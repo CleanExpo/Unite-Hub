@@ -165,6 +165,7 @@
     "next-themes": "^0.4.6",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.10",
+    "open": "^10.1.0",
     "openai": "^6.8.1",
     "ora": "^8.1.1",
     "prom-client": "^15.1.3",

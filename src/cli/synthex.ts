@@ -13,6 +13,7 @@
 
 import { Command } from 'commander';
 import { createInitCommand } from './commands/init.js';
+import { createAuthCommand } from './commands/auth/index.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -30,14 +31,8 @@ async function main() {
   // Add init command
   program.addCommand(createInitCommand());
 
-  // Placeholder commands (to be implemented)
-  program
-    .command('auth')
-    .description('Authentication commands')
-    .action(async () => {
-      await logger.warn('Auth commands coming soon!');
-      await logger.example('synthex auth login --service shopify --tenant-id "CLIENT_001"');
-    });
+  // Add auth command
+  program.addCommand(createAuthCommand());
 
   program
     .command('check')
