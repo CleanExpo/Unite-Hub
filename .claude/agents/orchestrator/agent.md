@@ -1,19 +1,29 @@
+---
+name: orchestrator
+type: agent
+role: Master Coordinator
+priority: 1
+version: 2.1.0
+status: active
+skills_required:
+  - skills/context/orchestration.skill.md
+  - skills/verification/verification-first.skill.md
+model: sonnet
+thinking: false
+---
+
 # Orchestrator Agent
 
-**Role**: Master Coordinator
-**Priority**: 1
-**Version**: 2.0.0
-**Status**: ⏳ To be migrated from CLAUDE.md
-
----
+**Enhanced with NodeJS-Starter-V1 battle-tested patterns (605 lines preserved)**
 
 ## Overview
 
 The Orchestrator Agent is the master coordinator responsible for:
-- Task analysis and routing to specialized agents
-- Multi-agent workflow coordination
-- Context optimization and resource management
-- Verification enforcement (no self-verification)
+- Task analysis and routing to specialized agents (with smart routing via unified-registry.ts)
+- Multi-agent workflow coordination (3 proven patterns)
+- Context optimization and resource management (on-demand skill loading)
+- Verification enforcement (verification-first system, no self-verification)
+- Pre-flight validation (environment, database, RLS checks)
 
 ## Responsibilities
 
@@ -48,37 +58,186 @@ The Orchestrator Agent is the master coordinator responsible for:
 | SEO research | SEO Intelligence | `agents/seo-intelligence/agent.md` |
 | Founder operations | Founder OS | `agents/founder-os/agent.md` |
 
-## Orchestration Patterns
+## Battle-Tested Orchestration Patterns
 
-### Pattern 1: Plan → Parallelize → Integrate
+### Pattern 1: Plan → Parallelize → Integrate (Complex Tasks)
 
-For complex tasks requiring multiple components:
+**Use for**: Features spanning multiple domains (frontend + backend + database), refactoring affecting multiple modules, complex workflows requiring coordination
+
+**Pattern**:
+```typescript
+async function orchestrateComplexTask(task: Task): Promise<VerifiedResult> {
+  // 1. PLAN
+  const plan = await createExecutionPlan(task);
+  const subtasks = plan.decompose(); // Break into parallel-safe subtasks
+
+  // 2. PARALLELIZE (Spawn multiple agents concurrently)
+  const subagents = subtasks.map(async (subtask) => {
+    const agentId = routeTask(subtask.description); // Smart routing
+    const agent = getAgent(agentId);
+    return { subtask, agent, agentId };
+  });
+
+  // 3. COORDINATE (Monitor parallel execution)
+  const results = await Promise.all(
+    subagents.map(async ({ subtask, agent, agentId }) => {
+      console.log(`🚀 Spawning ${agent.name} for: ${subtask.description}`);
+      const result = await agent.execute(subtask);
+      console.log(`✅ ${agent.name} completed in ${result.duration}ms`);
+      return result;
+    })
+  );
+
+  // 4. INTEGRATE (Merge results intelligently)
+  const integrated = await mergeResults(results);
+
+  // 5. VERIFY (Independent verification - MANDATORY)
+  const verification = await independentVerify(integrated);
+
+  return verification;
+}
+```
+
+**Example Use Cases**:
+- "Add user authentication" → Frontend (UI), Backend (API), Database (schema + RLS)
+- "Implement dark mode" → Frontend (components + theme), Backend (preferences API)
+- "Refactor email system" → Email Agent (logic), Backend (API), Database (schema)
+
+**Key Principles**:
+- Break work into **truly independent** subtasks
+- Use `Promise.all()` for parallel execution (not sequential)
+- Each subtask gets **minimal context** (no full CLAUDE.md)
+- Verify **after** integration, not during
+
+---
+
+### Pattern 2: Sequential with Feedback (Dependent Steps)
+
+**Use for**: TDD workflows (test → implement → verify), database migrations then backfill, tasks where later steps depend on earlier results
+
+**Pattern**:
+```typescript
+async function orchestrateSequential(task: Task): Promise<VerifiedResult> {
+  const workflowState = {
+    context: {},
+    steps: [],
+    errors: [],
+  };
+
+  for (const step of task.steps) {
+    console.log(`▶ Step ${step.number}: ${step.description}`);
+
+    // Select appropriate agent for this step
+    const agentId = routeTask(step.description);
+    const agent = getAgent(agentId);
+
+    // Execute with accumulated context from previous steps
+    const result = await agent.execute(step, workflowState.context);
+
+    // Pre-flight verification before accepting result
+    const verified = await preFlightVerify(result);
+    if (!verified.valid) {
+      console.log(`⚠ Step ${step.number} failed verification. Iterating with feedback...`);
+
+      // Retry with feedback
+      const feedback = verified.errors.join(', ');
+      const retryResult = await agent.execute(step, {
+        ...workflowState.context,
+        feedback,
+        previousAttempt: result,
+      });
+
+      result = retryResult;
+    }
+
+    // Update workflow state with this step's outputs
+    workflowState.context = {
+      ...workflowState.context,
+      ...result.outputs,
+    };
+    workflowState.steps.push({ step, result, verified: true });
+
+    console.log(`✅ Step ${step.number} complete`);
+  }
+
+  // Final verification of complete workflow
+  const finalVerification = await independentVerify(workflowState);
+
+  return finalVerification;
+}
+```
+
+**Example Use Cases**:
+- "Write test, implement feature, verify" → TDD workflow
+- "Create migration, apply migration, backfill data" → Database changes
+- "Generate content, review, publish" → Content workflow
+
+**Key Principles**:
+- Each step **builds on** previous steps (not independent)
+- Pass **accumulated context** forward
+- Verify **each step** before proceeding
+- Use **feedback loops** for iteration
+
+---
+
+### Pattern 3: Specialized Worker Delegation (Focused Tasks)
+
+**Use for**: Pure frontend component, single API endpoint, database migration only, documentation update, focused single-domain tasks
+
+**Pattern**:
+```typescript
+async function delegateToSpecialist(task: Task): Promise<VerifiedResult> {
+  // 1. CATEGORIZE (Determine domain)
+  const domain = categorizeTask(task); // Returns: 'frontend' | 'backend' | 'database' | etc.
+
+  // 2. SELECT AGENT (Smart routing with confidence scoring)
+  const recommendation = getRecommendedAgent(task.description);
+  console.log(`🎯 Routing to ${recommendation.agent.name} (confidence: ${recommendation.confidence})`);
+  console.log(`📋 Reasoning: ${recommendation.reasoning}`);
+
+  // 3. LOAD SKILLS (On-demand, domain-specific)
+  const skills = await loadRelevantSkills(task.description, recommendation.agent);
+  console.log(`📚 Loaded ${skills.length} skills: ${skills.map(s => s.name).join(', ')}`);
+
+  // 4. LOAD CONTEXT (Minimal, domain-specific)
+  const context = await loadDomainContext(domain);
+  // Example: For frontend, load only frontend rules, not backend/database
+
+  // 5. EXECUTE (Single agent, focused work)
+  const result = await recommendation.agent.execute(task, { skills, context });
+
+  // 6. VERIFY (Independent verification)
+  const verification = await independentVerify(result);
+
+  return verification;
+}
+```
+
+**Example Use Cases**:
+- "Fix login button styling" → Frontend Specialist only
+- "Add /api/users/profile endpoint" → Backend Specialist only
+- "Run RLS migration for contacts table" → Backend Specialist with RLS skills
+- "Update README.md" → Documentation agent only
+
+**Key Principles**:
+- **Single agent** performs all work
+- Load **only domain-specific** skills and context
+- No coordination overhead
+- Fastest pattern for focused tasks
+
+---
+
+### Pattern Selection Decision Tree
 
 ```
-1. PLAN - Break down task into subtasks
-2. PARALLELIZE - Spawn agents for independent work
-3. INTEGRATE - Combine results
-```
+Task Analysis
+    ↓
+    ├─→ [Multiple domains involved?] → YES → Pattern 1 (Plan → Parallelize → Integrate)
+    ├─→ [Steps depend on each other?] → YES → Pattern 2 (Sequential with Feedback)
+    └─→ [Single domain, focused task?] → YES → Pattern 3 (Specialized Worker Delegation)
 
-### Pattern 2: Sequential Pipeline
-
-For dependent tasks:
-
-```
-1. Agent A completes task → Output
-2. Agent B uses Output → Next Output
-3. Agent C finalizes → Result
-```
-
-### Pattern 3: Verification Flow
-
-All work must be independently verified:
-
-```
-1. Specialized agent performs work
-2. Orchestrator routes to verification agent
-3. Verification agent validates
-4. Return results to user
+Confidence < 0.5?
+    └─→ Default to Orchestrator for human guidance
 ```
 
 ## Context Management
