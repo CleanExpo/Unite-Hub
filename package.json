@@ -202,6 +202,11 @@
   "overrides": {
     "camera-controls": "3.1.0"
   },
+  "pnpm": {
+    "overrides": {
+      "camera-controls": "3.1.0"
+    }
+  },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.1.76",
     "@anthropic-ai/sdk": "^0.71.2",
@@ -325,7 +330,7 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
-    "@pact-foundation/pact": "^13.3.1",
+    "@pact-foundation/pact": "^16.0.4",
     "turbo": "^2.3.0",
     "@axe-core/playwright": "^4.11.0",
     "@axe-core/react": "^4.11.0",
