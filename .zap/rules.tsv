@@ -1,0 +1,67 @@
+# OWASP ZAP Rules Configuration for Unite-Hub
+# Format: rule_id	action	name
+# Actions: IGNORE, WARN, FAIL
+
+# Informational (10xxx) - Mostly warnings
+10003	IGNORE	Vulnerable JS Library (false positives common with bundled code)
+10015	IGNORE	Incomplete or No Cache-control Header Set
+10016	IGNORE	Web Browser XSS Protection Not Enabled (deprecated header)
+10017	IGNORE	Cross-Domain JavaScript Source File Inclusion
+10019	WARN	Content-Type Header Missing
+10020	WARN	X-Frame-Options Header Missing
+10021	WARN	X-Content-Type-Options Header Missing
+10023	WARN	Information Disclosure - Debug Error Messages
+10024	WARN	Information Disclosure - Sensitive Information in URL
+10025	WARN	Information Disclosure - Sensitive Information in HTTP Referrer Header
+10027	WARN	Information Disclosure - Suspicious Comments
+10028	FAIL	Open Redirect
+10035	WARN	Strict-Transport-Security Header Not Set
+10036	WARN	Server Leaks Version Information via Server Header
+10037	WARN	Server Leaks Information via X-Powered-By Header
+10038	WARN	Content Security Policy (CSP) Header Not Set
+10040	FAIL	Secure Pages Include Mixed Content
+10054	WARN	Cookie Without SameSite Attribute
+10055	WARN	CSP: Wildcard Directive
+10062	WARN	PII Disclosure
+10063	WARN	Permissions Policy Header Not Set
+
+# Cross Site Scripting (40xxx) - Critical failures
+40012	FAIL	Cross Site Scripting (Reflected)
+40014	FAIL	Cross Site Scripting (Persistent)
+40016	FAIL	Cross Site Scripting (Persistent) - Prime
+40017	FAIL	Cross Site Scripting (Persistent) - Spider
+40026	FAIL	Cross Site Scripting (DOM Based)
+
+# SQL Injection (40xxx) - Critical failures
+40018	FAIL	SQL Injection
+40019	FAIL	SQL Injection - MySQL
+40020	FAIL	SQL Injection - Hypersonic SQL
+40021	FAIL	SQL Injection - Oracle
+40022	FAIL	SQL Injection - PostgreSQL
+40024	FAIL	SQL Injection - SQLite
+40028	FAIL	SQL Injection - MsSQL
+
+# Other Injection Attacks
+90019	FAIL	Server Side Code Injection
+90020	FAIL	Remote OS Command Injection
+90021	FAIL	XPath Injection
+90023	FAIL	XML External Entity Attack
+90025	FAIL	Expression Language Injection
+
+# Authentication & Session
+90011	FAIL	Weak Authentication Method
+40023	WARN	Possible Username Enumeration
+90033	WARN	Loosely Scoped Cookie
+
+# Information Disclosure
+90022	WARN	Application Error Disclosure
+40034	FAIL	.env Information Leak
+40035	WARN	Hidden File Finder
+40042	WARN	Spring Actuator Information Leak
+40043	FAIL	Log4Shell
+
+# CORS
+40040	WARN	CORS Header
+
+# Cloud Security
+90034	WARN	Cloud Metadata Potentially Exposed

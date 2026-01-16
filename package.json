@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
+  "packageManager": "pnpm@9.15.0",
   "engines": {
     "node": ">=20.19.4 <23.0.0",
-    "npm": ">=10.8.2 <11.0.0"
+    "pnpm": ">=9.0.0"
   },
   "scripts": {
     "test": "vitest run",
@@ -33,6 +34,13 @@
     "test:visual": "playwright test tests/visual",
     "test:visual:baseline": "playwright test tests/visual --update-snapshots",
     "test:visual:report": "playwright show-report",
+    "test:contract": "vitest run tests/contract/*.pact.spec.ts",
+    "test:contract:verify": "vitest run tests/contract/provider-verification.spec.ts",
+    "test:percy": "percy exec -- playwright test tests/visual/percy-visual.spec.ts",
+    "test:load:contacts": "k6 run tests/load/contacts-api-load.js",
+    "test:load:ai": "k6 run tests/load/ai-agent-load.js",
+    "test:load:auth": "k6 run tests/load/auth-load.js",
+    "test:load:all": "k6 run tests/load/contacts-api-load.js && k6 run tests/load/auth-load.js",
     "test:api": "node test-api-flows.mjs",
     "test:aido": "node scripts/test-aido-apis.mjs",
     "test:aido:quick": "node scripts/quick-test-aido.mjs",
@@ -317,6 +325,8 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
+    "@pact-foundation/pact": "^13.3.1",
+    "turbo": "^2.3.0",
     "@axe-core/playwright": "^4.11.0",
     "@axe-core/react": "^4.11.0",
     "@eslint/eslintrc": "^3.3.3",

@@ -1,0 +1,129 @@
+# Codecov Configuration for Unite-Hub
+# https://docs.codecov.io/docs/codecov-yaml
+
+codecov:
+  require_ci_to_pass: yes
+  notify:
+    after_n_builds: 1
+    wait_for_ci: yes
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+
+  status:
+    project:
+      default:
+        target: 70%
+        threshold: 2%
+        base: auto
+        if_ci_failed: error
+        informational: false
+        only_pulls: false
+
+      # Component-specific targets
+      api-routes:
+        target: 70%
+        paths:
+          - "src/app/api/**/*.ts"
+
+      business-logic:
+        target: 75%
+        paths:
+          - "src/lib/**/*.ts"
+
+      ui-components:
+        target: 65%
+        paths:
+          - "src/components/**/*.tsx"
+
+      ai-agents:
+        target: 60%
+        informational: true  # AI agents are harder to test deterministically
+        paths:
+          - "src/lib/agents/**/*.ts"
+          - "src/lib/m1/**/*.ts"
+
+    patch:
+      default:
+        target: 80%
+        threshold: 5%
+        base: auto
+
+parsers:
+  javascript:
+    enable_partials: yes
+
+comment:
+  layout: "header, diff, flags, components, tree, footer"
+  behavior: default
+  require_changes: no
+  require_base: no
+  require_head: yes
+  branches:
+    - main
+    - develop
+
+flags:
+  unittests:
+    paths:
+      - src/
+    carryforward: true
+
+  integrationtests:
+    paths:
+      - src/
+    carryforward: true
+
+  e2e:
+    paths:
+      - src/
+    carryforward: false
+
+# Ignore paths from coverage
+ignore:
+  - "node_modules/**"
+  - "**/*.d.ts"
+  - "**/*.config.*"
+  - "tests/**"
+  - ".next/**"
+  - "coverage/**"
+  - "src/types/**"
+  - "scripts/**"
+  - "shadow-observer/**"
+  - "convex/**"
+
+# Component tracking
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+
+  individual_components:
+    - component_id: "api-routes"
+      name: "API Routes"
+      paths:
+        - src/app/api/**
+
+    - component_id: "ui-components"
+      name: "UI Components"
+      paths:
+        - src/components/**
+
+    - component_id: "business-logic"
+      name: "Business Logic"
+      paths:
+        - src/lib/**
+
+    - component_id: "ai-agents"
+      name: "AI Agents"
+      paths:
+        - src/lib/agents/**
+        - src/lib/m1/**
+
+    - component_id: "hooks"
+      name: "React Hooks"
+      paths:
+        - src/hooks/**

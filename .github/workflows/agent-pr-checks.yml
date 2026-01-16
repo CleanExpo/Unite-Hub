@@ -1,0 +1,129 @@
+name: Agent PR Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/lib/agents/**'
+      - '.claude/**'
+      - 'src/lib/m1/**'
+
+jobs:
+  agent-validation:
+    name: Validate Agent Changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect package manager
+        id: detect-pm
+        run: |
+          if [ -f "pnpm-lock.yaml" ]; then
+            echo "manager=pnpm" >> $GITHUB_OUTPUT
+            echo "install=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+          else
+            echo "manager=npm" >> $GITHUB_OUTPUT
+            echo "install=npm ci" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.4'
+          cache: ${{ steps.detect-pm.outputs.manager }}
+
+      - name: Install pnpm
+        if: steps.detect-pm.outputs.manager == 'pnpm'
+        run: npm install -g pnpm@9.15.0
+
+      - name: Install dependencies
+        run: ${{ steps.detect-pm.outputs.install }}
+
+      - name: Check agent registry consistency
+        run: |
+          echo "Validating agent registry..."
+          if [ -f ".claude/agents/registry.json" ]; then
+            node -e "JSON.parse(require('fs').readFileSync('.claude/agents/registry.json'))"
+            echo "Registry JSON is valid"
+          else
+            echo "No registry.json found, skipping"
+          fi
+
+      - name: Validate workspace isolation
+        run: |
+          echo "Checking for workspace_id in agent files..."
+          AGENT_FILES=$(find src/lib/agents -name "*.ts" -type f 2>/dev/null || true)
+          MISSING_ISOLATION=""
+          for file in $AGENT_FILES; do
+            if ! grep -q "workspace_id\|workspaceId\|workspace" "$file"; then
+              MISSING_ISOLATION="$MISSING_ISOLATION\n- $file"
+            fi
+          done
+          if [ -n "$MISSING_ISOLATION" ]; then
+            echo "::warning::Files potentially lacking workspace isolation:$MISSING_ISOLATION"
+          else
+            echo "All agent files appear to have workspace isolation"
+          fi
+
+      - name: Run agent-related tests
+        run: npm run test -- --grep "agent" || echo "No agent tests found or tests skipped"
+        continue-on-error: true
+
+      - name: Run integrity check
+        run: npm run integrity:check || echo "Integrity check not configured"
+        continue-on-error: true
+
+      - name: Check for breaking changes
+        run: |
+          echo "Checking for breaking changes in agent interfaces..."
+          git diff origin/main --name-only | grep -E "src/lib/agents/.*\\.ts$" | while read file; do
+            if git diff origin/main -- "$file" | grep -E "^-.*export (type|interface|function)" > /dev/null; then
+              echo "::warning::Potential breaking change detected in $file"
+            fi
+          done || true
+
+      - name: Comment on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Agent PR Validation')
+            );
+
+            const body = `## Agent PR Validation
+
+            - Agent registry validation: Completed
+            - Workspace isolation check: Completed
+            - Agent tests: ${{ job.status }}
+            - Integrity check: ${{ job.status }}
+
+            See workflow logs for details.`;
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }

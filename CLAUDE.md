@@ -4,8 +4,9 @@
 - **Unite-Hub**: Core CRM for agencies (email, contacts, campaigns, AI agents)
 - **Synthex.social**: White-label AI marketing platform for small businesses
 
-**Tech Stack**: Next.js 16 (App Router), React 19, Supabase PostgreSQL, Anthropic Claude API, TypeScript 5.x  
-**Port**: 3008 (not 3000) — `npm run dev`
+**Tech Stack**: Next.js 16 (App Router), React 19, Supabase PostgreSQL, Anthropic Claude API, TypeScript 5.x
+**Package Manager**: pnpm 9.15+ with Turborepo
+**Port**: 3008 (not 3000) — `pnpm dev`
 
 ---
 
@@ -92,10 +93,20 @@ Core architectural patterns and development workflows are organized into focused
 ## Quick Start
 
 ```bash
-npm run dev              # Start dev server (port 3008)
-npm run typecheck        # Validate TypeScript
-npm run test             # Run all tests
-npm run integrity:check  # Founder OS health check
+pnpm install             # Install dependencies (pnpm required)
+pnpm dev                 # Start dev server (port 3008)
+pnpm typecheck           # Validate TypeScript
+pnpm test                # Run all tests
+pnpm integrity:check     # Founder OS health check
+```
+
+### Advanced Testing
+
+```bash
+pnpm test:contract       # Pact contract tests
+pnpm test:percy          # Percy visual regression (requires PERCY_TOKEN)
+pnpm test:load:contacts  # k6 load tests for contacts API
+pnpm test:load:auth      # k6 auth spike tests
 ```
 
 ---

@@ -1,0 +1,54 @@
+{
+  "name": "Unite-Hub",
+  "description": "OWASP ZAP scan context for Unite-Hub CRM",
+  "urls": [
+    "http://localhost:3008"
+  ],
+  "includedRegexes": [
+    "http://localhost:3008.*"
+  ],
+  "excludedRegexes": [
+    ".*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$",
+    ".*/_next/.*",
+    ".*/api/health$",
+    ".*\\.map$",
+    ".*/favicon\\.ico$"
+  ],
+  "authentication": {
+    "method": "json",
+    "loginUrl": "http://localhost:3008/api/auth/callback/credentials",
+    "loggedInIndicator": "session",
+    "loggedOutIndicator": "Sign in",
+    "credentials": {
+      "username": "${ZAP_TEST_USERNAME}",
+      "password": "${ZAP_TEST_PASSWORD}"
+    }
+  },
+  "users": [
+    {
+      "name": "test-user",
+      "enabled": true
+    }
+  ],
+  "scanPolicy": {
+    "name": "Unite-Hub-Policy",
+    "attackStrength": "MEDIUM",
+    "alertThreshold": "LOW",
+    "defaultPolicy": true
+  },
+  "technology": {
+    "include": [
+      "Db.PostgreSQL",
+      "Language.JavaScript",
+      "OS.Linux",
+      "SCM",
+      "WS.Node"
+    ],
+    "exclude": [
+      "Db.MySQL",
+      "Db.Oracle",
+      "Language.PHP",
+      "Language.Java"
+    ]
+  }
+}
