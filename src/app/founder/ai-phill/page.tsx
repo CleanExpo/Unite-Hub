@@ -121,8 +121,8 @@ export default function AiPhillPage() {
 
   const handleSendMessage = async () => {
     if (!input.trim()) {
-return;
-}
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -132,26 +132,95 @@ return;
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const messageText = input;
     setInput('');
     setIsLoading(true);
 
-    // TODO: Replace with actual API call to AI orchestrator
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/founder-os/ai-phill/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ message: messageText }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to get response from AI Phill');
+      }
+
+      // Build the response content with follow-up questions and actions
+      let content = data.response || 'I apologize, but I was unable to generate a response.';
+
+      if (data.followUpQuestions?.length > 0) {
+        content += '\n\n**Questions to consider:**\n' + data.followUpQuestions.map((q: string) => `- ${q}`).join('\n');
+      }
+
+      if (data.suggestedActions?.length > 0) {
+        content += '\n\n**Suggested actions:**\n' + data.suggestedActions.map((a: string) => `- ${a}`).join('\n');
+      }
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content:
-          'Based on the signals I\'m tracking, here\'s what I can tell you: [This will be powered by the AI orchestrator with access to all business data, signals, and historical context.]',
+        content,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('AI Phill chat error:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `I apologize, but I encountered an error: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
-  const handleGenerateDigest = () => {
-    // TODO: Implement digest generation
-    console.log('Generating weekly digest...');
+  const handleGenerateDigest = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/founder-os/ai-phill/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ message: 'Generate a weekly digest summarizing the key metrics, insights, and recommended actions across all my businesses.' }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to generate digest');
+      }
+
+      const digestMessage: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: `**Weekly Digest**\n\n${data.response}`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, digestMessage]);
+    } catch (error) {
+      console.error('Digest generation error:', error);
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: `Failed to generate weekly digest: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSaveJournal = () => {
@@ -239,7 +308,7 @@ return;
                       }`}
                     >
                       <p className="text-sm text-text-primary">{message.content}</p>
-                      <p className="text-xs text-text-muted mt-1">
+                      <p className="text-xs text-text-muted mt-1" suppressHydrationWarning>
                         {message.timestamp.toLocaleTimeString()}
                       </p>
                     </div>

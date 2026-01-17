@@ -136,6 +136,7 @@ const AI_PHILL_MODEL = 'claude-opus-4-5-20251101';
 const DEFAULT_THINKING_BUDGET = 15000;
 const STRATEGIC_THINKING_BUDGET = 20000;
 const QUICK_THINKING_BUDGET = 10000;
+const RESPONSE_TOKENS = 4096; // Tokens for actual response output
 
 const AI_PHILL_SYSTEM_PROMPT = `You are AI Phill, a cognitive advisor and trusted strategic partner for founders.
 
@@ -297,7 +298,7 @@ Return ONLY valid JSON.`;
       const result = await callAnthropicWithRetry(async () => {
         return await this.anthropic.messages.create({
           model: AI_PHILL_MODEL,
-          max_tokens: 4096,
+          max_tokens: STRATEGIC_THINKING_BUDGET + RESPONSE_TOKENS,
           thinking: {
             type: 'enabled',
             budget_tokens: STRATEGIC_THINKING_BUDGET,
@@ -416,7 +417,7 @@ Format your response in Markdown with clear sections.`;
       const result = await callAnthropicWithRetry(async () => {
         return await this.anthropic.messages.create({
           model: AI_PHILL_MODEL,
-          max_tokens: 2048,
+          max_tokens: QUICK_THINKING_BUDGET + RESPONSE_TOKENS,
           thinking: {
             type: 'enabled',
             budget_tokens: QUICK_THINKING_BUDGET,
@@ -568,7 +569,7 @@ Return ONLY valid JSON.`;
       const result = await callAnthropicWithRetry(async () => {
         return await this.anthropic.messages.create({
           model: AI_PHILL_MODEL,
-          max_tokens: 6000,
+          max_tokens: STRATEGIC_THINKING_BUDGET + RESPONSE_TOKENS,
           thinking: {
             type: 'enabled',
             budget_tokens: STRATEGIC_THINKING_BUDGET,
@@ -762,7 +763,7 @@ Return ONLY valid JSON.`;
       const result = await callAnthropicWithRetry(async () => {
         return await this.anthropic.messages.create({
           model: AI_PHILL_MODEL,
-          max_tokens: 4096,
+          max_tokens: DEFAULT_THINKING_BUDGET + RESPONSE_TOKENS,
           thinking: {
             type: 'enabled',
             budget_tokens: DEFAULT_THINKING_BUDGET,
@@ -898,7 +899,7 @@ Return ONLY valid JSON.`;
       const result = await callAnthropicWithRetry(async () => {
         return await this.anthropic.messages.create({
           model: AI_PHILL_MODEL,
-          max_tokens: 4096,
+          max_tokens: DEFAULT_THINKING_BUDGET + RESPONSE_TOKENS,
           thinking: {
             type: 'enabled',
             budget_tokens: DEFAULT_THINKING_BUDGET,
@@ -1036,7 +1037,7 @@ Return ONLY valid JSON.`;
       const result = await callAnthropicWithRetry(async () => {
         return await this.anthropic.messages.create({
           model: AI_PHILL_MODEL,
-          max_tokens: 6000,
+          max_tokens: STRATEGIC_THINKING_BUDGET + RESPONSE_TOKENS,
           thinking: {
             type: 'enabled',
             budget_tokens: STRATEGIC_THINKING_BUDGET,
