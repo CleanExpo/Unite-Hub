@@ -24,19 +24,27 @@ export async function POST(req: NextRequest) {
     let userId: string;
 
     if (token) {
-      const { supabaseBrowser } = await import('@/lib/supabase');
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
+      // Use authenticated client with JWT context (same as profile route)
+      const { getSupabaseServerWithAuth } = await import('@/lib/supabase');
+      const supabase = getSupabaseServerWithAuth(token);
+      const { data, error } = await supabase.auth.getUser();
       if (error || !data.user) {
+        console.error('[founder-os/ai-phill/chat] Token auth failed:', error?.message);
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
       userId = data.user.id;
+      console.log('[founder-os/ai-phill/chat] Token auth successful:', userId);
     } else {
+      // Fallback to server-side cookies (PKCE flow)
+      console.log('[founder-os/ai-phill/chat] No token, using cookie-based auth');
       const supabase = await getSupabaseServer();
       const { data, error: authError } = await supabase.auth.getUser();
       if (authError || !data.user) {
+        console.error('[founder-os/ai-phill/chat] Cookie auth failed:', authError?.message);
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
       userId = data.user.id;
+      console.log('[founder-os/ai-phill/chat] Cookie auth successful:', userId);
     }
 
     // Parse request body
