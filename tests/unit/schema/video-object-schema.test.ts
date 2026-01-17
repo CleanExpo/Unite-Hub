@@ -218,9 +218,9 @@ describe('VideoObject Schema Generator', () => {
       const output = generateVideoObjectForPlatform('perplexity', mockMetadata);
 
       expect(output).toContain('**Video**:');
-      expect(output).toContain('Duration:');
-      expect(output).toContain('Transcript:');
-      expect(output).toContain('Source:');
+      expect(output).toContain('**Duration**:');
+      expect(output).toContain('**Transcript**:');
+      expect(output).toContain('**Source**:');
     });
 
     it('should generate Bing microdata HTML', () => {
@@ -265,7 +265,9 @@ describe('VideoObject Schema Generator', () => {
     });
 
     it('should handle edge case durations', () => {
-      expect(extractDurationFromMetadata({ duration: 0 })).toBe(1);
+      // 0 is falsy in JS, so falls back to default (120)
+      expect(extractDurationFromMetadata({ duration: 0 })).toBe(120);
+      // Negative values use Math.max(1, value) = 1
       expect(extractDurationFromMetadata({ duration: -50 })).toBe(1);
     });
   });

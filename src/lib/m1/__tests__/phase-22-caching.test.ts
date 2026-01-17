@@ -65,14 +65,13 @@ describe('InMemoryCacheStore', () => {
     expect(cache.get('nonexistent')).toBeUndefined();
   });
 
-  it('should expire entries based on TTL', (done) => {
+  it('should expire entries based on TTL', async () => {
     cache.set('ttl-key', 'ttl-value', 100); // 100ms TTL
     expect(cache.get('ttl-key')).toBe('ttl-value');
 
-    setTimeout(() => {
-      expect(cache.get('ttl-key')).toBeUndefined();
-      done();
-    }, 150);
+    // Wait for TTL to expire
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    expect(cache.get('ttl-key')).toBeUndefined();
   });
 
   it('should evict LRU entries when full', () => {

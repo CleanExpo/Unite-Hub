@@ -24,53 +24,65 @@ import {
   addSuggestionFeedback,
 } from '@/lib/guardian/ai/ruleSuggestionOrchestrator';
 
-// Mock Supabase
+// Mock Supabase with full query builder chain
+const createQueryBuilder = () => {
+  const mockData = {
+    id: 'test-suggestion-id',
+    tenant_id: 'test-workspace-id',
+    status: 'new',
+    title: 'Test Suggestion',
+    rationale: 'Test rationale',
+    source: 'heuristic',
+    confidence: 0.65,
+    signals: {},
+    rule_draft: {
+      name: 'Test Rule',
+      type: 'alert',
+      description: 'Test rule',
+      config: {},
+      enabled: false,
+    },
+    safety: {
+      promptRedacted: true,
+      validationPassed: true,
+      validationErrors: [],
+      prohibitedKeysFound: [],
+    },
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    expires_at: null,
+    created_by: 'system',
+    metadata: {},
+  };
+
+  const builder: Record<string, any> = {};
+
+  // All chainable methods return the builder
+  const chainMethods = [
+    'select', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike',
+    'is', 'in', 'contains', 'containedBy', 'not', 'or', 'and',
+    'order', 'limit', 'offset', 'range', 'insert', 'update', 'upsert', 'delete',
+    'match', 'filter', 'textSearch', 'maybeSingle', 'csv', 'geojson', 'explain',
+  ];
+
+  chainMethods.forEach(method => {
+    builder[method] = vi.fn().mockReturnValue(builder);
+  });
+
+  // Terminal methods return data
+  builder.single = vi.fn().mockResolvedValue({ data: mockData, error: null });
+  builder.maybeSingle = vi.fn().mockResolvedValue({ data: mockData, error: null });
+  builder.then = vi.fn((resolve) => resolve({ data: [mockData], error: null, count: 1 }));
+
+  // Make range return a promise with data
+  builder.range = vi.fn().mockResolvedValue({ data: [], count: 0, error: null });
+
+  return builder;
+};
+
 vi.mock('@/lib/supabase', () => ({
   getSupabaseServer: vi.fn(() => ({
-    from: vi.fn((table: string) => ({
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({
-        data: {
-          id: 'test-suggestion-id',
-          tenant_id: 'test-workspace-id',
-          status: 'new',
-          title: 'Test Suggestion',
-          rationale: 'Test rationale',
-          source: 'heuristic',
-          confidence: 0.65,
-          signals: {},
-          rule_draft: {
-            name: 'Test Rule',
-            type: 'alert',
-            description: 'Test rule',
-            config: {},
-            enabled: false,
-          },
-          safety: {
-            promptRedacted: true,
-            validationPassed: true,
-            validationErrors: [],
-            prohibitedKeysFound: [],
-          },
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          expires_at: null,
-          created_by: 'system',
-          metadata: {},
-        },
-        error: null,
-      }),
-      insert: vi.fn().mockReturnThis(),
-      update: vi.fn().mockReturnThis(),
-      order: vi.fn().mockReturnThis(),
-      limit: vi.fn().mockReturnThis(),
-      range: vi.fn().mockResolvedValue({
-        data: [],
-        count: 0,
-        error: null,
-      }),
-    })),
+    from: vi.fn(() => createQueryBuilder()),
     rpc: vi.fn().mockResolvedValue({
       data: { count: 0 },
       error: null,

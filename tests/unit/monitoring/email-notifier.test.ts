@@ -114,7 +114,7 @@ describe('Email Notifier', () => {
 
     expect(emailBody).toContain('HIGH');
     expect(emailBody).toContain('example.com');
-    expect(emailBody).toContain('Ranking drop');
+    expect(emailBody).toContain('ranking drop');
   });
 
   it('should truncate long descriptions in emails', async () => {
@@ -126,7 +126,7 @@ describe('Email Notifier', () => {
     const truncated = truncate(longText);
 
     expect(truncated.length).toBeLessThanOrEqual(253);
-    expect(truncated).toEndWith('...');
+    expect(truncated.endsWith('...')).toBe(true);
   });
 
   it('should include unsubscribe link in footer', async () => {

@@ -319,3 +319,92 @@ vi.mock('netlify', () => ({
     listSites: vi.fn().mockResolvedValue([]),
   })),
 }));
+
+// ============================================
+// SUPABASE MOCKING
+// Comprehensive mock for Supabase client with full query builder chain
+// ============================================
+
+// Create a chainable query builder that supports all Supabase methods
+const createSupabaseQueryBuilder = (defaultData: any = null) => {
+  const builder: Record<string, any> = {};
+
+  // All chainable methods return the builder for method chaining
+  const chainMethods = [
+    'select', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike',
+    'is', 'in', 'contains', 'containedBy', 'not', 'or', 'and',
+    'order', 'limit', 'offset', 'range', 'insert', 'update', 'upsert', 'delete',
+    'match', 'filter', 'textSearch', 'csv', 'geojson', 'explain',
+    'returns', 'throwOnError', 'abortSignal',
+  ];
+
+  chainMethods.forEach(method => {
+    builder[method] = vi.fn().mockReturnValue(builder);
+  });
+
+  // Terminal methods that return data (for await/then)
+  builder.single = vi.fn().mockResolvedValue({ data: defaultData, error: null });
+  builder.maybeSingle = vi.fn().mockResolvedValue({ data: defaultData, error: null });
+
+  // Make the builder thenable so it can be awaited directly
+  builder.then = vi.fn((resolve) => {
+    resolve({ data: defaultData ? [defaultData] : [], error: null, count: defaultData ? 1 : 0 });
+    return Promise.resolve({ data: defaultData ? [defaultData] : [], error: null, count: defaultData ? 1 : 0 });
+  });
+
+  return builder;
+};
+
+// Create the main Supabase client mock
+const createSupabaseClientMock = () => ({
+  from: vi.fn(() => createSupabaseQueryBuilder()),
+  rpc: vi.fn().mockResolvedValue({ data: null, error: null }),
+  auth: {
+    getUser: vi.fn().mockResolvedValue({
+      data: { user: { id: 'test-user-id', email: 'test@example.com' } },
+      error: null,
+    }),
+    getSession: vi.fn().mockResolvedValue({
+      data: { session: { access_token: 'test-token' } },
+      error: null,
+    }),
+    signInWithPassword: vi.fn().mockResolvedValue({ data: {}, error: null }),
+    signOut: vi.fn().mockResolvedValue({ error: null }),
+    onAuthStateChange: vi.fn().mockReturnValue({
+      data: { subscription: { unsubscribe: vi.fn() } },
+    }),
+  },
+  storage: {
+    from: vi.fn().mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ data: { path: 'test-path' }, error: null }),
+      download: vi.fn().mockResolvedValue({ data: new Blob(), error: null }),
+      getPublicUrl: vi.fn().mockReturnValue({ data: { publicUrl: 'https://test.supabase.co/storage/test' } }),
+      remove: vi.fn().mockResolvedValue({ data: [], error: null }),
+      list: vi.fn().mockResolvedValue({ data: [], error: null }),
+    }),
+  },
+  channel: vi.fn().mockReturnValue({
+    on: vi.fn().mockReturnThis(),
+    subscribe: vi.fn().mockReturnValue({ status: 'SUBSCRIBED' }),
+    unsubscribe: vi.fn(),
+  }),
+});
+
+// Mock Supabase client creation
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => createSupabaseClientMock()),
+  createClient: vi.fn(() => createSupabaseClientMock()),
+  supabaseAdmin: createSupabaseClientMock(),
+}));
+
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn(() => createSupabaseClientMock()),
+}));
+
+vi.mock('@/lib/supabase/client', () => ({
+  createClient: vi.fn(() => createSupabaseClientMock()),
+}));
+
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: vi.fn(() => createSupabaseClientMock()),
+}));
