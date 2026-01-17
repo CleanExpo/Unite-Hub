@@ -45,11 +45,16 @@ async function verifySlackSignature(req: NextRequest, body: string): Promise<boo
     .update(sigBasestring)
     .digest('hex');
 
-  // Timing-safe comparison
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  );
+  // Timing-safe comparison (must check lengths first to avoid throwing)
+  const sigBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expectedSignature);
+
+  if (sigBuffer.length !== expectedBuffer.length) {
+    console.error('[Slack AI Phill] Signature length mismatch');
+    return false;
+  }
+
+  return crypto.timingSafeEqual(sigBuffer, expectedBuffer);
 }
 
 // Look up user by Slack ID or email
