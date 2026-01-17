@@ -53,16 +53,16 @@ interface ExecutiveReportData {
 }
 
 const RISK_COLORS = {
-  low: 'bg-green-100 text-green-800 border-green-300',
-  medium: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-  high: 'bg-red-100 text-red-800 border-red-300',
+  low: 'bg-success-100 text-success-800 border-success-300',
+  medium: 'bg-warning-100 text-warning-800 border-warning-300',
+  high: 'bg-error-100 text-error-800 border-error-300',
 };
 
 const HEALTH_COLORS = {
-  healthy: 'bg-green-100 text-green-800',
-  warnings: 'bg-yellow-100 text-yellow-800',
-  degraded: 'bg-orange-100 text-orange-800',
-  critical: 'bg-red-100 text-red-800',
+  healthy: 'bg-success-100 text-success-800',
+  warnings: 'bg-warning-100 text-warning-800',
+  degraded: 'bg-accent-100 text-accent-800',
+  critical: 'bg-error-100 text-error-800',
 };
 
 export default function ExecutiveDashboard() {
@@ -163,7 +163,7 @@ export default function ExecutiveDashboard() {
   if (workspaceLoading) {
     return (
       <div className="space-y-6 p-6">
-        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading workspace...</div>
       </div>
     );
   }
@@ -171,9 +171,9 @@ export default function ExecutiveDashboard() {
   if (workspaceError || !workspaceId) {
     return (
       <div className="space-y-6 p-6">
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900">{workspaceError || 'No workspace selected'}</p>
+            <p className="text-sm text-error-900">{workspaceError || 'No workspace selected'}</p>
           </CardContent>
         </Card>
       </div>
@@ -183,7 +183,7 @@ export default function ExecutiveDashboard() {
   if (loading) {
     return (
       <div className="space-y-6 p-6">
-        <div className="text-center py-12 text-gray-500">Loading executive dashboard...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading executive dashboard...</div>
       </div>
     );
   }
@@ -194,7 +194,7 @@ export default function ExecutiveDashboard() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Executive Dashboard</h1>
-          <p className="text-gray-600 mt-1">Guardian health reports and timeline</p>
+          <p className="text-text-muted mt-1">Guardian health reports and timeline</p>
         </div>
         <Button
           onClick={handleGenerateReport}
@@ -207,12 +207,12 @@ export default function ExecutiveDashboard() {
 
       {/* Current Report Summary */}
       {selectedReport && (
-        <Card className="bg-gradient-to-br from-blue-50 to-accent-50 border-2">
+        <Card className="bg-gradient-to-br from-info-50 to-accent-50 border-2">
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
                 <CardTitle className="text-xl">{selectedReport.title}</CardTitle>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-text-muted mt-1">
                   {new Date(selectedReport.createdAt).toLocaleDateString()}
                 </p>
               </div>
@@ -224,20 +224,20 @@ export default function ExecutiveDashboard() {
             {/* Key Metrics Grid */}
             <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
               {/* Readiness */}
-              <div className="bg-white p-4 rounded-lg border">
-                <p className="text-xs font-medium text-gray-600 mb-1">Readiness</p>
-                <p className="text-2xl font-bold text-blue-600">
+              <div className="bg-bg-card p-4 rounded-lg border">
+                <p className="text-xs font-medium text-text-muted mb-1">Readiness</p>
+                <p className="text-2xl font-bold text-info-600">
                   {selectedReport.summary.readinessScore}
                 </p>
                 <div className="flex items-center gap-1 mt-2 text-xs">
                   {selectedReport.summary.readinessDelta >= 0 ? (
-                    <TrendingUp className="w-3 h-3 text-green-600" />
+                    <TrendingUp className="w-3 h-3 text-success-600" />
                   ) : (
-                    <TrendingDown className="w-3 h-3 text-red-600" />
+                    <TrendingDown className="w-3 h-3 text-error-600" />
                   )}
                   <span
                     className={
-                      selectedReport.summary.readinessDelta >= 0 ? 'text-green-600' : 'text-red-600'
+                      selectedReport.summary.readinessDelta >= 0 ? 'text-success-600' : 'text-error-600'
                     }
                   >
                     {selectedReport.summary.readinessDelta > 0 ? '+' : ''}
@@ -247,26 +247,26 @@ export default function ExecutiveDashboard() {
               </div>
 
               {/* Edition Alignment */}
-              <div className="bg-white p-4 rounded-lg border">
-                <p className="text-xs font-medium text-gray-600 mb-1">Edition Alignment</p>
-                <p className="text-2xl font-bold text-purple-600">
+              <div className="bg-bg-card p-4 rounded-lg border">
+                <p className="text-xs font-medium text-text-muted mb-1">Edition Alignment</p>
+                <p className="text-2xl font-bold text-info-600">
                   {selectedReport.summary.editionAlignmentScore}
                 </p>
-                <p className="text-xs text-gray-500 mt-2">All editions avg</p>
+                <p className="text-xs text-text-tertiary mt-2">All editions avg</p>
               </div>
 
               {/* Uplift Progress */}
-              <div className="bg-white p-4 rounded-lg border">
-                <p className="text-xs font-medium text-gray-600 mb-1">Uplift Progress</p>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="bg-bg-card p-4 rounded-lg border">
+                <p className="text-xs font-medium text-text-muted mb-1">Uplift Progress</p>
+                <p className="text-2xl font-bold text-success-600">
                   {selectedReport.summary.upliftProgressPct}%
                 </p>
-                <p className="text-xs text-gray-500 mt-2">Tasks completed</p>
+                <p className="text-xs text-text-tertiary mt-2">Tasks completed</p>
               </div>
 
               {/* Network Health */}
-              <div className="bg-white p-4 rounded-lg border">
-                <p className="text-xs font-medium text-gray-600 mb-1">Network Health</p>
+              <div className="bg-bg-card p-4 rounded-lg border">
+                <p className="text-xs font-medium text-text-muted mb-1">Network Health</p>
                 <Badge
                   className={`${HEALTH_COLORS[selectedReport.summary.networkHealthStatus as keyof typeof HEALTH_COLORS] || HEALTH_COLORS.healthy}`}
                 >
@@ -275,8 +275,8 @@ export default function ExecutiveDashboard() {
               </div>
 
               {/* Risk Level */}
-              <div className="bg-white p-4 rounded-lg border">
-                <p className="text-xs font-medium text-gray-600 mb-1">Risk Level</p>
+              <div className="bg-bg-card p-4 rounded-lg border">
+                <p className="text-xs font-medium text-text-muted mb-1">Risk Level</p>
                 <Badge className={RISK_COLORS[selectedReport.summary.riskLevel]}>
                   {selectedReport.summary.riskLevel.toUpperCase()}
                 </Badge>
@@ -330,7 +330,7 @@ export default function ExecutiveDashboard() {
                   <h3 className="font-semibold text-sm">{section.sectionTitle}</h3>
                   <div className="mt-2 space-y-1">
                     {section.highlights.slice(0, 2).map((h, idx) => (
-                      <p key={idx} className="text-xs text-gray-600">
+                      <p key={idx} className="text-xs text-text-muted">
                         • {h}
                       </p>
                     ))}
@@ -344,12 +344,12 @@ export default function ExecutiveDashboard() {
               </div>
 
               {expandedSectionId === section.sectionKey && (
-                <div className="border-t bg-gray-50 p-4 space-y-3">
+                <div className="border-t bg-bg-hover p-4 space-y-3">
                   <div>
-                    <p className="text-xs font-medium text-gray-700 mb-2">All Highlights</p>
+                    <p className="text-xs font-medium text-text-secondary mb-2">All Highlights</p>
                     <ul className="space-y-1">
                       {section.highlights.map((h, idx) => (
-                        <li key={idx} className="text-xs text-gray-600">
+                        <li key={idx} className="text-xs text-text-muted">
                           ✓ {h}
                         </li>
                       ))}
@@ -370,24 +370,24 @@ export default function ExecutiveDashboard() {
                 <div key={point.id} className="flex gap-3 pb-3 border-b last:border-0">
                   <div className="mt-1">
                     {point.category === 'core' && (
-                      <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                      <CheckCircle2 className="w-4 h-4 text-info-600" />
                     )}
                     {point.category === 'meta' && (
-                      <BarChart3 className="w-4 h-4 text-purple-600" />
+                      <BarChart3 className="w-4 h-4 text-info-600" />
                     )}
                     {point.category === 'network_intelligence' && (
-                      <TrendingUp className="w-4 h-4 text-green-600" />
+                      <TrendingUp className="w-4 h-4 text-success-600" />
                     )}
                     {!['core', 'meta', 'network_intelligence'].includes(point.category) && (
-                      <Clock className="w-4 h-4 text-gray-400" />
+                      <Clock className="w-4 h-4 text-text-muted" />
                     )}
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-medium">{point.label}</p>
                     {point.narrativeSnippet && (
-                      <p className="text-xs text-gray-600 mt-1">{point.narrativeSnippet}</p>
+                      <p className="text-xs text-text-muted mt-1">{point.narrativeSnippet}</p>
                     )}
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-text-muted mt-1">
                       {new Date(point.occurredAt).toLocaleDateString()}
                     </p>
                   </div>
@@ -415,17 +415,17 @@ export default function ExecutiveDashboard() {
                 className={`p-3 rounded border cursor-pointer transition ${
                   selectedReport?.id === report.id
                     ? 'bg-accent-50 border-accent-400'
-                    : 'hover:bg-gray-50'
+                    : 'hover:bg-bg-hover'
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <p className="text-sm font-medium">{report.title}</p>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-text-muted">
                       {new Date(report.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  <ChevronRight className="w-4 h-4 text-text-muted" />
                 </div>
               </div>
             ))}
@@ -435,9 +435,9 @@ export default function ExecutiveDashboard() {
 
       {/* Error Banner */}
       {error && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900 flex items-start gap-2">
+            <p className="text-sm text-error-900 flex items-start gap-2">
               <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
               {error}
             </p>

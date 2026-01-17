@@ -230,6 +230,13 @@ export default function LoginPage() {
               Sign Up Now
             </Link>
           </div>
+
+          {/* Legal Links */}
+          <div className="mt-6 pt-6 border-t border-border-subtle flex justify-center gap-4 text-xs text-text-muted">
+            <Link href="/privacy" className="hover:text-text-primary transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-text-primary transition-colors">Terms</Link>
+            <Link href="/security" className="hover:text-text-primary transition-colors">Security</Link>
+          </div>
         </div>
       </div>
     </div>

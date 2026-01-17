@@ -127,11 +127,11 @@ return;
   return (
     <div className="h-full">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-6 py-4 dark:border-gray-700 dark:bg-gray-900">
+      <div className="border-b border-border-subtle bg-bg-card px-6 py-4 dark:border-border dark:bg-bg-base">
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <Shield className="h-6 w-6 text-blue-600" />
+              <Shield className="h-6 w-6 text-info-600" />
               <h1 className="text-2xl font-bold text-text-primary">
                 Coalition Formation
               </h1>
@@ -153,7 +153,7 @@ return;
       </div>
 
       {/* Coalition Status Banner */}
-      <div className="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-3 dark:border-gray-700 dark:from-blue-900/20 dark:to-indigo-900/20">
+      <div className="border-b border-border-subtle bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-3 dark:border-border dark:from-blue-900/20 dark:to-indigo-900/20">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-text-primary">
@@ -167,7 +167,7 @@ return;
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 bg-white px-6 dark:border-gray-700 dark:bg-gray-900">
+      <div className="border-b border-border-subtle bg-bg-card px-6 dark:border-border dark:bg-bg-base">
         <div className="flex gap-8">
           {(['overview', 'roles', 'synergy', 'history'] as const).map((tab) => (
             <button
@@ -175,8 +175,8 @@ return;
               onClick={() => setActiveTab(tab)}
               className={`border-b-2 px-1 py-4 text-sm font-medium transition-colors ${
                 activeTab === tab
-                  ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                  ? 'border-info-600 text-info-600 dark:border-info-400 dark:text-info-400'
+                  : 'border-transparent text-text-muted hover:text-text-primary dark:text-text-muted dark:hover:text-text-primary'
               }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -186,7 +186,7 @@ return;
       </div>
 
       {/* Content */}
-      <div className="bg-gray-50 p-6 dark:bg-gray-950">
+      <div className="bg-bg-hover p-6 dark:bg-bg-base">
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <CoalitionSynergyPanel workspaceId={workspaceId} />

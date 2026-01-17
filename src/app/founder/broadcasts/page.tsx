@@ -115,11 +115,11 @@ return;
         </div>
       )}
 
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Broadcast Guidelines</div>
               <p>
                 Broadcasts must not contain fabricated performance claims.

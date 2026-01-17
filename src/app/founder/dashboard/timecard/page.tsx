@@ -53,17 +53,17 @@ const CATEGORIES: Category[] = [
 ];
 
 const CATEGORY_COLORS: Record<Category, string> = {
-  admin: "bg-gray-500",
-  coding: "bg-blue-500",
+  admin: "bg-bg-hover0",
+  coding: "bg-info-500",
   meetings: "bg-purple-500",
   strategy: "bg-accent-500",
-  finance: "bg-green-500",
-  ops: "bg-orange-500",
+  finance: "bg-success-500",
+  ops: "bg-accent-500",
   sales: "bg-pink-500",
   marketing: "bg-indigo-500",
   research: "bg-cyan-500",
-  learning: "bg-amber-500",
-  break: "bg-emerald-500",
+  learning: "bg-warning-500",
+  break: "bg-success-500",
 };
 
 export default function FounderTimecardPage() {
@@ -177,10 +177,10 @@ export default function FounderTimecardPage() {
   };
 
   const riskColors = {
-    low: "text-green-600 bg-green-100",
-    medium: "text-amber-600 bg-amber-100",
-    high: "text-orange-600 bg-orange-100",
-    critical: "text-red-600 bg-red-100",
+    low: "text-success-600 bg-success-100",
+    medium: "text-warning-600 bg-warning-100",
+    high: "text-accent-600 bg-accent-100",
+    critical: "text-error-600 bg-error-100",
   };
 
   return (
@@ -194,7 +194,7 @@ export default function FounderTimecardPage() {
             <button
               type="button"
               onClick={exportCSV}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border rounded-lg hover:bg-gray-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-muted bg-bg-card border rounded-lg hover:bg-bg-hover"
             >
               <Download className="w-4 h-4" />
               Export CSV
@@ -213,7 +213,7 @@ export default function FounderTimecardPage() {
                     {runningTimer ? formatTime(timerElapsed) : "00:00:00"}
                   </div>
                   {runningTimer && (
-                    <div className="mt-2 text-sm text-gray-500">
+                    <div className="mt-2 text-sm text-text-tertiary">
                       {runningTimer.category}
                     </div>
                   )}
@@ -247,7 +247,7 @@ export default function FounderTimecardPage() {
                     <button
                       type="button"
                       onClick={stopTimer}
-                      className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
+                      className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-error-600 rounded-lg hover:bg-error-700"
                     >
                       <Square className="w-4 h-4" />
                       Stop Timer
@@ -270,7 +270,7 @@ export default function FounderTimecardPage() {
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   period === p
                     ? "bg-bg-input text-accent-600 shadow-sm"
-                    : "text-text-secondary hover:text-gray-900"
+                    : "text-text-secondary hover:text-text-primary"
                 }`}
               >
                 <Calendar className="w-4 h-4" />
@@ -294,11 +294,11 @@ export default function FounderTimecardPage() {
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <Card>
                     <CardContent className="pt-4">
-                      <div className="text-sm text-gray-500">Total Hours</div>
+                      <div className="text-sm text-text-tertiary">Total Hours</div>
                       <div className="text-2xl font-bold text-text-primary">
                         {summary.totalHours.toFixed(1)}h
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">
+                      <div className="text-xs text-text-muted mt-1">
                         {summary.totalMinutes} minutes
                       </div>
                     </CardContent>
@@ -306,11 +306,11 @@ export default function FounderTimecardPage() {
 
                   <Card>
                     <CardContent className="pt-4">
-                      <div className="text-sm text-gray-500">Top Category</div>
+                      <div className="text-sm text-text-tertiary">Top Category</div>
                       <div className="text-2xl font-bold text-text-primary">
                         {Object.entries(summary.byCategory).sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A"}
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">
+                      <div className="text-xs text-text-muted mt-1">
                         {Math.round((Object.entries(summary.byCategory).sort(([, a], [, b]) => b - a)[0]?.[1] || 0) / 60 * 10) / 10}h
                       </div>
                     </CardContent>
@@ -318,11 +318,11 @@ export default function FounderTimecardPage() {
 
                   <Card>
                     <CardContent className="pt-4">
-                      <div className="text-sm text-gray-500">Categories</div>
+                      <div className="text-sm text-text-tertiary">Categories</div>
                       <div className="text-2xl font-bold text-text-primary">
                         {Object.keys(summary.byCategory).length}
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">
+                      <div className="text-xs text-text-muted mt-1">
                         active this {period.replace("ly", "")}
                       </div>
                     </CardContent>
@@ -351,18 +351,18 @@ export default function FounderTimecardPage() {
                             : 0;
                           return (
                             <div key={category} className="flex items-center gap-3">
-                              <div className={`w-3 h-3 rounded-full ${CATEGORY_COLORS[category as Category] || "bg-gray-500"}`} />
+                              <div className={`w-3 h-3 rounded-full ${CATEGORY_COLORS[category as Category] || "bg-bg-hover0"}`} />
                               <span className="text-sm w-24 capitalize">{category}</span>
                               <div className="flex-1 h-2 bg-bg-hover rounded-full overflow-hidden">
                                 <div
-                                  className={`h-full ${CATEGORY_COLORS[category as Category] || "bg-gray-500"} rounded-full`}
+                                  className={`h-full ${CATEGORY_COLORS[category as Category] || "bg-bg-hover0"} rounded-full`}
                                   style={{ width: `${percentage}%` }}
                                 />
                               </div>
                               <span className="text-sm font-medium w-16 text-right">
                                 {(minutes / 60).toFixed(1)}h
                               </span>
-                              <span className="text-xs text-gray-500 w-10 text-right">
+                              <span className="text-xs text-text-tertiary w-10 text-right">
                                 {percentage}%
                               </span>
                             </div>
@@ -377,10 +377,10 @@ export default function FounderTimecardPage() {
             {/* Burnout Indicator */}
             {burnout && (
               <Section className="mt-6">
-                <Card className={burnout.risk === "critical" || burnout.risk === "high" ? "border-red-200 dark:border-red-800" : ""}>
+                <Card className={burnout.risk === "critical" || burnout.risk === "high" ? "border-error-200 dark:border-error-800" : ""}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <AlertTriangle className={`w-5 h-5 ${burnout.risk === "low" ? "text-green-500" : burnout.risk === "medium" ? "text-amber-500" : "text-red-500"}`} />
+                      <AlertTriangle className={`w-5 h-5 ${burnout.risk === "low" ? "text-success-500" : burnout.risk === "medium" ? "text-warning-500" : "text-error-500"}`} />
                       Burnout Risk: <span className={`px-2 py-0.5 rounded text-xs ${riskColors[burnout.risk]}`}>{burnout.risk.toUpperCase()}</span>
                     </CardTitle>
                   </CardHeader>

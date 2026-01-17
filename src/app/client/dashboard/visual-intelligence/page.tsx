@@ -255,8 +255,8 @@ export default function VisualIntelligencePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-            <Wand2 className="h-6 w-6 text-purple-600" />
+          <div className="p-2 bg-accent-100 dark:bg-accent-900/30 rounded-lg">
+            <Wand2 className="h-6 w-6 text-accent-600" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">Visual Intelligence</h1>
@@ -265,7 +265,7 @@ export default function VisualIntelligencePage() {
             </p>
           </div>
         </div>
-        <Badge className="bg-purple-500">
+        <Badge className="bg-accent-500">
           {mockStats.pending_approval} awaiting approval
         </Badge>
       </div>
@@ -275,7 +275,7 @@ export default function VisualIntelligencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Sparkles className="h-4 w-4 text-purple-500" />
+              <Sparkles className="h-4 w-4 text-accent-500" />
               Total Generated
             </div>
             <div className="text-2xl font-bold mt-1">{mockStats.total_generations}</div>

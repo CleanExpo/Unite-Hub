@@ -110,7 +110,7 @@ export default function FounderSafetyPage() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-bg-raised">
         <div className="text-center">
-          <Shield className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-4 animate-pulse" />
+          <Shield className="w-12 h-12 text-info-600 dark:text-info-400 mx-auto mb-4 animate-pulse" />
           <p className="text-text-secondary">Initializing Safety Command Center...</p>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function FounderSafetyPage() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-bg-raised">
         <div className="text-center">
-          <AlertTriangle className="w-12 h-12 text-orange-600 dark:text-orange-400 mx-auto mb-4" />
+          <AlertTriangle className="w-12 h-12 text-accent-600 dark:text-accent-400 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-text-primary mb-2">Access Denied</h1>
           <p className="text-text-secondary">
             Only workspace owners can access the Safety Command Center
@@ -157,14 +157,14 @@ export default function FounderSafetyPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Shield className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+              <Shield className="w-8 h-8 text-info-600 dark:text-info-400" />
               <h1 className="text-3xl font-bold text-text-primary">
                 Founder Safety Command Center
               </h1>
             </div>
             <button
               onClick={() => setShowInterventionDialog(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-error-600 hover:bg-error-700 text-white rounded-lg font-medium transition-colors"
             >
               <Power className="w-4 h-4" />
               Execute Intervention
@@ -179,14 +179,14 @@ export default function FounderSafetyPage() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {storeError && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start justify-between">
+          <div className="mb-6 p-4 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg flex items-start justify-between">
             <div>
-              <p className="font-medium text-red-900 dark:text-red-300">Error</p>
-              <p className="text-sm text-red-800 dark:text-red-400">{storeError}</p>
+              <p className="font-medium text-error-900 dark:text-error-300">Error</p>
+              <p className="text-sm text-error-800 dark:text-error-400">{storeError}</p>
             </div>
             <button
               onClick={clearError}
-              className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+              className="text-error-600 dark:text-error-400 hover:text-error-700 dark:hover:text-error-300"
             >
               ✕
             </button>
@@ -228,7 +228,7 @@ export default function FounderSafetyPage() {
         <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-bg-card rounded-lg border border-border-subtle max-w-md w-full p-6 space-y-4">
             <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+              <AlertTriangle className="w-5 h-5 text-accent-600 dark:text-accent-400" />
               Execute Intervention
             </h2>
 
@@ -277,7 +277,7 @@ export default function FounderSafetyPage() {
               <button
                 onClick={handleExecuteIntervention}
                 disabled={interventionInProgress || !interventionReason.trim()}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2 bg-error-600 hover:bg-error-700 disabled:bg-error-400 text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {interventionInProgress ? (
                   <>

@@ -80,49 +80,49 @@ throw new Error('Failed to fetch scenario data');
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'error':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-error-100 text-error-800 border-error-200';
       case 'warn':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'bg-warning-100 text-warning-800 border-warning-200';
       case 'info':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-info-100 text-info-800 border-info-200';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-bg-hover text-text-secondary border-border-subtle';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+        return 'bg-success-100 text-success-800 border-success-200';
       case 'running':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-info-100 text-info-800 border-info-200';
       case 'failed':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-error-100 text-error-800 border-error-200';
       case 'pending':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'bg-warning-100 text-warning-800 border-warning-200';
       case 'cancelled':
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-bg-hover text-text-secondary border-border-subtle';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-bg-hover text-text-secondary border-border-subtle';
     }
   };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'outage':
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'bg-error-100 text-error-700 border-error-200';
       case 'schema_drift':
         return 'bg-purple-100 text-purple-700 border-purple-200';
       case 'agent_failure':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'bg-accent-100 text-accent-700 border-orange-200';
       case 'traffic_spike':
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+        return 'bg-warning-100 text-warning-700 border-warning-200';
       case 'security':
         return 'bg-pink-100 text-pink-700 border-pink-200';
       case 'compliance':
         return 'bg-indigo-100 text-indigo-700 border-indigo-200';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-bg-hover text-text-secondary border-border-subtle';
     }
   };
 
@@ -134,9 +134,9 @@ throw new Error('Failed to fetch scenario data');
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">Guardian Scenario Simulator</h1>
         <div className="animate-pulse space-y-4">
-          <div className="h-20 bg-gray-200 rounded"></div>
-          <div className="h-40 bg-gray-200 rounded"></div>
-          <div className="h-60 bg-gray-200 rounded"></div>
+          <div className="h-20 bg-bg-hover rounded"></div>
+          <div className="h-40 bg-bg-hover rounded"></div>
+          <div className="h-60 bg-bg-hover rounded"></div>
         </div>
       </div>
     );
@@ -146,7 +146,7 @@ throw new Error('Failed to fetch scenario data');
     return (
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">Guardian Scenario Simulator</h1>
-        <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded">
+        <div className="bg-error-50 border border-error-200 text-error-800 p-4 rounded">
           Error: {error}
         </div>
       </div>
@@ -157,13 +157,13 @@ throw new Error('Failed to fetch scenario data');
     <div className="p-8 space-y-6">
       <div>
         <h1 className="text-2xl font-bold mb-2">Guardian Scenario Simulator</h1>
-        <p className="text-gray-600">
+        <p className="text-text-muted">
           Browse predefined risk scenarios and inspect simulated runs for outages, schema drift, agent failures, and more
         </p>
       </div>
 
       {scenarios.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 p-8 rounded text-center text-gray-500">
+        <div className="bg-bg-hover border border-border-subtle p-8 rounded text-center text-text-tertiary">
           No Guardian scenarios have been defined yet. Once scenarios are created and runs are executed, they will appear here.
         </div>
       ) : (
@@ -171,32 +171,32 @@ throw new Error('Failed to fetch scenario data');
           {/* Scenarios Panel */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Scenarios</h2>
-            <div className="bg-white border border-gray-200 rounded max-h-[480px] overflow-auto">
+            <div className="bg-bg-card border border-border-subtle rounded max-h-[480px] overflow-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
+                <thead className="bg-bg-hover border-b border-border-subtle sticky top-0">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Name</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Category</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Name</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Category</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-border-subtle">
                   {scenarios.map((scenario) => {
                     const selected = scenario.id === activeScenarioId;
                     return (
                       <tr
                         key={scenario.id}
-                        className={`cursor-pointer hover:bg-gray-50 ${
-                          selected ? 'bg-blue-50' : ''
+                        className={`cursor-pointer hover:bg-bg-hover ${
+                          selected ? 'bg-info-50' : ''
                         }`}
                         onClick={() => load({ scenarioId: selected ? null : scenario.id })}
                       >
                         <td className="px-4 py-3">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-text-primary">
                             {scenario.name}
                           </div>
                           {scenario.description && (
-                            <div className="text-xs text-gray-500 line-clamp-2 mt-1">
+                            <div className="text-xs text-text-tertiary line-clamp-2 mt-1">
                               {scenario.description}
                             </div>
                           )}
@@ -214,8 +214,8 @@ throw new Error('Failed to fetch scenario data');
                           <span
                             className={`inline-block px-2 py-1 rounded text-xs font-medium border ${
                               scenario.is_active
-                                ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                                : 'bg-gray-100 text-gray-700 border-gray-200'
+                                ? 'bg-success-100 text-success-800 border-success-200'
+                                : 'bg-bg-hover text-text-secondary border-border-subtle'
                             }`}
                           >
                             {scenario.is_active ? 'Active' : 'Disabled'}
@@ -229,13 +229,13 @@ throw new Error('Failed to fetch scenario data');
             </div>
 
             {activeScenario && (
-              <div className="bg-white border border-gray-200 rounded p-4 space-y-2">
-                <div className="text-sm font-semibold text-gray-900">Scenario Config</div>
-                <div className="text-xs text-gray-600 space-y-1">
+              <div className="bg-bg-card border border-border-subtle rounded p-4 space-y-2">
+                <div className="text-sm font-semibold text-text-primary">Scenario Config</div>
+                <div className="text-xs text-text-muted space-y-1">
                   <div>Created: {new Date(activeScenario.created_at).toLocaleString()}</div>
                   {activeScenario.created_by && <div>By: {activeScenario.created_by}</div>}
                 </div>
-                <pre className="text-xs text-gray-600 max-h-40 overflow-auto bg-gray-50 p-2 rounded">
+                <pre className="text-xs text-text-muted max-h-40 overflow-auto bg-bg-hover p-2 rounded">
                   {JSON.stringify(activeScenario.config, null, 2)}
                 </pre>
               </div>
@@ -246,35 +246,35 @@ throw new Error('Failed to fetch scenario data');
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Scenario Runs</h2>
             {!activeScenarioId || runs.length === 0 ? (
-              <div className="bg-gray-50 border border-gray-200 p-8 rounded text-center text-gray-500">
+              <div className="bg-bg-hover border border-border-subtle p-8 rounded text-center text-text-tertiary">
                 {!activeScenarioId
                   ? 'Select a scenario to view its runs'
                   : 'No runs executed for this scenario yet'}
               </div>
             ) : (
-              <div className="bg-white border border-gray-200 rounded max-h-[480px] overflow-auto">
+              <div className="bg-bg-card border border-border-subtle rounded max-h-[480px] overflow-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
+                  <thead className="bg-bg-hover border-b border-border-subtle sticky top-0">
                     <tr>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Started</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Summary</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Started</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Status</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Summary</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-border-subtle">
                     {runs.map((run) => {
                       const selected = run.id === activeRunId;
                       return (
                         <tr
                           key={run.id}
-                          className={`cursor-pointer hover:bg-gray-50 ${
-                            selected ? 'bg-blue-50' : ''
+                          className={`cursor-pointer hover:bg-bg-hover ${
+                            selected ? 'bg-info-50' : ''
                           }`}
                           onClick={() =>
                             load({ scenarioId: activeScenarioId, runId: selected ? null : run.id })
                           }
                         >
-                          <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                          <td className="px-4 py-3 text-xs text-text-tertiary whitespace-nowrap">
                             {run.started_at
                               ? new Date(run.started_at).toLocaleString()
                               : new Date(run.created_at).toLocaleString()}
@@ -288,7 +288,7 @@ throw new Error('Failed to fetch scenario data');
                               {run.status}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-xs text-gray-700">
+                          <td className="px-4 py-3 text-xs text-text-secondary">
                             {run.summary || '—'}
                           </td>
                         </tr>
@@ -300,9 +300,9 @@ throw new Error('Failed to fetch scenario data');
             )}
 
             {activeRun && (
-              <div className="bg-white border border-gray-200 rounded p-4 space-y-2">
-                <div className="text-sm font-semibold text-gray-900">Run Metrics</div>
-                <div className="text-xs text-gray-600 space-y-1">
+              <div className="bg-bg-card border border-border-subtle rounded p-4 space-y-2">
+                <div className="text-sm font-semibold text-text-primary">Run Metrics</div>
+                <div className="text-xs text-text-muted space-y-1">
                   <div>Status: {activeRun.status}</div>
                   {activeRun.started_at && (
                     <div>Started: {new Date(activeRun.started_at).toLocaleString()}</div>
@@ -312,7 +312,7 @@ throw new Error('Failed to fetch scenario data');
                   )}
                 </div>
                 {activeRun.metrics && Object.keys(activeRun.metrics).length > 0 && (
-                  <pre className="text-xs text-gray-600 max-h-40 overflow-auto bg-gray-50 p-2 rounded">
+                  <pre className="text-xs text-text-muted max-h-40 overflow-auto bg-bg-hover p-2 rounded">
                     {JSON.stringify(activeRun.metrics, null, 2)}
                   </pre>
                 )}
@@ -324,34 +324,34 @@ throw new Error('Failed to fetch scenario data');
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Run Timeline</h2>
             {!activeRunId || events.length === 0 ? (
-              <div className="bg-gray-50 border border-gray-200 p-8 rounded text-center text-gray-500">
+              <div className="bg-bg-hover border border-border-subtle p-8 rounded text-center text-text-tertiary">
                 {!activeRunId
                   ? 'Select a scenario run to view its timeline'
                   : 'No events captured for this run'}
               </div>
             ) : (
-              <div className="bg-white border border-gray-200 rounded max-h-[520px] overflow-auto">
+              <div className="bg-bg-card border border-border-subtle rounded max-h-[520px] overflow-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
+                  <thead className="bg-bg-hover border-b border-border-subtle sticky top-0">
                     <tr>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Step</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Phase</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Level</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
+                      <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Step</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Phase</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Level</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">
                         Message & Payload
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-border-subtle">
                     {events.map((event) => (
-                      <tr key={event.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap align-top">
+                      <tr key={event.id} className="hover:bg-bg-hover">
+                        <td className="px-4 py-3 text-xs text-text-tertiary whitespace-nowrap align-top">
                           <div>#{event.step_index}</div>
                           <div className="mt-1">
                             {new Date(event.created_at).toLocaleTimeString()}
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-xs text-gray-700 align-top">
+                        <td className="px-4 py-3 text-xs text-text-secondary align-top">
                           {event.phase}
                         </td>
                         <td className="px-4 py-3 text-sm align-top">
@@ -363,10 +363,10 @@ throw new Error('Failed to fetch scenario data');
                             {event.level.toUpperCase()}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-xs text-gray-700 align-top">
+                        <td className="px-4 py-3 text-xs text-text-secondary align-top">
                           <div className="font-medium mb-1">{event.message}</div>
                           {Object.keys(event.payload).length > 0 && (
-                            <pre className="text-xs text-gray-500 max-h-32 overflow-auto bg-gray-50 p-2 rounded">
+                            <pre className="text-xs text-text-tertiary max-h-32 overflow-auto bg-bg-hover p-2 rounded">
                               {JSON.stringify(event.payload, null, 2)}
                             </pre>
                           )}

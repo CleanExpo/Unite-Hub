@@ -180,12 +180,12 @@ export default function FounderRiskCenterPage() {
 
   const getSeverityColor = (severity: RiskSeverity) => {
     const colors = {
-      low: 'bg-blue-500',
-      medium: 'bg-yellow-500',
-      high: 'bg-orange-500',
-      critical: 'bg-red-500',
+      low: 'bg-info-500',
+      medium: 'bg-warning-500',
+      high: 'bg-accent-500',
+      critical: 'bg-error-500',
     };
-    return colors[severity] || 'bg-gray-500';
+    return colors[severity] || 'bg-bg-hover0';
   };
 
   const getSeverityIcon = (severity: RiskSeverity) => {
@@ -233,7 +233,7 @@ export default function FounderRiskCenterPage() {
               <XCircle className="h-4 w-4" />
               <span className="text-sm">Critical Events</span>
             </div>
-            <p className="text-2xl font-bold text-red-500">{summary?.critical_events || 0}</p>
+            <p className="text-2xl font-bold text-error-500">{summary?.critical_events || 0}</p>
           </div>
           <div className="bg-bg-card rounded-xl border border-border-primary p-4">
             <div className="flex items-center gap-2 text-text-tertiary mb-2">
@@ -247,7 +247,7 @@ export default function FounderRiskCenterPage() {
               <AlertTriangle className="h-4 w-4" />
               <span className="text-sm">Policy Violations</span>
             </div>
-            <p className="text-2xl font-bold text-orange-500">{summary?.unresolved_violations || 0}</p>
+            <p className="text-2xl font-bold text-accent-500">{summary?.unresolved_violations || 0}</p>
             <p className="text-sm text-text-tertiary mt-1">
               {summary?.total_violations || 0} total
             </p>
@@ -337,7 +337,7 @@ export default function FounderRiskCenterPage() {
                   <div className="flex gap-3 pt-4 border-t border-border-primary">
                     <button
                       onClick={() => handleResolveEvent(selectedEvent.id)}
-                      className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                      className="flex-1 px-4 py-2 bg-success-500 text-white rounded-lg hover:bg-success-600 transition"
                     >
                       <CheckCircle className="h-4 w-4 inline mr-2" />
                       Resolve Event
@@ -367,7 +367,7 @@ export default function FounderRiskCenterPage() {
                     <h3 className="font-semibold text-text-primary text-sm">{policy.name}</h3>
                     <p className="text-xs text-text-secondary mt-1">{policy.scope}</p>
                     <div className="flex items-center justify-between mt-2">
-                      <span className="px-2 py-1 rounded text-xs bg-green-500/20 text-green-500">
+                      <span className="px-2 py-1 rounded text-xs bg-success-500/20 text-success-500">
                         {policy.status}
                       </span>
                       <span className="text-xs text-text-tertiary">

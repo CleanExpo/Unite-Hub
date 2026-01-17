@@ -182,20 +182,20 @@ export default function RuntimeOrchestratorPage() {
 
   const getSeverityColor = (severity: string) => {
     const colors = {
-      info: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      warning: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-      critical: 'bg-red-500/10 text-red-400 border-red-500/20',
+      info: 'bg-info-500/10 text-info-400 border-info-500/20',
+      warning: 'bg-warning-500/10 text-warning-400 border-warning-500/20',
+      critical: 'bg-error-500/10 text-error-400 border-error-500/20',
     };
     return colors[severity as keyof typeof colors] || colors.info;
   };
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      evaluating: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+      evaluating: 'bg-info-500/10 text-info-400 border-info-500/20',
       executing: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-      completed: 'bg-green-500/10 text-green-400 border-green-500/20',
-      failed: 'bg-red-500/10 text-red-400 border-red-500/20',
-      skipped: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
+      completed: 'bg-success-500/10 text-success-400 border-success-500/20',
+      failed: 'bg-error-500/10 text-error-400 border-error-500/20',
+      skipped: 'bg-bg-hover0/10 text-text-muted border-border/20',
     };
     return colors[status] || colors.evaluating;
   };
@@ -235,7 +235,7 @@ export default function RuntimeOrchestratorPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Critical</span>
-              <AlertTriangle className="w-5 h-5 text-red-400" />
+              <AlertTriangle className="w-5 h-5 text-error-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">{criticalSignals}</div>
             <div className="text-xs text-text-tertiary mt-1">requires attention</div>
@@ -253,7 +253,7 @@ export default function RuntimeOrchestratorPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Safety Mode</span>
-              <Shield className="w-5 h-5 text-green-400" />
+              <Shield className="w-5 h-5 text-success-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">
               {
@@ -340,7 +340,7 @@ export default function RuntimeOrchestratorPage() {
                             {signal.severity}
                           </span>
                           {signal.resolved_at && (
-                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <CheckCircle className="w-4 h-4 text-success-400" />
                           )}
                         </div>
                         <div className="text-sm text-text-secondary mb-2">
@@ -411,8 +411,8 @@ export default function RuntimeOrchestratorPage() {
                           <span
                             className={`px-2 py-0.5 text-xs rounded border ${
                               strategy.evaluation_mode === 'side-effect-free'
-                                ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                                : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                                ? 'bg-success-500/10 text-success-400 border-success-500/20'
+                                : 'bg-warning-500/10 text-warning-400 border-warning-500/20'
                             }`}
                           >
                             {strategy.evaluation_mode}
@@ -429,11 +429,11 @@ export default function RuntimeOrchestratorPage() {
                       </div>
                       <div>
                         {strategy.is_active ? (
-                          <span className="px-3 py-1 text-xs bg-green-500/10 text-green-400 border border-green-500/20 rounded">
+                          <span className="px-3 py-1 text-xs bg-success-500/10 text-success-400 border border-success-500/20 rounded">
                             Active
                           </span>
                         ) : (
-                          <span className="px-3 py-1 text-xs bg-gray-500/10 text-gray-400 border border-gray-500/20 rounded">
+                          <span className="px-3 py-1 text-xs bg-bg-hover0/10 text-text-muted border border-border/20 rounded">
                             Inactive
                           </span>
                         )}
@@ -485,9 +485,9 @@ export default function RuntimeOrchestratorPage() {
                       {run.evaluation_result && (
                         <div className="flex items-center gap-2 text-xs text-text-tertiary">
                           {run.evaluation_result.safe ? (
-                            <CheckCircle className="w-3 h-3 text-green-400" />
+                            <CheckCircle className="w-3 h-3 text-success-400" />
                           ) : (
-                            <AlertTriangle className="w-3 h-3 text-red-400" />
+                            <AlertTriangle className="w-3 h-3 text-error-400" />
                           )}
                           <span>
                             {run.evaluation_result.safe ? 'Safe to execute' : 'Not safe'}
@@ -523,9 +523,9 @@ export default function RuntimeOrchestratorPage() {
                         <div className="p-3 bg-bg-tertiary rounded">
                           <div className="flex items-center gap-2 mb-2">
                             {selectedRun.evaluation_result.safe ? (
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-success-400" />
                             ) : (
-                              <AlertTriangle className="w-4 h-4 text-red-400" />
+                              <AlertTriangle className="w-4 h-4 text-error-400" />
                             )}
                             <span className="text-sm text-text-primary">
                               {selectedRun.evaluation_result.safe
@@ -551,7 +551,7 @@ export default function RuntimeOrchestratorPage() {
                               <ul className="space-y-1">
                                 {selectedRun.side_effects_detected.warnings.map((warning, i) => (
                                   <li key={i} className="text-xs text-text-secondary flex gap-2">
-                                    <AlertTriangle className="w-3 h-3 text-yellow-400 mt-0.5" />
+                                    <AlertTriangle className="w-3 h-3 text-warning-400 mt-0.5" />
                                     {warning}
                                   </li>
                                 ))}

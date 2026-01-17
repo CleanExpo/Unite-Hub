@@ -233,10 +233,10 @@ export default function FounderCommandCenterPage() {
   }
 
   const severityColors = {
-    low: 'text-blue-400',
-    medium: 'text-yellow-400',
-    high: 'text-orange-400',
-    critical: 'text-red-400',
+    low: 'text-info-400',
+    medium: 'text-warning-400',
+    high: 'text-accent-400',
+    critical: 'text-error-400',
   };
 
   return (
@@ -274,11 +274,11 @@ export default function FounderCommandCenterPage() {
             </div>
             <div className="rounded-lg bg-bg-card p-4 border border-border-default">
               <div className="text-sm text-text-secondary">Avg Health Score</div>
-              <div className="text-2xl font-bold text-green-400">{summary.avg_health_score.toFixed(1)}/100</div>
+              <div className="text-2xl font-bold text-success-400">{summary.avg_health_score.toFixed(1)}/100</div>
             </div>
             <div className="rounded-lg bg-bg-card p-4 border border-border-default">
               <div className="text-sm text-text-secondary">Critical Alerts</div>
-              <div className="text-2xl font-bold text-red-400">{summary.critical_alerts}</div>
+              <div className="text-2xl font-bold text-error-400">{summary.critical_alerts}</div>
             </div>
           </div>
         )}
@@ -340,9 +340,9 @@ export default function FounderCommandCenterPage() {
                 {insights.trends.map((trend, idx) => (
                   <div key={idx} className="flex items-center gap-2 rounded bg-bg-app px-3 py-1.5 text-sm">
                     <span className="text-text-secondary">{trend.metric}:</span>
-                    {trend.direction === 'up' && <TrendingUp className="h-4 w-4 text-green-400" />}
-                    {trend.direction === 'down' && <TrendingDown className="h-4 w-4 text-red-400" />}
-                    <span className={trend.direction === 'up' ? 'text-green-400' : 'text-red-400'}>
+                    {trend.direction === 'up' && <TrendingUp className="h-4 w-4 text-success-400" />}
+                    {trend.direction === 'down' && <TrendingDown className="h-4 w-4 text-error-400" />}
+                    <span className={trend.direction === 'up' ? 'text-success-400' : 'text-error-400'}>
                       {trend.change_percent > 0 ? '+' : ''}{trend.change_percent.toFixed(1)}%
                     </span>
                   </div>
@@ -379,7 +379,7 @@ export default function FounderCommandCenterPage() {
                       e.stopPropagation();
                       deletePanel(panel.id);
                     }}
-                    className="text-text-tertiary hover:text-red-400"
+                    className="text-text-tertiary hover:text-error-400"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -416,7 +416,7 @@ export default function FounderCommandCenterPage() {
                           <h3 className="font-medium text-text-primary">{widget.title || widget.widget_type}</h3>
                           <button
                             onClick={() => removeWidget(widget.id)}
-                            className="text-text-tertiary hover:text-red-400"
+                            className="text-text-tertiary hover:text-error-400"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>

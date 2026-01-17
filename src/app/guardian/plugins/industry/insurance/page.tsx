@@ -69,8 +69,8 @@ export default function InsuranceOpsPage({
   if (error) {
     return (
       <div className="w-full h-screen bg-bg-card p-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <div className="flex items-center gap-3 text-red-800">
+        <div className="bg-error-50 border border-error-200 rounded-lg p-6">
+          <div className="flex items-center gap-3 text-error-800">
             <AlertTriangle size={20} />
             <span className="font-medium">{error}</span>
           </div>
@@ -86,13 +86,13 @@ export default function InsuranceOpsPage({
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'high':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-error-100 text-error-800 border-error-300';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return 'bg-warning-100 text-warning-800 border-warning-300';
       case 'low':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'bg-info-100 text-info-800 border-info-300';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return 'bg-bg-hover text-text-secondary border-border';
     }
   };
 
@@ -111,10 +111,10 @@ export default function InsuranceOpsPage({
 
   const getTrendIcon = (trend?: string) => {
     if (trend === 'up') {
-return <TrendingUp size={16} className="text-red-600" />;
+return <TrendingUp size={16} className="text-error-600" />;
 }
     if (trend === 'down') {
-return <TrendingDown size={16} className="text-green-600" />;
+return <TrendingDown size={16} className="text-success-600" />;
 }
     return null;
   };
@@ -122,13 +122,13 @@ return <TrendingDown size={16} className="text-green-600" />;
   const getRiskBadgeColor = (label: string) => {
     switch (label) {
       case 'high':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-error-100 text-error-800 border-error-300';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return 'bg-warning-100 text-warning-800 border-warning-300';
       case 'low':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'bg-success-100 text-success-800 border-success-300';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return 'bg-bg-hover text-text-secondary border-border';
     }
   };
 
@@ -160,28 +160,28 @@ return <TrendingDown size={16} className="text-green-600" />;
               .map((line, idx) => {
                 if (line.startsWith('🔴')) {
                   return (
-                    <div key={idx} className="font-bold text-red-600 mb-2">
+                    <div key={idx} className="font-bold text-error-600 mb-2">
                       {line}
                     </div>
                   );
                 }
                 if (line.startsWith('🟠')) {
                   return (
-                    <div key={idx} className="font-bold text-orange-600 mb-2">
+                    <div key={idx} className="font-bold text-accent-600 mb-2">
                       {line}
                     </div>
                   );
                 }
                 if (line.startsWith('🟡')) {
                   return (
-                    <div key={idx} className="font-bold text-yellow-600 mb-2">
+                    <div key={idx} className="font-bold text-warning-600 mb-2">
                       {line}
                     </div>
                   );
                 }
                 if (line.startsWith('🟢')) {
                   return (
-                    <div key={idx} className="font-bold text-green-600 mb-2">
+                    <div key={idx} className="font-bold text-success-600 mb-2">
                       {line}
                     </div>
                   );
@@ -221,7 +221,7 @@ return <TrendingDown size={16} className="text-green-600" />;
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-bg-card rounded-lg border border-border-light p-4 hover:border-accent-500 transition-colors">
           <div className="flex items-center gap-2 mb-2">
-            <AlertCircle size={18} className="text-orange-500" />
+            <AlertCircle size={18} className="text-accent-500" />
             <span className="text-text-secondary text-sm font-medium">Alerts (24h)</span>
           </div>
           <div className="text-2xl font-bold text-text-primary">{snapshot.totals.alerts}</div>
@@ -229,7 +229,7 @@ return <TrendingDown size={16} className="text-green-600" />;
 
         <div className="bg-bg-card rounded-lg border border-border-light p-4 hover:border-accent-500 transition-colors">
           <div className="flex items-center gap-2 mb-2">
-            <Clock size={18} className="text-blue-500" />
+            <Clock size={18} className="text-info-500" />
             <span className="text-text-secondary text-sm font-medium">Incidents (24h)</span>
           </div>
           <div className="text-2xl font-bold text-text-primary">{snapshot.totals.incidents}</div>
@@ -237,7 +237,7 @@ return <TrendingDown size={16} className="text-green-600" />;
 
         <div className="bg-bg-card rounded-lg border border-border-light p-4 hover:border-accent-500 transition-colors">
           <div className="flex items-center gap-2 mb-2">
-            <Users size={18} className="text-green-500" />
+            <Users size={18} className="text-success-500" />
             <span className="text-text-secondary text-sm font-medium">Correlations (24h)</span>
           </div>
           <div className="text-2xl font-bold text-text-primary">{snapshot.totals.correlations}</div>
@@ -254,12 +254,12 @@ return <TrendingDown size={16} className="text-green-600" />;
 
       {/* High Severity Alert */}
       {snapshot.totals.riskLabel === 'high' && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded">
+        <div className="bg-error-50 border-l-4 border-error-500 p-4 mb-8 rounded">
           <div className="flex items-start gap-3">
-            <AlertTriangle size={24} className="text-red-600 flex-shrink-0 mt-0.5" />
+            <AlertTriangle size={24} className="text-error-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-bold text-red-800 mb-1">High Risk Detected</h3>
-              <p className="text-red-700 text-sm">
+              <h3 className="font-bold text-error-800 mb-1">High Risk Detected</h3>
+              <p className="text-error-700 text-sm">
                 One or more high-severity signals detected. Review operations dashboard and related features.
               </p>
             </div>
@@ -278,7 +278,7 @@ return <TrendingDown size={16} className="text-green-600" />;
 
         {snapshot.signals.length === 0 ? (
           <div className="p-6 text-center text-text-secondary">
-            <CheckCircle size={24} className="mx-auto mb-2 text-green-600" />
+            <CheckCircle size={24} className="mx-auto mb-2 text-success-600" />
             <p>No high-priority signals detected. Operations appear normal.</p>
           </div>
         ) : (
@@ -334,14 +334,14 @@ return <TrendingDown size={16} className="text-green-600" />;
         <div className="bg-bg-card rounded-lg border border-border-light mb-8">
           <div className="p-6 border-b border-border-light">
             <h3 className="font-bold text-text-primary flex items-center gap-2">
-              <AlertCircle size={18} className="text-yellow-600" />
+              <AlertCircle size={18} className="text-warning-600" />
               Data Quality Notes
             </h3>
           </div>
           <ul className="p-6 space-y-2">
             {snapshot.warnings.map((w, idx) => (
               <li key={idx} className="text-sm text-text-secondary flex items-start gap-2">
-                <span className="text-yellow-600 font-bold mt-0.5">•</span>
+                <span className="text-warning-600 font-bold mt-0.5">•</span>
                 <span>{w}</span>
               </li>
             ))}

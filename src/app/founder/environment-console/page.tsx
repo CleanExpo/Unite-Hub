@@ -181,22 +181,22 @@ export default function EnvironmentConsole() {
 
   const getScoreBadgeColor = (score: number) => {
     if (score >= 75) {
-return 'bg-green-500';
+return 'bg-success-500';
 }
     if (score >= 50) {
-return 'bg-yellow-500';
+return 'bg-warning-500';
 }
-    return 'bg-red-500';
+    return 'bg-error-500';
   };
 
   const getSeverityIcon = (severity: string) => {
     if (severity === 'high') {
-return <AlertCircle className="w-4 h-4 text-red-500" />;
+return <AlertCircle className="w-4 h-4 text-error-500" />;
 }
     if (severity === 'medium') {
-return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+return <AlertTriangle className="w-4 h-4 text-warning-500" />;
 }
-    return <CheckCircle2 className="w-4 h-4 text-green-500" />;
+    return <CheckCircle2 className="w-4 h-4 text-success-500" />;
   };
 
   if (loading) {
@@ -204,7 +204,7 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
       <div className="flex items-center justify-center h-screen">
         <Card className="w-96">
           <CardContent className="pt-6 text-center">
-            <p className="text-gray-500">Loading environment data...</p>
+            <p className="text-text-tertiary">Loading environment data...</p>
           </CardContent>
         </Card>
       </div>
@@ -216,39 +216,39 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">Environment Console</h1>
-        <p className="text-gray-600 mt-2">Real-time contextual awareness and environment learning</p>
+        <p className="text-text-muted mt-2">Real-time contextual awareness and environment learning</p>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm font-medium text-gray-600">Captures Today</div>
+            <div className="text-sm font-medium text-text-muted">Captures Today</div>
             <div className="text-2xl font-bold mt-2">{stats.totalCaptures}</div>
-            <div className="text-xs text-gray-500 mt-1">Success rate: {(stats.successRate * 100).toFixed(0)}%</div>
+            <div className="text-xs text-text-tertiary mt-1">Success rate: {(stats.successRate * 100).toFixed(0)}%</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm font-medium text-gray-600">Daily Cost</div>
+            <div className="text-sm font-medium text-text-muted">Daily Cost</div>
             <div className="text-2xl font-bold mt-2">${stats.spentToday.toFixed(2)}</div>
-            <div className="text-xs text-green-600 mt-1">Budget remaining: ${stats.budgetRemaining.toFixed(2)}</div>
+            <div className="text-xs text-success-600 mt-1">Budget remaining: ${stats.budgetRemaining.toFixed(2)}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm font-medium text-gray-600">Environments</div>
+            <div className="text-sm font-medium text-text-muted">Environments</div>
             <div className="text-2xl font-bold mt-2">{profiles.length}</div>
-            <div className="text-xs text-gray-500 mt-1">Learned profiles</div>
+            <div className="text-xs text-text-tertiary mt-1">Learned profiles</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-sm font-medium text-gray-600">Avg Focus Quality</div>
+            <div className="text-sm font-medium text-text-muted">Avg Focus Quality</div>
             <div className="text-2xl font-bold mt-2">
               {Math.round(profiles.reduce((sum, p) => sum + p.focusQualityAverage, 0) / profiles.length)}
             </div>
-            <div className="text-xs text-gray-500 mt-1">Across all environments</div>
+            <div className="text-xs text-text-tertiary mt-1">Across all environments</div>
           </CardContent>
         </Card>
       </div>
@@ -275,23 +275,23 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="text-sm font-medium text-gray-600">Type</div>
+                      <div className="text-sm font-medium text-text-muted">Type</div>
                       <div className="text-lg font-semibold capitalize mt-1">{snapshot.environmentType}</div>
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-gray-600">Activity</div>
+                      <div className="text-sm font-medium text-text-muted">Activity</div>
                       <div className="text-lg font-semibold capitalize mt-1">{snapshot.likelyActivity}</div>
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-gray-600">Cognitive Load</div>
+                      <div className="text-sm font-medium text-text-muted">Cognitive Load</div>
                       <div className="text-lg font-semibold capitalize mt-1">{snapshot.cognitiveLoad}</div>
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-gray-600">Energy Level</div>
+                      <div className="text-sm font-medium text-text-muted">Energy Level</div>
                       <div className="text-lg font-semibold capitalize mt-1">{snapshot.energyLevel}</div>
                     </div>
                   </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">{snapshot.environmentDescription}</p>
+                  <p className="text-text-secondary text-sm leading-relaxed">{snapshot.environmentDescription}</p>
                 </CardContent>
               </Card>
 
@@ -308,7 +308,7 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                         {snapshot.safetyScore}/100
                       </Badge>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-bg-hover rounded-full h-2">
                       <div
                         className={`${getScoreBadgeColor(snapshot.safetyScore)} h-2 rounded-full`}
                         style={{ width: `${snapshot.safetyScore}%` }}
@@ -323,7 +323,7 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                         {snapshot.focusScore}/100
                       </Badge>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-bg-hover rounded-full h-2">
                       <div
                         className={`${getScoreBadgeColor(snapshot.focusScore)} h-2 rounded-full`}
                         style={{ width: `${snapshot.focusScore}%` }}
@@ -338,7 +338,7 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                         {snapshot.socialPressureScore}/100
                       </Badge>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-bg-hover rounded-full h-2">
                       <div
                         className={`${getScoreBadgeColor(100 - snapshot.socialPressureScore)} h-2 rounded-full`}
                         style={{ width: `${snapshot.socialPressureScore}%` }}
@@ -356,11 +356,11 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {snapshot.riskFlags.map((flag, idx) => (
-                      <div key={idx} className="flex gap-3 items-start p-3 bg-red-50 rounded-lg">
+                      <div key={idx} className="flex gap-3 items-start p-3 bg-error-50 rounded-lg">
                         {getSeverityIcon(flag.severity)}
                         <div className="flex-1">
                           <div className="font-medium text-sm capitalize">{flag.type}</div>
-                          <div className="text-xs text-gray-600 mt-1">{flag.description}</div>
+                          <div className="text-xs text-text-muted mt-1">{flag.description}</div>
                         </div>
                       </div>
                     ))}
@@ -376,12 +376,12 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {snapshot.opportunityFlags.map((opp, idx) => (
-                      <div key={idx} className="flex gap-3 items-start p-3 bg-green-50 rounded-lg">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0 mt-1" />
+                      <div key={idx} className="flex gap-3 items-start p-3 bg-success-50 rounded-lg">
+                        <CheckCircle2 className="w-4 h-4 text-success-600 flex-shrink-0 mt-1" />
                         <div className="flex-1">
                           <div className="font-medium text-sm capitalize">{opp.type}</div>
-                          <div className="text-xs text-gray-600 mt-1">{opp.description}</div>
-                          <div className="text-xs font-medium text-green-600 mt-2 capitalize">
+                          <div className="text-xs text-text-muted mt-1">{opp.description}</div>
+                          <div className="text-xs font-medium text-success-600 mt-2 capitalize">
                             {opp.suitability} suitability
                           </div>
                         </div>
@@ -406,23 +406,23 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                 {captureEvents.map((event) => (
                   <div key={event.eventId} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <Camera className="w-5 h-5 text-blue-500" />
+                      <Camera className="w-5 h-5 text-info-500" />
                       <div>
                         <div className="font-medium text-sm">
                           {event.triggerMode.charAt(0).toUpperCase() + event.triggerMode.slice(1)} Capture
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-text-tertiary">
                           {new Date(event.timestamp).toLocaleTimeString()}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       {event.successfulAnalysis ? (
-                        <Badge className="bg-green-500 text-white">Success</Badge>
+                        <Badge className="bg-success-500 text-white">Success</Badge>
                       ) : (
-                        <Badge className="bg-red-500 text-white">Failed</Badge>
+                        <Badge className="bg-error-500 text-white">Failed</Badge>
                       )}
-                      <div className="text-xs text-gray-500">${event.estimatedCost.toFixed(3)}</div>
+                      <div className="text-xs text-text-tertiary">${event.estimatedCost.toFixed(3)}</div>
                     </div>
                   </div>
                 ))}
@@ -473,7 +473,7 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                       <span className="text-sm font-medium">Focus Quality</span>
                       <span className="text-lg font-bold">{profile.focusQualityAverage}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-bg-hover rounded-full h-2">
                       <div
                         className={`${getScoreBadgeColor(profile.focusQualityAverage)} h-2 rounded-full`}
                         style={{ width: `${profile.focusQualityAverage}%` }}
@@ -487,9 +487,9 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                       <span className="text-sm font-medium">Confidence</span>
                       <span className="text-sm font-semibold">{(profile.confidenceScore * 100).toFixed(0)}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-bg-hover rounded-full h-2">
                       <div
-                        className="bg-blue-500 h-2 rounded-full"
+                        className="bg-info-500 h-2 rounded-full"
                         style={{ width: `${profile.confidenceScore * 100}%` }}
                       />
                     </div>
@@ -506,9 +506,9 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                         <Badge className="bg-pink-100 text-pink-800">Creative</Badge>
                       )}
                       {profile.communicationOptimal && (
-                        <Badge className="bg-blue-100 text-blue-800">Communication</Badge>
+                        <Badge className="bg-info-100 text-info-800">Communication</Badge>
                       )}
-                      {profile.restOptimal && <Badge className="bg-green-100 text-green-800">Rest</Badge>}
+                      {profile.restOptimal && <Badge className="bg-success-100 text-success-800">Rest</Badge>}
                     </div>
                   </div>
                 </CardContent>
@@ -531,31 +531,31 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <h3 className="font-semibold">{profile.displayName}</h3>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-text-tertiary mt-1">
                           {profile.sampleSize} sessions tracked
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-blue-600">{profile.focusQualityAverage}%</div>
-                        <div className="text-xs text-gray-500">Focus quality</div>
+                        <div className="text-2xl font-bold text-info-600">{profile.focusQualityAverage}%</div>
+                        <div className="text-xs text-text-tertiary">Focus quality</div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="bg-gray-50 p-2 rounded">
-                        <div className="text-gray-600">Best Time</div>
+                      <div className="bg-bg-hover p-2 rounded">
+                        <div className="text-text-muted">Best Time</div>
                         <div className="font-semibold mt-1">9:00 AM - 11:00 AM</div>
                       </div>
-                      <div className="bg-gray-50 p-2 rounded">
-                        <div className="text-gray-600">Avg Duration</div>
+                      <div className="bg-bg-hover p-2 rounded">
+                        <div className="text-text-muted">Avg Duration</div>
                         <div className="font-semibold mt-1">2.5 hours</div>
                       </div>
                     </div>
 
                     {/* Trend Indicator */}
                     <div className="mt-3 flex items-center gap-2 text-sm">
-                      <TrendingUp className="w-4 h-4 text-green-600" />
-                      <span className="text-green-600 font-medium">Improving trend (+5% last week)</span>
+                      <TrendingUp className="w-4 h-4 text-success-600" />
+                      <span className="text-success-600 font-medium">Improving trend (+5% last week)</span>
                     </div>
                   </div>
                 ))}
@@ -569,31 +569,31 @@ return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
               <CardTitle>Key Insights</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex gap-3 items-start p-3 bg-blue-50 rounded-lg">
-                <Eye className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="flex gap-3 items-start p-3 bg-info-50 rounded-lg">
+                <Eye className="w-5 h-5 text-info-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="font-medium text-sm">Peak Productivity</div>
-                  <div className="text-xs text-gray-600 mt-1">
+                  <div className="text-xs text-text-muted mt-1">
                     Office desk is your most productive environment for deep work (82% focus quality)
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-3 items-start p-3 bg-blue-50 rounded-lg">
-                <Zap className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="flex gap-3 items-start p-3 bg-info-50 rounded-lg">
+                <Zap className="w-5 h-5 text-info-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="font-medium text-sm">Energy Pattern</div>
-                  <div className="text-xs text-gray-600 mt-1">
+                  <div className="text-xs text-text-muted mt-1">
                     Best results occur when energy level is "good" or "sharp" (73% success rate)
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-3 items-start p-3 bg-blue-50 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="flex gap-3 items-start p-3 bg-info-50 rounded-lg">
+                <TrendingUp className="w-5 h-5 text-info-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="font-medium text-sm">Recommendation</div>
-                  <div className="text-xs text-gray-600 mt-1">
+                  <div className="text-xs text-text-muted mt-1">
                     Schedule complex tasks at office during morning hours for best outcomes
                   </div>
                 </div>

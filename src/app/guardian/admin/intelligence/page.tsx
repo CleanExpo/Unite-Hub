@@ -268,7 +268,7 @@ throw new Error('Failed to load summary');
       <Card className={!summary.h01?.installed ? 'opacity-60' : ''}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Lightbulb size={20} className="text-yellow-500" />
+            <Lightbulb size={20} className="text-warning-500" />
             H01: Rule Suggestions
           </CardTitle>
           <CardDescription>
@@ -309,7 +309,7 @@ throw new Error('Failed to load summary');
               </Button>
               <Dialog open={confirmAction === 'h01'} onOpenChange={(open) => setConfirmAction(open ? 'h01' : null)}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="w-full bg-yellow-500/20 text-yellow-600 hover:bg-yellow-500/30">
+                  <Button size="sm" className="w-full bg-warning-500/20 text-warning-600 hover:bg-warning-500/30">
                     <Zap size={16} className="mr-2" />
                     Generate Suggestions Now
                   </Button>
@@ -329,7 +329,7 @@ throw new Error('Failed to load summary');
                     <Button
                       onClick={() => handleQuickAction('h01')}
                       disabled={actionLoading === 'h01'}
-                      className="bg-yellow-500 hover:bg-yellow-600"
+                      className="bg-warning-500 hover:bg-warning-600"
                     >
                       {actionLoading === 'h01' ? 'Running...' : 'Confirm'}
                     </Button>
@@ -347,7 +347,7 @@ throw new Error('Failed to load summary');
       <Card className={!summary.h02?.installed ? 'opacity-60' : ''}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <TrendingUp size={20} className="text-orange-500" />
+            <TrendingUp size={20} className="text-accent-500" />
             H02: Anomaly Detection
           </CardTitle>
           <CardDescription>
@@ -362,7 +362,7 @@ throw new Error('Failed to load summary');
                   {Object.entries(summary.h02.by_severity).map(([severity, count]) => (
                     <div key={severity} className="space-y-1">
                       <p className="text-sm capitalize text-text-secondary">{severity}</p>
-                      <p className={`text-xl font-bold ${severity === 'critical' ? 'text-destructive' : severity === 'high' ? 'text-orange-500' : 'text-yellow-500'}`}>
+                      <p className={`text-xl font-bold ${severity === 'critical' ? 'text-destructive' : severity === 'high' ? 'text-accent-500' : 'text-warning-500'}`}>
                         {count}
                       </p>
                     </div>
@@ -394,7 +394,7 @@ throw new Error('Failed to load summary');
               </Button>
               <Dialog open={confirmAction === 'h02'} onOpenChange={(open) => setConfirmAction(open ? 'h02' : null)}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="w-full bg-orange-500/20 text-orange-600 hover:bg-orange-500/30">
+                  <Button size="sm" className="w-full bg-accent-500/20 text-accent-600 hover:bg-accent-500/30">
                     <Zap size={16} className="mr-2" />
                     Run Anomaly Detectors Now
                   </Button>
@@ -414,7 +414,7 @@ throw new Error('Failed to load summary');
                     <Button
                       onClick={() => handleQuickAction('h02')}
                       disabled={actionLoading === 'h02'}
-                      className="bg-orange-500 hover:bg-orange-600"
+                      className="bg-accent-500 hover:bg-accent-600"
                     >
                       {actionLoading === 'h02' ? 'Running...' : 'Confirm'}
                     </Button>
@@ -482,7 +482,7 @@ throw new Error('Failed to load summary');
       <Card className={!summary.h04?.installed ? 'opacity-60' : ''}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BarChart3 size={20} className="text-blue-500" />
+            <BarChart3 size={20} className="text-info-500" />
             H04: Predictive Triage
           </CardTitle>
           <CardDescription>
@@ -497,7 +497,7 @@ throw new Error('Failed to load summary');
                   {Object.entries(summary.h04.open_incidents).map(([band, count]) => (
                     <div key={band} className="space-y-1">
                       <p className="text-sm capitalize text-text-secondary">{band}</p>
-                      <p className={`text-xl font-bold ${band === 'critical' ? 'text-destructive' : band === 'high' ? 'text-orange-500' : 'text-yellow-500'}`}>
+                      <p className={`text-xl font-bold ${band === 'critical' ? 'text-destructive' : band === 'high' ? 'text-accent-500' : 'text-warning-500'}`}>
                         {count}
                       </p>
                     </div>
@@ -525,7 +525,7 @@ throw new Error('Failed to load summary');
               </Button>
               <Dialog open={confirmAction === 'h04'} onOpenChange={(open) => setConfirmAction(open ? 'h04' : null)}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="w-full bg-blue-500/20 text-blue-600 hover:bg-blue-500/30">
+                  <Button size="sm" className="w-full bg-info-500/20 text-info-600 hover:bg-info-500/30">
                     <Zap size={16} className="mr-2" />
                     Run Incident Scoring Now
                   </Button>
@@ -545,7 +545,7 @@ throw new Error('Failed to load summary');
                     <Button
                       onClick={() => handleQuickAction('h04')}
                       disabled={actionLoading === 'h04'}
-                      className="bg-blue-500 hover:bg-blue-600"
+                      className="bg-info-500 hover:bg-info-600"
                     >
                       {actionLoading === 'h04' ? 'Running...' : 'Confirm'}
                     </Button>
@@ -563,7 +563,7 @@ throw new Error('Failed to load summary');
       <Card className={!summary.h05?.installed ? 'opacity-60' : ''}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Lock size={20} className="text-green-500" />
+            <Lock size={20} className="text-success-500" />
             H05: Governance Coach
           </CardTitle>
           <CardDescription>
@@ -587,7 +587,7 @@ throw new Error('Failed to load summary');
               )}
               <div className="space-y-1">
                 <p className="text-sm text-text-secondary">Open Actions</p>
-                <p className="text-2xl font-bold text-green-500">{summary.h05.open_actions_count}</p>
+                <p className="text-2xl font-bold text-success-500">{summary.h05.open_actions_count}</p>
               </div>
               {summary.h05.last_applied_at && (
                 <p className="text-xs text-text-secondary">Last applied: {new Date(summary.h05.last_applied_at).toLocaleDateString()}</p>

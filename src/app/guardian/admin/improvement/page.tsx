@@ -255,26 +255,26 @@ export default function ImprovementLoopPage() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'critical':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-100 text-error-800';
       case 'high':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-accent-100 text-accent-800';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'active':
-        return <Zap className="w-4 h-4 text-green-600" />;
+        return <Zap className="w-4 h-4 text-success-600" />;
       case 'done':
-        return <CheckCircle2 className="w-4 h-4 text-green-600" />;
+        return <CheckCircle2 className="w-4 h-4 text-success-600" />;
       case 'in_progress':
-        return <Clock className="w-4 h-4 text-blue-600" />;
+        return <Clock className="w-4 h-4 text-info-600" />;
       case 'blocked':
-        return <AlertTriangle className="w-4 h-4 text-red-600" />;
+        return <AlertTriangle className="w-4 h-4 text-error-600" />;
       default:
         return null;
     }

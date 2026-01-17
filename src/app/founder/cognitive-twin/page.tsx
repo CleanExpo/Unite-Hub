@@ -52,10 +52,10 @@ function PortfolioSummary({ portfolio }: { portfolio: Awaited<ReturnType<typeof 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Warning</CardTitle>
-          <TrendingUp className="h-4 w-4 text-yellow-500" />
+          <TrendingUp className="h-4 w-4 text-warning-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-500">{warningCount}</div>
+          <div className="text-2xl font-bold text-warning-600 dark:text-warning-500">{warningCount}</div>
           <p className="text-xs text-muted-foreground">Monitor closely</p>
         </CardContent>
       </Card>
@@ -63,10 +63,10 @@ function PortfolioSummary({ portfolio }: { portfolio: Awaited<ReturnType<typeof 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Healthy</CardTitle>
-          <TrendingUp className="h-4 w-4 text-green-500" />
+          <TrendingUp className="h-4 w-4 text-success-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-green-600 dark:text-green-500">{healthyCount}</div>
+          <div className="text-2xl font-bold text-success-600 dark:text-success-500">{healthyCount}</div>
           <p className="text-xs text-muted-foreground">Performing well</p>
         </CardContent>
       </Card>
@@ -80,13 +80,13 @@ return null;
 }
 
   return (
-    <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
+    <Card className="border-warning-500 bg-warning-50 dark:bg-warning-950">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-yellow-900 dark:text-yellow-100">
+        <CardTitle className="flex items-center gap-2 text-warning-900 dark:text-warning-100">
           <AlertCircle className="h-5 w-5" />
           {count} Pending Decision{count > 1 ? 's' : ''}
         </CardTitle>
-        <CardDescription className="text-yellow-800 dark:text-yellow-200">
+        <CardDescription className="text-warning-800 dark:text-warning-200">
           You have decisions awaiting your input
         </CardDescription>
       </CardHeader>

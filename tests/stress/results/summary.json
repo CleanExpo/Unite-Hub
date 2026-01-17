@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-01-16T22:04:42.571Z",
+  "category": "all",
+  "duration": 64650.0111,
+  "metrics": {
+    "requests": 345,
+    "failedRequests": 1,
+    "avgResponseTime": 675.1633440579712,
+    "p95ResponseTime": 1096.73966,
+    "p99ResponseTime": 0
+  },
+  "thresholds": {
+    "passed": 0,
+    "failed": 0
+  }
+}

@@ -38,17 +38,17 @@ interface EditionFit {
 }
 
 const TIER_COLORS = {
-  core: 'bg-blue-100 text-blue-800',
-  pro: 'bg-purple-100 text-purple-800',
-  elite: 'bg-amber-100 text-amber-800',
-  custom: 'bg-gray-100 text-gray-800',
+  core: 'bg-info-100 text-info-800',
+  pro: 'bg-info-100 text-info-800',
+  elite: 'bg-warning-100 text-warning-800',
+  custom: 'bg-bg-hover text-text-secondary',
 };
 
 const STATUS_COLORS = {
-  not_started: 'bg-red-100 text-red-800 border-red-300',
-  emerging: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-  aligned: 'bg-green-100 text-green-800 border-green-300',
-  exceeds: 'bg-blue-100 text-blue-800 border-blue-300',
+  not_started: 'bg-error-100 text-error-800 border-error-300',
+  emerging: 'bg-warning-100 text-warning-800 border-warning-300',
+  aligned: 'bg-success-100 text-success-800 border-success-300',
+  exceeds: 'bg-info-100 text-info-800 border-info-300',
 };
 
 export default function EditionsPage() {
@@ -116,7 +116,7 @@ export default function EditionsPage() {
   if (workspaceLoading) {
     return (
       <div className="space-y-6 p-6">
-        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading workspace...</div>
       </div>
     );
   }
@@ -124,9 +124,9 @@ export default function EditionsPage() {
   if (workspaceError || !workspaceId) {
     return (
       <div className="space-y-6 p-6">
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900">{workspaceError || 'No workspace selected'}</p>
+            <p className="text-sm text-error-900">{workspaceError || 'No workspace selected'}</p>
           </CardContent>
         </Card>
       </div>
@@ -136,7 +136,7 @@ export default function EditionsPage() {
   if (loading) {
     return (
       <div className="space-y-6 p-6">
-        <div className="text-center py-12 text-gray-500">Loading editions...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading editions...</div>
       </div>
     );
   }
@@ -154,7 +154,7 @@ export default function EditionsPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Guardian Editions</h1>
-          <p className="text-gray-600 mt-1">Capability packaging & adoption roadmap</p>
+          <p className="text-text-muted mt-1">Capability packaging & adoption roadmap</p>
         </div>
         <Button
           onClick={handleComputeFit}
@@ -166,9 +166,9 @@ export default function EditionsPage() {
       </div>
 
       {/* Advisory Banner */}
-      <Card className="border-blue-200 bg-blue-50">
+      <Card className="border-info-200 bg-info-50">
         <CardContent className="pt-6">
-          <p className="text-sm text-blue-900 flex items-start gap-2">
+          <p className="text-sm text-info-900 flex items-start gap-2">
             <TrendingUp className="w-4 h-4 mt-0.5 shrink-0" />
             <span>
               <strong>Editions are Advisory.</strong> Guardian editions help you plan adoption
@@ -208,7 +208,7 @@ export default function EditionsPage() {
 
               <CardContent className="space-y-4">
                 {/* Description */}
-                <p className="text-sm text-gray-600 line-clamp-2">{edition.description}</p>
+                <p className="text-sm text-text-muted line-clamp-2">{edition.description}</p>
 
                 {/* Fit Progress (if computed) */}
                 {fit && (
@@ -222,21 +222,21 @@ export default function EditionsPage() {
                       </Badge>
                     </div>
                     {/* Progress bar */}
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-bg-hover rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
                           fit.status === 'not_started'
-                            ? 'bg-red-500'
+                            ? 'bg-error-500'
                             : fit.status === 'emerging'
-                              ? 'bg-yellow-500'
+                              ? 'bg-warning-500'
                               : fit.status === 'aligned'
-                                ? 'bg-green-500'
-                                : 'bg-blue-500'
+                                ? 'bg-success-500'
+                                : 'bg-info-500'
                         }`}
                         style={{ width: `${fitScore}%` }}
                       />
                     </div>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-text-muted">
                       {fitScore}/100 (Target: {edition.recommendedOverallScore})
                     </p>
                   </div>
@@ -258,16 +258,16 @@ export default function EditionsPage() {
 
               {/* Expanded Details */}
               {expandedEdition === edition.key && fit && (
-                <div className="border-t bg-gray-50 p-4 space-y-4">
+                <div className="border-t bg-bg-hover p-4 space-y-4">
                   {/* Gaps */}
                   {fit.gaps.length > 0 && (
                     <div className="space-y-2">
-                      <h4 className="font-medium text-sm text-gray-900">Gaps to Address</h4>
+                      <h4 className="font-medium text-sm text-text-primary">Gaps to Address</h4>
                       <div className="space-y-2">
                         {fit.gaps.map((gap, idx) => (
-                          <div key={idx} className="text-xs bg-white p-2 rounded border border-gray-200">
-                            <p className="font-medium text-gray-700">{gap.capabilityKey}</p>
-                            <p className="text-gray-600 mt-1">
+                          <div key={idx} className="text-xs bg-bg-card p-2 rounded border border-border">
+                            <p className="font-medium text-text-secondary">{gap.capabilityKey}</p>
+                            <p className="text-text-muted mt-1">
                               {gap.gapType === 'missing'
                                 ? 'Not yet configured'
                                 : `Score: ${gap.currentScore} → Target: ${gap.targetScore}`}
@@ -280,7 +280,7 @@ export default function EditionsPage() {
 
                   {/* Next Steps */}
                   <div className="pt-2">
-                    <p className="text-xs font-medium text-gray-700 mb-2">Next Steps</p>
+                    <p className="text-xs font-medium text-text-secondary mb-2">Next Steps</p>
                     <Button variant="ghost" size="sm" className="w-full text-accent-600 hover:text-accent-700">
                       → Generate Uplift Plan
                     </Button>
@@ -305,10 +305,10 @@ export default function EditionsPage() {
             {editionsWithFits.slice(0, 3).map((ed) => (
               <div key={ed.key} className="p-3 border rounded">
                 <p className="font-medium text-sm mb-1">{ed.label}</p>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-text-muted">
                   {ed.description.split('.')[0]}. Best for: {ed.tier === 'core' ? 'teams starting out' : ed.tier === 'pro' ? 'scaling operations' : 'full-stack monitoring'}.
                 </p>
-                <div className="mt-2 text-xs text-gray-500">
+                <div className="mt-2 text-xs text-text-tertiary">
                   Min score: {ed.minOverallScore} | Target: {ed.recommendedOverallScore}
                 </div>
               </div>
@@ -319,9 +319,9 @@ export default function EditionsPage() {
 
       {/* Error Banner */}
       {error && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900 flex items-start gap-2">
+            <p className="text-sm text-error-900 flex items-start gap-2">
               <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
               {error}
             </p>

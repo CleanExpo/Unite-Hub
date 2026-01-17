@@ -86,11 +86,11 @@ export default function MetaGovernancePage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'ready':
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
+        return <CheckCircle className="w-4 h-4 text-success-600" />;
       case 'partial':
-        return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
+        return <AlertTriangle className="w-4 h-4 text-warning-600" />;
       case 'not_configured':
-        return <XCircle className="w-4 h-4 text-red-600" />;
+        return <XCircle className="w-4 h-4 text-error-600" />;
       default:
         return null;
     }
@@ -99,13 +99,13 @@ export default function MetaGovernancePage() {
   const getOverallStatusColor = (status: string) => {
     switch (status) {
       case 'recommended':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'bg-success-100 text-success-800 border-success-300';
       case 'limited':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return 'bg-warning-100 text-warning-800 border-warning-300';
       case 'experimental':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-error-100 text-error-800 border-error-300';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
@@ -191,9 +191,9 @@ export default function MetaGovernancePage() {
 
             {/* Blockers, Warnings, Recommendations */}
             {readiness.blockers.length > 0 && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded">
-                <p className="font-semibold text-red-800 text-sm mb-2">Blockers</p>
-                <ul className="list-disc list-inside text-xs text-red-700 space-y-1">
+              <div className="p-3 bg-error-50 border border-error-200 rounded">
+                <p className="font-semibold text-error-800 text-sm mb-2">Blockers</p>
+                <ul className="list-disc list-inside text-xs text-error-700 space-y-1">
                   {readiness.blockers.map((b, i) => (
                     <li key={i}>{b}</li>
                   ))}
@@ -202,9 +202,9 @@ export default function MetaGovernancePage() {
             )}
 
             {readiness.warnings.length > 0 && (
-              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
-                <p className="font-semibold text-yellow-800 text-sm mb-2">Warnings</p>
-                <ul className="list-disc list-inside text-xs text-yellow-700 space-y-1">
+              <div className="p-3 bg-warning-50 border border-warning-200 rounded">
+                <p className="font-semibold text-warning-800 text-sm mb-2">Warnings</p>
+                <ul className="list-disc list-inside text-xs text-warning-700 space-y-1">
                   {readiness.warnings.map((w, i) => (
                     <li key={i}>{w}</li>
                   ))}
@@ -213,9 +213,9 @@ export default function MetaGovernancePage() {
             )}
 
             {readiness.recommendations.length > 0 && (
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded">
-                <p className="font-semibold text-blue-800 text-sm mb-2">Recommendations</p>
-                <ul className="list-disc list-inside text-xs text-blue-700 space-y-1">
+              <div className="p-3 bg-info-50 border border-info-200 rounded">
+                <p className="font-semibold text-info-800 text-sm mb-2">Recommendations</p>
+                <ul className="list-disc list-inside text-xs text-info-700 space-y-1">
                   {readiness.recommendations.map((r, i) => (
                     <li key={i}>{r}</li>
                   ))}
@@ -252,10 +252,10 @@ export default function MetaGovernancePage() {
                   <Badge
                     className={`text-lg px-4 py-2 ${
                       validation.overallStatus === 'pass'
-                        ? 'bg-green-100 text-green-800 border-green-300'
+                        ? 'bg-success-100 text-success-800 border-success-300'
                         : validation.overallStatus === 'warn'
-                        ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-                        : 'bg-red-100 text-red-800 border-red-300'
+                        ? 'bg-warning-100 text-warning-800 border-warning-300'
+                        : 'bg-error-100 text-error-800 border-error-300'
                     }`}
                   >
                     {validation.overallStatus === 'pass'
@@ -273,9 +273,9 @@ export default function MetaGovernancePage() {
 
               {/* Recommendations */}
               {validation.recommendations.length > 0 && (
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded">
-                  <p className="font-semibold text-blue-800 text-sm mb-2">Recommendations</p>
-                  <ul className="list-disc list-inside text-xs text-blue-700 space-y-1">
+                <div className="p-3 bg-info-50 border border-info-200 rounded">
+                  <p className="font-semibold text-info-800 text-sm mb-2">Recommendations</p>
+                  <ul className="list-disc list-inside text-xs text-info-700 space-y-1">
                     {validation.recommendations.map((rec: string, i: number) => (
                       <li key={i}>{rec}</li>
                     ))}
@@ -292,10 +292,10 @@ export default function MetaGovernancePage() {
                       key={i}
                       className={`p-3 rounded border ${
                         check.status === 'pass'
-                          ? 'bg-green-50 border-green-200'
+                          ? 'bg-success-50 border-success-200'
                           : check.status === 'warn'
-                          ? 'bg-yellow-50 border-yellow-200'
-                          : 'bg-red-50 border-red-200'
+                          ? 'bg-warning-50 border-warning-200'
+                          : 'bg-error-50 border-error-200'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -303,10 +303,10 @@ export default function MetaGovernancePage() {
                           <p className="font-semibold text-sm text-text-primary">{check.name}</p>
                           <p className={`text-xs mt-1 ${
                             check.status === 'pass'
-                              ? 'text-green-700'
+                              ? 'text-success-700'
                               : check.status === 'warn'
-                              ? 'text-yellow-700'
-                              : 'text-red-700'
+                              ? 'text-warning-700'
+                              : 'text-error-700'
                           }`}>
                             {check.message}
                           </p>
@@ -428,7 +428,7 @@ export default function MetaGovernancePage() {
             <p className="text-xs text-text-secondary mt-1">Advisory recommendations for Z-series rollout</p>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-3 bg-accent-50 border border-accent-200 rounded">
+            <div className="p-3 bg-accent-50 border-accent-200 rounded">
               <p className="font-semibold text-accent-900 text-sm">{advice.headline}</p>
             </div>
 
@@ -444,9 +444,9 @@ export default function MetaGovernancePage() {
             )}
 
             {advice.cautions && advice.cautions.length > 0 && (
-              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
-                <p className="font-semibold text-yellow-800 text-sm mb-2">Cautions</p>
-                <ul className="list-disc list-inside text-xs text-yellow-700 space-y-1">
+              <div className="p-3 bg-warning-50 border border-warning-200 rounded">
+                <p className="font-semibold text-warning-800 text-sm mb-2">Cautions</p>
+                <ul className="list-disc list-inside text-xs text-warning-700 space-y-1">
                   {advice.cautions.map((caution: string, i: number) => (
                     <li key={i}>{caution}</li>
                   ))}

@@ -20,10 +20,10 @@
  const renderStatus = (status?: string) => {
    const normalized = status ? status.toLowerCase() : "unknown";
    const palette: Record<string, string> = {
-     operational: "bg-emerald-100 text-emerald-800",
-     degraded: "bg-amber-100 text-amber-900",
-     "at-risk": "bg-rose-100 text-rose-800",
-     unknown: "bg-slate-100 text-slate-800",
+     operational: "bg-success-100 text-success-800",
+     degraded: "bg-warning-100 text-warning-900",
+     "at-risk": "bg-error-100 text-error-800",
+     unknown: "bg-bg-hover text-text-secondary",
    };
    return (
      <span
@@ -97,7 +97,7 @@
    if (!workspaceId) {
      return (
        <div className="px-6 py-8 space-y-4">
-         <p className="text-sm text-slate-500">
+         <p className="text-sm text-text-muted">
            Pending workspace selection...
          </p>
        </div>
@@ -107,23 +107,23 @@
    return (
      <div className="px-6 py-8 space-y-6">
        <header className="space-y-2">
-         <p className="text-sm uppercase tracking-[0.2em] text-slate-400">
+         <p className="text-sm uppercase tracking-[0.2em] text-text-tertiary">
            Guardian
          </p>
          <h1 className="text-3xl font-semibold">Executive Overview</h1>
        </header>
 
        {loading && !readiness && (
-         <p className="text-sm text-slate-500">Loading readiness...</p>
+         <p className="text-sm text-text-muted">Loading readiness...</p>
        )}
 
        {error && (
-         <p className="text-sm text-rose-500">Error: {error}</p>
+         <p className="text-sm text-error-500">Error: {error}</p>
        )}
 
        {!readiness && !loading && !error && (
-         <div className="p-4 border border-dashed border-slate-200 rounded-lg bg-slate-50">
-           <p className="text-sm text-slate-500">
+         <div className="p-4 border border-dashed border-border rounded-lg bg-bg-hover">
+           <p className="text-sm text-text-muted">
              No readiness data available yet.
            </p>
          </div>
@@ -133,7 +133,7 @@
          <div className="space-y-5">
            <div className="flex flex-wrap items-center gap-4">
              <div>
-               <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+               <p className="text-xs uppercase tracking-[0.2em] text-text-muted">
                  Overall Awareness
                </p>
                <p className="text-5xl font-bold">
@@ -143,13 +143,13 @@
                </p>
              </div>
              {renderStatus(readiness.overall_status)}
-             <p className="text-xs text-slate-400">
+             <p className="text-xs text-text-tertiary">
                Computed {readiness.computed_at ?? "—"}
              </p>
            </div>
 
            {narrative && (
-             <div className="p-4 rounded-lg bg-slate-900 text-slate-50">
+             <div className="p-4 rounded-lg bg-bg-base text-text-primary">
                <p className="text-sm leading-relaxed">{narrative}</p>
              </div>
            )}
@@ -161,7 +161,7 @@
                  {readiness.capabilities.map((capability) => (
                    <div
                      key={capability.name}
-                     className="p-3 border border-slate-200 rounded-lg bg-white"
+                     className="p-3 border border-border rounded-lg bg-bg-card"
                    >
                      <div className="flex justify-between items-center">
                        <p className="font-medium">{capability.name}</p>
@@ -171,7 +171,7 @@
                        {Math.round(capability.score ?? 0)}
                      </p>
 
-                     <p className="text-sm text-slate-500">
+                     <p className="text-sm text-text-muted">
                        Score measured at {readiness.computed_at ?? "—"}
                      </p>
                    </div>
@@ -179,7 +179,7 @@
                </div>
              </div>
            ) : (
-             <p className="text-sm text-slate-400">
+             <p className="text-sm text-text-tertiary">
                Capability data unavailable for this snapshot.
              </p>
            )}

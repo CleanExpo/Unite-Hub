@@ -58,15 +58,15 @@ export default function WorkloadRegulatorPage() {
   const recommendationColor = (rec: string) => {
     switch (rec) {
       case "increase":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "maintain":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "reduce":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "pause":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "halt":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       default:
         return "bg-bg-subtle text-text-secondary border-border";
     }

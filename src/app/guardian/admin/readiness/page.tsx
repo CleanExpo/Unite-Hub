@@ -54,17 +54,17 @@ interface UpliftPlan {
 }
 
 const STATUS_COLORS = {
-  not_configured: 'bg-red-100 text-red-800',
-  partial: 'bg-yellow-100 text-yellow-800',
-  ready: 'bg-green-100 text-green-800',
-  advanced: 'bg-blue-100 text-blue-800',
+  not_configured: 'bg-error-100 text-error-800',
+  partial: 'bg-warning-100 text-warning-800',
+  ready: 'bg-success-100 text-success-800',
+  advanced: 'bg-info-100 text-info-800',
 };
 
 const OVERALL_STATUS_COLORS = {
-  baseline: 'bg-gray-100 text-gray-800',
-  operational: 'bg-yellow-100 text-yellow-800',
-  mature: 'bg-green-100 text-green-800',
-  network_intelligent: 'bg-blue-100 text-blue-800',
+  baseline: 'bg-bg-hover text-text-secondary',
+  operational: 'bg-warning-100 text-warning-800',
+  mature: 'bg-success-100 text-success-800',
+  network_intelligent: 'bg-info-100 text-info-800',
 };
 
 const OVERALL_STATUS_DESC = {
@@ -196,7 +196,7 @@ export default function GuardianReadinessPage() {
   if (workspaceLoading) {
     return (
       <div className="space-y-6 p-6">
-        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading workspace...</div>
       </div>
     );
   }
@@ -204,9 +204,9 @@ export default function GuardianReadinessPage() {
   if (workspaceError || !workspaceId) {
     return (
       <div className="space-y-6 p-6">
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900">{workspaceError || 'No workspace selected'}</p>
+            <p className="text-sm text-error-900">{workspaceError || 'No workspace selected'}</p>
           </CardContent>
         </Card>
       </div>
@@ -216,7 +216,7 @@ export default function GuardianReadinessPage() {
   if (loading) {
     return (
       <div className="space-y-6 p-6">
-        <div className="text-center py-12 text-gray-500">Loading Guardian readiness...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading Guardian readiness...</div>
       </div>
     );
   }
@@ -224,9 +224,9 @@ export default function GuardianReadinessPage() {
   if (!readiness) {
     return (
       <div className="space-y-6 p-6">
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900">{error || 'Failed to load readiness data'}</p>
+            <p className="text-sm text-error-900">{error || 'Failed to load readiness data'}</p>
           </CardContent>
         </Card>
       </div>
@@ -261,7 +261,7 @@ export default function GuardianReadinessPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Guardian Readiness Dashboard</h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-text-muted mt-1">
             Capability status and tenant maturity assessment
           </p>
         </div>
@@ -271,9 +271,9 @@ export default function GuardianReadinessPage() {
       </div>
 
       {/* Advisory Banner */}
-      <Card className="border-blue-200 bg-blue-50">
+      <Card className="border-info-200 bg-info-50">
         <CardContent className="pt-6">
-          <p className="text-sm text-blue-900 flex items-start gap-2">
+          <p className="text-sm text-info-900 flex items-start gap-2">
             <TrendingUp className="w-4 h-4 mt-0.5 shrink-0" />
             <span>
               <strong>Advisory-Only:</strong> Readiness scores help identify gaps and opportunities for
@@ -299,29 +299,29 @@ export default function GuardianReadinessPage() {
           <div className="flex items-center gap-8">
             <div className="flex-1">
               <div className="text-6xl font-bold text-accent-600">{readiness.overall.score}</div>
-              <p className="text-gray-600 mt-2">Overall Capability Score (0-100)</p>
+              <p className="text-text-muted mt-2">Overall Capability Score (0-100)</p>
             </div>
 
             {/* Status Description */}
             <div className="flex-1 space-y-3">
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-text-primary">
                 {OVERALL_STATUS_DESC[readiness.overall.status]}
               </p>
               <div className="flex gap-2 text-xs">
-                <CheckCircle className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
-                <span className="text-gray-600">Computed at {readiness.computedAt ? new Date(readiness.computedAt).toLocaleString() : 'N/A'}</span>
+                <CheckCircle className="w-4 h-4 text-success-600 shrink-0 mt-0.5" />
+                <span className="text-text-muted">Computed at {readiness.computedAt ? new Date(readiness.computedAt).toLocaleString() : 'N/A'}</span>
               </div>
             </div>
           </div>
 
           {/* Category Breakdown */}
           <div className="pt-4 border-t">
-            <p className="text-sm font-medium text-gray-900 mb-3">Category Scores</p>
+            <p className="text-sm font-medium text-text-primary mb-3">Category Scores</p>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {Object.entries(categoryAverages).map(([cat, score]) => (
-                <div key={cat} className="p-3 bg-gray-50 rounded border">
+                <div key={cat} className="p-3 bg-bg-hover rounded border">
                   <div className="text-2xl font-bold text-accent-600">{score}</div>
-                  <p className="text-xs text-gray-600 mt-1 capitalize">
+                  <p className="text-xs text-text-muted mt-1 capitalize">
                     {cat.replace(/_/g, ' ')}
                   </p>
                 </div>
@@ -338,18 +338,18 @@ export default function GuardianReadinessPage() {
             <CardTitle className="text-lg capitalize">
               {category.replace(/_/g, ' ')}
             </CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-text-muted mt-1">
               {CATEGORY_DESCRIPTIONS[category as keyof typeof CATEGORY_DESCRIPTIONS]}
             </p>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {capabilities.map((cap) => (
-                <div key={cap.key} className="p-4 border rounded hover:bg-gray-50 transition-colors">
+                <div key={cap.key} className="p-4 border rounded hover:bg-bg-hover transition-colors">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
                       <p className="font-medium text-sm">{cap.label}</p>
-                      <p className="text-xs text-gray-600 mt-1">{cap.description}</p>
+                      <p className="text-xs text-text-muted mt-1">{cap.description}</p>
                     </div>
                     <div className="flex items-center gap-2 ml-4">
                       <div className="text-right">
@@ -364,7 +364,7 @@ export default function GuardianReadinessPage() {
                   {/* Details */}
                   {Object.keys(cap.details).length > 0 && (
                     <div className="mt-3 pt-3 border-t text-xs">
-                      <div className="grid grid-cols-2 gap-2 text-gray-600">
+                      <div className="grid grid-cols-2 gap-2 text-text-muted">
                         {Object.entries(cap.details).map(([key, value]) => (
                           <div key={key}>
                             <span className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>{' '}
@@ -403,7 +403,7 @@ export default function GuardianReadinessPage() {
               {expandedPlanId === 'list' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </Button>
           </div>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-text-muted mt-1">
             AI-generated adoption plans tailored to your readiness level. Generate actionable tasks to advance Guardian maturity.
           </p>
         </CardHeader>
@@ -411,7 +411,7 @@ export default function GuardianReadinessPage() {
         {(expandedPlanId === 'list' || upliftPlans.length > 0) && (
           <CardContent className="space-y-4">
             {/* Advisory Banner */}
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-900">
+            <div className="p-3 bg-info-50 border border-info-200 rounded text-xs text-info-900">
               <strong>Advisory-Only:</strong> Uplift plans are suggestions for improving Guardian adoption. Implementation is entirely optional and under your control.
             </div>
 
@@ -432,7 +432,7 @@ export default function GuardianReadinessPage() {
 
             {/* Plans List */}
             {upliftPlans.length === 0 && !plansLoading ? (
-              <div className="p-6 text-center text-gray-600 text-sm">
+              <div className="p-6 text-center text-text-muted text-sm">
                 <p>No uplift plans yet. Generate one to get started.</p>
               </div>
             ) : (
@@ -440,35 +440,35 @@ export default function GuardianReadinessPage() {
                 {upliftPlans.map((plan) => (
                   <div
                     key={plan.id}
-                    className="border rounded-lg overflow-hidden bg-gray-50 hover:bg-white transition-colors"
+                    className="border rounded-lg overflow-hidden bg-bg-hover hover:bg-white transition-colors"
                   >
                     {/* Plan Header */}
                     <div
-                      className="p-4 flex justify-between items-start cursor-pointer hover:bg-gray-100"
+                      className="p-4 flex justify-between items-start cursor-pointer hover:bg-bg-hover"
                       onClick={() => setExpandedPlanId(expandedPlanId === plan.id ? null : plan.id)}
                     >
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h4 className="font-medium">{plan.name}</h4>
                           <Badge className={`text-xs ${
-                            plan.status === 'draft' ? 'bg-gray-200 text-gray-800' :
-                            plan.status === 'active' ? 'bg-green-200 text-green-800' :
-                            plan.status === 'completed' ? 'bg-blue-200 text-blue-800' :
-                            'bg-gray-300 text-gray-900'
+                            plan.status === 'draft' ? 'bg-bg-hover text-text-secondary' :
+                            plan.status === 'active' ? 'bg-success-200 text-success-800' :
+                            plan.status === 'completed' ? 'bg-info-200 text-info-800' :
+                            'bg-bg-elevated text-text-primary'
                           }`}>
                             {plan.status.replace(/_/g, ' ')}
                           </Badge>
                         </div>
-                        <p className="text-xs text-gray-600">{plan.description}</p>
-                        <div className="mt-2 text-xs text-gray-500">
+                        <p className="text-xs text-text-muted">{plan.description}</p>
+                        <div className="mt-2 text-xs text-text-tertiary">
                           Target: {plan.targetOverallScore} ({plan.targetOverallStatus.replace(/_/g, ' ')}) • {plan.tasks?.length || 0} tasks
                         </div>
                       </div>
                       <div>
                         {expandedPlanId === plan.id ? (
-                          <ChevronUp className="w-5 h-5 text-gray-600" />
+                          <ChevronUp className="w-5 h-5 text-text-muted" />
                         ) : (
-                          <ChevronDown className="w-5 h-5 text-gray-600" />
+                          <ChevronDown className="w-5 h-5 text-text-muted" />
                         )}
                       </div>
                     </div>
@@ -478,20 +478,20 @@ export default function GuardianReadinessPage() {
                       <div className="border-t bg-white">
                         <div className="p-4 space-y-3">
                           {plan.tasks.length === 0 ? (
-                            <p className="text-xs text-gray-600">No tasks in this plan.</p>
+                            <p className="text-xs text-text-muted">No tasks in this plan.</p>
                           ) : (
                             plan.tasks.map((task) => (
-                              <div key={task.id} className="p-3 bg-gray-50 rounded border text-xs space-y-2">
+                              <div key={task.id} className="p-3 bg-bg-hover rounded border text-xs space-y-2">
                                 <div className="flex justify-between items-start">
                                   <div className="flex-1">
                                     <p className="font-medium">{task.title}</p>
-                                    <p className="text-gray-600 text-xs mt-1">{task.description}</p>
+                                    <p className="text-text-muted text-xs mt-1">{task.description}</p>
                                   </div>
                                   <Badge className={`text-xs ml-2 ${
-                                    task.status === 'todo' ? 'bg-gray-200 text-gray-800' :
-                                    task.status === 'in_progress' ? 'bg-blue-200 text-blue-800' :
-                                    task.status === 'blocked' ? 'bg-red-200 text-red-800' :
-                                    'bg-green-200 text-green-800'
+                                    task.status === 'todo' ? 'bg-bg-hover text-text-secondary' :
+                                    task.status === 'in_progress' ? 'bg-info-200 text-info-800' :
+                                    task.status === 'blocked' ? 'bg-error-200 text-error-800' :
+                                    'bg-success-200 text-success-800'
                                   }`}>
                                     {task.status.replace(/_/g, ' ')}
                                   </Badge>
@@ -533,7 +533,7 @@ export default function GuardianReadinessPage() {
 
                                 {/* Hints */}
                                 {task.hints && Object.keys(task.hints).length > 0 && (
-                                  <div className="p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-900">
+                                  <div className="p-2 bg-info-50 border border-info-200 rounded text-xs text-info-900">
                                     <strong>Hints:</strong> {JSON.stringify(task.hints).slice(0, 200)}...
                                   </div>
                                 )}
@@ -552,7 +552,7 @@ export default function GuardianReadinessPage() {
       </Card>
 
       {/* Navigation & Next Steps */}
-      <Card className="border-green-200 bg-green-50">
+      <Card className="border-success-200 bg-success-50">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
@@ -560,10 +560,10 @@ export default function GuardianReadinessPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
-          <p className="text-green-900">
+          <p className="text-success-900">
             Use your readiness score to prioritize Guardian adoption. Areas with lower scores represent opportunities to expand Guardian capabilities:
           </p>
-          <ul className="space-y-2 text-green-900 ml-4">
+          <ul className="space-y-2 text-success-900 ml-4">
             <li>• <strong>Rules & Alerts:</strong> Build and activate rule templates</li>
             <li>• <strong>Risk Scoring:</strong> Enable the risk engine for incident prioritization</li>
             <li>• <strong>QA & Simulation:</strong> Add regression testing to validate rule changes</li>

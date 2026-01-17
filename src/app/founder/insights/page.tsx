@@ -172,22 +172,22 @@ export default function InsightsPage() {
 
   const getInsightIcon = (type: Insight['type']) => {
     if (type === 'positive') {
-return <TrendingUp className="w-5 h-5 text-green-400" />;
+return <TrendingUp className="w-5 h-5 text-success-400" />;
 }
     if (type === 'negative') {
-return <TrendingDown className="w-5 h-5 text-red-400" />;
+return <TrendingDown className="w-5 h-5 text-error-400" />;
 }
-    return <Activity className="w-5 h-5 text-yellow-400" />;
+    return <Activity className="w-5 h-5 text-warning-400" />;
   };
 
   const getInsightColor = (type: Insight['type']) => {
     if (type === 'positive') {
-return 'border-green-500/30 bg-green-500/10';
+return 'border-success-500/30 bg-success-500/10';
 }
     if (type === 'negative') {
-return 'border-red-500/30 bg-red-500/10';
+return 'border-error-500/30 bg-error-500/10';
 }
-    return 'border-yellow-500/30 bg-yellow-500/10';
+    return 'border-warning-500/30 bg-warning-500/10';
   };
 
   if (loading) {
@@ -195,7 +195,7 @@ return 'border-red-500/30 bg-red-500/10';
       <PageContainer>
         <Section>
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-info-500" />
           </div>
         </Section>
       </PageContainer>
@@ -207,8 +207,8 @@ return 'border-red-500/30 bg-red-500/10';
       {/* Header */}
       <Section>
         <div>
-          <h1 className="text-3xl font-bold text-gray-100">AI Insights</h1>
-          <p className="text-gray-400 mt-2">
+          <h1 className="text-3xl font-bold text-text-primary">AI Insights</h1>
+          <p className="text-text-muted mt-2">
             AI-generated insights and recommendations across your business portfolio
           </p>
         </div>
@@ -216,17 +216,17 @@ return 'border-red-500/30 bg-red-500/10';
 
       {/* Filters */}
       <Section>
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
+        <Card className="bg-bg-raised/50 border-border p-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
             <div className="md:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
               <Input
                 type="text"
                 placeholder="Search insights..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-900/50 border-gray-700 text-gray-100"
+                className="pl-10 bg-bg-base/50 border-border text-text-primary"
               />
             </div>
 
@@ -235,7 +235,7 @@ return 'border-red-500/30 bg-red-500/10';
               <select
                 value={selectedBusiness}
                 onChange={(e) => setSelectedBusiness(e.target.value)}
-                className="w-full h-10 px-3 bg-gray-900/50 border border-gray-700 text-gray-100 rounded-md"
+                className="w-full h-10 px-3 bg-bg-base/50 border border-border text-text-primary rounded-md"
               >
                 {businesses.map((business) => (
                   <option key={business.id} value={business.id}>
@@ -252,8 +252,8 @@ return 'border-red-500/30 bg-red-500/10';
                 onClick={() => setShowAcknowledged(!showAcknowledged)}
                 className={
                   showAcknowledged
-                    ? 'w-full border-gray-600'
-                    : 'w-full bg-blue-600 hover:bg-blue-700'
+                    ? 'w-full border-border'
+                    : 'w-full bg-info-600 hover:bg-info-700'
                 }
               >
                 {showAcknowledged ? 'All' : 'Pending Only'}
@@ -266,44 +266,44 @@ return 'border-red-500/30 bg-red-500/10';
       {/* Stats */}
       <Section>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
+          <Card className="bg-bg-raised/50 border-border p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Total Insights</p>
-                <p className="text-2xl font-bold text-gray-100 mt-1">{insights.length}</p>
+                <p className="text-sm text-text-muted">Total Insights</p>
+                <p className="text-2xl font-bold text-text-primary mt-1">{insights.length}</p>
               </div>
-              <Activity className="w-8 h-8 text-blue-400" />
+              <Activity className="w-8 h-8 text-info-400" />
             </div>
           </Card>
 
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
+          <Card className="bg-bg-raised/50 border-border p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Pending</p>
-                <p className="text-2xl font-bold text-yellow-400 mt-1">
+                <p className="text-sm text-text-muted">Pending</p>
+                <p className="text-2xl font-bold text-warning-400 mt-1">
                   {insights.filter((i) => !i.acknowledged).length}
                 </p>
               </div>
-              <Circle className="w-8 h-8 text-yellow-400" />
+              <Circle className="w-8 h-8 text-warning-400" />
             </div>
           </Card>
 
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
+          <Card className="bg-bg-raised/50 border-border p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Actionable</p>
-                <p className="text-2xl font-bold text-green-400 mt-1">
+                <p className="text-sm text-text-muted">Actionable</p>
+                <p className="text-2xl font-bold text-success-400 mt-1">
                   {insights.filter((i) => i.actionable).length}
                 </p>
               </div>
-              <TrendingUp className="w-8 h-8 text-green-400" />
+              <TrendingUp className="w-8 h-8 text-success-400" />
             </div>
           </Card>
 
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
+          <Card className="bg-bg-raised/50 border-border p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">This Week</p>
+                <p className="text-sm text-text-muted">This Week</p>
                 <p className="text-2xl font-bold text-purple-400 mt-1">
                   {insights.filter((i) => i.timestamp.includes('hours') || i.timestamp.includes('day')).length}
                 </p>
@@ -318,10 +318,10 @@ return 'border-red-500/30 bg-red-500/10';
       <Section>
         <div className="space-y-4">
           {filteredInsights.length === 0 ? (
-            <Card className="bg-gray-800/50 border-gray-700 p-12 text-center">
-              <Activity className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-100 mb-2">No insights found</h3>
-              <p className="text-gray-400">
+            <Card className="bg-bg-raised/50 border-border p-12 text-center">
+              <Activity className="w-16 h-16 text-text-muted mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-text-primary mb-2">No insights found</h3>
+              <p className="text-text-muted">
                 {searchQuery
                   ? 'Try adjusting your search or filters'
                   : 'AI Phill will generate insights as signals are detected'}
@@ -339,16 +339,16 @@ return 'border-red-500/30 bg-red-500/10';
                       {getInsightIcon(insight.type)}
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-100">{insight.title}</h3>
+                          <h3 className="text-lg font-semibold text-text-primary">{insight.title}</h3>
                           {insight.actionable && (
-                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs font-medium rounded border border-blue-500/30">
+                            <span className="px-2 py-0.5 bg-info-500/20 text-info-400 text-xs font-medium rounded border border-info-500/30">
                               Actionable
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-300 mb-2">{insight.summary}</p>
-                        <p className="text-sm text-gray-400 mb-4">{insight.details}</p>
-                        <div className="flex items-center space-x-4 text-xs text-gray-500">
+                        <p className="text-sm text-text-secondary mb-2">{insight.summary}</p>
+                        <p className="text-sm text-text-muted mb-4">{insight.details}</p>
+                        <div className="flex items-center space-x-4 text-xs text-text-tertiary">
                           <span className="flex items-center">
                             <Building2 className="w-3 h-3 mr-1" />
                             {insight.businessName}
@@ -370,14 +370,14 @@ return 'border-red-500/30 bg-red-500/10';
                         <Button
                           onClick={() => handleAcknowledge(insight.id)}
                           size="sm"
-                          className="bg-green-600 hover:bg-green-700"
+                          className="bg-success-600 hover:bg-success-700"
                         >
                           <CheckCircle className="w-4 h-4 mr-2" />
                           Acknowledge
                         </Button>
                       )}
                       {insight.acknowledged && (
-                        <span className="flex items-center text-sm text-green-400">
+                        <span className="flex items-center text-sm text-success-400">
                           <CheckCircle className="w-4 h-4 mr-1" />
                           Acknowledged
                         </span>

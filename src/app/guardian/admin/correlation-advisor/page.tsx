@@ -47,16 +47,16 @@ interface Annotation {
 }
 
 const STATUS_COLORS = {
-  new: 'bg-blue-100 text-blue-800',
-  reviewing: 'bg-yellow-100 text-yellow-800',
-  accepted: 'bg-green-100 text-green-800',
-  rejected: 'bg-red-100 text-red-800',
-  applied: 'bg-purple-100 text-purple-800',
+  new: 'bg-info-100 text-info-800',
+  reviewing: 'bg-warning-100 text-warning-800',
+  accepted: 'bg-success-100 text-success-800',
+  rejected: 'bg-error-100 text-error-800',
+  applied: 'bg-info-100 text-info-800',
 };
 
 const SOURCE_COLORS = {
-  ai: 'bg-indigo-100 text-indigo-800',
-  heuristic: 'bg-slate-100 text-slate-800',
+  ai: 'bg-info-100 text-info-800',
+  heuristic: 'bg-bg-hover text-text-secondary',
 };
 
 export default function CorrelationAdvisorPage() {

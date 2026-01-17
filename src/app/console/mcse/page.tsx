@@ -19,37 +19,37 @@ export default function MCSEPage() {
           <Brain className="text-purple-400" size={28} />
           <h1 className="text-3xl font-bold">MCSE</h1>
         </div>
-        <p className="text-gray-400">MAOS Cognitive Supervisor Engine</p>
+        <p className="text-text-muted">MAOS Cognitive Supervisor Engine</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-sm text-gray-400">Validations</div>
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="text-sm text-text-muted">Validations</div>
           <div className="text-3xl font-bold">3,892</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-sm text-gray-400">Avg Logic Score</div>
-          <div className="text-3xl font-bold text-green-400">84%</div>
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="text-sm text-text-muted">Avg Logic Score</div>
+          <div className="text-3xl font-bold text-success-400">84%</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-sm text-gray-400">Hallucination Rate</div>
-          <div className="text-3xl font-bold text-yellow-400">18%</div>
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="text-sm text-text-muted">Hallucination Rate</div>
+          <div className="text-3xl font-bold text-warning-400">18%</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-sm text-gray-400">Valid Outputs</div>
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="text-sm text-text-muted">Valid Outputs</div>
           <div className="text-3xl font-bold">3,654</div>
         </div>
       </div>
 
       {/* Recent Validations */}
-      <div className="bg-gray-800 rounded-lg overflow-hidden">
-        <div className="p-4 border-b border-gray-700">
+      <div className="bg-bg-raised rounded-lg overflow-hidden">
+        <div className="p-4 border-b border-border-subtle">
           <h2 className="text-xl font-semibold">Recent Cognitive Validations</h2>
         </div>
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-700 text-left text-sm text-gray-400">
+            <tr className="border-b border-border-subtle text-left text-sm text-text-muted">
               <th className="p-4">Agent</th>
               <th className="p-4">Logic Score</th>
               <th className="p-4">Hallucination</th>
@@ -59,30 +59,30 @@ export default function MCSEPage() {
           </thead>
           <tbody>
             {validations.map((v) => (
-              <tr key={v.id} className="border-b border-gray-700/50 hover:bg-gray-700/50">
+              <tr key={v.id} className="border-b border-border-subtle/50 hover:bg-bg-hover">
                 <td className="p-4 font-medium">{v.agent}</td>
                 <td className="p-4">
-                  <span className={v.logic_score >= 70 ? 'text-green-400' : 'text-red-400'}>
+                  <span className={v.logic_score >= 70 ? 'text-success-400' : 'text-error-400'}>
                     {v.logic_score}%
                   </span>
                 </td>
                 <td className="p-4">
-                  <span className={v.hallucination_score <= 20 ? 'text-green-400' : 'text-yellow-400'}>
+                  <span className={v.hallucination_score <= 20 ? 'text-success-400' : 'text-warning-400'}>
                     {v.hallucination_score}%
                   </span>
                 </td>
                 <td className="p-4">
                   {v.valid ? (
-                    <span className="flex items-center gap-1 text-green-400">
+                    <span className="flex items-center gap-1 text-success-400">
                       <CheckCircle size={16} /> Valid
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1 text-red-400">
+                    <span className="flex items-center gap-1 text-error-400">
                       <XCircle size={16} /> Invalid
                     </span>
                   )}
                 </td>
-                <td className="p-4 text-gray-500">{v.timestamp}</td>
+                <td className="p-4 text-text-tertiary">{v.timestamp}</td>
               </tr>
             ))}
           </tbody>

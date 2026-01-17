@@ -79,22 +79,22 @@ export default function BillingPage() {
 
   const getStatusIcon = (status: string) => {
     const icons: Record<string, React.ReactNode> = {
-      paid: <CheckCircle2 className="w-5 h-5 text-green-400" />,
-      open: <Clock className="w-5 h-5 text-blue-400" />,
-      overdue: <XCircle className="w-5 h-5 text-red-400" />,
-      draft: <Clock className="w-5 h-5 text-gray-400" />,
-      canceled: <XCircle className="w-5 h-5 text-gray-500" />,
+      paid: <CheckCircle2 className="w-5 h-5 text-success-400" />,
+      open: <Clock className="w-5 h-5 text-info-400" />,
+      overdue: <XCircle className="w-5 h-5 text-error-400" />,
+      draft: <Clock className="w-5 h-5 text-text-muted" />,
+      canceled: <XCircle className="w-5 h-5 text-text-tertiary" />,
     };
     return icons[status] || icons.draft;
   };
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      paid: 'bg-green-500/10 text-green-400',
-      open: 'bg-blue-500/10 text-blue-400',
-      overdue: 'bg-red-500/10 text-red-400',
-      draft: 'bg-gray-500/10 text-gray-400',
-      canceled: 'bg-gray-600/10 text-gray-500',
+      paid: 'bg-success-500/10 text-success-400',
+      open: 'bg-info-500/10 text-info-400',
+      overdue: 'bg-error-500/10 text-error-400',
+      draft: 'bg-bg-hover0/10 text-text-muted',
+      canceled: 'bg-bg-raised/10 text-text-tertiary',
     };
     return colors[status] || colors.draft;
   };
@@ -133,9 +133,9 @@ export default function BillingPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Paid</span>
-              <CheckCircle2 className="w-5 h-5 text-green-400" />
+              <CheckCircle2 className="w-5 h-5 text-success-400" />
             </div>
-            <div className="text-3xl font-bold text-green-400">
+            <div className="text-3xl font-bold text-success-400">
               ${totalPaid.toFixed(2)}
             </div>
             <div className="text-xs text-text-tertiary mt-1">
@@ -146,9 +146,9 @@ export default function BillingPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Outstanding</span>
-              <Clock className="w-5 h-5 text-blue-400" />
+              <Clock className="w-5 h-5 text-info-400" />
             </div>
-            <div className="text-3xl font-bold text-blue-400">
+            <div className="text-3xl font-bold text-info-400">
               ${totalOutstanding.toFixed(2)}
             </div>
             <div className="text-xs text-text-tertiary mt-1">
@@ -270,10 +270,10 @@ export default function BillingPage() {
 
                   {/* Payment Info */}
                   {invoices.find((inv) => inv.id === selectedInvoice)?.paid_at && (
-                    <div className="p-6 bg-green-500/10 rounded-lg border border-green-500/20">
+                    <div className="p-6 bg-success-500/10 rounded-lg border border-success-500/20">
                       <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle2 className="w-5 h-5 text-green-400" />
-                        <span className="font-semibold text-green-400">Paid</span>
+                        <CheckCircle2 className="w-5 h-5 text-success-400" />
+                        <span className="font-semibold text-success-400">Paid</span>
                       </div>
                       <p className="text-xs text-text-secondary">
                         {new Date(

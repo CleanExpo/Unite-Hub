@@ -102,20 +102,20 @@ return;
 
   const getHealthColor = (health: number) => {
     if (health >= 70) {
-return 'text-green-500';
+return 'text-success-500';
 }
     if (health >= 40) {
-return 'text-yellow-500';
+return 'text-warning-500';
 }
     return 'text-destructive';
   };
 
   const getHealthBg = (health: number) => {
     if (health >= 70) {
-return 'bg-green-500';
+return 'bg-success-500';
 }
     if (health >= 40) {
-return 'bg-yellow-500';
+return 'bg-warning-500';
 }
     return 'bg-destructive';
   };
@@ -123,7 +123,7 @@ return 'bg-yellow-500';
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return <TrendingUp className="h-4 w-4 text-green-500" />;
+        return <TrendingUp className="h-4 w-4 text-success-500" />;
       case 'declining':
         return <TrendingDown className="h-4 w-4 text-destructive" />;
       default:
@@ -173,10 +173,10 @@ return 'bg-yellow-500';
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Healthy</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-500" />
+            <CheckCircle className="h-4 w-4 text-success-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-500">{metrics?.healthyCount || 0}</div>
+            <div className="text-2xl font-bold text-success-500">{metrics?.healthyCount || 0}</div>
             <p className="text-xs text-muted-foreground">Performing well</p>
           </CardContent>
         </Card>
@@ -184,10 +184,10 @@ return 'bg-yellow-500';
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Warning</CardTitle>
-            <AlertCircle className="h-4 w-4 text-yellow-500" />
+            <AlertCircle className="h-4 w-4 text-warning-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-500">{metrics?.warningCount || 0}</div>
+            <div className="text-2xl font-bold text-warning-500">{metrics?.warningCount || 0}</div>
             <p className="text-xs text-muted-foreground">Monitor closely</p>
           </CardContent>
         </Card>

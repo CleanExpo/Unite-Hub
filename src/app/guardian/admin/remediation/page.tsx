@@ -118,11 +118,11 @@ throw new Error('Simulation failed');
   const getEffectColor = (effect?: string) => {
     switch (effect) {
       case 'positive':
-        return 'text-green-600 bg-green-50';
+        return 'text-success-600 bg-success-50';
       case 'negative':
-        return 'text-red-600 bg-red-50';
+        return 'text-error-600 bg-error-50';
       default:
-        return 'text-gray-600 bg-gray-50';
+        return 'text-text-secondary bg-bg-hover';
     }
   };
 
@@ -246,9 +246,9 @@ throw new Error('Simulation failed');
                       </div>
                       <div className="flex items-center gap-1">
                         {run.status === 'completed' ? (
-                          <CheckCircle className="w-5 h-5 text-green-600" />
+                          <CheckCircle className="w-5 h-5 text-success-600" />
                         ) : (
-                          <AlertCircle className="w-5 h-5 text-red-600" />
+                          <AlertCircle className="w-5 h-5 text-error-600" />
                         )}
                       </div>
                     </div>

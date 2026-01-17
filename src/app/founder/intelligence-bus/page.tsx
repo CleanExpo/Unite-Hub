@@ -75,17 +75,17 @@ groups[key] = [];
   const getKindBadgeClass = (kind: string) => {
     switch (kind) {
       case "alert":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "anomaly":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "recommendation":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "insight":
         return "bg-purple-500/10 text-purple-400 border-purple-500/20";
       case "forecast":
-        return "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
+        return "bg-cyan-500/10 text-info-400 border-cyan-500/20";
       case "pattern":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       default:
         return "bg-muted text-muted-foreground border-border";
     }
@@ -141,7 +141,7 @@ groups[key] = [];
               <CardTitle className="text-sm text-text-secondary">Alerts</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-red-400">{summary.alerts}</div>
+              <div className="text-3xl font-bold text-error-400">{summary.alerts}</div>
             </CardContent>
           </Card>
 
@@ -150,7 +150,7 @@ groups[key] = [];
               <CardTitle className="text-sm text-text-secondary">Anomalies</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-orange-400">{summary.anomalies}</div>
+              <div className="text-3xl font-bold text-accent-400">{summary.anomalies}</div>
             </CardContent>
           </Card>
         </section>

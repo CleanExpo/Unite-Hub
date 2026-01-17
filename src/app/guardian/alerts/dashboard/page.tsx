@@ -195,12 +195,12 @@ export default function GuardianAlertsDashboardPage() {
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${
                             a.severity === 'critical'
-                              ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                              ? 'bg-error-500/10 text-error-400 border border-error-500/20'
                               : a.severity === 'high'
-                              ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
+                              ? 'bg-accent-500/10 text-accent-400 border border-accent-500/20'
                               : a.severity === 'medium'
-                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                              : 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
+                              ? 'bg-warning-500/10 text-warning-400 border border-warning-500/20'
+                              : 'bg-info-500/10 text-info-400 border border-info-500/20'
                           }`}
                         >
                           {a.severity.toUpperCase()}
@@ -248,10 +248,10 @@ export default function GuardianAlertsDashboardPage() {
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${
                             i.severity === 'critical'
-                              ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                              ? 'bg-error-500/10 text-error-400 border border-error-500/20'
                               : i.severity === 'high'
-                              ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
-                              : 'bg-sky-500/10 text-sky-400 border border-sky-500/20'
+                              ? 'bg-accent-500/10 text-accent-400 border border-accent-500/20'
+                              : 'bg-info-500/10 text-info-400 border border-info-500/20'
                           }`}
                         >
                           {i.severity.toUpperCase()} · {i.status}
@@ -313,9 +313,9 @@ export default function GuardianAlertsDashboardPage() {
                           <span
                             className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${
                               n.status === 'sent'
-                                ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                                ? 'bg-success-500/10 text-success-400 border border-success-500/20'
                                 : n.status === 'failed'
-                                ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                ? 'bg-error-500/10 text-error-400 border border-error-500/20'
                                 : 'bg-muted text-muted-foreground'
                             }`}
                           >

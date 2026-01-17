@@ -223,7 +223,7 @@ return;
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge className="bg-green-500">Active</Badge>;
+        return <Badge className="bg-success-500">Active</Badge>;
       case 'completed':
         return <Badge variant="secondary">Completed</Badge>;
       case 'paused':
@@ -235,13 +235,13 @@ return;
 
   const getFindingTypeBadge = (type: string) => {
     const colors: Record<string, string> = {
-      insight: 'bg-blue-500',
+      insight: 'bg-info-500',
       trend: 'bg-purple-500',
-      opportunity: 'bg-green-500',
-      threat: 'bg-red-500',
-      recommendation: 'bg-amber-500',
+      opportunity: 'bg-success-500',
+      threat: 'bg-error-500',
+      recommendation: 'bg-warning-500',
     };
-    return <Badge className={colors[type] || 'bg-gray-500'}>{type}</Badge>;
+    return <Badge className={colors[type] || 'bg-bg-hover0'}>{type}</Badge>;
   };
 
   if (!tenantId) {
@@ -308,10 +308,10 @@ return;
         <Card className="border-accent-500/20 bg-accent-500/5">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">AI Status</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-500" />
+            <CheckCircle className="h-4 w-4 text-success-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-500">Ready</div>
+            <div className="text-2xl font-bold text-success-500">Ready</div>
             <p className="text-xs text-muted-foreground">Claude Sonnet 4.5</p>
           </CardContent>
         </Card>
@@ -496,7 +496,7 @@ return;
                         onClick={() => toggleStarFinding(finding.id, finding.is_starred)}
                       >
                         {finding.is_starred ? (
-                          <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                          <Star className="h-4 w-4 fill-yellow-500 text-warning-500" />
                         ) : (
                           <StarOff className="h-4 w-4 text-muted-foreground" />
                         )}

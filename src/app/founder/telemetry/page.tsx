@@ -173,11 +173,11 @@ export default function TelemetryPage() {
 
   const getSeverityColor = (severity: TelemetrySeverity) => {
     const colors = {
-      debug: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-      info: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      warning: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-      error: 'bg-red-500/10 text-red-400 border-red-500/20',
-      critical: 'bg-red-500/10 text-red-400 border-red-500/20',
+      debug: 'bg-bg-hover0/10 text-text-muted border-border/20',
+      info: 'bg-info-500/10 text-info-400 border-info-500/20',
+      warning: 'bg-warning-500/10 text-warning-400 border-warning-500/20',
+      error: 'bg-error-500/10 text-error-400 border-error-500/20',
+      critical: 'bg-error-500/10 text-error-400 border-error-500/20',
     };
     return colors[severity] || colors.info;
   };
@@ -216,7 +216,7 @@ export default function TelemetryPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">CPU Usage</span>
-              <Cpu className="w-5 h-5 text-blue-400" />
+              <Cpu className="w-5 h-5 text-info-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">
               {latestSnapshot?.state.cpu_usage || 0}
@@ -228,7 +228,7 @@ export default function TelemetryPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Memory</span>
-              <HardDrive className="w-5 h-5 text-green-400" />
+              <HardDrive className="w-5 h-5 text-success-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">
               {latestSnapshot?.state.memory_usage || 0}
@@ -459,10 +459,10 @@ export default function TelemetryPage() {
                           <div
                             className={`w-3 h-3 rounded-full ${
                               severity === 'critical' || severity === 'error'
-                                ? 'bg-red-400'
+                                ? 'bg-error-400'
                                 : severity === 'warning'
-                                ? 'bg-yellow-400'
-                                : 'bg-blue-400'
+                                ? 'bg-warning-400'
+                                : 'bg-info-400'
                             }`}
                           />
                           <span className="text-text-primary capitalize">{severity}</span>

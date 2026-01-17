@@ -175,17 +175,17 @@ return;
       <Section>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-info-600 to-purple-600 rounded-full flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-100">AI Phill</h1>
-              <p className="text-gray-400 mt-1">Your AI Business Intelligence Advisor</p>
+              <h1 className="text-3xl font-bold text-text-primary">AI Phill</h1>
+              <p className="text-text-muted mt-1">Your AI Business Intelligence Advisor</p>
             </div>
           </div>
           <Button
             onClick={handleGenerateDigest}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            className="bg-gradient-to-r from-info-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
           >
             <FileText className="w-4 h-4 mr-2" />
             Generate Weekly Digest
@@ -198,11 +198,11 @@ return;
         {/* Chat Interface - 2 columns */}
         <div className="lg:col-span-2 space-y-6">
           {/* Chat Messages */}
-          <Card className="bg-gray-800/50 border-gray-700 flex flex-col h-[600px]">
-            <div className="p-4 border-b border-gray-700">
+          <Card className="bg-bg-raised/50 border-border flex flex-col h-[600px]">
+            <div className="p-4 border-b border-border">
               <div className="flex items-center space-x-2">
-                <Bot className="w-5 h-5 text-blue-400" />
-                <h3 className="font-semibold text-gray-100">Chat with AI Phill</h3>
+                <Bot className="w-5 h-5 text-info-400" />
+                <h3 className="font-semibold text-text-primary">Chat with AI Phill</h3>
               </div>
             </div>
 
@@ -221,8 +221,8 @@ return;
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                         message.role === 'user'
-                          ? 'bg-green-600'
-                          : 'bg-gradient-to-br from-blue-600 to-purple-600'
+                          ? 'bg-success-600'
+                          : 'bg-gradient-to-br from-info-600 to-purple-600'
                       }`}
                     >
                       {message.role === 'user' ? (
@@ -234,12 +234,12 @@ return;
                     <div
                       className={`p-3 rounded-lg ${
                         message.role === 'user'
-                          ? 'bg-green-600/20 border border-green-500/30'
-                          : 'bg-gray-700/50 border border-gray-600'
+                          ? 'bg-success-600/20 border border-success-500/30'
+                          : 'bg-bg-elevated/50 border border-border'
                       }`}
                     >
-                      <p className="text-sm text-gray-100">{message.content}</p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-sm text-text-primary">{message.content}</p>
+                      <p className="text-xs text-text-muted mt-1">
                         {message.timestamp.toLocaleTimeString()}
                       </p>
                     </div>
@@ -250,18 +250,18 @@ return;
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="flex items-start space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-info-600 to-purple-600 flex items-center justify-center">
                       <Bot className="w-4 h-4 text-white" />
                     </div>
-                    <div className="bg-gray-700/50 border border-gray-600 p-3 rounded-lg">
+                    <div className="bg-bg-elevated/50 border border-border p-3 rounded-lg">
                       <div className="flex space-x-2">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                        <div className="w-2 h-2 bg-bg-elevated rounded-full animate-bounce" />
                         <div
-                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                          className="w-2 h-2 bg-bg-elevated rounded-full animate-bounce"
                           style={{ animationDelay: '0.1s' }}
                         />
                         <div
-                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                          className="w-2 h-2 bg-bg-elevated rounded-full animate-bounce"
                           style={{ animationDelay: '0.2s' }}
                         />
                       </div>
@@ -272,7 +272,7 @@ return;
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-gray-700">
+            <div className="p-4 border-t border-border">
               <div className="flex items-center space-x-2">
                 <Input
                   type="text"
@@ -280,12 +280,12 @@ return;
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  className="flex-1 bg-gray-900/50 border-gray-700 text-gray-100"
+                  className="flex-1 bg-bg-base/50 border-border text-text-primary"
                 />
                 <Button
                   onClick={handleSendMessage}
                   disabled={!input.trim() || isLoading}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-info-600 hover:bg-info-700"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
@@ -300,7 +300,7 @@ return;
                 key={idx}
                 variant="outline"
                 onClick={() => setInput(prompt)}
-                className="border-gray-700 text-gray-300 hover:bg-gray-800 justify-start text-left h-auto py-3"
+                className="border-border text-text-secondary hover:bg-bg-raised justify-start text-left h-auto py-3"
               >
                 <Lightbulb className="w-4 h-4 mr-2 flex-shrink-0" />
                 <span className="text-sm">{prompt}</span>
@@ -312,26 +312,26 @@ return;
         {/* Sidebar - 1 column */}
         <div className="space-y-6">
           {/* Recent Insights */}
-          <Card className="bg-gray-800/50 border-gray-700">
-            <div className="p-4 border-b border-gray-700">
-              <h3 className="font-semibold text-gray-100 flex items-center">
-                <TrendingUp className="w-4 h-4 mr-2 text-blue-400" />
+          <Card className="bg-bg-raised/50 border-border">
+            <div className="p-4 border-b border-border">
+              <h3 className="font-semibold text-text-primary flex items-center">
+                <TrendingUp className="w-4 h-4 mr-2 text-info-400" />
                 Recent Insights
               </h3>
             </div>
-            <div className="divide-y divide-gray-700">
+            <div className="divide-y divide-border-subtle">
               {insights.slice(0, 5).map((insight) => (
-                <div key={insight.id} className="p-4 hover:bg-gray-800/30 transition-colors">
+                <div key={insight.id} className="p-4 hover:bg-bg-raised/30 transition-colors">
                   <div className="flex items-start justify-between mb-2">
-                    <h4 className="text-sm font-semibold text-gray-100">{insight.title}</h4>
+                    <h4 className="text-sm font-semibold text-text-primary">{insight.title}</h4>
                     {!insight.acknowledged && (
-                      <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1" />
+                      <span className="w-2 h-2 bg-info-500 rounded-full flex-shrink-0 mt-1" />
                     )}
                   </div>
-                  <p className="text-xs text-gray-400 mb-2">{insight.summary}</p>
+                  <p className="text-xs text-text-muted mb-2">{insight.summary}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">{insight.businessName}</span>
-                    <span className="text-xs text-gray-500">{insight.timestamp}</span>
+                    <span className="text-xs text-text-tertiary">{insight.businessName}</span>
+                    <span className="text-xs text-text-tertiary">{insight.timestamp}</span>
                   </div>
                 </div>
               ))}
@@ -339,22 +339,22 @@ return;
           </Card>
 
           {/* Quick Stats */}
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
-            <h3 className="font-semibold text-gray-100 mb-4">This Week</h3>
+          <Card className="bg-bg-raised/50 border-border p-4">
+            <h3 className="font-semibold text-text-primary mb-4">This Week</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">New Insights</span>
-                <span className="text-lg font-bold text-blue-400">
+                <span className="text-sm text-text-muted">New Insights</span>
+                <span className="text-lg font-bold text-info-400">
                   {insights.filter((i) => !i.acknowledged).length}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">Journal Entries</span>
-                <span className="text-lg font-bold text-green-400">{journalEntries.length}</span>
+                <span className="text-sm text-text-muted">Journal Entries</span>
+                <span className="text-lg font-bold text-success-400">{journalEntries.length}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">Avg Health Score</span>
-                <span className="text-lg font-bold text-yellow-400">84</span>
+                <span className="text-sm text-text-muted">Avg Health Score</span>
+                <span className="text-lg font-bold text-warning-400">84</span>
               </div>
             </div>
           </Card>
@@ -364,14 +364,14 @@ return;
       {/* Journal Section */}
       <Section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-100 flex items-center">
+          <h2 className="text-xl font-semibold text-text-primary flex items-center">
             <Calendar className="w-5 h-5 mr-2 text-purple-400" />
             Journal Entries
           </h2>
           <Button
             onClick={() => setShowNewJournal(!showNewJournal)}
             variant="outline"
-            className="border-gray-600"
+            className="border-border"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Entry
@@ -379,27 +379,27 @@ return;
         </div>
 
         {showNewJournal && (
-          <Card className="bg-gray-800/50 border-gray-700 p-6 mb-6">
+          <Card className="bg-bg-raised/50 border-border p-6 mb-6">
             <div className="space-y-4">
               <Input
                 type="text"
                 placeholder="Entry title..."
                 value={journalTitle}
                 onChange={(e) => setJournalTitle(e.target.value)}
-                className="bg-gray-900/50 border-gray-700 text-gray-100"
+                className="bg-bg-base/50 border-border text-text-primary"
               />
               <Textarea
                 placeholder="What's on your mind? Record insights, decisions, or reflections..."
                 value={journalContent}
                 onChange={(e) => setJournalContent(e.target.value)}
                 rows={6}
-                className="bg-gray-900/50 border-gray-700 text-gray-100"
+                className="bg-bg-base/50 border-border text-text-primary"
               />
               <div className="flex items-center justify-end space-x-2">
                 <Button
                   variant="outline"
                   onClick={() => setShowNewJournal(false)}
-                  className="border-gray-600"
+                  className="border-border"
                 >
                   Cancel
                 </Button>
@@ -417,15 +417,15 @@ return;
 
         <div className="space-y-4">
           {journalEntries.map((entry) => (
-            <Card key={entry.id} className="bg-gray-800/50 border-gray-700 p-6">
+            <Card key={entry.id} className="bg-bg-raised/50 border-border p-6">
               <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-semibold text-gray-100">{entry.title}</h3>
-                <span className="text-sm text-gray-500">{entry.timestamp}</span>
+                <h3 className="text-lg font-semibold text-text-primary">{entry.title}</h3>
+                <span className="text-sm text-text-tertiary">{entry.timestamp}</span>
               </div>
-              <p className="text-gray-300 mb-3">{entry.content}</p>
+              <p className="text-text-secondary mb-3">{entry.content}</p>
               {entry.businessName && (
-                <div className="pt-3 border-t border-gray-700">
-                  <span className="text-xs text-gray-400">Related to: {entry.businessName}</span>
+                <div className="pt-3 border-t border-border">
+                  <span className="text-xs text-text-muted">Related to: {entry.businessName}</span>
                 </div>
               )}
             </Card>

@@ -98,8 +98,8 @@ return;
                     <div>Benchmarks: {run.benchmarksUpdated}</div>
                     <div>Cohorts: {run.cohortsProcessed}</div>
                     <div>Insights: {run.insightsDistributed}</div>
-                    <div className="text-green-600">TIBE Pass: {run.tibeValidationsPassed}</div>
-                    <div className="text-red-600">TIBE Fail: {run.tibeValidationsFailed}</div>
+                    <div className="text-success-600">TIBE Pass: {run.tibeValidationsPassed}</div>
+                    <div className="text-error-600">TIBE Fail: {run.tibeValidationsFailed}</div>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
                     Confidence: {(run.confidence * 100).toFixed(0)}%

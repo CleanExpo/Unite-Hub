@@ -197,13 +197,13 @@ export default function ClientDashboardOverview() {
                 Quick Actions
               </h3>
               <div className="space-y-2">
-                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-bg-hover text-sm text-text-secondary">
+                <button className="w-full text-left px-4 py-3 bg-bg-hover rounded-lg hover:bg-bg-elevated text-sm text-text-secondary">
                   Request a new audit
                 </button>
-                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-bg-hover text-sm text-text-secondary">
+                <button className="w-full text-left px-4 py-3 bg-bg-hover rounded-lg hover:bg-bg-elevated text-sm text-text-secondary">
                   Schedule a strategy call
                 </button>
-                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-bg-hover text-sm text-text-secondary">
+                <button className="w-full text-left px-4 py-3 bg-bg-hover rounded-lg hover:bg-bg-elevated text-sm text-text-secondary">
                   View all reports
                 </button>
               </div>

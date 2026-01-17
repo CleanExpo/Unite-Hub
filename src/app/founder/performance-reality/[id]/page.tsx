@@ -122,7 +122,7 @@ export default function SnapshotDetailPage({
             </div>
             <div className="p-4 bg-muted/50 rounded-lg">
               <p className={`text-3xl font-bold ${
-                scoreDelta > 0 ? 'text-green-500' : scoreDelta < 0 ? 'text-red-500' : ''
+                scoreDelta > 0 ? 'text-success-500' : scoreDelta < 0 ? 'text-error-500' : ''
               }`}>
                 {scoreDelta > 0 ? '+' : ''}{Math.round(scoreDelta * 10) / 10}
               </p>
@@ -187,9 +187,9 @@ export default function SnapshotDetailPage({
       </Card>
 
       {/* Truth notice */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <Info className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <Info className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-muted-foreground">
             This analysis is based on {Math.round(snapshot.data_completeness * 100)}%
             of expected data sources. The confidence band ({snapshot.confidence_low}-{snapshot.confidence_high})

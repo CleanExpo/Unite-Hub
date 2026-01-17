@@ -208,7 +208,7 @@ export default function ProjectDetailPage() {
       <div className="space-y-4">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline"
+          className="flex items-center gap-2 text-info-600 dark:text-info-400 hover:underline"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -245,7 +245,7 @@ export default function ProjectDetailPage() {
             Refresh
           </button>
           <button
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-info-600 hover:bg-info-700 text-white rounded-lg font-medium transition-colors"
           >
             <Mail className="w-4 h-4" />
             Send Report
@@ -304,7 +304,7 @@ export default function ProjectDetailPage() {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-3 font-medium border-b-2 transition-colors ${
                 activeTab === tab
-                  ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                  ? 'border-info-600 text-info-600 dark:text-info-400'
                   : 'border-transparent text-text-secondary hover:text-text-primary'
               }`}
             >
@@ -337,7 +337,7 @@ export default function ProjectDetailPage() {
                           href={project.client_website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 dark:text-blue-400 hover:underline"
+                          className="text-info-600 dark:text-info-400 hover:underline"
                         >
                           {project.client_website}
                         </a>
@@ -413,7 +413,7 @@ export default function ProjectDetailPage() {
 
                     <div className="w-full bg-bg-hover rounded-full h-2">
                       <div
-                        className="bg-blue-600 h-2 rounded-full transition-all"
+                        className="bg-info-600 h-2 rounded-full transition-all"
                         style={{ width: `${timeline.completion_percentage}%` }}
                       />
                     </div>

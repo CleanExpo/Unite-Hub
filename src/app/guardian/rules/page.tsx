@@ -301,7 +301,7 @@ export default function GuardianRuleEditorPage() {
                       <span
                         className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${
                           r.is_active
-                            ? 'bg-green-500/10 text-green-400'
+                            ? 'bg-success-500/10 text-success-400'
                             : 'bg-muted text-muted-foreground'
                         }`}
                       >
@@ -428,7 +428,7 @@ export default function GuardianRuleEditorPage() {
             </div>
 
             {aiError && (
-              <div className="rounded-md border border-amber-500/40 bg-amber-500/5 p-3 text-xs text-amber-600">
+              <div className="rounded-md border border-warning-500/40 bg-warning-500/5 p-3 text-xs text-warning-600">
                 {aiError}
               </div>
             )}

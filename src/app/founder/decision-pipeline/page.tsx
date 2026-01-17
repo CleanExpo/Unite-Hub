@@ -87,7 +87,7 @@ return;
                       </div>
                       <Progress
                         value={(value as number) * 100}
-                        className={`h-1.5 ${(value as number) >= 0.8 ? '[&>div]:bg-red-500' : (value as number) >= 0.6 ? '[&>div]:bg-amber-500' : ''}`}
+                        className={`h-1.5 ${(value as number) >= 0.8 ? '[&>div]:bg-error-500' : (value as number) >= 0.6 ? '[&>div]:bg-warning-500' : ''}`}
                       />
                     </div>
                   ))}
@@ -107,7 +107,7 @@ return;
                     <div className="text-xs text-muted-foreground">Completed</div>
                   </div>
                   <div className="bg-muted/50 rounded p-2">
-                    <div className="text-lg font-bold text-red-600">{snapshot.decisionVolume.dropped}</div>
+                    <div className="text-lg font-bold text-error-600">{snapshot.decisionVolume.dropped}</div>
                     <div className="text-xs text-muted-foreground">Dropped</div>
                   </div>
                 </div>
@@ -137,11 +137,11 @@ return;
         </div>
       )}
 
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Pipeline Transparency</div>
               <p>
                 All throttling and dropped decisions are visible here.

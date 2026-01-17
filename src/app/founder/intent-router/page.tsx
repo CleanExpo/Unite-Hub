@@ -78,15 +78,15 @@ export default function IntentRouterPage() {
   const confidenceColor = (confidence: string) => {
     switch (confidence) {
       case "very_high":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "high":
         return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "medium":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "low":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "very_low":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -95,17 +95,17 @@ export default function IntentRouterPage() {
   const statusColor = (status: string) => {
     switch (status) {
       case "completed":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "in_progress":
         return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "routed":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "detected":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "failed":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "cancelled":
-        return "bg-gray-500/10 text-gray-400 border-gray-500/20";
+        return "bg-bg-hover0/10 text-text-muted border-border/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -378,7 +378,7 @@ export default function IntentRouterPage() {
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">High Confidence</div>
-              <div className="text-2xl font-bold text-emerald-400">
+              <div className="text-2xl font-bold text-success-400">
                 {summary.high_confidence_count}
               </div>
             </Card>
@@ -388,7 +388,7 @@ export default function IntentRouterPage() {
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Completed</div>
-              <div className="text-2xl font-bold text-emerald-400">{summary.completed_count}</div>
+              <div className="text-2xl font-bold text-success-400">{summary.completed_count}</div>
             </Card>
           </div>
 

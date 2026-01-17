@@ -226,7 +226,7 @@ export default function FounderFirstClientJourneyPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <TrendingUp className="h-8 w-8 text-green-500" />
+              <TrendingUp className="h-8 w-8 text-success-500" />
               <div>
                 <p className="text-2xl font-bold">{avgProgress}%</p>
                 <p className="text-xs text-muted-foreground">Avg Journey Progress</p>
@@ -238,7 +238,7 @@ export default function FounderFirstClientJourneyPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <Zap className="h-8 w-8 text-blue-500" />
+              <Zap className="h-8 w-8 text-info-500" />
               <div>
                 <p className="text-2xl font-bold">{avgActivationScore}</p>
                 <p className="text-xs text-muted-foreground">Avg Activation Score</p>
@@ -247,10 +247,10 @@ export default function FounderFirstClientJourneyPage() {
           </CardContent>
         </Card>
 
-        <Card className={clientsNeedingAttention > 0 ? 'border-orange-500/50' : ''}>
+        <Card className={clientsNeedingAttention > 0 ? 'border-accent-500/50' : ''}>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <AlertTriangle className={`h-8 w-8 ${clientsNeedingAttention > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
+              <AlertTriangle className={`h-8 w-8 ${clientsNeedingAttention > 0 ? 'text-accent-500' : 'text-muted-foreground'}`} />
               <div>
                 <p className="text-2xl font-bold">{clientsNeedingAttention}</p>
                 <p className="text-xs text-muted-foreground">Need Attention</p>
@@ -297,7 +297,7 @@ export default function FounderFirstClientJourneyPage() {
                 selectedClient === client.clientId
                   ? 'ring-2 ring-primary'
                   : 'hover:bg-muted/50'
-              } ${client.needsAttention ? 'border-orange-500/50' : ''}`}
+              } ${client.needsAttention ? 'border-accent-500/50' : ''}`}
               onClick={() => setSelectedClient(client.clientId)}
             >
               <CardContent className="p-4">
@@ -307,7 +307,7 @@ export default function FounderFirstClientJourneyPage() {
                     <p className="text-xs text-muted-foreground">{client.industry}</p>
                   </div>
                   {client.needsAttention && (
-                    <AlertTriangle className="h-4 w-4 text-orange-500" />
+                    <AlertTriangle className="h-4 w-4 text-accent-500" />
                   )}
                 </div>
                 <JourneyIndicator journeyState={client.journeyState} />

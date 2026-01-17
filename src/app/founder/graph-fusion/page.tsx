@@ -131,10 +131,10 @@ export default function GraphFusionPage() {
 
   const getOperationColor = (operation: string) => {
     const colors = {
-      merge: 'bg-green-500/10 text-green-400 border-green-500/20',
-      conflict: 'bg-red-500/10 text-red-400 border-red-500/20',
-      rollback: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-      validate: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+      merge: 'bg-success-500/10 text-success-400 border-success-500/20',
+      conflict: 'bg-error-500/10 text-error-400 border-error-500/20',
+      rollback: 'bg-warning-500/10 text-warning-400 border-warning-500/20',
+      validate: 'bg-info-500/10 text-info-400 border-info-500/20',
     };
     return colors[operation as keyof typeof colors] || colors.validate;
   };
@@ -178,7 +178,7 @@ export default function GraphFusionPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Fusion Operations</span>
-              <GitMerge className="w-5 h-5 text-green-400" />
+              <GitMerge className="w-5 h-5 text-success-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">{totalLogs}</div>
             <div className="text-xs text-text-tertiary mt-1">{recentMerges} in 24h</div>
@@ -187,7 +187,7 @@ export default function GraphFusionPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Conflicts</span>
-              <AlertTriangle className="w-5 h-5 text-red-400" />
+              <AlertTriangle className="w-5 h-5 text-error-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">{totalConflicts}</div>
             <div className="text-xs text-text-tertiary mt-1">detected</div>
@@ -196,7 +196,7 @@ export default function GraphFusionPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Success Rate</span>
-              <CheckCircle className="w-5 h-5 text-green-400" />
+              <CheckCircle className="w-5 h-5 text-success-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">
               {totalLogs > 0
@@ -260,11 +260,11 @@ export default function GraphFusionPage() {
                         <div className="flex items-center gap-2 mb-2">
                           <span className="font-medium text-text-primary">{source.source}</span>
                           {source.enabled ? (
-                            <span className="px-2 py-0.5 text-xs bg-green-500/10 text-green-400 border border-green-500/20 rounded">
+                            <span className="px-2 py-0.5 text-xs bg-success-500/10 text-success-400 border border-success-500/20 rounded">
                               Active
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 text-xs bg-gray-500/10 text-gray-400 border border-gray-500/20 rounded">
+                            <span className="px-2 py-0.5 text-xs bg-bg-hover0/10 text-text-muted border border-border/20 rounded">
                               Disabled
                             </span>
                           )}
@@ -346,7 +346,7 @@ export default function GraphFusionPage() {
                           <div>Entities: +{log.diff.entities_added}</div>
                           <div>Relationships: +{log.diff.relationships_added}</div>
                           {log.diff.conflicts.length > 0 && (
-                            <div className="text-red-400">
+                            <div className="text-error-400">
                               Conflicts: {log.diff.conflicts.length}
                             </div>
                           )}
@@ -407,7 +407,7 @@ export default function GraphFusionPage() {
                             <ul className="space-y-1">
                               {selectedLog.diff.schema_changes.map((change, i) => (
                                 <li key={i} className="text-xs text-text-secondary flex gap-2">
-                                  <CheckCircle className="w-3 h-3 text-green-400 mt-0.5" />
+                                  <CheckCircle className="w-3 h-3 text-success-400 mt-0.5" />
                                   {change}
                                 </li>
                               ))}
@@ -428,7 +428,7 @@ export default function GraphFusionPage() {
                                   className="p-3 bg-bg-tertiary rounded border border-border-primary"
                                 >
                                   <div className="flex items-start gap-2">
-                                    <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5" />
+                                    <AlertTriangle className="w-4 h-4 text-error-400 mt-0.5" />
                                     <div className="flex-1">
                                       <div className="text-xs text-text-tertiary mb-1">
                                         [{conflict.type}]

@@ -45,10 +45,10 @@ return;
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'resolved': return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'escalated': return <AlertTriangle className="h-4 w-4 text-amber-600" />;
-      case 'dismissed': return <XCircle className="h-4 w-4 text-gray-600" />;
-      default: return <Clock className="h-4 w-4 text-blue-600" />;
+      case 'resolved': return <CheckCircle className="h-4 w-4 text-success-600" />;
+      case 'escalated': return <AlertTriangle className="h-4 w-4 text-warning-600" />;
+      case 'dismissed': return <XCircle className="h-4 w-4 text-text-muted" />;
+      default: return <Clock className="h-4 w-4 text-info-600" />;
     }
   };
 
@@ -139,11 +139,11 @@ return;
       )}
 
       {/* Disclaimer */}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Arbitration Limitations</div>
               <p>
                 Automated arbitration provides recommendations, not final decisions.

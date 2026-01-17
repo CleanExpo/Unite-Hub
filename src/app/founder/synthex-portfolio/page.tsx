@@ -317,8 +317,8 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      <div className="flex items-center justify-center min-h-screen bg-bg-hover">
+        <Loader2 className="w-8 h-8 animate-spin text-info-600" />
       </div>
     );
   }
@@ -328,12 +328,12 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
   // ============================================================================
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-bg-hover">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+      <div className="bg-bg-card border-b border-border-subtle sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-6">
-          <h1 className="text-3xl font-bold text-slate-900">Synthex Portfolio</h1>
-          <p className="text-sm text-slate-600 mt-1">Manage all Synthex customer accounts</p>
+          <h1 className="text-3xl font-bold text-text-primary">Synthex Portfolio</h1>
+          <p className="text-sm text-text-muted mt-1">Manage all Synthex customer accounts</p>
         </div>
       </div>
 
@@ -356,7 +356,7 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{portfolioMetrics.totalTenants}</div>
-                <div className="text-xs text-green-600 mt-2">
+                <div className="text-xs text-success-600 mt-2">
                   {portfolioMetrics.activeTenants} active
                 </div>
               </CardContent>
@@ -371,7 +371,7 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
                 <div className="text-3xl font-bold">
                   ${portfolioMetrics.monthlyRevenue.toFixed(0)}
                 </div>
-                <div className="text-xs text-slate-600 mt-2">AUD</div>
+                <div className="text-xs text-text-muted mt-2">AUD</div>
               </CardContent>
             </Card>
 
@@ -398,15 +398,15 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
             </Card>
 
             {/* Churn Risk */}
-            <Card className={portfolioMetrics.churnRiskCount > 0 ? 'bg-red-50' : ''}>
+            <Card className={portfolioMetrics.churnRiskCount > 0 ? 'bg-error-50' : ''}>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Churn Risk</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-red-600">
+                <div className="text-3xl font-bold text-error-600">
                   {portfolioMetrics.churnRiskCount}
                 </div>
-                <div className="text-xs text-slate-600 mt-2">high risk</div>
+                <div className="text-xs text-text-muted mt-2">high risk</div>
               </CardContent>
             </Card>
           </div>
@@ -415,12 +415,12 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
         {/* Tenants List */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-slate-900">Customer Accounts</h2>
+            <h2 className="text-2xl font-bold text-text-primary">Customer Accounts</h2>
             <div className="flex gap-3">
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white"
+                className="px-3 py-2 border border-border-subtle rounded-lg text-sm bg-bg-card"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
@@ -432,7 +432,7 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white"
+                className="px-3 py-2 border border-border-subtle rounded-lg text-sm bg-bg-card"
               >
                 <option value="health">Sort by Health</option>
                 <option value="revenue">Sort by Revenue</option>
@@ -449,8 +449,8 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
                     <div className="grid md:grid-cols-5 gap-6 items-start">
                       {/* Tenant Info */}
                       <div>
-                        <h3 className="font-semibold text-slate-900">{tenant.businessName}</h3>
-                        <p className="text-sm text-slate-600 mt-1">{tenant.industry}</p>
+                        <h3 className="font-semibold text-text-primary">{tenant.businessName}</h3>
+                        <p className="text-sm text-text-muted mt-1">{tenant.industry}</p>
                         <div className="flex gap-2 mt-2">
                           <Badge variant="outline" className="text-xs">
                             {tenant.region.toUpperCase()}
@@ -458,10 +458,10 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
                           <Badge
                             className={`text-xs ${
                               tenant.status === 'active'
-                                ? 'bg-green-100 text-green-800'
+                                ? 'bg-success-100 text-success-800'
                                 : tenant.status === 'churned'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-yellow-100 text-yellow-800'
+                                  ? 'bg-error-100 text-error-800'
+                                  : 'bg-warning-100 text-warning-800'
                             }`}
                           >
                             {tenant.status}
@@ -471,7 +471,7 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
 
                       {/* Health Score */}
                       <div>
-                        <div className="text-sm text-slate-600 font-medium">Health Score</div>
+                        <div className="text-sm text-text-muted font-medium">Health Score</div>
                         <div className="text-3xl font-bold mt-1">
                           {tenant.metrics.healthScore}
                         </div>
@@ -480,28 +480,28 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
 
                       {/* Job Metrics */}
                       <div>
-                        <div className="text-sm text-slate-600 font-medium">Jobs</div>
+                        <div className="text-sm text-text-muted font-medium">Jobs</div>
                         <div className="text-2xl font-bold mt-1">
                           {tenant.metrics.jobsCompleted}/{tenant.metrics.jobsCreated}
                         </div>
-                        <div className="text-sm text-slate-600 mt-2">
+                        <div className="text-sm text-text-muted mt-2">
                           {Math.round(tenant.metrics.completionRate)}% completed
                         </div>
                       </div>
 
                       {/* Revenue & Churn */}
                       <div>
-                        <div className="text-sm text-slate-600 font-medium">Monthly Revenue</div>
+                        <div className="text-sm text-text-muted font-medium">Monthly Revenue</div>
                         <div className="text-2xl font-bold mt-1">
                           ${tenant.metrics.monthlyRevenue.toFixed(2)}
                         </div>
                         <Badge
                           className={`mt-2 text-xs ${
                             tenant.metrics.churnRisk === 'low'
-                              ? 'bg-green-100 text-green-800'
+                              ? 'bg-success-100 text-success-800'
                               : tenant.metrics.churnRisk === 'medium'
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-red-100 text-red-800'
+                                ? 'bg-warning-100 text-warning-800'
+                                : 'bg-error-100 text-error-800'
                           }`}
                         >
                           {tenant.metrics.churnRisk} risk
@@ -511,7 +511,7 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
                       {/* Actions */}
                       <div className="flex flex-col gap-2">
                         {tenant.metrics.recommendation && (
-                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-800">
+                          <div className="bg-warning-50 border border-warning-200 rounded-lg p-2 text-xs text-warning-800">
                             {tenant.metrics.recommendation}
                           </div>
                         )}
@@ -548,7 +548,7 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
                                 Adjust plan
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                className="text-red-600"
+                                className="text-error-600"
                                 onClick={() => handleSuspendAccount(tenant.id)}
                                 disabled={actionLoading === `suspend-${tenant.id}`}
                               >
@@ -566,9 +566,9 @@ return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
           ) : (
             <Card>
               <CardContent className="pt-12 pb-12 text-center">
-                <Users size={48} className="mx-auto text-slate-300 mb-4" />
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">No accounts found</h3>
-                <p className="text-slate-600">Accounts matching your filters will appear here</p>
+                <Users size={48} className="mx-auto text-text-secondary mb-4" />
+                <h3 className="text-lg font-semibold text-text-primary mb-2">No accounts found</h3>
+                <p className="text-text-muted">Accounts matching your filters will appear here</p>
               </CardContent>
             </Card>
           )}

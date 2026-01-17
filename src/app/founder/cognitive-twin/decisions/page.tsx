@@ -10,15 +10,15 @@ import Link from 'next/link';
 
 function DecisionCard({ decision }: { decision: any }) {
   const statusColors = {
-    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
-    decided: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-    archived: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100',
+    pending: 'bg-warning-100 text-warning-800 dark:bg-warning-900 dark:text-warning-100',
+    decided: 'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-100',
+    archived: 'bg-bg-hover text-text-primary dark:bg-bg-base dark:text-text-primary',
   };
 
   const priorityColors = {
-    high: 'border-red-500',
-    medium: 'border-yellow-500',
-    low: 'border-blue-500',
+    high: 'border-error-500',
+    medium: 'border-warning-500',
+    low: 'border-info-500',
   };
 
   return (
@@ -55,14 +55,14 @@ function DecisionCard({ decision }: { decision: any }) {
           )}
 
           {decision.status === 'decided' && decision.selectedOption && (
-            <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-500">
+            <div className="flex items-center gap-2 text-sm text-success-600 dark:text-success-500">
               <CheckCircle2 className="h-4 w-4" />
               Decided: {decision.selectedOption}
             </div>
           )}
 
           {decision.status === 'pending' && (
-            <div className="flex items-center gap-2 text-sm text-yellow-600 dark:text-yellow-500">
+            <div className="flex items-center gap-2 text-sm text-warning-600 dark:text-warning-500">
               <Clock className="h-4 w-4" />
               Awaiting decision
             </div>
@@ -141,7 +141,7 @@ function DecisionStats({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Pending</CardTitle>
-          <Clock className="h-4 w-4 text-yellow-500" />
+          <Clock className="h-4 w-4 text-warning-500" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{pending}</div>
@@ -152,7 +152,7 @@ function DecisionStats({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Decided</CardTitle>
-          <CheckCircle2 className="h-4 w-4 text-green-500" />
+          <CheckCircle2 className="h-4 w-4 text-success-500" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{decided}</div>

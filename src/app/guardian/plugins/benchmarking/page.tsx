@@ -111,8 +111,8 @@ export default function BenchmarkingDashboard() {
       </div>
 
       {/* Internal Use Watermark */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-        <p className="text-xs text-blue-900 font-semibold">
+      <div className="bg-info-50 border border-info-200 rounded-lg p-3">
+        <p className="text-xs text-info-900 font-semibold">
           🔒 INTERNAL USE ONLY · Anonymised Data · K-Anonymity Enforced (k≥10)
         </p>
       </div>
@@ -137,7 +137,7 @@ export default function BenchmarkingDashboard() {
           </div>
           <div>
             <p className="text-xs text-text-secondary">Privacy</p>
-            <p className="text-lg font-bold text-green-600 mt-1">✓ Verified</p>
+            <p className="text-lg font-bold text-success-600 mt-1">✓ Verified</p>
           </div>
         </div>
       </div>
@@ -188,10 +188,10 @@ export default function BenchmarkingDashboard() {
                       <span
                         className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
                           metric.interpretation === 'elevated'
-                            ? 'bg-orange-100 text-orange-800'
+                            ? 'bg-accent-100 text-accent-800'
                             : metric.interpretation === 'below'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-green-100 text-green-800'
+                              ? 'bg-info-100 text-info-800'
+                              : 'bg-success-100 text-success-800'
                         }`}
                       >
                         {metric.interpretation}
@@ -214,27 +214,27 @@ export default function BenchmarkingDashboard() {
 
       {/* Interpretation Guide */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h3 className="font-semibold text-green-900 flex items-center gap-2 mb-2">
+        <div className="bg-success-50 border border-success-200 rounded-lg p-4">
+          <h3 className="font-semibold text-success-900 flex items-center gap-2 mb-2">
             <span className="text-sm">✓ Typical</span>
           </h3>
-          <p className="text-xs text-green-800">
+          <p className="text-xs text-success-800">
             Within ±15% of cohort median. Operational patterns align with peer baseline.
           </p>
         </div>
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-          <h3 className="font-semibold text-orange-900 flex items-center gap-2 mb-2">
+        <div className="bg-accent-50 border border-accent-200 rounded-lg p-4">
+          <h3 className="font-semibold text-accent-900 flex items-center gap-2 mb-2">
             <span className="text-sm">⚠ Elevated</span>
           </h3>
-          <p className="text-xs text-orange-800">
+          <p className="text-xs text-accent-800">
             &gt;15% above median. May indicate higher operational complexity or resource needs.
           </p>
         </div>
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 flex items-center gap-2 mb-2">
+        <div className="bg-info-50 border border-info-200 rounded-lg p-4">
+          <h3 className="font-semibold text-info-900 flex items-center gap-2 mb-2">
             <span className="text-sm">→ Below</span>
           </h3>
-          <p className="text-xs text-blue-800">
+          <p className="text-xs text-info-800">
             &lt;-15% below median. Indicates lower incident volume or higher stability.
           </p>
         </div>

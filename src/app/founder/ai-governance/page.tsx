@@ -119,21 +119,21 @@ export default function AIGovernancePage() {
 
   const getSeverityColor = (severity: string) => {
     const colors: Record<string, string> = {
-      critical: 'bg-red-500',
-      high: 'bg-orange-500',
-      medium: 'bg-yellow-500',
-      low: 'bg-blue-500',
+      critical: 'bg-error-500',
+      high: 'bg-accent-500',
+      medium: 'bg-warning-500',
+      low: 'bg-info-500',
     };
-    return colors[severity] || 'bg-gray-500';
+    return colors[severity] || 'bg-bg-hover0';
   };
 
   const getEnforcementColor = (level: string) => {
     const colors: Record<string, string> = {
-      blocking: 'text-red-400',
-      warning: 'text-yellow-400',
-      logging: 'text-blue-400',
+      blocking: 'text-error-400',
+      warning: 'text-warning-400',
+      logging: 'text-info-400',
     };
-    return colors[level] || 'text-gray-400';
+    return colors[level] || 'text-text-muted';
   };
 
   return (
@@ -195,9 +195,9 @@ export default function AIGovernancePage() {
                         <p className="text-sm text-text-tertiary mt-1">{policy.category}</p>
                       </div>
                       {policy.is_active ? (
-                        <CheckCircle2 className="w-5 h-5 text-green-400" />
+                        <CheckCircle2 className="w-5 h-5 text-success-400" />
                       ) : (
-                        <XCircle className="w-5 h-5 text-gray-500" />
+                        <XCircle className="w-5 h-5 text-text-tertiary" />
                       )}
                     </div>
                     {policy.description && (
@@ -252,8 +252,8 @@ export default function AIGovernancePage() {
                           <span
                             className={`px-2 py-1 text-xs rounded ${
                               log.status === 'success'
-                                ? 'bg-green-500/10 text-green-400'
-                                : 'bg-red-500/10 text-red-400'
+                                ? 'bg-success-500/10 text-success-400'
+                                : 'bg-error-500/10 text-error-400'
                             }`}
                           >
                             {log.status}
@@ -278,7 +278,7 @@ export default function AIGovernancePage() {
               <div className="text-center py-12 text-text-secondary">Loading violations...</div>
             ) : violations.length === 0 ? (
               <div className="text-center py-12 bg-bg-card rounded-lg border border-border-primary">
-                <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-green-400" />
+                <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-success-400" />
                 <p className="text-text-secondary">No open violations</p>
               </div>
             ) : (
@@ -340,7 +340,7 @@ export default function AIGovernancePage() {
                     {reviewData.compliance_score}
                     <span className="text-2xl text-text-tertiary">/100</span>
                   </div>
-                  <TrendingUp className="w-6 h-6 mx-auto text-green-400" />
+                  <TrendingUp className="w-6 h-6 mx-auto text-success-400" />
                 </div>
 
                 {/* Findings */}

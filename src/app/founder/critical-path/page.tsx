@@ -96,13 +96,13 @@ export default function CriticalPathPage() {
   const getStateBadgeClass = (state: string) => {
     switch (state) {
       case "done":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "in_progress":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "blocked":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "pending":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "skipped":
         return "bg-muted text-muted-foreground border-border";
       default:
@@ -152,7 +152,7 @@ export default function CriticalPathPage() {
               <CardTitle className="text-sm text-text-secondary">In Progress</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-400">
+              <div className="text-3xl font-bold text-info-400">
                 {summary.in_progress_nodes}
               </div>
             </CardContent>
@@ -163,7 +163,7 @@ export default function CriticalPathPage() {
               <CardTitle className="text-sm text-text-secondary">Blocked</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-red-400">{summary.blocked_nodes}</div>
+              <div className="text-3xl font-bold text-error-400">{summary.blocked_nodes}</div>
             </CardContent>
           </Card>
 
@@ -172,7 +172,7 @@ export default function CriticalPathPage() {
               <CardTitle className="text-sm text-text-secondary">Pending</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-amber-400">
+              <div className="text-3xl font-bold text-warning-400">
                 {summary.pending_nodes}
               </div>
             </CardContent>

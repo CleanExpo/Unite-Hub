@@ -192,7 +192,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <FileText className="h-8 w-8 text-blue-500" />
+              <FileText className="h-8 w-8 text-info-500" />
               <div>
                 <p className="text-2xl font-bold">3</p>
                 <p className="text-xs text-muted-foreground">Report Types</p>
@@ -204,7 +204,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="h-8 w-8 text-green-500" />
+              <CheckCircle2 className="h-8 w-8 text-success-500" />
               <div>
                 <p className="text-2xl font-bold">Ready</p>
                 <p className="text-xs text-muted-foreground">For Review</p>
@@ -258,10 +258,10 @@ return;
                     variant="outline"
                     className={
                       currentReport.data_completeness >= 75
-                        ? 'text-green-500 border-green-500/30'
+                        ? 'text-success-500 border-success-500/30'
                         : currentReport.data_completeness >= 40
-                        ? 'text-yellow-500 border-yellow-500/30'
-                        : 'text-orange-500 border-orange-500/30'
+                        ? 'text-warning-500 border-warning-500/30'
+                        : 'text-accent-500 border-accent-500/30'
                     }
                   >
                     {currentReport.data_completeness}% complete
@@ -357,10 +357,10 @@ return;
 
             {/* Omitted sections */}
             {currentReport.omitted_sections.length > 0 && (
-              <Card className="border-orange-500/30">
+              <Card className="border-accent-500/30">
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-orange-500" />
+                    <AlertTriangle className="h-4 w-4 text-accent-500" />
                     <CardTitle className="text-sm">Omitted Sections</CardTitle>
                   </div>
                 </CardHeader>

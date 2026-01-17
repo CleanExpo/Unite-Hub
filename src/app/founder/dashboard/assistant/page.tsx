@@ -247,7 +247,7 @@ return;
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Mail className="h-5 w-5 text-blue-500" />
+              <Mail className="h-5 w-5 text-info-500" />
               <div>
                 <div className="text-2xl font-bold">
                   {dashboardData?.emailSummary?.total || 0}
@@ -273,7 +273,7 @@ return;
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-green-500" />
+              <Users className="h-5 w-5 text-success-500" />
               <div>
                 <div className="text-2xl font-bold">
                   {dashboardData?.staffOverview?.totalStaff || 0}
@@ -286,7 +286,7 @@ return;
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-amber-500" />
+              <DollarSign className="h-5 w-5 text-warning-500" />
               <div>
                 <div className="text-2xl font-bold">
                   ${(dashboardData?.financial?.netPosition || 0).toLocaleString()}
@@ -385,7 +385,7 @@ return;
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Outstanding</span>
-                    <span className="font-medium text-amber-500">
+                    <span className="font-medium text-warning-500">
                       ${(dashboardData?.financial?.invoices?.outstanding || 0).toLocaleString()}
                     </span>
                   </div>

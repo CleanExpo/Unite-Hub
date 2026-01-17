@@ -192,23 +192,23 @@ return;
 
   const getEngagementBadge = (level: string) => {
     const colors: Record<string, string> = {
-      cold: 'bg-blue-100 text-blue-800',
-      warm: 'bg-yellow-100 text-yellow-800',
-      hot: 'bg-orange-100 text-orange-800',
-      active: 'bg-green-100 text-green-800',
+      cold: 'bg-info-100 text-info-800',
+      warm: 'bg-warning-100 text-warning-800',
+      hot: 'bg-accent-100 text-accent-800',
+      active: 'bg-success-100 text-success-800',
     };
-    return colors[level] || 'bg-gray-100 text-gray-800';
+    return colors[level] || 'bg-bg-hover text-text-primary';
   };
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {
       discovered: 'bg-purple-100 text-purple-800',
-      ingesting: 'bg-blue-100 text-blue-800',
-      analyzed: 'bg-green-100 text-green-800',
-      converted: 'bg-emerald-100 text-emerald-800',
-      archived: 'bg-gray-100 text-gray-800',
+      ingesting: 'bg-info-100 text-info-800',
+      analyzed: 'bg-success-100 text-success-800',
+      converted: 'bg-success-100 text-success-800',
+      archived: 'bg-bg-hover text-text-primary',
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-bg-hover text-text-primary';
   };
 
   const formatDate = (dateStr?: string) => {
@@ -224,15 +224,15 @@ return '-';
 
   const getSentimentColor = (score?: number) => {
     if (score === undefined) {
-return 'text-gray-400';
+return 'text-text-muted';
 }
     if (score >= 0.7) {
-return 'text-green-600';
+return 'text-success-600';
 }
     if (score >= 0.4) {
-return 'text-yellow-600';
+return 'text-warning-600';
 }
-    return 'text-red-600';
+    return 'text-error-600';
   };
 
   return (
@@ -322,7 +322,7 @@ return 'text-yellow-600';
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Hot Leads</CardTitle>
-            <TrendingUp className="h-4 w-4 text-orange-500" />
+            <TrendingUp className="h-4 w-4 text-accent-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -333,7 +333,7 @@ return 'text-yellow-600';
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Analyzed</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <CheckCircle2 className="h-4 w-4 text-success-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.byStatus?.analyzed || 0}</div>
@@ -342,7 +342,7 @@ return 'text-yellow-600';
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending Ingestion</CardTitle>
-            <Clock className="h-4 w-4 text-blue-500" />
+            <Clock className="h-4 w-4 text-info-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">

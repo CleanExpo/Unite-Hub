@@ -312,7 +312,7 @@ return <TrendingDown className="w-5 h-5 text-error-400" />;
             className="flex items-center justify-between hover:bg-bg-card/30 transition-colors"
           >
             <div className="flex items-center space-x-3">
-              <Linkedin className="w-5 h-5 text-blue-400" />
+              <Linkedin className="w-5 h-5 text-info-400" />
               <div>
                 <p className="text-sm font-semibold text-text-primary">LinkedIn</p>
                 <p className="text-xs text-text-muted">{business.links.linkedIn}</p>
@@ -332,7 +332,7 @@ return <TrendingDown className="w-5 h-5 text-error-400" />;
             className="flex items-center justify-between hover:bg-bg-card/30 transition-colors"
           >
             <div className="flex items-center space-x-3">
-              <Facebook className="w-5 h-5 text-blue-500" />
+              <Facebook className="w-5 h-5 text-info-500" />
               <div>
                 <p className="text-sm font-semibold text-text-primary">Facebook</p>
                 <p className="text-xs text-text-muted">{business.links.facebook}</p>
@@ -372,7 +372,7 @@ return <TrendingDown className="w-5 h-5 text-error-400" />;
             className="flex items-center justify-between hover:bg-bg-card/30 transition-colors"
           >
             <div className="flex items-center space-x-3">
-              <Twitter className="w-5 h-5 text-blue-400" />
+              <Twitter className="w-5 h-5 text-info-400" />
               <div>
                 <p className="text-sm font-semibold text-text-primary">X (Twitter)</p>
                 <p className="text-xs text-text-muted">{business.links.twitter}</p>
@@ -425,7 +425,7 @@ return <TrendingDown className="w-5 h-5 text-error-400" />;
       <Section>
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-info-600 to-purple-600 rounded-lg flex items-center justify-center">
               <Building2 className="w-8 h-8 text-white" />
             </div>
             <div>

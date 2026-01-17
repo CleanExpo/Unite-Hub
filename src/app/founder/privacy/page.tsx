@@ -233,11 +233,11 @@ throw new Error("Failed to update DSR");
 
   function getStatusBadge(status: DSRStatus) {
     const variants: Record<DSRStatus, { color: string; icon: React.ReactNode }> = {
-      open: { color: "bg-blue-500/10 text-blue-400 border-blue-500/20", icon: <ClockIcon className="w-3 h-3" /> },
-      in_progress: { color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", icon: <ExclamationCircleIcon className="w-3 h-3" /> },
-      resolved: { color: "bg-green-500/10 text-green-400 border-green-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
-      rejected: { color: "bg-red-500/10 text-red-400 border-red-500/20", icon: <ExclamationCircleIcon className="w-3 h-3" /> },
-      cancelled: { color: "bg-gray-500/10 text-gray-400 border-gray-500/20", icon: <ExclamationCircleIcon className="w-3 h-3" /> },
+      open: { color: "bg-info-500/10 text-info-400 border-info-500/20", icon: <ClockIcon className="w-3 h-3" /> },
+      in_progress: { color: "bg-warning-500/10 text-warning-400 border-warning-500/20", icon: <ExclamationCircleIcon className="w-3 h-3" /> },
+      resolved: { color: "bg-success-500/10 text-success-400 border-success-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
+      rejected: { color: "bg-error-500/10 text-error-400 border-error-500/20", icon: <ExclamationCircleIcon className="w-3 h-3" /> },
+      cancelled: { color: "bg-bg-hover0/10 text-text-muted border-border/20", icon: <ExclamationCircleIcon className="w-3 h-3" /> },
     };
 
     const variant = variants[status];
@@ -322,7 +322,7 @@ throw new Error("Failed to update DSR");
                 <CardTitle className="text-text-secondary text-sm">Open</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold text-blue-400">{statistics.open}</p>
+                <p className="text-3xl font-bold text-info-400">{statistics.open}</p>
               </CardContent>
             </Card>
             <Card className="bg-bg-card border-border-primary">
@@ -330,7 +330,7 @@ throw new Error("Failed to update DSR");
                 <CardTitle className="text-text-secondary text-sm">In Progress</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold text-yellow-400">{statistics.in_progress}</p>
+                <p className="text-3xl font-bold text-warning-400">{statistics.in_progress}</p>
               </CardContent>
             </Card>
             <Card className="bg-bg-card border-border-primary">
@@ -338,7 +338,7 @@ throw new Error("Failed to update DSR");
                 <CardTitle className="text-text-secondary text-sm">Resolved</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold text-green-400">{statistics.resolved}</p>
+                <p className="text-3xl font-bold text-success-400">{statistics.resolved}</p>
               </CardContent>
             </Card>
           </div>
@@ -455,7 +455,7 @@ throw new Error("Failed to update DSR");
                             <Button
                               size="sm"
                               onClick={() => handleUpdateDSRStatus(dsr.id, "in_progress")}
-                              className="bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 border border-yellow-500/20"
+                              className="bg-warning-500/10 text-warning-400 hover:bg-warning-500/20 border border-warning-500/20"
                             >
                               Start
                             </Button>
@@ -464,7 +464,7 @@ throw new Error("Failed to update DSR");
                             <Button
                               size="sm"
                               onClick={() => handleUpdateDSRStatus(dsr.id, "resolved")}
-                              className="bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/20"
+                              className="bg-success-500/10 text-success-400 hover:bg-success-500/20 border border-success-500/20"
                             >
                               Resolve
                             </Button>
@@ -504,8 +504,8 @@ throw new Error("Failed to update DSR");
                         <Badge
                           className={
                             log.granted
-                              ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                              : "bg-red-500/10 text-red-400 border border-red-500/20"
+                              ? "bg-success-500/10 text-success-400 border border-success-500/20"
+                              : "bg-error-500/10 text-error-400 border border-error-500/20"
                           }
                         >
                           {log.granted ? "Granted" : "Revoked"}

@@ -45,12 +45,12 @@ return;
 
   const getLoadColor = (load: number) => {
     if (load >= 0.8) {
-return 'text-red-600';
+return 'text-error-600';
 }
     if (load >= 0.6) {
-return 'text-amber-600';
+return 'text-warning-600';
 }
-    return 'text-green-600';
+    return 'text-success-600';
   };
 
   if (loading) {
@@ -114,7 +114,7 @@ return 'text-amber-600';
                       </div>
                       <Progress
                         value={(value as number) * 100}
-                        className={`h-1.5 ${(value as number) >= 0.8 ? '[&>div]:bg-red-500' : (value as number) >= 0.6 ? '[&>div]:bg-amber-500' : ''}`}
+                        className={`h-1.5 ${(value as number) >= 0.8 ? '[&>div]:bg-error-500' : (value as number) >= 0.6 ? '[&>div]:bg-warning-500' : ''}`}
                       />
                     </div>
                   ))}
@@ -150,11 +150,11 @@ return 'text-amber-600';
       )}
 
       {/* Disclaimer */}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Load Estimation Notice</div>
               <p>
                 Load metrics are estimates based on available signals. Actual

@@ -128,7 +128,7 @@ return;
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8">
         <div className="max-w-2xl mx-auto">
           <div className="flex justify-center items-center h-96">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-info-500" />
           </div>
         </div>
       </div>
@@ -144,43 +144,43 @@ return;
             variant="ghost"
             size="icon"
             onClick={() => router.back()}
-            className="text-gray-400 hover:text-white"
+            className="text-text-muted hover:text-white"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-white">Founder Settings</h1>
-            <p className="text-gray-400 mt-1">Admin-only platform configuration</p>
+            <p className="text-text-muted mt-1">Admin-only platform configuration</p>
           </div>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <Alert className="border-red-500/50 bg-red-500/10">
-            <AlertCircle className="h-4 w-4 text-red-500" />
-            <AlertDescription className="text-red-400">{error}</AlertDescription>
+          <Alert className="border-error-500/50 bg-error-500/10">
+            <AlertCircle className="h-4 w-4 text-error-500" />
+            <AlertDescription className="text-error-400">{error}</AlertDescription>
           </Alert>
         )}
 
         {/* Success Alert */}
         {success && (
-          <Alert className="border-green-500/50 bg-green-500/10">
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
-            <AlertDescription className="text-green-400">{success}</AlertDescription>
+          <Alert className="border-success-500/50 bg-success-500/10">
+            <CheckCircle2 className="h-4 w-4 text-success-500" />
+            <AlertDescription className="text-success-400">{success}</AlertDescription>
           </Alert>
         )}
 
         {/* Multi-Service Mode Toggle (Phase 10) */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Settings2 className="h-5 w-5 text-blue-400" />
+            <Settings2 className="h-5 w-5 text-info-400" />
             <h2 className="text-xl font-semibold text-white">Service Mode Controls</h2>
           </div>
           <FounderModeToggle />
         </div>
 
         {/* Legacy Stripe Mode Toggle Card (Deprecated - use above controls) */}
-        <Card className="border-gray-700 bg-gray-800">
+        <Card className="border-border bg-bg-raised">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -193,8 +193,8 @@ return;
                 variant={mode?.mode === 'live' ? 'destructive' : 'secondary'}
                 className={`text-lg px-4 py-2 ${
                   mode?.mode === 'live'
-                    ? 'bg-red-500/20 text-red-400 border-red-500'
-                    : 'bg-blue-500/20 text-blue-400 border-blue-500'
+                    ? 'bg-error-500/20 text-error-400 border-error-500'
+                    : 'bg-info-500/20 text-info-400 border-info-500'
                 }`}
               >
                 {mode?.mode.toUpperCase() || 'UNKNOWN'}
@@ -204,21 +204,21 @@ return;
 
           <CardContent className="space-y-6">
             {/* Current Mode Display */}
-            <div className="p-4 rounded-lg bg-gray-700/50 border border-gray-600">
-              <p className="text-sm text-gray-400 mb-2">Current Mode</p>
+            <div className="p-4 rounded-lg bg-bg-elevated/50 border border-border">
+              <p className="text-sm text-text-muted mb-2">Current Mode</p>
               <p className="text-2xl font-bold text-white">
                 {mode?.mode === 'live' ? '💳 LIVE' : '🧪 TEST'}
               </p>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-text-tertiary mt-2">
                 Last updated: {mode?.timestamp ? new Date(mode.timestamp).toLocaleString() : 'Unknown'}
               </p>
             </div>
 
             {/* Warning for Live Mode */}
             {mode?.mode === 'live' && (
-              <Alert className="border-yellow-500/50 bg-yellow-500/10">
-                <AlertCircle className="h-4 w-4 text-yellow-500" />
-                <AlertDescription className="text-yellow-400">
+              <Alert className="border-warning-500/50 bg-warning-500/10">
+                <AlertCircle className="h-4 w-4 text-warning-500" />
+                <AlertDescription className="text-warning-400">
                   ⚠️ Platform is in LIVE mode. Real payments are being processed. Use caution when switching modes.
                 </AlertDescription>
               </Alert>
@@ -227,7 +227,7 @@ return;
             {/* Mode Selection */}
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-300 block mb-3">
+                <label className="text-sm font-medium text-text-secondary block mb-3">
                   Switch To Mode
                 </label>
                 <div className="flex gap-4">
@@ -238,9 +238,9 @@ return;
                       className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
                         selectedMode === m
                           ? m === 'live'
-                            ? 'bg-red-500/30 border-2 border-red-500 text-red-400'
-                            : 'bg-blue-500/30 border-2 border-blue-500 text-blue-400'
-                          : 'bg-gray-700 border-2 border-gray-600 text-gray-400 hover:border-gray-500'
+                            ? 'bg-error-500/30 border-2 border-error-500 text-error-400'
+                            : 'bg-info-500/30 border-2 border-info-500 text-info-400'
+                          : 'bg-bg-elevated border-2 border-border text-text-muted hover:border-border'
                       }`}
                     >
                       {m === 'live' ? '💳 LIVE MODE' : '🧪 TEST MODE'}
@@ -251,7 +251,7 @@ return;
 
               {/* Reason (Optional) */}
               <div>
-                <label className="text-sm font-medium text-gray-300 block mb-2">
+                <label className="text-sm font-medium text-text-secondary block mb-2">
                   Reason for Change (Optional)
                 </label>
                 <input
@@ -259,7 +259,7 @@ return;
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="e.g., 'Customer production launch', 'Testing environment update'"
-                  className="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-lg bg-bg-elevated border border-border text-white placeholder-gray-500 focus:outline-none focus:border-info-500"
                 />
               </div>
 
@@ -269,8 +269,8 @@ return;
                 disabled={isSaving || selectedMode === mode?.mode}
                 className={`w-full font-medium py-2 ${
                   selectedMode === 'live'
-                    ? 'bg-red-600 hover:bg-red-700 disabled:bg-red-600/50'
-                    : 'bg-blue-600 hover:bg-blue-700'
+                    ? 'bg-error-600 hover:bg-error-700 disabled:bg-error-600/50'
+                    : 'bg-info-600 hover:bg-info-700'
                 } text-white`}
               >
                 {isSaving ? (
@@ -293,29 +293,29 @@ return;
 
         {/* Audit History */}
         {audit.length > 0 && (
-          <Card className="border-gray-700 bg-gray-800">
+          <Card className="border-border bg-bg-raised">
             <CardHeader>
               <CardTitle className="text-white">Mode Change History</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {audit.map((entry, idx) => (
-                  <div key={idx} className="p-3 rounded-lg bg-gray-700/50 border border-gray-600">
+                  <div key={idx} className="p-3 rounded-lg bg-bg-elevated/50 border border-border">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex gap-2 items-center">
                         <Badge variant="outline" className="text-xs">
                           {entry.old_mode} → {entry.new_mode}
                         </Badge>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-text-tertiary">
                           by {entry.changed_by?.split('@')[0] || 'Unknown'}
                         </span>
                       </div>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-text-tertiary">
                         {new Date(entry.changed_at).toLocaleString()}
                       </span>
                     </div>
                     {entry.reason && (
-                      <p className="text-sm text-gray-400">Reason: {entry.reason}</p>
+                      <p className="text-sm text-text-muted">Reason: {entry.reason}</p>
                     )}
                   </div>
                 ))}

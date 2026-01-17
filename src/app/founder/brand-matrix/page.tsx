@@ -27,7 +27,7 @@ export default function BrandMatrixPage() {
       {/* Header */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">Brand Matrix</h1>
-        <p className="text-gray-600">
+        <p className="text-text-muted">
           Manage all brands under Unite-Hub Nexus. Define positioning, cross-linking rules, and ensure brand consistency.
         </p>
       </div>
@@ -40,7 +40,7 @@ export default function BrandMatrixPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{activeBrands.length}</div>
-            <p className="text-xs text-gray-600 mt-1">Active brands in portfolio</p>
+            <p className="text-xs text-text-muted mt-1">Active brands in portfolio</p>
           </CardContent>
         </Card>
 
@@ -50,7 +50,7 @@ export default function BrandMatrixPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{brandCrossLinkingRules.length}</div>
-            <p className="text-xs text-gray-600 mt-1">Brand relationships defined</p>
+            <p className="text-xs text-text-muted mt-1">Brand relationships defined</p>
           </CardContent>
         </Card>
 
@@ -62,7 +62,7 @@ export default function BrandMatrixPage() {
             <div className="text-2xl font-bold">
               {new Set(brandCrossLinkingRules.map(r => r.from)).size}
             </div>
-            <p className="text-xs text-gray-600 mt-1">Brands with outbound links</p>
+            <p className="text-xs text-text-muted mt-1">Brands with outbound links</p>
           </CardContent>
         </Card>
       </div>
@@ -91,22 +91,22 @@ export default function BrandMatrixPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Description</p>
+                    <p className="text-sm font-medium text-text-muted">Description</p>
                     <p className="text-sm mt-1">{brand.description}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Domain</p>
+                    <p className="text-sm font-medium text-text-muted">Domain</p>
                     <a
                       href={brand.domain}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:underline"
+                      className="text-sm text-info-600 hover:underline"
                     >
                       {brand.domain}
                     </a>
                   </div>
                   <div className="pt-2 border-t">
-                    <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                    <p className="text-xs font-medium text-text-muted uppercase tracking-wide">
                       Brand ID: {brand.id}
                     </p>
                   </div>
@@ -128,17 +128,17 @@ export default function BrandMatrixPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Mission</p>
+                      <p className="text-sm font-medium text-text-muted">Mission</p>
                       <p className="text-sm mt-1">{positioning.mission}</p>
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Promise</p>
+                      <p className="text-sm font-medium text-text-muted">Promise</p>
                       <p className="text-sm mt-1">{positioning.promise}</p>
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-gray-600 mb-2">Audience</p>
+                      <p className="text-sm font-medium text-text-muted mb-2">Audience</p>
                       <div className="flex flex-wrap gap-2">
                         {positioning.audience.map((aud) => (
                           <Badge key={aud} variant="secondary">
@@ -149,7 +149,7 @@ export default function BrandMatrixPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-gray-600 mb-2">Tone</p>
+                      <p className="text-sm font-medium text-text-muted mb-2">Tone</p>
                       <div className="flex flex-wrap gap-2">
                         {positioning.tone.map((t) => (
                           <Badge key={t} variant="secondary">
@@ -160,11 +160,11 @@ export default function BrandMatrixPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-gray-600 mb-2">Strengths</p>
+                      <p className="text-sm font-medium text-text-muted mb-2">Strengths</p>
                       <ul className="text-sm space-y-1">
                         {positioning.strengths.map((s) => (
                           <li key={s} className="flex items-center gap-2">
-                            <span className="text-green-600">✓</span>
+                            <span className="text-success-600">✓</span>
                             {s}
                           </li>
                         ))}
@@ -172,11 +172,11 @@ export default function BrandMatrixPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm font-medium text-gray-600 mb-2">Risk Flags</p>
+                      <p className="text-sm font-medium text-text-muted mb-2">Risk Flags</p>
                       <ul className="text-sm space-y-1">
                         {positioning.riskFlags.map((flag) => (
                           <li key={flag} className="flex items-start gap-2">
-                            <span className="text-yellow-600 mt-0.5">⚠</span>
+                            <span className="text-warning-600 mt-0.5">⚠</span>
                             <span>{flag}</span>
                           </li>
                         ))}
@@ -222,7 +222,7 @@ return null;
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <span className="font-medium">{brand.name}</span>
-                                <span className="text-gray-400">→</span>
+                                <span className="text-text-muted">→</span>
                                 <span className="font-medium">
                                   {targetBrand?.name || rule.to}
                                 </span>
@@ -241,12 +241,12 @@ return null;
                             </div>
 
                             <div>
-                              <p className="text-sm font-medium text-gray-600">Context</p>
+                              <p className="text-sm font-medium text-text-muted">Context</p>
                               <p className="text-sm mt-1">{rule.context}</p>
                             </div>
 
                             <div>
-                              <p className="text-sm font-medium text-gray-600">Rule</p>
+                              <p className="text-sm font-medium text-text-muted">Rule</p>
                               <p className="text-sm mt-1">{rule.rule}</p>
                             </div>
                           </div>
@@ -262,11 +262,11 @@ return null;
       </Tabs>
 
       {/* Documentation Footer */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-info-50 border-info-200">
         <CardHeader>
           <CardTitle className="text-sm">How This Works</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm space-y-2 text-gray-700">
+        <CardContent className="text-sm space-y-2 text-text-secondary">
           <p>
             <strong>Brand Registry</strong>: Central definition of all brands. Used by Founder Ops Hub for task assignment and content team for reference.
           </p>

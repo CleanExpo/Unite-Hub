@@ -57,9 +57,9 @@ return;
 
   const getTrendIcon = (direction: string) => {
     switch (direction) {
-      case 'up': return <TrendingUp className="h-4 w-4 text-green-600" />;
-      case 'down': return <TrendingDown className="h-4 w-4 text-red-600" />;
-      default: return <Minus className="h-4 w-4 text-gray-600" />;
+      case 'up': return <TrendingUp className="h-4 w-4 text-success-600" />;
+      case 'down': return <TrendingDown className="h-4 w-4 text-error-600" />;
+      default: return <Minus className="h-4 w-4 text-text-muted" />;
     }
   };
 
@@ -153,11 +153,11 @@ return;
       </Card>
 
       {/* Disclaimer */}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Privacy Notice</div>
               <p>
                 All data is anonymized and aggregated. No individual tenant

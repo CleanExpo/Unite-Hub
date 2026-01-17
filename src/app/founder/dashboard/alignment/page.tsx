@@ -215,7 +215,7 @@ export default function FounderAlignmentPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <Users className="h-8 w-8 text-blue-500" />
+              <Users className="h-8 w-8 text-info-500" />
               <div>
                 <p className="text-2xl font-bold">{clients.length}</p>
                 <p className="text-xs text-muted-foreground">Clients</p>
@@ -224,10 +224,10 @@ export default function FounderAlignmentPage() {
           </CardContent>
         </Card>
 
-        <Card className={totalBlockers > 0 ? 'border-red-500/50' : ''}>
+        <Card className={totalBlockers > 0 ? 'border-error-500/50' : ''}>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <AlertTriangle className={`h-8 w-8 ${totalBlockers > 0 ? 'text-red-500' : 'text-muted-foreground'}`} />
+              <AlertTriangle className={`h-8 w-8 ${totalBlockers > 0 ? 'text-error-500' : 'text-muted-foreground'}`} />
               <div>
                 <p className="text-2xl font-bold">{totalBlockers}</p>
                 <p className="text-xs text-muted-foreground">Critical Blockers</p>
@@ -236,10 +236,10 @@ export default function FounderAlignmentPage() {
           </CardContent>
         </Card>
 
-        <Card className={totalOpportunities > 0 ? 'border-green-500/50' : ''}>
+        <Card className={totalOpportunities > 0 ? 'border-success-500/50' : ''}>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <Sparkles className={`h-8 w-8 ${totalOpportunities > 0 ? 'text-green-500' : 'text-muted-foreground'}`} />
+              <Sparkles className={`h-8 w-8 ${totalOpportunities > 0 ? 'text-success-500' : 'text-muted-foreground'}`} />
               <div>
                 <p className="text-2xl font-bold">{totalOpportunities}</p>
                 <p className="text-xs text-muted-foreground">High Opportunities</p>
@@ -319,7 +319,7 @@ export default function FounderAlignmentPage() {
                       {selectedClientData.narrative.next_steps.map((step, i) => (
                         <div key={i} className="flex items-start gap-2 text-xs">
                           <Target className="h-3 w-3 mt-0.5 text-primary flex-shrink-0" />
-                          <span className={step.startsWith('[URGENT]') ? 'text-red-500' : ''}>
+                          <span className={step.startsWith('[URGENT]') ? 'text-error-500' : ''}>
                             {step}
                           </span>
                         </div>

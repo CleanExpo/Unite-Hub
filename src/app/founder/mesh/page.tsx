@@ -150,10 +150,10 @@ return;
 
   const getHealthColor = (health: string) => {
     switch (health) {
-      case 'healthy': return 'bg-green-100 text-green-800 border-green-200';
-      case 'degraded': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'healthy': return 'bg-success-100 text-success-800 border-success-200';
+      case 'degraded': return 'bg-warning-100 text-warning-800 border-warning-200';
+      case 'critical': return 'bg-error-100 text-error-800 border-error-200';
+      default: return 'bg-bg-hover text-text-primary border-border-subtle';
     }
   };
 

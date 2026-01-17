@@ -132,9 +132,9 @@ export default function ModelsConsolePage() {
 
   // Risk badge
   const RiskBadge = ({ score }: { score: number }) => {
-    let color = 'text-green-400 bg-green-400/10';
-    if (score >= 70) color = 'text-red-400 bg-red-400/10';
-    else if (score >= 40) color = 'text-yellow-400 bg-yellow-400/10';
+    let color = 'text-success-400 bg-success-400/10';
+    if (score >= 70) color = 'text-error-400 bg-error-400/10';
+    else if (score >= 40) color = 'text-warning-400 bg-warning-400/10';
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded ${color}`}>
         Risk: {score}/100
@@ -199,7 +199,7 @@ export default function ModelsConsolePage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-lg font-semibold text-text-primary">{model.name}</h3>
-                        <span className="px-2 py-1 text-xs font-medium text-blue-400 bg-blue-400/10 rounded">
+                        <span className="px-2 py-1 text-xs font-medium text-info-400 bg-info-400/10 rounded">
                           v{model.version}
                         </span>
                       </div>
@@ -303,9 +303,9 @@ export default function ModelsConsolePage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         {audit.change_set.breaking ? (
-                          <AlertTriangle className="w-5 h-5 text-red-400" />
+                          <AlertTriangle className="w-5 h-5 text-error-400" />
                         ) : (
-                          <CheckCircle className="w-5 h-5 text-green-400" />
+                          <CheckCircle className="w-5 h-5 text-success-400" />
                         )}
                         <h3 className="text-lg font-semibold text-text-primary">
                           {audit.change_set.breaking ? 'Breaking Change' : 'Safe Change'}
@@ -324,19 +324,19 @@ export default function ModelsConsolePage() {
                   <div className="grid grid-cols-3 gap-4 mb-4">
                     <div>
                       <p className="text-xs text-text-secondary mb-1">Added</p>
-                      <p className="text-sm text-green-400">
+                      <p className="text-sm text-success-400">
                         {Object.keys(audit.change_set.added || {}).length} fields
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-text-secondary mb-1">Removed</p>
-                      <p className="text-sm text-red-400">
+                      <p className="text-sm text-error-400">
                         {Object.keys(audit.change_set.removed || {}).length} fields
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-text-secondary mb-1">Modified</p>
-                      <p className="text-sm text-yellow-400">
+                      <p className="text-sm text-warning-400">
                         {Object.keys(audit.change_set.modified || {}).length} fields
                       </p>
                     </div>
@@ -355,9 +355,9 @@ export default function ModelsConsolePage() {
                         <p className="text-xs text-text-secondary">Rollback Safe</p>
                         <p className="text-sm text-text-primary mt-1">
                           {audit.ai_interpretation.rollback_safe ? (
-                            <CheckCircle className="w-4 h-4 inline text-green-400" />
+                            <CheckCircle className="w-4 h-4 inline text-success-400" />
                           ) : (
-                            <XCircle className="w-4 h-4 inline text-red-400" />
+                            <XCircle className="w-4 h-4 inline text-error-400" />
                           )}
                           <span className="ml-2">
                             {audit.ai_interpretation.rollback_safe ? 'Yes' : 'No'}

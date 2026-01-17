@@ -49,10 +49,10 @@ export default function FounderTimelinePage() {
 
   const getSeverityColor = (severity?: string) => {
     switch (severity) {
-      case "critical": return "bg-red-500/10 text-red-500 border-red-500";
-      case "high": return "bg-orange-500/10 text-orange-500 border-orange-500";
-      case "medium": return "bg-yellow-500/10 text-yellow-500 border-yellow-500";
-      case "low": return "bg-blue-500/10 text-blue-500 border-blue-500";
+      case "critical": return "bg-error-500/10 text-error-500 border-error-500";
+      case "high": return "bg-accent-500/10 text-accent-500 border-accent-500";
+      case "medium": return "bg-warning-500/10 text-warning-500 border-warning-500";
+      case "low": return "bg-info-500/10 text-info-500 border-info-500";
       default: return "bg-bg-card text-text-secondary border-border";
     }
   };
@@ -86,7 +86,7 @@ export default function FounderTimelinePage() {
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Critical Events</div>
-              <div className="text-2xl font-bold text-red-500 mt-1">{stats.critical_events}</div>
+              <div className="text-2xl font-bold text-error-500 mt-1">{stats.critical_events}</div>
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Audit Logs</div>
@@ -94,7 +94,7 @@ export default function FounderTimelinePage() {
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Risk Events</div>
-              <div className="text-2xl font-bold text-orange-500 mt-1">{stats.risk_events}</div>
+              <div className="text-2xl font-bold text-accent-500 mt-1">{stats.risk_events}</div>
             </Card>
           </div>
         )}

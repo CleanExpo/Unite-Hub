@@ -30,14 +30,14 @@ export default function ConsoleLayout({ children }: { children: React.ReactNode 
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex h-screen bg-bg-base text-text-primary">
       {/* Sidebar */}
-      <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-gray-800 transition-all duration-300 flex flex-col`}>
-        <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+      <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-bg-raised transition-all duration-300 flex flex-col`}>
+        <div className="p-4 border-b border-border-subtle flex items-center justify-between">
           {!collapsed && <h1 className="text-xl font-bold">Unite Console</h1>}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1 rounded hover:bg-gray-700"
+            className="p-1 rounded hover:bg-bg-hover"
           >
             {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
           </button>
@@ -54,8 +54,8 @@ export default function ConsoleLayout({ children }: { children: React.ReactNode 
                 href={engine.path}
                 className={`flex items-center gap-3 p-3 rounded-lg mb-1 transition-colors ${
                   isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'hover:bg-gray-700 text-gray-300'
+                    ? 'bg-accent-500 text-text-primary'
+                    : 'hover:bg-bg-hover text-text-secondary'
                 }`}
               >
                 <Icon size={20} />
@@ -63,7 +63,7 @@ export default function ConsoleLayout({ children }: { children: React.ReactNode 
                   <div className="flex-1">
                     <div className="font-medium">{engine.name}</div>
                     {engine.description && (
-                      <div className="text-xs text-gray-400">{engine.description}</div>
+                      <div className="text-xs text-text-muted">{engine.description}</div>
                     )}
                   </div>
                 )}
@@ -72,7 +72,7 @@ export default function ConsoleLayout({ children }: { children: React.ReactNode 
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-700 text-xs text-gray-500">
+        <div className="p-4 border-t border-border-subtle text-xs text-text-tertiary">
           {!collapsed && <div>v1.0.0 • 18 Engines</div>}
         </div>
       </aside>

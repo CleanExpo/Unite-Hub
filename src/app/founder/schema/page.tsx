@@ -118,9 +118,9 @@ export default function SchemaConsolePage() {
   // Risk badge
   const RiskBadge = ({ level }: { level: 'low' | 'medium' | 'high' }) => {
     const config = {
-      low: 'text-green-400 bg-green-400/10',
-      medium: 'text-yellow-400 bg-yellow-400/10',
-      high: 'text-red-400 bg-red-400/10',
+      low: 'text-success-400 bg-success-400/10',
+      medium: 'text-warning-400 bg-warning-400/10',
+      high: 'text-error-400 bg-error-400/10',
     };
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded ${config[level]}`}>
@@ -238,9 +238,9 @@ export default function SchemaConsolePage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         {report.ai_reasoning?.breaking_changes ? (
-                          <AlertTriangle className="w-5 h-5 text-red-400" />
+                          <AlertTriangle className="w-5 h-5 text-error-400" />
                         ) : (
-                          <CheckCircle className="w-5 h-5 text-green-400" />
+                          <CheckCircle className="w-5 h-5 text-success-400" />
                         )}
                         <h3 className="text-lg font-semibold text-text-primary">
                           {report.ai_reasoning?.breaking_changes ? 'Breaking Drift' : 'Safe Drift'}
@@ -269,25 +269,25 @@ export default function SchemaConsolePage() {
                   <div className="grid grid-cols-4 gap-3 mb-4">
                     <div className="bg-bg-primary p-3 rounded">
                       <p className="text-xs text-text-secondary">Added Tables</p>
-                      <p className="text-lg font-semibold text-green-400 mt-1">
+                      <p className="text-lg font-semibold text-success-400 mt-1">
                         {report.differences.added_tables?.length || 0}
                       </p>
                     </div>
                     <div className="bg-bg-primary p-3 rounded">
                       <p className="text-xs text-text-secondary">Removed Tables</p>
-                      <p className="text-lg font-semibold text-red-400 mt-1">
+                      <p className="text-lg font-semibold text-error-400 mt-1">
                         {report.differences.removed_tables?.length || 0}
                       </p>
                     </div>
                     <div className="bg-bg-primary p-3 rounded">
                       <p className="text-xs text-text-secondary">Modified Columns</p>
-                      <p className="text-lg font-semibold text-yellow-400 mt-1">
+                      <p className="text-lg font-semibold text-warning-400 mt-1">
                         {report.differences.modified_columns?.length || 0}
                       </p>
                     </div>
                     <div className="bg-bg-primary p-3 rounded">
                       <p className="text-xs text-text-secondary">Index Changes</p>
-                      <p className="text-lg font-semibold text-blue-400 mt-1">
+                      <p className="text-lg font-semibold text-info-400 mt-1">
                         {report.differences.index_changes?.length || 0}
                       </p>
                     </div>

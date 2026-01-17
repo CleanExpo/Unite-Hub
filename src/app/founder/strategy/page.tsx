@@ -331,7 +331,7 @@ return;
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowCreateForm(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+            className="bg-info-600 hover:bg-info-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
           >
             <Plus className="w-5 h-5" />
             New Strategy
@@ -353,7 +353,7 @@ return;
             onClick={() => setPollingActive(!pollingActive)}
             className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors ${
               pollingActive
-                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                ? 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-300'
                 : 'bg-bg-hover text-text-secondary'
             }`}
             title={pollingActive ? 'Polling is enabled' : 'Polling is disabled'}
@@ -366,11 +366,11 @@ return;
 
       {/* Error Messages */}
       {errorMessage && (
-        <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+        <div className="bg-error-50 dark:bg-error-950/30 border border-error-200 dark:border-error-800 rounded-lg p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-error-600 dark:text-error-400 flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-semibold text-red-900 dark:text-red-100">Error</h3>
-            <p className="text-sm text-red-800 dark:text-red-200">{errorMessage}</p>
+            <h3 className="font-semibold text-error-900 dark:text-error-100">Error</h3>
+            <p className="text-sm text-error-800 dark:text-error-200">{errorMessage}</p>
           </div>
         </div>
       )}
@@ -483,7 +483,7 @@ return;
             </div>
 
             {createError && (
-              <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-800 dark:text-red-200">
+              <div className="bg-error-50 dark:bg-error-950/30 border border-error-200 dark:border-error-800 rounded-lg p-3 text-sm text-error-800 dark:text-error-200">
                 {createError}
               </div>
             )}
@@ -492,7 +492,7 @@ return;
               <button
                 type="submit"
                 disabled={isCreating}
-                className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                className="bg-info-600 hover:bg-info-700 disabled:opacity-50 text-white px-6 py-2 rounded-lg font-medium transition-colors"
               >
                 {isCreating ? 'Creating...' : 'Create Strategy'}
               </button>
@@ -518,11 +518,11 @@ return;
                 <div className="text-sm text-text-secondary mb-1">
                   Hierarchy Health
                 </div>
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <div className="text-2xl font-bold text-info-600 dark:text-info-400">
                   {hierarchyHealth.toFixed(1)}%
                 </div>
               </div>
-              <Target className="w-8 h-8 text-blue-600 dark:text-blue-400 opacity-20" />
+              <Target className="w-8 h-8 text-info-600 dark:text-info-400 opacity-20" />
             </div>
           </div>
 
@@ -546,11 +546,11 @@ return;
                 <div className="text-sm text-text-secondary mb-1">
                   Critical Items
                 </div>
-                <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+                <div className="text-2xl font-bold text-error-600 dark:text-error-400">
                   {riskDist.critical}
                 </div>
               </div>
-              <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400 opacity-20" />
+              <AlertTriangle className="w-8 h-8 text-error-600 dark:text-error-400 opacity-20" />
             </div>
           </div>
 
@@ -560,11 +560,11 @@ return;
                 <div className="text-sm text-text-secondary mb-1">
                   Decomposition Quality
                 </div>
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400 capitalize">
+                <div className="text-2xl font-bold text-success-600 dark:text-success-400 capitalize">
                   {decompositionQuality}
                 </div>
               </div>
-              <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400 opacity-20" />
+              <CheckCircle2 className="w-8 h-8 text-success-600 dark:text-success-400 opacity-20" />
             </div>
           </div>
         </div>

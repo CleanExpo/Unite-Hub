@@ -57,7 +57,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base flex items-center gap-2">
-                    {pattern.isSuccess ? <CheckCircle className="h-4 w-4 text-green-500" /> : <XCircle className="h-4 w-4 text-red-500" />}
+                    {pattern.isSuccess ? <CheckCircle className="h-4 w-4 text-success-500" /> : <XCircle className="h-4 w-4 text-error-500" />}
                     {pattern.name}
                   </CardTitle>
                   <div className="flex gap-1">
@@ -78,7 +78,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
           ))}
         </div>
       )}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">Pattern Library Constraints</div><p>Pattern success must include context. Failed patterns stored with reasons. No pattern marked universal.</p></div></div></CardContent></Card>
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" /><div className="text-sm text-warning-800 dark:text-warning-200"><div className="font-medium mb-1">Pattern Library Constraints</div><p>Pattern success must include context. Failed patterns stored with reasons. No pattern marked universal.</p></div></div></CardContent></Card>
     </div>
   );
 }

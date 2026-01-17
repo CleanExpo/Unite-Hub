@@ -117,16 +117,16 @@ export default function QACoveragePage() {
   function getRiskColor(riskLevel: string): string {
     switch (riskLevel) {
       case 'critical': {
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-100 text-error-800';
       }
       case 'high': {
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-accent-100 text-accent-800';
       }
       case 'medium': {
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       }
       default: {
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-100 text-success-800';
       }
     }
   }
@@ -138,8 +138,8 @@ export default function QACoveragePage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-text-primary mb-2">QA Coverage Map</h1>
           <p className="text-text-secondary">Detect untested high-risk rules and playbooks</p>
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-900">
+          <div className="mt-4 p-4 bg-info-50 border border-info-200 rounded-lg">
+            <p className="text-sm text-info-900">
               <strong>Analytics Only:</strong> Coverage indices are read-only aggregations from Guardian I01-I07.
             </p>
           </div>
@@ -147,7 +147,7 @@ export default function QACoveragePage() {
 
         {/* Error */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>
+          <div className="mb-6 p-4 bg-error-50 border border-error-200 rounded-lg text-error-700">{error}</div>
         )}
 
         {/* Actions */}
@@ -162,7 +162,7 @@ export default function QACoveragePage() {
           <button
             onClick={loadCoverageData}
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            className="px-4 py-2 bg-info-600 text-white rounded hover:bg-info-700 disabled:opacity-50"
           >
             Refresh
           </button>
@@ -202,7 +202,7 @@ export default function QACoveragePage() {
                   </div>
                   <div className="p-6 bg-bg-card border border-border-subtle rounded-lg">
                     <p className="text-sm text-text-secondary mb-2">Critical Blind Spots</p>
-                    <p className="text-4xl font-bold text-red-600">{snapshot.criticalBlindSpots}</p>
+                    <p className="text-4xl font-bold text-error-600">{snapshot.criticalBlindSpots}</p>
                   </div>
                 </div>
 
@@ -218,9 +218,9 @@ export default function QACoveragePage() {
                     <div key={item.label} className="p-4 bg-bg-card border border-border-subtle rounded-lg">
                       <p className="text-sm text-text-secondary mb-2">{item.label}</p>
                       <div className="flex items-center gap-3">
-                        <div className="flex-1 bg-gray-200 rounded-full h-2">
+                        <div className="flex-1 bg-bg-hover rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full bg-green-600`}
+                            className={`h-2 rounded-full bg-success-600`}
                             style={{ width: `${item.value * 100}%` }}
                           ></div>
                         </div>
@@ -243,7 +243,7 @@ export default function QACoveragePage() {
                       className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
                         riskFilter === level
                           ? 'bg-accent-500 text-white'
-                          : 'bg-gray-100 text-text-primary hover:bg-gray-200'
+                          : 'bg-bg-hover text-text-primary hover:bg-bg-hover'
                       }`}
                     >
                       {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -269,7 +269,7 @@ export default function QACoveragePage() {
                               Type: {spot.entityType} | Coverage: {(spot.coverageScore * 100).toFixed(0)}%
                             </p>
                             {spot.consecutiveUncoveredDays && (
-                              <p className="text-sm text-red-600 mt-1">
+                              <p className="text-sm text-error-600 mt-1">
                                 Untested for {spot.consecutiveUncoveredDays} days
                               </p>
                             )}
@@ -306,7 +306,7 @@ export default function QACoveragePage() {
                               title={`${(point.overallCoverage * 100).toFixed(0)}% on ${new Date(point.snapshotDate).toLocaleDateString()}`}
                             >
                               <div
-                                className="w-full bg-green-600 rounded-t"
+                                className="w-full bg-success-600 rounded-t"
                                 style={{ height: `${height}%` }}
                               ></div>
                               <span className="text-xs text-text-secondary">

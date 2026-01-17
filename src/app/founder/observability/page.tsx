@@ -77,20 +77,20 @@ export default function ObservabilityPage() {
 
   const getSeverityIcon = (severity: string) => {
     const icons: Record<string, React.ReactNode> = {
-      critical: <XCircle className="w-5 h-5 text-red-500" />,
-      error: <XCircle className="w-5 h-5 text-red-400" />,
-      warning: <AlertTriangle className="w-5 h-5 text-yellow-400" />,
-      info: <Info className="w-5 h-5 text-blue-400" />,
+      critical: <XCircle className="w-5 h-5 text-error-500" />,
+      error: <XCircle className="w-5 h-5 text-error-400" />,
+      warning: <AlertTriangle className="w-5 h-5 text-warning-400" />,
+      info: <Info className="w-5 h-5 text-info-400" />,
     };
     return icons[severity] || icons.info;
   };
 
   const getSeverityColor = (severity: string) => {
     const colors: Record<string, string> = {
-      critical: 'bg-red-500/10 text-red-400 border-red-500/20',
-      error: 'bg-red-500/10 text-red-400 border-red-500/20',
-      warning: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-      info: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+      critical: 'bg-error-500/10 text-error-400 border-error-500/20',
+      error: 'bg-error-500/10 text-error-400 border-error-500/20',
+      warning: 'bg-warning-500/10 text-warning-400 border-warning-500/20',
+      info: 'bg-info-500/10 text-info-400 border-info-500/20',
     };
     return colors[severity] || colors.info;
   };
@@ -140,9 +140,9 @@ export default function ObservabilityPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Errors</span>
-              <XCircle className="w-5 h-5 text-red-400" />
+              <XCircle className="w-5 h-5 text-error-400" />
             </div>
-            <div className="text-3xl font-bold text-red-400">{errorCount}</div>
+            <div className="text-3xl font-bold text-error-400">{errorCount}</div>
             <div className="text-xs text-text-tertiary mt-1">
               {totalEvents > 0 ? ((errorCount / totalEvents) * 100).toFixed(1) : 0}% of total
             </div>
@@ -151,9 +151,9 @@ export default function ObservabilityPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Warnings</span>
-              <AlertTriangle className="w-5 h-5 text-yellow-400" />
+              <AlertTriangle className="w-5 h-5 text-warning-400" />
             </div>
-            <div className="text-3xl font-bold text-yellow-400">{warningCount}</div>
+            <div className="text-3xl font-bold text-warning-400">{warningCount}</div>
             <div className="text-xs text-text-tertiary mt-1">
               {totalEvents > 0 ? ((warningCount / totalEvents) * 100).toFixed(1) : 0}% of total
             </div>
@@ -210,31 +210,31 @@ export default function ObservabilityPage() {
                       <div className="flex gap-1 h-6">
                         {data.errors > 0 && (
                           <div
-                            className="bg-red-500 rounded"
+                            className="bg-error-500 rounded"
                             style={{ width: `${(data.errors / data.total) * widthPercent}%` }}
                           />
                         )}
                         {data.warnings > 0 && (
                           <div
-                            className="bg-yellow-500 rounded"
+                            className="bg-warning-500 rounded"
                             style={{ width: `${(data.warnings / data.total) * widthPercent}%` }}
                           />
                         )}
                         {data.info > 0 && (
                           <div
-                            className="bg-blue-500 rounded"
+                            className="bg-info-500 rounded"
                             style={{ width: `${(data.info / data.total) * widthPercent}%` }}
                           />
                         )}
                       </div>
                       <div className="flex gap-4 mt-2 text-xs">
                         {data.errors > 0 && (
-                          <span className="text-red-400">{data.errors} errors</span>
+                          <span className="text-error-400">{data.errors} errors</span>
                         )}
                         {data.warnings > 0 && (
-                          <span className="text-yellow-400">{data.warnings} warnings</span>
+                          <span className="text-warning-400">{data.warnings} warnings</span>
                         )}
-                        {data.info > 0 && <span className="text-blue-400">{data.info} info</span>}
+                        {data.info > 0 && <span className="text-info-400">{data.info} info</span>}
                       </div>
                     </div>
                   );

@@ -91,10 +91,10 @@ export default function EarlyWarningsPage() {
 
   const riskLevel = highCount > 2 ? 'critical' : highCount > 0 ? 'high' : mediumCount > 2 ? 'medium' : 'low';
   const riskColor = {
-    critical: 'text-red-500 bg-red-500/10',
-    high: 'text-orange-500 bg-orange-500/10',
-    medium: 'text-yellow-500 bg-yellow-500/10',
-    low: 'text-green-500 bg-green-500/10',
+    critical: 'text-error-500 bg-error-500/10',
+    high: 'text-accent-500 bg-accent-500/10',
+    medium: 'text-warning-500 bg-warning-500/10',
+    low: 'text-success-500 bg-success-500/10',
   }[riskLevel];
 
   return (
@@ -134,15 +134,15 @@ export default function EarlyWarningsPage() {
             </div>
             <div className="flex gap-4 text-center">
               <div>
-                <p className="text-2xl font-bold text-red-500">{highCount}</p>
+                <p className="text-2xl font-bold text-error-500">{highCount}</p>
                 <p className="text-xs text-muted-foreground">High</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-yellow-500">{mediumCount}</p>
+                <p className="text-2xl font-bold text-warning-500">{mediumCount}</p>
                 <p className="text-xs text-muted-foreground">Medium</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-blue-500">{lowCount}</p>
+                <p className="text-2xl font-bold text-info-500">{lowCount}</p>
                 <p className="text-xs text-muted-foreground">Low</p>
               </div>
             </div>
@@ -183,9 +183,9 @@ export default function EarlyWarningsPage() {
       </div>
 
       {/* Truth notice */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <Info className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <Info className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-muted-foreground">
             <p>
               Early warnings use <strong>Balanced Mode</strong> thresholds to minimize false positives

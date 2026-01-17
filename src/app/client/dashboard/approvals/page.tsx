@@ -141,7 +141,7 @@ export default function ApprovalsPage() {
 
         {/* Filter */}
         <div className="flex items-center gap-2 mb-6">
-          <Filter className="w-4 h-4 text-gray-400" />
+          <Filter className="w-4 h-4 text-text-muted" />
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as typeof filter)}
@@ -157,7 +157,7 @@ export default function ApprovalsPage() {
         {/* Approvals List */}
         {loading ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading...</p>
+            <p className="text-text-tertiary">Loading...</p>
           </div>
         ) : filteredApprovals.length === 0 ? (
           <div className="text-center py-12 bg-bg-card rounded-lg border border-border-subtle">

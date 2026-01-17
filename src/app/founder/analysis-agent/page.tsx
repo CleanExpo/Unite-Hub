@@ -142,7 +142,7 @@ export default function AnalysisAgentDemo() {
   if (!session) {
     return (
       <div className="p-8">
-        <Alert className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30">
+        <Alert className="border-warning-200 bg-warning-50 dark:bg-warning-950/30">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Not Authenticated</AlertTitle>
           <AlertDescription>Please log in to access the analysis agent demo.</AlertDescription>
@@ -195,16 +195,16 @@ export default function AnalysisAgentDemo() {
 
       {/* Status Message */}
       {demo.status === 'success' && (
-        <Alert className="border-green-200 bg-green-50 dark:bg-green-950/30">
-          <CheckCircle2 className="h-4 w-4 text-green-600" />
+        <Alert className="border-success-200 bg-success-50 dark:bg-success-950/30">
+          <CheckCircle2 className="h-4 w-4 text-success-600" />
           <AlertTitle>Analysis Complete</AlertTitle>
           <AlertDescription>{demo.message}</AlertDescription>
         </Alert>
       )}
 
       {demo.status === 'error' && (
-        <Alert className="border-red-200 bg-red-50 dark:bg-red-950/30">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
+        <Alert className="border-error-200 bg-error-50 dark:bg-error-950/30">
+          <AlertTriangle className="h-4 w-4 text-error-600" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{demo.message}</AlertDescription>
         </Alert>
@@ -232,12 +232,12 @@ export default function AnalysisAgentDemo() {
                     <span className="text-2xl font-bold">{result.kpis.emailEngagement.toFixed(0)}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Open Rate</span>
+                    <span className="text-sm text-text-muted">Open Rate</span>
                     <span className="font-medium">{result.kpis.emailOpenRate.toFixed(1)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded h-2">
+                  <div className="w-full bg-bg-hover rounded h-2">
                     <div
-                      className="bg-blue-600 h-2 rounded"
+                      className="bg-info-600 h-2 rounded"
                       style={{ width: `${Math.min(result.kpis.emailEngagement, 100)}%` }}
                     />
                   </div>
@@ -254,7 +254,7 @@ export default function AnalysisAgentDemo() {
                     <span className="text-2xl font-bold">{result.kpis.contentGenerated}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Auto-Approved</span>
+                    <span className="text-sm text-text-muted">Auto-Approved</span>
                     <span className="font-medium">{result.kpis.autoApprovedContent.toFixed(0)}%</span>
                   </div>
                   <Badge
@@ -274,13 +274,13 @@ export default function AnalysisAgentDemo() {
                     <span className="text-sm font-medium">Average Utilization</span>
                     <span className="text-2xl font-bold">{result.kpis.staffUtilization.toFixed(0)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded h-2">
+                  <div className="w-full bg-bg-hover rounded h-2">
                     <div
-                      className={`h-2 rounded ${result.kpis.staffUtilization > 85 ? 'bg-red-600' : result.kpis.staffUtilization > 75 ? 'bg-yellow-600' : 'bg-green-600'}`}
+                      className={`h-2 rounded ${result.kpis.staffUtilization > 85 ? 'bg-error-600' : result.kpis.staffUtilization > 75 ? 'bg-warning-600' : 'bg-success-600'}`}
                       style={{ width: `${Math.min(result.kpis.staffUtilization, 100)}%` }}
                     />
                   </div>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-text-muted">
                     {result.kpis.staffUtilization > 85
                       ? 'Overloaded'
                       : result.kpis.staffUtilization > 75
@@ -322,9 +322,9 @@ export default function AnalysisAgentDemo() {
           {/* Anomalies Tab */}
           <TabsContent value="anomalies">
             {result.anomalies.length === 0 ? (
-              <Card className="bg-green-50 dark:bg-green-950/20 border-green-200">
+              <Card className="bg-success-50 dark:bg-success-950/20 border-success-200">
                 <CardContent className="pt-6">
-                  <p className="text-green-900 dark:text-green-200">No anomalies detected.</p>
+                  <p className="text-success-900 dark:text-success-200">No anomalies detected.</p>
                 </CardContent>
               </Card>
             ) : (
@@ -334,10 +334,10 @@ export default function AnalysisAgentDemo() {
                     key={idx}
                     className={`border-l-4 ${
                       anomaly.severity === 'critical'
-                        ? 'border-l-red-600 bg-red-50 dark:bg-red-950/20'
+                        ? 'border-l-red-600 bg-error-50 dark:bg-error-950/20'
                         : anomaly.severity === 'high'
-                          ? 'border-l-orange-600 bg-orange-50 dark:bg-orange-950/20'
-                          : 'border-l-yellow-600 bg-yellow-50 dark:bg-yellow-950/20'
+                          ? 'border-l-accent-600 bg-accent-50 dark:bg-accent-950/20'
+                          : 'border-l-warning-600 bg-warning-50 dark:bg-warning-950/20'
                     }`}
                   >
                     <CardContent className="pt-6">
@@ -453,7 +453,7 @@ export default function AnalysisAgentDemo() {
             </div>
 
             {result.forecast.recommendedActions.length > 0 && (
-              <Card className="mt-4 border-blue-200 bg-blue-50 dark:bg-blue-950/20">
+              <Card className="mt-4 border-info-200 bg-info-50 dark:bg-info-950/20">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <Zap className="h-4 w-4" />
@@ -464,7 +464,7 @@ export default function AnalysisAgentDemo() {
                   <ul className="space-y-2">
                     {result.forecast.recommendedActions.map((action, idx) => (
                       <li key={idx} className="text-sm flex gap-2">
-                        <span className="text-blue-600">→</span>
+                        <span className="text-info-600">→</span>
                         {action}
                       </li>
                     ))}
@@ -477,43 +477,43 @@ export default function AnalysisAgentDemo() {
       )}
 
       {/* Documentation */}
-      <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
+      <Card className="border-info-200 bg-info-50 dark:bg-info-950/20">
         <CardHeader>
           <CardTitle className="text-base">How the Analysis Agent Works</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">1. Data Collection</p>
+            <p className="font-medium text-info-900 dark:text-info-200">1. Data Collection</p>
             <p className="text-text-secondary">
               Aggregates data from email, research, content, scheduling, staff, and financial systems.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">2. KPI Extraction</p>
+            <p className="font-medium text-info-900 dark:text-info-200">2. KPI Extraction</p>
             <p className="text-text-secondary">
               Calculates 15+ key performance indicators across all business dimensions.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">3. Anomaly Detection</p>
+            <p className="font-medium text-info-900 dark:text-info-200">3. Anomaly Detection</p>
             <p className="text-text-secondary">
               Identifies statistical outliers, spikes, drops, and pattern breaks using z-score analysis.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">4. Forecasting</p>
+            <p className="font-medium text-info-900 dark:text-info-200">4. Forecasting</p>
             <p className="text-text-secondary">
               Projects future metrics using exponential smoothing and trend extrapolation.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">5. Insight Generation</p>
+            <p className="font-medium text-info-900 dark:text-info-200">5. Insight Generation</p>
             <p className="text-text-secondary">
               Derives 50+ business insights with action items and priority levels.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">6. Founder Review</p>
+            <p className="font-medium text-info-900 dark:text-info-200">6. Founder Review</p>
             <p className="text-text-secondary">
               Routes high-risk reports to founder with full context for decision-making.
             </p>

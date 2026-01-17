@@ -53,11 +53,11 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
       ) : (
         <div className="space-y-3">
           {history.map(check => (
-            <Card key={check.id} className={check.blocked ? 'border-red-200' : ''}>
+            <Card key={check.id} className={check.blocked ? 'border-error-200' : ''}>
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base flex items-center gap-2">
-                    {check.blocked ? <XCircle className="h-4 w-4 text-red-500" /> : <CheckCircle className="h-4 w-4 text-green-500" />}
+                    {check.blocked ? <XCircle className="h-4 w-4 text-error-500" /> : <CheckCircle className="h-4 w-4 text-success-500" />}
                     {check.checkType.replace('_', ' ')} Check
                   </CardTitle>
                   <Badge variant={check.blocked ? 'destructive' : check.coreKpisImpacted ? 'secondary' : 'default'}>
@@ -69,11 +69,11 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
                 {check.regressionsDetected.length > 0 && (
                   <div className="mb-2">
                     {check.regressionsDetected.map((r, i) => (
-                      <div key={i} className="text-sm text-red-600">• {r}</div>
+                      <div key={i} className="text-sm text-error-600">• {r}</div>
                     ))}
                   </div>
                 )}
-                {check.blockReason && <div className="text-sm text-red-600 font-medium">{check.blockReason}</div>}
+                {check.blockReason && <div className="text-sm text-error-600 font-medium">{check.blockReason}</div>}
                 <div className="text-xs text-muted-foreground mt-2">Confidence: {(check.confidence * 100).toFixed(0)}%</div>
                 {check.uncertaintyNotes && <p className="text-xs text-muted-foreground italic mt-2 border-l-2 border-muted pl-2">{check.uncertaintyNotes}</p>}
               </CardContent>
@@ -81,7 +81,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
           ))}
         </div>
       )}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">QA Constraints</div><p>No positive spin on regressions. Before/after metrics shown. Blocked if core KPIs drop beyond threshold.</p></div></div></CardContent></Card>
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" /><div className="text-sm text-warning-800 dark:text-warning-200"><div className="font-medium mb-1">QA Constraints</div><p>No positive spin on regressions. Before/after metrics shown. Blocked if core KPIs drop beyond threshold.</p></div></div></CardContent></Card>
     </div>
   );
 }

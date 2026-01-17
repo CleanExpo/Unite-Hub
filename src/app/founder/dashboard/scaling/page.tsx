@@ -155,7 +155,7 @@ export default function FounderScalingPage() {
             </p>
           </div>
         </div>
-        <Badge className="bg-green-500">
+        <Badge className="bg-success-500">
           <CheckCircle2 className="h-3 w-3 mr-1" />
           Healthy
         </Badge>
@@ -233,14 +233,14 @@ export default function FounderScalingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card className="cursor-pointer hover:bg-muted/50">
               <CardContent className="p-4 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-blue-500" />
+                <TrendingUp className="h-4 w-4 text-info-500" />
                 <span className="text-sm">Stability</span>
                 <ExternalLink className="h-3 w-3 ml-auto" />
               </CardContent>
             </Card>
             <Card className="cursor-pointer hover:bg-muted/50">
               <CardContent className="p-4 flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-orange-500" />
+                <AlertTriangle className="h-4 w-4 text-accent-500" />
                 <span className="text-sm">Director</span>
                 <ExternalLink className="h-3 w-3 ml-auto" />
               </CardContent>
@@ -254,7 +254,7 @@ export default function FounderScalingPage() {
             </Card>
             <Card className="cursor-pointer hover:bg-muted/50">
               <CardContent className="p-4 flex items-center gap-2">
-                <Database className="h-4 w-4 text-green-500" />
+                <Database className="h-4 w-4 text-success-500" />
                 <span className="text-sm">Governance</span>
                 <ExternalLink className="h-3 w-3 ml-auto" />
               </CardContent>
@@ -272,7 +272,7 @@ export default function FounderScalingPage() {
                 <div key={provider.provider} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">{provider.provider}</span>
-                    <span className={`text-xs ${provider.status === 'warning' ? 'text-yellow-500' : 'text-green-500'}`}>
+                    <span className={`text-xs ${provider.status === 'warning' ? 'text-warning-500' : 'text-success-500'}`}>
                       {((provider.used / provider.budget) * 100).toFixed(0)}%
                     </span>
                   </div>
@@ -294,7 +294,7 @@ export default function FounderScalingPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-green-500" />
+                  <DollarSign className="h-4 w-4 text-success-500" />
                   <span className="text-sm font-medium">Monthly Cost Projection</span>
                 </div>
                 <span className="text-lg font-bold">$285</span>
@@ -332,10 +332,10 @@ export default function FounderScalingPage() {
                       <Badge
                         className={
                           decision.action === 'accepted'
-                            ? 'bg-green-500'
+                            ? 'bg-success-500'
                             : decision.action === 'deferred'
-                            ? 'bg-yellow-500'
-                            : 'bg-red-500'
+                            ? 'bg-warning-500'
+                            : 'bg-error-500'
                         }
                       >
                         {decision.action}

@@ -74,9 +74,9 @@ export default function StabilityHorizonPage() {
   const windowColor = (window: string) => {
     switch (window) {
       case "24h":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "72h":
-        return "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
+        return "bg-cyan-500/10 text-info-400 border-cyan-500/20";
       case "7d":
         return "bg-purple-500/10 text-purple-400 border-purple-500/20";
       case "14d":
@@ -91,15 +91,15 @@ export default function StabilityHorizonPage() {
   const riskColor = (risk: string) => {
     switch (risk) {
       case "critical":
-        return "bg-red-500/10 text-red-400";
+        return "bg-error-500/10 text-error-400";
       case "high":
-        return "bg-orange-500/10 text-orange-400";
+        return "bg-accent-500/10 text-accent-400";
       case "moderate":
-        return "bg-amber-500/10 text-amber-400";
+        return "bg-warning-500/10 text-warning-400";
       case "low":
-        return "bg-emerald-500/10 text-emerald-400";
+        return "bg-success-500/10 text-success-400";
       case "minimal":
-        return "bg-green-500/10 text-green-400";
+        return "bg-success-500/10 text-success-400";
       default:
         return "bg-bg-subtle text-text-secondary";
     }
@@ -107,15 +107,15 @@ export default function StabilityHorizonPage() {
 
   const scoreColor = (score: number) => {
     if (score >= 75) {
-return "text-red-400";
+return "text-error-400";
 }
     if (score >= 50) {
-return "text-amber-400";
+return "text-warning-400";
 }
     if (score >= 25) {
 return "text-accent-400";
 }
-    return "text-emerald-400";
+    return "text-success-400";
   };
 
   if (authLoading || loading) {
@@ -165,14 +165,14 @@ return "text-accent-400";
 
           <Card className="bg-bg-card border-border p-6">
             <div className="text-sm text-text-secondary mb-1">Critical Events</div>
-            <div className="text-3xl font-semibold text-red-400">
+            <div className="text-3xl font-semibold text-error-400">
               {summary.critical_count}
             </div>
           </Card>
 
           <Card className="bg-bg-card border-border p-6">
             <div className="text-sm text-text-secondary mb-1">High Risk Events</div>
-            <div className="text-3xl font-semibold text-orange-400">
+            <div className="text-3xl font-semibold text-accent-400">
               {summary.high_count}
             </div>
           </Card>
@@ -221,13 +221,13 @@ return "text-accent-400";
                 <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
                   <div>
                     <div className="text-xs text-text-secondary mb-1">Positive Indicators</div>
-                    <div className="text-emerald-400 font-medium">
+                    <div className="text-success-400 font-medium">
                       {horizon.positive_indicators}
                     </div>
                   </div>
                   <div>
                     <div className="text-xs text-text-secondary mb-1">Negative Indicators</div>
-                    <div className="text-red-400 font-medium">
+                    <div className="text-error-400 font-medium">
                       {horizon.negative_indicators}
                     </div>
                   </div>

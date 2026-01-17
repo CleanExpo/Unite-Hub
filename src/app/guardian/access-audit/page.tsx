@@ -103,11 +103,11 @@ export default function GuardianAccessAuditPage() {
           </div>
           <div className="rounded-xl border bg-bg-card p-4 space-y-1">
             <p className="text-xs text-text-secondary">Successful</p>
-            <p className="text-2xl font-semibold text-emerald-400">{summary.successCount.toLocaleString()}</p>
+            <p className="text-2xl font-semibold text-success-400">{summary.successCount.toLocaleString()}</p>
           </div>
           <div className="rounded-xl border bg-bg-card p-4 space-y-1">
             <p className="text-xs text-text-secondary">Failed</p>
-            <p className="text-2xl font-semibold text-rose-400">{summary.failureCount.toLocaleString()}</p>
+            <p className="text-2xl font-semibold text-error-400">{summary.failureCount.toLocaleString()}</p>
           </div>
           <div className="rounded-xl border bg-bg-card p-4 space-y-1">
             <p className="text-xs text-text-secondary">Error Rate</p>
@@ -171,7 +171,7 @@ export default function GuardianAccessAuditPage() {
       {loading ? (
         <p className="text-sm text-text-secondary">Loading Guardian access audit…</p>
       ) : error ? (
-        <div className="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-400">
+        <div className="rounded-xl border border-error-500/40 bg-error-500/10 p-4 text-sm text-error-400">
           {error}
         </div>
       ) : items.length === 0 ? (
@@ -218,8 +218,8 @@ export default function GuardianAccessAuditPage() {
                       <span
                         className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${
                           r.success
-                            ? 'bg-emerald-500/10 text-emerald-400'
-                            : 'bg-rose-500/10 text-rose-400'
+                            ? 'bg-success-500/10 text-success-400'
+                            : 'bg-error-500/10 text-error-400'
                         }`}
                       >
                         {r.status_code}

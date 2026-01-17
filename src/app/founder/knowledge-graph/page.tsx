@@ -192,7 +192,7 @@ export default function KnowledgeGraphPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Relationships</span>
-              <GitBranch className="w-5 h-5 text-blue-400" />
+              <GitBranch className="w-5 h-5 text-info-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">{totalRelationships}</div>
             <div className="text-xs text-text-tertiary mt-1">
@@ -203,7 +203,7 @@ export default function KnowledgeGraphPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Connections</span>
-              <Network className="w-5 h-5 text-green-400" />
+              <Network className="w-5 h-5 text-success-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">
               {neighbors?.entities.length || 0}
@@ -407,7 +407,7 @@ export default function KnowledgeGraphPage() {
                     className="p-4 bg-bg-card rounded-lg border border-border-primary"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs rounded border border-blue-500/20">
+                      <div className="px-3 py-1 bg-info-500/10 text-info-400 text-xs rounded border border-info-500/20">
                         {relationship.type}
                       </div>
                       <GitBranch className="w-4 h-4 text-text-tertiary" />
@@ -475,7 +475,7 @@ export default function KnowledgeGraphPage() {
                     <ul className="space-y-2">
                       {analysis.recommendations.map((rec, index) => (
                         <li key={index} className="flex items-start gap-3">
-                          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2" />
+                          <div className="w-1.5 h-1.5 bg-info-400 rounded-full mt-2" />
                           <span className="text-text-secondary text-sm">{rec}</span>
                         </li>
                       ))}

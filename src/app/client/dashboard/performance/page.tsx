@@ -187,7 +187,7 @@ return;
         {!loading && reports.length === 0 && (
           <Section className="mt-6">
             <div className="text-center py-12 bg-bg-raised/50 rounded-lg">
-              <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <BarChart3 className="w-12 h-12 text-text-muted mx-auto mb-3" />
               <h3 className="text-lg font-medium text-text-primary mb-1">
                 No {activeTab} reports yet
               </h3>
@@ -304,7 +304,7 @@ function TabButton({ active, onClick, icon: Icon, label }: TabButtonProps) {
       className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
         active
           ? "bg-bg-input text-accent-600 dark:text-accent-400 shadow-sm"
-          : "text-text-secondary hover:text-gray-900 dark:hover:text-white"
+          : "text-text-secondary hover:text-text-primary"
       }`}
     >
       <Icon className="w-4 h-4" />

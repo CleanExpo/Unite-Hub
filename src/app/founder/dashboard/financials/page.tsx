@@ -239,14 +239,14 @@ export default function FounderFinancialsPage() {
                               </span>
                               <div className="flex-1 h-2 bg-bg-hover rounded-full overflow-hidden">
                                 <div
-                                  className="h-full bg-blue-500 rounded-full"
+                                  className="h-full bg-info-500 rounded-full"
                                   style={{ width: `${percentage}%` }}
                                 />
                               </div>
                               <span className="text-sm font-medium w-20 text-right">
                                 {formatCurrency(amount)}
                               </span>
-                              <span className="text-xs text-gray-500 w-10 text-right">
+                              <span className="text-xs text-text-tertiary w-10 text-right">
                                 {percentage}%
                               </span>
                             </div>
@@ -260,14 +260,14 @@ export default function FounderFinancialsPage() {
 
             {/* Data Sources Notice */}
             <Section className="mt-8">
-              <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+              <div className="p-4 bg-warning-50 dark:bg-warning-900/20 rounded-lg border border-warning-200 dark:border-warning-800">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                    <p className="text-sm font-medium text-warning-800 dark:text-warning-200">
                       Founder-Only Access
                     </p>
-                    <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                    <p className="text-xs text-warning-700 dark:text-warning-300 mt-1">
                       This dashboard is restricted to founder access only. All data is
                       sourced from Xero API, bank feeds, and email receipts. No synthetic
                       or estimated data is displayed. Forecasts are based on historical
@@ -298,7 +298,7 @@ function PeriodButton({ active, onClick, label }: PeriodButtonProps) {
       className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
         active
           ? "bg-bg-input text-accent-600 dark:text-accent-400 shadow-sm"
-          : "text-text-secondary hover:text-gray-900 dark:hover:text-white"
+          : "text-text-secondary hover:text-text-primary dark:hover:text-white"
       }`}
     >
       <Calendar className="w-4 h-4" />
@@ -316,10 +316,10 @@ interface MetricCardProps {
 
 function MetricCard({ icon: Icon, label, value, color }: MetricCardProps) {
   const colorClasses = {
-    green: "text-green-600 bg-green-100 dark:bg-green-900/30",
-    red: "text-red-600 bg-red-100 dark:bg-red-900/30",
-    blue: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
-    amber: "text-amber-600 bg-amber-100 dark:bg-amber-900/30",
+    green: "text-success-600 bg-success-100 dark:bg-success-900/30",
+    red: "text-error-600 bg-error-100 dark:bg-error-900/30",
+    blue: "text-info-600 bg-info-100 dark:bg-info-900/30",
+    amber: "text-warning-600 bg-warning-100 dark:bg-warning-900/30",
   };
 
   return (

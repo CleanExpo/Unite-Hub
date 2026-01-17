@@ -216,7 +216,7 @@ export default function PlaybookDetailPage() {
         {/* Back Link */}
         <Link
           href="/founder/marketing/playbooks"
-          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent-600 mb-4"
+          className="inline-flex items-center gap-2 text-sm text-text-tertiary hover:text-accent-600 mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Playbooks
@@ -232,10 +232,10 @@ export default function PlaybookDetailPage() {
               <span
                 className={`px-2 py-1 text-xs font-medium rounded ${
                   playbook.status === "active"
-                    ? "bg-green-100 text-green-700"
+                    ? "bg-success-100 text-success-700"
                     : playbook.status === "draft"
-                    ? "bg-gray-100 text-gray-700"
-                    : "bg-amber-100 text-amber-700"
+                    ? "bg-bg-hover text-text-secondary"
+                    : "bg-warning-100 text-warning-700"
                 }`}
               >
                 {playbook.status}
@@ -244,7 +244,7 @@ export default function PlaybookDetailPage() {
             <p className="text-text-secondary mb-3">
               {playbook.description}
             </p>
-            <div className="flex items-center gap-4 text-sm text-gray-500">
+            <div className="flex items-center gap-4 text-sm text-text-tertiary">
               <span>Goal: {playbook.primary_goal}</span>
               <span>Persona: {playbook.primary_persona}</span>
             </div>
@@ -267,7 +267,7 @@ export default function PlaybookDetailPage() {
         {/* Platforms */}
         <Section className="mb-6">
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500">Platforms:</span>
+            <span className="text-sm text-text-tertiary">Platforms:</span>
             {playbook.platforms.map((platform) => {
               const Icon = PLATFORM_ICONS[platform] || BookOpen;
               return (
@@ -331,11 +331,11 @@ export default function PlaybookDetailPage() {
           {filteredAssets.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <Video className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                <Video className="w-12 h-12 mx-auto text-text-secondary mb-4" />
                 <h3 className="text-lg font-medium text-text-primary mb-2">
                   No assets yet
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-text-tertiary mb-4">
                   Add your first content asset to this playbook.
                 </p>
                 <button
@@ -364,7 +364,7 @@ export default function PlaybookDetailPage() {
               <h3 className="text-lg font-medium text-text-primary mb-2">
                 AI Asset Generator
               </h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-sm text-text-tertiary mb-4">
                 Generate hooks, scripts, and thumbnails automatically based on your playbook strategy.
               </p>
               <button className="inline-flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700">
@@ -399,10 +399,10 @@ function StatPill({
   color: "blue" | "gray" | "green" | "amber" | "teal";
 }) {
   const colors = {
-    blue: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-    gray: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
-    green: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    amber: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    blue: "bg-info-100 text-info-700 dark:bg-info-900/30 dark:text-info-400",
+    gray: "bg-bg-hover text-text-secondary dark:bg-bg-elevated dark:text-text-secondary",
+    green: "bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400",
+    amber: "bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400",
     teal: "bg-accent-100 text-accent-700 dark:bg-accent-900/30 dark:text-accent-400",
   };
 
@@ -431,7 +431,7 @@ function FilterTab({
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
         active
           ? "bg-accent-600 text-white"
-          : "bg-bg-hover text-gray-600 dark:text-gray-300 hover:bg-bg-hover"
+          : "bg-bg-hover text-text-muted dark:text-text-secondary hover:bg-bg-hover"
       }`}
     >
       {Icon && <Icon className="w-4 h-4" />}
@@ -446,10 +446,10 @@ function AssetCard({ asset, onUpdate }: { asset: SocialAsset; onUpdate: () => vo
   const TypeIcon = ASSET_TYPE_ICONS[asset.asset_type] || FileText;
 
   const statusColors = {
-    draft: "bg-gray-100 text-gray-700",
-    ready: "bg-green-100 text-green-700",
-    scheduled: "bg-amber-100 text-amber-700",
-    published: "bg-blue-100 text-blue-700",
+    draft: "bg-bg-hover text-text-secondary",
+    ready: "bg-success-100 text-success-700",
+    scheduled: "bg-warning-100 text-warning-700",
+    published: "bg-info-100 text-info-700",
   };
 
   return (
@@ -473,14 +473,14 @@ function AssetCard({ asset, onUpdate }: { asset: SocialAsset; onUpdate: () => vo
                 onClick={() => setMenuOpen(!menuOpen)}
                 className="p-1 rounded hover:bg-bg-hover"
               >
-                <MoreVertical className="w-4 h-4 text-gray-400" />
+                <MoreVertical className="w-4 h-4 text-text-muted" />
               </button>
               {menuOpen && (
                 <div className="absolute right-0 top-8 w-32 bg-bg-card rounded-lg shadow-lg border border-border-subtle py-1 z-10">
                   <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover">
                     <Edit className="w-4 h-4" /> Edit
                   </button>
-                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-bg-hover">
+                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-error-600 hover:bg-bg-hover">
                     <Trash2 className="w-4 h-4" /> Delete
                   </button>
                 </div>
@@ -494,17 +494,17 @@ function AssetCard({ asset, onUpdate }: { asset: SocialAsset; onUpdate: () => vo
         </h3>
 
         {asset.hook && (
-          <p className="text-sm text-gray-500 mb-3 line-clamp-2 italic">"{asset.hook}"</p>
+          <p className="text-sm text-text-tertiary mb-3 line-clamp-2 italic">"{asset.hook}"</p>
         )}
 
         {asset.scheduled_at && (
-          <div className="flex items-center gap-1.5 text-xs text-amber-600 mb-2">
+          <div className="flex items-center gap-1.5 text-xs text-warning-600 mb-2">
             <Calendar className="w-3.5 h-3.5" />
             Scheduled: {new Date(asset.scheduled_at).toLocaleDateString()}
           </div>
         )}
 
-        <div className="flex items-center justify-between text-xs text-gray-400 mt-3 pt-3 border-t border-border-subtle">
+        <div className="flex items-center justify-between text-xs text-text-muted mt-3 pt-3 border-t border-border-subtle">
           <span className="capitalize">{asset.platform} / {asset.asset_type}</span>
           <span>{new Date(asset.created_at).toLocaleDateString()}</span>
         </div>

@@ -61,15 +61,15 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
                 </div>
               </CardHeader>
               <CardContent className="space-y-2">
-                {insight.insightPayload.highlights.map((h, i) => <div key={i} className="text-sm text-green-600">✓ {h}</div>)}
-                {insight.insightPayload.risks.map((r, i) => <div key={i} className="text-sm text-red-600">⚠ {r}</div>)}
+                {insight.insightPayload.highlights.map((h, i) => <div key={i} className="text-sm text-success-600">✓ {h}</div>)}
+                {insight.insightPayload.risks.map((r, i) => <div key={i} className="text-sm text-error-600">⚠ {r}</div>)}
                 {insight.uncertaintyNotes && <div className="text-xs text-muted-foreground italic border-l-2 border-muted pl-2">{insight.uncertaintyNotes}</div>}
               </CardContent>
             </Card>
           ))}
         </div>
       )}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">Rendering Guidelines</div><p>Rendered outputs inherit uncertainty and confidence. No visual element hides critical risk. Summaries never claim more certainty than sources.</p></div></div></CardContent></Card>
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" /><div className="text-sm text-warning-800 dark:text-warning-200"><div className="font-medium mb-1">Rendering Guidelines</div><p>Rendered outputs inherit uncertainty and confidence. No visual element hides critical risk. Summaries never claim more certainty than sources.</p></div></div></CardContent></Card>
     </div>
   );
 }

@@ -66,10 +66,10 @@ return;
 
   const getRiskColor = (level: string) => {
     switch (level) {
-      case 'critical': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'medium': return 'bg-yellow-500';
-      default: return 'bg-green-500';
+      case 'critical': return 'bg-error-500';
+      case 'high': return 'bg-accent-500';
+      case 'medium': return 'bg-warning-500';
+      default: return 'bg-success-500';
     }
   };
 
@@ -98,7 +98,7 @@ return;
 
       {/* Global Risk Assessment */}
       {globalRisk && (
-        <Card className={globalRisk.riskLevel === 'critical' ? 'border-red-500' : ''}>
+        <Card className={globalRisk.riskLevel === 'critical' ? 'border-error-500' : ''}>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -121,11 +121,11 @@ return;
                 <p className="text-sm text-muted-foreground">Total Regions</p>
               </div>
               <div>
-                <div className="text-2xl font-bold text-red-500">{frozenCount}</div>
+                <div className="text-2xl font-bold text-error-500">{frozenCount}</div>
                 <p className="text-sm text-muted-foreground">Frozen</p>
               </div>
               <div>
-                <div className="text-2xl font-bold text-amber-500">{globalRisk.conflicts.length}</div>
+                <div className="text-2xl font-bold text-warning-500">{globalRisk.conflicts.length}</div>
                 <p className="text-sm text-muted-foreground">Conflicts</p>
               </div>
             </div>
@@ -150,9 +150,9 @@ return;
 
       {/* Alerts */}
       {(frozenCount > 0 || criticalCount > 0) && (
-        <Card className="border-amber-500">
+        <Card className="border-warning-500">
           <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-amber-500">
+            <div className="flex items-center gap-2 text-warning-500">
               <AlertTriangle className="h-5 w-5" />
               <div>
                 {frozenCount > 0 && (

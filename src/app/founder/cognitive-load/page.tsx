@@ -88,15 +88,15 @@ export default function CognitiveLoadPage() {
   const intensityColor = (intensity: string) => {
     switch (intensity) {
       case "overload":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "extreme":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "high":
         return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "moderate":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "low":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -105,14 +105,14 @@ export default function CognitiveLoadPage() {
   const loadGauge = (load: number) => {
     const color =
       load >= 90
-        ? "bg-red-500"
+        ? "bg-error-500"
         : load >= 75
-          ? "bg-orange-500"
+          ? "bg-accent-500"
           : load >= 60
             ? "bg-accent-500"
             : load >= 40
-              ? "bg-amber-500"
-              : "bg-emerald-500";
+              ? "bg-warning-500"
+              : "bg-success-500";
     return (
       <div className="relative h-2 bg-bg-muted rounded-full overflow-hidden">
         <div
@@ -181,11 +181,11 @@ export default function CognitiveLoadPage() {
         <div className="space-y-6">
           {/* Alert Banner */}
           {currentLoad.recovery_needed && (
-            <Card className="bg-red-500/10 border-red-500/20 p-4">
+            <Card className="bg-error-500/10 border-error-500/20 p-4">
               <div className="flex items-start gap-3">
-                <div className="text-red-400 text-xl">⚠️</div>
+                <div className="text-error-400 text-xl">⚠️</div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-red-400 mb-1">Recovery Recommended</h3>
+                  <h3 className="font-semibold text-error-400 mb-1">Recovery Recommended</h3>
                   <p className="text-sm text-text-secondary">{currentLoad.latest_recovery_action}</p>
                 </div>
               </div>
@@ -300,7 +300,7 @@ export default function CognitiveLoadPage() {
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Overload Events</div>
-              <div className="text-2xl font-bold text-red-400">{summary.overload_events}</div>
+              <div className="text-2xl font-bold text-error-400">{summary.overload_events}</div>
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Recovery Needed</div>

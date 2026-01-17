@@ -105,10 +105,10 @@ interface GuardianNetworkOverview {
 }
 
 const SEVERITY_COLORS = {
-  critical: "bg-red-100 text-red-800 border-red-300",
-  high: "bg-orange-100 text-orange-800 border-orange-300",
-  medium: "bg-yellow-100 text-yellow-800 border-yellow-300",
-  low: "bg-blue-100 text-blue-800 border-blue-300",
+  critical: "bg-error-100 text-error-800 border-error-300",
+  high: "bg-accent-100 text-accent-800 border-accent-300",
+  medium: "bg-warning-100 text-warning-800 border-warning-300",
+  low: "bg-info-100 text-info-800 border-info-300",
 };
 
 export default function NetworkIntelligencePage() {
@@ -332,7 +332,7 @@ return;
   if (workspaceLoading) {
     return (
       <div className="space-y-6 p-6">
-        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading workspace...</div>
       </div>
     );
   }
@@ -340,9 +340,9 @@ return;
   if (workspaceError || !workspaceId) {
     return (
       <div className="space-y-6 p-6">
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900">{workspaceError || "No workspace selected"}</p>
+            <p className="text-sm text-error-900">{workspaceError || "No workspace selected"}</p>
           </CardContent>
         </Card>
       </div>
@@ -352,7 +352,7 @@ return;
   if (loading) {
     return (
       <div className="space-y-6 p-6">
-        <div className="text-center py-12 text-gray-500">Loading Network Intelligence...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading Network Intelligence...</div>
       </div>
     );
   }
@@ -360,9 +360,9 @@ return;
   if (!overview || !flags) {
     return (
       <div className="space-y-6 p-6">
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900">{error || "Failed to load Network Intelligence"}</p>
+            <p className="text-sm text-error-900">{error || "Failed to load Network Intelligence"}</p>
           </CardContent>
         </Card>
       </div>
@@ -375,7 +375,7 @@ return;
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Network Intelligence Console</h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-text-muted mt-1">
             Unified view of X-series network telemetry, anomalies, and governance
           </p>
         </div>
@@ -385,9 +385,9 @@ return;
       </div>
 
       {/* Privacy Banner */}
-      <Card className="border-blue-200 bg-blue-50">
+      <Card className="border-info-200 bg-info-50">
         <CardContent className="pt-6">
-          <p className="text-sm text-blue-900 flex items-start gap-2">
+          <p className="text-sm text-info-900 flex items-start gap-2">
             <TrendingUp className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <span>
               All X-series data is privacy-preserving. Network metrics are aggregated
@@ -398,9 +398,9 @@ return;
       </Card>
 
       {error && (
-        <Card className="border-yellow-200 bg-yellow-50">
+        <Card className="border-warning-200 bg-warning-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-yellow-900">{error}</p>
+            <p className="text-sm text-warning-900">{error}</p>
           </CardContent>
         </Card>
       )}
@@ -412,7 +412,7 @@ return;
           className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
             selectedTab === "overview"
               ? "border-accent-500 text-accent-600"
-              : "border-transparent text-gray-600 hover:text-gray-900"
+              : "border-transparent text-text-muted hover:text-text-primary"
           }`}
         >
           <BarChart3 className="w-4 h-4" />
@@ -423,7 +423,7 @@ return;
           className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
             selectedTab === "insights"
               ? "border-accent-500 text-accent-600"
-              : "border-transparent text-gray-600 hover:text-gray-900"
+              : "border-transparent text-text-muted hover:text-text-primary"
           }`}
         >
           <Eye className="w-4 h-4" />
@@ -434,7 +434,7 @@ return;
           className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
             selectedTab === "settings"
               ? "border-accent-500 text-accent-600"
-              : "border-transparent text-gray-600 hover:text-gray-900"
+              : "border-transparent text-text-muted hover:text-text-primary"
           }`}
         >
           <Settings className="w-4 h-4" />
@@ -445,7 +445,7 @@ return;
           className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
             selectedTab === "compliance"
               ? "border-accent-500 text-accent-600"
-              : "border-transparent text-gray-600 hover:text-gray-900"
+              : "border-transparent text-text-muted hover:text-text-primary"
           }`}
         >
           <Shield className="w-4 h-4" />
@@ -459,7 +459,7 @@ return;
           className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
             selectedTab === "recommendations"
               ? "border-accent-500 text-accent-600"
-              : "border-transparent text-gray-600 hover:text-gray-900"
+              : "border-transparent text-text-muted hover:text-text-primary"
           }`}
         >
           <CheckCircle className="w-4 h-4" />
@@ -480,10 +480,10 @@ return;
                 <div className="flex items-center justify-between p-3 border rounded">
                   <div>
                     <p className="font-medium">Network Telemetry</p>
-                    <p className="text-xs text-gray-500">Anonymized metric ingestion</p>
+                    <p className="text-xs text-text-tertiary">Anonymized metric ingestion</p>
                   </div>
                   <Badge
-                    className={flags.enableNetworkTelemetry ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
+                    className={flags.enableNetworkTelemetry ? "bg-success-100 text-success-800" : "bg-bg-hover text-text-secondary"}
                   >
                     {flags.enableNetworkTelemetry ? "Enabled" : "Disabled"}
                   </Badge>
@@ -492,10 +492,10 @@ return;
                 <div className="flex items-center justify-between p-3 border rounded">
                   <div>
                     <p className="font-medium">Benchmarks</p>
-                    <p className="text-xs text-gray-500">Cohort comparisons</p>
+                    <p className="text-xs text-text-tertiary">Cohort comparisons</p>
                   </div>
                   <Badge
-                    className={flags.enableNetworkBenchmarks ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
+                    className={flags.enableNetworkBenchmarks ? "bg-success-100 text-success-800" : "bg-bg-hover text-text-secondary"}
                   >
                     {flags.enableNetworkBenchmarks ? "Enabled" : "Disabled"}
                   </Badge>
@@ -504,10 +504,10 @@ return;
                 <div className="flex items-center justify-between p-3 border rounded">
                   <div>
                     <p className="font-medium">Anomalies</p>
-                    <p className="text-xs text-gray-500">Anomaly detection (X02)</p>
+                    <p className="text-xs text-text-tertiary">Anomaly detection (X02)</p>
                   </div>
                   <Badge
-                    className={flags.enableNetworkAnomalies ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
+                    className={flags.enableNetworkAnomalies ? "bg-success-100 text-success-800" : "bg-bg-hover text-text-secondary"}
                   >
                     {flags.enableNetworkAnomalies ? "Enabled" : "Disabled"}
                   </Badge>
@@ -516,10 +516,10 @@ return;
                 <div className="flex items-center justify-between p-3 border rounded">
                   <div>
                     <p className="font-medium">Early Warnings</p>
-                    <p className="text-xs text-gray-500">Pattern-based signals (X03)</p>
+                    <p className="text-xs text-text-tertiary">Pattern-based signals (X03)</p>
                   </div>
                   <Badge
-                    className={flags.enableNetworkEarlyWarnings ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
+                    className={flags.enableNetworkEarlyWarnings ? "bg-success-100 text-success-800" : "bg-bg-hover text-text-secondary"}
                   >
                     {flags.enableNetworkEarlyWarnings ? "Enabled" : "Disabled"}
                   </Badge>
@@ -528,10 +528,10 @@ return;
                 <div className="flex items-center justify-between p-3 border rounded">
                   <div>
                     <p className="font-medium">AI Hints</p>
-                    <p className="text-xs text-gray-500">AI-generated suggestions</p>
+                    <p className="text-xs text-text-tertiary">AI-generated suggestions</p>
                   </div>
                   <Badge
-                    className={flags.enableAiHints ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
+                    className={flags.enableAiHints ? "bg-success-100 text-success-800" : "bg-bg-hover text-text-secondary"}
                   >
                     {flags.enableAiHints ? "Enabled" : "Disabled"}
                   </Badge>
@@ -540,10 +540,10 @@ return;
                 <div className="flex items-center justify-between p-3 border rounded">
                   <div>
                     <p className="font-medium">Cohort Metadata</p>
-                    <p className="text-xs text-gray-500">Region/vertical in cohorts</p>
+                    <p className="text-xs text-text-tertiary">Region/vertical in cohorts</p>
                   </div>
                   <Badge
-                    className={flags.enableCohortMetadataSharing ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
+                    className={flags.enableCohortMetadataSharing ? "bg-success-100 text-success-800" : "bg-bg-hover text-text-secondary"}
                   >
                     {flags.enableCohortMetadataSharing ? "Enabled" : "Disabled"}
                   </Badge>
@@ -559,16 +559,16 @@ return;
                 <div className="text-3xl font-bold text-accent-600">
                   {overview.stats.anomaliesLast30d}
                 </div>
-                <p className="text-sm text-gray-600 mt-1">Anomalies (30d)</p>
+                <p className="text-sm text-text-muted mt-1">Anomalies (30d)</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-orange-600">
+                <div className="text-3xl font-bold text-accent-600">
                   {overview.stats.earlyWarningsOpen}
                 </div>
-                <p className="text-sm text-gray-600 mt-1">Open Warnings</p>
+                <p className="text-sm text-text-muted mt-1">Open Warnings</p>
               </CardContent>
             </Card>
 
@@ -577,14 +577,14 @@ return;
                 <div className="text-3xl font-bold">
                   {overview.stats.benchmarksAvailable ? "Yes" : "No"}
                 </div>
-                <p className="text-sm text-gray-600 mt-1">Benchmarks</p>
+                <p className="text-sm text-text-muted mt-1">Benchmarks</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-6">
                 <div className="text-3xl font-bold">{overview.stats.cohortsUsed.length}</div>
-                <p className="text-sm text-gray-600 mt-1">Cohorts</p>
+                <p className="text-sm text-text-muted mt-1">Cohorts</p>
               </CardContent>
             </Card>
           </div>
@@ -598,18 +598,18 @@ return;
               </CardHeader>
               <CardContent>
                 {overview.recentAnomalies.length === 0 ? (
-                  <p className="text-sm text-gray-500">No recent anomalies</p>
+                  <p className="text-sm text-text-tertiary">No recent anomalies</p>
                 ) : (
                   <div className="space-y-2">
                     {overview.recentAnomalies.slice(0, 5).map((anom, idx) => (
                       <div key={idx} className="text-xs p-2 border rounded flex justify-between">
                         <div>
                           <p className="font-medium">{anom.metricKey}</p>
-                          <p className="text-gray-500">{anom.metricFamily}</p>
+                          <p className="text-text-tertiary">{anom.metricFamily}</p>
                         </div>
                         <Badge
                           className={
-                            SEVERITY_COLORS[anom.severity] || "bg-gray-100 text-gray-800"
+                            SEVERITY_COLORS[anom.severity] || "bg-bg-hover text-text-secondary"
                           }
                         >
                           {anom.severity}
@@ -628,7 +628,7 @@ return;
               </CardHeader>
               <CardContent>
                 {overview.recentWarnings.length === 0 ? (
-                  <p className="text-sm text-gray-500">No recent warnings</p>
+                  <p className="text-sm text-text-tertiary">No recent warnings</p>
                 ) : (
                   <div className="space-y-2">
                     {overview.recentWarnings.slice(0, 5).map((warn) => (
@@ -637,14 +637,14 @@ return;
                           <p className="font-medium">{warn.patternKey}</p>
                           <Badge
                             className={
-                              SEVERITY_COLORS[warn.severity] || "bg-gray-100 text-gray-800"
+                              SEVERITY_COLORS[warn.severity] || "bg-bg-hover text-text-secondary"
                             }
                           >
                             {(warn.matchScore * 100).toFixed(0)}%
                           </Badge>
                         </div>
                         {warn.suggestionTheme && (
-                          <p className="text-gray-500">{warn.suggestionTheme}</p>
+                          <p className="text-text-tertiary">{warn.suggestionTheme}</p>
                         )}
                       </div>
                     ))}
@@ -665,9 +665,9 @@ return;
             </CardHeader>
             <CardContent>
               {!flags.enableNetworkAnomalies && !flags.enableNetworkEarlyWarnings ? (
-                <div className="p-6 bg-gray-50 border border-gray-200 rounded text-center">
-                  <AlertCircle className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-gray-600">
+                <div className="p-6 bg-bg-hover border border-border rounded text-center">
+                  <AlertCircle className="w-8 h-8 mx-auto text-text-muted mb-2" />
+                  <p className="text-text-muted">
                     Enable "Anomalies" or "Early Warnings" in Settings to view insights
                   </p>
                 </div>
@@ -676,7 +676,7 @@ return;
                   {flags.enableNetworkAnomalies && (
                     <div className="p-4 border rounded">
                       <h4 className="font-medium mb-2">Network Anomalies (X02)</h4>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-text-muted">
                         View detailed anomaly detection results and historical patterns
                       </p>
                     </div>
@@ -684,7 +684,7 @@ return;
                   {flags.enableNetworkEarlyWarnings && (
                     <div className="p-4 border rounded">
                       <h4 className="font-medium mb-2">Early-Warning Signals (X03)</h4>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-text-muted">
                         Monitor pattern-based early warnings derived from cohort behavior
                       </p>
                     </div>
@@ -740,7 +740,7 @@ return;
                 <div key={item.key} className="flex items-center justify-between p-3 border rounded">
                   <div>
                     <p className="font-medium">{item.label}</p>
-                    <p className="text-xs text-gray-500">{item.description}</p>
+                    <p className="text-xs text-text-tertiary">{item.description}</p>
                   </div>
                   <Switch
                     checked={flags[item.key]}
@@ -762,19 +762,19 @@ return;
             </CardHeader>
             <CardContent>
               {overview.recentGovernanceEvents.length === 0 ? (
-                <p className="text-sm text-gray-500">No governance events recorded</p>
+                <p className="text-sm text-text-tertiary">No governance events recorded</p>
               ) : (
                 <div className="space-y-2">
                   {overview.recentGovernanceEvents.map((event, idx) => (
                     <div key={idx} className="text-xs p-2 border rounded flex justify-between">
                       <div>
                         <p className="font-medium">{event.eventType}</p>
-                        <p className="text-gray-500">{event.context}</p>
+                        <p className="text-text-tertiary">{event.context}</p>
                         {event.detailsSummary && (
-                          <p className="text-gray-400 mt-1">{event.detailsSummary}</p>
+                          <p className="text-text-muted mt-1">{event.detailsSummary}</p>
                         )}
                       </div>
-                      <p className="text-gray-400 flex-shrink-0">
+                      <p className="text-text-muted flex-shrink-0">
                         {new Date(event.occurredAt).toLocaleDateString()}
                       </p>
                     </div>
@@ -785,9 +785,9 @@ return;
           </Card>
 
           {/* Privacy Info */}
-          <Card className="border-blue-200 bg-blue-50">
+          <Card className="border-info-200 bg-info-50">
             <CardContent className="pt-6">
-              <p className="text-sm text-blue-900">
+              <p className="text-sm text-info-900">
                 <strong>Privacy Guarantee:</strong> Your tenant's individual metrics are never
                 shared with other tenants. All X-series features use anonymized cohort-level
                 aggregations without cross-tenant identifiers.
@@ -822,7 +822,7 @@ return;
                     <div key={item.key} className="p-4 border rounded">
                       <label className="block mb-2">
                         <p className="font-medium text-sm">{item.label}</p>
-                        <p className="text-xs text-gray-500">{item.desc}</p>
+                        <p className="text-xs text-text-tertiary">{item.desc}</p>
                       </label>
                       <div className="flex items-center gap-2">
                         <input
@@ -836,15 +836,15 @@ return;
                           placeholder={`Enter ${item.label} retention days`}
                           aria-label={`${item.label} retention days`}
                         />
-                        <span className="text-xs text-gray-500 w-8">days</span>
+                        <span className="text-xs text-text-tertiary w-8">days</span>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">Loading retention policy...</p>
+                <p className="text-sm text-text-tertiary">Loading retention policy...</p>
               )}
-              <p className="text-xs text-gray-500 mt-4">
+              <p className="text-xs text-text-tertiary mt-4">
                 Range: 30–3650 days. Automatic cleanup runs daily for data older than the retention period.
               </p>
             </CardContent>
@@ -859,16 +859,16 @@ return;
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="p-4 border rounded bg-gray-50">
+              <div className="p-4 border rounded bg-bg-hover">
                 <h4 className="font-medium text-sm mb-2">Cleanup Actions</h4>
-                <p className="text-xs text-gray-600 mb-4">
+                <p className="text-xs text-text-muted mb-4">
                   Preview what will be deleted based on retention policy. Dry-run mode counts rows without deleting.
                 </p>
                 <Button
                   onClick={handleCleanupDryRun}
                   disabled={cleanupRunning || updating}
                   variant="outline"
-                  className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                  className="text-accent-600 border-accent-200 hover:bg-accent-50"
                 >
                   {cleanupRunning ? 'Running...' : 'Run Dry-Run Cleanup'}
                 </Button>
@@ -883,22 +883,22 @@ return;
             </CardHeader>
             <CardContent>
               {lifecycleEvents.length === 0 ? (
-                <p className="text-sm text-gray-500">No lifecycle events recorded</p>
+                <p className="text-sm text-text-tertiary">No lifecycle events recorded</p>
               ) : (
                 <div className="space-y-2">
                   {lifecycleEvents.slice(0, 10).map((event, idx) => (
-                    <div key={idx} className="text-xs p-3 border rounded bg-gray-50">
+                    <div key={idx} className="text-xs p-3 border rounded bg-bg-hover">
                       <div className="flex justify-between items-start mb-1">
                         <div>
                           <p className="font-medium">{event.scope.toUpperCase()}</p>
-                          <p className="text-gray-600">{event.action}</p>
+                          <p className="text-text-muted">{event.action}</p>
                         </div>
-                        <Badge className="bg-blue-100 text-blue-800">
+                        <Badge className="bg-info-100 text-info-800">
                           {event.itemsAffected} rows
                         </Badge>
                       </div>
-                      <p className="text-gray-500 mt-1">{event.detail}</p>
-                      <p className="text-gray-400 text-xs mt-1">
+                      <p className="text-text-tertiary mt-1">{event.detail}</p>
+                      <p className="text-text-muted text-xs mt-1">
                         {new Date(event.occurredAt).toLocaleDateString()} {new Date(event.occurredAt).toLocaleTimeString()}
                       </p>
                     </div>
@@ -909,9 +909,9 @@ return;
           </Card>
 
           {/* Compliance Info */}
-          <Card className="border-green-200 bg-green-50">
+          <Card className="border-success-200 bg-success-50">
             <CardContent className="pt-6">
-              <p className="text-sm text-green-900">
+              <p className="text-sm text-success-900">
                 <strong>Retention & Compliance:</strong> All lifecycle operations are immutable and auditable.
                 Retention policies apply only to X-series artifacts; Guardian core runtime tables are never touched.
                 Governance events are preserved according to your retention setting.
@@ -925,9 +925,9 @@ return;
       {selectedTab === "recommendations" && (
         <div className="space-y-6">
           {/* Advisory Banner */}
-          <Card className="border-blue-200 bg-blue-50">
+          <Card className="border-info-200 bg-info-50">
             <CardContent className="pt-6">
-              <p className="text-sm text-blue-900 flex items-start gap-2">
+              <p className="text-sm text-info-900 flex items-start gap-2">
                 <TrendingUp className="w-4 h-4 mt-0.5 shrink-0" />
                 <span>
                   <strong>Advisory-Only:</strong> Recommendations are non-binding guidance derived from network
@@ -938,9 +938,9 @@ return;
           </Card>
 
           {!flags?.enableNetworkEarlyWarnings && !flags?.enableNetworkAnomalies ? (
-            <Card className="border-yellow-200 bg-yellow-50">
+            <Card className="border-warning-200 bg-warning-50">
               <CardContent className="pt-6">
-                <p className="text-sm text-yellow-900">
+                <p className="text-sm text-warning-900">
                   Enable "Anomalies" or "Early Warnings" in Settings to see recommendations
                 </p>
               </CardContent>
@@ -970,27 +970,27 @@ return;
                   </div>
 
                   {recommendations.length === 0 ? (
-                    <div className="p-6 bg-gray-50 border border-gray-200 rounded text-center">
-                      <CheckCircle className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                      <p className="text-gray-600">No {recommendationFilter !== 'all' ? recommendationFilter : ''} recommendations</p>
+                    <div className="p-6 bg-bg-hover border border-border rounded text-center">
+                      <CheckCircle className="w-8 h-8 mx-auto text-text-muted mb-2" />
+                      <p className="text-text-muted">No {recommendationFilter !== 'all' ? recommendationFilter : ''} recommendations</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
                       {recommendations.map((rec) => (
                         <div
                           key={rec.id}
-                          className="p-4 border rounded hover:bg-gray-50 cursor-pointer transition-colors"
+                          className="p-4 border rounded hover:bg-bg-hover cursor-pointer transition-colors"
                           onClick={() => setRecommendationDetail(rec)}
                         >
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex-1">
                               <p className="font-medium text-sm">{rec.title}</p>
-                              <p className="text-xs text-gray-500 mt-1">{rec.summary}</p>
+                              <p className="text-xs text-text-tertiary mt-1">{rec.summary}</p>
                             </div>
                             <div className="flex gap-2 ml-4">
                               <Badge
                                 className={
-                                  SEVERITY_COLORS[rec.severity] || "bg-gray-100 text-gray-800"
+                                  SEVERITY_COLORS[rec.severity] || "bg-bg-hover text-text-secondary"
                                 }
                               >
                                 {rec.severity}
@@ -998,12 +998,12 @@ return;
                               <Badge
                                 className={
                                   rec.status === 'open'
-                                    ? 'bg-blue-100 text-blue-800'
+                                    ? 'bg-info-100 text-info-800'
                                     : rec.status === 'in_progress'
-                                    ? 'bg-orange-100 text-orange-800'
+                                    ? 'bg-accent-100 text-accent-800'
                                     : rec.status === 'implemented'
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-gray-100 text-gray-800'
+                                    ? 'bg-success-100 text-success-800'
+                                    : 'bg-bg-hover text-text-secondary'
                                 }
                               >
                                 {rec.status}
@@ -1011,9 +1011,9 @@ return;
                             </div>
                           </div>
                           <div className="flex gap-1 text-xs mt-3">
-                            <span className="text-gray-500">{rec.recommendationType}</span>
-                            <span className="text-gray-400">•</span>
-                            <span className="text-gray-500">{rec.suggestionTheme}</span>
+                            <span className="text-text-tertiary">{rec.recommendationType}</span>
+                            <span className="text-text-muted">•</span>
+                            <span className="text-text-tertiary">{rec.suggestionTheme}</span>
                           </div>
                         </div>
                       ))}
@@ -1030,7 +1030,7 @@ return;
                       <span>{recommendationDetail.title}</span>
                       <Badge
                         className={
-                          SEVERITY_COLORS[recommendationDetail.severity] || "bg-gray-100 text-gray-800"
+                          SEVERITY_COLORS[recommendationDetail.severity] || "bg-bg-hover text-text-secondary"
                         }
                       >
                         {recommendationDetail.severity}
@@ -1039,24 +1039,24 @@ return;
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Summary</p>
+                      <p className="text-xs text-text-tertiary mb-1">Summary</p>
                       <p className="text-sm">{recommendationDetail.summary}</p>
                     </div>
 
                     {recommendationDetail.rationale && (
                       <div>
-                        <p className="text-xs text-gray-500 mb-1">Rationale</p>
+                        <p className="text-xs text-text-tertiary mb-1">Rationale</p>
                         <p className="text-sm">{recommendationDetail.rationale}</p>
                       </div>
                     )}
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-xs text-gray-500">Type</p>
+                        <p className="text-xs text-text-tertiary">Type</p>
                         <p className="text-sm font-medium">{recommendationDetail.recommendationType}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Theme</p>
+                        <p className="text-xs text-text-tertiary">Theme</p>
                         <p className="text-sm font-medium">{recommendationDetail.suggestionTheme}</p>
                       </div>
                     </div>
@@ -1067,7 +1067,7 @@ return;
                           onClick={() => updateRecommendationStatus(recommendationDetail.id, 'in_progress')}
                           disabled={updating}
                           size="sm"
-                          className="bg-orange-600 hover:bg-orange-700"
+                          className="bg-accent-600 hover:bg-accent-700"
                         >
                           Start Work
                         </Button>
@@ -1088,7 +1088,7 @@ return;
                           onClick={() => updateRecommendationStatus(recommendationDetail.id, 'implemented')}
                           disabled={updating}
                           size="sm"
-                          className="bg-green-600 hover:bg-green-700"
+                          className="bg-success-600 hover:bg-success-700"
                         >
                           Mark Implemented
                         </Button>
@@ -1103,7 +1103,7 @@ return;
                       </div>
                     )}
 
-                    <p className="text-xs text-gray-400 pt-4 border-t">
+                    <p className="text-xs text-text-muted pt-4 border-t">
                       Updated: {new Date(recommendationDetail.updatedAt).toLocaleDateString()}
                     </p>
                   </CardContent>

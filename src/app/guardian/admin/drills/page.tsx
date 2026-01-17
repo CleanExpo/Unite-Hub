@@ -105,12 +105,12 @@ throw new Error('Failed to start drill');
 
   function getDifficultyColor(difficulty: string) {
     const colors: Record<string, string> = {
-      easy: 'bg-green-100 text-green-800',
-      normal: 'bg-blue-100 text-blue-800',
-      hard: 'bg-yellow-100 text-yellow-800',
-      chaos: 'bg-red-100 text-red-800',
+      easy: 'bg-success-100 text-success-800',
+      normal: 'bg-info-100 text-info-800',
+      hard: 'bg-warning-100 text-warning-800',
+      chaos: 'bg-error-100 text-error-800',
     };
-    return colors[difficulty] || 'bg-gray-100';
+    return colors[difficulty] || 'bg-bg-hover';
   }
 
   return (
@@ -120,8 +120,8 @@ throw new Error('Failed to start drill');
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-text-primary mb-2">Guardian War-Games Console</h1>
           <p className="text-text-secondary">Create and run incident response training drills</p>
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-900">
+          <div className="mt-4 p-4 bg-info-50 border border-info-200 rounded-lg">
+            <p className="text-sm text-info-900">
               <strong>Training Only:</strong> All drills operate on simulated data from I01–I04.
               No real incidents, alerts, or notifications are created.
             </p>
@@ -130,7 +130,7 @@ throw new Error('Failed to start drill');
 
         {/* Error */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>
+          <div className="mb-6 p-4 bg-error-50 border border-error-200 rounded-lg text-error-700">{error}</div>
         )}
 
         {/* Tabs */}
@@ -196,7 +196,7 @@ throw new Error('Failed to start drill');
                           e.stopPropagation();
                           startDrill(drill.id);
                         }}
-                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                        className="px-4 py-2 bg-success-600 text-white rounded hover:bg-success-700"
                       >
                         Start Drill
                       </button>
@@ -249,7 +249,7 @@ throw new Error('Failed to start drill');
                   <span className={`px-3 py-1 rounded ${getDifficultyColor(selectedDrill.difficulty)}`}>
                     {selectedDrill.difficulty.toUpperCase()}
                   </span>
-                  <span className="bg-gray-100 px-3 py-1 rounded text-sm">
+                  <span className="bg-bg-hover px-3 py-1 rounded text-sm">
                     {selectedDrill.source_type}
                   </span>
                 </div>
@@ -267,7 +267,7 @@ throw new Error('Failed to start drill');
                     onClick={() => {
                       startDrill(selectedDrill.id);
                     }}
-                    className="w-full mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="w-full mt-2 px-4 py-2 bg-info-500 text-white rounded hover:bg-info-600"
                   >
                     Start Freeform Drill
                   </button>

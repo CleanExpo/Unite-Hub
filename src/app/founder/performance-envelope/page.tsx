@@ -69,11 +69,11 @@ export default function PerformanceEnvelopePage() {
 
   const stateColor = (state: string) => {
     const colors: Record<string, string> = {
-      optimal: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-      stable: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-      strained: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-      overloaded: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-      critical: "bg-red-500/10 text-red-400 border-red-500/20",
+      optimal: "bg-success-500/10 text-success-400 border-emerald-500/20",
+      stable: "bg-info-500/10 text-info-400 border-info-500/20",
+      strained: "bg-warning-500/10 text-warning-400 border-warning-500/20",
+      overloaded: "bg-accent-500/10 text-accent-400 border-accent-500/20",
+      critical: "bg-error-500/10 text-error-400 border-error-500/20",
       recovery: "bg-purple-500/10 text-purple-400 border-purple-500/20",
     };
     return colors[state] || "bg-bg-subtle text-text-secondary border-border";
@@ -81,18 +81,18 @@ export default function PerformanceEnvelopePage() {
 
   const indexColor = (value: number) => {
     if (value >= 90) {
-return "text-red-400";
+return "text-error-400";
 }
     if (value >= 75) {
-return "text-orange-400";
+return "text-accent-400";
 }
     if (value >= 60) {
-return "text-amber-400";
+return "text-warning-400";
 }
     if (value >= 40) {
-return "text-emerald-400";
+return "text-success-400";
 }
-    return "text-green-400";
+    return "text-success-400";
   };
 
   if (authLoading || loading) {
@@ -147,7 +147,7 @@ return "text-emerald-400";
 
           <Card className="bg-bg-card border-border p-6">
             <div className="text-sm text-text-secondary mb-1">Optimal Periods</div>
-            <div className="text-3xl font-semibold text-emerald-400">
+            <div className="text-3xl font-semibold text-success-400">
               {summary.optimal_count}
             </div>
           </Card>
@@ -217,7 +217,7 @@ return "text-emerald-400";
                       {envelope.limiting_factors.map((factor, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 rounded bg-red-500/10 text-red-400 text-xs"
+                          className="px-2 py-1 rounded bg-error-500/10 text-error-400 text-xs"
                         >
                           {factor}
                         </span>

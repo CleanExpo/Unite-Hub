@@ -145,7 +145,7 @@ export default function FounderExecutivePage() {
         </div>
         <Badge
           variant={displayBriefing.system_health.overall_status === 'healthy' ? 'default' : 'destructive'}
-          className={displayBriefing.system_health.overall_status === 'healthy' ? 'bg-green-500' : ''}
+          className={displayBriefing.system_health.overall_status === 'healthy' ? 'bg-success-500' : ''}
         >
           {displayBriefing.system_health.overall_status}
         </Badge>
@@ -156,7 +156,7 @@ export default function FounderExecutivePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Activity className="h-4 w-4 text-green-500" />
+              <Activity className="h-4 w-4 text-success-500" />
               <span className="text-sm text-muted-foreground">Active Agents</span>
             </div>
             <div className="text-2xl font-bold mt-1">
@@ -168,7 +168,7 @@ export default function FounderExecutivePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-blue-500" />
+              <Target className="h-4 w-4 text-info-500" />
               <span className="text-sm text-muted-foreground">Active Missions</span>
             </div>
             <div className="text-2xl font-bold mt-1">
@@ -180,10 +180,10 @@ export default function FounderExecutivePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-yellow-500" />
+              <Clock className="h-4 w-4 text-warning-500" />
               <span className="text-sm text-muted-foreground">Pending</span>
             </div>
-            <div className="text-2xl font-bold mt-1 text-yellow-500">
+            <div className="text-2xl font-bold mt-1 text-warning-500">
               {displayBriefing.pending_decisions}
             </div>
           </CardContent>
@@ -250,7 +250,7 @@ export default function FounderExecutivePage() {
                 <div className="space-y-2">
                   {displayBriefing.top_priorities.map((priority: string, i: number) => (
                     <div key={i} className="flex items-center gap-2 text-sm">
-                      <div className="w-1 h-1 bg-blue-500 rounded-full" />
+                      <div className="w-1 h-1 bg-info-500 rounded-full" />
                       {priority}
                     </div>
                   ))}
@@ -297,7 +297,7 @@ export default function FounderExecutivePage() {
           {mockMissions.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center">
-                <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                <CheckCircle2 className="h-8 w-8 text-success-500 mx-auto mb-2" />
                 <p className="text-muted-foreground">No active missions</p>
               </CardContent>
             </Card>
@@ -308,7 +308,7 @@ export default function FounderExecutivePage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-yellow-500" />
+                <AlertCircle className="h-4 w-4 text-warning-500" />
                 Pending Decisions
               </CardTitle>
             </CardHeader>
@@ -318,16 +318,16 @@ export default function FounderExecutivePage() {
                   <div className="p-3 border rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium text-sm">Brand Overhaul Approval</span>
-                      <Badge className="bg-orange-500">High</Badge>
+                      <Badge className="bg-accent-500">High</Badge>
                     </div>
                     <p className="text-xs text-muted-foreground mb-3">
                       Major brand shift requires founder approval before execution.
                     </p>
                     <div className="flex gap-2">
-                      <button className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">
+                      <button className="px-3 py-1 bg-success-500 text-white text-xs rounded hover:bg-success-600">
                         Approve
                       </button>
-                      <button className="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300">
+                      <button className="px-3 py-1 bg-bg-hover text-text-secondary text-xs rounded hover:bg-bg-hover">
                         Review
                       </button>
                     </div>
@@ -335,7 +335,7 @@ export default function FounderExecutivePage() {
                 </div>
               ) : (
                 <div className="text-center py-4">
-                  <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                  <CheckCircle2 className="h-8 w-8 text-success-500 mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">No pending decisions</p>
                 </div>
               )}

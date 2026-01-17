@@ -101,13 +101,13 @@ throw new Error("Failed to load forecasts");
 
   const getMethodBadge = (method: string) => {
     const colors: Record<string, string> = {
-      heuristic: "bg-blue-500",
-      linear_regression: "bg-green-500",
+      heuristic: "bg-info-500",
+      linear_regression: "bg-success-500",
       time_series: "bg-purple-500",
       ml_model: "bg-accent-500",
-      manual: "bg-gray-500",
+      manual: "bg-bg-hover0",
     };
-    return colors[method] || "bg-gray-500";
+    return colors[method] || "bg-bg-hover0";
   };
 
   const getForecastTrend = (forecast: Forecast) => {
@@ -116,12 +116,12 @@ return null;
 }
     const diff = forecast.actual_value - forecast.forecast_value;
     if (Math.abs(diff) < 0.01) {
-return <Activity className="h-4 w-4 text-gray-500" />;
+return <Activity className="h-4 w-4 text-text-tertiary" />;
 }
     return diff > 0 ? (
-      <TrendingUp className="h-4 w-4 text-green-500" />
+      <TrendingUp className="h-4 w-4 text-success-500" />
     ) : (
-      <TrendingDown className="h-4 w-4 text-red-500" />
+      <TrendingDown className="h-4 w-4 text-error-500" />
     );
   };
 
@@ -139,7 +139,7 @@ return <Activity className="h-4 w-4 text-gray-500" />;
     return (
       <div className="min-h-screen bg-bg-primary p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-red-600">{workspaceError || "No workspace selected"}</div>
+          <div className="text-error-600">{workspaceError || "No workspace selected"}</div>
         </div>
       </div>
     );
@@ -170,9 +170,9 @@ return <Activity className="h-4 w-4 text-gray-500" />;
         </div>
 
         {error && (
-          <Card className="bg-red-500/10 border-red-500">
+          <Card className="bg-error-500/10 border-error-500">
             <CardContent className="p-4">
-              <p className="text-red-500">{error}</p>
+              <p className="text-error-500">{error}</p>
             </CardContent>
           </Card>
         )}
@@ -275,7 +275,7 @@ return <Activity className="h-4 w-4 text-gray-500" />;
                   <div
                     key={forecast.id}
                     className={`flex items-start gap-4 p-4 rounded-lg bg-bg-primary hover:bg-bg-hover transition-colors border ${
-                      forecast.is_expired ? "border-gray-500 opacity-60" : "border-border"
+                      forecast.is_expired ? "border-border opacity-60" : "border-border"
                     }`}
                   >
                     <div className="flex items-center justify-center p-3 rounded-lg bg-accent-500/10">
@@ -291,7 +291,7 @@ return <Activity className="h-4 w-4 text-gray-500" />;
                           {getHorizonLabel(forecast.forecast_horizon)}
                         </Badge>
                         {forecast.is_expired && (
-                          <Badge variant="outline" className="text-xs text-gray-500">
+                          <Badge variant="outline" className="text-xs text-text-tertiary">
                             Expired
                           </Badge>
                         )}
@@ -325,7 +325,7 @@ return <Activity className="h-4 w-4 text-gray-500" />;
                         {forecast.forecast_error !== null && (
                           <div>
                             <div className="text-text-tertiary text-xs">Error</div>
-                            <div className="font-semibold text-red-500">
+                            <div className="font-semibold text-error-500">
                               {Math.abs(forecast.forecast_error).toFixed(2)}
                             </div>
                           </div>

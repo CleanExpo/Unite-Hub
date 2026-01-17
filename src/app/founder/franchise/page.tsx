@@ -104,9 +104,9 @@ return;
 
       {/* Warnings */}
       {(isExpiringSoon || isNearLimit) && (
-        <Card className="border-amber-500">
+        <Card className="border-warning-500">
           <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-amber-500">
+            <div className="flex items-center gap-2 text-warning-500">
               <AlertTriangle className="h-5 w-5" />
               <div>
                 {isExpiringSoon && (

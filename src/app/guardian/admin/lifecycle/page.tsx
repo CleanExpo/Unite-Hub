@@ -130,18 +130,18 @@ export default function LifecyclePage() {
   if (error && !policies.length) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-red-600">Error: {error}</p>
+        <p className="text-error-600">Error: {error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-bg-hover p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Meta Lifecycle & Data Hygiene</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-text-primary">Meta Lifecycle & Data Hygiene</h1>
+          <p className="text-text-muted mt-2">
             Manage retention, compaction, and deletion policies for Guardian Z-series meta artefacts
             (Z01-Z05). These policies apply only to metadata and do NOT affect core Guardian runtime
             data (alerts, incidents, rules, etc.).
@@ -149,11 +149,11 @@ export default function LifecyclePage() {
         </div>
 
         {/* Safety Warning */}
-        <div className="mb-8 bg-amber-50 border border-amber-300 rounded-lg p-4 flex gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <div className="mb-8 bg-warning-50 border border-warning-300 rounded-lg p-4 flex gap-3">
+          <AlertCircle className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-semibold text-amber-900 mb-1">Z-Series Metadata Only</h3>
-            <p className="text-sm text-amber-800">
+            <h3 className="font-semibold text-warning-900 mb-1">Z-Series Metadata Only</h3>
+            <p className="text-sm text-warning-800">
               These lifecycle policies affect only Z-series meta artefacts (readiness scores,
               adoption signals, reports, nudges, etc.). Core Guardian data (G-series rules,
               H-series incidents, I-series simulations, X-series network data) is completely
@@ -175,33 +175,33 @@ export default function LifecyclePage() {
 
         {/* Lifecycle Results */}
         {results && (
-          <Card className="mb-8 border-green-300 bg-green-50">
+          <Card className="mb-8 border-success-300 bg-success-50">
             <CardHeader>
-              <CardTitle className="text-green-900">Lifecycle Results</CardTitle>
+              <CardTitle className="text-success-900">Lifecycle Results</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white p-3 rounded border border-green-200">
-                  <p className="text-xs text-gray-600">Total Compacted</p>
-                  <p className="text-2xl font-bold text-green-700">
+                <div className="bg-bg-card p-3 rounded border border-success-200">
+                  <p className="text-xs text-text-muted">Total Compacted</p>
+                  <p className="text-2xl font-bold text-success-700">
                     {results.reduce((sum, r) => sum + r.compacted_rows, 0)}
                   </p>
                 </div>
-                <div className="bg-white p-3 rounded border border-green-200">
-                  <p className="text-xs text-gray-600">Total Deleted</p>
-                  <p className="text-2xl font-bold text-red-700">
+                <div className="bg-bg-card p-3 rounded border border-success-200">
+                  <p className="text-xs text-text-muted">Total Deleted</p>
+                  <p className="text-2xl font-bold text-error-700">
                     {results.reduce((sum, r) => sum + r.deleted_rows, 0)}
                   </p>
                 </div>
-                <div className="bg-white p-3 rounded border border-green-200">
-                  <p className="text-xs text-gray-600">Successful</p>
-                  <p className="text-2xl font-bold text-blue-700">
+                <div className="bg-bg-card p-3 rounded border border-success-200">
+                  <p className="text-xs text-text-muted">Successful</p>
+                  <p className="text-2xl font-bold text-info-700">
                     {results.filter((r) => r.status === 'success').length}
                   </p>
                 </div>
-                <div className="bg-white p-3 rounded border border-green-200">
-                  <p className="text-xs text-gray-600">Skipped</p>
-                  <p className="text-2xl font-bold text-gray-700">
+                <div className="bg-bg-card p-3 rounded border border-success-200">
+                  <p className="text-xs text-text-muted">Skipped</p>
+                  <p className="text-2xl font-bold text-text-secondary">
                     {results.filter((r) => r.status === 'skipped').length}
                   </p>
                 </div>
@@ -210,11 +210,11 @@ export default function LifecyclePage() {
               {/* Detailed Results */}
               <div className="space-y-3">
                 {results.map((result) => (
-                  <div key={result.policy_key} className="bg-white p-4 rounded border border-gray-200">
+                  <div key={result.policy_key} className="bg-bg-card p-4 rounded border border-border">
                     <div className="flex items-start justify-between">
                       <div>
-                        <h4 className="font-semibold text-gray-900">{result.policy_key}</h4>
-                        <div className="text-sm text-gray-600 mt-1 space-y-1">
+                        <h4 className="font-semibold text-text-primary">{result.policy_key}</h4>
+                        <div className="text-sm text-text-muted mt-1 space-y-1">
                           <p>Compacted: {result.compacted_rows} rows</p>
                           <p>Deleted: {result.deleted_rows} rows</p>
                           <p>Retained: {result.retained_rows} rows</p>
@@ -229,16 +229,16 @@ export default function LifecyclePage() {
                       <Badge
                         className={
                           result.status === 'success'
-                            ? 'bg-green-100 text-green-800'
+                            ? 'bg-success-100 text-success-800'
                             : result.status === 'skipped'
-                              ? 'bg-gray-100 text-gray-800'
-                              : 'bg-red-100 text-red-800'
+                              ? 'bg-bg-hover text-text-secondary'
+                              : 'bg-error-100 text-error-800'
                         }
                       >
                         {result.status}
                       </Badge>
                     </div>
-                    {result.reason && <p className="text-sm text-gray-500 mt-2">{result.reason}</p>}
+                    {result.reason && <p className="text-sm text-text-tertiary mt-2">{result.reason}</p>}
                   </div>
                 ))}
               </div>
@@ -256,20 +256,20 @@ export default function LifecyclePage() {
               {policies.map((policy) => (
                 <div
                   key={policy.policy_key}
-                  className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                  className="border border-border rounded-lg p-4 bg-bg-hover"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{policy.label}</h3>
-                      <p className="text-sm text-gray-600">{policy.description}</p>
+                      <h3 className="text-lg font-semibold text-text-primary">{policy.label}</h3>
+                      <p className="text-sm text-text-muted">{policy.description}</p>
                     </div>
-                    <Badge className="bg-blue-100 text-blue-800">{policy.policy_key}</Badge>
+                    <Badge className="bg-info-100 text-info-800">{policy.policy_key}</Badge>
                   </div>
 
                   {editingPolicy === policy.policy_key ? (
-                    <div className="bg-white p-4 rounded border border-blue-300 space-y-4">
+                    <div className="bg-bg-card p-4 rounded border border-info-300 space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-text-secondary mb-1">
                           Retention Days
                         </label>
                         <input
@@ -282,9 +282,9 @@ export default function LifecyclePage() {
                               retention_days: parseInt(e.target.value),
                             })
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded"
+                          className="w-full px-3 py-2 border border-border-subtle rounded"
                         />
-                        <p className="text-xs text-gray-500 mt-1">Minimum 7 days</p>
+                        <p className="text-xs text-text-tertiary mt-1">Minimum 7 days</p>
                       </div>
 
                       <div className="flex gap-4">
@@ -297,7 +297,7 @@ export default function LifecyclePage() {
                             }
                             className="rounded"
                           />
-                          <span className="text-sm text-gray-700">Archive Enabled</span>
+                          <span className="text-sm text-text-secondary">Archive Enabled</span>
                         </label>
 
                         <label className="flex items-center gap-2">
@@ -309,12 +309,12 @@ export default function LifecyclePage() {
                             }
                             className="rounded"
                           />
-                          <span className="text-sm text-gray-700">Delete Enabled</span>
+                          <span className="text-sm text-text-secondary">Delete Enabled</span>
                         </label>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-text-secondary mb-1">
                           Compaction Strategy
                         </label>
                         <select
@@ -325,7 +325,7 @@ export default function LifecyclePage() {
                               compaction_strategy: e.target.value,
                             })
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded"
+                          className="w-full px-3 py-2 border border-border-subtle rounded"
                         >
                           <option value="none">None</option>
                           <option value="snapshot">Snapshot</option>
@@ -336,7 +336,7 @@ export default function LifecyclePage() {
                       <div className="flex gap-2">
                         <Button
                           onClick={() => handleUpdatePolicy(policy.policy_key)}
-                          className="bg-green-600 hover:bg-green-700 text-white"
+                          className="bg-success-600 hover:bg-success-700 text-white"
                         >
                           Save
                         </Button>
@@ -354,30 +354,30 @@ export default function LifecyclePage() {
                   ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                       <div>
-                        <p className="text-xs text-gray-600">Retention Days</p>
-                        <p className="text-lg font-semibold text-gray-900">{policy.retention_days}</p>
+                        <p className="text-xs text-text-muted">Retention Days</p>
+                        <p className="text-lg font-semibold text-text-primary">{policy.retention_days}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-600">Archive Enabled</p>
-                        <p className="text-lg font-semibold text-gray-900">
+                        <p className="text-xs text-text-muted">Archive Enabled</p>
+                        <p className="text-lg font-semibold text-text-primary">
                           {policy.archive_enabled ? '✓' : '✗'}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-600">Delete Enabled</p>
+                        <p className="text-xs text-text-muted">Delete Enabled</p>
                         <Badge
                           className={
                             policy.delete_enabled
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-green-100 text-green-800'
+                              ? 'bg-error-100 text-error-800'
+                              : 'bg-success-100 text-success-800'
                           }
                         >
                           {policy.delete_enabled ? 'YES' : 'NO'}
                         </Badge>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-600">Compaction</p>
-                        <p className="text-lg font-semibold text-gray-900">
+                        <p className="text-xs text-text-muted">Compaction</p>
+                        <p className="text-lg font-semibold text-text-primary">
                           {policy.compaction_strategy}
                         </p>
                       </div>

@@ -211,7 +211,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="h-8 w-8 text-green-500" />
+              <CheckCircle2 className="h-8 w-8 text-success-500" />
               <div>
                 <p className="text-2xl font-bold">{healthyClients}</p>
                 <p className="text-xs text-muted-foreground">Complete Stories</p>
@@ -220,12 +220,12 @@ return;
           </CardContent>
         </Card>
 
-        <Card className={needsDataClients > 0 ? 'border-orange-500/50' : ''}>
+        <Card className={needsDataClients > 0 ? 'border-accent-500/50' : ''}>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
               <AlertTriangle
                 className={`h-8 w-8 ${
-                  needsDataClients > 0 ? 'text-orange-500' : 'text-muted-foreground'
+                  needsDataClients > 0 ? 'text-accent-500' : 'text-muted-foreground'
                 }`}
               />
               <div>
@@ -252,10 +252,10 @@ return;
                     variant="outline"
                     className={`ml-2 text-[10px] ${
                       client.storyHealth >= 75
-                        ? 'text-green-500'
+                        ? 'text-success-500'
                         : client.storyHealth >= 40
-                        ? 'text-yellow-500'
-                        : 'text-orange-500'
+                        ? 'text-warning-500'
+                        : 'text-accent-500'
                     }`}
                   >
                     {client.storyHealth}%
@@ -339,12 +339,12 @@ return;
                 {founderNarrative.risk_indicators.length > 0 && (
                   <div>
                     <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4 text-orange-500" />
+                      <AlertTriangle className="h-4 w-4 text-accent-500" />
                       Risk Indicators
                     </h3>
                     <ul className="space-y-1">
                       {founderNarrative.risk_indicators.map((risk, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-orange-600">
+                        <li key={i} className="flex items-start gap-2 text-sm text-accent-600">
                           <span>⚠️</span>
                           <span>{risk}</span>
                         </li>
@@ -357,7 +357,7 @@ return;
                 {founderNarrative.opportunity_indicators.length > 0 && (
                   <div>
                     <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-                      <Star className="h-4 w-4 text-yellow-500" />
+                      <Star className="h-4 w-4 text-warning-500" />
                       Opportunities
                     </h3>
                     <ul className="space-y-1">

@@ -142,15 +142,15 @@ export default function GovernanceCoachPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
-      initial: { color: 'bg-gray-200', icon: <Clock className="w-3 h-3" /> },
-      plan_generated: { color: 'bg-blue-200', icon: <Zap className="w-3 h-3" /> },
-      approved: { color: 'bg-amber-200', icon: <AlertCircle className="w-3 h-3" /> },
-      applied: { color: 'bg-green-200', icon: <CheckCircle className="w-3 h-3" /> },
-      failed: { color: 'bg-red-200', icon: <AlertCircle className="w-3 h-3" /> },
+      initial: { color: 'bg-bg-hover', icon: <Clock className="w-3 h-3" /> },
+      plan_generated: { color: 'bg-info-200', icon: <Zap className="w-3 h-3" /> },
+      approved: { color: 'bg-warning-200', icon: <AlertCircle className="w-3 h-3" /> },
+      applied: { color: 'bg-success-200', icon: <CheckCircle className="w-3 h-3" /> },
+      failed: { color: 'bg-error-200', icon: <AlertCircle className="w-3 h-3" /> },
     };
-    const config = statusConfig[status] || { color: 'bg-gray-200', icon: <Clock className="w-3 h-3" /> };
+    const config = statusConfig[status] || { color: 'bg-bg-hover', icon: <Clock className="w-3 h-3" /> };
     return (
-      <Badge className={`${config.color} text-gray-900 flex items-center gap-1`}>
+      <Badge className={`${config.color} text-text-primary flex items-center gap-1`}>
         {config.icon}
         {status.replace('_', ' ')}
       </Badge>
@@ -165,8 +165,8 @@ export default function GovernanceCoachPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Guardian Governance Coach</h1>
-          <p className="text-gray-600 mt-2">Safe, staged rollout planning for H-series features</p>
+          <h1 className="text-3xl font-bold text-text-primary">Guardian Governance Coach</h1>
+          <p className="text-text-muted mt-2">Safe, staged rollout planning for H-series features</p>
         </div>
         <Dialog open={showNewSessionDialog} onOpenChange={setShowNewSessionDialog}>
           <DialogTrigger asChild>
@@ -200,7 +200,7 @@ export default function GovernanceCoachPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 flex items-center gap-2">
+        <div className="bg-error-50 border border-error-200 rounded-lg p-4 text-error-700 flex items-center gap-2">
           <AlertCircle className="w-5 h-5" />
           {error}
         </div>
@@ -241,7 +241,7 @@ export default function GovernanceCoachPage() {
                       <h4 className="font-medium text-text-primary">
                         Stage {stage.index}: {stage.name}
                       </h4>
-                      <p className="text-sm text-gray-600">{stage.description}</p>
+                      <p className="text-sm text-text-muted">{stage.description}</p>
                       <div className="mt-2 flex gap-2 flex-wrap">
                         {stage.actions.map((action: any, aIdx: number) => (
                           <Badge key={aIdx} variant="outline" className="text-xs">
@@ -254,7 +254,7 @@ export default function GovernanceCoachPage() {
                 </div>
               )}
               <div className="bg-bg-primary rounded p-3">
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-text-secondary">
                   <strong>Total Duration:</strong> {selectedSession.proposed_plan?.totalDurationMinutes} minutes
                   <br />
                   <strong>Current Stage:</strong> {selectedSession.proposed_plan?.currentStage}
@@ -278,7 +278,7 @@ export default function GovernanceCoachPage() {
                 </div>
                 <div>
                   <h4 className="font-medium text-text-primary mb-2">Key Points</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                  <ul className="list-disc list-inside space-y-1 text-sm text-text-secondary">
                     {selectedSession.recommendations.narrative.keyPoints?.map((point: string, idx: number) => (
                       <li key={idx}>{point}</li>
                     ))}
@@ -286,7 +286,7 @@ export default function GovernanceCoachPage() {
                 </div>
                 <div>
                   <h4 className="font-medium text-text-primary mb-2">Risk Summary</h4>
-                  <p className="text-sm text-gray-700">{selectedSession.recommendations.narrative.riskSummary}</p>
+                  <p className="text-sm text-text-secondary">{selectedSession.recommendations.narrative.riskSummary}</p>
                 </div>
               </CardContent>
             </Card>
@@ -339,10 +339,10 @@ export default function GovernanceCoachPage() {
 
           {/* Apply Section */}
           {selectedSession.status === 'plan_generated' && allApproved && (
-            <Card className="bg-green-50 border border-green-200">
+            <Card className="bg-success-50 border border-success-200">
               <CardHeader>
-                <CardTitle className="text-green-900">Ready to Apply</CardTitle>
-                <CardDescription className="text-green-700">All actions approved. Review plan and apply when ready.</CardDescription>
+                <CardTitle className="text-success-900">Ready to Apply</CardTitle>
+                <CardDescription className="text-success-700">All actions approved. Review plan and apply when ready.</CardDescription>
               </CardHeader>
               <CardContent>
                 <Dialog open={showApplyConfirmation} onOpenChange={setShowApplyConfirmation}>
@@ -358,8 +358,8 @@ export default function GovernanceCoachPage() {
                       <DialogDescription>Apply all approved actions to your Guardian system?</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                      <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
-                        <p className="text-sm text-yellow-900">
+                      <div className="bg-warning-50 border border-warning-200 rounded p-3">
+                        <p className="text-sm text-warning-900">
                           <strong>⚠️ This will:</strong>
                           <ul className="list-disc list-inside mt-2 space-y-1">
                             <li>Update Z10 governance flags</li>
@@ -369,8 +369,8 @@ export default function GovernanceCoachPage() {
                           </ul>
                         </p>
                       </div>
-                      <div className="bg-blue-50 border border-blue-200 rounded p-3">
-                        <p className="text-sm text-blue-900">
+                      <div className="bg-info-50 border border-info-200 rounded p-3">
+                        <p className="text-sm text-info-900">
                           <strong>✓ You can:</strong>
                           <ul className="list-disc list-inside mt-2 space-y-1">
                             <li>Rollback individual changes using Z15 backups</li>
@@ -411,9 +411,9 @@ export default function GovernanceCoachPage() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <p className="text-gray-600">Loading sessions...</p>
+              <p className="text-text-muted">Loading sessions...</p>
             ) : sessions.length === 0 ? (
-              <p className="text-gray-600">No sessions yet. Create one to get started.</p>
+              <p className="text-text-muted">No sessions yet. Create one to get started.</p>
             ) : (
               <div className="space-y-3">
                 {sessions.map((session: any) => (
@@ -425,8 +425,8 @@ export default function GovernanceCoachPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <h4 className="font-medium text-text-primary">{session.summary}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{session.coach_mode} • {session.target}</p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-text-muted mt-1">{session.coach_mode} • {session.target}</p>
+                        <p className="text-xs text-text-tertiary mt-1">
                           {new Date(session.created_at).toLocaleDateString()} at{' '}
                           {new Date(session.created_at).toLocaleTimeString()}
                         </p>

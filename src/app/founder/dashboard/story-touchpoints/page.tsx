@@ -248,7 +248,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <BarChart3 className="h-8 w-8 text-blue-500" />
+              <BarChart3 className="h-8 w-8 text-info-500" />
               <div>
                 <p className="text-2xl font-bold">{avgHealth}%</p>
                 <p className="text-xs text-muted-foreground">Avg Health</p>
@@ -257,10 +257,10 @@ return;
           </CardContent>
         </Card>
 
-        <Card className={staleCount > 0 ? 'border-yellow-500/50' : ''}>
+        <Card className={staleCount > 0 ? 'border-warning-500/50' : ''}>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <Clock className={`h-8 w-8 ${staleCount > 0 ? 'text-yellow-500' : 'text-muted-foreground'}`} />
+              <Clock className={`h-8 w-8 ${staleCount > 0 ? 'text-warning-500' : 'text-muted-foreground'}`} />
               <div>
                 <p className="text-2xl font-bold">{staleCount}</p>
                 <p className="text-xs text-muted-foreground">Stale</p>
@@ -269,10 +269,10 @@ return;
           </CardContent>
         </Card>
 
-        <Card className={needsAttentionCount > 0 ? 'border-orange-500/50' : ''}>
+        <Card className={needsAttentionCount > 0 ? 'border-accent-500/50' : ''}>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <AlertTriangle className={`h-8 w-8 ${needsAttentionCount > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
+              <AlertTriangle className={`h-8 w-8 ${needsAttentionCount > 0 ? 'text-accent-500' : 'text-muted-foreground'}`} />
               <div>
                 <p className="text-2xl font-bold">{needsAttentionCount}</p>
                 <p className="text-xs text-muted-foreground">Need Attention</p>

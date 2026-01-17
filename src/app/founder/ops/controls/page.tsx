@@ -164,9 +164,9 @@ return;
     <div className="space-y-6">
       {/* Success Banner */}
       {saveSuccess && (
-        <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 flex items-center gap-2">
-          <CheckCircle className="h-5 w-5 text-green-500" />
-          <span className="text-sm text-green-600 dark:text-green-400">Settings saved successfully</span>
+        <div className="bg-success-500/10 border border-success-500/20 rounded-lg p-4 flex items-center gap-2">
+          <CheckCircle className="h-5 w-5 text-success-500" />
+          <span className="text-sm text-success-600 dark:text-success-400">Settings saved successfully</span>
         </div>
       )}
 
@@ -284,7 +284,7 @@ return;
                   </SelectItem>
                   <SelectItem value="autonomous">
                     <div className="flex items-center gap-2">
-                      <Badge className="bg-green-500">Autonomous</Badge>
+                      <Badge className="bg-success-500">Autonomous</Badge>
                       <span>AI acts independently</span>
                     </div>
                   </SelectItem>
@@ -414,9 +414,9 @@ return;
           </div>
 
           {form.research_auto_run && (
-            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 text-yellow-500 mt-0.5" />
-              <p className="text-sm text-yellow-600 dark:text-yellow-400">
+            <div className="bg-warning-500/10 border border-warning-500/20 rounded-lg p-3 flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 text-warning-500 mt-0.5" />
+              <p className="text-sm text-warning-600 dark:text-warning-400">
                 Auto-run research may incur additional API costs. Monitor usage in billing.
               </p>
             </div>

@@ -387,13 +387,13 @@ export default function TemplatesPage() {
   const getStatusColor = (status: TemplateStatus) => {
     switch (status) {
       case 'published':
-        return 'bg-green-500';
+        return 'bg-success-500';
       case 'draft':
-        return 'bg-yellow-500';
+        return 'bg-warning-500';
       case 'archived':
-        return 'bg-gray-500';
+        return 'bg-bg-hover0';
       default:
-        return 'bg-gray-500';
+        return 'bg-bg-hover0';
     }
   };
 
@@ -502,7 +502,7 @@ export default function TemplatesPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500 rounded-lg text-red-400">
+          <div className="mb-6 p-4 bg-error-500/10 border border-error-500 rounded-lg text-error-400">
             {error}
           </div>
         )}
@@ -591,7 +591,7 @@ export default function TemplatesPage() {
                           e.stopPropagation();
                           handleDeleteTemplate(template.id);
                         }}
-                        className="text-red-400 hover:text-red-300"
+                        className="text-error-400 hover:text-error-300"
                         variant="ghost"
                         size="sm"
                       >
@@ -644,7 +644,7 @@ export default function TemplatesPage() {
                       setShowBlocksModal(true);
                       fetchBlocks(selectedTemplate.id);
                     }}
-                    className="w-full bg-blue-500 text-white"
+                    className="w-full bg-info-500 text-white"
                   >
                     <Blocks className="w-4 h-4 mr-2" />
                     Manage Blocks ({blocks.length})
@@ -911,7 +911,7 @@ export default function TemplatesPage() {
                         </div>
                         <Button
                           onClick={() => handleDeleteBlock(block.id)}
-                          className="text-red-400 hover:text-red-300"
+                          className="text-error-400 hover:text-error-300"
                           variant="ghost"
                           size="sm"
                         >
@@ -979,7 +979,7 @@ export default function TemplatesPage() {
 
                 <Button
                   onClick={handleCreateBlock}
-                  className="w-full bg-blue-500 text-white"
+                  className="w-full bg-info-500 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Block
@@ -1032,7 +1032,7 @@ export default function TemplatesPage() {
                         </div>
                         <Button
                           onClick={() => handleDeleteBinding(binding.id)}
-                          className="text-red-400 hover:text-red-300"
+                          className="text-error-400 hover:text-error-300"
                           variant="ghost"
                           size="sm"
                         >

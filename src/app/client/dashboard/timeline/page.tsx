@@ -133,7 +133,7 @@ return `${days}d ago`;
         {/* Filters */}
         <div className="flex items-center gap-4 mb-6">
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-400" />
+            <Filter className="w-4 h-4 text-text-muted" />
             <select
               value={filterModel}
               onChange={(e) => setFilterModel(e.target.value)}
@@ -164,7 +164,7 @@ return `${days}d ago`;
         {/* Timeline */}
         {loading ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading timeline...</p>
+            <p className="text-text-tertiary">Loading timeline...</p>
           </div>
         ) : filteredEvents.length === 0 ? (
           <div className="text-center py-12 bg-bg-card rounded-lg border border-border-subtle">
@@ -187,10 +187,10 @@ return `${days}d ago`;
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs px-2 py-0.5 bg-bg-hover text-gray-600 dark:text-gray-300 rounded">
+                        <span className="text-xs px-2 py-0.5 bg-bg-hover text-text-secondary rounded">
                           {EVENT_TYPE_LABELS[event.event_type] || event.event_type}
                         </span>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-text-muted">
                           {formatDate(event.created_at)}
                         </span>
                       </div>
@@ -201,9 +201,9 @@ return `${days}d ago`;
                     <div className="flex items-center gap-2">
                       <AIModelBadge model={event.model_used as AIModel} />
                       {expandedId === event.id ? (
-                        <ChevronUp className="w-4 h-4 text-gray-400" />
+                        <ChevronUp className="w-4 h-4 text-text-muted" />
                       ) : (
-                        <ChevronDown className="w-4 h-4 text-gray-400" />
+                        <ChevronDown className="w-4 h-4 text-text-muted" />
                       )}
                     </div>
                   </div>
@@ -215,7 +215,7 @@ return `${days}d ago`;
                     <p className="text-xs font-medium text-text-secondary mb-2">
                       Event Details
                     </p>
-                    <pre className="text-xs bg-gray-50 dark:bg-gray-700/50 p-3 rounded overflow-x-auto">
+                    <pre className="text-xs bg-bg-hover p-3 rounded overflow-x-auto">
                       {JSON.stringify(event.metadata, null, 2)}
                     </pre>
                   </div>

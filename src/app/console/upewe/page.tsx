@@ -15,63 +15,63 @@ export default function UPEWEPage() {
     <div className="p-6">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <AlertTriangle className="text-yellow-400" size={28} />
+          <AlertTriangle className="text-warning-400" size={28} />
           <h1 className="text-3xl font-bold">UPEWE</h1>
         </div>
-        <p className="text-gray-400">Unified Prediction & Early-Warning Engine</p>
+        <p className="text-text-muted">Unified Prediction & Early-Warning Engine</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-sm text-gray-400">Active Forecasts</div>
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="text-sm text-text-muted">Active Forecasts</div>
           <div className="text-3xl font-bold">24</div>
         </div>
-        <div className="bg-yellow-900/50 rounded-lg p-4">
-          <div className="text-sm text-yellow-400">High Probability</div>
-          <div className="text-3xl font-bold text-yellow-400">8</div>
+        <div className="bg-warning-900/50 rounded-lg p-4">
+          <div className="text-sm text-warning-400">High Probability</div>
+          <div className="text-3xl font-bold text-warning-400">8</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-sm text-gray-400">Avg Confidence</div>
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="text-sm text-text-muted">Avg Confidence</div>
           <div className="text-3xl font-bold">82%</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-sm text-gray-400">Prevented Incidents</div>
-          <div className="text-3xl font-bold text-green-400">47</div>
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="text-sm text-text-muted">Prevented Incidents</div>
+          <div className="text-3xl font-bold text-success-400">47</div>
         </div>
       </div>
 
       {/* Active Forecasts */}
-      <div className="bg-gray-800 rounded-lg overflow-hidden">
-        <div className="p-4 border-b border-gray-700">
+      <div className="bg-bg-raised rounded-lg overflow-hidden">
+        <div className="p-4 border-b border-border-subtle">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <Bell size={20} />
             Active Forecasts
           </h2>
         </div>
-        <div className="divide-y divide-gray-700">
+        <div className="divide-y divide-border-subtle">
           {forecasts.map((f) => (
-            <div key={f.id} className="p-4 hover:bg-gray-700/50">
+            <div key={f.id} className="p-4 hover:bg-bg-hover">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">{f.event}</span>
-                <span className="flex items-center gap-1 text-sm text-gray-400">
+                <span className="flex items-center gap-1 text-sm text-text-muted">
                   <Clock size={14} />
                   {f.window}
                 </span>
               </div>
               <div className="flex items-center gap-6 text-sm">
                 <div>
-                  <span className="text-gray-400">Probability: </span>
-                  <span className={f.probability >= 0.7 ? 'text-red-400' : f.probability >= 0.4 ? 'text-yellow-400' : 'text-green-400'}>
+                  <span className="text-text-muted">Probability: </span>
+                  <span className={f.probability >= 0.7 ? 'text-error-400' : f.probability >= 0.4 ? 'text-warning-400' : 'text-success-400'}>
                     {(f.probability * 100).toFixed(0)}%
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-400">Confidence: </span>
-                  <span className="text-blue-400">{(f.confidence * 100).toFixed(0)}%</span>
+                  <span className="text-text-muted">Confidence: </span>
+                  <span className="text-info-400">{(f.confidence * 100).toFixed(0)}%</span>
                 </div>
                 <div>
-                  <span className="text-gray-400">Signals: </span>
+                  <span className="text-text-muted">Signals: </span>
                   <span>{f.signals}</span>
                 </div>
               </div>

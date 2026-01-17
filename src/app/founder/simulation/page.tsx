@@ -115,9 +115,9 @@ export default function SimulationConsolePage() {
 
   // Confidence badge
   const ConfidenceBadge = ({ score }: { score: number }) => {
-    let color = 'text-green-400 bg-green-400/10';
-    if (score < 0.5) color = 'text-red-400 bg-red-400/10';
-    else if (score < 0.7) color = 'text-yellow-400 bg-yellow-400/10';
+    let color = 'text-success-400 bg-success-400/10';
+    if (score < 0.5) color = 'text-error-400 bg-error-400/10';
+    else if (score < 0.7) color = 'text-warning-400 bg-warning-400/10';
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded ${color}`}>
         {Math.round(score * 100)}% confidence

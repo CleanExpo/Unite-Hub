@@ -79,7 +79,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
         </Card>
       )}
       {records.length === 0 ? (
-        <Card><CardContent className="py-12 text-center"><Shield className="h-12 w-12 mx-auto text-green-500 mb-4" /><h3 className="text-lg font-medium mb-2">No Enforcement Events</h3><p className="text-muted-foreground">System stability has not required intervention.</p></CardContent></Card>
+        <Card><CardContent className="py-12 text-center"><Shield className="h-12 w-12 mx-auto text-success-500 mb-4" /><h3 className="text-lg font-medium mb-2">No Enforcement Events</h3><p className="text-muted-foreground">System stability has not required intervention.</p></CardContent></Card>
       ) : (
         <div className="space-y-3">
           {records.map(record => (
@@ -106,7 +106,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
           ))}
         </div>
       )}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">Stability Protocol</div><p>No oscillation tolerance. Cooling and safe modes supported. Founder lock required on high-risk actions. Region freeze capability active.</p></div></div></CardContent></Card>
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" /><div className="text-sm text-warning-800 dark:text-warning-200"><div className="font-medium mb-1">Stability Protocol</div><p>No oscillation tolerance. Cooling and safe modes supported. Founder lock required on high-risk actions. Region freeze capability active.</p></div></div></CardContent></Card>
     </div>
   );
 }

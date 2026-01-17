@@ -8,7 +8,7 @@ const ScoreBar = ({ score }: { score: number }) => {
   const safeScore = Math.min(100, Math.max(0, score));
   // Use inline style for dynamic score width (CSS variable pattern)
   return (
-    <div className="w-full bg-gray-300 rounded-full h-2">
+    <div className="w-full bg-bg-elevated rounded-full h-2">
       <div
         className="bg-accent-500 h-2 rounded-full transition-all duration-300"
         // eslint-disable-next-line @stylistic/jsx-no-constructed-context-values
@@ -64,15 +64,15 @@ export default function AdoptionOverviewPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'power':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-100 text-success-800';
       case 'regular':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-info-100 text-info-800';
       case 'light':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'inactive':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-secondary';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
@@ -91,7 +91,7 @@ export default function AdoptionOverviewPage() {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-red-600">Error: {error}</p>
+        <p className="text-error-600">Error: {error}</p>
       </div>
     );
   }
@@ -105,12 +105,12 @@ export default function AdoptionOverviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-bg-hover p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Adoption Overview</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-text-primary">Adoption Overview</h1>
+          <p className="text-text-muted mt-2">
             Last updated: {new Date(adoption.computed_at).toLocaleDateString()}
           </p>
         </div>
@@ -127,18 +127,18 @@ export default function AdoptionOverviewPage() {
           {adoption.dimensions.map((dimension) => (
             <div
               key={dimension.dimension}
-              className="bg-white rounded-lg shadow p-6 border-l-4 border-accent-500"
+              className="bg-bg-card rounded-lg shadow p-6 border-l-4 border-accent-500"
             >
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 capitalize">
+              <h2 className="text-lg font-semibold text-text-primary mb-4 capitalize">
                 {dimension.dimension.replace(/_/g, ' ')}
               </h2>
 
               {/* Subdimension Cards */}
               <div className="space-y-3">
                 {dimension.subdimensions.map((sub) => (
-                  <div key={sub.sub_dimension} className="bg-gray-50 p-3 rounded">
+                  <div key={sub.sub_dimension} className="bg-bg-hover p-3 rounded">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-700 font-medium">
+                      <span className="text-sm text-text-secondary font-medium">
                         {sub.sub_dimension.replace(/_/g, ' ')}
                       </span>
                       <span className={`text-xs px-2 py-1 rounded ${getStatusColor(sub.status)}`}>
@@ -150,16 +150,16 @@ export default function AdoptionOverviewPage() {
                     <ScoreBar score={sub.score} />
 
                     {/* Score Text */}
-                    <p className="text-xs text-gray-500 mt-1">{Math.round(sub.score)}/100</p>
+                    <p className="text-xs text-text-tertiary mt-1">{Math.round(sub.score)}/100</p>
 
                     {/* Signals Detail */}
                     {Object.keys(sub.signals).length > 0 && (
-                      <div className="text-xs text-gray-600 mt-2 border-t border-gray-200 pt-2">
+                      <div className="text-xs text-text-muted mt-2 border-t border-border pt-2">
                         <details className="cursor-pointer">
                           <summary className="font-medium">Signals ({Object.keys(sub.signals).length})</summary>
                           <div className="mt-1 space-y-1 ml-2">
                             {Object.entries(sub.signals).map(([key, value]) => (
-                              <div key={key} className="text-gray-600">
+                              <div key={key} className="text-text-muted">
                                 {typeof value === 'object'
                                   ? `${key}: ${(value as any).value || value}`
                                   : `${key}: ${value}`}
@@ -178,8 +178,8 @@ export default function AdoptionOverviewPage() {
         </div>
 
         {/* Summary Stats */}
-        <div className="mt-8 bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Overall Health</h3>
+        <div className="mt-8 bg-bg-card rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-text-primary mb-4">Overall Health</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {adoption.dimensions.map((dimension) => {
               const avgScore =
@@ -189,11 +189,11 @@ export default function AdoptionOverviewPage() {
 
               return (
                 <div key={dimension.dimension} className="text-center">
-                  <p className="text-sm text-gray-600 mb-2 capitalize">
+                  <p className="text-sm text-text-muted mb-2 capitalize">
                     {dimension.dimension.replace(/_/g, ' ')}
                   </p>
                   <p className="text-2xl font-bold text-accent-500">{Math.round(avgScore)}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-text-tertiary">
                     {powerCount} power adoption{powerCount !== 1 ? 's' : ''}
                   </p>
                 </div>

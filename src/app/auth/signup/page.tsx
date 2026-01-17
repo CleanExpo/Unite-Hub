@@ -114,6 +114,13 @@ export default function SignUpPage() {
               Sign in
             </a>
           </p>
+
+          <p className="text-center text-xs text-slate-500 mt-4">
+            By signing up, you agree to our{" "}
+            <a href="/terms" className="underline hover:text-slate-300">Terms</a>,{" "}
+            <a href="/privacy" className="underline hover:text-slate-300">Privacy</a>, and{" "}
+            <a href="/security" className="underline hover:text-slate-300">Security</a> policies
+          </p>
         </CardContent>
       </Card>
     </div>

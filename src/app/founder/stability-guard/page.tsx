@@ -120,11 +120,11 @@ export default function StabilityGuardPage() {
   const severityColor = (severity: string) => {
     switch (severity) {
       case "critical":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "warning":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "info":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -133,11 +133,11 @@ export default function StabilityGuardPage() {
   const statusColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "acknowledged":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "resolved":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "dismissed":
         return "bg-bg-muted text-text-secondary border-border";
       default:
@@ -148,17 +148,17 @@ export default function StabilityGuardPage() {
   const typeColor = (type: string) => {
     switch (type) {
       case "decline":
-        return "bg-red-500/10 text-red-400";
+        return "bg-error-500/10 text-error-400";
       case "burnout_risk":
-        return "bg-orange-500/10 text-orange-400";
+        return "bg-accent-500/10 text-accent-400";
       case "overload":
-        return "bg-amber-500/10 text-amber-400";
+        return "bg-warning-500/10 text-warning-400";
       case "instability":
-        return "bg-yellow-500/10 text-yellow-400";
+        return "bg-warning-500/10 text-warning-400";
       case "forecast_alarm":
         return "bg-purple-500/10 text-purple-400";
       case "recovery_failure":
-        return "bg-red-500/10 text-red-400";
+        return "bg-error-500/10 text-error-400";
       default:
         return "bg-bg-muted text-text-secondary";
     }
@@ -202,11 +202,11 @@ export default function StabilityGuardPage() {
 
       {/* Critical Alert Banner */}
       {activeAlerts.filter((a) => a.severity === "critical").length > 0 && (
-        <Card className="p-4 bg-red-500/10 border-red-500/20">
+        <Card className="p-4 bg-error-500/10 border-error-500/20">
           <div className="flex items-center gap-3">
             <span className="text-2xl">🚨</span>
             <div>
-              <div className="font-semibold text-red-400">
+              <div className="font-semibold text-error-400">
                 {activeAlerts.filter((a) => a.severity === "critical").length} Critical Alert(s)
                 Active
               </div>
@@ -294,7 +294,7 @@ export default function StabilityGuardPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-red-400">
+                      <div className="text-3xl font-bold text-error-400">
                         {anomaly.severity_score.toFixed(0)}
                       </div>
                       <div className="text-xs text-text-secondary">severity</div>
@@ -369,19 +369,19 @@ export default function StabilityGuardPage() {
                     </div>
                   </div>
                   <div className="text-right space-y-2">
-                    <div className="text-3xl font-bold text-red-400">
+                    <div className="text-3xl font-bold text-error-400">
                       {alert.severity_score.toFixed(0)}
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleAcknowledgeAlert(alert.id)}
-                        className="px-3 py-1 text-xs rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
+                        className="px-3 py-1 text-xs rounded-lg bg-warning-500/10 text-warning-400 border border-warning-500/20 hover:bg-warning-500/20 transition-colors"
                       >
                         Acknowledge
                       </button>
                       <button
                         onClick={() => handleResolveAlert(alert.id)}
-                        className="px-3 py-1 text-xs rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                        className="px-3 py-1 text-xs rounded-lg bg-success-500/10 text-success-400 border border-emerald-500/20 hover:bg-success-500/20 transition-colors"
                       >
                         Resolve
                       </button>
@@ -484,15 +484,15 @@ export default function StabilityGuardPage() {
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Active Alerts</div>
-              <div className="text-2xl font-bold text-amber-400">{summary.active_alerts}</div>
+              <div className="text-2xl font-bold text-warning-400">{summary.active_alerts}</div>
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Critical Alerts</div>
-              <div className="text-2xl font-bold text-red-400">{summary.critical_alerts}</div>
+              <div className="text-2xl font-bold text-error-400">{summary.critical_alerts}</div>
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Unresolved Critical</div>
-              <div className="text-2xl font-bold text-red-400">
+              <div className="text-2xl font-bold text-error-400">
                 {summary.unresolved_critical_count}
               </div>
             </Card>

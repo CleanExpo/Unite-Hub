@@ -181,7 +181,7 @@ throw new Error('Failed to update baseline');
 
         {/* Error message */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="mb-6 p-4 bg-error-50 border border-error-200 rounded-lg text-error-700">
             {error}
           </div>
         )}
@@ -285,7 +285,7 @@ throw new Error('Failed to update baseline');
                       {!baseline.is_reference && (
                         <button
                           onClick={() => markBaselineAsReference(baseline.id)}
-                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors text-sm"
+                          className="px-3 py-1 bg-info-100 text-info-700 rounded hover:bg-info-200 transition-colors text-sm"
                         >
                           Mark as Reference
                         </button>
@@ -318,10 +318,10 @@ throw new Error('Failed to update baseline');
                           <span
                             className={`px-3 py-1 rounded text-sm font-medium ${
                               report.severity === 'critical'
-                                ? 'bg-red-100 text-red-700'
+                                ? 'bg-error-100 text-error-700'
                                 : report.severity === 'warning'
-                                  ? 'bg-yellow-100 text-yellow-700'
-                                  : 'bg-green-100 text-green-700'
+                                  ? 'bg-warning-100 text-warning-700'
+                                  : 'bg-success-100 text-success-700'
                             }`}
                           >
                             {report.severity.toUpperCase()}
@@ -372,7 +372,7 @@ throw new Error('Failed to update baseline');
               </div>
               <button
                 onClick={() => setSelectedSchedule(null)}
-                className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
+                className="w-full px-4 py-2 bg-bg-hover text-text-secondary rounded hover:bg-bg-elevated transition-colors"
               >
                 Close
               </button>
@@ -404,7 +404,7 @@ throw new Error('Failed to update baseline');
               </div>
               <button
                 onClick={() => setSelectedReport(null)}
-                className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
+                className="w-full px-4 py-2 bg-bg-hover text-text-secondary rounded hover:bg-bg-elevated transition-colors"
               >
                 Close
               </button>

@@ -171,12 +171,12 @@ export default function IntegrationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-bg-hover p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Integrations & Success Toolkit</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-text-primary">Integrations & Success Toolkit</h1>
+          <p className="text-text-muted mt-2">
             Configure external integrations for Guardian meta data, view customer success metrics, and manage webhook
             delivery to BI/CS tools.
           </p>
@@ -184,9 +184,9 @@ export default function IntegrationsPage() {
 
         {/* Error Banner */}
         {error && (
-          <div className="mb-8 bg-red-50 border border-red-300 rounded-lg p-4 flex gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-red-800">{error}</p>
+          <div className="mb-8 bg-error-50 border border-error-300 rounded-lg p-4 flex gap-3">
+            <AlertCircle className="w-5 h-5 text-error-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-error-800">{error}</p>
           </div>
         )}
 
@@ -199,24 +199,24 @@ export default function IntegrationsPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                 {/* Readiness */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
-                  <p className="text-xs text-blue-700 font-semibold mb-2">READINESS SCORE</p>
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-info-200">
+                  <p className="text-xs text-info-700 font-semibold mb-2">READINESS SCORE</p>
                   <div className="mb-2">
-                    <p className="text-2xl font-bold text-blue-900">{overview.readiness.overall_score}</p>
-                    <p className="text-xs text-blue-700">{overview.readiness.band || 'Unknown'}</p>
+                    <p className="text-2xl font-bold text-info-900">{overview.readiness.overall_score}</p>
+                    <p className="text-xs text-info-700">{overview.readiness.band || 'Unknown'}</p>
                   </div>
                   {overview.readiness.last_computed_at && (
-                    <p className="text-xs text-blue-600">
+                    <p className="text-xs text-info-600">
                       {new Date(overview.readiness.last_computed_at).toLocaleDateString()}
                     </p>
                   )}
                 </div>
 
                 {/* Adoption Overall */}
-                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
-                  <p className="text-xs text-green-700 font-semibold mb-2">ADOPTION STATUS</p>
-                  <p className="text-2xl font-bold text-green-900 capitalize">{overview.adoption.overall_status}</p>
-                  <p className="text-xs text-green-700 mt-2">{overview.adoption.dimensions.length} dimensions tracked</p>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-success-200">
+                  <p className="text-xs text-success-700 font-semibold mb-2">ADOPTION STATUS</p>
+                  <p className="text-2xl font-bold text-success-900 capitalize">{overview.adoption.overall_status}</p>
+                  <p className="text-xs text-success-700 mt-2">{overview.adoption.dimensions.length} dimensions tracked</p>
                 </div>
 
                 {/* Uplift */}
@@ -229,15 +229,15 @@ export default function IntegrationsPage() {
                 </div>
 
                 {/* Editions */}
-                <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200">
-                  <p className="text-xs text-amber-700 font-semibold mb-2">BEST FIT EDITION</p>
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg border border-warning-200">
+                  <p className="text-xs text-warning-700 font-semibold mb-2">BEST FIT EDITION</p>
                   {overview.editions.length > 0 && (
                     <>
-                      <p className="text-lg font-bold text-amber-900">{overview.editions[0].label}</p>
-                      <p className="text-xs text-amber-700">Score: {overview.editions[0].fit_score}</p>
+                      <p className="text-lg font-bold text-warning-900">{overview.editions[0].label}</p>
+                      <p className="text-xs text-warning-700">Score: {overview.editions[0].fit_score}</p>
                     </>
                   )}
-                  {overview.editions.length === 0 && <p className="text-xs text-amber-700">No edition fit data</p>}
+                  {overview.editions.length === 0 && <p className="text-xs text-warning-700">No edition fit data</p>}
                 </div>
 
                 {/* Reports */}
@@ -263,33 +263,33 @@ export default function IntegrationsPage() {
           <CardContent>
             {integrations.length === 0 ? (
               <div className="text-center py-8">
-                <Zap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-600 mb-3">No integrations configured yet.</p>
-                <p className="text-sm text-gray-500">
+                <Zap className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+                <p className="text-text-muted mb-3">No integrations configured yet.</p>
+                <p className="text-sm text-text-tertiary">
                   Create an integration to send Guardian Z-series meta events to external BI/CS tools.
                 </p>
               </div>
             ) : (
               <div className="space-y-4">
                 {integrations.map((integration) => (
-                  <div key={integration.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition">
+                  <div key={integration.id} className="border border-border rounded-lg p-4 bg-bg-hover hover:bg-bg-hover transition">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-lg font-semibold text-gray-900">{integration.label}</h3>
+                          <h3 className="text-lg font-semibold text-text-primary">{integration.label}</h3>
                           <Badge variant="outline" className="text-xs">
                             {integration.integration_key}
                           </Badge>
                           {integration.is_enabled ? (
-                            <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                            <Badge className="bg-success-100 text-success-800">Enabled</Badge>
                           ) : (
-                            <Badge className="bg-gray-100 text-gray-800">Disabled</Badge>
+                            <Badge className="bg-bg-hover text-text-secondary">Disabled</Badge>
                           )}
                         </div>
-                        <p className="text-sm text-gray-600">{integration.description}</p>
+                        <p className="text-sm text-text-muted">{integration.description}</p>
                         <div className="mt-2 flex flex-wrap gap-1">
                           {integration.scopes.map((scope) => (
-                            <Badge key={scope} className="bg-blue-50 text-blue-700 text-xs">
+                            <Badge key={scope} className="bg-info-50 text-info-700 text-xs">
                               {scope}
                             </Badge>
                           ))}
@@ -299,21 +299,21 @@ export default function IntegrationsPage() {
                       {/* Webhook Stats */}
                       <div className="text-right ml-4">
                         <div className="text-sm mb-2">
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-text-muted">
                             {integration.webhook_stats.delivered} delivered
                           </p>
                           {integration.webhook_stats.pending > 0 && (
-                            <p className="text-xs text-amber-600">
+                            <p className="text-xs text-warning-600">
                               {integration.webhook_stats.pending} pending
                             </p>
                           )}
                           {integration.webhook_stats.failed > 0 && (
-                            <p className="text-xs text-red-600">
+                            <p className="text-xs text-error-600">
                               {integration.webhook_stats.failed} failed
                             </p>
                           )}
                           {integration.webhook_stats.events_last_24h > 0 && (
-                            <p className="text-xs text-green-600">
+                            <p className="text-xs text-success-600">
                               {integration.webhook_stats.events_last_24h} last 24h
                             </p>
                           )}
@@ -350,7 +350,7 @@ export default function IntegrationsPage() {
                 ))}
 
                 {/* Test All Button */}
-                <div className="mt-6 pt-4 border-t border-gray-200">
+                <div className="mt-6 pt-4 border-t border-border">
                   <Button
                     variant="outline"
                     onClick={() => handleTestWebhook()}
@@ -367,11 +367,11 @@ export default function IntegrationsPage() {
         </Card>
 
         {/* Info Banner */}
-        <div className="mt-8 bg-blue-50 border border-blue-300 rounded-lg p-4 flex gap-3">
-          <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+        <div className="mt-8 bg-info-50 border border-info-300 rounded-lg p-4 flex gap-3">
+          <CheckCircle2 className="w-5 h-5 text-info-600 flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-semibold text-blue-900 mb-1">Z07 Meta Integrations</h3>
-            <p className="text-sm text-blue-800">
+            <h3 className="font-semibold text-info-900 mb-1">Z07 Meta Integrations</h3>
+            <p className="text-sm text-info-800">
               These integrations expose <strong>Z-series metadata only</strong> (readiness, uplift, adoption, reports,
               editions, lifecycle). Core Guardian data (alerts, incidents, rules, network intelligence) is never exposed
               and Guardian runtime behaviour is never modified.

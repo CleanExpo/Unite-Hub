@@ -101,25 +101,25 @@ throw new Error("Failed to update approval");
     switch (status) {
       case "pending_review":
         return (
-          <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+          <Badge variant="outline" className="bg-warning-100 text-warning-800">
             Pending Review
           </Badge>
         );
       case "approved":
         return (
-          <Badge variant="outline" className="bg-green-100 text-green-800">
+          <Badge variant="outline" className="bg-success-100 text-success-800">
             Approved
           </Badge>
         );
       case "rejected":
         return (
-          <Badge variant="outline" className="bg-red-100 text-red-800">
+          <Badge variant="outline" className="bg-error-100 text-error-800">
             Rejected
           </Badge>
         );
       case "needs_changes":
         return (
-          <Badge variant="outline" className="bg-orange-100 text-orange-800">
+          <Badge variant="outline" className="bg-accent-100 text-accent-800">
             Needs Changes
           </Badge>
         );
@@ -184,7 +184,7 @@ throw new Error("Failed to update approval");
 
               {/* Raw Data Payload */}
               <Collapsible>
-                <CollapsibleTrigger className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800">
+                <CollapsibleTrigger className="flex items-center gap-1 text-xs text-info-600 hover:text-info-800">
                   <ChevronDown className="w-3 h-3" />
                   Raw data payload
                 </CollapsibleTrigger>
@@ -220,7 +220,7 @@ throw new Error("Failed to update approval");
                 <div className="flex flex-wrap gap-2">
                   <Button
                     size="sm"
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-success-600 hover:bg-success-700"
                     onClick={() => handleAction(approval.id, "approve")}
                     disabled={actionLoading === approval.id}
                   >
@@ -234,7 +234,7 @@ throw new Error("Failed to update approval");
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-yellow-600 text-yellow-600 hover:bg-yellow-50"
+                    className="border-warning-600 text-warning-600 hover:bg-warning-50"
                     onClick={() =>
                       handleAction(
                         approval.id,
@@ -250,7 +250,7 @@ throw new Error("Failed to update approval");
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-red-600 text-red-600 hover:bg-red-50"
+                    className="border-error-600 text-error-600 hover:bg-error-50"
                     onClick={() => handleAction(approval.id, "reject")}
                     disabled={actionLoading === approval.id}
                   >

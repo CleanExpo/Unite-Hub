@@ -83,21 +83,21 @@ export default function SLAReportingPage() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "critical": return "bg-red-500/10 text-red-500";
-      case "high": return "bg-orange-500/10 text-orange-500";
-      case "medium": return "bg-yellow-500/10 text-yellow-500";
-      case "low": return "bg-blue-500/10 text-blue-500";
+      case "critical": return "bg-error-500/10 text-error-500";
+      case "high": return "bg-accent-500/10 text-accent-500";
+      case "medium": return "bg-warning-500/10 text-warning-500";
+      case "low": return "bg-info-500/10 text-info-500";
       default: return "bg-bg-primary text-text-secondary";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "resolved": return "bg-green-500/10 text-green-500";
-      case "monitoring": return "bg-blue-500/10 text-blue-500";
-      case "investigating": return "bg-yellow-500/10 text-yellow-500";
-      case "identified": return "bg-orange-500/10 text-orange-500";
-      case "open": return "bg-red-500/10 text-red-500";
+      case "resolved": return "bg-success-500/10 text-success-500";
+      case "monitoring": return "bg-info-500/10 text-info-500";
+      case "investigating": return "bg-warning-500/10 text-warning-500";
+      case "identified": return "bg-accent-500/10 text-accent-500";
+      case "open": return "bg-error-500/10 text-error-500";
       default: return "bg-bg-primary text-text-secondary";
     }
   };
@@ -172,7 +172,7 @@ export default function SLAReportingPage() {
               </Card>
               <Card className="bg-bg-card border-border p-6">
                 <div className="text-text-secondary text-sm">Open Incidents</div>
-                <div className="text-3xl font-bold text-red-500 mt-2">
+                <div className="text-3xl font-bold text-error-500 mt-2">
                   {overview.open_incidents}
                 </div>
                 <div className="text-xs text-text-secondary mt-1">
@@ -208,7 +208,7 @@ export default function SLAReportingPage() {
                   </div>
                   <span
                     className={`px-2 py-1 text-xs rounded font-medium ${
-                      sla.is_active ? "bg-green-500/10 text-green-500" : "bg-bg-primary text-text-secondary"
+                      sla.is_active ? "bg-success-500/10 text-success-500" : "bg-bg-primary text-text-secondary"
                     }`}
                   >
                     {sla.is_active ? "ACTIVE" : "INACTIVE"}

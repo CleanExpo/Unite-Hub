@@ -46,9 +46,9 @@ interface VisualDemo {
 
 const CATEGORY_CONFIG = {
   hero: { icon: Layout, color: "text-purple-600 bg-purple-100", label: "Hero Sections" },
-  section: { icon: Square, color: "text-blue-600 bg-blue-100", label: "Page Sections" },
-  card: { icon: Grid, color: "text-green-600 bg-green-100", label: "Cards" },
-  gallery: { icon: Image, color: "text-amber-600 bg-amber-100", label: "Galleries" },
+  section: { icon: Square, color: "text-info-600 bg-info-100", label: "Page Sections" },
+  card: { icon: Grid, color: "text-success-600 bg-success-100", label: "Cards" },
+  gallery: { icon: Image, color: "text-warning-600 bg-warning-100", label: "Galleries" },
   social: { icon: Share2, color: "text-pink-600 bg-pink-100", label: "Social Media" },
 };
 
@@ -217,7 +217,7 @@ export default function VisualDemosPage() {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div className="flex gap-3 flex-1 w-full sm:w-auto">
               <div className="relative flex-1 sm:max-w-xs">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                 <input
                   type="text"
                   placeholder="Search demos..."
@@ -264,11 +264,11 @@ export default function VisualDemosPage() {
           ) : filteredDemos.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <Sparkles className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                <Sparkles className="w-12 h-12 mx-auto text-text-secondary mb-4" />
                 <h3 className="text-lg font-medium text-text-primary mb-2">
                   No demos found
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-text-tertiary mb-4">
                   Try adjusting your filters or add a new visual demo.
                 </p>
               </CardContent>
@@ -290,7 +290,7 @@ export default function VisualDemosPage() {
               <h3 className="text-xl font-semibold text-text-primary mb-2">
                 Animation Style Wizard
               </h3>
-              <p className="text-sm text-gray-500 mb-6 max-w-md mx-auto">
+              <p className="text-sm text-text-tertiary mb-6 max-w-md mx-auto">
                 Answer a few questions about your brand, industry, and preferences to get personalized
                 animation recommendations.
               </p>
@@ -330,14 +330,14 @@ function CategoryPill({ active, onClick, label, count, icon: Icon, color }: Cate
       className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
         active
           ? "bg-accent-600 text-white"
-          : "bg-bg-hover text-gray-600 dark:text-gray-300 hover:bg-bg-hover"
+          : "bg-bg-hover text-text-muted dark:text-text-secondary hover:bg-bg-hover"
       }`}
     >
       {Icon && <Icon className={`w-4 h-4 ${active ? "" : color?.split(" ")[0]}`} />}
       {label}
       <span
         className={`px-1.5 py-0.5 rounded text-xs ${
-          active ? "bg-white/20" : "bg-gray-200 dark:bg-gray-600"
+          active ? "bg-bg-card/20" : "bg-bg-hover dark:bg-bg-raised"
         }`}
       >
         {count}
@@ -355,8 +355,8 @@ function DemoCard({ demo, onPreview }: DemoCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const categoryConfig = CATEGORY_CONFIG[demo.category];
   const intensityColors = {
-    subtle: "bg-gray-100 text-gray-600",
-    normal: "bg-blue-100 text-blue-600",
+    subtle: "bg-bg-hover text-text-muted",
+    normal: "bg-info-100 text-info-600",
     dramatic: "bg-purple-100 text-purple-600",
   };
 
@@ -385,15 +385,15 @@ function DemoCard({ demo, onPreview }: DemoCardProps) {
         >
           <button
             onClick={onPreview}
-            className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
+            className="p-2 bg-bg-card rounded-full hover:bg-bg-hover transition-colors"
           >
-            <Play className="w-5 h-5 text-gray-800" />
+            <Play className="w-5 h-5 text-text-primary" />
           </button>
-          <button className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors">
-            <Eye className="w-5 h-5 text-gray-800" />
+          <button className="p-2 bg-bg-card rounded-full hover:bg-bg-hover transition-colors">
+            <Eye className="w-5 h-5 text-text-primary" />
           </button>
-          <button className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors">
-            <Copy className="w-5 h-5 text-gray-800" />
+          <button className="p-2 bg-bg-card rounded-full hover:bg-bg-hover transition-colors">
+            <Copy className="w-5 h-5 text-text-primary" />
           </button>
         </div>
 
@@ -430,7 +430,7 @@ function DemoCard({ demo, onPreview }: DemoCardProps) {
               </span>
             )}
           </div>
-          <Zap className="w-4 h-4 text-amber-500" />
+          <Zap className="w-4 h-4 text-warning-500" />
         </div>
       </CardContent>
     </Card>
@@ -460,7 +460,7 @@ function DemoPreviewModal({ demo, onClose }: DemoPreviewModalProps) {
           </div>
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+            className="absolute top-4 right-4 p-2 bg-bg-card/10 hover:bg-bg-card/20 rounded-full transition-colors"
           >
             <span className="sr-only">Close</span>
             <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -477,7 +477,7 @@ function DemoPreviewModal({ demo, onClose }: DemoPreviewModalProps) {
                 <div className={`p-2 rounded-lg ${categoryConfig.color}`}>
                   <categoryConfig.icon className="w-5 h-5" />
                 </div>
-                <span className="text-sm text-gray-500">{categoryConfig.label}</span>
+                <span className="text-sm text-text-tertiary">{categoryConfig.label}</span>
               </div>
               <h2 className="text-2xl font-bold text-text-primary">{demo.title}</h2>
               <p className="text-text-secondary mt-1">{demo.description}</p>
@@ -485,20 +485,20 @@ function DemoPreviewModal({ demo, onClose }: DemoPreviewModalProps) {
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-6">
-            <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-1">Animation</p>
+            <div className="p-4 bg-bg-hover dark:bg-bg-elevated/50 rounded-lg">
+              <p className="text-xs text-text-tertiary mb-1">Animation</p>
               <p className="font-medium text-text-primary">
                 {demo.config.animation || "Default"}
               </p>
             </div>
-            <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-1">Intensity</p>
+            <div className="p-4 bg-bg-hover dark:bg-bg-elevated/50 rounded-lg">
+              <p className="text-xs text-text-tertiary mb-1">Intensity</p>
               <p className="font-medium text-text-primary capitalize">
                 {demo.config.intensity || "Normal"}
               </p>
             </div>
-            <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-1">Persona</p>
+            <div className="p-4 bg-bg-hover dark:bg-bg-elevated/50 rounded-lg">
+              <p className="text-xs text-text-tertiary mb-1">Persona</p>
               <p className="font-medium text-text-primary capitalize">
                 {demo.persona || "Universal"}
               </p>

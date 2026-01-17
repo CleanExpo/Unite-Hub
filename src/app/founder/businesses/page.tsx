@@ -130,19 +130,19 @@ export default function BusinessesPage() {
 
   const getHealthColor = (score: number) => {
     if (score >= 80) {
-return 'text-green-400';
+return 'text-success-400';
 }
     if (score >= 60) {
-return 'text-yellow-400';
+return 'text-warning-400';
 }
-    return 'text-red-400';
+    return 'text-error-400';
   };
 
   const getStatusBadge = (status: Business['status']) => {
     const colors = {
-      healthy: 'bg-green-500/20 text-green-400 border-green-500/30',
-      attention: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-      critical: 'bg-red-500/20 text-red-400 border-red-500/30',
+      healthy: 'bg-success-500/20 text-success-400 border-success-500/30',
+      attention: 'bg-warning-500/20 text-warning-400 border-warning-500/30',
+      critical: 'bg-error-500/20 text-error-400 border-error-500/30',
     };
     const labels = {
       healthy: 'Healthy',
@@ -160,11 +160,11 @@ return 'text-yellow-400';
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredBusinesses.map((business) => (
         <Link key={business.id} href={`/founder/businesses/${business.id}`}>
-          <Card className="bg-gray-800/50 border-gray-700 p-6 hover:bg-gray-800/70 transition-colors cursor-pointer h-full">
+          <Card className="bg-bg-raised/50 border-border p-6 hover:bg-bg-raised/70 transition-colors cursor-pointer h-full">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-100">{business.name}</h3>
-                <p className="text-sm text-gray-400 mt-1">{business.industry}</p>
+                <h3 className="text-lg font-semibold text-text-primary">{business.name}</h3>
+                <p className="text-sm text-text-muted mt-1">{business.industry}</p>
               </div>
               {getStatusBadge(business.status)}
             </div>
@@ -172,19 +172,19 @@ return 'text-yellow-400';
             <div className="space-y-3">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-gray-400">Health Score</span>
+                  <span className="text-sm text-text-muted">Health Score</span>
                   <span className={`text-sm font-semibold ${getHealthColor(business.healthScore)}`}>
                     {business.healthScore}/100
                   </span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-bg-elevated rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${
                       business.healthScore >= 80
-                        ? 'bg-green-500'
+                        ? 'bg-success-500'
                         : business.healthScore >= 60
-                        ? 'bg-yellow-500'
-                        : 'bg-red-500'
+                        ? 'bg-warning-500'
+                        : 'bg-error-500'
                     }`}
                     style={{ width: `${business.healthScore}%` }}
                   />
@@ -192,12 +192,12 @@ return 'text-yellow-400';
               </div>
 
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-400">Recent Signals</span>
-                <span className="text-gray-100 font-medium">{business.recentSignals}</span>
+                <span className="text-text-muted">Recent Signals</span>
+                <span className="text-text-primary font-medium">{business.recentSignals}</span>
               </div>
 
-              <div className="pt-3 border-t border-gray-700">
-                <p className="text-xs text-gray-500">Last activity: {business.lastActivity}</p>
+              <div className="pt-3 border-t border-border">
+                <p className="text-xs text-text-tertiary">Last activity: {business.lastActivity}</p>
               </div>
             </div>
           </Card>
@@ -207,31 +207,31 @@ return 'text-yellow-400';
   );
 
   const renderListView = () => (
-    <Card className="bg-gray-800/50 border-gray-700">
-      <div className="divide-y divide-gray-700">
+    <Card className="bg-bg-raised/50 border-border">
+      <div className="divide-y divide-border-subtle">
         {filteredBusinesses.map((business) => (
           <Link key={business.id} href={`/founder/businesses/${business.id}`}>
-            <div className="p-4 hover:bg-gray-800/30 transition-colors cursor-pointer">
+            <div className="p-4 hover:bg-bg-raised/30 transition-colors cursor-pointer">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4 flex-1">
-                  <Building2 className="w-8 h-8 text-gray-400" />
+                  <Building2 className="w-8 h-8 text-text-muted" />
                   <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-gray-100">{business.name}</h3>
-                    <p className="text-xs text-gray-400 mt-1">{business.industry}</p>
+                    <h3 className="text-sm font-semibold text-text-primary">{business.name}</h3>
+                    <p className="text-xs text-text-muted mt-1">{business.industry}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-6">
                   <div className="text-right">
-                    <p className="text-xs text-gray-400">Health Score</p>
+                    <p className="text-xs text-text-muted">Health Score</p>
                     <p className={`text-sm font-semibold ${getHealthColor(business.healthScore)}`}>
                       {business.healthScore}/100
                     </p>
                   </div>
 
                   <div className="text-right">
-                    <p className="text-xs text-gray-400">Signals</p>
-                    <p className="text-sm font-semibold text-gray-100">{business.recentSignals}</p>
+                    <p className="text-xs text-text-muted">Signals</p>
+                    <p className="text-sm font-semibold text-text-primary">{business.recentSignals}</p>
                   </div>
 
                   <div className="text-right min-w-[120px]">
@@ -239,7 +239,7 @@ return 'text-yellow-400';
                   </div>
 
                   <div className="text-right min-w-[100px]">
-                    <p className="text-xs text-gray-500">{business.lastActivity}</p>
+                    <p className="text-xs text-text-tertiary">{business.lastActivity}</p>
                   </div>
                 </div>
               </div>
@@ -255,7 +255,7 @@ return 'text-yellow-400';
       <PageContainer>
         <Section>
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-info-500" />
           </div>
         </Section>
       </PageContainer>
@@ -268,11 +268,11 @@ return 'text-yellow-400';
       <Section>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-100">Businesses</h1>
-            <p className="text-gray-400 mt-2">Manage your business portfolio</p>
+            <h1 className="text-3xl font-bold text-text-primary">Businesses</h1>
+            <p className="text-text-muted mt-2">Manage your business portfolio</p>
           </div>
           <Link href="/founder/businesses/new">
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-info-600 hover:bg-info-700">
               <Plus className="w-4 h-4 mr-2" />
               Add Business
             </Button>
@@ -282,17 +282,17 @@ return 'text-yellow-400';
 
       {/* Filters and View Toggle */}
       <Section>
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
+        <Card className="bg-bg-raised/50 border-border p-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Search */}
             <div className="relative flex-1 w-full md:max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
               <Input
                 type="text"
                 placeholder="Search businesses..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-900/50 border-gray-700 text-gray-100"
+                className="pl-10 bg-bg-base/50 border-border text-text-primary"
               />
             </div>
 
@@ -301,7 +301,7 @@ return 'text-yellow-400';
               <Button
                 variant={selectedFilter === 'all' ? 'default' : 'outline'}
                 onClick={() => setSelectedFilter('all')}
-                className={selectedFilter === 'all' ? 'bg-blue-600' : 'border-gray-600'}
+                className={selectedFilter === 'all' ? 'bg-info-600' : 'border-border'}
                 size="sm"
               >
                 All
@@ -309,7 +309,7 @@ return 'text-yellow-400';
               <Button
                 variant={selectedFilter === 'healthy' ? 'default' : 'outline'}
                 onClick={() => setSelectedFilter('healthy')}
-                className={selectedFilter === 'healthy' ? 'bg-green-600' : 'border-gray-600'}
+                className={selectedFilter === 'healthy' ? 'bg-success-600' : 'border-border'}
                 size="sm"
               >
                 Healthy
@@ -317,7 +317,7 @@ return 'text-yellow-400';
               <Button
                 variant={selectedFilter === 'attention' ? 'default' : 'outline'}
                 onClick={() => setSelectedFilter('attention')}
-                className={selectedFilter === 'attention' ? 'bg-yellow-600' : 'border-gray-600'}
+                className={selectedFilter === 'attention' ? 'bg-warning-600' : 'border-border'}
                 size="sm"
               >
                 Attention
@@ -325,7 +325,7 @@ return 'text-yellow-400';
               <Button
                 variant={selectedFilter === 'critical' ? 'default' : 'outline'}
                 onClick={() => setSelectedFilter('critical')}
-                className={selectedFilter === 'critical' ? 'bg-red-600' : 'border-gray-600'}
+                className={selectedFilter === 'critical' ? 'bg-error-600' : 'border-border'}
                 size="sm"
               >
                 Critical
@@ -333,12 +333,12 @@ return 'text-yellow-400';
             </div>
 
             {/* View toggle */}
-            <div className="flex items-center space-x-2 border border-gray-700 rounded-lg p-1">
+            <div className="flex items-center space-x-2 border border-border rounded-lg p-1">
               <Button
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
-                className={viewMode === 'grid' ? 'bg-blue-600' : ''}
+                className={viewMode === 'grid' ? 'bg-info-600' : ''}
               >
                 <Grid3x3 className="w-4 h-4" />
               </Button>
@@ -346,7 +346,7 @@ return 'text-yellow-400';
                 variant={viewMode === 'list' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('list')}
-                className={viewMode === 'list' ? 'bg-blue-600' : ''}
+                className={viewMode === 'list' ? 'bg-info-600' : ''}
               >
                 <List className="w-4 h-4" />
               </Button>
@@ -358,17 +358,17 @@ return 'text-yellow-400';
       {/* Business List */}
       <Section>
         {filteredBusinesses.length === 0 ? (
-          <Card className="bg-gray-800/50 border-gray-700 p-12 text-center">
-            <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-100 mb-2">No businesses found</h3>
-            <p className="text-gray-400 mb-6">
+          <Card className="bg-bg-raised/50 border-border p-12 text-center">
+            <AlertCircle className="w-12 h-12 text-text-muted mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-text-primary mb-2">No businesses found</h3>
+            <p className="text-text-muted mb-6">
               {searchQuery
                 ? 'Try adjusting your search or filters'
                 : 'Get started by adding your first business'}
             </p>
             {!searchQuery && (
               <Link href="/founder/businesses/new">
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="bg-info-600 hover:bg-info-700">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Business
                 </Button>
@@ -386,11 +386,11 @@ return 'text-yellow-400';
       {filteredBusinesses.length > 0 && (
         <Section>
           <div className="flex items-center justify-center space-x-2">
-            <Button variant="outline" className="border-gray-600" disabled>
+            <Button variant="outline" className="border-border" disabled>
               Previous
             </Button>
-            <span className="text-sm text-gray-400">Page 1 of 1</span>
-            <Button variant="outline" className="border-gray-600" disabled>
+            <span className="text-sm text-text-muted">Page 1 of 1</span>
+            <Button variant="outline" className="border-border" disabled>
               Next
             </Button>
           </div>

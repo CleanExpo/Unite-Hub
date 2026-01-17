@@ -251,7 +251,7 @@ export default function GuardianAlertsPage() {
                           <span
                             className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${
                               r.is_active
-                                ? 'bg-emerald-500/10 text-emerald-400'
+                                ? 'bg-success-500/10 text-success-400'
                                 : 'bg-muted text-muted-foreground'
                             }`}
                           >
@@ -295,7 +295,7 @@ export default function GuardianAlertsPage() {
                           {e.rule_id.substring(0, 8)}
                         </td>
                         <td className="px-3 py-2 text-[10px]">
-                          <span className="inline-flex rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-400">
+                          <span className="inline-flex rounded-full bg-warning-500/10 px-2 py-0.5 text-[10px] font-medium text-warning-400">
                             {e.severity.toUpperCase()}
                           </span>
                         </td>

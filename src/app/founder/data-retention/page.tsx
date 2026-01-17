@@ -249,13 +249,13 @@ export default function DataRetentionPage() {
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Pending</div>
-              <div className="text-2xl font-bold text-yellow-500 mt-1">
+              <div className="text-2xl font-bold text-warning-500 mt-1">
                 {statistics.pending_jobs}
               </div>
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Completed</div>
-              <div className="text-2xl font-bold text-green-500 mt-1">
+              <div className="text-2xl font-bold text-success-500 mt-1">
                 {statistics.completed_jobs}
               </div>
             </Card>
@@ -383,7 +383,7 @@ export default function DataRetentionPage() {
                       <td className="py-3">
                         <span
                           className={`text-sm ${
-                            policy.auto_delete ? "text-green-500" : "text-text-secondary"
+                            policy.auto_delete ? "text-success-500" : "text-text-secondary"
                           }`}
                         >
                           {policy.auto_delete ? "Yes" : "No"}
@@ -393,10 +393,10 @@ export default function DataRetentionPage() {
                         <span
                           className={`text-sm px-2 py-1 rounded ${
                             policy.status === "active"
-                              ? "bg-green-500/20 text-green-500"
+                              ? "bg-success-500/20 text-success-500"
                               : policy.status === "inactive"
-                              ? "bg-yellow-500/20 text-yellow-500"
-                              : "bg-gray-500/20 text-gray-500"
+                              ? "bg-warning-500/20 text-warning-500"
+                              : "bg-bg-hover0/20 text-text-tertiary"
                           }`}
                         >
                           {policy.status}
@@ -468,14 +468,14 @@ export default function DataRetentionPage() {
                         <span
                           className={`text-sm px-2 py-1 rounded ${
                             job.status === "completed"
-                              ? "bg-green-500/20 text-green-500"
+                              ? "bg-success-500/20 text-success-500"
                               : job.status === "running"
-                              ? "bg-blue-500/20 text-blue-500"
+                              ? "bg-info-500/20 text-info-500"
                               : job.status === "failed"
-                              ? "bg-red-500/20 text-red-500"
+                              ? "bg-error-500/20 text-error-500"
                               : job.status === "pending"
-                              ? "bg-yellow-500/20 text-yellow-500"
-                              : "bg-gray-500/20 text-gray-500"
+                              ? "bg-warning-500/20 text-warning-500"
+                              : "bg-bg-hover0/20 text-text-tertiary"
                           }`}
                         >
                           {job.status}

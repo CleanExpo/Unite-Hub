@@ -96,10 +96,10 @@ export default function NewBusinessPage() {
           <div
             className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
               step === currentStep
-                ? 'bg-blue-600 text-white'
+                ? 'bg-info-600 text-white'
                 : step < currentStep
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-700 text-gray-400'
+                ? 'bg-success-600 text-white'
+                : 'bg-bg-elevated text-text-muted'
             }`}
           >
             {step < currentStep ? <Check className="w-5 h-5" /> : step}
@@ -107,7 +107,7 @@ export default function NewBusinessPage() {
           {step < 3 && (
             <div
               className={`w-24 h-1 mx-2 ${
-                step < currentStep ? 'bg-green-600' : 'bg-gray-700'
+                step < currentStep ? 'bg-success-600' : 'bg-bg-elevated'
               }`}
             />
           )}
@@ -119,7 +119,7 @@ export default function NewBusinessPage() {
   const renderStep1 = () => (
     <div className="space-y-6">
       <div>
-        <Label htmlFor="name" className="text-gray-300">
+        <Label htmlFor="name" className="text-text-secondary">
           Business Name *
         </Label>
         <Input
@@ -128,12 +128,12 @@ export default function NewBusinessPage() {
           value={formData.name}
           onChange={(e) => updateField('name', e.target.value)}
           placeholder="e.g., Balustrade Co."
-          className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+          className="mt-2 bg-bg-base/50 border-border text-text-primary"
         />
       </div>
 
       <div>
-        <Label htmlFor="industry" className="text-gray-300">
+        <Label htmlFor="industry" className="text-text-secondary">
           Industry *
         </Label>
         <Input
@@ -142,12 +142,12 @@ export default function NewBusinessPage() {
           value={formData.industry}
           onChange={(e) => updateField('industry', e.target.value)}
           placeholder="e.g., Construction, SaaS, Retail"
-          className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+          className="mt-2 bg-bg-base/50 border-border text-text-primary"
         />
       </div>
 
       <div>
-        <Label htmlFor="description" className="text-gray-300">
+        <Label htmlFor="description" className="text-text-secondary">
           Description
         </Label>
         <Textarea
@@ -156,7 +156,7 @@ export default function NewBusinessPage() {
           onChange={(e) => updateField('description', e.target.value)}
           placeholder="Brief description of your business..."
           rows={4}
-          className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+          className="mt-2 bg-bg-base/50 border-border text-text-primary"
         />
       </div>
     </div>
@@ -165,7 +165,7 @@ export default function NewBusinessPage() {
   const renderStep2 = () => (
     <div className="space-y-6">
       <div>
-        <Label htmlFor="website" className="text-gray-300 flex items-center">
+        <Label htmlFor="website" className="text-text-secondary flex items-center">
           <Globe className="w-4 h-4 mr-2" />
           Website
         </Label>
@@ -175,12 +175,12 @@ export default function NewBusinessPage() {
           value={formData.website}
           onChange={(e) => updateField('website', e.target.value)}
           placeholder="https://example.com"
-          className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+          className="mt-2 bg-bg-base/50 border-border text-text-primary"
         />
       </div>
 
       <div>
-        <Label htmlFor="linkedIn" className="text-gray-300 flex items-center">
+        <Label htmlFor="linkedIn" className="text-text-secondary flex items-center">
           <Linkedin className="w-4 h-4 mr-2" />
           LinkedIn
         </Label>
@@ -190,12 +190,12 @@ export default function NewBusinessPage() {
           value={formData.linkedIn}
           onChange={(e) => updateField('linkedIn', e.target.value)}
           placeholder="https://linkedin.com/company/..."
-          className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+          className="mt-2 bg-bg-base/50 border-border text-text-primary"
         />
       </div>
 
       <div>
-        <Label htmlFor="facebook" className="text-gray-300 flex items-center">
+        <Label htmlFor="facebook" className="text-text-secondary flex items-center">
           <Facebook className="w-4 h-4 mr-2" />
           Facebook
         </Label>
@@ -205,12 +205,12 @@ export default function NewBusinessPage() {
           value={formData.facebook}
           onChange={(e) => updateField('facebook', e.target.value)}
           placeholder="https://facebook.com/..."
-          className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+          className="mt-2 bg-bg-base/50 border-border text-text-primary"
         />
       </div>
 
       <div>
-        <Label htmlFor="instagram" className="text-gray-300 flex items-center">
+        <Label htmlFor="instagram" className="text-text-secondary flex items-center">
           <Instagram className="w-4 h-4 mr-2" />
           Instagram
         </Label>
@@ -220,12 +220,12 @@ export default function NewBusinessPage() {
           value={formData.instagram}
           onChange={(e) => updateField('instagram', e.target.value)}
           placeholder="https://instagram.com/..."
-          className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+          className="mt-2 bg-bg-base/50 border-border text-text-primary"
         />
       </div>
 
       <div>
-        <Label htmlFor="twitter" className="text-gray-300 flex items-center">
+        <Label htmlFor="twitter" className="text-text-secondary flex items-center">
           <Twitter className="w-4 h-4 mr-2" />
           X (Twitter)
         </Label>
@@ -235,7 +235,7 @@ export default function NewBusinessPage() {
           value={formData.twitter}
           onChange={(e) => updateField('twitter', e.target.value)}
           placeholder="https://x.com/..."
-          className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+          className="mt-2 bg-bg-base/50 border-border text-text-primary"
         />
       </div>
     </div>
@@ -244,10 +244,10 @@ export default function NewBusinessPage() {
   const renderStep3 = () => (
     <div className="space-y-6">
       <div>
-        <Label htmlFor="initialNotes" className="text-gray-300">
+        <Label htmlFor="initialNotes" className="text-text-secondary">
           Initial Notes & Signals
         </Label>
-        <p className="text-sm text-gray-400 mt-1 mb-3">
+        <p className="text-sm text-text-muted mt-1 mb-3">
           Add any initial context, goals, or signals you want to track for this business
         </p>
         <Textarea
@@ -256,13 +256,13 @@ export default function NewBusinessPage() {
           onChange={(e) => updateField('initialNotes', e.target.value)}
           placeholder="e.g., Currently focusing on SEO optimization, launching new product line in Q2..."
           rows={8}
-          className="bg-gray-900/50 border-gray-700 text-gray-100"
+          className="bg-bg-base/50 border-border text-text-primary"
         />
       </div>
 
-      <Card className="bg-blue-600/10 border-blue-500/30 p-4">
-        <h4 className="text-sm font-semibold text-blue-400 mb-2">What happens next?</h4>
-        <ul className="text-sm text-gray-300 space-y-1">
+      <Card className="bg-info-600/10 border-info-500/30 p-4">
+        <h4 className="text-sm font-semibold text-info-400 mb-2">What happens next?</h4>
+        <ul className="text-sm text-text-secondary space-y-1">
           <li>• AI Phill will start monitoring your business signals</li>
           <li>• Health score will be calculated based on available data</li>
           <li>• You can add more details from the business dashboard</li>
@@ -278,9 +278,9 @@ export default function NewBusinessPage() {
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <Building2 className="w-16 h-16 text-blue-400 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-gray-100">Add New Business</h1>
-            <p className="text-gray-400 mt-2">
+            <Building2 className="w-16 h-16 text-info-400 mx-auto mb-4" />
+            <h1 className="text-3xl font-bold text-text-primary">Add New Business</h1>
+            <p className="text-text-muted mt-2">
               Step {currentStep} of 3:{' '}
               {currentStep === 1
                 ? 'Basic Information'
@@ -294,18 +294,18 @@ export default function NewBusinessPage() {
           {renderStepIndicator()}
 
           {/* Form */}
-          <Card className="bg-gray-800/50 border-gray-700 p-8">
+          <Card className="bg-bg-raised/50 border-border p-8">
             {currentStep === 1 && renderStep1()}
             {currentStep === 2 && renderStep2()}
             {currentStep === 3 && renderStep3()}
 
             {/* Navigation */}
-            <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700">
+            <div className="flex items-center justify-between mt-8 pt-6 border-t border-border">
               <Button
                 variant="outline"
                 onClick={handlePrevious}
                 disabled={currentStep === 1}
-                className="border-gray-600"
+                className="border-border"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Previous
@@ -318,7 +318,7 @@ export default function NewBusinessPage() {
                     (currentStep === 1 && !isStep1Valid) ||
                     (currentStep === 2 && !isStep2Valid)
                   }
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-info-600 hover:bg-info-700"
                 >
                   Next
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -326,7 +326,7 @@ export default function NewBusinessPage() {
               ) : (
                 <Button
                   onClick={handleSubmit}
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-success-600 hover:bg-success-700"
                 >
                   <Check className="w-4 h-4 mr-2" />
                   Create Business
@@ -340,7 +340,7 @@ export default function NewBusinessPage() {
             <Button
               variant="ghost"
               onClick={() => router.push('/founder/businesses')}
-              className="text-gray-400 hover:text-gray-300"
+              className="text-text-muted hover:text-text-secondary"
             >
               Cancel
             </Button>

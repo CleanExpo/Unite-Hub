@@ -157,13 +157,13 @@ export default function ExperimentsV2Page() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      draft: 'bg-gray-500',
-      running: 'bg-green-500',
-      paused: 'bg-yellow-500',
-      completed: 'bg-blue-500',
-      archived: 'bg-gray-600',
+      draft: 'bg-bg-hover0',
+      running: 'bg-success-500',
+      paused: 'bg-warning-500',
+      completed: 'bg-info-500',
+      archived: 'bg-bg-raised',
     };
-    return colors[status] || 'bg-gray-500';
+    return colors[status] || 'bg-bg-hover0';
   };
 
   return (

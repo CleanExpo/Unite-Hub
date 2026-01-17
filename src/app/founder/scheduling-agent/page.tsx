@@ -144,7 +144,7 @@ continue;
   if (!session) {
     return (
       <div className="p-8">
-        <Alert className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30">
+        <Alert className="border-warning-200 bg-warning-50 dark:bg-warning-950/30">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Not Authenticated</AlertTitle>
           <AlertDescription>Please log in to access the scheduling agent demo.</AlertDescription>
@@ -214,16 +214,16 @@ continue;
 
       {/* Status Message */}
       {demo.status === 'success' && (
-        <Alert className="border-green-200 bg-green-50 dark:bg-green-950/30">
-          <CheckCircle2 className="h-4 w-4 text-green-600" />
+        <Alert className="border-success-200 bg-success-50 dark:bg-success-950/30">
+          <CheckCircle2 className="h-4 w-4 text-success-600" />
           <AlertTitle>Analysis Complete</AlertTitle>
           <AlertDescription>{demo.message}</AlertDescription>
         </Alert>
       )}
 
       {demo.status === 'error' && (
-        <Alert className="border-red-200 bg-red-50 dark:bg-red-950/30">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
+        <Alert className="border-error-200 bg-error-50 dark:bg-error-950/30">
+          <AlertTriangle className="h-4 w-4 text-error-600" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{demo.message}</AlertDescription>
         </Alert>
@@ -241,9 +241,9 @@ continue;
           {/* Available Slots Tab */}
           <TabsContent value="availability" className="space-y-4">
             {availableSlots.length === 0 ? (
-              <Card className="bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200">
+              <Card className="bg-warning-50 dark:bg-warning-950/20 border-warning-200">
                 <CardContent className="pt-6">
-                  <p className="text-yellow-900 dark:text-yellow-200">
+                  <p className="text-warning-900 dark:text-warning-200">
                     No available slots found in the requested time range.
                   </p>
                 </CardContent>
@@ -260,7 +260,7 @@ continue;
                       <CardContent className="pt-6">
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-blue-600" />
+                            <Calendar className="h-4 w-4 text-info-600" />
                             <span className="font-medium">
                               {startDate.toLocaleDateString('en-US', {
                                 weekday: 'short',
@@ -270,7 +270,7 @@ continue;
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-green-600" />
+                            <Clock className="h-4 w-4 text-success-600" />
                             <span>
                               {startDate.toLocaleTimeString('en-US', {
                                 hour: '2-digit',
@@ -311,9 +311,9 @@ continue;
           {/* Conflicts Tab */}
           <TabsContent value="conflicts" className="space-y-4">
             {conflicts.length === 0 ? (
-              <Card className="bg-green-50 dark:bg-green-950/20 border-green-200">
+              <Card className="bg-success-50 dark:bg-success-950/20 border-success-200">
                 <CardContent className="pt-6">
-                  <p className="text-green-900 dark:text-green-200">
+                  <p className="text-success-900 dark:text-success-200">
                     No conflicts detected in the calendar.
                   </p>
                 </CardContent>
@@ -325,11 +325,11 @@ continue;
                   const eventBStart = new Date(conflict.eventB.start);
 
                   return (
-                    <Card key={idx} className="border-orange-200 bg-orange-50 dark:bg-orange-950/20">
+                    <Card key={idx} className="border-orange-200 bg-accent-50 dark:bg-accent-950/20">
                       <CardContent className="pt-6">
                         <div className="space-y-3">
                           <div className="flex items-start gap-2">
-                            <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5" />
+                            <AlertTriangle className="h-4 w-4 text-accent-600 mt-0.5" />
                             <div className="flex-1">
                               <p className="font-medium text-sm">{conflict.eventA.title}</p>
                               <p className="text-xs text-text-secondary">
@@ -344,7 +344,7 @@ continue;
                             overlaps with
                           </div>
                           <div className="flex items-start gap-2">
-                            <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5" />
+                            <AlertTriangle className="h-4 w-4 text-accent-600 mt-0.5" />
                             <div className="flex-1">
                               <p className="font-medium text-sm">{conflict.eventB.title}</p>
                               <p className="text-xs text-text-secondary">
@@ -357,7 +357,7 @@ continue;
                           </div>
                           <div className="flex justify-between items-center pt-2 border-t border-orange-200">
                             <span className="text-xs font-medium">{conflict.overlap} min overlap</span>
-                            <Badge variant="outline" className="text-orange-700">
+                            <Badge variant="outline" className="text-accent-700">
                               Severity: High
                             </Badge>
                           </div>
@@ -451,37 +451,37 @@ continue;
       )}
 
       {/* Documentation */}
-      <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
+      <Card className="border-info-200 bg-info-50 dark:bg-info-950/20">
         <CardHeader>
           <CardTitle className="text-base">How the Scheduling Agent Works</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">1. Calendar Analysis</p>
+            <p className="font-medium text-info-900 dark:text-info-200">1. Calendar Analysis</p>
             <p className="text-text-secondary">
               The agent scans the target participant's calendar for available time slots within the requested date range.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">2. Conflict Detection</p>
+            <p className="font-medium text-info-900 dark:text-info-200">2. Conflict Detection</p>
             <p className="text-text-secondary">
               It identifies overlapping events and back-to-back meetings that could affect schedule quality.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">3. Confidence Scoring</p>
+            <p className="font-medium text-info-900 dark:text-info-200">3. Confidence Scoring</p>
             <p className="text-text-secondary">
               Available slots are ranked by confidence (0-100%) based on buffer time and business hours preference.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">4. Proposal Generation</p>
+            <p className="font-medium text-info-900 dark:text-info-200">4. Proposal Generation</p>
             <p className="text-text-secondary">
               Professional email with up to 5 available slots is generated and formatted for calendar tools.
             </p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">5. Risk Evaluation</p>
+            <p className="font-medium text-info-900 dark:text-info-200">5. Risk Evaluation</p>
             <p className="text-text-secondary">
               The system assesses risks and routes high-risk proposals to founder for review.
             </p>

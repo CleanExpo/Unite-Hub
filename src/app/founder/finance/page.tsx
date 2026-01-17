@@ -257,19 +257,19 @@ export default function FounderFinancePage() {
   };
 
   const getRunwayColor = (months: number | null) => {
-    if (months === null) return 'text-slate-400';
-    if (months >= 999) return 'text-emerald-400';
-    if (months >= 18) return 'text-emerald-400';
-    if (months >= 12) return 'text-yellow-400';
-    if (months >= 6) return 'text-orange-400';
-    return 'text-red-400';
+    if (months === null) return 'text-text-muted';
+    if (months >= 999) return 'text-success-400';
+    if (months >= 18) return 'text-success-400';
+    if (months >= 12) return 'text-warning-400';
+    if (months >= 6) return 'text-accent-400';
+    return 'text-error-400';
   };
 
   const getHealthColor = (score: number) => {
-    if (score >= 80) return 'text-emerald-400';
-    if (score >= 60) return 'text-yellow-400';
-    if (score >= 40) return 'text-orange-400';
-    return 'text-red-400';
+    if (score >= 80) return 'text-success-400';
+    if (score >= 60) return 'text-warning-400';
+    if (score >= 40) return 'text-accent-400';
+    return 'text-error-400';
   };
 
   return (
@@ -279,10 +279,10 @@ export default function FounderFinancePage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <Wallet className="w-8 h-8 text-emerald-400" />
+              <Wallet className="w-8 h-8 text-success-400" />
               Capital & Runway Dashboard
             </h1>
-            <p className="text-slate-400 mt-1">
+            <p className="text-text-muted mt-1">
               Track your financial position and runway projections
             </p>
           </div>
@@ -290,7 +290,7 @@ export default function FounderFinancePage() {
             <Button
               onClick={handleCalculateRunway}
               disabled={isCalculating}
-              className="bg-slate-700 hover:bg-slate-600"
+              className="bg-bg-elevated hover:bg-bg-elevated"
             >
               <RefreshCw className={`w-4 h-4 mr-2 ${isCalculating ? 'animate-spin' : ''}`} />
               Calculate Runway
@@ -298,7 +298,7 @@ export default function FounderFinancePage() {
             <Button
               onClick={handleAnalyze}
               disabled={isAnalyzing}
-              className="bg-emerald-600 hover:bg-emerald-500"
+              className="bg-success-600 hover:bg-success-500"
             >
               <Sparkles className={`w-4 h-4 mr-2 ${isAnalyzing ? 'animate-pulse' : ''}`} />
               AI Analysis
@@ -308,55 +308,55 @@ export default function FounderFinancePage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-emerald-400 animate-spin" />
+            <RefreshCw className="w-8 h-8 text-success-400 animate-spin" />
           </div>
         ) : (
           <>
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card className="bg-slate-800/50 border-slate-700 p-6">
+              <Card className="bg-bg-raised/50 border-border p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-slate-400 text-sm">Net Position</span>
-                  <DollarSign className="w-5 h-5 text-emerald-400" />
+                  <span className="text-text-muted text-sm">Net Position</span>
+                  <DollarSign className="w-5 h-5 text-success-400" />
                 </div>
                 <p className="text-2xl font-bold text-white">
                   {formatCurrency(summary?.net_position || 0)}
                 </p>
-                <p className="text-slate-500 text-sm mt-1">
+                <p className="text-text-tertiary text-sm mt-1">
                   Cash + Receivables - Payables
                 </p>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 p-6">
+              <Card className="bg-bg-raised/50 border-border p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-slate-400 text-sm">Monthly Burn</span>
-                  <TrendingDown className="w-5 h-5 text-red-400" />
+                  <span className="text-text-muted text-sm">Monthly Burn</span>
+                  <TrendingDown className="w-5 h-5 text-error-400" />
                 </div>
                 <p className="text-2xl font-bold text-white">
                   {formatCurrency(summary?.net_burn || 0)}
                 </p>
-                <p className="text-slate-500 text-sm mt-1">
+                <p className="text-text-tertiary text-sm mt-1">
                   Expenses: {formatCurrency(summary?.monthly_burn || 0)}
                 </p>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 p-6">
+              <Card className="bg-bg-raised/50 border-border p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-slate-400 text-sm">Monthly Revenue</span>
-                  <TrendingUp className="w-5 h-5 text-emerald-400" />
+                  <span className="text-text-muted text-sm">Monthly Revenue</span>
+                  <TrendingUp className="w-5 h-5 text-success-400" />
                 </div>
                 <p className="text-2xl font-bold text-white">
                   {formatCurrency(summary?.monthly_revenue || 0)}
                 </p>
-                <p className="text-slate-500 text-sm mt-1">
+                <p className="text-text-tertiary text-sm mt-1">
                   Avg. of last 3 months
                 </p>
               </Card>
 
-              <Card className="bg-slate-800/50 border-slate-700 p-6">
+              <Card className="bg-bg-raised/50 border-border p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-slate-400 text-sm">Runway</span>
-                  <Clock className="w-5 h-5 text-yellow-400" />
+                  <span className="text-text-muted text-sm">Runway</span>
+                  <Clock className="w-5 h-5 text-warning-400" />
                 </div>
                 <p className={`text-2xl font-bold ${getRunwayColor(summary?.runway_months ?? null)}`}>
                   {summary?.runway_months === 999
@@ -366,7 +366,7 @@ export default function FounderFinancePage() {
                     : 'N/A'}
                 </p>
                 {summary?.runway_date && summary.runway_months !== 999 && (
-                  <p className="text-slate-500 text-sm mt-1">
+                  <p className="text-text-tertiary text-sm mt-1">
                     Until {new Date(summary.runway_date).toLocaleDateString()}
                   </p>
                 )}
@@ -375,25 +375,25 @@ export default function FounderFinancePage() {
 
             {/* AI Analysis */}
             {analysis && (
-              <Card className="bg-slate-800/50 border-slate-700 p-6 mb-8">
+              <Card className="bg-bg-raised/50 border-border p-6 mb-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <Sparkles className="w-5 h-5 text-emerald-400" />
+                  <Sparkles className="w-5 h-5 text-success-400" />
                   <h2 className="text-xl font-semibold text-white">AI Analysis</h2>
                   <span className={`ml-auto text-lg font-bold ${getHealthColor(analysis.health_score)}`}>
                     Health Score: {analysis.health_score}/100
                   </span>
                 </div>
-                <p className="text-slate-300 mb-4">{analysis.summary}</p>
+                <p className="text-text-secondary mb-4">{analysis.summary}</p>
                 {analysis.risk_flags.length > 0 && (
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-red-400 mb-2 flex items-center gap-2">
+                    <h3 className="text-sm font-medium text-error-400 mb-2 flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4" />
                       Risk Flags
                     </h3>
                     <ul className="space-y-1">
                       {analysis.risk_flags.map((flag, i) => (
-                        <li key={i} className="text-slate-400 text-sm flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />
+                        <li key={i} className="text-text-muted text-sm flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-error-400 rounded-full" />
                           {flag}
                         </li>
                       ))}
@@ -402,11 +402,11 @@ export default function FounderFinancePage() {
                 )}
                 {analysis.recommendations.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-medium text-emerald-400 mb-2">Recommendations</h3>
+                    <h3 className="text-sm font-medium text-success-400 mb-2">Recommendations</h3>
                     <ul className="space-y-1">
                       {analysis.recommendations.map((rec, i) => (
-                        <li key={i} className="text-slate-400 text-sm flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+                        <li key={i} className="text-text-muted text-sm flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-success-400 rounded-full" />
                           {rec}
                         </li>
                       ))}
@@ -418,16 +418,16 @@ export default function FounderFinancePage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Accounts */}
-              <Card className="bg-slate-800/50 border-slate-700 p-6">
+              <Card className="bg-bg-raised/50 border-border p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                    <Building2 className="w-5 h-5 text-slate-400" />
+                    <Building2 className="w-5 h-5 text-text-muted" />
                     Accounts
                   </h2>
                   <Button
                     size="sm"
                     onClick={() => setShowAddAccount(true)}
-                    className="bg-emerald-600 hover:bg-emerald-500"
+                    className="bg-success-600 hover:bg-success-500"
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
@@ -437,33 +437,33 @@ export default function FounderFinancePage() {
                     {summary.accounts.map((account) => (
                       <div
                         key={account.id}
-                        className="p-4 bg-slate-700/50 rounded-lg border border-slate-600"
+                        className="p-4 bg-bg-elevated/50 rounded-lg border border-border"
                       >
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium text-white">{account.account_name}</span>
                           {account.is_primary && (
-                            <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">
+                            <span className="text-xs bg-success-500/20 text-success-400 px-2 py-0.5 rounded">
                               Primary
                             </span>
                           )}
                         </div>
-                        <p className="text-lg font-bold text-emerald-400">
+                        <p className="text-lg font-bold text-success-400">
                           {formatCurrency(account.current_balance)}
                         </p>
-                        <p className="text-slate-500 text-xs mt-1">
+                        <p className="text-text-tertiary text-xs mt-1">
                           {account.institution_name || account.account_type.replace('_', ' ')}
                         </p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-slate-400">
+                  <div className="text-center py-8 text-text-muted">
                     <CreditCard className="w-12 h-12 mx-auto mb-3 opacity-50" />
                     <p>No accounts yet</p>
                     <Button
                       size="sm"
                       onClick={() => setShowAddAccount(true)}
-                      className="mt-3 bg-emerald-600 hover:bg-emerald-500"
+                      className="mt-3 bg-success-600 hover:bg-success-500"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Account
@@ -473,22 +473,22 @@ export default function FounderFinancePage() {
               </Card>
 
               {/* Burn Trend */}
-              <Card className="bg-slate-800/50 border-slate-700 p-6">
+              <Card className="bg-bg-raised/50 border-border p-6">
                 <h2 className="text-xl font-semibold text-white flex items-center gap-2 mb-4">
-                  <ChartLine className="w-5 h-5 text-slate-400" />
+                  <ChartLine className="w-5 h-5 text-text-muted" />
                   Burn Trend
                 </h2>
                 {summary?.burn_trend && summary.burn_trend.length > 0 ? (
                   <div className="space-y-3">
                     {summary.burn_trend.map((month) => (
                       <div key={month.month} className="flex items-center justify-between">
-                        <span className="text-slate-400 text-sm">{month.month}</span>
+                        <span className="text-text-muted text-sm">{month.month}</span>
                         <div className="flex items-center gap-4">
-                          <span className="text-red-400 text-sm flex items-center gap-1">
+                          <span className="text-error-400 text-sm flex items-center gap-1">
                             <ArrowDownRight className="w-3 h-3" />
                             {formatCurrency(month.burn)}
                           </span>
-                          <span className="text-emerald-400 text-sm flex items-center gap-1">
+                          <span className="text-success-400 text-sm flex items-center gap-1">
                             <ArrowUpRight className="w-3 h-3" />
                             {formatCurrency(month.revenue)}
                           </span>
@@ -497,7 +497,7 @@ export default function FounderFinancePage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-slate-400">
+                  <div className="text-center py-8 text-text-muted">
                     <ChartLine className="w-12 h-12 mx-auto mb-3 opacity-50" />
                     <p>No data yet</p>
                   </div>
@@ -505,16 +505,16 @@ export default function FounderFinancePage() {
               </Card>
 
               {/* Recent Transactions */}
-              <Card className="bg-slate-800/50 border-slate-700 p-6">
+              <Card className="bg-bg-raised/50 border-border p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-slate-400" />
+                    <Calendar className="w-5 h-5 text-text-muted" />
                     Recent Transactions
                   </h2>
                   <Button
                     size="sm"
                     onClick={() => setShowAddTransaction(true)}
-                    className="bg-emerald-600 hover:bg-emerald-500"
+                    className="bg-success-600 hover:bg-success-500"
                     disabled={!summary?.accounts?.length}
                   >
                     <Plus className="w-4 h-4" />
@@ -525,20 +525,20 @@ export default function FounderFinancePage() {
                     {summary.recent_transactions.slice(0, 10).map((tx) => (
                       <div
                         key={tx.id}
-                        className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg"
+                        className="flex items-center justify-between p-3 bg-bg-elevated/50 rounded-lg"
                       >
                         <div>
                           <p className="text-white text-sm font-medium">
                             {tx.description || tx.event_type.replace('_', ' ')}
                           </p>
-                          <p className="text-slate-500 text-xs">
+                          <p className="text-text-tertiary text-xs">
                             {new Date(tx.event_date).toLocaleDateString()}
                             {tx.counterparty_name && ` • ${tx.counterparty_name}`}
                           </p>
                         </div>
                         <span
                           className={`font-medium ${
-                            tx.direction === 'inflow' ? 'text-emerald-400' : 'text-red-400'
+                            tx.direction === 'inflow' ? 'text-success-400' : 'text-error-400'
                           }`}
                         >
                           {tx.direction === 'inflow' ? '+' : '-'}
@@ -548,14 +548,14 @@ export default function FounderFinancePage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-slate-400">
+                  <div className="text-center py-8 text-text-muted">
                     <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
                     <p>No transactions yet</p>
                     {summary?.accounts?.length ? (
                       <Button
                         size="sm"
                         onClick={() => setShowAddTransaction(true)}
-                        className="mt-3 bg-emerald-600 hover:bg-emerald-500"
+                        className="mt-3 bg-success-600 hover:bg-success-500"
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Transaction
@@ -573,7 +573,7 @@ export default function FounderFinancePage() {
         {/* Add Account Modal */}
         {showAddAccount && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <Card className="bg-slate-800 border-slate-700 p-6 w-full max-w-md">
+            <Card className="bg-bg-raised border-border p-6 w-full max-w-md">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-white">Add Account</h2>
                 <Button
@@ -586,24 +586,24 @@ export default function FounderFinancePage() {
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Account Name</label>
+                  <label className="text-sm text-text-muted block mb-1">Account Name</label>
                   <Input
                     value={newAccount.account_name}
                     onChange={(e) =>
                       setNewAccount({ ...newAccount, account_name: e.target.value })
                     }
                     placeholder="e.g., Business Checking"
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-bg-elevated border-border text-white"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Account Type</label>
+                  <label className="text-sm text-text-muted block mb-1">Account Type</label>
                   <select
                     value={newAccount.account_type}
                     onChange={(e) =>
                       setNewAccount({ ...newAccount, account_type: e.target.value })
                     }
-                    className="w-full p-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                    className="w-full p-2 bg-bg-elevated border border-border rounded-md text-white"
                   >
                     <option value="bank_checking">Bank Checking</option>
                     <option value="bank_savings">Bank Savings</option>
@@ -613,18 +613,18 @@ export default function FounderFinancePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Institution</label>
+                  <label className="text-sm text-text-muted block mb-1">Institution</label>
                   <Input
                     value={newAccount.institution_name}
                     onChange={(e) =>
                       setNewAccount({ ...newAccount, institution_name: e.target.value })
                     }
                     placeholder="e.g., CommBank"
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-bg-elevated border-border text-white"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Opening Balance</label>
+                  <label className="text-sm text-text-muted block mb-1">Opening Balance</label>
                   <Input
                     type="number"
                     value={newAccount.opening_balance}
@@ -632,12 +632,12 @@ export default function FounderFinancePage() {
                       setNewAccount({ ...newAccount, opening_balance: e.target.value })
                     }
                     placeholder="0"
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-bg-elevated border-border text-white"
                   />
                 </div>
                 <Button
                   onClick={handleAddAccount}
-                  className="w-full bg-emerald-600 hover:bg-emerald-500"
+                  className="w-full bg-success-600 hover:bg-success-500"
                 >
                   Add Account
                 </Button>
@@ -649,7 +649,7 @@ export default function FounderFinancePage() {
         {/* Add Transaction Modal */}
         {showAddTransaction && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <Card className="bg-slate-800 border-slate-700 p-6 w-full max-w-md">
+            <Card className="bg-bg-raised border-border p-6 w-full max-w-md">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-white">Add Transaction</h2>
                 <Button
@@ -662,13 +662,13 @@ export default function FounderFinancePage() {
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Account</label>
+                  <label className="text-sm text-text-muted block mb-1">Account</label>
                   <select
                     value={newTransaction.account_id}
                     onChange={(e) =>
                       setNewTransaction({ ...newTransaction, account_id: e.target.value })
                     }
-                    className="w-full p-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                    className="w-full p-2 bg-bg-elevated border border-border rounded-md text-white"
                   >
                     <option value="">Select account...</option>
                     {summary?.accounts?.map((acc) => (
@@ -679,32 +679,32 @@ export default function FounderFinancePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Date</label>
+                  <label className="text-sm text-text-muted block mb-1">Date</label>
                   <Input
                     type="date"
                     value={newTransaction.event_date}
                     onChange={(e) =>
                       setNewTransaction({ ...newTransaction, event_date: e.target.value })
                     }
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-bg-elevated border-border text-white"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm text-slate-400 block mb-1">Direction</label>
+                    <label className="text-sm text-text-muted block mb-1">Direction</label>
                     <select
                       value={newTransaction.direction}
                       onChange={(e) =>
                         setNewTransaction({ ...newTransaction, direction: e.target.value })
                       }
-                      className="w-full p-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                      className="w-full p-2 bg-bg-elevated border border-border rounded-md text-white"
                     >
                       <option value="inflow">Income</option>
                       <option value="outflow">Expense</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm text-slate-400 block mb-1">Amount</label>
+                    <label className="text-sm text-text-muted block mb-1">Amount</label>
                     <Input
                       type="number"
                       value={newTransaction.amount}
@@ -712,18 +712,18 @@ export default function FounderFinancePage() {
                         setNewTransaction({ ...newTransaction, amount: e.target.value })
                       }
                       placeholder="0"
-                      className="bg-slate-700 border-slate-600 text-white"
+                      className="bg-bg-elevated border-border text-white"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Type</label>
+                  <label className="text-sm text-text-muted block mb-1">Type</label>
                   <select
                     value={newTransaction.event_type}
                     onChange={(e) =>
                       setNewTransaction({ ...newTransaction, event_type: e.target.value })
                     }
-                    className="w-full p-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                    className="w-full p-2 bg-bg-elevated border border-border rounded-md text-white"
                   >
                     <option value="revenue">Revenue</option>
                     <option value="payroll">Payroll</option>
@@ -737,20 +737,20 @@ export default function FounderFinancePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Description</label>
+                  <label className="text-sm text-text-muted block mb-1">Description</label>
                   <Input
                     value={newTransaction.description}
                     onChange={(e) =>
                       setNewTransaction({ ...newTransaction, description: e.target.value })
                     }
                     placeholder="Optional description"
-                    className="bg-slate-700 border-slate-600 text-white"
+                    className="bg-bg-elevated border-border text-white"
                   />
                 </div>
                 <Button
                   onClick={handleAddTransaction}
                   disabled={!newTransaction.account_id || !newTransaction.amount}
-                  className="w-full bg-emerald-600 hover:bg-emerald-500"
+                  className="w-full bg-success-600 hover:bg-success-500"
                 >
                   Add Transaction
                 </Button>

@@ -118,9 +118,9 @@ export default function SignInPage() {
             {/* Footer */}
             <p className="text-center text-xs text-text-muted pt-4">
               By signing in, you agree to our{" "}
-              <a href="/terms" className="underline hover:text-text-secondary">Terms</a>
-              {" "}and{" "}
-              <a href="/privacy" className="underline hover:text-text-secondary">Privacy Policy</a>
+              <a href="/terms" className="underline hover:text-text-secondary">Terms</a>,{" "}
+              <a href="/privacy" className="underline hover:text-text-secondary">Privacy</a>, and{" "}
+              <a href="/security" className="underline hover:text-text-secondary">Security</a> policies
             </p>
           </CardContent>
         </Card>

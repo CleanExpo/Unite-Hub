@@ -50,28 +50,28 @@ export default function ResearchAgentPage() {
   const getThreatLevelColor = (level: string) => {
     switch (level) {
       case 'low':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-100 text-success-800';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'high':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-accent-100 text-accent-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-primary';
     }
   };
 
   const getRiskLevelColor = (level: string) => {
     switch (level) {
       case 'low':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-100 text-success-800';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'high':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-accent-100 text-accent-800';
       case 'critical':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-100 text-error-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-primary';
     }
   };
 
@@ -88,7 +88,7 @@ export default function ResearchAgentPage() {
       {/* Header */}
       <div className="space-y-2">
         <h1 className="text-4xl font-bold">Research Agent Demo</h1>
-        <p className="text-gray-600">
+        <p className="text-text-muted">
           Autonomous intelligence gathering with competitive analysis, trend detection, risk scoring, and founder alerts.
         </p>
       </div>
@@ -116,7 +116,7 @@ export default function ResearchAgentPage() {
                   <button
                     onClick={() => handleRunDemo(cat.key)}
                     disabled={isRunning}
-                    className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium text-sm transition-colors"
+                    className="w-full px-4 py-2 bg-info-600 text-white rounded hover:bg-info-700 disabled:bg-bg-elevated disabled:cursor-not-allowed font-medium text-sm transition-colors"
                   >
                     {isRunning ? 'Running...' : 'Run Query'}
                   </button>
@@ -131,7 +131,7 @@ export default function ResearchAgentPage() {
           {results.length === 0 ? (
             <Card>
               <CardContent className="pt-6">
-                <p className="text-gray-600 text-center">No research queries run yet. Run a query to see results here.</p>
+                <p className="text-text-muted text-center">No research queries run yet. Run a query to see results here.</p>
               </CardContent>
             </Card>
           ) : (
@@ -159,7 +159,7 @@ export default function ResearchAgentPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600 line-clamp-2">{result.summary}</p>
+                    <p className="text-sm text-text-muted line-clamp-2">{result.summary}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -167,7 +167,7 @@ export default function ResearchAgentPage() {
           )}
 
           {selectedResult && (
-            <Card className="border-blue-200 bg-blue-50">
+            <Card className="border-info-200 bg-info-50">
               <CardHeader>
                 <CardTitle>Query Details</CardTitle>
                 <CardDescription>
@@ -178,13 +178,13 @@ export default function ResearchAgentPage() {
                 {/* Query Info */}
                 <div>
                   <h3 className="font-semibold mb-2">Query</h3>
-                  <p className="text-sm text-gray-700">{selectedResult.query.query}</p>
+                  <p className="text-sm text-text-secondary">{selectedResult.query.query}</p>
                 </div>
 
                 {/* Summary */}
                 <div>
                   <h3 className="font-semibold mb-2">Summary</h3>
-                  <p className="text-sm text-gray-700">{selectedResult.summary}</p>
+                  <p className="text-sm text-text-secondary">{selectedResult.summary}</p>
                 </div>
 
                 {/* Threat Assessment */}
@@ -192,17 +192,17 @@ export default function ResearchAgentPage() {
                   <h3 className="font-semibold mb-2">Threat Assessment</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Threat Level:</span>
+                      <span className="text-sm text-text-muted">Threat Level:</span>
                       <Badge className={getThreatLevelColor(selectedResult.threatLevel)}>
                         {selectedResult.threatLevel}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Risk Score:</span>
+                      <span className="text-sm text-text-muted">Risk Score:</span>
                       <span className="font-semibold">{selectedResult.riskAssessment.score}/100</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Risk Level:</span>
+                      <span className="text-sm text-text-muted">Risk Level:</span>
                       <Badge className={getRiskLevelColor(selectedResult.riskAssessment.level)}>
                         {selectedResult.riskAssessment.level}
                       </Badge>
@@ -216,7 +216,7 @@ export default function ResearchAgentPage() {
                     <h3 className="font-semibold mb-2">Risk Factors</h3>
                     <ul className="space-y-1">
                       {selectedResult.riskAssessment.reasons.map((reason, idx) => (
-                        <li key={idx} className="text-sm text-gray-700">
+                        <li key={idx} className="text-sm text-text-secondary">
                           • {reason}
                         </li>
                       ))}
@@ -229,9 +229,9 @@ export default function ResearchAgentPage() {
                   <h3 className="font-semibold mb-2">Insights ({selectedResult.insights.length})</h3>
                   <div className="space-y-2">
                     {selectedResult.insights.map((insight, idx) => (
-                      <div key={idx} className="bg-white p-3 rounded border">
+                      <div key={idx} className="bg-bg-card p-3 rounded border">
                         <p className="text-sm font-medium">{insight.insight}</p>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-600">
+                        <div className="flex items-center gap-4 mt-2 text-xs text-text-muted">
                           <span>Source: {insight.source}</span>
                           <span>Confidence: {(insight.confidence * 100).toFixed(0)}%</span>
                         </div>
@@ -260,7 +260,7 @@ export default function ResearchAgentPage() {
                     <h3 className="font-semibold mb-2">Recommendations</h3>
                     <ul className="space-y-2">
                       {selectedResult.recommendations.map((rec, idx) => (
-                        <li key={idx} className="text-sm bg-white p-2 rounded border-l-2 border-blue-400">
+                        <li key={idx} className="text-sm bg-bg-card p-2 rounded border-l-2 border-info-400">
                           {rec}
                         </li>
                       ))}
@@ -273,13 +273,13 @@ export default function ResearchAgentPage() {
                   <h3 className="font-semibold mb-2">Approval Status</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Requires Founder Review:</span>
+                      <span className="text-sm text-text-muted">Requires Founder Review:</span>
                       <span className="font-semibold">
                         {selectedResult.requiresFounderReview ? '✓ Yes' : 'No'}
                       </span>
                     </div>
                     {selectedResult.founderReviewedAt && (
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-text-muted">
                         Reviewed: {new Date(selectedResult.founderReviewedAt).toLocaleString()}
                       </div>
                     )}
@@ -302,33 +302,33 @@ export default function ResearchAgentPage() {
               <div>
                 <h3 className="font-semibold mb-3">5 Research Categories</h3>
                 <div className="space-y-3">
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">🎯 Competitor Analysis</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       Positioning, marketing spend, feature releases, customer sentiment analysis
                     </p>
                   </div>
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">📊 Industry Trends</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       Market shifts, demand signals, regulatory changes, industry reports
                     </p>
                   </div>
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">🔧 Technology Monitoring</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       Emerging tools, adoption rates, technology ecosystem, integration opportunities
                     </p>
                   </div>
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">📈 Algorithm Tracking</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       SEO ranking volatility, algorithm signals, feature deprecations, platform changes
                     </p>
                   </div>
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">🤖 AI Model Releases</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       New model releases, benchmark improvements, capability analysis, adoption trends
                     </p>
                   </div>
@@ -338,10 +338,10 @@ export default function ResearchAgentPage() {
               {/* Threat Detection */}
               <div>
                 <h3 className="font-semibold mb-3">Threat Detection Logic</h3>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-text-muted mb-3">
                   Research agent analyzes insights for threat signals:
                 </p>
-                <div className="bg-yellow-50 p-3 rounded text-sm space-y-2">
+                <div className="bg-warning-50 p-3 rounded text-sm space-y-2">
                   <p>
                     <span className="font-medium">High Threat Keywords:</span> volatility, decline, risk, threat, outage, critical, emergency, breach, failure, shutdown
                   </p>
@@ -359,20 +359,20 @@ export default function ResearchAgentPage() {
                 <h3 className="font-semibold mb-3">Risk Scoring (0-100)</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-green-100 text-green-800">Low 0-19</Badge>
-                    <span className="text-gray-600">Monitor for trends, continue current strategy</span>
+                    <Badge className="bg-success-100 text-success-800">Low 0-19</Badge>
+                    <span className="text-text-muted">Monitor for trends, continue current strategy</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-yellow-100 text-yellow-800">Medium 20-39</Badge>
-                    <span className="text-gray-600">Review findings, reassess quarterly strategy</span>
+                    <Badge className="bg-warning-100 text-warning-800">Medium 20-39</Badge>
+                    <span className="text-text-muted">Review findings, reassess quarterly strategy</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-orange-100 text-orange-800">High 40-69</Badge>
-                    <span className="text-gray-600">Founder manual review required</span>
+                    <Badge className="bg-accent-100 text-accent-800">High 40-69</Badge>
+                    <span className="text-text-muted">Founder manual review required</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-red-100 text-red-800">Critical 70+</Badge>
-                    <span className="text-gray-600">Urgent founder escalation</span>
+                    <Badge className="bg-error-100 text-error-800">Critical 70+</Badge>
+                    <span className="text-text-muted">Urgent founder escalation</span>
                   </div>
                 </div>
               </div>
@@ -380,24 +380,24 @@ export default function ResearchAgentPage() {
               {/* Founder Alerts */}
               <div>
                 <h3 className="font-semibold mb-3">Founder Alert Routing</h3>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-text-muted mb-3">
                   High-threat research automatically routes to founder for review when:
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">•</span>
+                    <span className="text-accent-600 font-bold">•</span>
                     <span>
                       <span className="font-medium">Threat Level = High</span> - Immediate strategic implications detected
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">•</span>
+                    <span className="text-accent-600 font-bold">•</span>
                     <span>
                       <span className="font-medium">Risk Level = High/Critical</span> - Business impact confirmed
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">•</span>
+                    <span className="text-accent-600 font-bold">•</span>
                     <span>
                       <span className="font-medium">Risk Score &gt;= 40</span> - Significant risk threshold crossed
                     </span>
@@ -408,7 +408,7 @@ export default function ResearchAgentPage() {
               {/* Batch Processing */}
               <div>
                 <h3 className="font-semibold mb-3">Batch Processing</h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-text-muted">
                   Monitor multiple queries simultaneously with batch tracking. Batch status shows query count, insight count, and high-threat items identified.
                 </p>
               </div>

@@ -114,29 +114,29 @@ export default function StatusPageConsole() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'good':
-        return 'bg-green-100 text-green-900';
+        return 'bg-success-100 text-success-900';
       case 'warn':
-        return 'bg-yellow-100 text-yellow-900';
+        return 'bg-warning-100 text-warning-900';
       case 'bad':
-        return 'bg-red-100 text-red-900';
+        return 'bg-error-100 text-error-900';
       case 'info':
-        return 'bg-blue-100 text-blue-900';
+        return 'bg-info-100 text-info-900';
       default:
-        return 'bg-gray-100 text-gray-900';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
   const getOverallStatusColor = (status: string) => {
     switch (status) {
       case 'recommended':
-        return 'bg-green-500';
+        return 'bg-success-500';
       case 'limited':
-        return 'bg-yellow-500';
+        return 'bg-warning-500';
       case 'needs_attention':
-        return 'bg-red-500';
+        return 'bg-error-500';
       case 'experimental':
       default:
-        return 'bg-gray-500';
+        return 'bg-bg-elevated';
     }
   };
 
@@ -217,11 +217,11 @@ export default function StatusPageConsole() {
 
           {/* Blockers */}
           {statusView.blockers && statusView.blockers.length > 0 && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded">
-              <h3 className="font-semibold text-red-900 mb-2">Blockers</h3>
+            <div className="p-4 bg-error-50 border border-error-200 rounded">
+              <h3 className="font-semibold text-error-900 mb-2">Blockers</h3>
               <ul className="space-y-1 text-sm">
                 {statusView.blockers.map((blocker, idx) => (
-                  <li key={idx} className="text-red-800">
+                  <li key={idx} className="text-error-800">
                     • {blocker}
                   </li>
                 ))}
@@ -231,11 +231,11 @@ export default function StatusPageConsole() {
 
           {/* Warnings */}
           {statusView.warnings && statusView.warnings.length > 0 && (
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
-              <h3 className="font-semibold text-yellow-900 mb-2">Warnings</h3>
+            <div className="p-4 bg-warning-50 border border-warning-200 rounded">
+              <h3 className="font-semibold text-warning-900 mb-2">Warnings</h3>
               <ul className="space-y-1 text-sm">
                 {statusView.warnings.map((warning, idx) => (
-                  <li key={idx} className="text-yellow-800">
+                  <li key={idx} className="text-warning-800">
                     • {warning}
                   </li>
                 ))}

@@ -204,13 +204,13 @@ export default function RecoveryConsolePage() {
   // Status badge
   const StatusBadge = ({ status }: { status: RecoveryStatus }) => {
     const config = {
-      pending: { icon: Pause, color: 'text-gray-400', bg: 'bg-gray-400/10' },
-      simulating: { icon: RefreshCw, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-      simulated: { icon: AlertTriangle, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
-      executing: { icon: Play, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-      success: { icon: CheckCircle, color: 'text-green-400', bg: 'bg-green-400/10' },
-      failed: { icon: XCircle, color: 'text-red-400', bg: 'bg-red-400/10' },
-      cancelled: { icon: XCircle, color: 'text-gray-500', bg: 'bg-gray-500/10' },
+      pending: { icon: Pause, color: 'text-text-muted', bg: 'bg-bg-elevated/10' },
+      simulating: { icon: RefreshCw, color: 'text-info-400', bg: 'bg-info-400/10' },
+      simulated: { icon: AlertTriangle, color: 'text-warning-400', bg: 'bg-warning-400/10' },
+      executing: { icon: Play, color: 'text-info-500', bg: 'bg-info-500/10' },
+      success: { icon: CheckCircle, color: 'text-success-400', bg: 'bg-success-400/10' },
+      failed: { icon: XCircle, color: 'text-error-400', bg: 'bg-error-400/10' },
+      cancelled: { icon: XCircle, color: 'text-text-tertiary', bg: 'bg-bg-hover0/10' },
     };
 
     const { icon: Icon, color, bg } = config[status];
@@ -224,9 +224,9 @@ export default function RecoveryConsolePage() {
 
   // Risk badge
   const RiskBadge = ({ score }: { score: number }) => {
-    let color = 'text-green-400 bg-green-400/10';
-    if (score >= 70) color = 'text-red-400 bg-red-400/10';
-    else if (score >= 40) color = 'text-yellow-400 bg-yellow-400/10';
+    let color = 'text-success-400 bg-success-400/10';
+    if (score >= 70) color = 'text-error-400 bg-error-400/10';
+    else if (score >= 40) color = 'text-warning-400 bg-warning-400/10';
 
     return (
       <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${color}`}>
@@ -300,11 +300,11 @@ export default function RecoveryConsolePage() {
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-lg font-semibold text-text-primary">{policy.key}</h3>
                         {policy.enabled ? (
-                          <span className="px-2 py-1 text-xs font-medium text-green-400 bg-green-400/10 rounded">
+                          <span className="px-2 py-1 text-xs font-medium text-success-400 bg-success-400/10 rounded">
                             Enabled
                           </span>
                         ) : (
-                          <span className="px-2 py-1 text-xs font-medium text-gray-400 bg-gray-400/10 rounded">
+                          <span className="px-2 py-1 text-xs font-medium text-text-muted bg-bg-elevated/10 rounded">
                             Disabled
                           </span>
                         )}
@@ -508,7 +508,7 @@ export default function RecoveryConsolePage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Success Rate</span>
-                  <span className="text-green-400 font-semibold">{stats.success_rate}%</span>
+                  <span className="text-success-400 font-semibold">{stats.success_rate}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Avg Risk Score</span>

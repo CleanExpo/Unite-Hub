@@ -82,15 +82,15 @@ export default function GatekeeperPage() {
 
   function getDecisionBadge(decision: string | null) {
     const styles: Record<string, string> = {
-      allow: 'bg-green-100 text-green-800',
-      block: 'bg-red-100 text-red-800',
-      warn: 'bg-yellow-100 text-yellow-800',
+      allow: 'bg-success-100 text-success-800',
+      block: 'bg-error-100 text-error-800',
+      warn: 'bg-warning-100 text-warning-800',
     };
 
     return (
       <span
         className={`inline-block px-2 py-1 rounded text-sm font-medium ${
-          decision ? styles[decision] || 'bg-gray-100' : 'bg-gray-100'
+          decision ? styles[decision] || 'bg-bg-hover' : 'bg-bg-hover'
         }`}
       >
         {decision ? decision.toUpperCase() : 'PENDING'}
@@ -109,8 +109,8 @@ export default function GatekeeperPage() {
           <p className="text-text-secondary">
             Pre-deployment validation for Guardian config changes (rules, playbooks, thresholds)
           </p>
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-900">
+          <div className="mt-4 p-4 bg-info-50 border border-info-200 rounded-lg">
+            <p className="text-sm text-info-900">
               <strong>Note:</strong> Gatekeeper provides advisory gate decisions for CI/CD systems
               and admins. It does not enforce or block deployments directly. Final deployment
               decisions are made by external CI/CD pipelines or administrators.
@@ -155,7 +155,7 @@ export default function GatekeeperPage() {
 
         {/* Gate Decisions List */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-900 rounded">
+          <div className="mb-6 p-4 bg-error-50 border border-error-200 text-error-900 rounded">
             {error}
           </div>
         )}

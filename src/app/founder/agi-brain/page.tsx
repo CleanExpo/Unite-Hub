@@ -58,7 +58,7 @@ export default function AGIBrainPage() {
       <h2 className="text-2xl font-semibold">Business Goals</h2>
 
       {criticalGoals.length > 0 && (
-        <div className="bg-red-900 text-red-50 p-4 rounded">
+        <div className="bg-error-900 text-error-50 p-4 rounded">
           <h3 className="font-semibold mb-2">🚨 Goals at Risk ({criticalGoals.length})</h3>
           <ul className="space-y-1 text-sm">
             {criticalGoals.slice(0, 3).map(g => (
@@ -76,23 +76,23 @@ export default function AGIBrainPage() {
           const isAtRisk = progress < 50;
 
           return (
-            <div key={goal.id} className={`p-4 rounded border ${isAtRisk ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'}`}>
+            <div key={goal.id} className={`p-4 rounded border ${isAtRisk ? 'border-error-500 bg-error-50' : 'border-border-subtle bg-bg-card'}`}>
               <h3 className="font-semibold text-lg">{goal.title}</h3>
-              <p className="text-sm text-gray-600 mb-2">{goal.domain}</p>
+              <p className="text-sm text-text-muted mb-2">{goal.domain}</p>
               <div className="space-y-2">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span>Progress</span>
                     <span className="font-mono">{Math.round(progress)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-bg-hover rounded-full h-2">
                     <div
-                      className={`h-2 rounded-full ${isAtRisk ? 'bg-red-500' : 'bg-green-500'}`}
+                      className={`h-2 rounded-full ${isAtRisk ? 'bg-error-500' : 'bg-success-500'}`}
                       style={{ width: `${Math.min(100, progress)}%` }}
                     />
                   </div>
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-text-tertiary">
                   {goal.currentValue} / {goal.targetValue} {goal.unit}
                 </div>
               </div>
@@ -116,13 +116,13 @@ return <div>Loading business intelligence...</div>;
         <h2 className="text-2xl font-semibold">Business Brain Summary</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-blue-50 p-4 rounded border border-blue-300">
-            <h3 className="font-semibold text-blue-900">Health Score</h3>
-            <p className="text-4xl font-bold text-blue-600">{businessBrain.healthScore}/100</p>
-            <p className="text-sm text-blue-800 mt-2">Status: {businessBrain.overallStatus.toUpperCase()}</p>
+          <div className="bg-info-50 p-4 rounded border border-info-300">
+            <h3 className="font-semibold text-info-900">Health Score</h3>
+            <p className="text-4xl font-bold text-info-600">{businessBrain.healthScore}/100</p>
+            <p className="text-sm text-info-800 mt-2">Status: {businessBrain.overallStatus.toUpperCase()}</p>
           </div>
 
-          <div className="bg-gray-50 p-4 rounded border border-gray-300">
+          <div className="bg-bg-hover p-4 rounded border border-border-subtle">
             <h3 className="font-semibold">Strategic Themes</h3>
             <ul className="text-sm space-y-1 mt-2">
               {themes.slice(0, 3).map((theme, i) => (
@@ -133,21 +133,21 @@ return <div>Loading business intelligence...</div>;
         </div>
 
         {atRiskDims.length > 0 && (
-          <div className="bg-red-50 p-4 rounded border border-red-300">
-            <h3 className="font-semibold text-red-900 mb-2">⚠️ At-Risk Dimensions ({atRiskDims.length})</h3>
+          <div className="bg-error-50 p-4 rounded border border-error-300">
+            <h3 className="font-semibold text-error-900 mb-2">⚠️ At-Risk Dimensions ({atRiskDims.length})</h3>
             <div className="space-y-2">
               {atRiskDims.map(dim => (
                 <div key={dim.dimension} className="text-sm">
-                  <span className="font-semibold text-red-900">{dim.dimension}:</span>
-                  <p className="text-red-800">{dim.alerts[0]}</p>
+                  <span className="font-semibold text-error-900">{dim.dimension}:</span>
+                  <p className="text-error-800">{dim.alerts[0]}</p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        <div className="bg-green-50 p-4 rounded border border-green-300">
-          <h3 className="font-semibold text-green-900 mb-2">✅ Top Opportunities</h3>
+        <div className="bg-success-50 p-4 rounded border border-success-300">
+          <h3 className="font-semibold text-success-900 mb-2">✅ Top Opportunities</h3>
           <ul className="text-sm space-y-1">
             {businessBrain.topOpportunities.slice(0, 3).map((opp, i) => (
               <li key={i}>• {opp}</li>
@@ -155,8 +155,8 @@ return <div>Loading business intelligence...</div>;
           </ul>
         </div>
 
-        <div className="bg-yellow-50 p-4 rounded border border-yellow-300">
-          <h3 className="font-semibold text-yellow-900 mb-2">📋 Immediate Actions</h3>
+        <div className="bg-warning-50 p-4 rounded border border-warning-300">
+          <h3 className="font-semibold text-warning-900 mb-2">📋 Immediate Actions</h3>
           <ol className="text-sm space-y-1 list-decimal list-inside">
             {businessBrain.immediateActions.map((action, i) => (
               <li key={i}>{action}</li>
@@ -178,27 +178,27 @@ return <div>Loading business intelligence...</div>;
             <p className="text-lg font-mono text-purple-600 mt-2">{personalContext.cognitiveState || 'unknown'}</p>
           </div>
 
-          <div className="bg-orange-50 p-4 rounded border border-orange-300">
-            <h3 className="font-semibold text-orange-900">⚡ Energy Level</h3>
-            <p className="text-lg font-mono text-orange-600 mt-2">{personalContext.energyLevel || 'unknown'}</p>
+          <div className="bg-accent-50 p-4 rounded border border-orange-300">
+            <h3 className="font-semibold text-accent-900">⚡ Energy Level</h3>
+            <p className="text-lg font-mono text-accent-600 mt-2">{personalContext.energyLevel || 'unknown'}</p>
           </div>
 
-          <div className="bg-red-50 p-4 rounded border border-red-300">
-            <h3 className="font-semibold text-red-900">😰 Stress Level</h3>
-            <p className="text-lg font-mono text-red-600 mt-2">{personalContext.stressLevel || 'unknown'}</p>
+          <div className="bg-error-50 p-4 rounded border border-error-300">
+            <h3 className="font-semibold text-error-900">😰 Stress Level</h3>
+            <p className="text-lg font-mono text-error-600 mt-2">{personalContext.stressLevel || 'unknown'}</p>
           </div>
 
-          <div className="bg-blue-50 p-4 rounded border border-blue-300">
-            <h3 className="font-semibold text-blue-900">😴 Sleep Hours</h3>
-            <p className="text-lg font-mono text-blue-600 mt-2">{personalContext.sleepHours || '?'} hours</p>
+          <div className="bg-info-50 p-4 rounded border border-info-300">
+            <h3 className="font-semibold text-info-900">😴 Sleep Hours</h3>
+            <p className="text-lg font-mono text-info-600 mt-2">{personalContext.sleepHours || '?'} hours</p>
           </div>
         </div>
       ) : (
-        <div className="text-gray-500">No personal context available yet.</div>
+        <div className="text-text-tertiary">No personal context available yet.</div>
       )}
 
       {personalContext?.warningFlags && personalContext.warningFlags.length > 0 && (
-        <div className="bg-red-100 border border-red-400 text-red-700 p-4 rounded">
+        <div className="bg-error-100 border border-error-400 text-error-700 p-4 rounded">
           <h3 className="font-semibold mb-2">⚠️ Warnings</h3>
           <ul className="space-y-1 text-sm">
             {personalContext.warningFlags.map((flag: string, i: number) => (
@@ -221,21 +221,21 @@ return null;
 }
 
         return (
-          <div key={type} className="bg-gray-50 p-4 rounded border border-gray-300">
+          <div key={type} className="bg-bg-hover p-4 rounded border border-border-subtle">
             <div className="flex justify-between items-center mb-2">
               <h3 className="font-semibold text-lg capitalize">{type} Briefing</h3>
-              {briefing.isUrgent && <span className="text-red-600 font-bold">🚨 URGENT</span>}
+              {briefing.isUrgent && <span className="text-error-600 font-bold">🚨 URGENT</span>}
             </div>
 
-            <p className="text-sm text-gray-600 mb-3">{briefing.summary}</p>
+            <p className="text-sm text-text-muted mb-3">{briefing.summary}</p>
 
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-text-tertiary">
               📖 {briefing.estimatedReadTime}min read | ⏱️ {briefing.estimatedActionTime}min action
             </div>
 
             <details className="mt-2">
-              <summary className="cursor-pointer text-blue-600 text-sm">Show full briefing</summary>
-              <pre className="mt-2 text-xs bg-white p-2 rounded border overflow-x-auto">
+              <summary className="cursor-pointer text-info-600 text-sm">Show full briefing</summary>
+              <pre className="mt-2 text-xs bg-bg-card p-2 rounded border overflow-x-auto">
                 {formatBriefingForDisplay(briefing)}
               </pre>
             </details>
@@ -249,8 +249,8 @@ return null;
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Smart Glasses Interface</h2>
 
-      <div className="bg-blue-50 p-4 rounded border border-blue-300">
-        <h3 className="font-semibold text-blue-900 mb-3">Available Glasses Hardware</h3>
+      <div className="bg-info-50 p-4 rounded border border-info-300">
+        <h3 className="font-semibold text-info-900 mb-3">Available Glasses Hardware</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
           {[
@@ -259,9 +259,9 @@ return null;
             { name: 'XREAL', features: ['Spatial audio', 'Wide FOV', 'Touch input'] },
             { name: 'VITURE', features: ['120Hz display', 'Gesture control', 'Lightweight'] }
           ].map(device => (
-            <div key={device.name} className="bg-white p-3 rounded border">
+            <div key={device.name} className="bg-bg-card p-3 rounded border">
               <p className="font-semibold">{device.name}</p>
-              <ul className="text-xs text-gray-600 mt-1 space-y-1">
+              <ul className="text-xs text-text-muted mt-1 space-y-1">
                 {device.features.map(f => (
                   <li key={f}>✓ {f}</li>
                 ))}
@@ -271,8 +271,8 @@ return null;
         </div>
       </div>
 
-      <div className="bg-green-50 p-4 rounded border border-green-300">
-        <h3 className="font-semibold text-green-900 mb-2">Voice Commands</h3>
+      <div className="bg-success-50 p-4 rounded border border-success-300">
+        <h3 className="font-semibold text-success-900 mb-2">Voice Commands</h3>
         <ul className="text-sm space-y-1">
           <li>• "Briefing" → Receive morning/midday/evening briefing</li>
           <li>• "Goals" → Check goal status</li>
@@ -282,17 +282,17 @@ return null;
         </ul>
       </div>
 
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-text-tertiary">
         <p>🔮 Smart glasses are coming in Phase 10. Setup and connectivity handled by respective device SDKs.</p>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-white p-10">
+    <div className="min-h-screen bg-bg-card p-10">
       <header className="mb-10">
         <h1 className="text-4xl font-bold mb-2">AGI Brain – Founder Command Center</h1>
-        <p className="text-gray-600 max-w-3xl">
+        <p className="text-text-muted max-w-3xl">
           Unified business intelligence, personal context, goal tracking, and briefing system. Integrated with Phase 8 governance.
         </p>
       </header>
@@ -311,8 +311,8 @@ return null;
             onClick={() => setActiveTab(tab.id as any)}
             className={`px-4 py-2 font-medium transition-colors ${
               activeTab === tab.id
-                ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'border-b-2 border-info-600 text-info-600'
+                : 'text-text-muted hover:text-text-primary'
             }`}
           >
             {tab.label}
@@ -329,7 +329,7 @@ return null;
         {activeTab === 'glasses' && renderGlassesTab()}
       </div>
 
-      <footer className="mt-20 text-xs text-gray-500 border-t pt-10">
+      <footer className="mt-20 text-xs text-text-tertiary border-t pt-10">
         <p>Phase 9 – Full Business Brain & Personal AGI Advisor v1.0</p>
         <p>Last updated: {new Date().toLocaleString()}</p>
       </footer>

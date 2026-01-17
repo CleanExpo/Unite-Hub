@@ -24,10 +24,10 @@ export default function TCPQELPage() {
     <div className="p-6">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <CreditCard className="text-blue-400" size={28} />
+          <CreditCard className="text-info-400" size={28} />
           <h1 className="text-3xl font-bold">TCPQEL</h1>
         </div>
-        <p className="text-gray-400">Tenant Commercial Plans, Quotas & Engine Licensing</p>
+        <p className="text-text-muted">Tenant Commercial Plans, Quotas & Engine Licensing</p>
       </div>
 
       {/* Current Plan */}
@@ -47,34 +47,34 @@ export default function TCPQELPage() {
 
       {/* Usage Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-gray-400 mb-2">
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="flex items-center gap-2 text-text-muted mb-2">
             <Package size={16} />
             <span className="text-sm">Total Operations</span>
           </div>
           <div className="text-2xl font-bold">20,106</div>
-          <div className="text-sm text-gray-500">of 27,700 limit</div>
+          <div className="text-sm text-text-tertiary">of 27,700 limit</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-gray-400 mb-2">
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="flex items-center gap-2 text-text-muted mb-2">
             <BarChart3 size={16} />
             <span className="text-sm">Average Usage</span>
           </div>
           <div className="text-2xl font-bold">72.6%</div>
-          <div className="text-sm text-gray-500">across all engines</div>
+          <div className="text-sm text-text-tertiary">across all engines</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-gray-400 mb-2">
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="flex items-center gap-2 text-text-muted mb-2">
             <AlertCircle size={16} />
             <span className="text-sm">Near Limit</span>
           </div>
-          <div className="text-2xl font-bold text-yellow-400">2</div>
-          <div className="text-sm text-gray-500">engines above 80%</div>
+          <div className="text-2xl font-bold text-warning-400">2</div>
+          <div className="text-sm text-text-tertiary">engines above 80%</div>
         </div>
       </div>
 
       {/* Usage by Engine */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-bg-raised rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-4">Usage by Engine</h2>
 
         <div className="space-y-4">
@@ -82,11 +82,11 @@ export default function TCPQELPage() {
             <div key={item.engine}>
               <div className="flex items-center justify-between mb-1">
                 <span className="font-medium">{item.engine}</span>
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-text-muted">
                   {item.used.toLocaleString()} / {item.limit.toLocaleString()}
                 </span>
               </div>
-              <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
+              <div className="h-3 bg-bg-elevated rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all ${
                     item.percentage > 80 ? 'bg-yellow-500' :
@@ -95,7 +95,7 @@ export default function TCPQELPage() {
                   style={{ width: `${item.percentage}%` }}
                 />
               </div>
-              <div className="text-right text-xs text-gray-500 mt-1">
+              <div className="text-right text-xs text-text-tertiary mt-1">
                 {item.percentage.toFixed(1)}%
               </div>
             </div>
@@ -104,9 +104,9 @@ export default function TCPQELPage() {
       </div>
 
       {/* Upgrade CTA */}
-      <div className="mt-8 bg-gray-800 rounded-lg p-6 text-center">
+      <div className="mt-8 bg-bg-raised rounded-lg p-6 text-center">
         <h3 className="text-lg font-semibold mb-2">Need more capacity?</h3>
-        <p className="text-gray-400 mb-4">
+        <p className="text-text-muted mb-4">
           Upgrade to Enterprise for unlimited operations and all engines.
         </p>
         <button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-medium">

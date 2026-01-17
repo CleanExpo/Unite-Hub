@@ -22,26 +22,26 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-8">
-      <Card className="bg-gray-800/50 border-gray-700 p-8 max-w-md w-full text-center">
-        <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-100 mb-2">
+    <div className="min-h-screen bg-bg-base flex items-center justify-center p-8">
+      <Card className="bg-bg-raised/50 border-border p-8 max-w-md w-full text-center">
+        <AlertCircle className="w-16 h-16 text-error-400 mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-text-primary mb-2">
           Something went wrong
         </h2>
-        <p className="text-gray-400 mb-6">
+        <p className="text-text-muted mb-6">
           {error.message || 'An error occurred while loading the Founder OS dashboard.'}
         </p>
         <div className="space-y-3">
           <Button
             onClick={reset}
-            className="w-full bg-blue-600 hover:bg-blue-700"
+            className="w-full bg-info-600 hover:bg-info-700"
           >
             Try again
           </Button>
           <Button
             onClick={() => window.location.href = '/'}
             variant="outline"
-            className="w-full border-gray-600 text-gray-300 hover:bg-gray-800"
+            className="w-full border-border text-text-secondary hover:bg-bg-raised"
           >
             Go to Home
           </Button>

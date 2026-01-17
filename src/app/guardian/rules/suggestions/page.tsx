@@ -47,17 +47,17 @@ interface SuggestionDetail extends Suggestion {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  new: 'bg-blue-100 text-blue-800',
-  reviewing: 'bg-yellow-100 text-yellow-800',
-  accepted: 'bg-green-100 text-green-800',
-  rejected: 'bg-red-100 text-red-800',
+  new: 'bg-info-100 text-info-800',
+  reviewing: 'bg-warning-100 text-warning-800',
+  accepted: 'bg-success-100 text-success-800',
+  rejected: 'bg-error-100 text-error-800',
   applied: 'bg-purple-100 text-purple-800',
-  expired: 'bg-gray-100 text-gray-800',
+  expired: 'bg-bg-hover text-text-secondary',
 };
 
 const SOURCE_COLORS: Record<string, string> = {
   ai: 'bg-indigo-100 text-indigo-800',
-  heuristic: 'bg-amber-100 text-amber-800',
+  heuristic: 'bg-warning-100 text-warning-800',
 };
 
 export default function GuardianSuggestionsPage() {
@@ -357,7 +357,7 @@ export default function GuardianSuggestionsPage() {
                           {s.status}
                         </span>
                         {s.confidence !== null && (
-                          <span className="px-2 py-1 rounded bg-gray-100 text-gray-800 text-[10px] font-medium">
+                          <span className="px-2 py-1 rounded bg-bg-hover text-text-secondary text-[10px] font-medium">
                             {(s.confidence * 100).toFixed(0)}%
                           </span>
                         )}
@@ -414,7 +414,7 @@ export default function GuardianSuggestionsPage() {
 
               {/* Safety */}
               {!detail.safety.validationPassed && (
-                <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-2 text-xs text-yellow-800">
+                <div className="rounded-lg border border-warning-200 bg-warning-50 p-2 text-xs text-warning-800">
                   <div className="font-medium">Safety Issues:</div>
                   <ul className="mt-1 space-y-1">
                     {detail.safety.validationErrors.map((err, i) => (
@@ -434,14 +434,14 @@ export default function GuardianSuggestionsPage() {
                     <button
                       onClick={() => updateStatus('reviewing')}
                       disabled={actionLoading}
-                      className="h-8 px-3 rounded-md bg-blue-600 text-white text-xs font-medium hover:opacity-90 disabled:opacity-50"
+                      className="h-8 px-3 rounded-md bg-info-600 text-white text-xs font-medium hover:opacity-90 disabled:opacity-50"
                     >
                       Mark Reviewing
                     </button>
                     <button
                       onClick={() => updateStatus('accepted')}
                       disabled={actionLoading}
-                      className="h-8 px-3 rounded-md bg-green-600 text-white text-xs font-medium hover:opacity-90 disabled:opacity-50"
+                      className="h-8 px-3 rounded-md bg-success-600 text-white text-xs font-medium hover:opacity-90 disabled:opacity-50"
                     >
                       Accept
                     </button>

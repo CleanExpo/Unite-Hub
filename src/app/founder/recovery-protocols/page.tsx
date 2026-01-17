@@ -106,15 +106,15 @@ export default function RecoveryProtocolsPage() {
   const stateColor = (state: string) => {
     switch (state) {
       case "well_rested":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "normal":
         return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "fatigued":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "exhausted":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "burned_out":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "recovering":
         return "bg-purple-500/10 text-purple-400 border-purple-500/20";
       default:
@@ -125,13 +125,13 @@ export default function RecoveryProtocolsPage() {
   const urgencyColor = (urgency: string) => {
     switch (urgency) {
       case "critical":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "high":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "moderate":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "low":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -140,14 +140,14 @@ export default function RecoveryProtocolsPage() {
   const scoreGauge = (score: number) => {
     const color =
       score >= 80
-        ? "bg-emerald-500"
+        ? "bg-success-500"
         : score >= 60
           ? "bg-accent-500"
           : score >= 40
-            ? "bg-amber-500"
+            ? "bg-warning-500"
             : score >= 20
-              ? "bg-orange-500"
-              : "bg-red-500";
+              ? "bg-accent-500"
+              : "bg-error-500";
     return (
       <div className="relative h-3 bg-bg-muted rounded-full overflow-hidden">
         <div
@@ -196,11 +196,11 @@ export default function RecoveryProtocolsPage() {
 
       {/* Critical Actions Alert */}
       {summary && summary.critical_actions > 0 && (
-        <Card className="bg-red-500/10 border-red-500/20 p-4">
+        <Card className="bg-error-500/10 border-error-500/20 p-4">
           <div className="flex items-start gap-3">
-            <div className="text-red-400 text-xl">🚨</div>
+            <div className="text-error-400 text-xl">🚨</div>
             <div className="flex-1">
-              <h3 className="font-semibold text-red-400 mb-1">
+              <h3 className="font-semibold text-error-400 mb-1">
                 {summary.critical_actions} Critical Recovery Actions Pending
               </h3>
               <p className="text-sm text-text-secondary">
@@ -305,21 +305,21 @@ export default function RecoveryProtocolsPage() {
             </Card>
             <Card className="p-4 space-y-2 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Avg Fatigue</div>
-              <div className="text-2xl font-bold text-orange-400">
+              <div className="text-2xl font-bold text-accent-400">
                 {summary.avg_fatigue_level.toFixed(0)}
               </div>
               {scoreGauge(100 - summary.avg_fatigue_level)}
             </Card>
             <Card className="p-4 space-y-2 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Avg Stress</div>
-              <div className="text-2xl font-bold text-red-400">
+              <div className="text-2xl font-bold text-error-400">
                 {summary.avg_stress_level.toFixed(0)}
               </div>
               {scoreGauge(100 - summary.avg_stress_level)}
             </Card>
             <Card className="p-4 space-y-2 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Avg Sleep</div>
-              <div className="text-2xl font-bold text-emerald-400">
+              <div className="text-2xl font-bold text-success-400">
                 {summary.avg_sleep_quality.toFixed(0)}
               </div>
               {scoreGauge(summary.avg_sleep_quality)}
@@ -334,11 +334,11 @@ export default function RecoveryProtocolsPage() {
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Critical Actions</div>
-              <div className="text-2xl font-bold text-red-400">{summary.critical_actions}</div>
+              <div className="text-2xl font-bold text-error-400">{summary.critical_actions}</div>
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Completed Actions</div>
-              <div className="text-2xl font-bold text-emerald-400">
+              <div className="text-2xl font-bold text-success-400">
                 {summary.completed_actions}
               </div>
             </Card>
@@ -422,19 +422,19 @@ export default function RecoveryProtocolsPage() {
                   {state.fatigue_level !== null && (
                     <div>
                       <div className="text-xs text-text-secondary">Fatigue</div>
-                      <div className="font-medium text-orange-400">{state.fatigue_level}</div>
+                      <div className="font-medium text-accent-400">{state.fatigue_level}</div>
                     </div>
                   )}
                   {state.stress_level !== null && (
                     <div>
                       <div className="text-xs text-text-secondary">Stress</div>
-                      <div className="font-medium text-red-400">{state.stress_level}</div>
+                      <div className="font-medium text-error-400">{state.stress_level}</div>
                     </div>
                   )}
                   {state.sleep_quality !== null && (
                     <div>
                       <div className="text-xs text-text-secondary">Sleep</div>
-                      <div className="font-medium text-emerald-400">{state.sleep_quality}</div>
+                      <div className="font-medium text-success-400">{state.sleep_quality}</div>
                     </div>
                   )}
                 </div>
@@ -482,11 +482,11 @@ export default function RecoveryProtocolsPage() {
                       {action.urgency}
                     </span>
                     {action.taken ? (
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-success-500/10 text-success-400 border border-emerald-500/20">
                         ✓ Completed
                       </span>
                     ) : (
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-warning-500/10 text-warning-400 border border-warning-500/20">
                         Pending
                       </span>
                     )}

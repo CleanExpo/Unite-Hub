@@ -59,7 +59,7 @@ export default function ClientReviewPacksPage() {
   };
 
   const statusConfig = {
-    draft: { label: "Draft", color: "bg-gray-100 text-gray-700", icon: FileText },
+    draft: { label: "Draft", color: "bg-bg-hover text-text-secondary", icon: FileText },
     ready_for_review: { label: "Ready for Review", color: "bg-amber-100 text-amber-700", icon: Clock },
     approved: { label: "Approved", color: "bg-green-100 text-green-700", icon: CheckCircle },
     sent: { label: "Sent", color: "bg-blue-100 text-blue-700", icon: Send },
@@ -105,7 +105,7 @@ export default function ClientReviewPacksPage() {
               <CardContent className="space-y-6">
                 {/* Period */}
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Review Period</h3>
+                  <h3 className="text-sm font-medium text-text-tertiary mb-2">Review Period</h3>
                   <div className="flex items-center gap-2 text-text-primary">
                     <Calendar className="w-5 h-5 text-accent-600" />
                     {formatDate(selectedPack.startDate)} - {formatDate(selectedPack.endDate)}
@@ -115,7 +115,7 @@ export default function ClientReviewPacksPage() {
                 {/* Narrative */}
                 {selectedPack.narrative && (
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">Performance Summary</h3>
+                    <h3 className="text-sm font-medium text-text-tertiary mb-2">Performance Summary</h3>
                     <div className="p-4 bg-bg-raised/50 rounded-lg">
                       <p className="text-sm text-text-secondary whitespace-pre-line">
                         {selectedPack.narrative}
@@ -127,7 +127,7 @@ export default function ClientReviewPacksPage() {
                 {/* Performance Report Link */}
                 {selectedPack.performanceReportId && (
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">Performance Report</h3>
+                    <h3 className="text-sm font-medium text-text-tertiary mb-2">Performance Report</h3>
                     <a
                       href={`/client/dashboard/reports/${selectedPack.performanceReportId}`}
                       className="flex items-center gap-2 p-3 bg-accent-50 dark:bg-accent-900/20 rounded-lg text-accent-700 dark:text-accent-300 hover:bg-accent-100 dark:hover:bg-accent-900/30 transition-colors"
@@ -142,7 +142,7 @@ export default function ClientReviewPacksPage() {
                 {/* Visual Assets */}
                 {selectedPack.visualAssetIds.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">
+                    <h3 className="text-sm font-medium text-text-tertiary mb-2">
                       Visual Assets ({selectedPack.visualAssetIds.length})
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -151,7 +151,7 @@ export default function ClientReviewPacksPage() {
                           key={id}
                           className="aspect-video bg-bg-hover rounded-lg flex items-center justify-center"
                         >
-                          <Image className="w-8 h-8 text-gray-400" />
+                          <Image className="w-8 h-8 text-text-muted" />
                         </div>
                       ))}
                     </div>
@@ -161,7 +161,7 @@ export default function ClientReviewPacksPage() {
                 {/* Data Sources */}
                 {selectedPack.dataSources.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">Data Sources</h3>
+                    <h3 className="text-sm font-medium text-text-tertiary mb-2">Data Sources</h3>
                     <div className="flex flex-wrap gap-2">
                       {selectedPack.dataSources.map((source) => (
                         <span
@@ -178,7 +178,7 @@ export default function ClientReviewPacksPage() {
                 {/* Delivery Info */}
                 {selectedPack.sentAt && (
                   <div className="pt-4 border-t border-border-subtle">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-text-tertiary">
                       Delivered via <strong className="capitalize">{selectedPack.deliveryChannel}</strong> on{" "}
                       {formatDate(selectedPack.sentAt)}
                     </p>
@@ -202,9 +202,9 @@ export default function ClientReviewPacksPage() {
               <Section className="mt-6">
                 <Card>
                   <CardContent className="py-12 text-center">
-                    <FolderOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">No review packs available yet.</p>
-                    <p className="text-sm text-gray-400 mt-1">
+                    <FolderOpen className="w-12 h-12 text-text-muted mx-auto mb-4" />
+                    <p className="text-text-tertiary">No review packs available yet.</p>
+                    <p className="text-sm text-text-muted mt-1">
                       Your agency will create review packs for you periodically.
                     </p>
                   </CardContent>

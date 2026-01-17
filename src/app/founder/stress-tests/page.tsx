@@ -138,20 +138,20 @@ export default function StressTestsPage() {
 
   const getSeverityColor = (severity?: 'low' | 'medium' | 'high') => {
     const colors = {
-      low: 'bg-green-500/10 text-green-400 border-green-500/20',
-      medium: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-      high: 'bg-red-500/10 text-red-400 border-red-500/20',
+      low: 'bg-success-500/10 text-success-400 border-success-500/20',
+      medium: 'bg-warning-500/10 text-warning-400 border-warning-500/20',
+      high: 'bg-error-500/10 text-error-400 border-error-500/20',
     };
     return colors[severity || 'low'];
   };
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      pending: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-      running: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      completed: 'bg-green-500/10 text-green-400 border-green-500/20',
-      failed: 'bg-red-500/10 text-red-400 border-red-500/20',
-      cancelled: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+      pending: 'bg-bg-hover0/10 text-text-muted border-border/20',
+      running: 'bg-info-500/10 text-info-400 border-info-500/20',
+      completed: 'bg-success-500/10 text-success-400 border-success-500/20',
+      failed: 'bg-error-500/10 text-error-400 border-error-500/20',
+      cancelled: 'bg-warning-500/10 text-warning-400 border-warning-500/20',
     };
     return colors[status] || colors.pending;
   };
@@ -189,7 +189,7 @@ export default function StressTestsPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Test Runs</span>
-              <Activity className="w-5 h-5 text-blue-400" />
+              <Activity className="w-5 h-5 text-info-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">{totalRuns}</div>
             <div className="text-xs text-text-tertiary mt-1">{completedRuns} completed</div>
@@ -198,7 +198,7 @@ export default function StressTestsPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Avg Latency</span>
-              <Clock className="w-5 h-5 text-green-400" />
+              <Clock className="w-5 h-5 text-success-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">
               {selectedRun?.metrics?.avg_latency_ms || 0}
@@ -212,7 +212,7 @@ export default function StressTestsPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Error Rate</span>
-              <AlertTriangle className="w-5 h-5 text-red-400" />
+              <AlertTriangle className="w-5 h-5 text-error-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">
               {selectedRun?.metrics
@@ -462,7 +462,7 @@ export default function StressTestsPage() {
                         <ul className="space-y-2">
                           {selectedRun.ai_insights.bottlenecks.map((bottleneck, index) => (
                             <li key={index} className="flex items-start gap-3">
-                              <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5" />
+                              <AlertTriangle className="w-4 h-4 text-error-400 mt-0.5" />
                               <span className="text-text-secondary text-sm">{bottleneck}</span>
                             </li>
                           ))}

@@ -133,7 +133,7 @@ return;
               </div>
               <Progress
                 value={state.fatigueIndex * 100}
-                className={`h-2 ${state.fatigueIndex > 0.7 ? '[&>div]:bg-red-500' : ''}`}
+                className={`h-2 ${state.fatigueIndex > 0.7 ? '[&>div]:bg-error-500' : ''}`}
               />
             </div>
 
@@ -178,7 +178,7 @@ return;
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Lightbulb className="h-5 w-5 text-amber-500" />
+              <Lightbulb className="h-5 w-5 text-warning-500" />
               Suggestion
             </CardTitle>
           </CardHeader>
@@ -216,11 +216,11 @@ return;
       )}
 
       {/* Disclaimer */}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Advisory Only</div>
               <p>
                 Creative suggestions are based on historical patterns.

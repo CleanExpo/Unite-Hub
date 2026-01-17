@@ -104,7 +104,7 @@ export default function VisionPage() {
           </div>
 
           {persona.persona_summary && (
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-text-secondary mb-4">
               {persona.persona_summary}
             </p>
           )}
@@ -139,7 +139,7 @@ export default function VisionPage() {
             )}
           </div>
 
-          <p className="text-xs text-gray-400 mt-4">
+          <p className="text-xs text-text-muted mt-4">
             Last updated: {new Date(persona.updated_at).toLocaleDateString()}
           </p>
         </div>
@@ -166,7 +166,7 @@ export default function VisionPage() {
                     <p className="text-sm text-text-secondary line-clamp-2">
                       {item.content}
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-text-muted mt-1">
                       {new Date(item.created_at).toLocaleDateString()}
                     </p>
                   </div>

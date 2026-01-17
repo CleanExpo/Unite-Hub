@@ -106,21 +106,21 @@ throw new Error("Failed to update status");
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "critical": return "bg-red-500";
-      case "high": return "bg-orange-500";
-      case "medium": return "bg-yellow-500";
-      case "low": return "bg-blue-500";
-      default: return "bg-gray-500";
+      case "critical": return "bg-error-500";
+      case "high": return "bg-accent-500";
+      case "medium": return "bg-warning-500";
+      case "low": return "bg-info-500";
+      default: return "bg-bg-hover0";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "detected": return "bg-red-500";
-      case "acknowledged": return "bg-yellow-500";
-      case "resolved": return "bg-green-500";
-      case "ignored": return "bg-gray-500";
-      default: return "bg-gray-500";
+      case "detected": return "bg-error-500";
+      case "acknowledged": return "bg-warning-500";
+      case "resolved": return "bg-success-500";
+      case "ignored": return "bg-bg-hover0";
+      default: return "bg-bg-hover0";
     }
   };
 
@@ -138,7 +138,7 @@ throw new Error("Failed to update status");
     return (
       <div className="min-h-screen bg-bg-primary p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-red-600">{workspaceError || "No workspace selected"}</div>
+          <div className="text-error-600">{workspaceError || "No workspace selected"}</div>
         </div>
       </div>
     );
@@ -169,9 +169,9 @@ throw new Error("Failed to update status");
         </div>
 
         {error && (
-          <Card className="bg-red-500/10 border-red-500">
+          <Card className="bg-error-500/10 border-error-500">
             <CardContent className="p-4">
-              <p className="text-red-500">{error}</p>
+              <p className="text-error-500">{error}</p>
             </CardContent>
           </Card>
         )}
@@ -202,7 +202,7 @@ throw new Error("Failed to update status");
                 <CardTitle className="text-sm text-text-secondary">Critical Events</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-red-500">{summary.critical_events}</div>
+                <div className="text-3xl font-bold text-error-500">{summary.critical_events}</div>
               </CardContent>
             </Card>
           </div>

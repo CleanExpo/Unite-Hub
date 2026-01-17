@@ -84,7 +84,7 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
           onClick={() =>
             router.push(`/client/dashboard/visual-playground/${pillarId}`)
           }
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mb-6"
+          className="flex items-center gap-2 text-text-tertiary hover:text-text-secondary mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to {pillar.title}
@@ -161,7 +161,7 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
                 </div>
 
                 <div className="prose prose-sm dark:prose-invert max-w-none mb-4">
-                  <pre className="whitespace-pre-wrap text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                  <pre className="whitespace-pre-wrap text-sm text-text-secondary bg-bg-hover p-4 rounded-lg">
                     {concept.content}
                   </pre>
                 </div>

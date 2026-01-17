@@ -92,8 +92,8 @@ export default function HealthcareOpsPage({
   if (error) {
     return (
       <div className="w-full h-screen bg-bg-card p-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <div className="flex items-center gap-3 text-red-800">
+        <div className="bg-error-50 border border-error-200 rounded-lg p-6">
+          <div className="flex items-center gap-3 text-error-800">
             <AlertTriangle size={20} />
             <span className="font-medium">{error}</span>
           </div>
@@ -109,13 +109,13 @@ export default function HealthcareOpsPage({
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'high':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-error-100 text-error-800 border-error-300';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return 'bg-warning-100 text-warning-800 border-warning-300';
       case 'low':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'bg-info-100 text-info-800 border-info-300';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return 'bg-bg-hover text-text-secondary border-border';
     }
   };
 
@@ -139,13 +139,13 @@ export default function HealthcareOpsPage({
   const getRiskLabelColor = (label: string) => {
     switch (label) {
       case 'high':
-        return 'text-red-700 bg-red-50';
+        return 'text-error-700 bg-error-50';
       case 'medium':
-        return 'text-yellow-700 bg-yellow-50';
+        return 'text-warning-700 bg-warning-50';
       case 'low':
-        return 'text-green-700 bg-green-50';
+        return 'text-success-700 bg-success-50';
       default:
-        return 'text-gray-700 bg-gray-50';
+        return 'text-text-secondary bg-bg-hover';
     }
   };
 
@@ -189,7 +189,7 @@ export default function HealthcareOpsPage({
                 <p className="text-text-secondary text-sm font-medium">24h Alerts</p>
                 <p className="text-2xl font-bold text-text-primary mt-2">{snapshot.totals.alerts}</p>
               </div>
-              <AlertCircle size={24} className="text-blue-500 opacity-40" />
+              <AlertCircle size={24} className="text-info-500 opacity-40" />
             </div>
           </div>
 
@@ -199,7 +199,7 @@ export default function HealthcareOpsPage({
                 <p className="text-text-secondary text-sm font-medium">24h Incidents</p>
                 <p className="text-2xl font-bold text-text-primary mt-2">{snapshot.totals.incidents}</p>
               </div>
-              <AlertTriangle size={24} className="text-yellow-500 opacity-40" />
+              <AlertTriangle size={24} className="text-warning-500 opacity-40" />
             </div>
           </div>
 
@@ -221,18 +221,18 @@ export default function HealthcareOpsPage({
                   {snapshot.totals.riskLabel}
                 </p>
               </div>
-              <Heart size={24} className="text-red-500 opacity-40" />
+              <Heart size={24} className="text-error-500 opacity-40" />
             </div>
           </div>
         </div>
 
         {/* High-Risk Alert Banner */}
         {snapshot.totals.riskLabel === 'high' && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8 flex items-start gap-4">
-            <AlertTriangle size={20} className="text-red-700 flex-shrink-0 mt-0.5" />
+          <div className="bg-error-50 border border-error-200 rounded-lg p-4 mb-8 flex items-start gap-4">
+            <AlertTriangle size={20} className="text-error-700 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-red-800">High-Risk Care Environment</h3>
-              <p className="text-red-700 text-sm mt-1">
+              <h3 className="font-semibold text-error-800">High-Risk Care Environment</h3>
+              <p className="text-error-700 text-sm mt-1">
                 Multiple operational signals indicate elevated care environment risk. Review signals below and consider escalation.
               </p>
             </div>

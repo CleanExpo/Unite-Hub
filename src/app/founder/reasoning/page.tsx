@@ -83,7 +83,7 @@ export default async function ReasoningDashboard() {
   if (!user) {
     return (
       <div className="p-8 text-center">
-        <p className="text-gray-600">Please sign in to access the reasoning dashboard</p>
+        <p className="text-text-muted">Please sign in to access the reasoning dashboard</p>
       </div>
     );
   }
@@ -99,7 +99,7 @@ export default async function ReasoningDashboard() {
   if (!userOrg) {
     return (
       <div className="p-8 text-center">
-        <p className="text-gray-600">You don't have access to any workspaces</p>
+        <p className="text-text-muted">You don't have access to any workspaces</p>
       </div>
     );
   }
@@ -113,7 +113,7 @@ export default async function ReasoningDashboard() {
   if (!workspace) {
     return (
       <div className="p-8 text-center">
-        <p className="text-gray-600">Workspace not found</p>
+        <p className="text-text-muted">Workspace not found</p>
       </div>
     );
   }
@@ -126,8 +126,8 @@ export default async function ReasoningDashboard() {
       <div className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold text-gray-900">🧠 Reasoning Engine</h1>
-          <p className="text-lg text-gray-600 mt-2">
+          <h1 className="text-4xl font-bold text-text-primary">🧠 Reasoning Engine</h1>
+          <p className="text-lg text-text-muted mt-2">
             Multi-pass AI reasoning with memory integration and uncertainty tracking
           </p>
         </div>
@@ -137,8 +137,8 @@ export default async function ReasoningDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600">{stats.totalRuns}</div>
-                <div className="text-sm text-gray-600 mt-2">Total Reasoning Runs</div>
+                <div className="text-4xl font-bold text-info-600">{stats.totalRuns}</div>
+                <div className="text-sm text-text-muted mt-2">Total Reasoning Runs</div>
               </div>
             </CardContent>
           </Card>
@@ -146,8 +146,8 @@ export default async function ReasoningDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <div className="text-4xl font-bold text-green-600">{stats.successRate.toFixed(0)}%</div>
-                <div className="text-sm text-gray-600 mt-2">Success Rate</div>
+                <div className="text-4xl font-bold text-success-600">{stats.successRate.toFixed(0)}%</div>
+                <div className="text-sm text-text-muted mt-2">Success Rate</div>
               </div>
             </CardContent>
           </Card>
@@ -155,8 +155,8 @@ export default async function ReasoningDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <div className="text-4xl font-bold text-red-600">{stats.avgRisk.toFixed(1)}</div>
-                <div className="text-sm text-gray-600 mt-2">Average Risk</div>
+                <div className="text-4xl font-bold text-error-600">{stats.avgRisk.toFixed(1)}</div>
+                <div className="text-sm text-text-muted mt-2">Average Risk</div>
               </div>
             </CardContent>
           </Card>
@@ -164,8 +164,8 @@ export default async function ReasoningDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <div className="text-4xl font-bold text-orange-600">{stats.avgUncertainty.toFixed(1)}</div>
-                <div className="text-sm text-gray-600 mt-2">Average Uncertainty</div>
+                <div className="text-4xl font-bold text-accent-600">{stats.avgUncertainty.toFixed(1)}</div>
+                <div className="text-sm text-text-muted mt-2">Average Uncertainty</div>
               </div>
             </CardContent>
           </Card>
@@ -173,7 +173,7 @@ export default async function ReasoningDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="console" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-white border border-gray-200 rounded-lg p-1">
+          <TabsList className="grid w-full grid-cols-4 bg-bg-card border border-border-subtle rounded-lg p-1">
             <TabsTrigger value="console">🚀 Console</TabsTrigger>
             <TabsTrigger value="timeline">📊 Timeline</TabsTrigger>
             <TabsTrigger value="graph">🔗 Graph</TabsTrigger>
@@ -195,7 +195,7 @@ export default async function ReasoningDashboard() {
               />
             ) : (
               <Card>
-                <CardContent className="py-12 text-center text-gray-600">
+                <CardContent className="py-12 text-center text-text-muted">
                   <p>No reasoning runs yet. Start a run from the Console tab.</p>
                 </CardContent>
               </Card>
@@ -208,7 +208,7 @@ export default async function ReasoningDashboard() {
               <ReasoningGraphOverlay passes={[]} />
             ) : (
               <Card>
-                <CardContent className="py-12 text-center text-gray-600">
+                <CardContent className="py-12 text-center text-text-muted">
                   <p>No reasoning runs yet. Start a run from the Console tab.</p>
                 </CardContent>
               </Card>
@@ -223,7 +223,7 @@ export default async function ReasoningDashboard() {
               </CardHeader>
               <CardContent>
                 {latestRuns.length === 0 ? (
-                  <div className="text-center py-8 text-gray-600">
+                  <div className="text-center py-8 text-text-muted">
                     <p>No reasoning runs yet</p>
                   </div>
                 ) : (
@@ -231,32 +231,32 @@ export default async function ReasoningDashboard() {
                     {latestRuns.map((run) => (
                       <div
                         key={run.id}
-                        className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="p-4 border border-border-subtle rounded-lg hover:bg-bg-hover transition-colors"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="font-semibold text-gray-900">{run.objective}</h3>
-                            <p className="text-sm text-gray-600 mt-1">Agent: {run.agent}</p>
+                            <h3 className="font-semibold text-text-primary">{run.objective}</h3>
+                            <p className="text-sm text-text-muted mt-1">Agent: {run.agent}</p>
                             <div className="flex gap-2 mt-2">
                               <span className={`text-xs px-2 py-1 rounded ${
                                 run.status === 'completed'
-                                  ? 'bg-green-100 text-green-800'
+                                  ? 'bg-success-100 text-success-800'
                                   : run.status === 'failed'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-yellow-100 text-yellow-800'
+                                  ? 'bg-error-100 text-error-800'
+                                  : 'bg-warning-100 text-warning-800'
                               }`}>
                                 {run.status}
                               </span>
-                              <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-800">
+                              <span className="text-xs px-2 py-1 rounded bg-info-100 text-info-800">
                                 Risk: {run.risk_score?.toFixed(1) || '-'}
                               </span>
-                              <span className="text-xs px-2 py-1 rounded bg-orange-100 text-orange-800">
+                              <span className="text-xs px-2 py-1 rounded bg-accent-100 text-accent-800">
                                 Uncertainty: {run.uncertainty_score?.toFixed(1) || '-'}
                               </span>
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-text-tertiary">
                               {new Date(run.created_at).toLocaleString()}
                             </div>
                           </div>
@@ -286,11 +286,11 @@ export default async function ReasoningDashboard() {
                     <div key={item.status}>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium capitalize">{item.status}</span>
-                        <span className="text-sm font-semibold text-gray-600">{item.count}</span>
+                        <span className="text-sm font-semibold text-text-muted">{item.count}</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-8">
+                      <div className="w-full bg-bg-hover rounded-full h-8">
                         <div
-                          className="bg-blue-600 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all"
+                          className="bg-info-600 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all"
                           style={{ width: `${percentage}%` }}
                         >
                           {percentage > 10 && `${percentage.toFixed(0)}%`}

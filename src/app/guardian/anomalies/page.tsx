@@ -93,12 +93,12 @@ export default function GuardianAnomaliesPage() {
 
   const anomalyColor =
     !latest || latest.anomaly_score < 0.25
-      ? 'text-cyan-400'
+      ? 'text-info-400'
       : latest.anomaly_score < 0.5
-      ? 'text-amber-400'
+      ? 'text-warning-400'
       : latest.anomaly_score < 0.75
-      ? 'text-orange-400'
-      : 'text-red-400';
+      ? 'text-accent-400'
+      : 'text-error-400';
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 space-y-6">
@@ -206,12 +206,12 @@ export default function GuardianAnomaliesPage() {
                       : 'Critical';
                   const color =
                     i.anomaly_score < 0.25
-                      ? 'text-cyan-400'
+                      ? 'text-info-400'
                       : i.anomaly_score < 0.5
-                      ? 'text-amber-400'
+                      ? 'text-warning-400'
                       : i.anomaly_score < 0.75
-                      ? 'text-orange-400'
-                      : 'text-red-400';
+                      ? 'text-accent-400'
+                      : 'text-error-400';
 
                   const windowStart = new Date(i.window_start);
                   const windowEnd = new Date(i.window_end);

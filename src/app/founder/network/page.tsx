@@ -49,16 +49,16 @@ type PatternSignature = {
 };
 
 const SEVERITY_COLORS = {
-  critical: "bg-red-100 text-red-800 border-red-300",
-  high: "bg-orange-100 text-orange-800 border-orange-300",
-  medium: "bg-yellow-100 text-yellow-800 border-yellow-300",
-  low: "bg-blue-100 text-blue-800 border-blue-300",
+  critical: "bg-error-100 text-error-800 border-error-300",
+  high: "bg-accent-100 text-accent-800 border-orange-300",
+  medium: "bg-warning-100 text-warning-800 border-warning-300",
+  low: "bg-info-100 text-info-800 border-info-300",
 };
 
 const STATUS_ICONS = {
-  open: <AlertCircle className="w-4 h-4 text-red-600" />,
-  acknowledged: <CheckCircle className="w-4 h-4 text-yellow-600" />,
-  dismissed: <XCircle className="w-4 h-4 text-gray-400" />,
+  open: <AlertCircle className="w-4 h-4 text-error-600" />,
+  acknowledged: <CheckCircle className="w-4 h-4 text-warning-600" />,
+  dismissed: <XCircle className="w-4 h-4 text-text-muted" />,
 };
 
 export default function NetworkPage() {
@@ -132,7 +132,7 @@ export default function NetworkPage() {
   if (workspaceLoading) {
     return (
       <div className="p-6">
-        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+        <div className="text-center py-12 text-text-tertiary">Loading workspace...</div>
       </div>
     );
   }
@@ -140,9 +140,9 @@ export default function NetworkPage() {
   if (workspaceError || !workspaceId) {
     return (
       <div className="p-6">
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900">{workspaceError || "No workspace selected"}</p>
+            <p className="text-sm text-error-900">{workspaceError || "No workspace selected"}</p>
           </CardContent>
         </Card>
       </div>
@@ -190,7 +190,7 @@ export default function NetworkPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Network Anomalies & Patterns</h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-text-muted mt-1">
             Privacy-preserving network intelligence and early warning signals
           </p>
         </div>
@@ -200,9 +200,9 @@ export default function NetworkPage() {
       </div>
 
       {/* Privacy Banner */}
-      <Card className="border-blue-200 bg-blue-50">
+      <Card className="border-info-200 bg-info-50">
         <CardContent className="pt-6">
-          <p className="text-sm text-blue-900 flex items-start gap-2">
+          <p className="text-sm text-info-900 flex items-start gap-2">
             <TrendingUp className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <span>
               Data is aggregated and privacy-preserving. Network comparisons use
@@ -213,9 +213,9 @@ export default function NetworkPage() {
       </Card>
 
       {error && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-error-200 bg-error-50">
           <CardContent className="pt-6">
-            <p className="text-sm text-red-900">{error}</p>
+            <p className="text-sm text-error-900">{error}</p>
           </CardContent>
         </Card>
       )}
@@ -227,7 +227,7 @@ export default function NetworkPage() {
           className={`px-4 py-2 font-medium border-b-2 transition-colors ${
             selectedTab === "warnings"
               ? "border-accent-500 text-accent-600"
-              : "border-transparent text-gray-600 hover:text-gray-900"
+              : "border-transparent text-text-muted hover:text-text-primary"
           }`}
         >
           Early Warnings ({filteredWarnings.length})
@@ -237,7 +237,7 @@ export default function NetworkPage() {
           className={`px-4 py-2 font-medium border-b-2 transition-colors ${
             selectedTab === "patterns"
               ? "border-accent-500 text-accent-600"
-              : "border-transparent text-gray-600 hover:text-gray-900"
+              : "border-transparent text-text-muted hover:text-text-primary"
           }`}
         >
           Pattern Catalog ({patterns.length})
@@ -277,10 +277,10 @@ export default function NetworkPage() {
 
           {/* Warnings List */}
           {loading ? (
-            <div className="text-center py-8 text-gray-500">Loading...</div>
+            <div className="text-center py-8 text-text-tertiary">Loading...</div>
           ) : filteredWarnings.length === 0 ? (
             <Card>
-              <CardContent className="pt-6 text-center text-gray-500">
+              <CardContent className="pt-6 text-center text-text-tertiary">
                 No early warnings detected
               </CardContent>
             </Card>
@@ -314,26 +314,26 @@ export default function NetworkPage() {
                           </Badge>
                         </div>
 
-                        <p className="text-sm text-gray-700 mb-2">
+                        <p className="text-sm text-text-secondary mb-2">
                           {warning.pattern.description}
                         </p>
 
                         <div className="grid grid-cols-2 gap-4 text-xs mb-3">
                           <div>
-                            <span className="text-gray-600">Metrics: </span>
-                            <code className="bg-gray-100 px-2 py-1 rounded">
+                            <span className="text-text-muted">Metrics: </span>
+                            <code className="bg-bg-hover px-2 py-1 rounded">
                               {warning.pattern.metric_keys.join(", ")}
                             </code>
                           </div>
                           <div>
-                            <span className="text-gray-600">Cohort: </span>
+                            <span className="text-text-muted">Cohort: </span>
                             <span className="font-mono">
                               {warning.evidence.cohortKey}
                             </span>
                           </div>
                         </div>
 
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-text-tertiary">
                           Detected:{" "}
                           {new Date(warning.created_at).toLocaleDateString()}{" "}
                           • Status: {warning.status}
@@ -377,10 +377,10 @@ export default function NetworkPage() {
       {selectedTab === "patterns" && (
         <div className="space-y-3">
           {loading ? (
-            <div className="text-center py-8 text-gray-500">Loading...</div>
+            <div className="text-center py-8 text-text-tertiary">Loading...</div>
           ) : patterns.length === 0 ? (
             <Card>
-              <CardContent className="pt-6 text-center text-gray-500">
+              <CardContent className="pt-6 text-center text-text-tertiary">
                 No pattern signatures available
               </CardContent>
             </Card>
@@ -393,22 +393,22 @@ export default function NetworkPage() {
                       <h3 className="font-semibold mb-1">
                         {pattern.pattern_key}
                       </h3>
-                      <p className="text-sm text-gray-700 mb-2">
+                      <p className="text-sm text-text-secondary mb-2">
                         {pattern.description}
                       </p>
                       <div className="grid grid-cols-3 gap-4 text-xs">
                         <div>
-                          <span className="text-gray-600">Family: </span>
+                          <span className="text-text-muted">Family: </span>
                           <span className="font-mono">
                             {pattern.metric_family}
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-600">Cohort: </span>
+                          <span className="text-text-muted">Cohort: </span>
                           <span className="font-mono">{pattern.cohort_key}</span>
                         </div>
                         <div>
-                          <span className="text-gray-600">Severity: </span>
+                          <span className="text-text-muted">Severity: </span>
                           <Badge className={SEVERITY_COLORS[pattern.severity as keyof typeof SEVERITY_COLORS]}>
                             {pattern.severity}
                           </Badge>

@@ -155,32 +155,32 @@ export default function SelfHealingPage() {
 
   const getSeverityColor = (severity: string) => {
     const colors: Record<string, string> = {
-      critical: 'bg-red-500/10 text-red-400 border-red-500/20',
-      error: 'bg-red-500/10 text-red-400 border-red-500/20',
-      warning: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-      info: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+      critical: 'bg-error-500/10 text-error-400 border-error-500/20',
+      error: 'bg-error-500/10 text-error-400 border-error-500/20',
+      warning: 'bg-warning-500/10 text-warning-400 border-warning-500/20',
+      info: 'bg-info-500/10 text-info-400 border-info-500/20',
     };
     return colors[severity] || colors.info;
   };
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      success: 'bg-green-500/10 text-green-400 border-green-500/20',
-      running: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      pending: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-      failed: 'bg-red-500/10 text-red-400 border-red-500/20',
-      rolled_back: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+      success: 'bg-success-500/10 text-success-400 border-success-500/20',
+      running: 'bg-info-500/10 text-info-400 border-info-500/20',
+      pending: 'bg-bg-hover0/10 text-text-muted border-border/20',
+      failed: 'bg-error-500/10 text-error-400 border-error-500/20',
+      rolled_back: 'bg-accent-500/10 text-accent-400 border-accent-500/20',
     };
     return colors[status] || colors.pending;
   };
 
   const getStatusIcon = (status: string) => {
     const icons: Record<string, React.ReactNode> = {
-      success: <CheckCircle className="w-5 h-5 text-green-400" />,
-      running: <Zap className="w-5 h-5 text-blue-400" />,
-      pending: <AlertTriangle className="w-5 h-5 text-gray-400" />,
-      failed: <XCircle className="w-5 h-5 text-red-400" />,
-      rolled_back: <RotateCcw className="w-5 h-5 text-orange-400" />,
+      success: <CheckCircle className="w-5 h-5 text-success-400" />,
+      running: <Zap className="w-5 h-5 text-info-400" />,
+      pending: <AlertTriangle className="w-5 h-5 text-text-muted" />,
+      failed: <XCircle className="w-5 h-5 text-error-400" />,
+      rolled_back: <RotateCcw className="w-5 h-5 text-accent-400" />,
     };
     return icons[status] || icons.pending;
   };
@@ -222,7 +222,7 @@ export default function SelfHealingPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Healing Runs</span>
-              <Zap className="w-5 h-5 text-blue-400" />
+              <Zap className="w-5 h-5 text-info-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">{totalRuns}</div>
             <div className="text-xs text-text-tertiary mt-1">
@@ -233,7 +233,7 @@ export default function SelfHealingPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Guardrails</span>
-              <Shield className="w-5 h-5 text-green-400" />
+              <Shield className="w-5 h-5 text-success-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">{activePolicies}</div>
             <div className="text-xs text-text-tertiary mt-1">active policies</div>
@@ -242,9 +242,9 @@ export default function SelfHealingPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Violations</span>
-              <XCircle className="w-5 h-5 text-red-400" />
+              <XCircle className="w-5 h-5 text-error-400" />
             </div>
-            <div className="text-3xl font-bold text-red-400">{totalViolations}</div>
+            <div className="text-3xl font-bold text-error-400">{totalViolations}</div>
             <div className="text-xs text-text-tertiary mt-1">total blocked</div>
           </div>
         </div>
@@ -330,7 +330,7 @@ export default function SelfHealingPage() {
                           <span>Idempotent: {signature.is_idempotent ? 'Yes' : 'No'}</span>
                           <span>Reversible: {signature.is_reversible ? 'Yes' : 'No'}</span>
                           {signature.auto_approve && (
-                            <span className="text-green-400">Auto-approved</span>
+                            <span className="text-success-400">Auto-approved</span>
                           )}
                         </div>
                       </div>
@@ -440,7 +440,7 @@ export default function SelfHealingPage() {
                     key={policy.id}
                     className={`p-4 bg-bg-card rounded-lg border ${
                       policy.is_active
-                        ? 'border-green-500/20'
+                        ? 'border-success-500/20'
                         : 'border-border-primary opacity-60'
                     }`}
                   >
@@ -457,10 +457,10 @@ export default function SelfHealingPage() {
                           <span
                             className={`px-2 py-0.5 text-xs rounded ${
                               policy.enforcement === 'block'
-                                ? 'bg-red-500/10 text-red-400'
+                                ? 'bg-error-500/10 text-error-400'
                                 : policy.enforcement === 'throttle'
-                                  ? 'bg-yellow-500/10 text-yellow-400'
-                                  : 'bg-blue-500/10 text-blue-400'
+                                  ? 'bg-warning-500/10 text-warning-400'
+                                  : 'bg-info-500/10 text-info-400'
                             }`}
                           >
                             {policy.enforcement}

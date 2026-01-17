@@ -92,10 +92,10 @@ setSystem(await sysRes.json());
   };
 
   const riskColors = {
-    low: "text-green-600 bg-green-100",
-    medium: "text-amber-600 bg-amber-100",
-    high: "text-orange-600 bg-orange-100",
-    critical: "text-red-600 bg-red-100",
+    low: "text-success-600 bg-success-100",
+    medium: "text-warning-600 bg-warning-100",
+    high: "text-accent-600 bg-accent-100",
+    critical: "text-error-600 bg-error-100",
   };
 
   return (
@@ -118,7 +118,7 @@ setSystem(await sysRes.json());
             {/* Financial Snapshot */}
             <Section className="mt-6">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-medium text-gray-500">Financial Snapshot</h2>
+                <h2 className="text-sm font-medium text-text-tertiary">Financial Snapshot</h2>
                 <Link
                   href="/founder/dashboard/financials"
                   className="text-xs text-accent-600 hover:text-accent-700 flex items-center gap-1"
@@ -157,7 +157,7 @@ setSystem(await sysRes.json());
             {/* Time & Burnout */}
             <Section className="mt-6">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-medium text-gray-500">Time Tracking</h2>
+                <h2 className="text-sm font-medium text-text-tertiary">Time Tracking</h2>
                 <Link
                   href="/founder/dashboard/timecard"
                   className="text-xs text-accent-600 hover:text-accent-700 flex items-center gap-1"
@@ -180,7 +180,7 @@ setSystem(await sysRes.json());
                 />
                 <Card>
                   <CardContent className="pt-4">
-                    <div className="text-sm text-gray-500">Burnout Risk</div>
+                    <div className="text-sm text-text-tertiary">Burnout Risk</div>
                     <div className="mt-1">
                       <span className={`px-2 py-1 text-sm font-medium rounded ${riskColors[time?.burnoutRisk || "low"]}`}>
                         {time?.burnoutRisk?.toUpperCase() || "LOW"}
@@ -190,7 +190,7 @@ setSystem(await sysRes.json());
                 </Card>
                 <Card>
                   <CardContent className="pt-4">
-                    <div className="text-sm text-gray-500">Top Category</div>
+                    <div className="text-sm text-text-tertiary">Top Category</div>
                     <div className="text-xl font-semibold text-text-primary capitalize">
                       {time?.topCategory || "N/A"}
                     </div>
@@ -201,7 +201,7 @@ setSystem(await sysRes.json());
 
             {/* System Health */}
             <Section className="mt-6">
-              <h2 className="text-sm font-medium text-gray-500 mb-3">System Health</h2>
+              <h2 className="text-sm font-medium text-text-tertiary mb-3">System Health</h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <Card>
                   <CardContent className="pt-4">
@@ -210,7 +210,7 @@ setSystem(await sysRes.json());
                         <Activity className="w-5 h-5" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Overall Score</p>
+                        <p className="text-sm text-text-tertiary">Overall Score</p>
                         <p className="text-xl font-semibold">{system?.overallScore || 99}%</p>
                       </div>
                     </div>
@@ -240,7 +240,7 @@ setSystem(await sysRes.json());
             {/* Client Journeys */}
             <Section className="mt-6">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-medium text-gray-500">Client Journeys</h2>
+                <h2 className="text-sm font-medium text-text-tertiary">Client Journeys</h2>
                 <Link
                   href="/founder/dashboard/first-client-journey"
                   className="text-xs text-accent-600 hover:text-accent-700 flex items-center gap-1"
@@ -275,7 +275,7 @@ setSystem(await sysRes.json());
 
             {/* Quick Links */}
             <Section className="mt-6">
-              <h2 className="text-sm font-medium text-gray-500 mb-3">Quick Actions</h2>
+              <h2 className="text-sm font-medium text-text-tertiary mb-3">Quick Actions</h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <QuickLink href="/founder/dashboard/financials" label="Financial Details" />
                 <QuickLink href="/founder/dashboard/timecard" label="Time Tracker" />
@@ -309,10 +309,10 @@ interface MetricCardProps {
 
 function MetricCard({ icon: Icon, label, value, color }: MetricCardProps) {
   const colors = {
-    green: "text-green-600 bg-green-100 dark:bg-green-900/30",
-    red: "text-red-600 bg-red-100 dark:bg-red-900/30",
-    blue: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
-    amber: "text-amber-600 bg-amber-100 dark:bg-amber-900/30",
+    green: "text-success-600 bg-success-100 dark:bg-success-900/30",
+    red: "text-error-600 bg-error-100 dark:bg-error-900/30",
+    blue: "text-info-600 bg-info-100 dark:bg-info-900/30",
+    amber: "text-warning-600 bg-warning-100 dark:bg-warning-900/30",
   };
 
   return (
@@ -323,7 +323,7 @@ function MetricCard({ icon: Icon, label, value, color }: MetricCardProps) {
             <Icon className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm text-gray-500">{label}</p>
+            <p className="text-sm text-text-tertiary">{label}</p>
             <p className="text-xl font-semibold text-text-primary">{value}</p>
           </div>
         </div>
@@ -344,7 +344,7 @@ function QuickLink({ href, label }: QuickLinkProps) {
       className="flex items-center justify-between p-3 bg-bg-card border border-border-subtle rounded-lg hover:border-accent-500 transition-colors"
     >
       <span className="text-sm font-medium text-text-secondary">{label}</span>
-      <ArrowRight className="w-4 h-4 text-gray-400" />
+      <ArrowRight className="w-4 h-4 text-text-muted" />
     </Link>
   );
 }

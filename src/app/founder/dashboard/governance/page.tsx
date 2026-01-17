@@ -92,8 +92,8 @@ export default function FounderGovernancePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-            <Shield className="h-6 w-6 text-emerald-600" />
+          <div className="p-2 bg-success-100 dark:bg-success-900/30 rounded-lg">
+            <Shield className="h-6 w-6 text-success-600" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">Governance Engine</h1>
@@ -241,7 +241,7 @@ export default function FounderGovernancePage() {
           ) : (
             <Card>
               <CardContent className="p-8 text-center">
-                <ShieldCheck className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                <ShieldCheck className="h-8 w-8 text-success-500 mx-auto mb-2" />
                 <p className="text-muted-foreground">No active risks detected</p>
               </CardContent>
             </Card>
@@ -259,9 +259,9 @@ export default function FounderGovernancePage() {
                   <div key={i} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                     <div className="flex items-center gap-3">
                       {audit.status === 'pass' ? (
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        <CheckCircle2 className="h-4 w-4 text-success-500" />
                       ) : (
-                        <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                        <AlertTriangle className="h-4 w-4 text-warning-500" />
                       )}
                       <div>
                         <div className="text-sm font-medium">{audit.type}</div>
@@ -269,10 +269,10 @@ export default function FounderGovernancePage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className={`text-sm font-bold ${audit.score >= 80 ? 'text-green-500' : audit.score >= 60 ? 'text-yellow-500' : 'text-red-500'}`}>
+                      <div className={`text-sm font-bold ${audit.score >= 80 ? 'text-success-500' : audit.score >= 60 ? 'text-warning-500' : 'text-error-500'}`}>
                         {audit.score}%
                       </div>
-                      <Badge variant={audit.status === 'pass' ? 'default' : 'secondary'} className={audit.status === 'pass' ? 'bg-green-500' : 'bg-yellow-500'}>
+                      <Badge variant={audit.status === 'pass' ? 'default' : 'secondary'} className={audit.status === 'pass' ? 'bg-success-500' : 'bg-warning-500'}>
                         {audit.status}
                       </Badge>
                     </div>

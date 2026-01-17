@@ -168,12 +168,12 @@ async function BusinessDetailContent({ businessKey }: { businessKey: string }) {
                   {/* Score indicators */}
                   <div className="flex gap-2 text-xs">
                     {snapshot.eeat_strength_score !== null && (
-                      <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-600">
+                      <span className="px-2 py-0.5 rounded bg-success-500/10 text-success-600">
                         E-E-A-T: {snapshot.eeat_strength_score}
                       </span>
                     )}
                     {snapshot.navboost_risk_score !== null && (
-                      <span className="px-2 py-0.5 rounded bg-orange-500/10 text-orange-600">
+                      <span className="px-2 py-0.5 rounded bg-accent-500/10 text-accent-600">
                         NavBoost Risk: {snapshot.navboost_risk_score}
                       </span>
                     )}

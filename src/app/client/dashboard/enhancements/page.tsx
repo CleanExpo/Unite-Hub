@@ -97,7 +97,7 @@ export default function EnhancementsPage() {
             AI-powered suggestions based on your audits and activity
           </p>
           {lastScanned && (
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-text-muted mt-1">
               Last scanned: {new Date(lastScanned).toLocaleString()}
             </p>
           )}
@@ -132,7 +132,7 @@ export default function EnhancementsPage() {
                   <AIModelBadge model={suggestion.model_used as AIModel} />
                 </div>
 
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                <p className="text-sm text-text-secondary mb-3">
                   {suggestion.description}
                 </p>
 
@@ -141,7 +141,7 @@ export default function EnhancementsPage() {
                     <span className={`text-xs px-2 py-1 rounded ${impactStyle.className}`}>
                       {impactStyle.label}
                     </span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-text-muted">
                       Source: {suggestion.source}
                     </span>
                   </div>

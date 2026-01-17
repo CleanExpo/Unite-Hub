@@ -64,7 +64,7 @@ return;
   if (!session) {
     return (
       <div className="p-8">
-        <Alert className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30">
+        <Alert className="border-warning-200 bg-warning-50 dark:bg-warning-950/30">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Not Authenticated</AlertTitle>
           <AlertDescription>Please log in to access the desktop agent dashboard.</AlertDescription>
@@ -88,7 +88,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <Activity className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+              <Activity className="w-8 h-8 mx-auto mb-2 text-info-600" />
               <div className="text-2xl font-bold">{stats.totalCommands}</div>
               <p className="text-sm text-text-secondary">Available Commands</p>
             </div>
@@ -98,7 +98,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <Shield className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
+              <Shield className="w-8 h-8 mx-auto mb-2 text-warning-600" />
               <div className="text-2xl font-bold">{stats.pendingApprovals}</div>
               <p className="text-sm text-text-secondary">Pending Approvals</p>
             </div>
@@ -108,7 +108,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <Zap className="w-8 h-8 mx-auto mb-2 text-green-600" />
+              <Zap className="w-8 h-8 mx-auto mb-2 text-success-600" />
               <div className="text-2xl font-bold">Active</div>
               <p className="text-sm text-text-secondary">Status</p>
             </div>
@@ -118,7 +118,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-red-600" />
+              <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-error-600" />
               <div className="text-2xl font-bold">{stats.errorCount}</div>
               <p className="text-sm text-text-secondary">Recent Errors</p>
             </div>
@@ -127,7 +127,7 @@ return;
       </div>
 
       {/* Security Notice */}
-      <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/30">
+      <Alert className="border-info-200 bg-info-50 dark:bg-info-950/30">
         <Shield className="h-4 w-4" />
         <AlertTitle>Secure Sandbox</AlertTitle>
         <AlertDescription>
@@ -146,7 +146,7 @@ return;
             <TabsTrigger value="approvals">
               Approvals
               {stats.pendingApprovals > 0 && (
-                <Badge className="ml-2 bg-yellow-600">{stats.pendingApprovals}</Badge>
+                <Badge className="ml-2 bg-warning-600">{stats.pendingApprovals}</Badge>
               )}
             </TabsTrigger>
           </TabsList>

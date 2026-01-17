@@ -31,12 +31,12 @@ export default function GovernanceScorecardPage() {
 
   const getMetricColor = (metric: string, value: number) => {
     if (metric.includes("score")) {
-      if (value >= 80) return "text-green-500";
-      if (value >= 60) return "text-yellow-500";
-      return "text-red-500";
+      if (value >= 80) return "text-success-500";
+      if (value >= 60) return "text-warning-500";
+      return "text-error-500";
     }
     if (metric.includes("critical") || metric.includes("incident")) {
-      return value > 0 ? "text-red-500" : "text-green-500";
+      return value > 0 ? "text-error-500" : "text-success-500";
     }
     return "text-text-primary";
   };

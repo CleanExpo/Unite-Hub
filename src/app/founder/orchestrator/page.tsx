@@ -158,7 +158,7 @@ export default function OrchestratorPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">Orchestrator Intelligence Center</h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-text-muted mt-2">
           Multi-agent workflow coordination with real-time monitoring and risk management
         </p>
       </div>
@@ -173,7 +173,7 @@ export default function OrchestratorPage() {
             <div className="text-2xl font-bold">
               {currentTask ? 1 : 0}
             </div>
-            <p className="text-xs text-gray-500 mt-1">Currently running</p>
+            <p className="text-xs text-text-tertiary mt-1">Currently running</p>
           </CardContent>
         </Card>
 
@@ -183,7 +183,7 @@ export default function OrchestratorPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{recentTasks.length}</div>
-            <p className="text-xs text-gray-500 mt-1">Completed workflows</p>
+            <p className="text-xs text-text-tertiary mt-1">Completed workflows</p>
           </CardContent>
         </Card>
 
@@ -212,7 +212,7 @@ export default function OrchestratorPage() {
                   : 'Normal'}
               </Badge>
             </div>
-            <p className="text-xs text-gray-500 mt-1">Task assessment</p>
+            <p className="text-xs text-text-tertiary mt-1">Task assessment</p>
           </CardContent>
         </Card>
 
@@ -224,7 +224,7 @@ export default function OrchestratorPage() {
             <div className="text-2xl font-bold">
               {currentTask?.uncertaintyScore ?? 0}%
             </div>
-            <p className="text-xs text-gray-500 mt-1">Confidence level</p>
+            <p className="text-xs text-text-tertiary mt-1">Confidence level</p>
           </CardContent>
         </Card>
       </div>
@@ -278,7 +278,7 @@ export default function OrchestratorPage() {
               </div>
 
               {planError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+                <div className="p-3 bg-error-50 border border-error-200 rounded text-sm text-error-700">
                   {planError}
                 </div>
               )}
@@ -344,7 +344,7 @@ export default function OrchestratorPage() {
           {currentTask ? (
             <div className="space-y-4">
               {executeError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+                <div className="p-3 bg-error-50 border border-error-200 rounded text-sm text-error-700">
                   {executeError}
                 </div>
               )}
@@ -353,7 +353,7 @@ export default function OrchestratorPage() {
           ) : (
             <Card>
               <CardContent className="pt-6">
-                <p className="text-center text-gray-500">
+                <p className="text-center text-text-tertiary">
                   Plan a workflow first using the Plan tab
                 </p>
               </CardContent>
@@ -375,7 +375,7 @@ export default function OrchestratorPage() {
           ) : (
             <Card>
               <CardContent className="pt-6">
-                <p className="text-center text-gray-500">
+                <p className="text-center text-text-tertiary">
                   Plan a workflow first using the Plan tab
                 </p>
               </CardContent>
@@ -416,7 +416,7 @@ export default function OrchestratorPage() {
           ) : (
             <Card>
               <CardContent className="pt-6">
-                <p className="text-center text-gray-500">
+                <p className="text-center text-text-tertiary">
                   Execute a workflow to view signals
                 </p>
               </CardContent>
@@ -432,13 +432,13 @@ export default function OrchestratorPage() {
             </CardHeader>
             <CardContent>
               {recentTasks.length === 0 ? (
-                <p className="text-center text-gray-500">No recent workflows</p>
+                <p className="text-center text-text-tertiary">No recent workflows</p>
               ) : (
                 <div className="space-y-3">
                   {recentTasks.map((task) => (
                     <div
                       key={task.taskId}
-                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="p-4 border rounded-lg hover:bg-bg-hover cursor-pointer transition-colors"
                       onClick={() => {
                         setCurrentTask(task);
                         setActiveTab('execution');
@@ -447,7 +447,7 @@ export default function OrchestratorPage() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <p className="font-medium truncate">{task.objective}</p>
-                          <p className="text-sm text-gray-500 mt-1">
+                          <p className="text-sm text-text-tertiary mt-1">
                             {new Date(task.createdAt).toLocaleString()}
                           </p>
                         </div>

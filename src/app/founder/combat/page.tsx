@@ -197,9 +197,9 @@ return;
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Completed</span>
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-success-500" />
             </div>
-            <p className="text-2xl font-bold text-green-500">{stats?.completed || 0}</p>
+            <p className="text-2xl font-bold text-success-500">{stats?.completed || 0}</p>
           </CardContent>
         </Card>
 
@@ -207,9 +207,9 @@ return;
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Running</span>
-              <Play className="h-4 w-4 text-blue-500" />
+              <Play className="h-4 w-4 text-info-500" />
             </div>
-            <p className="text-2xl font-bold text-blue-500">{stats?.running || 0}</p>
+            <p className="text-2xl font-bold text-info-500">{stats?.running || 0}</p>
           </CardContent>
         </Card>
 
@@ -217,9 +217,9 @@ return;
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Pending</span>
-              <Clock className="h-4 w-4 text-yellow-500" />
+              <Clock className="h-4 w-4 text-warning-500" />
             </div>
-            <p className="text-2xl font-bold text-yellow-500">{stats?.pending || 0}</p>
+            <p className="text-2xl font-bold text-warning-500">{stats?.pending || 0}</p>
           </CardContent>
         </Card>
 
@@ -227,9 +227,9 @@ return;
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Inconclusive</span>
-              <AlertTriangle className="h-4 w-4 text-gray-500" />
+              <AlertTriangle className="h-4 w-4 text-text-tertiary" />
             </div>
-            <p className="text-2xl font-bold text-gray-500">{stats?.inconclusive || 0}</p>
+            <p className="text-2xl font-bold text-text-tertiary">{stats?.inconclusive || 0}</p>
           </CardContent>
         </Card>
       </div>
@@ -243,7 +243,7 @@ return;
           <CardContent>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2">
-                <Badge className="bg-green-500">{integrationStats.winnersPromoted}</Badge>
+                <Badge className="bg-success-500">{integrationStats.winnersPromoted}</Badge>
                 <span className="text-sm text-muted-foreground">Winners Promoted</span>
               </div>
               <div className="flex items-center gap-2">
@@ -304,9 +304,9 @@ return;
       </Tabs>
 
       {/* Info Banner */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <AlertTriangle className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <AlertTriangle className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-muted-foreground">
             <p>
               <strong>Phase 88:</strong> The Creative Combat Engine runs structured A/B

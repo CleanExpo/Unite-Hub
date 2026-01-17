@@ -58,11 +58,11 @@ export default function KnowledgeHubPage() {
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
       case 'high':
-        return <AlertCircle className="w-4 h-4 text-red-600" />;
+        return <AlertCircle className="w-4 h-4 text-error-600" />;
       case 'moderate':
-        return <Info className="w-4 h-4 text-yellow-600" />;
+        return <Info className="w-4 h-4 text-warning-600" />;
       case 'info':
-        return <CheckCircle className="w-4 h-4 text-blue-600" />;
+        return <CheckCircle className="w-4 h-4 text-info-600" />;
       default:
         return null;
     }
@@ -71,27 +71,27 @@ export default function KnowledgeHubPage() {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'high':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-100 text-error-800';
       case 'moderate':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'info':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-info-100 text-info-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
   const getDomainColor = (domain: string) => {
     const colors: Record<string, string> = {
       readiness: 'bg-purple-100 text-purple-800',
-      adoption: 'bg-green-100 text-green-800',
+      adoption: 'bg-success-100 text-success-800',
       editions: 'bg-indigo-100 text-indigo-800',
-      uplift: 'bg-orange-100 text-orange-800',
+      uplift: 'bg-accent-100 text-accent-800',
       executive: 'bg-pink-100 text-pink-800',
       goals_okrs: 'bg-accent-100 text-accent-800',
-      network_meta: 'bg-cyan-100 text-cyan-800',
+      network_meta: 'bg-info-100 text-info-800',
     };
-    return colors[domain] || 'bg-gray-100 text-gray-800';
+    return colors[domain] || 'bg-bg-hover text-text-secondary';
   };
 
   if (loading) {

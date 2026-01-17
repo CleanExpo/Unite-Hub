@@ -76,7 +76,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
           ))}
         </div>
       )}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">Knowledge Constraints</div><p>Artifacts must reference source systems. No claims beyond original data. Examples clearly marked vs real cases.</p></div></div></CardContent></Card>
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" /><div className="text-sm text-warning-800 dark:text-warning-200"><div className="font-medium mb-1">Knowledge Constraints</div><p>Artifacts must reference source systems. No claims beyond original data. Examples clearly marked vs real cases.</p></div></div></CardContent></Card>
     </div>
   );
 }

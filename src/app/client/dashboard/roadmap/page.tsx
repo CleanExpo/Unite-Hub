@@ -29,10 +29,10 @@ interface Project {
 }
 
 const STATUS_CONFIG: Record<TaskStatus, { label: string; color: string; bg: string }> = {
-  planned: { label: "Planned", color: "text-gray-600", bg: "bg-gray-200" },
-  in_progress: { label: "In Progress", color: "text-blue-600", bg: "bg-blue-500" },
-  waiting_approval: { label: "Waiting on You", color: "text-yellow-600", bg: "bg-yellow-500" },
-  complete: { label: "Complete", color: "text-green-600", bg: "bg-green-500" },
+  planned: { label: "Planned", color: "text-text-muted", bg: "bg-bg-elevated" },
+  in_progress: { label: "In Progress", color: "text-info-600", bg: "bg-info-500" },
+  waiting_approval: { label: "Waiting on You", color: "text-warning-600", bg: "bg-warning-500" },
+  complete: { label: "Complete", color: "text-success-600", bg: "bg-success-500" },
 };
 
 export default function RoadmapPage() {
@@ -98,7 +98,7 @@ export default function RoadmapPage() {
 
         {/* Filter */}
         <div className="flex items-center gap-2 mb-6">
-          <Filter className="w-4 h-4 text-gray-400" />
+          <Filter className="w-4 h-4 text-text-muted" />
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as TaskStatus | "all")}
@@ -143,7 +143,7 @@ export default function RoadmapPage() {
                         <p className="text-sm text-text-primary">
                           {task.name}
                         </p>
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <div className="flex items-center gap-2 text-xs text-text-tertiary">
                           <span className={config.color}>{config.label}</span>
                           {task.start_date && task.end_date && (
                             <>

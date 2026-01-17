@@ -200,7 +200,7 @@ export default function FounderIntelPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-yellow-500" />
+              <Lightbulb className="h-4 w-4 text-warning-500" />
               Opportunities
             </CardTitle>
           </CardHeader>
@@ -247,9 +247,9 @@ export default function FounderIntelPage() {
       </Card>
 
       {/* Truth notice */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <Info className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <Info className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-muted-foreground">
             All intelligence is derived from real data sources including archive events,
             performance metrics, and recorded activities. No metrics are fabricated.
@@ -265,12 +265,12 @@ export default function FounderIntelPage() {
  */
 function generateDemoSignals(): AggregatedSignals {
   return {
-    agency_health: { score: 72, trend: 'up', label: 'Agency Health', color: 'text-green-500' },
-    client_health: { score: 78, trend: 'stable', label: 'Client Health', color: 'text-green-500' },
-    creative_health: { score: 65, trend: 'down', label: 'Creative Health', color: 'text-yellow-500' },
-    scaling_risk: { score: 45, trend: 'stable', label: 'Scaling Risk', color: 'text-orange-500' },
-    orm_reality: { score: 70, trend: 'up', label: 'ORM Reality', color: 'text-green-500' },
-    archive_completeness: { score: 85, trend: 'up', label: 'Archive', color: 'text-green-500' },
+    agency_health: { score: 72, trend: 'up', label: 'Agency Health', color: 'text-success-500' },
+    client_health: { score: 78, trend: 'stable', label: 'Client Health', color: 'text-success-500' },
+    creative_health: { score: 65, trend: 'down', label: 'Creative Health', color: 'text-warning-500' },
+    scaling_risk: { score: 45, trend: 'stable', label: 'Scaling Risk', color: 'text-accent-500' },
+    orm_reality: { score: 70, trend: 'up', label: 'ORM Reality', color: 'text-success-500' },
+    archive_completeness: { score: 85, trend: 'up', label: 'Archive', color: 'text-success-500' },
     signals: [],
     alerts: [],
     opportunities: [

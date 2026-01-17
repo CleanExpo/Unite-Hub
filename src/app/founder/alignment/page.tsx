@@ -114,7 +114,7 @@ return;
                   </div>
                   <Progress
                     value={(value as number) * 100}
-                    className={`h-2 ${(value as number) < 0.6 ? '[&>div]:bg-amber-500' : ''}`}
+                    className={`h-2 ${(value as number) < 0.6 ? '[&>div]:bg-warning-500' : ''}`}
                   />
                 </div>
               ))}
@@ -126,7 +126,7 @@ return;
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <XCircle className="h-4 w-4 text-red-600" />
+                  <XCircle className="h-4 w-4 text-error-600" />
                   Misalignment Flags
                 </CardTitle>
               </CardHeader>
@@ -135,8 +135,8 @@ return;
                   {snapshot.misalignmentFlags.map((flag, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <AlertTriangle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${
-                        flag.severity === 'high' ? 'text-red-600' :
-                        flag.severity === 'medium' ? 'text-amber-600' : 'text-gray-600'
+                        flag.severity === 'high' ? 'text-error-600' :
+                        flag.severity === 'medium' ? 'text-warning-600' : 'text-text-muted'
                       }`} />
                       <div>
                         <div className="text-sm font-medium capitalize">
@@ -166,7 +166,7 @@ return;
               <ul className="space-y-2">
                 {snapshot.recommendations.map((rec, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-green-600" />
+                    <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-success-600" />
                     {rec}
                   </li>
                 ))}
@@ -187,11 +187,11 @@ return;
       )}
 
       {/* Disclaimer */}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Alignment Measurement Notice</div>
               <p>
                 Alignment scores are derived from system signals and may not capture

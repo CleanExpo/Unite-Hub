@@ -108,11 +108,11 @@ throw new Error("Failed to update status");
 
   const getRiskLevelColor = (level: string) => {
     switch (level) {
-      case "critical": return "bg-red-600";
-      case "alert": return "bg-orange-500";
-      case "watch": return "bg-yellow-500";
-      case "info": return "bg-blue-500";
-      default: return "bg-gray-500";
+      case "critical": return "bg-error-600";
+      case "alert": return "bg-accent-500";
+      case "watch": return "bg-warning-500";
+      case "info": return "bg-info-500";
+      default: return "bg-bg-hover0";
     }
   };
 
@@ -140,7 +140,7 @@ throw new Error("Failed to update status");
     return (
       <div className="min-h-screen bg-bg-primary p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-red-600">{workspaceError || "No workspace selected"}</div>
+          <div className="text-error-600">{workspaceError || "No workspace selected"}</div>
         </div>
       </div>
     );
@@ -171,9 +171,9 @@ throw new Error("Failed to update status");
         </div>
 
         {error && (
-          <Card className="bg-red-500/10 border-red-500">
+          <Card className="bg-error-500/10 border-error-500">
             <CardContent className="p-4">
-              <p className="text-red-500">{error}</p>
+              <p className="text-error-500">{error}</p>
             </CardContent>
           </Card>
         )}
@@ -204,7 +204,7 @@ throw new Error("Failed to update status");
                 <CardTitle className="text-sm text-text-secondary">Critical</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-red-600">{summary.critical_warnings}</div>
+                <div className="text-3xl font-bold text-error-600">{summary.critical_warnings}</div>
               </CardContent>
             </Card>
 
@@ -213,7 +213,7 @@ throw new Error("Failed to update status");
                 <CardTitle className="text-sm text-text-secondary">Alert Level</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-orange-500">{summary.alert_warnings}</div>
+                <div className="text-3xl font-bold text-accent-500">{summary.alert_warnings}</div>
               </CardContent>
             </Card>
           </div>

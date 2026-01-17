@@ -118,11 +118,11 @@ return;
   const getRoleBadge = (role: string) => {
     const colors: Record<string, string> = {
       owner: 'bg-purple-500',
-      manager: 'bg-blue-500',
-      staff: 'bg-green-500',
-      client: 'bg-gray-500',
+      manager: 'bg-info-500',
+      staff: 'bg-success-500',
+      client: 'bg-bg-hover0',
     };
-    return colors[role] || 'bg-gray-500';
+    return colors[role] || 'bg-bg-hover0';
   };
 
   if (isLoading) {

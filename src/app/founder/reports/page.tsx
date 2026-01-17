@@ -236,21 +236,21 @@ export default function ReportsPage() {
   }
 
   const statusColors: Record<ReportStatus, string> = {
-    draft: 'text-gray-400',
-    generating: 'text-blue-400',
-    review: 'text-yellow-400',
-    finalized: 'text-green-400',
+    draft: 'text-text-muted',
+    generating: 'text-info-400',
+    review: 'text-warning-400',
+    finalized: 'text-success-400',
     sent: 'text-purple-400',
-    archived: 'text-gray-500',
+    archived: 'text-text-tertiary',
   };
 
   const audienceColors: Record<AudienceType, string> = {
-    investor: 'text-green-400',
+    investor: 'text-success-400',
     board: 'text-purple-400',
-    partner: 'text-blue-400',
-    stakeholder: 'text-orange-400',
-    internal: 'text-gray-400',
-    public: 'text-cyan-400',
+    partner: 'text-info-400',
+    stakeholder: 'text-accent-400',
+    internal: 'text-text-muted',
+    public: 'text-info-400',
   };
 
   return (
@@ -318,7 +318,7 @@ export default function ReportsPage() {
                     </button>
                     <button
                       onClick={() => deleteTemplate(template.id)}
-                      className="text-text-tertiary hover:text-red-400"
+                      className="text-text-tertiary hover:text-error-400"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -370,7 +370,7 @@ export default function ReportsPage() {
                         e.stopPropagation();
                         deleteReport(report.id);
                       }}
-                      className="text-text-tertiary hover:text-red-400"
+                      className="text-text-tertiary hover:text-error-400"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

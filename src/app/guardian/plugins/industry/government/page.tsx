@@ -96,8 +96,8 @@ export default function GovernmentOversightPage({
   if (error) {
     return (
       <div className="w-full h-screen bg-bg-card p-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <div className="flex items-center gap-3 text-red-800">
+        <div className="bg-error-50 border border-error-200 rounded-lg p-6">
+          <div className="flex items-center gap-3 text-error-800">
             <AlertTriangle size={20} />
             <span className="font-medium">{error}</span>
           </div>
@@ -113,13 +113,13 @@ export default function GovernmentOversightPage({
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'high':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-error-100 text-error-800 border-error-300';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return 'bg-warning-100 text-warning-800 border-warning-300';
       case 'low':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'bg-info-100 text-info-800 border-info-300';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return 'bg-bg-hover text-text-secondary border-border';
     }
   };
 
@@ -147,26 +147,26 @@ export default function GovernmentOversightPage({
   const getRiskLabelColor = (label: string) => {
     switch (label) {
       case 'high':
-        return 'text-red-700 bg-red-50';
+        return 'text-error-700 bg-error-50';
       case 'medium':
-        return 'text-yellow-700 bg-yellow-50';
+        return 'text-warning-700 bg-warning-50';
       case 'low':
-        return 'text-green-700 bg-green-50';
+        return 'text-success-700 bg-success-50';
       default:
-        return 'text-gray-700 bg-gray-50';
+        return 'text-text-secondary bg-bg-hover';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'pass':
-        return <CheckCircle size={16} className="text-green-600" />;
+        return <CheckCircle size={16} className="text-success-600" />;
       case 'warn':
-        return <AlertTriangle size={16} className="text-yellow-600" />;
+        return <AlertTriangle size={16} className="text-warning-600" />;
       case 'fail':
-        return <AlertCircle size={16} className="text-red-600" />;
+        return <AlertCircle size={16} className="text-error-600" />;
       default:
-        return <Clock size={16} className="text-gray-600" />;
+        return <Clock size={16} className="text-text-muted" />;
     }
   };
 
@@ -214,7 +214,7 @@ export default function GovernmentOversightPage({
               <p className="text-text-secondary text-sm font-medium">Audit Enabled</p>
               <FileCheck
                 size={24}
-                className={snapshot.governance.auditEnabled ? 'text-green-500' : 'text-gray-400'}
+                className={snapshot.governance.auditEnabled ? 'text-success-500' : 'text-text-muted'}
               />
             </div>
             <p className="text-2xl font-bold text-text-primary">
@@ -228,7 +228,7 @@ export default function GovernmentOversightPage({
               <p className="text-text-secondary text-sm font-medium">AI Governed</p>
               <Shield
                 size={24}
-                className={snapshot.governance.aiAllowed ? 'text-blue-500' : 'text-gray-400'}
+                className={snapshot.governance.aiAllowed ? 'text-info-500' : 'text-text-muted'}
               />
             </div>
             <p className="text-2xl font-bold text-text-primary">
@@ -270,7 +270,7 @@ export default function GovernmentOversightPage({
                 <p className="text-text-secondary text-sm font-medium">Backups</p>
                 <Clock
                   size={24}
-                  className={snapshot.governance.backupStatus === 'recent' ? 'text-green-500' : 'text-orange-500'}
+                  className={snapshot.governance.backupStatus === 'recent' ? 'text-success-500' : 'text-accent-500'}
                 />
               </div>
               <p className="text-sm font-bold text-text-primary capitalize">
@@ -285,7 +285,7 @@ export default function GovernmentOversightPage({
               <p className="text-text-secondary text-sm font-medium">Audit Export</p>
               <FileCheck
                 size={24}
-                className={snapshot.governance.auditExportAvailable ? 'text-green-500' : 'text-gray-400'}
+                className={snapshot.governance.auditExportAvailable ? 'text-success-500' : 'text-text-muted'}
               />
             </div>
             <p className="text-2xl font-bold text-text-primary">
@@ -384,12 +384,12 @@ export default function GovernmentOversightPage({
         )}
 
         {/* Transparency Score (Informational) */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+        <div className="bg-info-50 border border-info-200 rounded-lg p-6 mb-8">
           <div className="flex items-start gap-4">
-            <Shield size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
+            <Shield size={20} className="text-info-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-blue-900 mb-2">Governance Transparency Score</h3>
-              <p className="text-sm text-blue-700 mb-3">
+              <h3 className="font-semibold text-info-900 mb-2">Governance Transparency Score</h3>
+              <p className="text-sm text-info-700 mb-3">
                 {snapshot.signals.find((s) => s.key === 'transparency_score')?.count}% - Composite score
                 based on availability of validation systems, audit capabilities, governance controls, and
                 backup readiness. <strong>Informational only; not a compliance metric.</strong>

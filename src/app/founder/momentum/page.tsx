@@ -64,15 +64,15 @@ export default function MomentumPage() {
       case "accelerating_up":
         return "bg-purple-500/10 text-purple-400 border-purple-500/20";
       case "trending_up":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "stable":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "trending_down":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "accelerating_down":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "volatile":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       default:
         return "bg-bg-subtle text-text-secondary border-border";
     }
@@ -83,15 +83,15 @@ export default function MomentumPage() {
 return "text-purple-400";
 }
     if (score >= 60) {
-return "text-emerald-400";
+return "text-success-400";
 }
     if (score >= 40) {
 return "text-accent-400";
 }
     if (score >= 20) {
-return "text-amber-400";
+return "text-warning-400";
 }
-    return "text-red-400";
+    return "text-error-400";
   };
 
   if (authLoading || loading) {
@@ -186,7 +186,7 @@ return "text-amber-400";
                   {item.velocity !== null && (
                     <div>
                       <div className="text-text-secondary">Velocity</div>
-                      <div className={`font-medium ${item.velocity > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                      <div className={`font-medium ${item.velocity > 0 ? "text-success-400" : "text-error-400"}`}>
                         {item.velocity > 0 ? "+" : ""}{item.velocity.toFixed(1)}
                       </div>
                     </div>
@@ -194,7 +194,7 @@ return "text-amber-400";
                   {item.acceleration !== null && (
                     <div>
                       <div className="text-text-secondary">Acceleration</div>
-                      <div className={`font-medium ${item.acceleration > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                      <div className={`font-medium ${item.acceleration > 0 ? "text-success-400" : "text-error-400"}`}>
                         {item.acceleration > 0 ? "+" : ""}{item.acceleration.toFixed(1)}
                       </div>
                     </div>
@@ -202,13 +202,13 @@ return "text-amber-400";
                   {item.positive_signals !== null && (
                     <div>
                       <div className="text-text-secondary">Positive Signals</div>
-                      <div className="text-emerald-400 font-medium">{item.positive_signals}</div>
+                      <div className="text-success-400 font-medium">{item.positive_signals}</div>
                     </div>
                   )}
                   {item.negative_signals !== null && (
                     <div>
                       <div className="text-text-secondary">Negative Signals</div>
-                      <div className="text-red-400 font-medium">{item.negative_signals}</div>
+                      <div className="text-error-400 font-medium">{item.negative_signals}</div>
                     </div>
                   )}
                 </div>

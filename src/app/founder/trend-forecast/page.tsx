@@ -88,13 +88,13 @@ export default function TrendForecastPage() {
   const categoryColor = (category: string) => {
     switch (category) {
       case "improving":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "stable":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "declining":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "critical":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -107,7 +107,7 @@ export default function TrendForecastPage() {
       case "7d":
         return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "30d":
-        return "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
+        return "bg-cyan-500/10 text-info-400 border-cyan-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -135,12 +135,12 @@ export default function TrendForecastPage() {
   const scoreGauge = (score: number) => {
     const color =
       score >= 85
-        ? "bg-emerald-500"
+        ? "bg-success-500"
         : score >= 60
-          ? "bg-blue-500"
+          ? "bg-info-500"
           : score >= 40
-            ? "bg-amber-500"
-            : "bg-red-500";
+            ? "bg-warning-500"
+            : "bg-error-500";
     return (
       <div className="relative h-3 bg-bg-muted rounded-full overflow-hidden">
         <div
@@ -233,7 +233,7 @@ export default function TrendForecastPage() {
               onClick={() => setSelectedWindow("30d")}
               className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
                 selectedWindow === "30d"
-                  ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
+                  ? "bg-cyan-500/10 text-info-400 border-cyan-500/20"
                   : "bg-bg-card text-text-secondary border-border hover:border-accent-500/50"
               }`}
             >
@@ -289,7 +289,7 @@ export default function TrendForecastPage() {
                 </div>
                 <div
                   className={`text-lg font-semibold ${
-                    currentForecast.predicted_change >= 0 ? "text-emerald-400" : "text-red-400"
+                    currentForecast.predicted_change >= 0 ? "text-success-400" : "text-error-400"
                   }`}
                 >
                   {changeIcon(currentForecast.predicted_change)}{" "}
@@ -345,10 +345,10 @@ export default function TrendForecastPage() {
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-semibold ${
                         risk.severity === "high"
-                          ? "bg-red-500/10 text-red-400"
+                          ? "bg-error-500/10 text-error-400"
                           : risk.severity === "moderate"
-                            ? "bg-amber-500/10 text-amber-400"
-                            : "bg-blue-500/10 text-blue-400"
+                            ? "bg-warning-500/10 text-warning-400"
+                            : "bg-info-500/10 text-info-400"
                       }`}
                     >
                       {risk.severity}
@@ -418,7 +418,7 @@ export default function TrendForecastPage() {
                   </div>
                   <div
                     className={`text-lg font-semibold ${
-                      summary.forecast_24h.change >= 0 ? "text-emerald-400" : "text-red-400"
+                      summary.forecast_24h.change >= 0 ? "text-success-400" : "text-error-400"
                     }`}
                   >
                     {summary.forecast_24h.change >= 0 ? "+" : ""}
@@ -452,7 +452,7 @@ export default function TrendForecastPage() {
                   </div>
                   <div
                     className={`text-lg font-semibold ${
-                      summary.forecast_7d.change >= 0 ? "text-emerald-400" : "text-red-400"
+                      summary.forecast_7d.change >= 0 ? "text-success-400" : "text-error-400"
                     }`}
                   >
                     {summary.forecast_7d.change >= 0 ? "+" : ""}
@@ -469,7 +469,7 @@ export default function TrendForecastPage() {
             {summary.forecast_30d && (
               <Card className="p-6 space-y-4 bg-bg-card border-cyan-500/20">
                 <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-info-400 border border-cyan-500/20">
                     30 day
                   </span>
                   <span
@@ -486,7 +486,7 @@ export default function TrendForecastPage() {
                   </div>
                   <div
                     className={`text-lg font-semibold ${
-                      summary.forecast_30d.change >= 0 ? "text-emerald-400" : "text-red-400"
+                      summary.forecast_30d.change >= 0 ? "text-success-400" : "text-error-400"
                     }`}
                   >
                     {summary.forecast_30d.change >= 0 ? "+" : ""}
@@ -553,7 +553,7 @@ export default function TrendForecastPage() {
                     </div>
                     <div
                       className={`text-sm font-semibold ${
-                        forecast.predicted_change >= 0 ? "text-emerald-400" : "text-red-400"
+                        forecast.predicted_change >= 0 ? "text-success-400" : "text-error-400"
                       }`}
                     >
                       {forecast.predicted_change >= 0 ? "+" : ""}

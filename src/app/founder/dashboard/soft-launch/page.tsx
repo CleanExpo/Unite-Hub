@@ -203,19 +203,19 @@ export default function SoftLaunchPage() {
                     <div className="text-xs text-muted-foreground">Capacity</div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
-                    <div className="text-2xl font-bold text-green-500">
+                    <div className="text-2xl font-bold text-success-500">
                       {Math.round(summary.avg_momentum)}
                     </div>
                     <div className="text-xs text-muted-foreground">Avg Score</div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
-                    <div className="text-2xl font-bold text-blue-500">
+                    <div className="text-2xl font-bold text-info-500">
                       {summary.by_state.trial_active}
                     </div>
                     <div className="text-xs text-muted-foreground">In Trial</div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
-                    <div className="text-2xl font-bold text-emerald-500">
+                    <div className="text-2xl font-bold text-success-500">
                       {summary.by_state.stabilized}
                     </div>
                     <div className="text-xs text-muted-foreground">Stabilized</div>
@@ -235,25 +235,25 @@ export default function SoftLaunchPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Low Risk</span>
-                      <Badge variant="outline" className="bg-green-50 text-green-600">
+                      <Badge variant="outline" className="bg-success-50 text-success-600">
                         {summary.by_risk.low}
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Medium Risk</span>
-                      <Badge variant="outline" className="bg-yellow-50 text-yellow-600">
+                      <Badge variant="outline" className="bg-warning-50 text-warning-600">
                         {summary.by_risk.medium}
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">High Risk</span>
-                      <Badge variant="outline" className="bg-orange-50 text-orange-600">
+                      <Badge variant="outline" className="bg-accent-50 text-accent-600">
                         {summary.by_risk.high}
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Critical</span>
-                      <Badge variant="outline" className="bg-red-50 text-red-600">
+                      <Badge variant="outline" className="bg-error-50 text-error-600">
                         {summary.by_risk.critical}
                       </Badge>
                     </div>
@@ -282,9 +282,9 @@ export default function SoftLaunchPage() {
                   >
                     <div className="flex items-center gap-3">
                       {check.passed ? (
-                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                        <CheckCircle2 className="h-5 w-5 text-success-500" />
                       ) : (
-                        <XCircle className="h-5 w-5 text-red-500" />
+                        <XCircle className="h-5 w-5 text-error-500" />
                       )}
                       <div>
                         <div className="font-medium">{check.name}</div>
@@ -359,15 +359,15 @@ export default function SoftLaunchPage() {
           </Card>
 
           {/* Honest Expectations */}
-          <Card className="border-blue-200 bg-blue-50 dark:bg-blue-900/10">
+          <Card className="border-info-200 bg-info-50 dark:bg-info-900/10">
             <CardContent className="pt-6">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-info-500 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-blue-900 dark:text-blue-100">
+                  <h4 className="font-medium text-info-900 dark:text-info-100">
                     Truth Layer Reminder
                   </h4>
-                  <p className="text-sm text-blue-800 dark:text-blue-200 mt-1">
+                  <p className="text-sm text-info-800 dark:text-info-200 mt-1">
                     These KPIs measure engagement and momentum, not guaranteed outcomes.
                     Real marketing results take 90+ days. Set clear expectations with
                     each client about realistic timelines and required effort.

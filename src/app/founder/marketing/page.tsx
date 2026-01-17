@@ -113,7 +113,7 @@ export default function MarketingDashboardPage() {
 
             {/* Main Modules */}
             <Section className="mt-8">
-              <h2 className="text-sm font-medium text-gray-500 mb-4">Marketing Modules</h2>
+              <h2 className="text-sm font-medium text-text-tertiary mb-4">Marketing Modules</h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <ModuleCard
                   href="/founder/marketing/playbooks"
@@ -153,7 +153,7 @@ export default function MarketingDashboardPage() {
 
             {/* Quick Actions */}
             <Section className="mt-8">
-              <h2 className="text-sm font-medium text-gray-500 mb-4">Quick Actions</h2>
+              <h2 className="text-sm font-medium text-text-tertiary mb-4">Quick Actions</h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <QuickAction
                   href="/founder/marketing/playbooks?new=true"
@@ -181,7 +181,7 @@ export default function MarketingDashboardPage() {
             {/* Recent Activity */}
             <Section className="mt-8">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-medium text-gray-500">Recent Activity</h2>
+                <h2 className="text-sm font-medium text-text-tertiary">Recent Activity</h2>
               </div>
               <Card>
                 <CardContent className="pt-4">
@@ -235,10 +235,10 @@ interface StatCardProps {
 
 function StatCard({ icon: Icon, label, value, subtext, color }: StatCardProps) {
   const colors = {
-    blue: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
+    blue: "text-info-600 bg-info-100 dark:bg-info-900/30",
     purple: "text-purple-600 bg-purple-100 dark:bg-purple-900/30",
-    amber: "text-amber-600 bg-amber-100 dark:bg-amber-900/30",
-    green: "text-green-600 bg-green-100 dark:bg-green-900/30",
+    amber: "text-warning-600 bg-warning-100 dark:bg-warning-900/30",
+    green: "text-success-600 bg-success-100 dark:bg-success-900/30",
   };
 
   return (
@@ -249,9 +249,9 @@ function StatCard({ icon: Icon, label, value, subtext, color }: StatCardProps) {
             <Icon className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm text-gray-500">{label}</p>
+            <p className="text-sm text-text-tertiary">{label}</p>
             <p className="text-2xl font-bold text-text-primary">{value}</p>
-            <p className="text-xs text-gray-400">{subtext}</p>
+            <p className="text-xs text-text-muted">{subtext}</p>
           </div>
         </div>
       </CardContent>
@@ -270,15 +270,15 @@ interface ModuleCardProps {
 
 function ModuleCard({ href, icon: Icon, title, description, stats, color }: ModuleCardProps) {
   const colors = {
-    blue: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
+    blue: "text-info-600 bg-info-100 dark:bg-info-900/30",
     purple: "text-purple-600 bg-purple-100 dark:bg-purple-900/30",
-    amber: "text-amber-600 bg-amber-100 dark:bg-amber-900/30",
+    amber: "text-warning-600 bg-warning-100 dark:bg-warning-900/30",
   };
 
   const borderColors = {
-    blue: "hover:border-blue-500",
+    blue: "hover:border-info-500",
     purple: "hover:border-purple-500",
-    amber: "hover:border-amber-500",
+    amber: "hover:border-warning-500",
   };
 
   return (
@@ -294,7 +294,7 @@ function ModuleCard({ href, icon: Icon, title, description, stats, color }: Modu
             {stats.map((stat) => (
               <div key={stat.label}>
                 <p className="text-lg font-bold text-text-primary">{stat.value}</p>
-                <p className="text-xs text-gray-400">{stat.label}</p>
+                <p className="text-xs text-text-muted">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -337,14 +337,14 @@ interface ActivityItemProps {
 function ActivityItem({ icon: Icon, title, description, time }: ActivityItemProps) {
   return (
     <div className="flex items-start gap-3 py-2 border-b border-border-subtle last:border-0">
-      <div className="p-1.5 rounded bg-bg-hover text-gray-500">
+      <div className="p-1.5 rounded bg-bg-hover text-text-tertiary">
         <Icon className="w-4 h-4" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-text-primary">{title}</p>
-        <p className="text-xs text-gray-500 truncate">{description}</p>
+        <p className="text-xs text-text-tertiary truncate">{description}</p>
       </div>
-      <span className="text-xs text-gray-400 whitespace-nowrap">{time}</span>
+      <span className="text-xs text-text-muted whitespace-nowrap">{time}</span>
     </div>
   );
 }

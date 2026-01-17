@@ -136,13 +136,13 @@ export default function ExportsPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'ready':
-        return <CheckCircle2 className="w-4 h-4 text-green-600" />;
+        return <CheckCircle2 className="w-4 h-4 text-success-600" />;
       case 'building':
-        return <Clock className="w-4 h-4 text-blue-600 animate-spin" />;
+        return <Clock className="w-4 h-4 text-info-600 animate-spin" />;
       case 'failed':
-        return <XCircle className="w-4 h-4 text-red-600" />;
+        return <XCircle className="w-4 h-4 text-error-600" />;
       case 'pending':
-        return <Clock className="w-4 h-4 text-gray-600" />;
+        return <Clock className="w-4 h-4 text-text-muted" />;
       default:
         return null;
     }
@@ -151,17 +151,17 @@ export default function ExportsPage() {
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case 'ready':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'bg-success-100 text-success-800 border-success-300';
       case 'building':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'bg-info-100 text-info-800 border-info-300';
       case 'failed':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-error-100 text-error-800 border-error-300';
       case 'pending':
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return 'bg-bg-hover text-text-secondary border-border';
       case 'archived':
-        return 'bg-gray-100 text-gray-600 border-gray-300';
+        return 'bg-bg-hover text-text-muted border-border';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
@@ -427,13 +427,13 @@ export default function ExportsPage() {
                       </div>
 
                       {bundle.manifest.warnings.length > 0 && (
-                        <div className="p-2 bg-yellow-50/50 rounded border border-yellow-200">
-                          <p className="text-xs font-semibold text-yellow-800 mb-1 flex items-center gap-1">
+                        <div className="p-2 bg-warning-50/50 rounded border border-warning-200">
+                          <p className="text-xs font-semibold text-warning-800 mb-1 flex items-center gap-1">
                             <AlertTriangle className="w-3 h-3" /> Warnings
                           </p>
                           <ul className="space-y-1">
                             {bundle.manifest.warnings.map((w, i) => (
-                              <li key={i} className="text-xs text-yellow-700">
+                              <li key={i} className="text-xs text-warning-700">
                                 • {w}
                               </li>
                             ))}
@@ -444,8 +444,8 @@ export default function ExportsPage() {
                   )}
 
                   {bundle.status === 'failed' && bundle.errorMessage && (
-                    <div className="mt-3 p-2 bg-red-50/50 rounded border border-red-200">
-                      <p className="text-xs text-red-700">{bundle.errorMessage}</p>
+                    <div className="mt-3 p-2 bg-error-50/50 rounded border border-error-200">
+                      <p className="text-xs text-error-700">{bundle.errorMessage}</p>
                     </div>
                   )}
                 </div>

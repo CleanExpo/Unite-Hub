@@ -80,13 +80,13 @@ export default function FounderRealityMapPage() {
   const getLevelBadgeClass = (level: string) => {
     switch (level) {
       case "healthy":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "watch":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "stress":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "critical":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       default:
         return "bg-muted text-muted-foreground border-border";
     }
@@ -142,7 +142,7 @@ export default function FounderRealityMapPage() {
               <CardTitle className="text-sm text-text-secondary">Critical Panels</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-red-400">
+              <div className="text-3xl font-bold text-error-400">
                 {summary.critical_panels}
               </div>
             </CardContent>

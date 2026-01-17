@@ -177,7 +177,7 @@ export default function CreativeOpsPage() {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <ZoneIcon className={`h-5 w-5 ${mockGridState.zone === 'opportunity' ? 'text-green-500' : 'text-primary'}`} />
+              <ZoneIcon className={`h-5 w-5 ${mockGridState.zone === 'opportunity' ? 'text-success-500' : 'text-primary'}`} />
               <CardTitle className="text-base">Daily Brief</CardTitle>
             </div>
             <Badge variant="outline">{mockBrief.overall_status}</Badge>
@@ -297,7 +297,7 @@ export default function CreativeOpsPage() {
                 {mockCycleStates.map((cycle) => (
                   <div key={cycle.cycle} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${cycle.health >= 70 ? 'bg-green-500' : cycle.health >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`} />
+                      <div className={`w-3 h-3 rounded-full ${cycle.health >= 70 ? 'bg-success-500' : cycle.health >= 50 ? 'bg-warning-500' : 'bg-error-500'}`} />
                       <span className="font-medium capitalize">{cycle.cycle}</span>
                     </div>
                     <div className="flex items-center gap-4 text-sm">
@@ -319,7 +319,7 @@ export default function CreativeOpsPage() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm">{opp.title}</CardTitle>
-                    <Badge className={opp.potential_value === 'high' ? 'bg-green-500' : 'bg-blue-500'}>
+                    <Badge className={opp.potential_value === 'high' ? 'bg-success-500' : 'bg-info-500'}>
                       {opp.potential_value}
                     </Badge>
                   </div>
@@ -328,7 +328,7 @@ export default function CreativeOpsPage() {
                   <p className="text-xs text-muted-foreground">{opp.description}</p>
                   <div className="flex items-center justify-between text-xs">
                     <span>Confidence: {opp.confidence}%</span>
-                    <span className="text-green-500">{opp.estimated_lift}</span>
+                    <span className="text-success-500">{opp.estimated_lift}</span>
                   </div>
                   <div className="pt-2 border-t">
                     <h4 className="text-xs font-medium mb-1">Next Step</h4>
@@ -344,14 +344,14 @@ export default function CreativeOpsPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                  <AlertTriangle className="h-4 w-4 text-warning-500" />
                   Active Pressures
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {mockPressures.map((pressure) => (
-                    <div key={pressure.pressure_id} className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                    <div key={pressure.pressure_id} className="p-3 bg-warning-500/10 border border-warning-500/20 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-sm">{pressure.description}</span>
                         <Badge variant="outline">{pressure.severity}</Badge>
@@ -373,8 +373,8 @@ export default function CreativeOpsPage() {
 
 function MetricBox({ label, value, inverted = false }: { label: string; value: number; inverted?: boolean }) {
   const color = inverted
-    ? value <= 30 ? 'text-green-500' : value <= 50 ? 'text-yellow-500' : 'text-red-500'
-    : value >= 70 ? 'text-green-500' : value >= 50 ? 'text-yellow-500' : 'text-red-500';
+    ? value <= 30 ? 'text-success-500' : value <= 50 ? 'text-warning-500' : 'text-error-500'
+    : value >= 70 ? 'text-success-500' : value >= 50 ? 'text-warning-500' : 'text-error-500';
 
   return (
     <div className="text-center p-3 bg-muted/50 rounded-lg">
@@ -396,8 +396,8 @@ function SignalCard({
   inverted?: boolean;
 }) {
   const color = inverted
-    ? value <= 30 ? 'text-green-500' : value <= 50 ? 'text-yellow-500' : 'text-red-500'
-    : value >= 70 ? 'text-green-500' : value >= 50 ? 'text-yellow-500' : 'text-red-500';
+    ? value <= 30 ? 'text-success-500' : value <= 50 ? 'text-warning-500' : 'text-error-500'
+    : value >= 70 ? 'text-success-500' : value >= 50 ? 'text-warning-500' : 'text-error-500';
 
   return (
     <Card>

@@ -116,10 +116,10 @@ export default function RiskScoringPage() {
 
   const getSeverityColor = (severity: RiskSeverity) => {
     switch (severity) {
-      case "critical": return "bg-red-500/20 text-red-500";
-      case "high": return "bg-orange-500/20 text-orange-500";
-      case "medium": return "bg-yellow-500/20 text-yellow-500";
-      case "low": return "bg-green-500/20 text-green-500";
+      case "critical": return "bg-error-500/20 text-error-500";
+      case "high": return "bg-accent-500/20 text-accent-500";
+      case "medium": return "bg-warning-500/20 text-warning-500";
+      case "low": return "bg-success-500/20 text-success-500";
     }
   };
 
@@ -154,11 +154,11 @@ export default function RiskScoringPage() {
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Critical</div>
-              <div className="text-2xl font-bold text-red-500 mt-1">{overview.critical_events}</div>
+              <div className="text-2xl font-bold text-error-500 mt-1">{overview.critical_events}</div>
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">High</div>
-              <div className="text-2xl font-bold text-orange-500 mt-1">{overview.high_events}</div>
+              <div className="text-2xl font-bold text-accent-500 mt-1">{overview.high_events}</div>
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Total Events</div>

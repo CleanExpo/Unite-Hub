@@ -144,7 +144,7 @@ export default function FounderCreativeDirectorPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-yellow-500" />
+              <Star className="h-4 w-4 text-warning-500" />
               <span className="text-sm text-muted-foreground">Avg Quality</span>
             </div>
             <div className="text-2xl font-bold mt-1">
@@ -157,7 +157,7 @@ export default function FounderCreativeDirectorPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Palette className="h-4 w-4 text-blue-500" />
+              <Palette className="h-4 w-4 text-info-500" />
               <span className="text-sm text-muted-foreground">Consistency</span>
             </div>
             <div className="text-2xl font-bold mt-1">
@@ -170,7 +170,7 @@ export default function FounderCreativeDirectorPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Image className="h-4 w-4 text-green-500" />
+              <Image className="h-4 w-4 text-success-500" />
               <span className="text-sm text-muted-foreground">Assets (7d)</span>
             </div>
             <div className="text-2xl font-bold mt-1">
@@ -182,10 +182,10 @@ export default function FounderCreativeDirectorPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-orange-500" />
+              <AlertCircle className="h-4 w-4 text-accent-500" />
               <span className="text-sm text-muted-foreground">Need Attention</span>
             </div>
-            <div className="text-2xl font-bold mt-1 text-orange-500">
+            <div className="text-2xl font-bold mt-1 text-accent-500">
               {displayBriefing.attention_needed.length}
             </div>
           </CardContent>
@@ -207,7 +207,7 @@ export default function FounderCreativeDirectorPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-green-500" />
+                  <TrendingUp className="h-4 w-4 text-success-500" />
                   Top Performers
                 </CardTitle>
               </CardHeader>
@@ -231,7 +231,7 @@ export default function FounderCreativeDirectorPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 text-orange-500" />
+                  <AlertCircle className="h-4 w-4 text-accent-500" />
                   Attention Needed
                 </CardTitle>
               </CardHeader>
@@ -241,7 +241,7 @@ export default function FounderCreativeDirectorPage() {
                     {displayBriefing.attention_needed.map((item: any, i: number) => (
                       <div key={i} className="flex items-center justify-between">
                         <span className="text-sm">Client {item.client_id}</span>
-                        <Badge variant="outline" className="text-orange-500">
+                        <Badge variant="outline" className="text-accent-500">
                           {item.issue}
                         </Badge>
                       </div>
@@ -249,7 +249,7 @@ export default function FounderCreativeDirectorPage() {
                   </div>
                 ) : (
                   <div className="text-center py-4">
-                    <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                    <CheckCircle2 className="h-8 w-8 text-success-500 mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">All clients on track</p>
                   </div>
                 )}
@@ -328,7 +328,7 @@ export default function FounderCreativeDirectorPage() {
                   >
                     <input
                       type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300"
+                      className="h-4 w-4 rounded border-border-subtle"
                     />
                     <span className="text-sm">{item}</span>
                   </div>

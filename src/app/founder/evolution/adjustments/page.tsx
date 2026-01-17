@@ -57,7 +57,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base flex items-center gap-2">
-                    {log.status === 'completed' ? <CheckCircle className="h-4 w-4 text-green-500" /> : log.status === 'vetoed' ? <XCircle className="h-4 w-4 text-red-500" /> : null}
+                    {log.status === 'completed' ? <CheckCircle className="h-4 w-4 text-success-500" /> : log.status === 'vetoed' ? <XCircle className="h-4 w-4 text-error-500" /> : null}
                     {log.adjustmentType}
                   </CardTitle>
                   <div className="flex gap-1">
@@ -68,7 +68,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
               </CardHeader>
               <CardContent>
                 <div className="text-sm text-muted-foreground">Target: {log.targetEntity}</div>
-                {log.vetoedBy && <div className="text-sm text-red-600 mt-1">Vetoed by: {log.vetoedBy}</div>}
+                {log.vetoedBy && <div className="text-sm text-error-600 mt-1">Vetoed by: {log.vetoedBy}</div>}
                 <div className="text-xs text-muted-foreground mt-2">Safety checks: {log.safetyChecksPassed.join(', ')}</div>
                 {log.uncertaintyNotes && <p className="text-xs text-muted-foreground italic mt-2 border-l-2 border-muted pl-2">{log.uncertaintyNotes}</p>}
               </CardContent>
@@ -76,7 +76,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
           ))}
         </div>
       )}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">Forbidden Changes</div><p>Schema changes, feature modification, cross-region transfer, compliance settings, and major policy changes are strictly prohibited.</p></div></div></CardContent></Card>
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" /><div className="text-sm text-warning-800 dark:text-warning-200"><div className="font-medium mb-1">Forbidden Changes</div><p>Schema changes, feature modification, cross-region transfer, compliance settings, and major policy changes are strictly prohibited.</p></div></div></CardContent></Card>
     </div>
   );
 }

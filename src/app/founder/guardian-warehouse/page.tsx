@@ -71,17 +71,17 @@ export default function GuardianWarehousePage() {
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'critical':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-error-100 text-error-800 border-error-200';
       case 'error':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
+        return 'bg-accent-100 text-accent-800 border-orange-200';
       case 'warn':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'bg-warning-100 text-warning-800 border-warning-200';
       case 'info':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-info-100 text-info-800 border-info-200';
       case 'debug':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-bg-hover text-text-primary border-border-subtle';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-bg-hover text-text-primary border-border-subtle';
     }
   };
 
@@ -90,9 +90,9 @@ export default function GuardianWarehousePage() {
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">Guardian Telemetry Warehouse</h1>
         <div className="animate-pulse space-y-4">
-          <div className="h-20 bg-gray-200 rounded"></div>
-          <div className="h-40 bg-gray-200 rounded"></div>
-          <div className="h-60 bg-gray-200 rounded"></div>
+          <div className="h-20 bg-bg-hover rounded"></div>
+          <div className="h-40 bg-bg-hover rounded"></div>
+          <div className="h-60 bg-bg-hover rounded"></div>
         </div>
       </div>
     );
@@ -102,7 +102,7 @@ export default function GuardianWarehousePage() {
     return (
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">Guardian Telemetry Warehouse</h1>
-        <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded">
+        <div className="bg-error-50 border border-error-200 text-error-800 p-4 rounded">
           Error: {error}
         </div>
       </div>
@@ -113,7 +113,7 @@ export default function GuardianWarehousePage() {
     <div className="p-8 space-y-6">
       <div>
         <h1 className="text-2xl font-bold mb-2">Guardian Telemetry Warehouse</h1>
-        <p className="text-gray-600">
+        <p className="text-text-muted">
           Long-term telemetry storage with hourly & daily rollups
         </p>
       </div>
@@ -121,17 +121,17 @@ export default function GuardianWarehousePage() {
       {/* Summary Cards */}
       {summary && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-blue-50 border border-blue-200 p-4 rounded">
-            <div className="text-sm text-blue-600 font-medium">Total Warehouse Events</div>
-            <div className="text-2xl font-bold text-blue-900">{summary.total_warehouse_events}</div>
+          <div className="bg-info-50 border border-info-200 p-4 rounded">
+            <div className="text-sm text-info-600 font-medium">Total Warehouse Events</div>
+            <div className="text-2xl font-bold text-info-900">{summary.total_warehouse_events}</div>
           </div>
           <div className="bg-purple-50 border border-purple-200 p-4 rounded">
             <div className="text-sm text-purple-600 font-medium">Distinct Streams</div>
             <div className="text-2xl font-bold text-purple-900">{summary.distinct_stream_keys}</div>
           </div>
-          <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-            <div className="text-sm text-gray-600 font-medium">Selected Stream</div>
-            <div className="text-lg font-bold text-gray-900">
+          <div className="bg-bg-hover border border-border-subtle p-4 rounded">
+            <div className="text-sm text-text-muted font-medium">Selected Stream</div>
+            <div className="text-lg font-bold text-text-primary">
               {selectedStream || 'All streams'}
             </div>
           </div>
@@ -140,15 +140,15 @@ export default function GuardianWarehousePage() {
 
       {/* Stream Filter */}
       {summary && summary.stream_keys.length > 0 && (
-        <div className="bg-white border border-gray-200 p-4 rounded">
-          <div className="text-sm font-medium text-gray-700 mb-2">Filter by Stream:</div>
+        <div className="bg-bg-card border border-border-subtle p-4 rounded">
+          <div className="text-sm font-medium text-text-secondary mb-2">Filter by Stream:</div>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedStream(null)}
               className={`px-3 py-1 rounded text-sm border ${
                 !selectedStream
-                  ? 'bg-blue-100 text-blue-800 border-blue-200 font-medium'
-                  : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                  ? 'bg-info-100 text-info-800 border-info-200 font-medium'
+                  : 'bg-bg-hover text-text-secondary border-border-subtle hover:bg-bg-hover'
               }`}
             >
               All Streams
@@ -159,8 +159,8 @@ export default function GuardianWarehousePage() {
                 onClick={() => setSelectedStream(key)}
                 className={`px-3 py-1 rounded text-sm border ${
                   selectedStream === key
-                    ? 'bg-blue-100 text-blue-800 border-blue-200 font-medium'
-                    : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                    ? 'bg-info-100 text-info-800 border-info-200 font-medium'
+                    : 'bg-bg-hover text-text-secondary border-border-subtle hover:bg-bg-hover'
                 }`}
               >
                 {key}
@@ -175,27 +175,27 @@ export default function GuardianWarehousePage() {
         <div>
           <h2 className="text-xl font-semibold mb-3">Recent Warehouse Events</h2>
           {events.length === 0 ? (
-            <div className="bg-gray-50 border border-gray-200 p-8 rounded text-center text-gray-500">
+            <div className="bg-bg-hover border border-border-subtle p-8 rounded text-center text-text-tertiary">
               No warehouse events found
             </div>
           ) : (
-            <div className="bg-white border border-gray-200 rounded max-h-[480px] overflow-auto">
+            <div className="bg-bg-card border border-border-subtle rounded max-h-[480px] overflow-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
+                <thead className="bg-bg-hover border-b border-border-subtle sticky top-0">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Time</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Stream</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Level</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Tags</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Time</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Stream</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Level</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-text-secondary">Tags</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-border-subtle">
                   {events.map(event => (
-                    <tr key={event.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+                    <tr key={event.id} className="hover:bg-bg-hover">
+                      <td className="px-4 py-3 text-sm text-text-tertiary whitespace-nowrap">
                         {new Date(event.occurred_at).toLocaleString()}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 font-mono text-xs">
+                      <td className="px-4 py-3 text-sm text-text-primary font-mono text-xs">
                         {event.stream_key}
                       </td>
                       <td className="px-4 py-3 text-sm">
@@ -212,13 +212,13 @@ export default function GuardianWarehousePage() {
                           {event.tags.slice(0, 3).map((tag, idx) => (
                             <span
                               key={idx}
-                              className="inline-block px-1.5 py-0.5 bg-gray-100 text-gray-700 border border-gray-200 rounded text-xs"
+                              className="inline-block px-1.5 py-0.5 bg-bg-hover text-text-secondary border border-border-subtle rounded text-xs"
                             >
                               {tag}
                             </span>
                           ))}
                           {event.tags.length > 3 && (
-                            <span className="text-xs text-gray-500">+{event.tags.length - 3}</span>
+                            <span className="text-xs text-text-tertiary">+{event.tags.length - 3}</span>
                           )}
                         </div>
                       </td>
@@ -236,37 +236,37 @@ export default function GuardianWarehousePage() {
           <div>
             <h2 className="text-xl font-semibold mb-3">Hourly Rollups (Last 7 Days)</h2>
             {hourly.length === 0 ? (
-              <div className="bg-gray-50 border border-gray-200 p-8 rounded text-center text-gray-500">
+              <div className="bg-bg-hover border border-border-subtle p-8 rounded text-center text-text-tertiary">
                 No hourly rollups available
               </div>
             ) : (
-              <div className="bg-white border border-gray-200 rounded max-h-[220px] overflow-auto">
+              <div className="bg-bg-card border border-border-subtle rounded max-h-[220px] overflow-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
+                  <thead className="bg-bg-hover border-b border-border-subtle sticky top-0">
                     <tr>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-700">Hour</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-700">Total</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-700">Warn</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-700">Error</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-700">Critical</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary">Hour</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-text-secondary">Total</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-text-secondary">Warn</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-text-secondary">Error</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-text-secondary">Critical</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-border-subtle">
                     {hourly.map((h, idx) => (
-                      <tr key={idx} className="hover:bg-gray-50">
-                        <td className="px-3 py-2 text-xs text-gray-500 whitespace-nowrap">
+                      <tr key={idx} className="hover:bg-bg-hover">
+                        <td className="px-3 py-2 text-xs text-text-tertiary whitespace-nowrap">
                           {new Date(h.hour_bucket).toLocaleString()}
                         </td>
-                        <td className="px-3 py-2 text-xs text-center text-gray-900 font-medium">
+                        <td className="px-3 py-2 text-xs text-center text-text-primary font-medium">
                           {h.count_total}
                         </td>
-                        <td className="px-3 py-2 text-xs text-center text-amber-700">
+                        <td className="px-3 py-2 text-xs text-center text-warning-700">
                           {h.count_warn}
                         </td>
-                        <td className="px-3 py-2 text-xs text-center text-orange-700">
+                        <td className="px-3 py-2 text-xs text-center text-accent-700">
                           {h.count_error}
                         </td>
-                        <td className="px-3 py-2 text-xs text-center text-red-700">
+                        <td className="px-3 py-2 text-xs text-center text-error-700">
                           {h.count_critical}
                         </td>
                       </tr>
@@ -281,37 +281,37 @@ export default function GuardianWarehousePage() {
           <div>
             <h2 className="text-xl font-semibold mb-3">Daily Rollups (Last 30 Days)</h2>
             {daily.length === 0 ? (
-              <div className="bg-gray-50 border border-gray-200 p-8 rounded text-center text-gray-500">
+              <div className="bg-bg-hover border border-border-subtle p-8 rounded text-center text-text-tertiary">
                 No daily rollups available
               </div>
             ) : (
-              <div className="bg-white border border-gray-200 rounded max-h-[220px] overflow-auto">
+              <div className="bg-bg-card border border-border-subtle rounded max-h-[220px] overflow-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
+                  <thead className="bg-bg-hover border-b border-border-subtle sticky top-0">
                     <tr>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-700">Day</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-700">Total</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-700">Warn</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-700">Error</th>
-                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-700">Critical</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-text-secondary">Day</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-text-secondary">Total</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-text-secondary">Warn</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-text-secondary">Error</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-text-secondary">Critical</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-border-subtle">
                     {daily.map((d, idx) => (
-                      <tr key={idx} className="hover:bg-gray-50">
-                        <td className="px-3 py-2 text-xs text-gray-500 whitespace-nowrap">
+                      <tr key={idx} className="hover:bg-bg-hover">
+                        <td className="px-3 py-2 text-xs text-text-tertiary whitespace-nowrap">
                           {d.day_bucket}
                         </td>
-                        <td className="px-3 py-2 text-xs text-center text-gray-900 font-medium">
+                        <td className="px-3 py-2 text-xs text-center text-text-primary font-medium">
                           {d.count_total}
                         </td>
-                        <td className="px-3 py-2 text-xs text-center text-amber-700">
+                        <td className="px-3 py-2 text-xs text-center text-warning-700">
                           {d.count_warn}
                         </td>
-                        <td className="px-3 py-2 text-xs text-center text-orange-700">
+                        <td className="px-3 py-2 text-xs text-center text-accent-700">
                           {d.count_error}
                         </td>
-                        <td className="px-3 py-2 text-xs text-center text-red-700">
+                        <td className="px-3 py-2 text-xs text-center text-error-700">
                           {d.count_critical}
                         </td>
                       </tr>

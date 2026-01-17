@@ -104,7 +104,7 @@ export default function CapabilitiesPage() {
         {/* Planned */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-5 h-5 text-gray-400" />
+            <Clock className="w-5 h-5 text-text-muted" />
             <h2 className="text-lg font-semibold text-text-primary">
               Planned / Not Yet Available
             </h2>
@@ -119,7 +119,7 @@ export default function CapabilitiesPage() {
                 className="bg-bg-card rounded-lg border border-border-subtle p-4 opacity-50"
               >
                 <div className="flex items-start gap-3">
-                  <Clock className="w-4 h-4 text-gray-400 flex-shrink-0 mt-1" />
+                  <Clock className="w-4 h-4 text-text-muted flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-medium text-text-primary">
                       {cap.name}

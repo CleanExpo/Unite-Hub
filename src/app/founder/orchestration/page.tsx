@@ -244,7 +244,7 @@ export default function FounderOrchestrationPage() {
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-yellow-500">
+              <div className="text-2xl font-bold text-warning-500">
                 {overview.pending_schedules}
               </div>
               <p className="text-xs text-muted-foreground">Pending</p>
@@ -252,7 +252,7 @@ export default function FounderOrchestrationPage() {
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-green-500">
+              <div className="text-2xl font-bold text-success-500">
                 {overview.completed_today}
               </div>
               <p className="text-xs text-muted-foreground">Completed Today</p>
@@ -260,7 +260,7 @@ export default function FounderOrchestrationPage() {
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-red-500">
+              <div className="text-2xl font-bold text-error-500">
                 {overview.blocked_schedules}
               </div>
               <p className="text-xs text-muted-foreground">Blocked</p>
@@ -366,9 +366,9 @@ export default function FounderOrchestrationPage() {
       </Tabs>
 
       {/* Info Banner */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <Brain className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <Brain className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-muted-foreground">
             <p>
               <strong>Phase 84 Mode:</strong> The orchestration engine creates draft posts only.

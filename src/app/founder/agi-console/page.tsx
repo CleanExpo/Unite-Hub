@@ -134,35 +134,35 @@ export default function AGIConsolePage() {
   const getRiskColor = (level: string) => {
     switch (level) {
       case 'safe':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-100 text-success-800';
       case 'low':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-info-100 text-info-800';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'high':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-accent-100 text-accent-800';
       case 'critical':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-100 text-error-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-primary';
     }
   };
 
   const getTrendIcon = (trend: string) => {
     if (trend === 'improving') {
-return <TrendingUp className="w-4 h-4 text-green-600" />;
+return <TrendingUp className="w-4 h-4 text-success-600" />;
 }
     if (trend === 'declining') {
-return <AlertTriangle className="w-4 h-4 text-red-600" />;
+return <AlertTriangle className="w-4 h-4 text-error-600" />;
 }
-    return <Radio className="w-4 h-4 text-gray-600" />;
+    return <Radio className="w-4 h-4 text-text-muted" />;
   };
 
   if (loading) {
     return (
       <div className="p-10 space-y-4">
         <h1 className="text-3xl font-bold">AGI Console</h1>
-        <p className="text-gray-500">Loading governance dashboard...</p>
+        <p className="text-text-tertiary">Loading governance dashboard...</p>
       </div>
     );
   }
@@ -180,8 +180,8 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
 
       {/* Critical Status Alert */}
       {risk && risk.criticalRisks > 0 && (
-        <Alert className="border-red-200 bg-red-50 dark:bg-red-950/30">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
+        <Alert className="border-error-200 bg-error-50 dark:bg-error-950/30">
+          <AlertTriangle className="h-4 w-4 text-error-600" />
           <AlertTitle>Critical Risks Detected</AlertTitle>
           <AlertDescription>
             {risk.criticalRisks} critical risk boundary violation(s). Immediate founder review required.
@@ -219,38 +219,38 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                         <div className="flex items-start justify-between">
                           <div>
                             <p className="font-semibold capitalize">{model.model}</p>
-                            <p className="text-xs text-gray-500 capitalize">{model.capability}</p>
+                            <p className="text-xs text-text-tertiary capitalize">{model.capability}</p>
                           </div>
                           {getTrendIcon(model.trend)}
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 text-xs">
                           <div>
-                            <p className="text-gray-600">Selection Rate</p>
+                            <p className="text-text-muted">Selection Rate</p>
                             <p className="font-semibold">{model.selectionRate}%</p>
                           </div>
                           <div>
-                            <p className="text-gray-600">Quality</p>
+                            <p className="text-text-muted">Quality</p>
                             <p className="font-semibold">{model.qualityScore}/100</p>
                           </div>
                           <div>
-                            <p className="text-gray-600">Latency</p>
+                            <p className="text-text-muted">Latency</p>
                             <p className="font-semibold">{model.avgLatency}ms</p>
                           </div>
                           <div>
-                            <p className="text-gray-600">Success Rate</p>
+                            <p className="text-text-muted">Success Rate</p>
                             <p className="font-semibold">{model.successRate}%</p>
                           </div>
                         </div>
 
-                        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="w-full h-2 bg-bg-hover rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-blue-600"
+                            className="h-full bg-info-600"
                             style={{ width: `${model.qualityScore}%` }}
                           />
                         </div>
 
-                        <p className="text-xs text-gray-500">Cost: ${model.avgCost}/request</p>
+                        <p className="text-xs text-text-tertiary">Cost: ${model.avgCost}/request</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -275,15 +275,15 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div className="border rounded-lg p-4">
-                      <p className="text-sm text-gray-600">Active Policy</p>
+                      <p className="text-sm text-text-muted">Active Policy</p>
                       <p className="font-semibold text-lg">{governance.activePolicy}</p>
                     </div>
                     <div className="border rounded-lg p-4">
-                      <p className="text-sm text-gray-600">Total Decisions</p>
+                      <p className="text-sm text-text-muted">Total Decisions</p>
                       <p className="font-semibold text-lg">{governance.totalDecisions.toLocaleString()}</p>
                     </div>
                     <div className="border rounded-lg p-4">
-                      <p className="text-sm text-gray-600">Approval Rate</p>
+                      <p className="text-sm text-text-muted">Approval Rate</p>
                       <p className="font-semibold text-lg">
                         {Math.round((governance.approvedDecisions / governance.totalDecisions) * 100)}%
                       </p>
@@ -291,34 +291,34 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <Card className="bg-green-50 dark:bg-green-950/20">
+                    <Card className="bg-success-50 dark:bg-success-950/20">
                       <CardContent className="pt-4">
-                        <p className="text-xs text-gray-600">Approved</p>
-                        <p className="font-bold text-2xl text-green-700">
+                        <p className="text-xs text-text-muted">Approved</p>
+                        <p className="font-bold text-2xl text-success-700">
                           {governance.approvedDecisions.toLocaleString()}
                         </p>
                       </CardContent>
                     </Card>
-                    <Card className="bg-yellow-50 dark:bg-yellow-950/20">
+                    <Card className="bg-warning-50 dark:bg-warning-950/20">
                       <CardContent className="pt-4">
-                        <p className="text-xs text-gray-600">Escalated</p>
-                        <p className="font-bold text-2xl text-yellow-700">
+                        <p className="text-xs text-text-muted">Escalated</p>
+                        <p className="font-bold text-2xl text-warning-700">
                           {governance.escalatedDecisions.toLocaleString()}
                         </p>
                       </CardContent>
                     </Card>
-                    <Card className="bg-orange-50 dark:bg-orange-950/20">
+                    <Card className="bg-accent-50 dark:bg-accent-950/20">
                       <CardContent className="pt-4">
-                        <p className="text-xs text-gray-600">Rejected</p>
-                        <p className="font-bold text-2xl text-orange-700">
+                        <p className="text-xs text-text-muted">Rejected</p>
+                        <p className="font-bold text-2xl text-accent-700">
                           {governance.rejectedDecisions.toLocaleString()}
                         </p>
                       </CardContent>
                     </Card>
-                    <Card className="bg-red-50 dark:bg-red-950/20">
+                    <Card className="bg-error-50 dark:bg-error-950/20">
                       <CardContent className="pt-4">
-                        <p className="text-xs text-gray-600">Violations</p>
-                        <p className="font-bold text-2xl text-red-700">
+                        <p className="text-xs text-text-muted">Violations</p>
+                        <p className="font-bold text-2xl text-error-700">
                           {governance.violationsDetected.toLocaleString()}
                         </p>
                       </CardContent>
@@ -380,16 +380,16 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                           <span className="text-sm">Risk Score</span>
                           <span className="font-bold text-xl">{risk.overallScore}/100</span>
                         </div>
-                        <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="w-full h-3 bg-bg-hover rounded-full overflow-hidden">
                           <div
                             className={`h-full ${
                               risk.overallScore < 30
-                                ? 'bg-green-600'
+                                ? 'bg-success-600'
                                 : risk.overallScore < 50
-                                ? 'bg-yellow-600'
+                                ? 'bg-warning-600'
                                 : risk.overallScore < 75
-                                ? 'bg-orange-600'
-                                : 'bg-red-600'
+                                ? 'bg-accent-600'
+                                : 'bg-error-600'
                             }`}
                             style={{ width: `${risk.overallScore}%` }}
                           />
@@ -397,20 +397,20 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                         <div className="flex items-center gap-2 mt-2">
                           {risk.trend === 'improving' && (
                             <>
-                              <TrendingUp className="w-4 h-4 text-green-600" />
-                              <span className="text-sm text-green-600">Risk improving</span>
+                              <TrendingUp className="w-4 h-4 text-success-600" />
+                              <span className="text-sm text-success-600">Risk improving</span>
                             </>
                           )}
                           {risk.trend === 'stable' && (
                             <>
-                              <Radio className="w-4 h-4 text-gray-600" />
-                              <span className="text-sm text-gray-600">Risk stable</span>
+                              <Radio className="w-4 h-4 text-text-muted" />
+                              <span className="text-sm text-text-muted">Risk stable</span>
                             </>
                           )}
                           {risk.trend === 'worsening' && (
                             <>
-                              <AlertTriangle className="w-4 h-4 text-red-600" />
-                              <span className="text-sm text-red-600">Risk worsening</span>
+                              <AlertTriangle className="w-4 h-4 text-error-600" />
+                              <span className="text-sm text-error-600">Risk worsening</span>
                             </>
                           )}
                         </div>
@@ -431,9 +431,9 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                         <div className="flex justify-between items-center">
                           <span className="text-sm">Critical Risks</span>
                           {risk.boundaryViolations > 0 ? (
-                            <Badge className="bg-red-600">Active</Badge>
+                            <Badge className="bg-error-600">Active</Badge>
                           ) : (
-                            <Badge className="bg-green-600">None</Badge>
+                            <Badge className="bg-success-600">None</Badge>
                           )}
                         </div>
                       </div>
@@ -443,7 +443,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                   <div className="border rounded-lg p-4 space-y-3">
                     <div>
                       <h4 className="font-semibold text-sm mb-2">Risk Profile: Balanced</h4>
-                      <p className="text-xs text-gray-600 mb-3">
+                      <p className="text-xs text-text-muted mb-3">
                         Standard risk boundaries with selective founder approval requirements
                       </p>
                     </div>
@@ -487,7 +487,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Switch Risk Profile</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       Change governance strictness level
                     </p>
                   </div>
@@ -507,7 +507,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Run Risk Simulation</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       Forecast agent behavior and outcomes under different conditions
                     </p>
                   </div>
@@ -520,7 +520,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Review Pending Approvals</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       {governance ? governance.escalatedDecisions : 0} decisions waiting for founder decision
                     </p>
                   </div>
@@ -533,7 +533,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Override Decision</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       Manually approve or reject a governance decision
                     </p>
                   </div>
@@ -546,7 +546,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Generate Audit Report</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       Export governance audit and compliance report
                     </p>
                   </div>
@@ -562,7 +562,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
       </Tabs>
 
       {/* Footer */}
-      <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200">
+      <Card className="bg-info-50 dark:bg-info-950/20 border-info-200">
         <CardContent className="pt-6 text-sm text-text-secondary">
           <p>
             <strong>Last Updated:</strong> {new Date().toLocaleString()}

@@ -231,12 +231,12 @@ export default function RunbookCenterPage() {
                     <span
                       className={`px-2 py-1 rounded text-xs font-medium ${
                         asg.status === "completed"
-                          ? "bg-green-500/10 text-green-500"
+                          ? "bg-success-500/10 text-success-500"
                           : asg.status === "active"
-                          ? "bg-blue-500/10 text-blue-500"
+                          ? "bg-info-500/10 text-info-500"
                           : asg.status === "cancelled"
-                          ? "bg-red-500/10 text-red-500"
-                          : "bg-yellow-500/10 text-yellow-500"
+                          ? "bg-error-500/10 text-error-500"
+                          : "bg-warning-500/10 text-warning-500"
                       }`}
                     >
                       {asg.status.toUpperCase()}

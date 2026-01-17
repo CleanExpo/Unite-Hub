@@ -117,8 +117,8 @@ return;
                     {snapshot.riskZones.map((zone, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <AlertTriangle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${
-                          zone.severity === 'high' ? 'text-red-600' :
-                          zone.severity === 'medium' ? 'text-amber-600' : 'text-gray-600'
+                          zone.severity === 'high' ? 'text-error-600' :
+                          zone.severity === 'medium' ? 'text-warning-600' : 'text-text-muted'
                         }`} />
                         <div>
                           <div className="text-sm font-medium">{zone.area}</div>
@@ -146,7 +146,7 @@ return;
                   <ul className="space-y-2">
                     {snapshot.opportunityClusters.map((cluster, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <Target className="h-4 w-4 mt-0.5 flex-shrink-0 text-green-600" />
+                        <Target className="h-4 w-4 mt-0.5 flex-shrink-0 text-success-600" />
                         <div>
                           <div className="text-sm font-medium">{cluster.area}</div>
                           <p className="text-xs text-muted-foreground">{cluster.description}</p>
@@ -189,11 +189,11 @@ return;
       )}
 
       {/* Disclaimer */}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Cognitive Map Limitations</div>
               <p>
                 This visualization aggregates signals from multiple systems.

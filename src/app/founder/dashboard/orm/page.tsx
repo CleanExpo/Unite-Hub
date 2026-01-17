@@ -192,8 +192,8 @@ export default function FounderORMPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-            <DollarSign className="h-6 w-6 text-emerald-600" />
+          <div className="p-2 bg-success-100 dark:bg-success-900/30 rounded-lg">
+            <DollarSign className="h-6 w-6 text-success-600" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">Operational Reality Mode</h1>
@@ -202,7 +202,7 @@ export default function FounderORMPage() {
             </p>
           </div>
         </div>
-        <Badge className={mockSummary.health_score >= 70 ? 'bg-green-500' : mockSummary.health_score >= 50 ? 'bg-yellow-500' : 'bg-red-500'}>
+        <Badge className={mockSummary.health_score >= 70 ? 'bg-success-500' : mockSummary.health_score >= 50 ? 'bg-warning-500' : 'bg-error-500'}>
           Health: {mockSummary.health_score}%
         </Badge>
       </div>
@@ -212,10 +212,10 @@ export default function FounderORMPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <TrendingUp className="h-4 w-4 text-green-500" />
+              <TrendingUp className="h-4 w-4 text-success-500" />
               Revenue
             </div>
-            <div className="text-2xl font-bold text-green-500 mt-1">
+            <div className="text-2xl font-bold text-success-500 mt-1">
               {formatCurrency(mockSummary.total_revenue)}
             </div>
           </CardContent>
@@ -224,10 +224,10 @@ export default function FounderORMPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <BarChart3 className="h-4 w-4 text-red-500" />
+              <BarChart3 className="h-4 w-4 text-error-500" />
               Costs
             </div>
-            <div className="text-2xl font-bold text-red-500 mt-1">
+            <div className="text-2xl font-bold text-error-500 mt-1">
               {formatCurrency(mockSummary.total_cost)}
             </div>
           </CardContent>
@@ -236,7 +236,7 @@ export default function FounderORMPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <DollarSign className="h-4 w-4 text-blue-500" />
+              <DollarSign className="h-4 w-4 text-info-500" />
               Margin
             </div>
             <div className="text-2xl font-bold mt-1">
@@ -258,11 +258,11 @@ export default function FounderORMPage() {
               {mockSummary.clients.total}
             </div>
             <div className="text-xs">
-              <span className="text-green-500">{mockSummary.clients.profitable}✓</span>
+              <span className="text-success-500">{mockSummary.clients.profitable}✓</span>
               {' '}
-              <span className="text-yellow-500">{mockSummary.clients.marginal}~</span>
+              <span className="text-warning-500">{mockSummary.clients.marginal}~</span>
               {' '}
-              <span className="text-red-500">{mockSummary.clients.loss_leading}✗</span>
+              <span className="text-error-500">{mockSummary.clients.loss_leading}✗</span>
             </div>
           </CardContent>
         </Card>
@@ -274,7 +274,7 @@ export default function FounderORMPage() {
           <TabsTrigger value="profitability">
             Profitability
             {mockSummary.clients.loss_leading > 0 && (
-              <Badge className="ml-1 bg-red-500">{mockSummary.clients.loss_leading}</Badge>
+              <Badge className="ml-1 bg-error-500">{mockSummary.clients.loss_leading}</Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="roi">ROI Overview</TabsTrigger>
@@ -318,7 +318,7 @@ export default function FounderORMPage() {
                   Avg utilization: {mockWorkload.staff_load.avg_utilization}%
                 </div>
                 {mockWorkload.staff_load.overloaded_count > 0 && (
-                  <div className="text-xs text-red-500 mt-1">
+                  <div className="text-xs text-error-500 mt-1">
                     {mockWorkload.staff_load.overloaded_count} overloaded
                   </div>
                 )}
@@ -371,7 +371,7 @@ export default function FounderORMPage() {
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold">{mockWorkload.combined_index}%</div>
-                  <Badge className={mockWorkload.status === 'healthy' ? 'bg-green-500' : mockWorkload.status === 'moderate' ? 'bg-yellow-500' : 'bg-red-500'}>
+                  <Badge className={mockWorkload.status === 'healthy' ? 'bg-success-500' : mockWorkload.status === 'moderate' ? 'bg-warning-500' : 'bg-error-500'}>
                     {mockWorkload.status}
                   </Badge>
                 </div>

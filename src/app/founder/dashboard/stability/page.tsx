@@ -163,11 +163,11 @@ export default function FounderStabilityPage() {
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return <TrendingUp className="h-4 w-4 text-green-500" />;
+        return <TrendingUp className="h-4 w-4 text-success-500" />;
       case 'degrading':
-        return <TrendingDown className="h-4 w-4 text-red-500" />;
+        return <TrendingDown className="h-4 w-4 text-error-500" />;
       default:
-        return <Minus className="h-4 w-4 text-gray-500" />;
+        return <Minus className="h-4 w-4 text-text-tertiary" />;
     }
   };
 
@@ -176,8 +176,8 @@ export default function FounderStabilityPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-            <Shield className="h-6 w-6 text-blue-600" />
+          <div className="p-2 bg-info-100 dark:bg-info-900/30 rounded-lg">
+            <Shield className="h-6 w-6 text-info-600" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">System Stability</h1>
@@ -190,7 +190,7 @@ export default function FounderStabilityPage() {
           <button
             onClick={handleRunLoadTest}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 bg-warning-500 text-white rounded-lg hover:bg-warning-600 disabled:opacity-50"
           >
             <Zap className="h-4 w-4" />
             Run Load Test
@@ -198,7 +198,7 @@ export default function FounderStabilityPage() {
           <button
             onClick={handleRunChaosTest}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 bg-error-500 text-white rounded-lg hover:bg-error-600 disabled:opacity-50"
           >
             <Flame className="h-4 w-4" />
             Run Chaos Test
@@ -260,7 +260,7 @@ export default function FounderStabilityPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-orange-500" />
+                  <AlertTriangle className="h-4 w-4 text-accent-500" />
                   Active Bottlenecks
                 </CardTitle>
               </CardHeader>
@@ -272,14 +272,14 @@ export default function FounderStabilityPage() {
                         <span className="text-sm font-medium capitalize">
                           {bottleneck.service.replace(/_/g, ' ')}
                         </span>
-                        <Badge className={bottleneck.severity === 'high' ? 'bg-red-500' : 'bg-yellow-500'}>
+                        <Badge className={bottleneck.severity === 'high' ? 'bg-error-500' : 'bg-warning-500'}>
                           {bottleneck.severity}
                         </Badge>
                       </div>
                       <p className="text-xs text-muted-foreground mb-2">
                         {bottleneck.description}
                       </p>
-                      <p className="text-xs text-blue-500">
+                      <p className="text-xs text-info-500">
                         💡 {bottleneck.recommendation}
                       </p>
                     </div>
@@ -308,7 +308,7 @@ export default function FounderStabilityPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Avg Recovery Time</span>
-                    <span className="font-bold text-green-500">20s</span>
+                    <span className="font-bold text-success-500">20s</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Circuit Breakers Active</span>
@@ -388,11 +388,11 @@ export default function FounderStabilityPage() {
           {mockLoadTests.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center">
-                <Zap className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
+                <Zap className="h-8 w-8 text-warning-500 mx-auto mb-2" />
                 <p className="text-muted-foreground">No load tests run yet</p>
                 <button
                   onClick={handleRunLoadTest}
-                  className="mt-4 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+                  className="mt-4 px-4 py-2 bg-warning-500 text-white rounded-lg hover:bg-warning-600"
                 >
                   Run First Test
                 </button>
@@ -416,11 +416,11 @@ export default function FounderStabilityPage() {
           {mockChaosEvents.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center">
-                <Flame className="h-8 w-8 text-red-500 mx-auto mb-2" />
+                <Flame className="h-8 w-8 text-error-500 mx-auto mb-2" />
                 <p className="text-muted-foreground">No chaos tests run yet</p>
                 <button
                   onClick={handleRunChaosTest}
-                  className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  className="mt-4 px-4 py-2 bg-error-500 text-white rounded-lg hover:bg-error-600"
                 >
                   Run First Test
                 </button>
@@ -440,7 +440,7 @@ export default function FounderStabilityPage() {
                   <div key={i} className="p-4 border rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium">{rec.resource}</span>
-                      <Badge className={rec.priority === 'high' ? 'bg-red-500' : 'bg-yellow-500'}>
+                      <Badge className={rec.priority === 'high' ? 'bg-error-500' : 'bg-warning-500'}>
                         {rec.priority}
                       </Badge>
                     </div>
@@ -451,7 +451,7 @@ export default function FounderStabilityPage() {
                       </div>
                       <div>
                         <span className="text-muted-foreground">Recommended: </span>
-                        <span className="text-green-500">{rec.recommended}</span>
+                        <span className="text-success-500">{rec.recommended}</span>
                       </div>
                     </div>
                     <div className="text-xs text-muted-foreground">

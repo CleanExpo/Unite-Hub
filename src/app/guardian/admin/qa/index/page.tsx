@@ -147,7 +147,7 @@ throw new Error('Failed to save flags');
       </div>
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-900">
+        <div className="rounded-lg border border-error-200 bg-error-50 p-4 text-error-900">
           {error}
         </div>
       )}
@@ -239,7 +239,7 @@ throw new Error('Failed to save flags');
               </div>
               <div>
                 <p className="text-sm text-text-secondary">Blind Spots</p>
-                <p className="text-2xl font-bold text-red-600">{overview.coverage.criticalRules.blindSpots}</p>
+                <p className="text-2xl font-bold text-error-600">{overview.coverage.criticalRules.blindSpots}</p>
               </div>
               <div>
                 <p className="text-sm text-text-secondary">Playbooks Total</p>
@@ -258,8 +258,8 @@ throw new Error('Failed to save flags');
                 overview.latestAlerts.slice(0, 10).map((alert, idx) => (
                   <div key={idx} className="flex items-start gap-3 rounded p-3 bg-bg-secondary">
                     <div className={`mt-1 ${
-                      alert.severity === 'critical' ? 'text-red-600' :
-                      alert.severity === 'warning' ? 'text-yellow-600' :
+                      alert.severity === 'critical' ? 'text-error-600' :
+                      alert.severity === 'warning' ? 'text-warning-600' :
                       'text-text-secondary'
                     }`}>
                       <AlertCircle size={16} />
@@ -271,9 +271,9 @@ throw new Error('Failed to save flags');
                       </p>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded font-medium ${
-                      alert.severity === 'critical' ? 'bg-red-100 text-red-800' :
-                      alert.severity === 'warning' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-green-100 text-green-800'
+                      alert.severity === 'critical' ? 'bg-error-100 text-error-800' :
+                      alert.severity === 'warning' ? 'bg-warning-100 text-warning-800' :
+                      'bg-success-100 text-success-800'
                     }`}>
                       {alert.severity}
                     </span>

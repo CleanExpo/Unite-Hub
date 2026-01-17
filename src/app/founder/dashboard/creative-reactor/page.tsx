@@ -160,7 +160,7 @@ export default function CreativeReactorPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Zap className="h-6 w-6 text-yellow-500" />
+            <Zap className="h-6 w-6 text-warning-500" />
             Creative Reactor
           </h1>
           <p className="text-muted-foreground">
@@ -178,7 +178,7 @@ export default function CreativeReactorPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <Activity className="h-8 w-8 mx-auto text-blue-500 mb-2" />
+              <Activity className="h-8 w-8 mx-auto text-info-500 mb-2" />
               <div className="text-2xl font-bold">47.2K</div>
               <div className="text-xs text-muted-foreground">Total Impressions</div>
             </div>
@@ -187,7 +187,7 @@ export default function CreativeReactorPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <TrendingUp className="h-8 w-8 mx-auto text-green-500 mb-2" />
+              <TrendingUp className="h-8 w-8 mx-auto text-success-500 mb-2" />
               <div className="text-2xl font-bold">3.8%</div>
               <div className="text-xs text-muted-foreground">Avg Engagement</div>
             </div>
@@ -205,7 +205,7 @@ export default function CreativeReactorPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <Lightbulb className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
+              <Lightbulb className="h-8 w-8 mx-auto text-warning-500 mb-2" />
               <div className="text-2xl font-bold">2</div>
               <div className="text-xs text-muted-foreground">Active Tests</div>
             </div>
@@ -328,12 +328,12 @@ export default function CreativeReactorPage() {
                     </div>
                     <div className="text-xs text-right">
                       {method.best_channels.length > 0 && (
-                        <div className="text-green-500">
+                        <div className="text-success-500">
                           Best: {method.best_channels.join(', ')}
                         </div>
                       )}
                       {method.avoid_channels.length > 0 && (
-                        <div className="text-red-500">
+                        <div className="text-error-500">
                           Avoid: {method.avoid_channels.join(', ')}
                         </div>
                       )}
@@ -373,9 +373,9 @@ function InsightCard({
   action: string;
 }) {
   const config = {
-    opportunity: { icon: Lightbulb, color: 'text-yellow-500', bg: 'bg-yellow-500/10' },
-    warning: { icon: AlertTriangle, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-    success: { icon: CheckCircle2, color: 'text-green-500', bg: 'bg-green-500/10' },
+    opportunity: { icon: Lightbulb, color: 'text-warning-500', bg: 'bg-warning-500/10' },
+    warning: { icon: AlertTriangle, color: 'text-accent-500', bg: 'bg-accent-500/10' },
+    success: { icon: CheckCircle2, color: 'text-success-500', bg: 'bg-success-500/10' },
   };
 
   const { icon: Icon, color, bg } = config[type];
@@ -394,11 +394,11 @@ function InsightCard({
 
 function TierBadge({ tier }: { tier: string }) {
   const config = {
-    top: 'bg-green-500 text-white',
-    strong: 'bg-blue-500 text-white',
-    average: 'bg-yellow-500 text-black',
-    weak: 'bg-red-500 text-white',
-    untested: 'bg-gray-500 text-white',
+    top: 'bg-success-500 text-white',
+    strong: 'bg-info-500 text-white',
+    average: 'bg-warning-500 text-black',
+    weak: 'bg-error-500 text-white',
+    untested: 'bg-bg-hover0 text-white',
   };
 
   return (

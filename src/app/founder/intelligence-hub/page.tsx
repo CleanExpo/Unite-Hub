@@ -144,36 +144,36 @@ export default function IntelligenceHubPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'running':
-        return <CheckCircle2 className="w-5 h-5 text-green-600" />;
+        return <CheckCircle2 className="w-5 h-5 text-success-600" />;
       case 'idle':
-        return <Clock className="w-5 h-5 text-gray-600" />;
+        return <Clock className="w-5 h-5 text-text-muted" />;
       case 'degraded':
-        return <AlertCircle className="w-5 h-5 text-yellow-600" />;
+        return <AlertCircle className="w-5 h-5 text-warning-600" />;
       case 'error':
-        return <AlertTriangle className="w-5 h-5 text-red-600" />;
+        return <AlertTriangle className="w-5 h-5 text-error-600" />;
       default:
-        return <Activity className="w-5 h-5 text-gray-400" />;
+        return <Activity className="w-5 h-5 text-text-muted" />;
     }
   };
 
   const getHealthColor = (health: number) => {
     if (health >= 90) {
-return 'bg-green-100 text-green-800';
+return 'bg-success-100 text-success-800';
 }
     if (health >= 70) {
-return 'bg-yellow-100 text-yellow-800';
+return 'bg-warning-100 text-warning-800';
 }
-    return 'bg-red-100 text-red-800';
+    return 'bg-error-100 text-error-800';
   };
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return <AlertTriangle className="w-4 h-4 text-red-600" />;
+        return <AlertTriangle className="w-4 h-4 text-error-600" />;
       case 'warning':
-        return <AlertCircle className="w-4 h-4 text-yellow-600" />;
+        return <AlertCircle className="w-4 h-4 text-warning-600" />;
       default:
-        return <Lightbulb className="w-4 h-4 text-blue-600" />;
+        return <Lightbulb className="w-4 h-4 text-info-600" />;
     }
   };
 
@@ -181,7 +181,7 @@ return 'bg-yellow-100 text-yellow-800';
     return (
       <div className="p-10 space-y-4">
         <h1 className="text-3xl font-bold">Intelligence Hub</h1>
-        <p className="text-gray-500">Loading unified intelligence view...</p>
+        <p className="text-text-tertiary">Loading unified intelligence view...</p>
       </div>
     );
   }
@@ -198,16 +198,16 @@ return 'bg-yellow-100 text-yellow-800';
 
       {/* Critical Alert */}
       {meta?.riskLevel === 'critical' && (
-        <Alert className="border-red-200 bg-red-50 dark:bg-red-950/30">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
+        <Alert className="border-error-200 bg-error-50 dark:bg-error-950/30">
+          <AlertTriangle className="h-4 w-4 text-error-600" />
           <AlertTitle>Critical Alert</AlertTitle>
           <AlertDescription>{meta.recommendedActions[0]}</AlertDescription>
         </Alert>
       )}
 
       {meta?.riskLevel === 'high' && (
-        <Alert className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30">
-          <AlertCircle className="h-4 w-4 text-yellow-600" />
+        <Alert className="border-warning-200 bg-warning-50 dark:bg-warning-950/30">
+          <AlertCircle className="h-4 w-4 text-warning-600" />
           <AlertTitle>High Risk Alert</AlertTitle>
           <AlertDescription>System degradation detected. Review focus areas and take recommended actions.</AlertDescription>
         </Alert>
@@ -225,23 +225,23 @@ return 'bg-yellow-100 text-yellow-800';
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-sm text-gray-500">System Status</p>
-                <Badge className={meta.systemStatus === 'healthy' ? 'bg-green-600' : meta.systemStatus === 'degraded' ? 'bg-yellow-600' : 'bg-red-600'}>
+                <p className="text-sm text-text-tertiary">System Status</p>
+                <Badge className={meta.systemStatus === 'healthy' ? 'bg-success-600' : meta.systemStatus === 'degraded' ? 'bg-warning-600' : 'bg-error-600'}>
                   {meta.systemStatus.toUpperCase()}
                 </Badge>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Risk Level</p>
-                <Badge className={meta.riskLevel === 'low' ? 'bg-green-600' : meta.riskLevel === 'medium' ? 'bg-yellow-600' : meta.riskLevel === 'high' ? 'bg-orange-600' : 'bg-red-600'}>
+                <p className="text-sm text-text-tertiary">Risk Level</p>
+                <Badge className={meta.riskLevel === 'low' ? 'bg-success-600' : meta.riskLevel === 'medium' ? 'bg-warning-600' : meta.riskLevel === 'high' ? 'bg-accent-600' : 'bg-error-600'}>
                   {meta.riskLevel.toUpperCase()}
                 </Badge>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Confidence</p>
+                <p className="text-sm text-text-tertiary">Confidence</p>
                 <p className="text-lg font-semibold">{(meta.confidence * 100).toFixed(0)}%</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Next Review</p>
+                <p className="text-sm text-text-tertiary">Next Review</p>
                 <p className="text-lg font-semibold">{meta.nextReviewIn}m</p>
               </div>
             </div>
@@ -262,7 +262,7 @@ return 'bg-yellow-100 text-yellow-800';
               <ul className="space-y-2">
                 {meta.recommendedActions.map((action, idx) => (
                   <li key={idx} className="flex gap-3">
-                    <span className="text-blue-600 font-bold">{idx + 1}.</span>
+                    <span className="text-info-600 font-bold">{idx + 1}.</span>
                     <span className="text-sm">{action}</span>
                   </li>
                 ))}
@@ -292,17 +292,17 @@ return 'bg-yellow-100 text-yellow-800';
                       {getStatusIcon(agent.status)}
                       {agent.agent}
                     </span>
-                    <Badge className={`capitalize ${agent.status === 'running' ? 'bg-green-600' : agent.status === 'idle' ? 'bg-gray-600' : agent.status === 'degraded' ? 'bg-yellow-600' : 'bg-red-600'}`}>
+                    <Badge className={`capitalize ${agent.status === 'running' ? 'bg-success-600' : agent.status === 'idle' ? 'bg-bg-raised' : agent.status === 'degraded' ? 'bg-warning-600' : 'bg-error-600'}`}>
                       {agent.status}
                     </Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Health Score</p>
+                    <p className="text-sm text-text-tertiary mb-1">Health Score</p>
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-green-600" style={{ width: `${agent.healthScore}%` }} />
+                      <div className="flex-1 h-2 bg-bg-hover rounded-full overflow-hidden">
+                        <div className="h-full bg-success-600" style={{ width: `${agent.healthScore}%` }} />
                       </div>
                       <span className={`text-sm font-semibold px-2 py-1 rounded ${getHealthColor(agent.healthScore)}`}>
                         {agent.healthScore}%
@@ -312,18 +312,18 @@ return 'bg-yellow-100 text-yellow-800';
 
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div>
-                      <p className="text-gray-500">Active Workflows</p>
+                      <p className="text-text-tertiary">Active Workflows</p>
                       <p className="font-semibold">{agent.activeWorkflows}</p>
                     </div>
                     <div>
-                      <p className="text-gray-500">Last Activity</p>
+                      <p className="text-text-tertiary">Last Activity</p>
                       <p className="font-semibold text-xs">{new Date(agent.lastActivityAt).toLocaleTimeString()}</p>
                     </div>
                   </div>
 
                   {agent.errorCount && agent.errorCount > 0 && (
-                    <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 rounded p-2">
-                      <p className="text-xs font-semibold text-red-700">Errors: {agent.errorCount}</p>
+                    <div className="bg-error-50 dark:bg-error-950/30 border border-error-200 rounded p-2">
+                      <p className="text-xs font-semibold text-error-700">Errors: {agent.errorCount}</p>
                     </div>
                   )}
                 </CardContent>
@@ -346,16 +346,16 @@ return 'bg-yellow-100 text-yellow-800';
                         <Badge
                           className={`capitalize ${
                             insight.severity === 'critical'
-                              ? 'bg-red-600'
+                              ? 'bg-error-600'
                               : insight.severity === 'warning'
-                              ? 'bg-yellow-600'
-                              : 'bg-blue-600'
+                              ? 'bg-warning-600'
+                              : 'bg-info-600'
                           }`}
                         >
                           {insight.severity}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary">
                         <span className="bg-bg-hover px-2 py-1 rounded capitalize">
                           {insight.theme.replace(/_/g, ' ')}
                         </span>
@@ -392,11 +392,11 @@ return 'bg-yellow-100 text-yellow-800';
                 </div>
                 <div className="flex items-center justify-between p-3 bg-bg-raised rounded border border-border-subtle">
                   <span className="text-sm">Coordination → Content: request_approval (launch_workflow)</span>
-                  <Badge variant="outline" className="border-yellow-300">12m ago</Badge>
+                  <Badge variant="outline" className="border-warning-300">12m ago</Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-bg-raised rounded border border-border-subtle">
                   <span className="text-sm">Research → Analysis: notify_risk (market_volatility)</span>
-                  <Badge variant="outline" className="border-red-300">15m ago</Badge>
+                  <Badge variant="outline" className="border-error-300">15m ago</Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-bg-raised rounded border border-border-subtle">
                   <span className="text-sm">Content → Coordination: acknowledge (asset_ready)</span>
@@ -419,7 +419,7 @@ return 'bg-yellow-100 text-yellow-800';
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold">847</p>
-                <p className="text-xs text-gray-500 mt-1">operations / hour</p>
+                <p className="text-xs text-text-tertiary mt-1">operations / hour</p>
               </CardContent>
             </Card>
 
@@ -432,7 +432,7 @@ return 'bg-yellow-100 text-yellow-800';
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold">1.2s</p>
-                <p className="text-xs text-gray-500 mt-1">across all agents</p>
+                <p className="text-xs text-text-tertiary mt-1">across all agents</p>
               </CardContent>
             </Card>
 
@@ -445,7 +445,7 @@ return 'bg-yellow-100 text-yellow-800';
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold">42</p>
-                <p className="text-xs text-gray-500 mt-1">workflows running</p>
+                <p className="text-xs text-text-tertiary mt-1">workflows running</p>
               </CardContent>
             </Card>
           </div>
@@ -453,7 +453,7 @@ return 'bg-yellow-100 text-yellow-800';
       </Tabs>
 
       {/* Footer */}
-      <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200">
+      <Card className="bg-info-50 dark:bg-info-950/20 border-info-200">
         <CardContent className="pt-6 text-sm text-text-secondary">
           <p>
             <strong>Last Updated:</strong> {new Date().toLocaleString()}

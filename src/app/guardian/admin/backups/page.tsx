@@ -332,7 +332,7 @@ export default function BackupsConsole() {
                       <h3 className="font-semibold">{backup.label}</h3>
                       <p className="text-sm text-text-secondary">{backup.backupKey}</p>
                     </div>
-                    <span className={`px-2 py-1 text-xs rounded ${backup.status === 'ready' ? 'bg-green-100 text-green-900' : 'bg-yellow-100 text-yellow-900'}`}>
+                    <span className={`px-2 py-1 text-xs rounded ${backup.status === 'ready' ? 'bg-success-100 text-success-900' : 'bg-warning-100 text-warning-900'}`}>
                       {backup.status}
                     </span>
                   </div>
@@ -398,7 +398,7 @@ export default function BackupsConsole() {
                   </label>
                 </div>
                 {restoreTargetMode === 'replace' && (
-                  <div className="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-900">
+                  <div className="mt-2 p-3 bg-warning-50 border border-warning-200 rounded text-sm text-warning-900">
                     ⚠️ Replace mode will delete entities not in backup. Use with caution.
                   </div>
                 )}
@@ -416,11 +416,11 @@ export default function BackupsConsole() {
 
           {restoreStep === 'preview' && currentRestoreRun && (
             <div className="space-y-4">
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
-                <h3 className="font-semibold text-yellow-900 mb-2">Preview Restore Changes</h3>
-                <p className="text-sm text-yellow-800 mb-3">Review the changes below. Click Apply to proceed.</p>
+              <div className="p-4 bg-warning-50 border border-warning-200 rounded">
+                <h3 className="font-semibold text-warning-900 mb-2">Preview Restore Changes</h3>
+                <p className="text-sm text-warning-800 mb-3">Review the changes below. Click Apply to proceed.</p>
 
-                <div className="bg-white rounded p-3 space-y-2 text-sm mb-4 font-mono">
+                <div className="bg-bg-card rounded p-3 space-y-2 text-sm mb-4 font-mono">
                   <p>
                     <strong>Backup:</strong> {selectedBackupForRestore?.substring(0, 8)}...
                   </p>
@@ -454,9 +454,9 @@ export default function BackupsConsole() {
 
           {restoreStep === 'apply' && (
             <div className="space-y-4">
-              <div className="p-4 bg-red-50 border border-red-200 rounded">
-                <h3 className="font-semibold text-red-900 mb-2">Confirm Restore</h3>
-                <p className="text-sm text-red-800 mb-4">
+              <div className="p-4 bg-error-50 border border-error-200 rounded">
+                <h3 className="font-semibold text-error-900 mb-2">Confirm Restore</h3>
+                <p className="text-sm text-error-800 mb-4">
                   This action will restore meta configuration from the selected backup. Type "RESTORE" and check the confirmation box to proceed.
                 </p>
 
@@ -465,7 +465,7 @@ export default function BackupsConsole() {
                   placeholder="Type RESTORE to confirm"
                   value={confirmPhrase}
                   onChange={(e) => setConfirmPhrase(e.target.value)}
-                  className="w-full px-3 py-2 bg-white rounded border mb-3"
+                  className="w-full px-3 py-2 bg-bg-card rounded border mb-3"
                 />
 
                 <label className="flex items-center gap-2 mb-4">
@@ -481,7 +481,7 @@ export default function BackupsConsole() {
               <button
                 onClick={handleApplyRestore}
                 disabled={applyingRestore || confirmPhrase !== 'RESTORE' || !confirmChecked}
-                className="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+                className="w-full px-4 py-2 bg-error-600 text-white rounded hover:bg-error-700 disabled:opacity-50"
               >
                 {applyingRestore ? 'Applying...' : 'Apply Restore'}
               </button>
@@ -500,9 +500,9 @@ export default function BackupsConsole() {
           )}
 
           {restoreStep === 'complete' && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded">
-              <h3 className="font-semibold text-green-900">✓ Restore Completed</h3>
-              <p className="text-sm text-green-800 mt-2">Restore applied successfully. Check the audit log (Z10) for details.</p>
+            <div className="p-4 bg-success-50 border border-success-200 rounded">
+              <h3 className="font-semibold text-success-900">Restore Completed</h3>
+              <p className="text-sm text-success-800 mt-2">Restore applied successfully. Check the audit log (Z10) for details.</p>
               <button
                 onClick={() => {
                   setRestoreStep('select');
@@ -511,7 +511,7 @@ export default function BackupsConsole() {
                   setConfirmPhrase('');
                   setConfirmChecked(false);
                 }}
-                className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                className="mt-4 px-4 py-2 bg-success-600 text-white rounded hover:bg-success-700"
               >
                 Start New Restore
               </button>

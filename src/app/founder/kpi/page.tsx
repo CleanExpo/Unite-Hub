@@ -76,13 +76,13 @@ export default function KPIPage() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      revenue: 'bg-green-500',
-      engagement: 'bg-blue-500',
+      revenue: 'bg-success-500',
+      engagement: 'bg-info-500',
       conversion: 'bg-purple-500',
-      retention: 'bg-orange-500',
+      retention: 'bg-accent-500',
       satisfaction: 'bg-pink-500',
     };
-    return colors[category] || 'bg-gray-500';
+    return colors[category] || 'bg-bg-hover0';
   };
 
   return (
@@ -121,7 +121,7 @@ export default function KPIPage() {
                       <h3 className="text-lg font-semibold text-text-primary">{kpi.name}</h3>
                     </div>
                     {!kpi.is_active && (
-                      <span className="px-2 py-1 text-xs bg-gray-500/10 text-gray-400 rounded">Inactive</span>
+                      <span className="px-2 py-1 text-xs bg-bg-hover0/10 text-text-muted rounded">Inactive</span>
                     )}
                   </div>
 
@@ -133,7 +133,7 @@ export default function KPIPage() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className={`flex items-center gap-2 text-sm ${isGood ? 'text-green-400' : 'text-red-400'}`}>
+                    <div className={`flex items-center gap-2 text-sm ${isGood ? 'text-success-400' : 'text-error-400'}`}>
                       {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                       <span>{delta > 0 ? '+' : ''}{delta.toFixed(2)}%</span>
                     </div>

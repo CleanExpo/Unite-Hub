@@ -48,13 +48,13 @@ export default function ConsolePage() {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">System Overview</h1>
-        <p className="text-gray-400">Unite-Hub Engine Status Dashboard</p>
+        <p className="text-text-muted">Unite-Hub Engine Status Dashboard</p>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-sm text-gray-400">Total Engines</div>
+        <div className="bg-bg-raised rounded-lg p-4">
+          <div className="text-sm text-text-muted">Total Engines</div>
           <div className="text-3xl font-bold">{engines.length}</div>
         </div>
         <div className="bg-success-900/50 rounded-lg p-4">
@@ -72,14 +72,14 @@ export default function ConsolePage() {
       </div>
 
       {/* Health Score */}
-      <div className="bg-gray-800 rounded-lg p-6 mb-8">
+      <div className="bg-bg-raised rounded-lg p-6 mb-8">
         <h2 className="text-xl font-semibold mb-4">System Health Score</h2>
         <div className="flex items-center gap-4">
           <div className="text-5xl font-bold text-success-400">
             {Math.round((healthyCount / engines.length) * 100)}%
           </div>
           <div className="flex-1">
-            <div className="h-4 bg-gray-700 rounded-full overflow-hidden">
+            <div className="h-4 bg-bg-elevated rounded-full overflow-hidden">
               <div
                 className="h-full bg-success-500 transition-all"
                 style={{ width: `${(healthyCount / engines.length) * 100}%` }}
@@ -100,7 +100,7 @@ export default function ConsolePage() {
                              engine.status === 'warning' ? 'text-warning-400' : 'text-error-400';
 
           return (
-            <div key={engine.name} className="bg-gray-800 rounded-lg p-4">
+            <div key={engine.name} className="bg-bg-raised rounded-lg p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Icon size={20} className="text-info-400" />
@@ -111,20 +111,20 @@ export default function ConsolePage() {
 
               <div className="grid grid-cols-3 gap-2 text-sm">
                 <div>
-                  <div className="text-gray-500">Ops</div>
+                  <div className="text-text-tertiary">Ops</div>
                   <div className="font-medium">{engine.metrics.operations}</div>
                 </div>
                 <div>
-                  <div className="text-gray-500">Errors</div>
+                  <div className="text-text-tertiary">Errors</div>
                   <div className="font-medium">{engine.metrics.errors}</div>
                 </div>
                 <div>
-                  <div className="text-gray-500">Latency</div>
+                  <div className="text-text-tertiary">Latency</div>
                   <div className="font-medium">{engine.metrics.latency}ms</div>
                 </div>
               </div>
 
-              <div className="mt-3 text-xs text-gray-500 flex items-center gap-1">
+              <div className="mt-3 text-xs text-text-tertiary flex items-center gap-1">
                 <Clock size={12} />
                 {engine.lastCheck}
               </div>

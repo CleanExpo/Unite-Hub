@@ -205,13 +205,13 @@ export default function SearchPage() {
 
   const getEntityTypeColor = (type: string) => {
     const colors: Record<string, string> = {
-      contact: 'bg-blue-500',
+      contact: 'bg-info-500',
       campaign: 'bg-purple-500',
-      template: 'bg-green-500',
-      experiment: 'bg-orange-500',
-      policy: 'bg-red-500',
+      template: 'bg-success-500',
+      experiment: 'bg-accent-500',
+      policy: 'bg-error-500',
     };
-    return colors[type] || 'bg-gray-500';
+    return colors[type] || 'bg-bg-hover0';
   };
 
   // =============================================================================
@@ -269,7 +269,7 @@ export default function SearchPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500 rounded-lg text-red-400">
+          <div className="mb-6 p-4 bg-error-500/10 border border-error-500 rounded-lg text-error-400">
             {error}
           </div>
         )}
@@ -426,7 +426,7 @@ export default function SearchPage() {
                   <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-text-primary">Avg Latency</h3>
-                      <Clock className="w-6 h-6 text-blue-500" />
+                      <Clock className="w-6 h-6 text-info-500" />
                     </div>
                     <p className="text-4xl font-bold text-text-primary">
                       {analytics.avg_latency_ms}

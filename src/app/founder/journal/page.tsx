@@ -199,7 +199,7 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
       <PageContainer>
         <Section>
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-info-500" />
           </div>
         </Section>
       </PageContainer>
@@ -212,8 +212,8 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
       <Section>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-100">Journal</h1>
-            <p className="text-gray-400 mt-2">
+            <h1 className="text-3xl font-bold text-text-primary">Journal</h1>
+            <p className="text-text-muted mt-2">
               Record insights, decisions, and reflections about your businesses
             </p>
           </div>
@@ -230,11 +230,11 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
       {/* New Entry Form */}
       {showNewEntry && (
         <Section>
-          <Card className="bg-gray-800/50 border-gray-700 p-6">
-            <h3 className="text-lg font-semibold text-gray-100 mb-4">New Journal Entry</h3>
+          <Card className="bg-bg-raised/50 border-border p-6">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">New Journal Entry</h3>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="title" className="text-gray-300">
+                <Label htmlFor="title" className="text-text-secondary">
                   Title
                 </Label>
                 <Input
@@ -243,19 +243,19 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="Entry title..."
-                  className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+                  className="mt-2 bg-bg-base/50 border-border text-text-primary"
                 />
               </div>
 
               <div>
-                <Label htmlFor="business" className="text-gray-300">
+                <Label htmlFor="business" className="text-text-secondary">
                   Related Business (Optional)
                 </Label>
                 <select
                   id="business"
                   value={newBusinessId}
                   onChange={(e) => setNewBusinessId(e.target.value)}
-                  className="mt-2 w-full h-10 px-3 bg-gray-900/50 border border-gray-700 text-gray-100 rounded-md"
+                  className="mt-2 w-full h-10 px-3 bg-bg-base/50 border border-border text-text-primary rounded-md"
                 >
                   <option value="">None</option>
                   {businesses.filter((b) => b.id !== 'all').map((business) => (
@@ -267,7 +267,7 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
               </div>
 
               <div>
-                <Label htmlFor="content" className="text-gray-300">
+                <Label htmlFor="content" className="text-text-secondary">
                   Content
                 </Label>
                 <Textarea
@@ -276,12 +276,12 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
                   onChange={(e) => setNewContent(e.target.value)}
                   placeholder="What's on your mind? Record insights, decisions, or reflections..."
                   rows={8}
-                  className="mt-2 bg-gray-900/50 border-gray-700 text-gray-100"
+                  className="mt-2 bg-bg-base/50 border-border text-text-primary"
                 />
               </div>
 
               <div>
-                <Label htmlFor="tags" className="text-gray-300">
+                <Label htmlFor="tags" className="text-text-secondary">
                   Tags
                 </Label>
                 <div className="flex items-center space-x-2 mt-2">
@@ -292,9 +292,9 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
                     placeholder="Add tag and press Enter..."
-                    className="flex-1 bg-gray-900/50 border-gray-700 text-gray-100"
+                    className="flex-1 bg-bg-base/50 border-border text-text-primary"
                   />
-                  <Button onClick={handleAddTag} variant="outline" className="border-gray-600">
+                  <Button onClick={handleAddTag} variant="outline" className="border-border">
                     Add
                   </Button>
                 </div>
@@ -328,7 +328,7 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
                     setNewBusinessId('');
                     setNewTags([]);
                   }}
-                  className="border-gray-600"
+                  className="border-border"
                 >
                   Cancel
                 </Button>
@@ -347,17 +347,17 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
 
       {/* Filters */}
       <Section>
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
+        <Card className="bg-bg-raised/50 border-border p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
               <Input
                 type="text"
                 placeholder="Search entries..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-900/50 border-gray-700 text-gray-100"
+                className="pl-10 bg-bg-base/50 border-border text-text-primary"
               />
             </div>
 
@@ -366,7 +366,7 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
               <select
                 value={selectedBusiness}
                 onChange={(e) => setSelectedBusiness(e.target.value)}
-                className="w-full h-10 px-3 bg-gray-900/50 border border-gray-700 text-gray-100 rounded-md"
+                className="w-full h-10 px-3 bg-bg-base/50 border border-border text-text-primary rounded-md"
               >
                 {businesses.map((business) => (
                   <option key={business.id} value={business.id}>
@@ -382,10 +382,10 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
       {/* Entries List */}
       <Section>
         {filteredEntries.length === 0 ? (
-          <Card className="bg-gray-800/50 border-gray-700 p-12 text-center">
-            <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-100 mb-2">No entries found</h3>
-            <p className="text-gray-400 mb-6">
+          <Card className="bg-bg-raised/50 border-border p-12 text-center">
+            <FileText className="w-16 h-16 text-text-muted mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-text-primary mb-2">No entries found</h3>
+            <p className="text-text-muted mb-6">
               {searchQuery
                 ? 'Try adjusting your search'
                 : 'Start documenting your business journey'}
@@ -403,11 +403,11 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
         ) : (
           <div className="space-y-6">
             {filteredEntries.map((entry) => (
-              <Card key={entry.id} className="bg-gray-800/50 border-gray-700 p-6">
+              <Card key={entry.id} className="bg-bg-raised/50 border-border p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-gray-100 mb-2">{entry.title}</h3>
-                    <div className="flex items-center space-x-4 text-sm text-gray-400">
+                    <h3 className="text-xl font-semibold text-text-primary mb-2">{entry.title}</h3>
+                    <div className="flex items-center space-x-4 text-sm text-text-muted">
                       <span className="flex items-center">
                         <Calendar className="w-4 h-4 mr-1" />
                         {formatDate(entry.timestamp)}
@@ -423,15 +423,15 @@ return `${Math.floor(diffDays / 7)} weeks ago`;
                 </div>
 
                 <div className="prose prose-invert max-w-none mb-4">
-                  <p className="text-gray-300 whitespace-pre-wrap">{entry.content}</p>
+                  <p className="text-text-secondary whitespace-pre-wrap">{entry.content}</p>
                 </div>
 
                 {entry.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-700">
+                  <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
                     {entry.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-1 bg-gray-700/50 text-gray-400 text-xs rounded border border-gray-600 flex items-center"
+                        className="px-2 py-1 bg-bg-elevated/50 text-text-muted text-xs rounded border border-border flex items-center"
                       >
                         <Tag className="w-3 h-3 mr-1" />
                         {tag}

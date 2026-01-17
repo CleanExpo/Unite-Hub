@@ -125,8 +125,8 @@ throw new Error('Failed to start run');
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-text-primary mb-2">Performance & Cost QA</h1>
           <p className="text-text-secondary">Load testing, SLO evaluation, and AI cost monitoring</p>
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-900">
+          <div className="mt-4 p-4 bg-info-50 border border-info-200 rounded-lg">
+            <p className="text-sm text-info-900">
               <strong>Simulation Only:</strong> All performance tests run against I01–I08 simulation flows.
               No production capacity or costs are affected.
             </p>
@@ -135,7 +135,7 @@ throw new Error('Failed to start run');
 
         {/* Error */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>
+          <div className="mb-6 p-4 bg-error-50 border border-error-200 rounded-lg text-error-700">{error}</div>
         )}
 
         {/* KPI Cards */}
@@ -159,7 +159,7 @@ throw new Error('Failed to start run');
             </div>
             <div className="p-4 bg-bg-card border border-border-subtle rounded-lg">
               <p className="text-sm text-text-secondary">AI Budget Alerts</p>
-              <p className="text-2xl font-bold mt-2 text-red-600">{criticalAiUsage.length}</p>
+              <p className="text-2xl font-bold mt-2 text-error-600">{criticalAiUsage.length}</p>
             </div>
           </div>
         )}
@@ -199,13 +199,13 @@ throw new Error('Failed to start run');
                       </div>
                       <div>
                         <p className="text-sm text-text-secondary">Success Rate</p>
-                        <p className="text-2xl font-bold text-green-600">
+                        <p className="text-2xl font-bold text-success-600">
                           {recentRun.total_requests > 0 ? ((recentRun.successful_requests / recentRun.total_requests) * 100).toFixed(1) : 0}%
                         </p>
                       </div>
                       <div>
                         <p className="text-sm text-text-secondary">SLO Result</p>
-                        <p className={`text-2xl font-bold ${recentRun.slo_result === 'pass' ? 'text-green-600' : recentRun.slo_result === 'fail' ? 'text-red-600' : 'text-yellow-600'}`}>
+                        <p className={`text-2xl font-bold ${recentRun.slo_result === 'pass' ? 'text-success-600' : recentRun.slo_result === 'fail' ? 'text-error-600' : 'text-warning-600'}`}>
                           {recentRun.slo_result?.toUpperCase() || 'N/A'}
                         </p>
                       </div>
@@ -245,13 +245,13 @@ throw new Error('Failed to start run');
                               <p className="text-sm text-text-secondary mt-1">{profile.description}</p>
                             )}
                             <div className="flex gap-2 mt-2 text-xs">
-                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">{profile.profile_type}</span>
-                              <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">{profile.target_entity_type}</span>
+                              <span className="bg-info-100 text-info-800 px-2 py-1 rounded">{profile.profile_type}</span>
+                              <span className="bg-bg-hover text-text-secondary px-2 py-1 rounded">{profile.target_entity_type}</span>
                             </div>
                           </div>
                           <button
                             onClick={() => startRun(profile.id)}
-                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 whitespace-nowrap"
+                            className="px-4 py-2 bg-success-600 text-white rounded hover:bg-success-700 whitespace-nowrap"
                           >
                             Run Test
                           </button>
@@ -284,10 +284,10 @@ throw new Error('Failed to start run');
                               <span
                                 className={`font-medium ${
                                   run.status === 'completed'
-                                    ? 'text-green-600'
+                                    ? 'text-success-600'
                                     : run.status === 'failed'
-                                      ? 'text-red-600'
-                                      : 'text-yellow-600'
+                                      ? 'text-error-600'
+                                      : 'text-warning-600'
                                 }`}
                               >
                                 {run.status}
@@ -296,10 +296,10 @@ throw new Error('Failed to start run');
                                 <span
                                   className={`font-medium ${
                                     run.slo_result === 'pass'
-                                      ? 'text-green-600'
+                                      ? 'text-success-600'
                                       : run.slo_result === 'fail'
-                                        ? 'text-red-600'
-                                        : 'text-yellow-600'
+                                        ? 'text-error-600'
+                                        : 'text-warning-600'
                                   }`}
                                 >
                                   SLO: {run.slo_result.toUpperCase()}
@@ -340,21 +340,21 @@ throw new Error('Failed to start run');
                           </div>
                           <div>
                             <p className="text-text-secondary text-sm">Successful</p>
-                            <p className="text-2xl font-bold text-green-600">{selectedRun.successful_requests}</p>
+                            <p className="text-2xl font-bold text-success-600">{selectedRun.successful_requests}</p>
                           </div>
                           <div>
                             <p className="text-text-secondary text-sm">Failed</p>
-                            <p className="text-2xl font-bold text-red-600">{selectedRun.failed_requests}</p>
+                            <p className="text-2xl font-bold text-error-600">{selectedRun.failed_requests}</p>
                           </div>
                           <div>
                             <p className="text-text-secondary text-sm">SLO Result</p>
                             <p
                               className={`text-2xl font-bold ${
                                 selectedRun.slo_result === 'pass'
-                                  ? 'text-green-600'
+                                  ? 'text-success-600'
                                   : selectedRun.slo_result === 'fail'
-                                    ? 'text-red-600'
-                                    : 'text-yellow-600'
+                                    ? 'text-error-600'
+                                    : 'text-warning-600'
                               }`}
                             >
                               {selectedRun.slo_result?.toUpperCase() || 'N/A'}
@@ -400,11 +400,11 @@ throw new Error('Failed to start run');
                 <h2 className="text-xl font-semibold text-text-primary mb-4">AI Usage Summary (30 days)</h2>
 
                 {criticalAiUsage.length > 0 && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="font-semibold text-red-900 mb-2">Budget Exceeded:</p>
+                  <div className="mb-6 p-4 bg-error-50 border border-error-200 rounded-lg">
+                    <p className="font-semibold text-error-900 mb-2">Budget Exceeded:</p>
                     <div className="space-y-2">
                       {criticalAiUsage.map((item) => (
-                        <div key={item.context} className="text-sm text-red-800">
+                        <div key={item.context} className="text-sm text-error-800">
                           <strong>{item.context}:</strong> ${item.estimatedCostUsd.toFixed(2)} | {item.totalTokens} tokens
                         </div>
                       ))}
@@ -413,11 +413,11 @@ throw new Error('Failed to start run');
                 )}
 
                 {warningAiUsage.length > 0 && (
-                  <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <p className="font-semibold text-yellow-900 mb-2">Budget Warning:</p>
+                  <div className="mb-6 p-4 bg-warning-50 border border-warning-200 rounded-lg">
+                    <p className="font-semibold text-warning-900 mb-2">Budget Warning:</p>
                     <div className="space-y-2">
                       {warningAiUsage.map((item) => (
-                        <div key={item.context} className="text-sm text-yellow-800">
+                        <div key={item.context} className="text-sm text-warning-800">
                           <strong>{item.context}:</strong> ${item.estimatedCostUsd.toFixed(2)} | {item.totalTokens} tokens
                         </div>
                       ))}
@@ -443,10 +443,10 @@ throw new Error('Failed to start run');
                             <span
                               className={`inline-block px-2 py-1 rounded text-xs font-medium mt-2 ${
                                 item.budgetState === 'exceeded'
-                                  ? 'bg-red-100 text-red-800'
+                                  ? 'bg-error-100 text-error-800'
                                   : item.budgetState === 'warning'
-                                    ? 'bg-yellow-100 text-yellow-800'
-                                    : 'bg-green-100 text-green-800'
+                                    ? 'bg-warning-100 text-warning-800'
+                                    : 'bg-success-100 text-success-800'
                               }`}
                             >
                               {item.budgetState.toUpperCase()}

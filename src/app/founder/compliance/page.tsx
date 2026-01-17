@@ -182,9 +182,9 @@ return;
       </div>
 
       {/* Legal Disclaimer */}
-      <Card className="border-amber-200 bg-amber-50">
+      <Card className="border-warning-200 bg-warning-50">
         <CardContent className="pt-4">
-          <p className="text-sm text-amber-800">
+          <p className="text-sm text-warning-800">
             <strong>Important:</strong> This compliance system provides automated pattern matching
             and is not a substitute for legal advice. Platform policies and regulations change
             frequently. Consult qualified professionals for critical compliance decisions.

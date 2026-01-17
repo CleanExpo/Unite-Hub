@@ -104,11 +104,11 @@ export default function UsagePage() {
 
   const getSeverityColor = (severity: string) => {
     const colors: Record<string, string> = {
-      high: 'bg-red-500',
-      medium: 'bg-yellow-500',
-      low: 'bg-blue-500',
+      high: 'bg-error-500',
+      medium: 'bg-warning-500',
+      low: 'bg-info-500',
     };
-    return colors[severity] || 'bg-gray-500';
+    return colors[severity] || 'bg-bg-hover0';
   };
 
   return (
@@ -185,7 +185,7 @@ export default function UsagePage() {
               <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-text-secondary">Avg Daily Cost</span>
-                  <TrendingUp className="w-5 h-5 text-green-400" />
+                  <TrendingUp className="w-5 h-5 text-success-400" />
                 </div>
                 <div className="text-3xl font-bold text-text-primary">
                   ${avgDailyCost.toFixed(2)}
@@ -196,7 +196,7 @@ export default function UsagePage() {
               <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-text-secondary">Total Usage</span>
-                  <Zap className="w-5 h-5 text-blue-400" />
+                  <Zap className="w-5 h-5 text-info-400" />
                 </div>
                 <div className="text-3xl font-bold text-text-primary">
                   {totalUsage.toFixed(0)}
@@ -315,10 +315,10 @@ export default function UsagePage() {
                     <span
                       className={`px-3 py-1 text-xs rounded ${
                         insights.cost_trend === 'increasing'
-                          ? 'bg-red-500/10 text-red-400'
+                          ? 'bg-error-500/10 text-error-400'
                           : insights.cost_trend === 'decreasing'
-                          ? 'bg-green-500/10 text-green-400'
-                          : 'bg-blue-500/10 text-blue-400'
+                          ? 'bg-success-500/10 text-success-400'
+                          : 'bg-info-500/10 text-info-400'
                       }`}
                     >
                       {insights.cost_trend}

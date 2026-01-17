@@ -259,7 +259,7 @@ export default function FounderPostingEnginePage() {
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-green-500">
+              <div className="text-2xl font-bold text-success-500">
                 {overview.published_count}
               </div>
               <p className="text-xs text-muted-foreground">Published</p>
@@ -267,7 +267,7 @@ export default function FounderPostingEnginePage() {
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-blue-500">
+              <div className="text-2xl font-bold text-info-500">
                 {overview.draft_count}
               </div>
               <p className="text-xs text-muted-foreground">Drafts</p>
@@ -275,7 +275,7 @@ export default function FounderPostingEnginePage() {
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-yellow-500">
+              <div className="text-2xl font-bold text-warning-500">
                 {overview.blocked_count}
               </div>
               <p className="text-xs text-muted-foreground">Blocked</p>
@@ -283,7 +283,7 @@ export default function FounderPostingEnginePage() {
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-red-500">
+              <div className="text-2xl font-bold text-error-500">
                 {overview.failed_count}
               </div>
               <p className="text-xs text-muted-foreground">Failed</p>
@@ -341,9 +341,9 @@ export default function FounderPostingEnginePage() {
       </Tabs>
 
       {/* Info Banner */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <AlertTriangle className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <AlertTriangle className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-muted-foreground">
             <p>
               <strong>Phase 85 Mode:</strong> Draft mode is enabled by default. The posting

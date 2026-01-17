@@ -138,10 +138,10 @@ export default function FounderEvolutionPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-yellow-500" />
+              <Lightbulb className="h-4 w-4 text-warning-500" />
               <span className="text-sm text-muted-foreground">Pending</span>
             </div>
-            <div className="text-2xl font-bold mt-1 text-yellow-500">
+            <div className="text-2xl font-bold mt-1 text-warning-500">
               {mockBriefing.pending_proposals}
             </div>
           </CardContent>
@@ -150,10 +150,10 @@ export default function FounderEvolutionPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-orange-500" />
+              <AlertCircle className="h-4 w-4 text-accent-500" />
               <span className="text-sm text-muted-foreground">Signals</span>
             </div>
-            <div className="text-2xl font-bold mt-1 text-orange-500">
+            <div className="text-2xl font-bold mt-1 text-accent-500">
               {mockBriefing.high_priority_signals}
             </div>
           </CardContent>
@@ -162,10 +162,10 @@ export default function FounderEvolutionPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
+              <CheckCircle2 className="h-4 w-4 text-success-500" />
               <span className="text-sm text-muted-foreground">Implemented</span>
             </div>
-            <div className="text-2xl font-bold mt-1 text-green-500">
+            <div className="text-2xl font-bold mt-1 text-success-500">
               {mockBriefing.recent_implementations}
             </div>
           </CardContent>
@@ -174,7 +174,7 @@ export default function FounderEvolutionPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-blue-500" />
+              <TrendingUp className="h-4 w-4 text-info-500" />
               <span className="text-sm text-muted-foreground">Health</span>
             </div>
             <div className="text-2xl font-bold mt-1">
@@ -246,7 +246,7 @@ export default function FounderEvolutionPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">System Health Trend</span>
-                <Badge className="bg-green-500">
+                <Badge className="bg-success-500">
                   {mockReport.system_health_trend}
                 </Badge>
               </div>
@@ -269,7 +269,7 @@ export default function FounderEvolutionPage() {
           {mockProposals.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center">
-                <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                <CheckCircle2 className="h-8 w-8 text-success-500 mx-auto mb-2" />
                 <p className="text-muted-foreground">No pending proposals</p>
               </CardContent>
             </Card>
@@ -288,14 +288,14 @@ export default function FounderEvolutionPage() {
                     <div className="text-sm font-medium">Token usage spike detected</div>
                     <div className="text-xs text-muted-foreground">cost_anomalies • 2h ago</div>
                   </div>
-                  <Badge className="bg-orange-500">High</Badge>
+                  <Badge className="bg-accent-500">High</Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
                   <div>
                     <div className="text-sm font-medium">Client activation delay</div>
                     <div className="text-xs text-muted-foreground">client_usage_patterns • 5h ago</div>
                   </div>
-                  <Badge className="bg-yellow-500">Medium</Badge>
+                  <Badge className="bg-warning-500">Medium</Badge>
                 </div>
               </div>
             </CardContent>
@@ -310,14 +310,14 @@ export default function FounderEvolutionPage() {
             <CardContent>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <CheckCircle2 className="h-4 w-4 text-success-500" />
                   <div className="flex-1">
                     <div className="text-sm font-medium">Governance audit optimization</div>
                     <div className="text-xs text-muted-foreground">Implemented 3 days ago</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <CheckCircle2 className="h-4 w-4 text-success-500" />
                   <div className="flex-1">
                     <div className="text-sm font-medium">Mission risk scoring enhancement</div>
                     <div className="text-xs text-muted-foreground">Implemented 1 week ago</div>

@@ -71,13 +71,13 @@ export default function ResiliencePage() {
       case "exceptional":
         return "bg-purple-500/10 text-purple-400 border-purple-500/20";
       case "strong":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "adequate":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "vulnerable":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "critical":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       default:
         return "bg-bg-subtle text-text-secondary border-border";
     }
@@ -88,15 +88,15 @@ export default function ResiliencePage() {
 return "text-purple-400";
 }
     if (score >= 70) {
-return "text-emerald-400";
+return "text-success-400";
 }
     if (score >= 50) {
 return "text-accent-400";
 }
     if (score >= 30) {
-return "text-amber-400";
+return "text-warning-400";
 }
-    return "text-red-400";
+    return "text-error-400";
   };
 
   if (authLoading || loading) {
@@ -151,7 +151,7 @@ return "text-amber-400";
 
           <Card className="bg-bg-card border-border p-6">
             <div className="text-sm text-text-secondary mb-1">Vulnerable Events</div>
-            <div className="text-3xl font-semibold text-amber-400">
+            <div className="text-3xl font-semibold text-warning-400">
               {summary.vulnerable_count}
             </div>
           </Card>
@@ -195,13 +195,13 @@ return "text-amber-400";
                   {metric.pressure_score !== null && (
                     <div>
                       <div className="text-text-secondary mb-1">Pressure Score</div>
-                      <div className="text-red-400 font-medium">{metric.pressure_score.toFixed(1)}</div>
+                      <div className="text-error-400 font-medium">{metric.pressure_score.toFixed(1)}</div>
                     </div>
                   )}
                   {metric.stability_score !== null && (
                     <div>
                       <div className="text-text-secondary mb-1">Stability Score</div>
-                      <div className="text-emerald-400 font-medium">{metric.stability_score.toFixed(1)}</div>
+                      <div className="text-success-400 font-medium">{metric.stability_score.toFixed(1)}</div>
                     </div>
                   )}
                 </div>

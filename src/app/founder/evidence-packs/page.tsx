@@ -31,9 +31,9 @@ export default function EvidencePacksPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "approved": return "bg-green-500/10 text-green-500";
-      case "exported": return "bg-blue-500/10 text-blue-500";
-      case "pending_review": return "bg-yellow-500/10 text-yellow-500";
+      case "approved": return "bg-success-500/10 text-success-500";
+      case "exported": return "bg-info-500/10 text-info-500";
+      case "pending_review": return "bg-warning-500/10 text-warning-500";
       case "draft": return "bg-bg-primary text-text-secondary";
       default: return "bg-bg-primary text-text-secondary";
     }

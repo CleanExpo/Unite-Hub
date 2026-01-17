@@ -159,7 +159,7 @@ export default function FounderArchivePage() {
                 <Card>
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-3">
-                      <Users className="h-8 w-8 text-blue-500" />
+                      <Users className="h-8 w-8 text-info-500" />
                       <div>
                         <p className="text-2xl font-bold">
                           {overview.entriesByClient.length}
@@ -188,7 +188,7 @@ export default function FounderArchivePage() {
                 <Card>
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-3">
-                      <AlertTriangle className="h-8 w-8 text-orange-500" />
+                      <AlertTriangle className="h-8 w-8 text-accent-500" />
                       <div>
                         <p className="text-2xl font-bold">
                           {overview.entriesByType['director_alert'] || 0}
@@ -255,9 +255,9 @@ export default function FounderArchivePage() {
       </Tabs>
 
       {/* Truth notice */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <Info className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <Info className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-muted-foreground">
             All archive entries are tied to real events and artifacts. Entries may be
             filtered but never fabricated.
@@ -276,17 +276,17 @@ function generateFounderDemoEntries(clients: ClientItem[]): ClientArchiveEntry[]
   const entries: ClientArchiveEntry[] = [];
 
   const types = [
-    { type: 'weekly_report', source: 'reports', category: 'reports', icon: 'FileText', color: 'text-blue-500', label: 'Weekly Report' },
+    { type: 'weekly_report', source: 'reports', category: 'reports', icon: 'FileText', color: 'text-info-500', label: 'Weekly Report' },
     { type: 'monthly_report', source: 'reports', category: 'reports', icon: 'FileText', color: 'text-purple-500', label: 'Monthly Report' },
     { type: 'story', source: 'storytelling', category: 'stories', icon: 'BookOpen', color: 'text-indigo-500', label: 'Story' },
-    { type: 'touchpoint', source: 'touchpoints', category: 'events', icon: 'MessageCircle', color: 'text-cyan-500', label: 'Touchpoint' },
-    { type: 'performance_event', source: 'performance', category: 'events', icon: 'TrendingUp', color: 'text-emerald-500', label: 'Performance' },
-    { type: 'success_event', source: 'success', category: 'milestones', icon: 'Trophy', color: 'text-yellow-500', label: 'Success' },
-    { type: 'director_alert', source: 'director', category: 'alerts', icon: 'AlertTriangle', color: 'text-red-500', label: 'Director Alert' },
+    { type: 'touchpoint', source: 'touchpoints', category: 'events', icon: 'MessageCircle', color: 'text-info-500', label: 'Touchpoint' },
+    { type: 'performance_event', source: 'performance', category: 'events', icon: 'TrendingUp', color: 'text-success-500', label: 'Performance' },
+    { type: 'success_event', source: 'success', category: 'milestones', icon: 'Trophy', color: 'text-warning-500', label: 'Success' },
+    { type: 'director_alert', source: 'director', category: 'alerts', icon: 'AlertTriangle', color: 'text-error-500', label: 'Director Alert' },
     // VIF event types (Phase 79)
     { type: 'vif_asset_created', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Image', color: 'text-fuchsia-500', label: 'Visual Created' },
-    { type: 'vif_campaign_launched', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Rocket', color: 'text-blue-500', label: 'Campaign Launched' },
-    { type: 'vif_ab_visual_test_concluded', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Trophy', color: 'text-emerald-500', label: 'A/B Test Winner' },
+    { type: 'vif_campaign_launched', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Rocket', color: 'text-info-500', label: 'Campaign Launched' },
+    { type: 'vif_ab_visual_test_concluded', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Trophy', color: 'text-success-500', label: 'A/B Test Winner' },
   ];
 
   clients.forEach((client, clientIndex) => {

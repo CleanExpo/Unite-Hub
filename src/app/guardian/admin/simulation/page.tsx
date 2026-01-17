@@ -301,7 +301,7 @@ throw new Error('Failed to generate summary');
             <section className="rounded-xl border bg-card p-6 space-y-4">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-lg font-semibold">Latest Simulation Summary</h2>
-                <span className="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
+                <span className="inline-flex items-center rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-700">
                   {selectedRun.status}
                 </span>
               </div>
@@ -428,10 +428,10 @@ throw new Error('Failed to generate summary');
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
                         run.status === 'completed'
-                          ? 'bg-green-50 text-green-700'
+                          ? 'bg-success-50 text-success-700'
                           : run.status === 'running'
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'bg-red-50 text-red-700'
+                            ? 'bg-info-50 text-info-700'
+                            : 'bg-error-50 text-error-700'
                       }`}
                     >
                       {run.status}
@@ -481,22 +481,22 @@ throw new Error('Failed to generate summary');
                   {/* Severity Breakdown */}
                   <div className="flex gap-2 flex-wrap">
                     {event.severity_breakdown?.critical > 0 && (
-                      <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700">
+                      <span className="inline-flex items-center rounded-full bg-error-50 px-2 py-1 text-xs font-medium text-error-700">
                         Critical: {event.severity_breakdown.critical}
                       </span>
                     )}
                     {event.severity_breakdown?.high > 0 && (
-                      <span className="inline-flex items-center rounded-full bg-orange-50 px-2 py-1 text-xs font-medium text-orange-700">
+                      <span className="inline-flex items-center rounded-full bg-accent-50 px-2 py-1 text-xs font-medium text-accent-700">
                         High: {event.severity_breakdown.high}
                       </span>
                     )}
                     {event.severity_breakdown?.medium > 0 && (
-                      <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700">
+                      <span className="inline-flex items-center rounded-full bg-warning-50 px-2 py-1 text-xs font-medium text-warning-700">
                         Medium: {event.severity_breakdown.medium}
                       </span>
                     )}
                     {event.severity_breakdown?.low > 0 && (
-                      <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
+                      <span className="inline-flex items-center rounded-full bg-info-50 px-2 py-1 text-xs font-medium text-info-700">
                         Low: {event.severity_breakdown.low}
                       </span>
                     )}
@@ -539,7 +539,7 @@ throw new Error('Failed to generate summary');
                   <h4 className="text-sm font-semibold">Potential Risks</h4>
                   <ul className="space-y-1">
                     {summary.potentialRisks.map((risk, i) => (
-                      <li key={i} className="text-sm text-amber-600">
+                      <li key={i} className="text-sm text-warning-600">
                         ⚠️ {risk}
                       </li>
                     ))}

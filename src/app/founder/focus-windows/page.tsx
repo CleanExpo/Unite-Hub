@@ -74,30 +74,30 @@ export default function FocusWindowsPage() {
 
   const labelColor = (label: string) => {
     const colors: Record<string, string> = {
-      "peak-focus": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-      "high-focus": "bg-green-500/10 text-green-400 border-green-500/20",
-      "medium-focus": "bg-blue-500/10 text-blue-400 border-blue-500/20",
-      "low-focus": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+      "peak-focus": "bg-success-500/10 text-success-400 border-emerald-500/20",
+      "high-focus": "bg-success-500/10 text-success-400 border-success-500/20",
+      "medium-focus": "bg-info-500/10 text-info-400 border-info-500/20",
+      "low-focus": "bg-warning-500/10 text-warning-400 border-warning-500/20",
       recovery: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-      avoid: "bg-red-500/10 text-red-400 border-red-500/20",
+      avoid: "bg-error-500/10 text-error-400 border-error-500/20",
     };
     return colors[label] || "bg-bg-subtle text-text-secondary border-border";
   };
 
   const certaintyColor = (certainty: number) => {
     if (certainty >= 85) {
-return "text-emerald-400";
+return "text-success-400";
 }
     if (certainty >= 70) {
-return "text-green-400";
+return "text-success-400";
 }
     if (certainty >= 50) {
-return "text-blue-400";
+return "text-info-400";
 }
     if (certainty >= 30) {
-return "text-amber-400";
+return "text-warning-400";
 }
-    return "text-red-400";
+    return "text-error-400";
   };
 
   if (authLoading || loading) {
@@ -138,14 +138,14 @@ return "text-amber-400";
 
           <Card className="bg-bg-card border-border p-6">
             <div className="text-sm text-text-secondary mb-1">Peak Windows</div>
-            <div className="text-3xl font-semibold text-emerald-400">
+            <div className="text-3xl font-semibold text-success-400">
               {summary.peak_focus_count}
             </div>
           </Card>
 
           <Card className="bg-bg-card border-border p-6">
             <div className="text-sm text-text-secondary mb-1">High Windows</div>
-            <div className="text-3xl font-semibold text-green-400">
+            <div className="text-3xl font-semibold text-success-400">
               {summary.high_focus_count}
             </div>
           </Card>
@@ -160,8 +160,8 @@ return "text-amber-400";
       )}
 
       {summary?.next_peak_window && (
-        <Card className="bg-gradient-to-r from-emerald-500/5 to-green-500/5 border-emerald-500/20 p-6">
-          <h3 className="text-lg font-semibold text-emerald-400 mb-2">Next Peak Focus Window</h3>
+        <Card className="bg-gradient-to-r from-emerald-500/5 to-success-500/5 border-emerald-500/20 p-6">
+          <h3 className="text-lg font-semibold text-success-400 mb-2">Next Peak Focus Window</h3>
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
               <div className="text-text-secondary mb-1">Start Time</div>
@@ -238,7 +238,7 @@ return "text-amber-400";
                       {window.recommended_activities.map((activity, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-xs"
+                          className="px-2 py-1 rounded bg-success-500/10 text-success-400 text-xs"
                         >
                           {activity}
                         </span>

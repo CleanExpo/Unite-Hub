@@ -67,12 +67,12 @@ export default function GuardianInsightsPage() {
 
   const riskColor =
     !summary?.risk_latest || summary.risk_latest.score < 25
-      ? 'text-cyan-400'
+      ? 'text-info-400'
       : summary.risk_latest.score < 50
-      ? 'text-amber-400'
+      ? 'text-warning-400'
       : summary.risk_latest.score < 75
-      ? 'text-orange-400'
-      : 'text-red-400';
+      ? 'text-accent-400'
+      : 'text-error-400';
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 space-y-6">

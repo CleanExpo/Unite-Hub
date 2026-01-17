@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireExecutionContext } from "@/lib/execution-context"
+import { hasPermission } from "@/lib/core/permissionService"
+
 // Health service functions - temporarily stubbed
 const getHealthSummary = async (workspaceId: string) => ({ status: 'ok', timestamp: new Date() })
 const getLatestResults = async (workspaceId: string) => ({ checks: [] })
 const runTenantChecks = async (workspaceId?: string) => ({ checks: [] })
-
-// Permissions check - temporarily allow all
-const hasPermission = async (userId: string, workspaceId: string, resource: string, action: string) => true
 
 /**
  * GET /api/admin/health
@@ -53,7 +52,7 @@ return ctxResult.response
   const canView = await hasPermission(
     user.id,
     workspaceId,
-    "settings",
+    "admin",
     "read"
   )
 
@@ -98,7 +97,7 @@ return ctxResult.response
   const canWrite = await hasPermission(
     user.id,
     workspaceId,
-    "settings",
+    "admin",
     "write"
   )
 

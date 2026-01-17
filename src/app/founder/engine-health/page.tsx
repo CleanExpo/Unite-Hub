@@ -36,10 +36,10 @@ return;
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'healthy': return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'degraded': return <AlertTriangle className="h-4 w-4 text-amber-600" />;
-      case 'critical': return <XCircle className="h-4 w-4 text-red-600" />;
-      default: return <Activity className="h-4 w-4 text-gray-600" />;
+      case 'healthy': return <CheckCircle className="h-4 w-4 text-success-600" />;
+      case 'degraded': return <AlertTriangle className="h-4 w-4 text-warning-600" />;
+      case 'critical': return <XCircle className="h-4 w-4 text-error-600" />;
+      default: return <Activity className="h-4 w-4 text-text-muted" />;
     }
   };
 
@@ -67,7 +67,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
               </CardHeader>
               <CardContent>
                 {snapshot.anomalyFlags.length > 0 && snapshot.anomalyFlags.map((flag, i) => (
-                  <div key={i} className="text-xs text-red-600 mb-1">⚠ {flag.description}</div>
+                  <div key={i} className="text-xs text-error-600 mb-1">⚠ {flag.description}</div>
                 ))}
                 {snapshot.uncertaintyNotes && <div className="text-xs text-muted-foreground italic mt-2">{snapshot.uncertaintyNotes}</div>}
               </CardContent>
@@ -75,7 +75,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
           ))}
         </div>
       )}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">Health Monitoring</div><p>Health statuses derived from measurable metrics. No engine marked healthy without data. All anomalies clearly flagged.</p></div></div></CardContent></Card>
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" /><div className="text-sm text-warning-800 dark:text-warning-200"><div className="font-medium mb-1">Health Monitoring</div><p>Health statuses derived from measurable metrics. No engine marked healthy without data. All anomalies clearly flagged.</p></div></div></CardContent></Card>
     </div>
   );
 }

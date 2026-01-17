@@ -105,15 +105,15 @@ export default function ManagedServiceProjectsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
+        return 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-300';
       case 'pending':
-        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300';
+        return 'bg-warning-100 dark:bg-warning-900/30 text-warning-700 dark:text-warning-300';
       case 'paused':
-        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
+        return 'bg-info-100 dark:bg-info-900/30 text-info-700 dark:text-info-300';
       case 'completed':
         return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300';
       case 'cancelled':
-        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
+        return 'bg-error-100 dark:bg-error-900/30 text-error-700 dark:text-error-300';
       default:
         return 'bg-bg-hover text-text-secondary';
     }
@@ -158,7 +158,7 @@ export default function ManagedServiceProjectsPage() {
         </div>
         <button
           onClick={() => router.push('/founder/synthex/projects/new')}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="flex items-center gap-2 bg-info-600 hover:bg-info-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
         >
           <Plus className="w-4 h-4" />
           New Project
@@ -173,7 +173,7 @@ export default function ManagedServiceProjectsPage() {
               <p className="text-sm text-text-secondary">Total Projects</p>
               <p className="text-2xl font-bold text-text-primary mt-1">{stats.totalProjects}</p>
             </div>
-            <TrendingUp className="w-8 h-8 text-blue-500" />
+            <TrendingUp className="w-8 h-8 text-info-500" />
           </div>
         </div>
 
@@ -181,9 +181,9 @@ export default function ManagedServiceProjectsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-text-secondary">Active Projects</p>
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">{stats.activeProjects}</p>
+              <p className="text-2xl font-bold text-success-600 dark:text-success-400 mt-1">{stats.activeProjects}</p>
             </div>
-            <CheckCircle className="w-8 h-8 text-green-500" />
+            <CheckCircle className="w-8 h-8 text-success-500" />
           </div>
         </div>
 
@@ -201,17 +201,17 @@ export default function ManagedServiceProjectsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-text-secondary">Total Hours/Month</p>
-              <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">{stats.totalHoursAllocated}</p>
+              <p className="text-2xl font-bold text-accent-600 dark:text-accent-400 mt-1">{stats.totalHoursAllocated}</p>
             </div>
-            <Clock className="w-8 h-8 text-orange-500" />
+            <Clock className="w-8 h-8 text-accent-500" />
           </div>
         </div>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+        <div className="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-4">
+          <p className="text-sm text-error-700 dark:text-error-300">{error}</p>
         </div>
       )}
 
@@ -219,11 +219,11 @@ export default function ManagedServiceProjectsPage() {
       <div className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden">
         {projects.length === 0 ? (
           <div className="p-12 text-center">
-            <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <AlertCircle className="w-12 h-12 text-text-muted mx-auto mb-4" />
             <p className="text-text-secondary mb-4">No projects yet</p>
             <button
               onClick={() => router.push('/founder/synthex/projects/new')}
-              className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              className="text-info-600 dark:text-info-400 hover:underline font-medium"
             >
               Create your first project
             </button>
@@ -285,7 +285,7 @@ export default function ManagedServiceProjectsPage() {
 
                   <div className="text-right">
                     <p className="text-xs text-text-muted mb-1">Hours/Month</p>
-                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{project.monthly_hours}</p>
+                    <p className="text-2xl font-bold text-info-600 dark:text-info-400">{project.monthly_hours}</p>
                   </div>
                 </div>
               </div>

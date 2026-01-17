@@ -26,15 +26,15 @@ interface CoachPanelProps {
 }
 
 const SEVERITY_COLORS = {
-  info: 'bg-blue-100 text-blue-800',
-  tip: 'bg-green-100 text-green-800',
-  important: 'bg-amber-100 text-amber-800',
+  info: 'bg-info-100 text-info-800',
+  tip: 'bg-success-100 text-success-800',
+  important: 'bg-warning-100 text-warning-800',
 };
 
 const PRIORITY_ICONS = {
-  high: <AlertCircle className="w-4 h-4 text-red-500" />,
-  medium: <AlertCircle className="w-4 h-4 text-yellow-500" />,
-  low: <AlertCircle className="w-4 h-4 text-blue-500" />,
+  high: <AlertCircle className="w-4 h-4 text-error-500" />,
+  medium: <AlertCircle className="w-4 h-4 text-warning-500" />,
+  low: <AlertCircle className="w-4 h-4 text-info-500" />,
 };
 
 export default function CoachPanel({ workspaceId }: CoachPanelProps) {
@@ -104,7 +104,7 @@ export default function CoachPanel({ workspaceId }: CoachPanelProps) {
           <CardTitle className="text-lg">Guardian Coach</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600">Loading guidance...</p>
+          <p className="text-sm text-text-muted">Loading guidance...</p>
         </CardContent>
       </Card>
     );
@@ -117,7 +117,7 @@ export default function CoachPanel({ workspaceId }: CoachPanelProps) {
           <CardTitle className="text-lg">Guardian Coach</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-red-600">Error loading nudges</p>
+          <p className="text-sm text-error-600">Error loading nudges</p>
         </CardContent>
       </Card>
     );
@@ -137,22 +137,22 @@ export default function CoachPanel({ workspaceId }: CoachPanelProps) {
       <CardContent>
         {nudges.length === 0 ? (
           <div className="text-center py-4">
-            <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">You're all caught up!</p>
+            <CheckCircle2 className="w-8 h-8 text-success-500 mx-auto mb-2" />
+            <p className="text-sm text-text-muted">You're all caught up!</p>
           </div>
         ) : (
           <div className="space-y-3">
             {nudges.map((nudge) => (
               <div
                 key={nudge.id}
-                className="border border-gray-200 rounded-lg p-3 bg-gradient-to-r from-blue-50 to-transparent"
+                className="border border-border rounded-lg p-3 bg-gradient-to-r from-info-50 to-transparent"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-start gap-2 flex-1">
                     {PRIORITY_ICONS[nudge.priority]}
                     <div>
-                      <h4 className="font-semibold text-sm text-gray-900">{nudge.title}</h4>
+                      <h4 className="font-semibold text-sm text-text-primary">{nudge.title}</h4>
                       <Badge
                         className={`text-xs mt-1 ${SEVERITY_COLORS[nudge.severity]}`}
                         variant="outline"
@@ -163,18 +163,18 @@ export default function CoachPanel({ workspaceId }: CoachPanelProps) {
                   </div>
                   <button
                     onClick={() => handleNudgeAction(nudge.id, 'dismissed')}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-text-muted hover:text-text-secondary"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
                 {/* Body */}
-                <p className="text-sm text-gray-700 mb-3">{nudge.body}</p>
+                <p className="text-sm text-text-secondary mb-3">{nudge.body}</p>
 
                 {/* Micro Tips (from AI enhancement) */}
                 {nudge.metadata.ai_micro_tips && nudge.metadata.ai_micro_tips.length > 0 && (
-                  <div className="bg-white/50 rounded p-2 mb-3 text-xs text-gray-600 space-y-1">
+                  <div className="bg-bg-card/50 rounded p-2 mb-3 text-xs text-text-muted space-y-1">
                     {nudge.metadata.ai_micro_tips.map((tip: string, idx: number) => (
                       <div key={idx}>• {tip}</div>
                     ))}
@@ -194,7 +194,7 @@ export default function CoachPanel({ workspaceId }: CoachPanelProps) {
                     size="sm"
                     variant="ghost"
                     onClick={() => handleNudgeAction(nudge.id, 'dismissed')}
-                    className="text-gray-600 hover:text-gray-900"
+                    className="text-text-muted hover:text-text-primary"
                   >
                     Later
                   </Button>

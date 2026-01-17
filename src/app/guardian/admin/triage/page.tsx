@@ -71,10 +71,10 @@ interface DetailItem extends TriageItem {
 
 const BAND_COLORS: Record<string, { bg: string; text: string; icon: string }> =
   {
-    critical: { bg: "bg-red-100", text: "text-red-900", icon: "🔴" },
-    high: { bg: "bg-orange-100", text: "text-orange-900", icon: "🟠" },
-    medium: { bg: "bg-yellow-100", text: "text-yellow-900", icon: "🟡" },
-    low: { bg: "bg-green-100", text: "text-green-900", icon: "🟢" },
+    critical: { bg: "bg-error-100", text: "text-error-900", icon: "🔴" },
+    high: { bg: "bg-accent-100", text: "text-accent-900", icon: "🟠" },
+    medium: { bg: "bg-warning-100", text: "text-warning-900", icon: "🟡" },
+    low: { bg: "bg-success-100", text: "text-success-900", icon: "🟢" },
   };
 
 const TRIAGE_STATUSES = [

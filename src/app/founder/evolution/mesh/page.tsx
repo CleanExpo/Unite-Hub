@@ -92,7 +92,7 @@ return <div className="container mx-auto p-6"><div className="flex items-center 
           </Card>
         </div>
       )}
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">Mesh Transparency</div><p>Influence weights disclosed. Impact confidence links shown. Temporal decay factors applied. Feedback loops detected and flagged.</p></div></div></CardContent></Card>
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" /><div className="text-sm text-warning-800 dark:text-warning-200"><div className="font-medium mb-1">Mesh Transparency</div><p>Influence weights disclosed. Impact confidence links shown. Temporal decay factors applied. Feedback loops detected and flagged.</p></div></div></CardContent></Card>
     </div>
   );
 }

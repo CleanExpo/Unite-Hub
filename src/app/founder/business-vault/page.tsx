@@ -27,7 +27,7 @@ async function BusinessVaultContent() {
         </div>
         <div className="rounded-xl border bg-card p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
+            <div className="p-2 rounded-lg bg-info-500/10 text-info-500">
               <Layers className="h-5 w-5" />
             </div>
             <div>
@@ -38,7 +38,7 @@ async function BusinessVaultContent() {
         </div>
         <div className="rounded-xl border bg-card p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-green-500/10 text-green-500">
+            <div className="p-2 rounded-lg bg-success-500/10 text-success-500">
               <BarChart3 className="h-5 w-5" />
             </div>
             <div>

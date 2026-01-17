@@ -181,7 +181,7 @@ export default function AutomationConsolePage() {
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <span className={`px-2 py-1 text-xs rounded ${schedule.is_active ? 'bg-green-100 text-green-900' : 'bg-gray-100 text-gray-900'}`}>
+                    <span className={`px-2 py-1 text-xs rounded ${schedule.is_active ? 'bg-success-100 text-success-900' : 'bg-bg-hover text-text-primary'}`}>
                       {schedule.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
@@ -233,7 +233,7 @@ export default function AutomationConsolePage() {
                       </p>
                     )}
                   </div>
-                  <span className={`px-2 py-1 text-xs rounded ${trigger.is_active ? 'bg-green-100 text-green-900' : 'bg-gray-100 text-gray-900'}`}>
+                  <span className={`px-2 py-1 text-xs rounded ${trigger.is_active ? 'bg-success-100 text-success-900' : 'bg-bg-hover text-text-primary'}`}>
                     {trigger.is_active ? 'Active' : 'Inactive'}
                   </span>
                 </div>
@@ -260,7 +260,7 @@ export default function AutomationConsolePage() {
                   <tr key={exec.id} className="border-b hover:bg-bg-card">
                     <td className="p-2 text-xs">{new Date(exec.started_at).toLocaleString()}</td>
                     <td className="p-2">
-                      <span className={`px-2 py-1 text-xs rounded ${exec.status === 'completed' ? 'bg-green-100' : exec.status === 'failed' ? 'bg-red-100' : 'bg-yellow-100'}`}>
+                      <span className={`px-2 py-1 text-xs rounded ${exec.status === 'completed' ? 'bg-success-100' : exec.status === 'failed' ? 'bg-error-100' : 'bg-warning-100'}`}>
                         {exec.status}
                       </span>
                     </td>

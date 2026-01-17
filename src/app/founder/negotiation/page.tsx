@@ -184,7 +184,7 @@ return;
           <button
             onClick={handleRefresh}
             disabled={manualRefresh || isLoadingSessions}
-            className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-2 bg-info-600 hover:bg-info-700 disabled:bg-bg-elevated text-white rounded-lg transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${manualRefresh ? 'animate-spin' : ''}`} />
             Refresh
@@ -192,7 +192,7 @@ return;
 
           <button
             onClick={() => setShowControls(!showControls)}
-            className="inline-flex items-center gap-2 px-3 py-2 bg-bg-hover hover:bg-gray-300 dark:hover:bg-gray-600 text-text-primary rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-2 bg-bg-hover hover:bg-bg-hover dark:hover:bg-bg-raised text-text-primary rounded-lg transition-colors"
           >
             <Settings className="w-4 h-4" />
             Controls
@@ -202,27 +202,27 @@ return;
 
       {/* Status Indicator */}
       {pollingActive && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 flex items-center gap-3">
-          <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+        <div className="bg-info-50 dark:bg-info-900/20 border border-info-200 dark:border-info-800 rounded-lg p-3 flex items-center gap-3">
+          <div className="w-2 h-2 bg-info-600 rounded-full animate-pulse" />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">Live Negotiation Active</p>
-            <p className="text-xs text-blue-600 dark:text-blue-400">Polling every {pollingInterval / 1000}s</p>
+            <p className="text-sm font-semibold text-info-700 dark:text-info-300">Live Negotiation Active</p>
+            <p className="text-xs text-info-600 dark:text-info-400">Polling every {pollingInterval / 1000}s</p>
           </div>
         </div>
       )}
 
       {/* Founder Controls */}
       {showControls && selectedSession && (
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 space-y-3">
+        <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-4 space-y-3">
           <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-            <p className="text-sm font-semibold text-amber-700 dark:text-amber-300">Founder Controls</p>
+            <AlertTriangle className="w-4 h-4 text-warning-600 dark:text-warning-400" />
+            <p className="text-sm font-semibold text-warning-700 dark:text-warning-300">Founder Controls</p>
           </div>
 
           <div className="space-y-2">
             <button
               onClick={handleRefresh}
-              className="w-full px-4 py-2 bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-300 rounded text-sm font-medium transition-colors"
+              className="w-full px-4 py-2 bg-warning-100 dark:bg-warning-900/30 hover:bg-warning-200 dark:hover:bg-warning-900/50 text-warning-700 dark:text-warning-300 rounded text-sm font-medium transition-colors"
             >
               Re-run Negotiation
             </button>
@@ -230,7 +230,7 @@ return;
             {currentDecision && currentDecision.riskScore < 80 && (
               <button
                 onClick={handlePublishDecision}
-                className="w-full px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded text-sm font-medium transition-colors"
+                className="w-full px-4 py-2 bg-warning-600 hover:bg-warning-700 text-white rounded text-sm font-medium transition-colors"
               >
                 Publish Decision (Override Available)
               </button>
@@ -239,7 +239,7 @@ return;
             {currentDecision && currentDecision.riskScore >= 80 && (
               <button
                 disabled
-                className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-700 text-text-secondary rounded text-sm font-medium cursor-not-allowed"
+                className="w-full px-4 py-2 bg-bg-hover dark:bg-bg-elevated text-text-secondary rounded text-sm font-medium cursor-not-allowed"
               >
                 Decision Locked (Risk ≥ 80 - Safety Override)
               </button>
@@ -247,7 +247,7 @@ return;
 
             <button
               onClick={() => setActiveTab('history')}
-              className="w-full px-4 py-2 bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-300 rounded text-sm font-medium transition-colors"
+              className="w-full px-4 py-2 bg-warning-100 dark:bg-warning-900/30 hover:bg-warning-200 dark:hover:bg-warning-900/50 text-warning-700 dark:text-warning-300 rounded text-sm font-medium transition-colors"
             >
               Escalate to Manual Review
             </button>
@@ -264,8 +264,8 @@ return;
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-text-secondary hover:text-gray-900 dark:hover:text-gray-200'
+                  ? 'border-info-600 text-info-600 dark:text-info-400'
+                  : 'border-transparent text-text-secondary hover:text-text-primary dark:hover:text-text-secondary'
               }`}
             >
               {tab.label}
@@ -296,8 +296,8 @@ return;
           <div className="space-y-4">
             {selectedSession ? (
               <>
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                <div className="bg-info-50 dark:bg-info-900/20 border border-info-200 dark:border-info-800 rounded-lg p-3">
+                  <p className="text-sm text-info-700 dark:text-info-300">
                     <strong>{selectedSession.objective}</strong> - {currentProposals.length} proposals
                   </p>
                 </div>
@@ -314,8 +314,8 @@ return;
           <div className="space-y-4">
             {selectedSession && currentConsensusScores.length > 0 ? (
               <>
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
-                  <p className="text-sm text-green-700 dark:text-green-300">
+                <div className="bg-success-50 dark:bg-success-900/20 border border-success-200 dark:border-success-800 rounded-lg p-3">
+                  <p className="text-sm text-success-700 dark:text-success-300">
                     Overall Consensus: <strong>{selectedSession.consensusPercentage.toFixed(0)}%</strong>
                   </p>
                 </div>

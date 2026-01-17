@@ -58,7 +58,7 @@ export default function EmailAgentPage() {
       {/* Header */}
       <div className="space-y-2">
         <h1 className="text-4xl font-bold">Email Agent Demo</h1>
-        <p className="text-gray-600">
+        <p className="text-text-muted">
           Autonomous email composition with governance, risk scoring, brand safety, and approval routing.
         </p>
       </div>
@@ -95,8 +95,8 @@ export default function EmailAgentPage() {
                           disabled={!isAvailable}
                           className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
                             isAvailable
-                              ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
-                              : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                              ? 'bg-info-600 text-white hover:bg-info-700 cursor-pointer'
+                              : 'bg-bg-hover text-text-tertiary cursor-not-allowed'
                           }`}
                         >
                           {brand.replace(/_/g, ' ')}
@@ -115,7 +115,7 @@ export default function EmailAgentPage() {
           {results.length === 0 ? (
             <Card>
               <CardContent className="pt-6">
-                <p className="text-center text-gray-600">
+                <p className="text-center text-text-muted">
                   No emails composed yet. Try selecting a template above.
                 </p>
               </CardContent>
@@ -126,7 +126,7 @@ export default function EmailAgentPage() {
                 <Card
                   key={result.id}
                   className={`cursor-pointer ${
-                    selectedResult?.id === result.id ? 'border-2 border-blue-600' : ''
+                    selectedResult?.id === result.id ? 'border-2 border-info-600' : ''
                   }`}
                   onClick={() => setSelectedResult(result)}
                 >
@@ -164,7 +164,7 @@ export default function EmailAgentPage() {
           )}
 
           {selectedResult && (
-            <Card className="border-2 border-blue-600">
+            <Card className="border-2 border-info-600">
               <CardHeader>
                 <CardTitle>Email Details</CardTitle>
               </CardHeader>
@@ -172,14 +172,14 @@ export default function EmailAgentPage() {
                 {/* Email Content */}
                 <div>
                   <p className="font-medium mb-2">Subject</p>
-                  <p className="text-sm bg-gray-50 p-3 rounded">
+                  <p className="text-sm bg-bg-hover p-3 rounded">
                     {selectedResult.request.subject}
                   </p>
                 </div>
 
                 <div>
                   <p className="font-medium mb-2">Body</p>
-                  <p className="text-sm bg-gray-50 p-3 rounded whitespace-pre-wrap">
+                  <p className="text-sm bg-bg-hover p-3 rounded whitespace-pre-wrap">
                     {selectedResult.request.body}
                   </p>
                 </div>
@@ -202,7 +202,7 @@ export default function EmailAgentPage() {
                       <span>Reasons</span>
                       <ul className="mt-1 space-y-1">
                         {selectedResult.riskAssessment.reasons.map((reason, idx) => (
-                          <li key={idx} className="text-xs text-gray-600">
+                          <li key={idx} className="text-xs text-text-muted">
                             • {reason}
                           </li>
                         ))}
@@ -228,7 +228,7 @@ export default function EmailAgentPage() {
                         <span>Issues</span>
                         <ul className="mt-1 space-y-1">
                           {selectedResult.brandAlignment.issues.map((issue, idx) => (
-                            <li key={idx} className="text-xs text-red-600">
+                            <li key={idx} className="text-xs text-error-600">
                               • {issue}
                             </li>
                           ))}
@@ -258,7 +258,7 @@ export default function EmailAgentPage() {
                 {/* Actions */}
                 {selectedResult.readyToSend && (
                   <div className="border-t pt-4">
-                    <button className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    <button className="w-full px-4 py-2 bg-success-600 text-white rounded hover:bg-success-700">
                       Send Email
                     </button>
                   </div>
@@ -266,10 +266,10 @@ export default function EmailAgentPage() {
 
                 {selectedResult.approvalStatus === 'pending_approval' && (
                   <div className="border-t pt-4 space-y-2">
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-text-muted">
                       This email requires founder approval. Forward to founder for decision.
                     </p>
-                    <button className="w-full px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700">
+                    <button className="w-full px-4 py-2 bg-accent-600 text-white rounded hover:bg-accent-700">
                       Send to Founder for Approval
                     </button>
                   </div>
@@ -288,21 +288,21 @@ export default function EmailAgentPage() {
             <CardContent className="space-y-4 text-sm">
               <div>
                 <p className="font-medium mb-2">1. Template Selection</p>
-                <p className="text-gray-700">
+                <p className="text-text-secondary">
                   Choose from pre-approved templates for each brand and context (follow-up, introduction, re-engagement, educational).
                 </p>
               </div>
 
               <div>
                 <p className="font-medium mb-2">2. Personalization</p>
-                <p className="text-gray-700">
+                <p className="text-text-secondary">
                   Templates are personalized with recipient name, company, and context automatically.
                 </p>
               </div>
 
               <div>
                 <p className="font-medium mb-2">3. Risk Scoring</p>
-                <p className="text-gray-700">
+                <p className="text-text-secondary">
                   Every email is automatically scored for risk: 0-19 (low), 20-39 (medium), 40-69 (high), 70+ (critical).
                   Risk factors include financial promises, medical claims, brand risk flags, and public vs internal context.
                 </p>
@@ -310,14 +310,14 @@ export default function EmailAgentPage() {
 
               <div>
                 <p className="font-medium mb-2">4. Brand Safety</p>
-                <p className="text-gray-700">
+                <p className="text-text-secondary">
                   Email tone and messaging are validated against brand positioning guidelines. Any conflicts are flagged.
                 </p>
               </div>
 
               <div>
                 <p className="font-medium mb-2">5. Approval Routing</p>
-                <p className="text-gray-700">
+                <p className="text-text-secondary">
                   Low risk emails auto-approve and are ready to send. Medium/high risk emails go to content review or founder approval.
                   Critical risk emails are always escalated to founder.
                 </p>
@@ -325,14 +325,14 @@ export default function EmailAgentPage() {
 
               <div>
                 <p className="font-medium mb-2">6. Audit Trail</p>
-                <p className="text-gray-700">
+                <p className="text-text-secondary">
                   Every step is logged: composition, risk assessment, brand check, approval decision. Complete transparency for founder.
                 </p>
               </div>
 
               <div>
                 <p className="font-medium mb-2">7. Queue Management</p>
-                <p className="text-gray-700">
+                <p className="text-text-secondary">
                   Approved emails go to the queue and can be sent immediately or scheduled. Rejected emails are archived with feedback.
                 </p>
               </div>
@@ -344,25 +344,25 @@ export default function EmailAgentPage() {
               <CardTitle>Risk Scoring Examples</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <div className="border rounded p-3 bg-green-50">
-                <p className="font-medium text-green-900">Low Risk (Score: 15)</p>
+              <div className="border rounded p-3 bg-success-50">
+                <p className="font-medium text-success-900">Low Risk (Score: 15)</p>
                 <p className="text-xs mt-1">Standard follow-up email with no claims</p>
               </div>
 
-              <div className="border rounded p-3 bg-yellow-50">
-                <p className="font-medium text-yellow-900">Medium Risk (Score: 35)</p>
+              <div className="border rounded p-3 bg-warning-50">
+                <p className="font-medium text-warning-900">Medium Risk (Score: 35)</p>
                 <p className="text-xs mt-1">Email mentioning financial benefit + public context</p>
               </div>
 
-              <div className="border rounded p-3 bg-orange-50">
-                <p className="font-medium text-orange-900">High Risk (Score: 55)</p>
+              <div className="border rounded p-3 bg-accent-50">
+                <p className="font-medium text-accent-900">High Risk (Score: 55)</p>
                 <p className="text-xs mt-1">
                   Email promising guaranteed results (violates brand risk flag)
                 </p>
               </div>
 
-              <div className="border rounded p-3 bg-red-50">
-                <p className="font-medium text-red-900">Critical Risk (Score: 75)</p>
+              <div className="border rounded p-3 bg-error-50">
+                <p className="font-medium text-error-900">Critical Risk (Score: 75)</p>
                 <p className="text-xs mt-1">Email making health claims or legal guarantees</p>
               </div>
             </CardContent>
@@ -371,11 +371,11 @@ export default function EmailAgentPage() {
       </Tabs>
 
       {/* Footer */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-info-50 border-info-200">
         <CardHeader>
           <CardTitle className="text-sm">Email Agent Status</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-gray-700">
+        <CardContent className="text-sm text-text-secondary">
           <p>
             Email Agent v1.0 – Governance integrated. All emails evaluated for risk, brand safety,
             and approval requirements before sending.

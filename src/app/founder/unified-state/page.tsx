@@ -86,23 +86,23 @@ export default function UnifiedStatePage() {
       case "optimal":
         return "bg-purple-500/10 text-purple-400 border-purple-500/20";
       case "flow":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "focused":
         return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "balanced":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-info-500/10 text-info-400 border-info-500/20";
       case "stressed":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "overloaded":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "fatigued":
-        return "bg-yellow-500/10 text-yellow-400 border-yellow-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "disrupted":
         return "bg-pink-500/10 text-pink-400 border-pink-500/20";
       case "recovering":
-        return "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
+        return "bg-cyan-500/10 text-info-400 border-cyan-500/20";
       case "critical":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -111,13 +111,13 @@ export default function UnifiedStatePage() {
   const priorityColor = (priority: string) => {
     switch (priority) {
       case "critical":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       case "high":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "moderate":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "low":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -126,12 +126,12 @@ export default function UnifiedStatePage() {
   const scoreGauge = (score: number) => {
     const color =
       score >= 80
-        ? "bg-emerald-500"
+        ? "bg-success-500"
         : score >= 60
           ? "bg-accent-500"
           : score >= 40
-            ? "bg-amber-500"
-            : "bg-red-500";
+            ? "bg-warning-500"
+            : "bg-error-500";
     return (
       <div className="relative h-3 bg-bg-muted rounded-full overflow-hidden">
         <div
@@ -312,7 +312,7 @@ export default function UnifiedStatePage() {
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Peak Score</div>
-              <div className="text-2xl font-bold text-emerald-400">
+              <div className="text-2xl font-bold text-success-400">
                 {summary.max_score.toFixed(0)}
               </div>
             </Card>
@@ -324,7 +324,7 @@ export default function UnifiedStatePage() {
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Critical Events</div>
-              <div className="text-2xl font-bold text-red-400">{summary.critical_count}</div>
+              <div className="text-2xl font-bold text-error-400">{summary.critical_count}</div>
             </Card>
           </div>
 

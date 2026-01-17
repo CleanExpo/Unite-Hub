@@ -12,9 +12,9 @@ type DigestType = 'daily' | 'weekly' | 'monthly';
 
 function DigestCard({ digest }: { digest: any }) {
   const typeColors = {
-    daily: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100',
+    daily: 'bg-info-100 text-info-800 dark:bg-info-900 dark:text-info-100',
     weekly: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100',
-    monthly: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
+    monthly: 'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-100',
   };
 
   return (

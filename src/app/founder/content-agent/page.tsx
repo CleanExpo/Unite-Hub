@@ -49,20 +49,20 @@ export default function ContentAgentPage() {
   const getRiskLevelColor = (level: string) => {
     switch (level) {
       case 'low':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-100 text-success-800';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'high':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-accent-100 text-accent-800';
       case 'critical':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-100 text-error-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-primary';
     }
   };
 
   const getAlignmentColor = (aligned: boolean) => {
-    return aligned ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+    return aligned ? 'bg-success-100 text-success-800' : 'bg-error-100 text-error-800';
   };
 
   const contentIntents = [
@@ -79,7 +79,7 @@ export default function ContentAgentPage() {
       {/* Header */}
       <div className="space-y-2">
         <h1 className="text-4xl font-bold">Content Agent Demo</h1>
-        <p className="text-gray-600">
+        <p className="text-text-muted">
           Autonomous content generation with extended thinking, brand-safe validation, tone alignment, and founder governance.
         </p>
       </div>
@@ -106,7 +106,7 @@ export default function ContentAgentPage() {
                   <button
                     onClick={() => handleRunDemo(item.intent, item.topic)}
                     disabled={isRunning}
-                    className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium text-sm transition-colors"
+                    className="w-full px-4 py-2 bg-info-600 text-white rounded hover:bg-info-700 disabled:bg-bg-elevated disabled:cursor-not-allowed font-medium text-sm transition-colors"
                   >
                     {isRunning ? 'Generating...' : 'Generate'}
                   </button>
@@ -121,7 +121,7 @@ export default function ContentAgentPage() {
           {results.length === 0 ? (
             <Card>
               <CardContent className="pt-6">
-                <p className="text-gray-600 text-center">No content generated yet. Generate content to see results here.</p>
+                <p className="text-text-muted text-center">No content generated yet. Generate content to see results here.</p>
               </CardContent>
             </Card>
           ) : (
@@ -149,7 +149,7 @@ export default function ContentAgentPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600 line-clamp-2">{result.summary}</p>
+                    <p className="text-sm text-text-muted line-clamp-2">{result.summary}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -157,7 +157,7 @@ export default function ContentAgentPage() {
           )}
 
           {selectedResult && (
-            <Card className="border-blue-200 bg-blue-50">
+            <Card className="border-info-200 bg-info-50">
               <CardHeader>
                 <CardTitle>Content Details</CardTitle>
                 <CardDescription>
@@ -170,16 +170,16 @@ export default function ContentAgentPage() {
                   <h3 className="font-semibold mb-2">Request</h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-600">Intent:</span>
+                      <span className="text-text-muted">Intent:</span>
                       <p className="font-medium capitalize">{selectedResult.request.intent}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600">Topic:</span>
+                      <span className="text-text-muted">Topic:</span>
                       <p className="font-medium">{selectedResult.request.topic}</p>
                     </div>
                     {selectedResult.request.audience && (
                       <div>
-                        <span className="text-gray-600">Audience:</span>
+                        <span className="text-text-muted">Audience:</span>
                         <p className="font-medium">{selectedResult.request.audience}</p>
                       </div>
                     )}
@@ -189,22 +189,22 @@ export default function ContentAgentPage() {
                 {/* Content */}
                 <div>
                   <h3 className="font-semibold mb-2">Generated Content</h3>
-                  <div className="bg-white p-4 rounded border max-h-64 overflow-y-auto">
-                    <p className="text-sm text-gray-700 whitespace-pre-wrap">{selectedResult.content}</p>
+                  <div className="bg-bg-card p-4 rounded border max-h-64 overflow-y-auto">
+                    <p className="text-sm text-text-secondary whitespace-pre-wrap">{selectedResult.content}</p>
                   </div>
                 </div>
 
                 {/* Summary */}
                 <div>
                   <h3 className="font-semibold mb-2">Summary</h3>
-                  <p className="text-sm text-gray-700">{selectedResult.summary}</p>
+                  <p className="text-sm text-text-secondary">{selectedResult.summary}</p>
                 </div>
 
                 {/* Extended Thinking */}
                 {selectedResult.thinkingProcess && (
                   <div>
                     <h3 className="font-semibold mb-2">Extended Thinking Process</h3>
-                    <div className="bg-white p-3 rounded border text-xs text-gray-700 max-h-40 overflow-y-auto font-mono">
+                    <div className="bg-bg-card p-3 rounded border text-xs text-text-secondary max-h-40 overflow-y-auto font-mono">
                       {selectedResult.thinkingProcess}
                     </div>
                   </div>
@@ -215,18 +215,18 @@ export default function ContentAgentPage() {
                   <h3 className="font-semibold mb-2">Tone Alignment</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Status:</span>
+                      <span className="text-sm text-text-muted">Status:</span>
                       <Badge className={getAlignmentColor(selectedResult.toneAlignment.aligned)}>
                         {selectedResult.toneAlignment.aligned ? 'Aligned' : 'Issues Found'}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Score:</span>
+                      <span className="text-sm text-text-muted">Score:</span>
                       <span className="font-semibold">{selectedResult.toneAlignment.score}/100</span>
                     </div>
                     {selectedResult.toneAlignment.matchedTones.length > 0 && (
                       <div>
-                        <span className="text-sm text-gray-600">Matched Tones:</span>
+                        <span className="text-sm text-text-muted">Matched Tones:</span>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {selectedResult.toneAlignment.matchedTones.map((tone, idx) => (
                             <Badge key={idx} variant="secondary" className="text-xs">
@@ -238,10 +238,10 @@ export default function ContentAgentPage() {
                     )}
                     {selectedResult.toneAlignment.issues.length > 0 && (
                       <div>
-                        <span className="text-sm text-gray-600">Issues:</span>
+                        <span className="text-sm text-text-muted">Issues:</span>
                         <ul className="space-y-1 mt-1">
                           {selectedResult.toneAlignment.issues.map((issue, idx) => (
-                            <li key={idx} className="text-sm text-orange-700">
+                            <li key={idx} className="text-sm text-accent-700">
                               • {issue}
                             </li>
                           ))}
@@ -256,21 +256,21 @@ export default function ContentAgentPage() {
                   <h3 className="font-semibold mb-2">Risk Assessment</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Risk Score:</span>
+                      <span className="text-sm text-text-muted">Risk Score:</span>
                       <span className="font-semibold">{selectedResult.riskAssessment.score}/100</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Risk Level:</span>
+                      <span className="text-sm text-text-muted">Risk Level:</span>
                       <Badge className={getRiskLevelColor(selectedResult.riskAssessment.level)}>
                         {selectedResult.riskAssessment.level}
                       </Badge>
                     </div>
                     {selectedResult.riskAssessment.reasons.length > 0 && (
                       <div>
-                        <span className="text-sm text-gray-600">Risk Factors:</span>
+                        <span className="text-sm text-text-muted">Risk Factors:</span>
                         <ul className="space-y-1 mt-1">
                           {selectedResult.riskAssessment.reasons.map((reason, idx) => (
-                            <li key={idx} className="text-sm text-gray-700">
+                            <li key={idx} className="text-sm text-text-secondary">
                               • {reason}
                             </li>
                           ))}
@@ -285,21 +285,21 @@ export default function ContentAgentPage() {
                   <h3 className="font-semibold mb-2">Approval Status</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Status:</span>
+                      <span className="text-sm text-text-muted">Status:</span>
                       <Badge
                         className={
                           selectedResult.approvalStatus === 'auto_approved'
-                            ? 'bg-green-100 text-green-800'
+                            ? 'bg-success-100 text-success-800'
                             : selectedResult.approvalStatus === 'pending_approval'
-                              ? 'bg-orange-100 text-orange-800'
-                              : 'bg-red-100 text-red-800'
+                              ? 'bg-accent-100 text-accent-800'
+                              : 'bg-error-100 text-error-800'
                         }
                       >
                         {selectedResult.approvalStatus}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Ready to Use:</span>
+                      <span className="text-sm text-text-muted">Ready to Use:</span>
                       <span className="font-semibold">{selectedResult.readyToUse ? '✓ Yes' : 'Pending approval'}</span>
                     </div>
                   </div>
@@ -322,11 +322,11 @@ export default function ContentAgentPage() {
                 <h3 className="font-semibold mb-3">6 Content Intents</h3>
                 <div className="space-y-3">
                   {contentIntents.map((item) => (
-                    <div key={item.intent} className="bg-blue-50 p-3 rounded">
+                    <div key={item.intent} className="bg-info-50 p-3 rounded">
                       <p className="font-medium text-sm">
                         {item.icon} {item.label}
                       </p>
-                      <p className="text-sm text-gray-600 mt-1">{item.topic}</p>
+                      <p className="text-sm text-text-muted mt-1">{item.topic}</p>
                     </div>
                   ))}
                 </div>
@@ -346,7 +346,7 @@ export default function ContentAgentPage() {
                     <li>• Brand-audience alignment</li>
                     <li>• Research synthesis</li>
                   </ul>
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-text-muted mt-2">
                     Cost: ~27x more expensive than standard tokens, but produces significantly higher quality results.
                   </p>
                 </div>
@@ -356,27 +356,27 @@ export default function ContentAgentPage() {
               <div>
                 <h3 className="font-semibold mb-3">4-Step Generation Workflow</h3>
                 <div className="space-y-3">
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">Step 1: Extended Thinking</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       Deep reasoning about topic, audience, brand positioning, and content strategy. Generates comprehensive content.
                     </p>
                   </div>
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">Step 2: Tone Alignment Check</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       Validates content against brand tone guidelines. Checks for required tones, identifies issues.
                     </p>
                   </div>
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">Step 3: Risk Assessment</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       Scores risk 0-100 based on claims, context, and brand risk flags. Detects unsubstantiated statements.
                     </p>
                   </div>
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-info-50 p-3 rounded">
                     <p className="font-medium text-sm">Step 4: Approval Routing</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       Routes to founder for review if high risk or tone issues. Auto-approves low-risk content.
                     </p>
                   </div>
@@ -388,20 +388,20 @@ export default function ContentAgentPage() {
                 <h3 className="font-semibold mb-3">Tone Alignment (0-100 Score)</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-green-100 text-green-800">75-100</Badge>
-                    <span className="text-gray-600">Excellent alignment - ready to use</span>
+                    <Badge className="bg-success-100 text-success-800">75-100</Badge>
+                    <span className="text-text-muted">Excellent alignment - ready to use</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-yellow-100 text-yellow-800">50-74</Badge>
-                    <span className="text-gray-600">Good but needs minor adjustments</span>
+                    <Badge className="bg-warning-100 text-warning-800">50-74</Badge>
+                    <span className="text-text-muted">Good but needs minor adjustments</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-orange-100 text-orange-800">25-49</Badge>
-                    <span className="text-gray-600">Significant issues - requires revision</span>
+                    <Badge className="bg-accent-100 text-accent-800">25-49</Badge>
+                    <span className="text-text-muted">Significant issues - requires revision</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-red-100 text-red-800">0-24</Badge>
-                    <span className="text-gray-600">Poor alignment - needs major revision</span>
+                    <Badge className="bg-error-100 text-error-800">0-24</Badge>
+                    <span className="text-text-muted">Poor alignment - needs major revision</span>
                   </div>
                 </div>
               </div>
@@ -411,20 +411,20 @@ export default function ContentAgentPage() {
                 <h3 className="font-semibold mb-3">Risk Scoring (0-100)</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-green-100 text-green-800">Low 0-19</Badge>
-                    <span className="text-gray-600">Auto-approved, ready to use</span>
+                    <Badge className="bg-success-100 text-success-800">Low 0-19</Badge>
+                    <span className="text-text-muted">Auto-approved, ready to use</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-yellow-100 text-yellow-800">Medium 20-39</Badge>
-                    <span className="text-gray-600">Content review required</span>
+                    <Badge className="bg-warning-100 text-warning-800">Medium 20-39</Badge>
+                    <span className="text-text-muted">Content review required</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-orange-100 text-orange-800">High 40-69</Badge>
-                    <span className="text-gray-600">Founder manual approval required</span>
+                    <Badge className="bg-accent-100 text-accent-800">High 40-69</Badge>
+                    <span className="text-text-muted">Founder manual approval required</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-red-100 text-red-800">Critical 70+</Badge>
-                    <span className="text-gray-600">Auto-rejected, founder escalation</span>
+                    <Badge className="bg-error-100 text-error-800">Critical 70+</Badge>
+                    <span className="text-text-muted">Auto-rejected, founder escalation</span>
                   </div>
                 </div>
               </div>
@@ -432,24 +432,24 @@ export default function ContentAgentPage() {
               {/* Governance Integration */}
               <div>
                 <h3 className="font-semibold mb-3">Founder Governance Integration</h3>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-text-muted mb-3">
                   Content automatically routes to founder for review when:
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">•</span>
+                    <span className="text-accent-600 font-bold">•</span>
                     <span>
                       <span className="font-medium">Risk Level = High/Critical</span> - Business/brand impact concern
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">•</span>
+                    <span className="text-accent-600 font-bold">•</span>
                     <span>
                       <span className="font-medium">Tone Alignment &lt; 75</span> - Brand consistency issues
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-orange-600 font-bold">•</span>
+                    <span className="text-accent-600 font-bold">•</span>
                     <span>
                       <span className="font-medium">Unsubstantiated Claims Detected</span> - Risk flag violations
                     </span>
@@ -460,7 +460,7 @@ export default function ContentAgentPage() {
               {/* Research Integration */}
               <div>
                 <h3 className="font-semibold mb-3">Research Integration</h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-text-muted">
                   Content agent synthesizes insights from research agent into narrative, supporting claims with citations. Research links track integration types: supports claim, provides context, strengthens narrative, or illustrates point.
                 </p>
               </div>

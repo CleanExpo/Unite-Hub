@@ -113,24 +113,24 @@ export default function AuditLogCenterPage() {
 
   const getCategoryBadgeColor = (category: AuditCategory) => {
     const colors: Record<AuditCategory, string> = {
-      authentication: "bg-blue-500/10 text-blue-500",
+      authentication: "bg-info-500/10 text-info-500",
       authorization: "bg-purple-500/10 text-purple-500",
-      data_access: "bg-green-500/10 text-green-500",
-      data_modification: "bg-yellow-500/10 text-yellow-500",
+      data_access: "bg-success-500/10 text-success-500",
+      data_modification: "bg-warning-500/10 text-warning-500",
       configuration: "bg-indigo-500/10 text-indigo-500",
       compliance: "bg-pink-500/10 text-pink-500",
-      security: "bg-red-500/10 text-red-500",
-      billing: "bg-emerald-500/10 text-emerald-500",
-      incident: "bg-orange-500/10 text-orange-500",
+      security: "bg-error-500/10 text-error-500",
+      billing: "bg-success-500/10 text-success-500",
+      incident: "bg-accent-500/10 text-accent-500",
       policy: "bg-violet-500/10 text-violet-500",
-      notification: "bg-cyan-500/10 text-cyan-500",
-      rate_limit: "bg-amber-500/10 text-amber-500",
+      notification: "bg-cyan-500/10 text-info-500",
+      rate_limit: "bg-warning-500/10 text-warning-500",
       integration: "bg-accent-500/10 text-accent-500",
       export: "bg-lime-500/10 text-lime-500",
       import: "bg-fuchsia-500/10 text-fuchsia-500",
-      other: "bg-gray-500/10 text-gray-500",
+      other: "bg-bg-hover0/10 text-text-tertiary",
     };
-    return colors[category] || "bg-gray-500/10 text-gray-500";
+    return colors[category] || "bg-bg-hover0/10 text-text-tertiary";
   };
 
   if (loading) {

@@ -122,25 +122,25 @@ export default function GoalsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'ahead':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-100 text-success-800';
       case 'on_track':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-info-100 text-info-800';
       case 'behind':
-        return 'bg-red-100 text-red-800';
+        return 'bg-error-100 text-error-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
       governance: 'bg-purple-100 text-purple-800',
-      security_posture: 'bg-red-100 text-red-800',
-      operations: 'bg-blue-100 text-blue-800',
-      compliance: 'bg-yellow-100 text-yellow-800',
-      adoption: 'bg-green-100 text-green-800',
+      security_posture: 'bg-error-100 text-error-800',
+      operations: 'bg-info-100 text-info-800',
+      compliance: 'bg-warning-100 text-warning-800',
+      adoption: 'bg-success-100 text-success-800',
     };
-    return colors[category] || 'bg-gray-100 text-gray-800';
+    return colors[category] || 'bg-bg-hover text-text-secondary';
   };
 
   if (loading) {

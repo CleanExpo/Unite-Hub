@@ -59,19 +59,19 @@ const SIGNAL_ICON_MAP: Record<string, React.ReactNode> = {
  */
 const SEVERITY_COLOR_MAP: Record<SignalSeverity, { bg: string; text: string; border: string }> = {
   high: {
-    bg: 'bg-red-950',
-    text: 'text-red-300',
-    border: 'border-red-700'
+    bg: 'bg-error-950',
+    text: 'text-error-300',
+    border: 'border-error-700'
   },
   medium: {
-    bg: 'bg-yellow-950',
-    text: 'text-yellow-300',
-    border: 'border-yellow-700'
+    bg: 'bg-warning-950',
+    text: 'text-warning-300',
+    border: 'border-warning-700'
   },
   low: {
-    bg: 'bg-blue-950',
-    text: 'text-blue-300',
-    border: 'border-blue-700'
+    bg: 'bg-info-950',
+    text: 'text-info-300',
+    border: 'border-info-700'
   }
 };
 

@@ -229,9 +229,9 @@ return;
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Success</span>
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-success-500" />
             </div>
-            <p className="text-2xl font-bold text-green-500">{stats?.success || 0}</p>
+            <p className="text-2xl font-bold text-success-500">{stats?.success || 0}</p>
           </CardContent>
         </Card>
 
@@ -239,9 +239,9 @@ return;
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Failed</span>
-              <XCircle className="h-4 w-4 text-red-500" />
+              <XCircle className="h-4 w-4 text-error-500" />
             </div>
-            <p className="text-2xl font-bold text-red-500">{stats?.failed || 0}</p>
+            <p className="text-2xl font-bold text-error-500">{stats?.failed || 0}</p>
           </CardContent>
         </Card>
 
@@ -249,9 +249,9 @@ return;
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Rolled Back</span>
-              <RotateCcw className="h-4 w-4 text-blue-500" />
+              <RotateCcw className="h-4 w-4 text-info-500" />
             </div>
-            <p className="text-2xl font-bold text-blue-500">{stats?.rolledBack || 0}</p>
+            <p className="text-2xl font-bold text-info-500">{stats?.rolledBack || 0}</p>
           </CardContent>
         </Card>
 
@@ -259,9 +259,9 @@ return;
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Pending</span>
-              <Clock className="h-4 w-4 text-yellow-500" />
+              <Clock className="h-4 w-4 text-warning-500" />
             </div>
-            <p className="text-2xl font-bold text-yellow-500">{stats?.pending || 0}</p>
+            <p className="text-2xl font-bold text-warning-500">{stats?.pending || 0}</p>
           </CardContent>
         </Card>
       </div>
@@ -287,7 +287,7 @@ return;
                 <span className="text-sm text-muted-foreground">Blocked</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge className="bg-green-500">{schedulerStatus.completedToday}</Badge>
+                <Badge className="bg-success-500">{schedulerStatus.completedToday}</Badge>
                 <span className="text-sm text-muted-foreground">Today</span>
               </div>
               <div className="flex items-center gap-2">
@@ -349,9 +349,9 @@ return;
       </Tabs>
 
       {/* Info Banner */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <AlertTriangle className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <AlertTriangle className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-muted-foreground">
             <p>
               <strong>Phase 87:</strong> Cross-Channel Publishing Execution Layer provides

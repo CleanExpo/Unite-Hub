@@ -69,7 +69,7 @@ return;
   if (!session) {
     return (
       <div className="p-8">
-        <Alert className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30">
+        <Alert className="border-warning-200 bg-warning-50 dark:bg-warning-950/30">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Not Authenticated</AlertTitle>
           <AlertDescription>Please log in to access the autonomous agents dashboard.</AlertDescription>
@@ -93,7 +93,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <Brain className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+              <Brain className="w-8 h-8 mx-auto mb-2 text-info-600" />
               <div className="text-2xl font-bold">{stats.totalPlans}</div>
               <p className="text-sm text-text-secondary">Total Plans</p>
             </div>
@@ -103,7 +103,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
+              <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-warning-600" />
               <div className="text-2xl font-bold">{stats.pendingApproval}</div>
               <p className="text-sm text-text-secondary">Pending Approval</p>
             </div>
@@ -113,7 +113,7 @@ return;
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <Zap className="w-8 h-8 mx-auto mb-2 text-green-600" />
+              <Zap className="w-8 h-8 mx-auto mb-2 text-success-600" />
               <div className="text-2xl font-bold">{stats.runningExecutions}</div>
               <p className="text-sm text-text-secondary">Running Executions</p>
             </div>
@@ -132,7 +132,7 @@ return;
       </div>
 
       {/* Security Notice */}
-      <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/30">
+      <Alert className="border-info-200 bg-info-50 dark:bg-info-950/30">
         <Shield className="h-4 w-4" />
         <AlertTitle>Secure Autonomous Execution</AlertTitle>
         <AlertDescription>
@@ -212,7 +212,7 @@ return;
                         }}
                       />
                     ) : (
-                      <Alert className="border-green-200 bg-green-50 dark:bg-green-950/30">
+                      <Alert className="border-success-200 bg-success-50 dark:bg-success-950/30">
                         <AlertTitle>Plan Ready to Execute</AlertTitle>
                         <AlertDescription>
                           This plan has been validated and is ready for execution.

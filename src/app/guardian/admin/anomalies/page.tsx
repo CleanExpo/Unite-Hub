@@ -66,10 +66,10 @@ const BASELINE_METHODS = [
 ];
 
 const SEVERITY_COLORS = {
-  info: 'bg-blue-100 text-blue-800',
-  warn: 'bg-yellow-100 text-yellow-800',
-  high: 'bg-orange-100 text-orange-800',
-  critical: 'bg-red-100 text-red-800',
+  info: 'bg-info-100 text-info-800',
+  warn: 'bg-warning-100 text-warning-800',
+  high: 'bg-accent-100 text-accent-800',
+  critical: 'bg-error-100 text-error-800',
 };
 
 export default function AnomaliesPage() {

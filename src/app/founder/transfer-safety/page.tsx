@@ -103,7 +103,7 @@ return;
                       </div>
                       <Progress
                         value={assessment.culturalDistance * 100}
-                        className={`h-1.5 ${assessment.culturalDistance > 0.5 ? '[&>div]:bg-amber-500' : ''}`}
+                        className={`h-1.5 ${assessment.culturalDistance > 0.5 ? '[&>div]:bg-warning-500' : ''}`}
                       />
                     </div>
                   )}
@@ -122,7 +122,7 @@ return;
                       <div key={i} className="text-sm mb-2">
                         <div className="flex items-center gap-2">
                           <Badge variant="outline" className="text-xs">{factor.category}</Badge>
-                          <span className={factor.severity === 'high' ? 'text-red-600' : 'text-amber-600'}>
+                          <span className={factor.severity === 'high' ? 'text-error-600' : 'text-warning-600'}>
                             {factor.severity}
                           </span>
                         </div>
@@ -144,11 +144,11 @@ return;
         </div>
       )}
 
-      <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+      <Card className="border-warning-200 bg-warning-50 dark:bg-warning-950/20">
         <CardContent className="py-4">
           <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div className="text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0" />
+            <div className="text-sm text-warning-800 dark:text-warning-200">
               <div className="font-medium mb-1">Transfer Safety Rules</div>
               <p>
                 No cross-region assumption without penalty. Transferability is

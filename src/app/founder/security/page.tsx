@@ -163,10 +163,10 @@ throw new Error("Failed to invalidate session");
 
   function getStatusBadge(status: SessionStatus) {
     const variants: Record<SessionStatus, { color: string; icon: React.ReactNode }> = {
-      active: { color: "bg-green-500/10 text-green-400 border-green-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
-      expired: { color: "bg-gray-500/10 text-gray-400 border-gray-500/20", icon: <ClockIcon className="w-3 h-3" /> },
-      revoked: { color: "bg-red-500/10 text-red-400 border-red-500/20", icon: <XCircleIcon className="w-3 h-3" /> },
-      logged_out: { color: "bg-blue-500/10 text-blue-400 border-blue-500/20", icon: <XCircleIcon className="w-3 h-3" /> },
+      active: { color: "bg-success-500/10 text-success-400 border-success-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
+      expired: { color: "bg-bg-hover0/10 text-text-muted border-border/20", icon: <ClockIcon className="w-3 h-3" /> },
+      revoked: { color: "bg-error-500/10 text-error-400 border-error-500/20", icon: <XCircleIcon className="w-3 h-3" /> },
+      logged_out: { color: "bg-info-500/10 text-info-400 border-info-500/20", icon: <XCircleIcon className="w-3 h-3" /> },
     };
 
     const variant = variants[status];
@@ -180,9 +180,9 @@ throw new Error("Failed to invalidate session");
 
   function getSeverityBadge(severity: SecurityEventSeverity) {
     const variants: Record<SecurityEventSeverity, { color: string; icon: React.ReactNode }> = {
-      info: { color: "bg-blue-500/10 text-blue-400 border-blue-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
-      warning: { color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", icon: <ExclamationTriangleIcon className="w-3 h-3" /> },
-      critical: { color: "bg-red-500/10 text-red-400 border-red-500/20", icon: <ShieldExclamationIcon className="w-3 h-3" /> },
+      info: { color: "bg-info-500/10 text-info-400 border-info-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
+      warning: { color: "bg-warning-500/10 text-warning-400 border-warning-500/20", icon: <ExclamationTriangleIcon className="w-3 h-3" /> },
+      critical: { color: "bg-error-500/10 text-error-400 border-error-500/20", icon: <ShieldExclamationIcon className="w-3 h-3" /> },
     };
 
     const variant = variants[severity];
@@ -241,7 +241,7 @@ throw new Error("Failed to invalidate session");
                 <CardTitle className="text-text-secondary text-sm">Critical</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold text-red-400">{summary.critical}</p>
+                <p className="text-3xl font-bold text-error-400">{summary.critical}</p>
               </CardContent>
             </Card>
             <Card className="bg-bg-card border-border-primary">
@@ -249,7 +249,7 @@ throw new Error("Failed to invalidate session");
                 <CardTitle className="text-text-secondary text-sm">Warnings</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold text-yellow-400">{summary.warnings}</p>
+                <p className="text-3xl font-bold text-warning-400">{summary.warnings}</p>
               </CardContent>
             </Card>
             <Card className="bg-bg-card border-border-primary">
@@ -257,7 +257,7 @@ throw new Error("Failed to invalidate session");
                 <CardTitle className="text-text-secondary text-sm">Failed Logins</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold text-orange-400">{summary.failed_logins}</p>
+                <p className="text-3xl font-bold text-accent-400">{summary.failed_logins}</p>
               </CardContent>
             </Card>
           </div>
@@ -415,7 +415,7 @@ throw new Error("Failed to invalidate session");
                         <Button
                           size="sm"
                           onClick={() => handleInvalidateSession(session.id)}
-                          className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                          className="bg-error-500/10 text-error-400 hover:bg-error-500/20 border border-error-500/20"
                         >
                           Invalidate Session
                         </Button>
@@ -482,8 +482,8 @@ throw new Error("Failed to invalidate session");
                         <Badge
                           className={
                             event.success
-                              ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                              : "bg-red-500/10 text-red-400 border border-red-500/20"
+                              ? "bg-success-500/10 text-success-400 border border-success-500/20"
+                              : "bg-error-500/10 text-error-400 border border-error-500/20"
                           }
                         >
                           {event.success ? "Success" : "Failed"}
@@ -491,7 +491,7 @@ throw new Error("Failed to invalidate session");
                       </div>
 
                       {!event.success && event.failure_reason && (
-                        <p className="mt-2 text-xs text-red-400 p-2 bg-red-500/10 rounded">
+                        <p className="mt-2 text-xs text-error-400 p-2 bg-error-500/10 rounded">
                           {event.failure_reason}
                         </p>
                       )}

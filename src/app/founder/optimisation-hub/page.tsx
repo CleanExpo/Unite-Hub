@@ -131,29 +131,29 @@ export default function FounderOptimisationHubPage() {
 
   const getRewardColor = (value: number) => {
     if (value >= 0.8) {
-return 'bg-green-100 text-green-800';
+return 'bg-success-100 text-success-800';
 }
     if (value >= 0.6) {
-return 'bg-yellow-100 text-yellow-800';
+return 'bg-warning-100 text-warning-800';
 }
-    return 'bg-red-100 text-red-800';
+    return 'bg-error-100 text-error-800';
   };
 
   const getTrendIcon = (trend: string) => {
     if (trend === 'improving') {
-return <TrendingUp className="w-4 h-4 text-green-600" />;
+return <TrendingUp className="w-4 h-4 text-success-600" />;
 }
     if (trend === 'declining') {
-return <AlertTriangle className="w-4 h-4 text-red-600" />;
+return <AlertTriangle className="w-4 h-4 text-error-600" />;
 }
-    return <Gauge className="w-4 h-4 text-gray-600" />;
+    return <Gauge className="w-4 h-4 text-text-muted" />;
   };
 
   if (loading) {
     return (
       <div className="p-10 space-y-4">
         <h1 className="text-3xl font-bold">Optimisation Hub</h1>
-        <p className="text-gray-500">Loading optimization dashboard...</p>
+        <p className="text-text-tertiary">Loading optimization dashboard...</p>
       </div>
     );
   }
@@ -169,8 +169,8 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
       </div>
 
       {/* Alert for declining agents */}
-      <Alert className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30">
-        <AlertTriangle className="h-4 w-4 text-yellow-600" />
+      <Alert className="border-warning-200 bg-warning-50 dark:bg-warning-950/30">
+        <AlertTriangle className="h-4 w-4 text-warning-600" />
         <AlertTitle>Optimization Opportunities</AlertTitle>
         <AlertDescription>
           Scheduling agent latency and coordination reward both declining. Review optimization suggestions below.
@@ -207,33 +207,33 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                         <div className="flex items-start justify-between">
                           <div>
                             <p className="font-semibold capitalize">{reward.agent}</p>
-                            <p className="text-xs text-gray-500 capitalize">{reward.dimension.replace(/_/g, ' ')}</p>
+                            <p className="text-xs text-text-tertiary capitalize">{reward.dimension.replace(/_/g, ' ')}</p>
                           </div>
                           {getTrendIcon(reward.trend)}
                         </div>
 
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600">Reward</span>
+                            <span className="text-sm text-text-muted">Reward</span>
                             <Badge className={`capitalize ${getRewardColor(reward.average)}`}>
                               {(reward.average * 100).toFixed(0)}%
                             </Badge>
                           </div>
-                          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div className="w-full h-2 bg-bg-hover rounded-full overflow-hidden">
                             <div
                               className={`h-full ${
                                 reward.average >= 0.8
-                                  ? 'bg-green-600'
+                                  ? 'bg-success-600'
                                   : reward.average >= 0.6
-                                  ? 'bg-yellow-600'
-                                  : 'bg-red-600'
+                                  ? 'bg-warning-600'
+                                  : 'bg-error-600'
                               }`}
                               style={{ width: `${reward.average * 100}%` }}
                             />
                           </div>
                         </div>
 
-                        <p className="text-xs text-gray-500 capitalize">Trend: {reward.trend}</p>
+                        <p className="text-xs text-text-tertiary capitalize">Trend: {reward.trend}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -268,16 +268,16 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                           </div>
                           <p className="text-sm font-medium">{s.suggestion}</p>
                         </div>
-                        {s.requiresApproval && <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0" />}
+                        {s.requiresApproval && <AlertTriangle className="w-5 h-5 text-accent-600 flex-shrink-0" />}
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <p className="text-gray-600">Impact</p>
+                          <p className="text-text-muted">Impact</p>
                           <p className="font-semibold capitalize">{s.expectedImpact}</p>
                         </div>
                         <div>
-                          <p className="text-gray-600">Confidence</p>
+                          <p className="text-text-muted">Confidence</p>
                           <p className="font-semibold">{(s.confidence * 100).toFixed(0)}%</p>
                         </div>
                       </div>
@@ -293,7 +293,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                             </Button>
                           </>
                         ) : (
-                          <Badge className="bg-green-600">Auto-Applied</Badge>
+                          <Badge className="bg-success-600">Auto-Applied</Badge>
                         )}
                       </div>
                     </div>
@@ -323,16 +323,16 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <p className="font-semibold">{strategy.name}</p>
-                            <Badge className={strategy.priority === 'high' ? 'bg-red-600' : 'bg-yellow-600'}>
+                            <Badge className={strategy.priority === 'high' ? 'bg-error-600' : 'bg-warning-600'}>
                               {strategy.priority.toUpperCase()}
                             </Badge>
                           </div>
-                          <p className="text-xs text-gray-500 capitalize">{strategy.theme.replace(/_/g, ' ')}</p>
+                          <p className="text-xs text-text-tertiary capitalize">{strategy.theme.replace(/_/g, ' ')}</p>
                         </div>
                       </div>
 
                       <div>
-                        <p className="text-xs font-semibold text-gray-600 mb-2">Agents Involved</p>
+                        <p className="text-xs font-semibold text-text-muted mb-2">Agents Involved</p>
                         <div className="flex flex-wrap gap-1">
                           {strategy.agents.map(agent => (
                             <Badge key={agent} variant="outline" className="capitalize">
@@ -373,7 +373,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Run Auto-Tuner</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       Execute optimization suggestions within safety envelope (auto-apply low-risk changes, flag high-risk for approval)
                     </p>
                   </div>
@@ -386,7 +386,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Consolidate Memory</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       Move high-importance working memory to long-term storage and archive expiring short-term items
                     </p>
                   </div>
@@ -399,7 +399,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Review Workflow Queue</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       Check pending and active workflows from strategy playbooks. Estimated execution time: 2h 15m
                     </p>
                   </div>
@@ -412,10 +412,10 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
                 <div className="border rounded-lg p-4 space-y-3">
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Risk Safety Profile</h4>
-                    <p className="text-xs text-gray-600 mb-3">
+                    <p className="text-xs text-text-muted mb-3">
                       Current Profile: <span className="font-semibold">Default (Conservative)</span>
                     </p>
-                    <p className="text-xs text-gray-600">Max Risk Level: HIGH | Approval Required For: MEDIUM+</p>
+                    <p className="text-xs text-text-muted">Max Risk Level: HIGH | Approval Required For: MEDIUM+</p>
                   </div>
                   <Button variant="outline" className="w-full">
                     <Settings className="w-4 h-4 mr-2" />
@@ -429,7 +429,7 @@ return <AlertTriangle className="w-4 h-4 text-red-600" />;
       </Tabs>
 
       {/* Footer */}
-      <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200">
+      <Card className="bg-info-50 dark:bg-info-950/20 border-info-200">
         <CardContent className="pt-6 text-sm text-text-secondary">
           <p>
             <strong>Last Updated:</strong> {new Date().toLocaleString()}

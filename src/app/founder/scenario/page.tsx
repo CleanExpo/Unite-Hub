@@ -117,10 +117,10 @@ export default function ScenarioConsolePage() {
   // Status badge
   const StatusBadge = ({ status }: { status: ScenarioStatus }) => {
     const config = {
-      pending: 'text-gray-400 bg-gray-400/10',
-      running: 'text-blue-400 bg-blue-400/10',
-      completed: 'text-green-400 bg-green-400/10',
-      failed: 'text-red-400 bg-red-400/10',
+      pending: 'text-text-muted bg-bg-elevated/10',
+      running: 'text-info-400 bg-info-400/10',
+      completed: 'text-success-400 bg-success-400/10',
+      failed: 'text-error-400 bg-error-400/10',
     };
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded ${config[status]}`}>{status}</span>
@@ -297,7 +297,7 @@ export default function ScenarioConsolePage() {
                       {run.outputs.risks && run.outputs.risks.length > 0 && (
                         <div>
                           <h4 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4 text-red-400" />
+                            <AlertTriangle className="w-4 h-4 text-error-400" />
                             Risks
                           </h4>
                           <ul className="list-disc list-inside text-sm text-text-tertiary space-y-1 bg-bg-primary p-3 rounded">
@@ -312,7 +312,7 @@ export default function ScenarioConsolePage() {
                       {run.outputs.opportunities && run.outputs.opportunities.length > 0 && (
                         <div>
                           <h4 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-green-400" />
+                            <TrendingUp className="w-4 h-4 text-success-400" />
                             Opportunities
                           </h4>
                           <ul className="list-disc list-inside text-sm text-text-tertiary space-y-1 bg-bg-primary p-3 rounded">

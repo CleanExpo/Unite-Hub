@@ -381,12 +381,13 @@ export default function SynthexLanding() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-sm text-text-muted">
-              © 2025 Synthex.social • Australia & New Zealand • All rights reserved
+              © {new Date().getFullYear()} Synthex.social • Australia & New Zealand • All rights reserved
             </div>
             <div className="flex items-center gap-6 text-sm">
+              <Link href="/privacy" className="text-text-muted hover:text-text-primary transition-colors">Privacy</Link>
+              <Link href="/terms" className="text-text-muted hover:text-text-primary transition-colors">Terms</Link>
+              <Link href="/security" className="text-text-muted hover:text-text-primary transition-colors">Security</Link>
               <Link href="/login" className="text-text-muted hover:text-text-primary transition-colors">Sign in</Link>
-              <a href="#pricing" className="text-text-muted hover:text-text-primary transition-colors">Pricing</a>
-              <a href="#how-it-works" className="text-text-muted hover:text-text-primary transition-colors">How It Works</a>
             </div>
           </div>
         </div>

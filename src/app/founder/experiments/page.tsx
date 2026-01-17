@@ -137,10 +137,10 @@ export default function ExperimentsPage() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      draft: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-      running: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      paused: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-      completed: 'bg-green-500/10 text-green-400 border-green-500/20',
+      draft: 'bg-bg-hover0/10 text-text-muted border-border/20',
+      running: 'bg-info-500/10 text-info-400 border-info-500/20',
+      paused: 'bg-warning-500/10 text-warning-400 border-warning-500/20',
+      completed: 'bg-success-500/10 text-success-400 border-success-500/20',
     };
     return colors[status] || colors.draft;
   };
@@ -176,7 +176,7 @@ export default function ExperimentsPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Experiments</span>
-              <FlaskConical className="w-5 h-5 text-blue-400" />
+              <FlaskConical className="w-5 h-5 text-info-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">{totalExperiments}</div>
             <div className="text-xs text-text-tertiary mt-1">{runningExperiments} running</div>
@@ -185,7 +185,7 @@ export default function ExperimentsPage() {
           <div className="p-6 bg-bg-card rounded-lg border border-border-primary">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-text-secondary">Assignments</span>
-              <Users className="w-5 h-5 text-green-400" />
+              <Users className="w-5 h-5 text-success-400" />
             </div>
             <div className="text-3xl font-bold text-text-primary">
               {selectedExperiment?.variants.reduce((sum, v) => sum + v.assignment_count, 0) || 0}
@@ -369,7 +369,7 @@ export default function ExperimentsPage() {
                     key={flag.id}
                     className={`p-4 bg-bg-card rounded-lg border ${
                       flag.is_active
-                        ? 'border-green-500/20'
+                        ? 'border-success-500/20'
                         : 'border-border-primary opacity-60'
                     }`}
                   >
@@ -393,8 +393,8 @@ export default function ExperimentsPage() {
                         onClick={() => toggleFlag(flag.flag_key, flag.is_active)}
                         className={
                           flag.is_active
-                            ? 'bg-green-500 hover:bg-green-600'
-                            : 'bg-gray-500 hover:bg-gray-600'
+                            ? 'bg-success-500 hover:bg-success-600'
+                            : 'bg-bg-hover0 hover:bg-bg-raised'
                         }
                       >
                         {flag.is_active ? 'Active' : 'Inactive'}

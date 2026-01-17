@@ -57,13 +57,13 @@ export default function NotificationsPage() {
 
   const getSeverityColor = (severity: string) => {
     const colors: Record<string, string> = {
-      info: 'bg-blue-500',
-      low: 'bg-green-500',
-      medium: 'bg-yellow-500',
-      high: 'bg-orange-500',
-      critical: 'bg-red-500',
+      info: 'bg-info-500',
+      low: 'bg-success-500',
+      medium: 'bg-warning-500',
+      high: 'bg-accent-500',
+      critical: 'bg-error-500',
     };
-    return colors[severity] || 'bg-gray-500';
+    return colors[severity] || 'bg-bg-hover0';
   };
 
   return (

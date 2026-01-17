@@ -101,13 +101,13 @@ export default function VisualPlaygroundPage() {
                     {pillar.subPillars.slice(0, 3).map((sp) => (
                       <span
                         key={sp.id}
-                        className="text-xs px-2 py-1 bg-bg-hover text-gray-600 dark:text-gray-300 rounded"
+                        className="text-xs px-2 py-1 bg-bg-hover text-text-secondary rounded"
                       >
                         {sp.title}
                       </span>
                     ))}
                     {pillar.subPillars.length > 3 && (
-                      <span className="text-xs px-2 py-1 text-gray-400">
+                      <span className="text-xs px-2 py-1 text-text-muted">
                         +{pillar.subPillars.length - 3} more
                       </span>
                     )}
@@ -128,7 +128,7 @@ export default function VisualPlaygroundPage() {
               <p className="text-sm font-medium text-success-600 dark:text-success-400 mb-2">
                 This IS:
               </p>
-              <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+              <ul className="text-sm text-text-secondary space-y-1">
                 <li>• AI-generated concept exploration</li>
                 <li>• Starting points for creative direction</li>
                 <li>• Wireframe and layout ideas</li>
@@ -139,7 +139,7 @@ export default function VisualPlaygroundPage() {
               <p className="text-sm font-medium text-error-600 dark:text-error-400 mb-2">
                 This is NOT:
               </p>
-              <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+              <ul className="text-sm text-text-secondary space-y-1">
                 <li>• Final production-ready assets</li>
                 <li>• Guaranteed performance results</li>
                 <li>• Completed brand identity systems</li>

@@ -77,12 +77,12 @@ export default function GuardianRiskPage() {
 
   const riskColor =
     !latest || latest.score < 25
-      ? 'text-cyan-400'
+      ? 'text-info-400'
       : latest.score < 50
-      ? 'text-amber-400'
+      ? 'text-warning-400'
       : latest.score < 75
-      ? 'text-orange-400'
-      : 'text-red-400';
+      ? 'text-accent-400'
+      : 'text-error-400';
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 space-y-6">
@@ -187,12 +187,12 @@ export default function GuardianRiskPage() {
                     i.score < 25 ? 'Low' : i.score < 50 ? 'Medium' : i.score < 75 ? 'High' : 'Critical';
                   const color =
                     i.score < 25
-                      ? 'text-cyan-400'
+                      ? 'text-info-400'
                       : i.score < 50
-                      ? 'text-amber-400'
+                      ? 'text-warning-400'
                       : i.score < 75
-                      ? 'text-orange-400'
-                      : 'text-red-400';
+                      ? 'text-accent-400'
+                      : 'text-error-400';
                   return (
                     <tr key={i.id} className="border-b last:border-0">
                       <td className="px-3 py-2">{i.date}</td>

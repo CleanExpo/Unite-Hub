@@ -121,7 +121,7 @@ export default async function RewardsPage({
         </div>
 
         {/* How It Works */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
+        <div className="bg-info-50 border border-info-200 rounded-lg p-4 space-y-3">
           <h3 className="font-semibold text-text-primary">How to Earn Points</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
             <div className="flex items-start gap-2">
@@ -170,7 +170,7 @@ export default async function RewardsPage({
         </div>
 
         {/* Tier Progression */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4 space-y-3">
+        <div className="bg-gradient-to-r from-accent-50 to-pink-50 border border-accent-200 rounded-lg p-4 space-y-3">
           <h3 className="font-semibold text-text-primary">Tier Levels</h3>
           <div className="space-y-2">
             <div className="flex items-center justify-between">

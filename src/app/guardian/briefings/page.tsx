@@ -220,10 +220,10 @@ export default function GuardianBriefingsPage() {
                           <span
                             className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${
                               rec.priority === 'high'
-                                ? 'bg-red-500/10 text-red-400'
+                                ? 'bg-error-500/10 text-error-400'
                                 : rec.priority === 'medium'
-                                ? 'bg-amber-500/10 text-amber-400'
-                                : 'bg-cyan-500/10 text-cyan-400'
+                                ? 'bg-warning-500/10 text-warning-400'
+                                : 'bg-info-500/10 text-info-400'
                             }`}
                           >
                             {rec.priority.toUpperCase()}

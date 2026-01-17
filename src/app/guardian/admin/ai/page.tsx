@@ -135,7 +135,7 @@ export default function GuardianAiAdminPage() {
       )}
 
       {success && (
-        <div className="rounded-xl border border-green-500/40 bg-green-500/5 p-4 text-sm text-green-600">
+        <div className="rounded-xl border border-success-500/40 bg-success-500/5 p-4 text-sm text-success-600">
           {success}
         </div>
       )}
@@ -401,7 +401,7 @@ export default function GuardianAiAdminPage() {
           )}
 
           {usage.errorCount > 0 && (
-            <p className="text-xs text-amber-600">
+            <p className="text-xs text-warning-600">
               Errors: {usage.errorCount} call(s) failed
             </p>
           )}

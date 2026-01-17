@@ -136,7 +136,7 @@ export default function PlaybooksListPage() {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div className="flex gap-3 flex-1 w-full sm:w-auto">
               <div className="relative flex-1 sm:max-w-xs">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                 <input
                   type="text"
                   placeholder="Search playbooks..."
@@ -175,11 +175,11 @@ export default function PlaybooksListPage() {
           ) : filteredPlaybooks.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <BookOpen className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                <BookOpen className="w-12 h-12 mx-auto text-text-secondary mb-4" />
                 <h3 className="text-lg font-medium text-text-primary mb-2">
                   No playbooks found
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-text-tertiary mb-4">
                   Create your first social playbook to start planning multi-platform content.
                 </p>
                 <button
@@ -222,9 +222,9 @@ function PlaybookCard({ playbook, onStatusChange }: PlaybookCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const statusColors = {
-    active: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    draft: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
-    archived: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    active: "bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400",
+    draft: "bg-bg-hover text-text-secondary dark:bg-bg-elevated dark:text-text-secondary",
+    archived: "bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400",
   };
 
   return (
@@ -239,7 +239,7 @@ function PlaybookCard({ playbook, onStatusChange }: PlaybookCardProps) {
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-1 rounded hover:bg-bg-hover"
             >
-              <MoreVertical className="w-4 h-4 text-gray-400" />
+              <MoreVertical className="w-4 h-4 text-text-muted" />
             </button>
             {menuOpen && (
               <div className="absolute right-0 top-8 w-40 bg-bg-card rounded-lg shadow-lg border border-border-subtle py-1 z-10">
@@ -295,7 +295,7 @@ function PlaybookCard({ playbook, onStatusChange }: PlaybookCardProps) {
         </div>
 
         {/* Meta */}
-        <div className="flex items-center justify-between text-xs text-gray-400">
+        <div className="flex items-center justify-between text-xs text-text-muted">
           <span>{playbook.primary_goal || "No goal set"}</span>
           <span>{new Date(playbook.updated_at).toLocaleDateString()}</span>
         </div>
@@ -361,7 +361,7 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
           <h2 className="text-xl font-semibold text-text-primary">
             Create Social Playbook
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-text-tertiary mt-1">
             Define your multi-platform content strategy
           </p>
         </div>

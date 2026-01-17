@@ -117,7 +117,7 @@ export default function CoordinationAgentDemo() {
   if (!session) {
     return (
       <div className="p-8">
-        <Alert className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30">
+        <Alert className="border-warning-200 bg-warning-50 dark:bg-warning-950/30">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Not Authenticated</AlertTitle>
           <AlertDescription>Please log in to access the coordination agent demo.</AlertDescription>
@@ -153,7 +153,7 @@ export default function CoordinationAgentDemo() {
               >
                 <div>
                   <p className="font-medium">{template.name}</p>
-                  <p className="text-xs text-gray-500">{template.description}</p>
+                  <p className="text-xs text-text-tertiary">{template.description}</p>
                 </div>
               </Button>
             ))}
@@ -174,16 +174,16 @@ export default function CoordinationAgentDemo() {
 
       {/* Status */}
       {demo.status === 'completed' && (
-        <Alert className="border-green-200 bg-green-50 dark:bg-green-950/30">
-          <CheckCircle2 className="h-4 w-4 text-green-600" />
+        <Alert className="border-success-200 bg-success-50 dark:bg-success-950/30">
+          <CheckCircle2 className="h-4 w-4 text-success-600" />
           <AlertTitle>Workflow Completed</AlertTitle>
           <AlertDescription>{demo.message}</AlertDescription>
         </Alert>
       )}
 
       {demo.status === 'error' && (
-        <Alert className="border-red-200 bg-red-50 dark:bg-red-950/30">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
+        <Alert className="border-error-200 bg-error-50 dark:bg-error-950/30">
+          <AlertTriangle className="h-4 w-4 text-error-600" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{demo.message}</AlertDescription>
         </Alert>
@@ -197,13 +197,13 @@ export default function CoordinationAgentDemo() {
                 <span className="font-medium">Workflow Progress</span>
                 <span className="text-2xl font-bold">{demo.progress}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-bg-hover rounded-full h-3">
                 <div
-                  className="bg-blue-600 h-3 rounded-full transition-all"
+                  className="bg-info-600 h-3 rounded-full transition-all"
                   style={{ width: `${demo.progress}%` }}
                 />
               </div>
-              <p className="text-sm text-gray-600">{demo.message}</p>
+              <p className="text-sm text-text-muted">{demo.message}</p>
             </div>
           </CardContent>
         </Card>
@@ -223,9 +223,9 @@ export default function CoordinationAgentDemo() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="text-center">
-                    <GitBranch className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                    <GitBranch className="w-8 h-8 mx-auto mb-2 text-info-600" />
                     <div className="text-2xl font-bold">{demo.result.taskCount}</div>
-                    <p className="text-sm text-gray-600">Total Tasks</p>
+                    <p className="text-sm text-text-muted">Total Tasks</p>
                   </div>
                 </CardContent>
               </Card>
@@ -233,9 +233,9 @@ export default function CoordinationAgentDemo() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="text-center">
-                    <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-600" />
+                    <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-success-600" />
                     <div className="text-2xl font-bold">{demo.result.completedTasks}</div>
-                    <p className="text-sm text-gray-600">Completed</p>
+                    <p className="text-sm text-text-muted">Completed</p>
                   </div>
                 </CardContent>
               </Card>
@@ -243,9 +243,9 @@ export default function CoordinationAgentDemo() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="text-center">
-                    <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-orange-600" />
+                    <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-accent-600" />
                     <div className="text-2xl font-bold">{demo.result.failedTasks}</div>
-                    <p className="text-sm text-gray-600">Failed</p>
+                    <p className="text-sm text-text-muted">Failed</p>
                   </div>
                 </CardContent>
               </Card>
@@ -255,7 +255,7 @@ export default function CoordinationAgentDemo() {
                   <div className="text-center">
                     <Clock className="w-8 h-8 mx-auto mb-2 text-purple-600" />
                     <div className="text-2xl font-bold">{(demo.result.duration / 1000).toFixed(1)}s</div>
-                    <p className="text-sm text-gray-600">Duration</p>
+                    <p className="text-sm text-text-muted">Duration</p>
                   </div>
                 </CardContent>
               </Card>
@@ -269,7 +269,7 @@ export default function CoordinationAgentDemo() {
                 <Card key={idx}>
                   <CardContent className="pt-6">
                     <div className="flex gap-3">
-                      <Zap className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                      <Zap className="h-5 w-5 text-warning-600 flex-shrink-0 mt-0.5" />
                       <p>{insight}</p>
                     </div>
                   </CardContent>
@@ -297,33 +297,33 @@ export default function CoordinationAgentDemo() {
       )}
 
       {/* Documentation */}
-      <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
+      <Card className="border-info-200 bg-info-50 dark:bg-info-950/20">
         <CardHeader>
           <CardTitle className="text-base">How the Coordination Agent Works</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">1. Objective Decomposition</p>
+            <p className="font-medium text-info-900 dark:text-info-200">1. Objective Decomposition</p>
             <p className="text-text-secondary">High-level objective is decomposed into concrete agent tasks using template matching.</p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">2. Dependency Resolution</p>
+            <p className="font-medium text-info-900 dark:text-info-200">2. Dependency Resolution</p>
             <p className="text-text-secondary">Tasks are sequenced respecting dependencies and calculating critical path.</p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">3. Agent Routing</p>
+            <p className="font-medium text-info-900 dark:text-info-200">3. Agent Routing</p>
             <p className="text-text-secondary">Each task is routed to the appropriate specialist agent (Email, Research, Content, Scheduling, Analysis).</p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">4. Execution Monitoring</p>
+            <p className="font-medium text-info-900 dark:text-info-200">4. Execution Monitoring</p>
             <p className="text-text-secondary">Tasks execute with retry logic, dependency tracking, and real-time progress monitoring.</p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">5. Result Aggregation</p>
+            <p className="font-medium text-info-900 dark:text-info-200">5. Result Aggregation</p>
             <p className="text-text-secondary">Insights from all agents are aggregated and ranked by priority.</p>
           </div>
           <div>
-            <p className="font-medium text-blue-900 dark:text-blue-200">6. Founder Governance</p>
+            <p className="font-medium text-info-900 dark:text-info-200">6. Founder Governance</p>
             <p className="text-text-secondary">High-risk workflows require founder approval before execution.</p>
           </div>
         </CardContent>

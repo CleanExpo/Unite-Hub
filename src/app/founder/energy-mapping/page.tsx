@@ -101,15 +101,15 @@ export default function EnergyMappingPage() {
       case "flow_state":
         return "bg-purple-500/10 text-purple-400 border-purple-500/20";
       case "peak":
-        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        return "bg-success-500/10 text-success-400 border-emerald-500/20";
       case "high":
         return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "moderate":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-warning-500/10 text-warning-400 border-warning-500/20";
       case "low":
-        return "bg-orange-500/10 text-orange-400 border-orange-500/20";
+        return "bg-accent-500/10 text-accent-400 border-accent-500/20";
       case "depleted":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-error-500/10 text-error-400 border-error-500/20";
       default:
         return "bg-bg-muted text-text-secondary border-border";
     }
@@ -120,12 +120,12 @@ export default function EnergyMappingPage() {
       energy >= 90
         ? "bg-purple-500"
         : energy >= 75
-          ? "bg-emerald-500"
+          ? "bg-success-500"
           : energy >= 50
             ? "bg-accent-500"
             : energy >= 30
-              ? "bg-amber-500"
-              : "bg-red-500";
+              ? "bg-warning-500"
+              : "bg-error-500";
     return (
       <div className="relative h-2 bg-bg-muted rounded-full overflow-hidden">
         <div
@@ -159,11 +159,11 @@ export default function EnergyMappingPage() {
 
       {/* Optimal Windows Alert */}
       {optimalWindows?.peak_windows && optimalWindows.peak_windows.length > 0 && (
-        <Card className="bg-emerald-500/10 border-emerald-500/20 p-4">
+        <Card className="bg-success-500/10 border-emerald-500/20 p-4">
           <div className="flex items-start gap-3">
-            <div className="text-emerald-400 text-xl">⚡</div>
+            <div className="text-success-400 text-xl">⚡</div>
             <div className="flex-1">
-              <h3 className="font-semibold text-emerald-400 mb-2">Optimal Work Windows Detected</h3>
+              <h3 className="font-semibold text-success-400 mb-2">Optimal Work Windows Detected</h3>
               <div className="space-y-1">
                 {optimalWindows.peak_windows.slice(0, 3).map((window: any, idx: number) => (
                   <div key={idx} className="text-sm text-text-secondary">
@@ -233,13 +233,13 @@ export default function EnergyMappingPage() {
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Peak</div>
-              <div className="text-2xl font-bold text-emerald-400">
+              <div className="text-2xl font-bold text-success-400">
                 {summary.max_energy.toFixed(1)}
               </div>
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Low</div>
-              <div className="text-2xl font-bold text-red-400">{summary.min_energy.toFixed(1)}</div>
+              <div className="text-2xl font-bold text-error-400">{summary.min_energy.toFixed(1)}</div>
             </Card>
             <Card className="p-4 space-y-1 bg-bg-card border-border">
               <div className="text-xs text-text-secondary">Peak Count</div>

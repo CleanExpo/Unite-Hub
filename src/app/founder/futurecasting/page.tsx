@@ -96,9 +96,9 @@ export default function FuturecastingConsolePage() {
   // Timeframe badge
   const TimeframeBadge = ({ timeframe }: { timeframe: ForecastTimeframe }) => {
     const config = {
-      short_term: 'text-blue-400 bg-blue-400/10',
+      short_term: 'text-info-400 bg-info-400/10',
       medium_term: 'text-purple-400 bg-purple-400/10',
-      long_term: 'text-orange-400 bg-orange-400/10',
+      long_term: 'text-accent-400 bg-accent-400/10',
       multi_horizon: 'text-accent-500 bg-accent-500/10',
     };
     const labels = {
@@ -117,9 +117,9 @@ export default function FuturecastingConsolePage() {
   // Trend badge
   const TrendBadge = ({ trend }: { trend: 'rising' | 'falling' | 'stable' }) => {
     const config = {
-      rising: 'text-green-400 bg-green-400/10',
-      falling: 'text-red-400 bg-red-400/10',
-      stable: 'text-gray-400 bg-gray-400/10',
+      rising: 'text-success-400 bg-success-400/10',
+      falling: 'text-error-400 bg-error-400/10',
+      stable: 'text-text-muted bg-bg-elevated/10',
     };
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded ${config[trend]}`}>{trend}</span>
@@ -129,9 +129,9 @@ export default function FuturecastingConsolePage() {
   // Significance badge
   const SignificanceBadge = ({ level }: { level: 'low' | 'medium' | 'high' }) => {
     const config = {
-      low: 'text-gray-400',
-      medium: 'text-yellow-400',
-      high: 'text-red-400',
+      low: 'text-text-muted',
+      medium: 'text-warning-400',
+      high: 'text-error-400',
     };
     return (
       <AlertCircle className={`w-4 h-4 ${config[level]}`} />
@@ -200,7 +200,7 @@ export default function FuturecastingConsolePage() {
                         <h3 className="text-lg font-semibold text-text-primary">{model.title}</h3>
                         <TimeframeBadge timeframe={model.timeframe} />
                         {model.outputs?.confidence_score !== undefined && (
-                          <span className="px-2 py-1 text-xs font-medium text-green-400 bg-green-400/10 rounded">
+                          <span className="px-2 py-1 text-xs font-medium text-success-400 bg-success-400/10 rounded">
                             {Math.round(model.outputs.confidence_score * 100)}% confidence
                           </span>
                         )}

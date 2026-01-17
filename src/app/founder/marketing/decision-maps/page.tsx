@@ -43,9 +43,9 @@ interface DecisionMap {
 
 const STAGE_CONFIG = {
   full: { icon: Target, color: "text-purple-600 bg-purple-100", label: "Full Funnel" },
-  awareness: { icon: Eye, color: "text-blue-600 bg-blue-100", label: "Awareness" },
-  consideration: { icon: Users, color: "text-amber-600 bg-amber-100", label: "Consideration" },
-  conversion: { icon: ShoppingCart, color: "text-green-600 bg-green-100", label: "Conversion" },
+  awareness: { icon: Eye, color: "text-info-600 bg-info-100", label: "Awareness" },
+  consideration: { icon: Users, color: "text-warning-600 bg-warning-100", label: "Consideration" },
+  conversion: { icon: ShoppingCart, color: "text-success-600 bg-success-100", label: "Conversion" },
   retention: { icon: Heart, color: "text-pink-600 bg-pink-100", label: "Retention" },
 };
 
@@ -155,7 +155,7 @@ export default function DecisionMapsPage() {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div className="flex gap-3 flex-1 w-full sm:w-auto">
               <div className="relative flex-1 sm:max-w-xs">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                 <input
                   type="text"
                   placeholder="Search maps..."
@@ -199,14 +199,14 @@ export default function DecisionMapsPage() {
                   className={`p-4 rounded-lg border transition-all ${
                     stageFilter === stage
                       ? "border-accent-500 bg-accent-50 dark:bg-accent-900/20"
-                      : "border-border-subtle hover:border-gray-300"
+                      : "border-border-subtle hover:border-border-subtle"
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-lg ${config.color} flex items-center justify-center mx-auto mb-2`}>
                     <config.icon className="w-5 h-5" />
                   </div>
                   <p className="text-lg font-bold text-text-primary">{count}</p>
-                  <p className="text-xs text-gray-500">{config.label}</p>
+                  <p className="text-xs text-text-tertiary">{config.label}</p>
                 </button>
               );
             })}
@@ -222,11 +222,11 @@ export default function DecisionMapsPage() {
           ) : filteredMaps.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <Map className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                <Map className="w-12 h-12 mx-auto text-text-secondary mb-4" />
                 <h3 className="text-lg font-medium text-text-primary mb-2">
                   No decision maps found
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-text-tertiary mb-4">
                   Create your first decision moment map to start mapping customer journeys.
                 </p>
                 <button
@@ -277,7 +277,7 @@ function DecisionMapCard({ map, onDuplicate }: DecisionMapCardProps) {
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-1 rounded hover:bg-bg-hover"
             >
-              <MoreVertical className="w-4 h-4 text-gray-400" />
+              <MoreVertical className="w-4 h-4 text-text-muted" />
             </button>
             {menuOpen && (
               <div className="absolute right-0 top-8 w-40 bg-bg-card rounded-lg shadow-lg border border-border-subtle py-1 z-10">
@@ -293,7 +293,7 @@ function DecisionMapCard({ map, onDuplicate }: DecisionMapCardProps) {
                 >
                   <Copy className="w-4 h-4" /> Duplicate
                 </button>
-                <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-bg-hover">
+                <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-error-600 hover:bg-bg-hover">
                   <Trash2 className="w-4 h-4" /> Delete
                 </button>
               </div>
@@ -316,7 +316,7 @@ function DecisionMapCard({ map, onDuplicate }: DecisionMapCardProps) {
               {stageConfig.label}
             </span>
             {map.asset_count !== undefined && (
-              <span className="text-xs text-gray-400">{map.asset_count} assets</span>
+              <span className="text-xs text-text-muted">{map.asset_count} assets</span>
             )}
           </div>
           <Link
@@ -373,7 +373,7 @@ function CreateMapModal({ onClose, onCreated }: CreateMapModalProps) {
           <h2 className="text-xl font-semibold text-text-primary">
             Create Decision Map
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-text-tertiary mt-1">
             Map customer decision moments across the funnel
           </p>
         </div>

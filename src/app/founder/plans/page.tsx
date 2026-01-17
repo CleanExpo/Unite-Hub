@@ -106,11 +106,11 @@ export default function PlansPage() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      ok: 'bg-green-500',
-      warning: 'bg-yellow-500',
-      exceeded: 'bg-red-500',
+      ok: 'bg-success-500',
+      warning: 'bg-warning-500',
+      exceeded: 'bg-error-500',
     };
-    return colors[status] || 'bg-gray-500';
+    return colors[status] || 'bg-bg-hover0';
   };
 
   return (
@@ -173,9 +173,9 @@ export default function PlansPage() {
                           <p className="text-sm text-text-tertiary mt-1">{plan.category}</p>
                         </div>
                         {plan.is_active ? (
-                          <CheckCircle2 className="w-5 h-5 text-green-400" />
+                          <CheckCircle2 className="w-5 h-5 text-success-400" />
                         ) : (
-                          <XCircle className="w-5 h-5 text-gray-500" />
+                          <XCircle className="w-5 h-5 text-text-tertiary" />
                         )}
                       </div>
 
@@ -211,7 +211,7 @@ export default function PlansPage() {
                               {feature.name}
                             </span>
                             {feature.soft_limit && (
-                              <span className="text-xs text-blue-400">soft</span>
+                              <span className="text-xs text-info-400">soft</span>
                             )}
                           </div>
                           {feature.limit_value !== null && feature.limit_value !== undefined && (
@@ -284,10 +284,10 @@ export default function PlansPage() {
                               <div
                                 className={`h-full ${
                                   quota.status === 'exceeded'
-                                    ? 'bg-red-500'
+                                    ? 'bg-error-500'
                                     : quota.status === 'warning'
-                                    ? 'bg-yellow-500'
-                                    : 'bg-green-500'
+                                    ? 'bg-warning-500'
+                                    : 'bg-success-500'
                                 }`}
                                 style={{ width: `${Math.min(100, usagePercent)}%` }}
                               />
@@ -297,9 +297,9 @@ export default function PlansPage() {
                       </div>
 
                       {quota.status === 'exceeded' && (
-                        <div className="mt-3 p-2 bg-red-500/10 border border-red-500/20 rounded flex items-start gap-2">
-                          <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5" />
-                          <span className="text-xs text-red-400">Quota exceeded</span>
+                        <div className="mt-3 p-2 bg-error-500/10 border border-error-500/20 rounded flex items-start gap-2">
+                          <AlertTriangle className="w-4 h-4 text-error-400 mt-0.5" />
+                          <span className="text-xs text-error-400">Quota exceeded</span>
                         </div>
                       )}
                     </div>

@@ -133,7 +133,7 @@ return;
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <AlertCircle className="w-8 h-8 text-red-600 mx-auto mb-2" />
+          <AlertCircle className="w-8 h-8 text-error-600 mx-auto mb-2" />
           <p className="text-text-secondary">Please log in to access the optimizer</p>
         </div>
       </div>
@@ -144,7 +144,7 @@ return;
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <AlertCircle className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+          <AlertCircle className="w-8 h-8 text-warning-600 mx-auto mb-2" />
           <p className="text-text-secondary">No workspace selected</p>
         </div>
       </div>
@@ -158,8 +158,8 @@ return;
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <Zap className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <div className="p-2 bg-info-100 dark:bg-info-900/30 rounded-lg">
+                <Zap className="w-6 h-6 text-info-600 dark:text-info-400" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-text-primary">Execution Optimizer</h1>
@@ -181,10 +181,10 @@ return;
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <div className="mb-6 p-4 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
-              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+              <AlertCircle className="w-5 h-5 text-error-600 dark:text-error-400" />
+              <p className="text-sm text-error-700 dark:text-error-300">{error}</p>
             </div>
           </div>
         )}
@@ -232,7 +232,7 @@ return;
                     </div>
                     <div>
                       <p className="text-xs font-medium text-text-secondary">Adaptation Score</p>
-                      <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                      <p className="text-lg font-bold text-info-600 dark:text-info-400">
                         {currentProfile.adaptationScore}/100
                       </p>
                     </div>
@@ -323,7 +323,7 @@ return;
           <div className="fixed inset-0 bg-black/20 dark:bg-black/40 flex items-center justify-center">
             <div className="bg-bg-card rounded-lg p-6 shadow-lg">
               <div className="flex items-center gap-3">
-                <RefreshCw className="w-5 h-5 animate-spin text-blue-600 dark:text-blue-400" />
+                <RefreshCw className="w-5 h-5 animate-spin text-info-600 dark:text-info-400" />
                 <span className="text-text-primary">Loading optimizer data...</span>
               </div>
             </div>

@@ -39,7 +39,7 @@ export default function PillarPage() {
         {/* Back Button */}
         <button
           onClick={() => router.push("/client/dashboard/visual-playground")}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mb-6"
+          className="flex items-center gap-2 text-text-tertiary hover:text-text-secondary mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Playground
@@ -90,7 +90,7 @@ export default function PillarPage() {
                     {subPillar.disclaimer}
                   </p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
+                <ChevronRight className="w-5 h-5 text-text-muted" />
               </div>
             </div>
           ))}

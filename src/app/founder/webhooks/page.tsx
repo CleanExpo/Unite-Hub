@@ -283,19 +283,19 @@ export default function WebhooksPage() {
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Pending</div>
-              <div className="text-2xl font-bold text-yellow-500 mt-1">
+              <div className="text-2xl font-bold text-warning-500 mt-1">
                 {statistics.pending_events}
               </div>
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Delivered</div>
-              <div className="text-2xl font-bold text-green-500 mt-1">
+              <div className="text-2xl font-bold text-success-500 mt-1">
                 {statistics.delivered_events}
               </div>
             </Card>
             <Card className="bg-bg-card border-border p-4">
               <div className="text-text-secondary text-sm">Failed</div>
-              <div className="text-2xl font-bold text-red-500 mt-1">
+              <div className="text-2xl font-bold text-error-500 mt-1">
                 {statistics.failed_events}
               </div>
             </Card>
@@ -436,10 +436,10 @@ export default function WebhooksPage() {
                           <span
                             className={`text-sm px-2 py-1 rounded ${
                               endpoint.status === "active"
-                                ? "bg-green-500/20 text-green-500"
+                                ? "bg-success-500/20 text-success-500"
                                 : endpoint.status === "inactive"
-                                ? "bg-yellow-500/20 text-yellow-500"
-                                : "bg-red-500/20 text-red-500"
+                                ? "bg-warning-500/20 text-warning-500"
+                                : "bg-error-500/20 text-error-500"
                             }`}
                           >
                             {endpoint.status}
@@ -502,12 +502,12 @@ export default function WebhooksPage() {
                         <span
                           className={`text-sm px-2 py-1 rounded ${
                             event.status === "delivered"
-                              ? "bg-green-500/20 text-green-500"
+                              ? "bg-success-500/20 text-success-500"
                               : event.status === "pending"
-                              ? "bg-yellow-500/20 text-yellow-500"
+                              ? "bg-warning-500/20 text-warning-500"
                               : event.status === "retrying"
-                              ? "bg-blue-500/20 text-blue-500"
-                              : "bg-red-500/20 text-red-500"
+                              ? "bg-info-500/20 text-info-500"
+                              : "bg-error-500/20 text-error-500"
                           }`}
                         >
                           {event.status}

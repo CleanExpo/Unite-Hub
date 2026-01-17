@@ -62,10 +62,10 @@ interface HealthSummary {
 // ============================================
 
 const severityConfig = {
-  CRITICAL: { color: 'bg-red-500', icon: AlertCircle, label: 'Critical' },
-  HIGH: { color: 'bg-orange-500', icon: AlertTriangle, label: 'High' },
-  MEDIUM: { color: 'bg-yellow-500', icon: Bug, label: 'Medium' },
-  LOW: { color: 'bg-blue-500', icon: Zap, label: 'Low' },
+  CRITICAL: { color: 'bg-error-500', icon: AlertCircle, label: 'Critical' },
+  HIGH: { color: 'bg-accent-500', icon: AlertTriangle, label: 'High' },
+  MEDIUM: { color: 'bg-warning-500', icon: Bug, label: 'Medium' },
+  LOW: { color: 'bg-info-500', icon: Zap, label: 'Low' },
 };
 
 const categoryLabels: Record<string, string> = {
@@ -224,15 +224,15 @@ return `${hours}h ago`;
               <p className="text-xs text-muted-foreground">Open Issues</p>
             </CardContent>
           </Card>
-          <Card className={summary.criticalCount > 0 ? 'border-red-500' : ''}>
+          <Card className={summary.criticalCount > 0 ? 'border-error-500' : ''}>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-red-500">{summary.criticalCount}</div>
+              <div className="text-2xl font-bold text-error-500">{summary.criticalCount}</div>
               <p className="text-xs text-muted-foreground">Critical</p>
             </CardContent>
           </Card>
-          <Card className={summary.highCount > 0 ? 'border-orange-500' : ''}>
+          <Card className={summary.highCount > 0 ? 'border-accent-500' : ''}>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-orange-500">{summary.highCount}</div>
+              <div className="text-2xl font-bold text-accent-500">{summary.highCount}</div>
               <p className="text-xs text-muted-foreground">High</p>
             </CardContent>
           </Card>
@@ -244,7 +244,7 @@ return `${hours}h ago`;
           </Card>
           <Card>
             <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-green-500">{summary.recentResolutions}</div>
+              <div className="text-2xl font-bold text-success-500">{summary.recentResolutions}</div>
               <p className="text-xs text-muted-foreground">Resolved (7d)</p>
             </CardContent>
           </Card>
@@ -260,8 +260,8 @@ return `${hours}h ago`;
       )}
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-          <p className="text-red-500 text-sm">{error}</p>
+        <div className="bg-error-500/10 border border-error-500/20 rounded-lg p-4">
+          <p className="text-error-500 text-sm">{error}</p>
         </div>
       )}
 
@@ -269,7 +269,7 @@ return `${hours}h ago`;
       {!loading && !error && jobs.length === 0 && (
         <Card>
           <CardContent className="py-12 text-center">
-            <CheckCircle2 className="h-12 w-12 mx-auto text-green-500 mb-4" />
+            <CheckCircle2 className="h-12 w-12 mx-auto text-success-500 mb-4" />
             <h3 className="text-lg font-medium">System is Healthy</h3>
             <p className="text-sm text-muted-foreground mt-1">
               No open self-healing jobs. All systems operational.

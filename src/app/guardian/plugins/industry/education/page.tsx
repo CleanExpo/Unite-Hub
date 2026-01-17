@@ -78,10 +78,10 @@ export default function CampusOperationsDashboard() {
 
   const riskColor =
     snapshot.overview.responseStatus === 'critical'
-      ? 'text-red-600'
+      ? 'text-error-600'
       : snapshot.overview.responseStatus === 'delayed'
-        ? 'text-yellow-600'
-        : 'text-green-600';
+        ? 'text-warning-600'
+        : 'text-success-600';
 
   return (
     <div className="space-y-6 p-6">
@@ -116,7 +116,7 @@ export default function CampusOperationsDashboard() {
                 {snapshot.overview.totalIncidents24h}
               </p>
             </div>
-            <AlertCircle className="h-5 w-5 text-yellow-500" />
+            <AlertCircle className="h-5 w-5 text-warning-500" />
           </div>
         </div>
 
@@ -128,7 +128,7 @@ export default function CampusOperationsDashboard() {
                 {Math.round(snapshot.overview.escalationRate)}%
               </p>
             </div>
-            <TrendingUp className="h-5 w-5 text-orange-500" />
+            <TrendingUp className="h-5 w-5 text-accent-500" />
           </div>
         </div>
 
@@ -140,7 +140,7 @@ export default function CampusOperationsDashboard() {
                 {snapshot.overview.responseStatus === 'on_track' ? '✓' : '⚠'}
               </p>
             </div>
-            <Clock className="h-5 w-5 text-blue-500" />
+            <Clock className="h-5 w-5 text-info-500" />
           </div>
         </div>
 
@@ -149,8 +149,8 @@ export default function CampusOperationsDashboard() {
             <div>
               <p className="text-xs text-text-secondary font-medium">Env. Status</p>
               <p className={`text-2xl font-bold mt-1 ${
-                snapshot.overview.environmentalStatus === 'normal' ? 'text-green-600' :
-                snapshot.overview.environmentalStatus === 'elevated' ? 'text-yellow-600' : 'text-red-600'
+                snapshot.overview.environmentalStatus === 'normal' ? 'text-success-600' :
+                snapshot.overview.environmentalStatus === 'elevated' ? 'text-warning-600' : 'text-error-600'
               }`}>
                 {snapshot.overview.environmentalStatus === 'normal' ? 'OK' :
                  snapshot.overview.environmentalStatus === 'elevated' ? '⚠' : '🔴'}
@@ -163,12 +163,12 @@ export default function CampusOperationsDashboard() {
 
       {/* Critical Alert */}
       {snapshot.overview.responseStatus === 'critical' && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-error-50 border border-error-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="h-5 w-5 text-error-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-red-900">Critical Response Latency</h3>
-              <p className="text-sm text-red-800 mt-1">
+              <h3 className="font-semibold text-error-900">Critical Response Latency</h3>
+              <p className="text-sm text-error-800 mt-1">
                 Average resolution time exceeds 10 days. Immediate resource review recommended.
               </p>
             </div>
@@ -205,10 +205,10 @@ export default function CampusOperationsDashboard() {
                       <span
                         className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
                           signal.severity === 'high'
-                            ? 'bg-red-100 text-red-800'
+                            ? 'bg-error-100 text-error-800'
                             : signal.severity === 'medium'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-green-100 text-green-800'
+                              ? 'bg-warning-100 text-warning-800'
+                              : 'bg-success-100 text-success-800'
                         }`}
                       >
                         {signal.severity}
@@ -232,11 +232,11 @@ export default function CampusOperationsDashboard() {
 
       {/* Warnings */}
       {snapshot.warnings.length > 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <h3 className="font-semibold text-yellow-900 mb-2">Data Gaps</h3>
+        <div className="bg-warning-50 border border-warning-200 rounded-lg p-4">
+          <h3 className="font-semibold text-warning-900 mb-2">Data Gaps</h3>
           <ul className="space-y-1">
             {snapshot.warnings.map((warning, idx) => (
-              <li key={idx} className="text-sm text-yellow-800">
+              <li key={idx} className="text-sm text-warning-800">
                 • {warning}
               </li>
             ))}
