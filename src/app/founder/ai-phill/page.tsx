@@ -11,6 +11,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -137,10 +138,14 @@ export default function AiPhillPage() {
     setIsLoading(true);
 
     try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+
       const response = await fetch('/api/founder-os/ai-phill/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(session && { Authorization: `Bearer ${session.access_token}` }),
         },
         credentials: 'include',
         body: JSON.stringify({ message: messageText }),
@@ -187,10 +192,14 @@ export default function AiPhillPage() {
   const handleGenerateDigest = async () => {
     setIsLoading(true);
     try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+
       const response = await fetch('/api/founder-os/ai-phill/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(session && { Authorization: `Bearer ${session.access_token}` }),
         },
         credentials: 'include',
         body: JSON.stringify({ message: 'Generate a weekly digest summarizing the key metrics, insights, and recommended actions across all my businesses.' }),
