@@ -61,7 +61,7 @@ None currently.
 
 ## Phase 5 Progress
 
-- [ ] 05-01: Console pages (14 files, 273 violations)
+- [x] 05-01: Console pages (14 files, 273 violations) - 4 files fixed, 10 already compliant
 - [ ] 05-02: Client dashboard (20 files, 131 violations)
 - [ ] 05-03: Guardian admin & core (46 files, 705 violations)
 - [ ] 05-04: Founder core & dashboard (~80 files, ~800 violations)
