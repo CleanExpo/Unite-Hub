@@ -163,7 +163,7 @@ export default function HealthcareOpsPage({
               </div>
             </div>
             {!allowExternal && (
-              <div className="bg-amber-100 border border-amber-300 text-amber-800 px-4 py-2 rounded-lg text-sm font-medium">
+              <div className="bg-warning-100 border border-warning-300 text-warning-800 px-4 py-2 rounded-lg text-sm font-medium">
                 🔒 INTERNAL - Sharing Restricted
               </div>
             )}
@@ -209,7 +209,7 @@ export default function HealthcareOpsPage({
                 <p className="text-text-secondary text-sm font-medium">Correlations</p>
                 <p className="text-2xl font-bold text-text-primary mt-2">{snapshot.totals.correlations}</p>
               </div>
-              <Users size={24} className="text-purple-500 opacity-40" />
+              <Users size={24} className="text-accent-500 opacity-40" />
             </div>
           </div>
 
@@ -300,14 +300,14 @@ export default function HealthcareOpsPage({
 
         {/* Warnings Section */}
         {snapshot.warnings && snapshot.warnings.length > 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-8">
-            <h3 className="text-sm font-semibold text-amber-800 mb-3 flex items-center gap-2">
+          <div className="bg-warning-50 border border-warning-200 rounded-lg p-6 mb-8">
+            <h3 className="text-sm font-semibold text-warning-800 mb-3 flex items-center gap-2">
               <AlertTriangle size={16} />
               Feature Availability Notices
             </h3>
             <ul className="space-y-2">
               {snapshot.warnings.map((warning, idx) => (
-                <li key={idx} className="text-sm text-amber-700">• {warning}</li>
+                <li key={idx} className="text-sm text-warning-700">• {warning}</li>
               ))}
             </ul>
           </div>

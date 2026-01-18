@@ -432,7 +432,7 @@ throw new Error('Failed to load summary');
       <Card className={!summary.h03?.installed ? 'opacity-60' : ''}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Brain size={20} className="text-purple-500" />
+            <Brain size={20} className="text-accent-500" />
             H03: Correlation Advisor
           </CardTitle>
           <CardDescription>

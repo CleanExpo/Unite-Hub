@@ -74,7 +74,9 @@ export default function IntegrationsPage() {
 
   // Load data on mount
   useEffect(() => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     const fetchData = async () => {
       try {
@@ -110,7 +112,9 @@ export default function IntegrationsPage() {
   }, [workspaceId]);
 
   const handleTestWebhook = async (integrationId?: string) => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setTesting(true);
@@ -119,7 +123,9 @@ export default function IntegrationsPage() {
         : `/api/guardian/meta/integrations/test?workspaceId=${workspaceId}`;
 
       const res = await fetch(url, { method: 'POST' });
-      if (!res.ok) throw new Error('Test failed');
+      if (!res.ok) {
+throw new Error('Test failed');
+}
 
       const data = await res.json();
       alert(`✅ ${data.data.test_events_created} test event(s) queued for delivery`);
@@ -140,7 +146,9 @@ export default function IntegrationsPage() {
   };
 
   const handleToggle = async (integration: Integration) => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       const res = await fetch(`/api/guardian/meta/integrations?workspaceId=${workspaceId}`, {
@@ -151,7 +159,9 @@ export default function IntegrationsPage() {
         }),
       });
 
-      if (!res.ok) throw new Error('Update failed');
+      if (!res.ok) {
+throw new Error('Update failed');
+}
 
       const data = await res.json();
       setIntegrations(
@@ -220,10 +230,10 @@ export default function IntegrationsPage() {
                 </div>
 
                 {/* Uplift */}
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
-                  <p className="text-xs text-purple-700 font-semibold mb-2">UPLIFT PROGRESS</p>
-                  <p className="text-2xl font-bold text-purple-900">{overview.uplift.completion_percentage}%</p>
-                  <p className="text-xs text-purple-700">
+                <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-4 rounded-lg border border-accent-200">
+                  <p className="text-xs text-accent-700 font-semibold mb-2">UPLIFT PROGRESS</p>
+                  <p className="text-2xl font-bold text-accent-900">{overview.uplift.completion_percentage}%</p>
+                  <p className="text-xs text-accent-700">
                     {overview.uplift.tasks_done}/{overview.uplift.tasks_total} tasks
                   </p>
                 </div>

@@ -56,7 +56,9 @@ export default function GoalsPage() {
 
   // Load goals on mount
   useEffect(() => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     const loadGoals = async () => {
       try {
@@ -75,7 +77,9 @@ export default function GoalsPage() {
 
   // Load selected goal details
   useEffect(() => {
-    if (!workspaceId || !searchParams.get('goalId')) return;
+    if (!workspaceId || !searchParams.get('goalId')) {
+return;
+}
 
     const loadGoalDetail = async () => {
       try {
@@ -100,7 +104,9 @@ export default function GoalsPage() {
         body: JSON.stringify(createForm),
       });
 
-      if (!res.ok) throw new Error('Failed to create goal');
+      if (!res.ok) {
+throw new Error('Failed to create goal');
+}
 
       const data = await res.json();
       setGoals([...goals, data.goal]);
@@ -134,7 +140,7 @@ export default function GoalsPage() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      governance: 'bg-purple-100 text-purple-800',
+      governance: 'bg-accent-100 text-accent-800',
       security_posture: 'bg-error-100 text-error-800',
       operations: 'bg-info-100 text-info-800',
       compliance: 'bg-warning-100 text-warning-800',

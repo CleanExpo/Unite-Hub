@@ -51,7 +51,7 @@ const STATUS_COLORS: Record<string, string> = {
   reviewing: 'bg-warning-100 text-warning-800',
   accepted: 'bg-success-100 text-success-800',
   rejected: 'bg-error-100 text-error-800',
-  applied: 'bg-purple-100 text-purple-800',
+  applied: 'bg-accent-100 text-accent-800',
   expired: 'bg-bg-hover text-text-secondary',
 };
 
@@ -95,7 +95,9 @@ export default function GuardianSuggestionsPage() {
         `/api/guardian/ai/rule-suggestions?workspaceId=${workspaceId}`
       );
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Failed to load suggestions');
+      if (!res.ok) {
+throw new Error(json.error || 'Failed to load suggestions');
+}
       setSuggestions(json.suggestions || []);
     } catch (err: any) {
       setError(err?.message || 'Failed to load suggestions');
@@ -107,14 +109,18 @@ export default function GuardianSuggestionsPage() {
 
   // Load suggestion detail
   const loadDetail = useCallback(async (id: string) => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
     setDetailLoading(true);
     try {
       const res = await fetch(
         `/api/guardian/ai/rule-suggestions/${id}?workspaceId=${workspaceId}`
       );
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Failed to load suggestion');
+      if (!res.ok) {
+throw new Error(json.error || 'Failed to load suggestion');
+}
       setDetail(json);
     } catch (err: any) {
       setActionError(err?.message || 'Failed to load suggestion');
@@ -160,7 +166,9 @@ export default function GuardianSuggestionsPage() {
       );
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Failed to generate suggestions');
+      if (!res.ok) {
+throw new Error(json.error || 'Failed to generate suggestions');
+}
 
       // Reload list
       await loadSuggestions();
@@ -174,7 +182,9 @@ export default function GuardianSuggestionsPage() {
 
   // Record feedback
   async function recordFeedback(action: string) {
-    if (!selectedId || !workspaceId) return;
+    if (!selectedId || !workspaceId) {
+return;
+}
 
     setActionLoading(true);
     setActionError(null);
@@ -189,7 +199,9 @@ export default function GuardianSuggestionsPage() {
       );
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Failed to record feedback');
+      if (!res.ok) {
+throw new Error(json.error || 'Failed to record feedback');
+}
 
       // Update local status
       if (detail) {
@@ -205,7 +217,9 @@ export default function GuardianSuggestionsPage() {
 
   // Update status
   async function updateStatus(status: string) {
-    if (!selectedId || !workspaceId) return;
+    if (!selectedId || !workspaceId) {
+return;
+}
 
     setActionLoading(true);
     setActionError(null);
@@ -220,7 +234,9 @@ export default function GuardianSuggestionsPage() {
       );
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Failed to update status');
+      if (!res.ok) {
+throw new Error(json.error || 'Failed to update status');
+}
 
       if (detail) {
         setDetail({ ...detail, status: status as any });
@@ -235,7 +251,9 @@ export default function GuardianSuggestionsPage() {
 
   // Apply suggestion (create rule)
   async function applySuggestion() {
-    if (!selectedId || !workspaceId || !detail) return;
+    if (!selectedId || !workspaceId || !detail) {
+return;
+}
 
     setActionLoading(true);
     setActionError(null);
@@ -249,7 +267,9 @@ export default function GuardianSuggestionsPage() {
       );
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Failed to apply suggestion');
+      if (!res.ok) {
+throw new Error(json.error || 'Failed to apply suggestion');
+}
 
       // Navigate to rule editor with rule ID
       if (json.ruleId) {
@@ -453,7 +473,7 @@ export default function GuardianSuggestionsPage() {
                     <button
                       onClick={applySuggestion}
                       disabled={actionLoading || !detail.safety.validationPassed}
-                      className="h-8 px-3 rounded-md bg-purple-600 text-white text-xs font-medium hover:opacity-90 disabled:opacity-50"
+                      className="h-8 px-3 rounded-md bg-accent-600 text-white text-xs font-medium hover:opacity-90 disabled:opacity-50"
                     >
                       {actionLoading ? 'Applying…' : 'Apply & Create Rule'}
                     </button>

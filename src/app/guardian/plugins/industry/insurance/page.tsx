@@ -142,7 +142,7 @@ return <TrendingDown size={16} className="text-success-600" />;
             Insurance Ops Dashboard
           </h1>
           {!allowExternal && (
-            <div className="px-3 py-1 bg-amber-100 text-amber-800 text-sm font-medium rounded border border-amber-300 flex items-center gap-2">
+            <div className="px-3 py-1 bg-warning-100 text-warning-800 text-sm font-medium rounded border border-warning-300 flex items-center gap-2">
               <Lock size={14} />
               INTERNAL
             </div>
@@ -202,7 +202,7 @@ return <TrendingDown size={16} className="text-success-600" />;
                 }
                 if (line.startsWith('⚠️')) {
                   return (
-                    <div key={idx} className="text-amber-700 italic mt-3 pt-3 border-t border-border-light">
+                    <div key={idx} className="text-warning-700 italic mt-3 pt-3 border-t border-border-light">
                       {line}
                     </div>
                   );
@@ -387,8 +387,8 @@ return <TrendingDown size={16} className="text-success-600" />;
       </div>
 
       {/* Disclaimer */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
-        <p className="text-sm text-amber-900 leading-relaxed">
+      <div className="bg-warning-50 border border-warning-200 rounded-lg p-6">
+        <p className="text-sm text-warning-900 leading-relaxed">
           <strong>⚠️ Important Disclaimer:</strong> {snapshot.disclaimer}
         </p>
       </div>

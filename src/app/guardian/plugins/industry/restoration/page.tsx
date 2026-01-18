@@ -274,7 +274,7 @@ export default function RestorationOpsDashboard() {
           <p className="text-text-secondary mt-1">Industry-specific operational intelligence for water, mould, and fire workflows</p>
         </div>
         {!governance.allowExternal && (
-          <Badge className="bg-amber-950 text-amber-300 border border-amber-700 flex items-center gap-2 px-3 py-1">
+          <Badge className="bg-warning-950 text-warning-300 border border-warning-700 flex items-center gap-2 px-3 py-1">
             <Lock className="w-3 h-3" />
             INTERNAL
           </Badge>

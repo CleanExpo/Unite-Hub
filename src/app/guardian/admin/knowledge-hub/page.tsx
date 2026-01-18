@@ -30,7 +30,9 @@ export default function KnowledgeHubPage() {
 
   // Load knowledge hub summary and playbooks
   useEffect(() => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     const loadData = async () => {
       try {
@@ -83,11 +85,11 @@ export default function KnowledgeHubPage() {
 
   const getDomainColor = (domain: string) => {
     const colors: Record<string, string> = {
-      readiness: 'bg-purple-100 text-purple-800',
+      readiness: 'bg-accent-100 text-accent-800',
       adoption: 'bg-success-100 text-success-800',
       editions: 'bg-indigo-100 text-indigo-800',
       uplift: 'bg-accent-100 text-accent-800',
-      executive: 'bg-pink-100 text-pink-800',
+      executive: 'bg-accent-100 text-accent-800',
       goals_okrs: 'bg-accent-100 text-accent-800',
       network_meta: 'bg-info-100 text-info-800',
     };
@@ -103,8 +105,12 @@ export default function KnowledgeHubPage() {
   }
 
   const filteredPatterns = (summary?.patterns || []).filter((p) => {
-    if (filterDomain !== 'all' && p.domain !== filterDomain) return false;
-    if (filterSeverity !== 'all' && p.severity !== filterSeverity) return false;
+    if (filterDomain !== 'all' && p.domain !== filterDomain) {
+return false;
+}
+    if (filterSeverity !== 'all' && p.severity !== filterSeverity) {
+return false;
+}
     return true;
   });
 
