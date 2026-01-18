@@ -87,10 +87,10 @@ export default function RoadmapPage() {
         </div>
 
         {/* Disclaimer */}
-        <div className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+        <div className="mb-6 bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-yellow-700 dark:text-yellow-300">
+            <AlertTriangle className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-warning-700 dark:text-warning-300">
               Items marked &quot;Planned&quot; are upcoming, not guaranteed. Timelines may shift based on priorities and approvals.
             </p>
           </div>
@@ -158,10 +158,10 @@ export default function RoadmapPage() {
                         </div>
                       </div>
                       {task.status === "complete" && (
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <CheckCircle className="w-4 h-4 text-success-500" />
                       )}
                       {task.status === "waiting_approval" && (
-                        <Clock className="w-4 h-4 text-yellow-500" />
+                        <Clock className="w-4 h-4 text-warning-500" />
                       )}
                     </div>
                   );

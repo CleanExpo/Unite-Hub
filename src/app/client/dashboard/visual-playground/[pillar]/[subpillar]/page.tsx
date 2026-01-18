@@ -104,14 +104,14 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
         </div>
 
         {/* Disclaimer */}
-        <div className="mb-8 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+        <div className="mb-8 bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+              <p className="text-sm font-medium text-warning-800 dark:text-warning-200">
                 {subPillar.disclaimer}
               </p>
-              <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
+              <p className="text-xs text-warning-700 dark:text-warning-300 mt-1">
                 {DISCLAIMERS.general}
               </p>
             </div>
@@ -166,7 +166,7 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
                   </pre>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-yellow-600 dark:text-yellow-400">
+                <div className="flex items-center gap-2 text-xs text-warning-600 dark:text-warning-400">
                   <Info className="w-3 h-3" />
                   {concept.disclaimer}
                 </div>

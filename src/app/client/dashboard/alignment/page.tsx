@@ -204,14 +204,14 @@ export default function ClientAlignmentPage() {
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
+              <CheckCircle2 className="h-4 w-4 text-success-500" />
               <CardTitle className="text-sm">Recent Wins</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {report.recent_wins.map((win) => (
-                <Badge key={win.win_id} variant="outline" className="text-green-500 border-green-500/30">
+                <Badge key={win.win_id} variant="outline" className="text-success-500 border-success-500/30">
                   {win.title}
                 </Badge>
               ))}

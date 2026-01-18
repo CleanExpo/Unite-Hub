@@ -165,7 +165,7 @@ export default function ClientJourneyPage() {
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {currentPhase.capabilities.map((capability, index) => (
                 <li key={index} className="flex items-center gap-2 text-sm">
-                  <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-success-500 flex-shrink-0" />
                   {capability}
                 </li>
               ))}
@@ -204,9 +204,9 @@ export default function ClientJourneyPage() {
               {journeyState.completedMilestones.map((milestone) => (
                 <div
                   key={milestone}
-                  className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg"
+                  className="flex items-center gap-3 p-3 bg-success-500/10 rounded-lg"
                 >
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
+                  <CheckCircle2 className="h-5 w-5 text-success-500" />
                   <div>
                     <p className="text-sm font-medium">
                       {getMilestoneDisplayName(milestone)}
@@ -264,7 +264,7 @@ export default function ClientJourneyPage() {
                 </>
               ) : (
                 <div className="text-center py-8">
-                  <CheckCircle2 className="h-12 w-12 mx-auto text-green-500 mb-4" />
+                  <CheckCircle2 className="h-12 w-12 mx-auto text-success-500 mb-4" />
                   <h3 className="font-medium">Journey Complete</h3>
                   <p className="text-sm text-muted-foreground mt-2">
                     {getNextStepDescription(null)}

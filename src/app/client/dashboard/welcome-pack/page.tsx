@@ -323,7 +323,7 @@ export default function WelcomePackPage() {
             <Card className="mt-6">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-purple-500" />
+                  <Sparkles className="h-5 w-5 text-accent-500" />
                   <CardTitle>Your Personalized Welcome Guide</CardTitle>
                 </div>
               </CardHeader>
@@ -350,7 +350,7 @@ export default function WelcomePackPage() {
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-blue-500" />
+                    <FileText className="h-5 w-5 text-info-500" />
                     <CardTitle className="text-base">Welcome Guide</CardTitle>
                   </div>
                 </CardHeader>
@@ -371,7 +371,7 @@ export default function WelcomePackPage() {
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-green-500" />
+                    <BarChart3 className="h-5 w-5 text-success-500" />
                     <CardTitle className="text-base">Brand Positioning Report</CardTitle>
                   </div>
                 </CardHeader>
@@ -391,7 +391,7 @@ export default function WelcomePackPage() {
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <Video className="h-5 w-5 text-purple-500" />
+                    <Video className="h-5 w-5 text-accent-500" />
                     <CardTitle className="text-base">Intro Video Script</CardTitle>
                   </div>
                 </CardHeader>
@@ -411,7 +411,7 @@ export default function WelcomePackPage() {
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-orange-500" />
+                    <BarChart3 className="h-5 w-5 text-warning-500" />
                     <CardTitle className="text-base">SEO Snapshot</CardTitle>
                   </div>
                 </CardHeader>
@@ -431,7 +431,7 @@ export default function WelcomePackPage() {
               <Card className="md:col-span-2">
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <Image className="h-5 w-5 text-pink-500" />
+                    <Image className="h-5 w-5 text-accent-400" />
                     <CardTitle className="text-base">Visual Inspiration</CardTitle>
                   </div>
                 </CardHeader>

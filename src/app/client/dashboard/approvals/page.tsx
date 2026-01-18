@@ -116,26 +116,26 @@ export default function ApprovalsPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 text-center">
-            <Clock className="w-5 h-5 text-yellow-600 mx-auto mb-1" />
-            <p className="text-2xl font-bold text-yellow-700 dark:text-yellow-300">
+          <div className="bg-warning-50 dark:bg-warning-900/20 rounded-lg p-4 text-center">
+            <Clock className="w-5 h-5 text-warning-600 mx-auto mb-1" />
+            <p className="text-2xl font-bold text-warning-700 dark:text-warning-300">
               {counts.pending}
             </p>
-            <p className="text-xs text-yellow-600 dark:text-yellow-400">Pending</p>
+            <p className="text-xs text-warning-600 dark:text-warning-400">Pending</p>
           </div>
-          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
-            <CheckCircle className="w-5 h-5 text-green-600 mx-auto mb-1" />
-            <p className="text-2xl font-bold text-green-700 dark:text-green-300">
+          <div className="bg-success-50 dark:bg-success-900/20 rounded-lg p-4 text-center">
+            <CheckCircle className="w-5 h-5 text-success-600 mx-auto mb-1" />
+            <p className="text-2xl font-bold text-success-700 dark:text-success-300">
               {counts.approved}
             </p>
-            <p className="text-xs text-green-600 dark:text-green-400">Approved</p>
+            <p className="text-xs text-success-600 dark:text-success-400">Approved</p>
           </div>
-          <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 text-center">
-            <XCircle className="w-5 h-5 text-red-600 mx-auto mb-1" />
-            <p className="text-2xl font-bold text-red-700 dark:text-red-300">
+          <div className="bg-error-50 dark:bg-error-900/20 rounded-lg p-4 text-center">
+            <XCircle className="w-5 h-5 text-error-600 mx-auto mb-1" />
+            <p className="text-2xl font-bold text-error-700 dark:text-error-300">
               {counts.rejected}
             </p>
-            <p className="text-xs text-red-600 dark:text-red-400">Rejected</p>
+            <p className="text-xs text-error-600 dark:text-error-400">Rejected</p>
           </div>
         </div>
 
@@ -192,10 +192,10 @@ export default function ApprovalsPage() {
                   <span
                     className={`text-xs px-2 py-1 rounded ${
                       item.status === "pending"
-                        ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"
+                        ? "bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-300"
                         : item.status === "approved"
-                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                        : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                        ? "bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-300"
+                        : "bg-error-100 text-error-700 dark:bg-error-900/30 dark:text-error-300"
                     }`}
                   >
                     {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
@@ -205,13 +205,13 @@ export default function ApprovalsPage() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleReject(item.id)}
-                        className="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
+                        className="px-3 py-1.5 text-sm text-error-600 hover:bg-error-50 dark:hover:bg-error-900/20 rounded-lg"
                       >
                         Reject
                       </button>
                       <button
                         onClick={() => handleApprove(item.id)}
-                        className="px-3 py-1.5 text-sm bg-green-600 text-white hover:bg-green-700 rounded-lg"
+                        className="px-3 py-1.5 text-sm bg-success-600 text-white hover:bg-success-700 rounded-lg"
                       >
                         Approve
                       </button>

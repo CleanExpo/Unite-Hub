@@ -57,10 +57,10 @@ export default function PillarPage() {
         </div>
 
         {/* Disclaimer */}
-        <div className="mb-8 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+        <div className="mb-8 bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-yellow-700 dark:text-yellow-300">
+            <AlertTriangle className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-warning-700 dark:text-warning-300">
               {DISCLAIMERS.general}
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function PillarPage() {
                   <p className="text-sm text-text-secondary mb-2">
                     {subPillar.description}
                   </p>
-                  <p className="text-xs text-yellow-600 dark:text-yellow-400">
+                  <p className="text-xs text-warning-600 dark:text-warning-400">
                     {subPillar.disclaimer}
                   </p>
                 </div>

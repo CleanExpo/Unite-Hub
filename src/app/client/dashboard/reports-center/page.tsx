@@ -170,10 +170,10 @@ return;
                         variant="outline"
                         className={
                           currentReport.data_completeness >= 75
-                            ? 'text-green-500 border-green-500/30'
+                            ? 'text-success-500 border-success-500/30'
                             : currentReport.data_completeness >= 40
-                            ? 'text-yellow-500 border-yellow-500/30'
-                            : 'text-orange-500 border-orange-500/30'
+                            ? 'text-warning-500 border-warning-500/30'
+                            : 'text-warning-600 border-warning-600/30'
                         }
                       >
                         {currentReport.data_completeness}% complete
@@ -215,7 +215,7 @@ return;
 
               {/* Omitted sections notice */}
               {currentReport.omitted_sections.length > 0 && (
-                <Card className="border-orange-500/30">
+                <Card className="border-warning-500/30">
                   <CardContent className="pt-6">
                     <p className="text-sm text-muted-foreground">
                       {currentReport.omitted_sections.length} section(s) omitted due to insufficient data:{' '}

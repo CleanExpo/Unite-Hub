@@ -41,7 +41,7 @@ export default function CapabilitiesPage() {
         {/* Currently Available */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <CheckCircle className="w-5 h-5 text-green-600" />
+            <CheckCircle className="w-5 h-5 text-success-600" />
             <h2 className="text-lg font-semibold text-text-primary">
               Currently Available (Stage 1 MVP)
             </h2>
@@ -53,7 +53,7 @@ export default function CapabilitiesPage() {
                 className="bg-bg-card rounded-lg border border-border-subtle p-4"
               >
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-1" />
+                  <CheckCircle className="w-4 h-4 text-success-500 flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-medium text-text-primary">
                       {cap.name}
@@ -71,7 +71,7 @@ export default function CapabilitiesPage() {
         {/* In Testing */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Beaker className="w-5 h-5 text-yellow-600" />
+            <Beaker className="w-5 h-5 text-warning-600" />
             <h2 className="text-lg font-semibold text-text-primary">
               In Testing
             </h2>
@@ -86,7 +86,7 @@ export default function CapabilitiesPage() {
                 className="bg-bg-card rounded-lg border border-border-subtle p-4 opacity-75"
               >
                 <div className="flex items-start gap-3">
-                  <Beaker className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-1" />
+                  <Beaker className="w-4 h-4 text-warning-500 flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-medium text-text-primary">
                       {cap.name}

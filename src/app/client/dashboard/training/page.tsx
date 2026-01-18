@@ -141,7 +141,7 @@ export default function ClientTrainingPage() {
 
       {/* Required Training Alert */}
       {completedRequired < requiredModules.length && (
-        <Card className="border-amber-500/50 bg-amber-50 dark:bg-amber-900/10">
+        <Card className="border-warning-500/50 bg-warning-50 dark:bg-warning-900/10">
           <CardContent className="py-4">
             <div className="flex items-center justify-between">
               <div>

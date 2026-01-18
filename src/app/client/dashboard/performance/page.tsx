@@ -167,7 +167,7 @@ return;
         {/* Error State */}
         {error && (
           <Section className="mt-4">
-            <div className="flex items-center gap-2 p-4 text-red-700 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg">
+            <div className="flex items-center gap-2 p-4 text-error-700 bg-error-50 dark:bg-error-900/20 dark:text-error-400 rounded-lg">
               <AlertCircle className="w-5 h-5" />
               <span>{error}</span>
             </div>

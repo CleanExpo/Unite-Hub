@@ -285,7 +285,7 @@ export default function VisualIntelligencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <TrendingUp className="h-4 w-4 text-green-500" />
+              <TrendingUp className="h-4 w-4 text-success-500" />
               This Month
             </div>
             <div className="text-2xl font-bold mt-1">{mockStats.this_month}</div>
@@ -295,7 +295,7 @@ export default function VisualIntelligencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <AlertTriangle className="h-4 w-4 text-yellow-500" />
+              <AlertTriangle className="h-4 w-4 text-warning-500" />
               Pending
             </div>
             <div className="text-2xl font-bold mt-1">{mockStats.pending_approval}</div>
@@ -305,7 +305,7 @@ export default function VisualIntelligencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <DollarSign className="h-4 w-4 text-blue-500" />
+              <DollarSign className="h-4 w-4 text-info-500" />
               Total Cost
             </div>
             <div className="text-2xl font-bold mt-1">${mockStats.total_cost}</div>
@@ -315,7 +315,7 @@ export default function VisualIntelligencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="h-4 w-4 text-orange-500" />
+              <Clock className="h-4 w-4 text-warning-500" />
               Avg Time
             </div>
             <div className="text-2xl font-bold mt-1">{mockStats.avg_time}s</div>
@@ -405,10 +405,10 @@ export default function VisualIntelligencePage() {
                       variant="outline"
                       className={
                         recipe.difficulty === 'beginner'
-                          ? 'border-green-500 text-green-500'
+                          ? 'border-success-500 text-success-500'
                           : recipe.difficulty === 'intermediate'
-                          ? 'border-yellow-500 text-yellow-500'
-                          : 'border-red-500 text-red-500'
+                          ? 'border-warning-500 text-warning-500'
+                          : 'border-error-500 text-error-500'
                       }
                     >
                       {recipe.difficulty}
@@ -461,19 +461,19 @@ export default function VisualIntelligencePage() {
               </CardHeader>
               <CardContent className="space-y-2 text-xs text-muted-foreground">
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                  <CheckCircle2 className="h-4 w-4 text-success-500 mt-0.5" />
                   <span>Rate genomes consistently to guide evolution</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                  <CheckCircle2 className="h-4 w-4 text-success-500 mt-0.5" />
                   <span>Higher fitness scores are selected more often</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                  <CheckCircle2 className="h-4 w-4 text-success-500 mt-0.5" />
                   <span>Best genomes are preserved across generations</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                  <CheckCircle2 className="h-4 w-4 text-success-500 mt-0.5" />
                   <span>Diversity prevents premature convergence</span>
                 </div>
               </CardContent>

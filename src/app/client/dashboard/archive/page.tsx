@@ -87,9 +87,9 @@ export default function ClientArchivePage() {
       </div>
 
       {/* Truth notice */}
-      <Card className="border-blue-500/30 bg-blue-500/5">
+      <Card className="border-info-500/30 bg-info-500/5">
         <CardContent className="pt-4 flex items-start gap-3">
-          <Info className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+          <Info className="h-4 w-4 text-info-500 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-muted-foreground">
             Entries shown are generated from real activity and artifacts only.
             All data is backed by actual events from your journey.
@@ -136,16 +136,16 @@ function generateDemoEntries(): ClientArchiveEntry[] {
     eventDate.setDate(eventDate.getDate() - Math.floor(Math.random() * 30));
 
     const types = [
-      { type: 'weekly_report', source: 'reports', category: 'reports', icon: 'FileText', color: 'text-blue-500', label: 'Weekly Report' },
+      { type: 'weekly_report', source: 'reports', category: 'reports', icon: 'FileText', color: 'text-info-500', label: 'Weekly Report' },
       { type: 'story', source: 'storytelling', category: 'stories', icon: 'BookOpen', color: 'text-indigo-500', label: 'Story' },
       { type: 'touchpoint', source: 'touchpoints', category: 'events', icon: 'MessageCircle', color: 'text-cyan-500', label: 'Touchpoint' },
       { type: 'performance_event', source: 'performance', category: 'events', icon: 'TrendingUp', color: 'text-emerald-500', label: 'Performance' },
-      { type: 'success_event', source: 'success', category: 'milestones', icon: 'Trophy', color: 'text-yellow-500', label: 'Success' },
+      { type: 'success_event', source: 'success', category: 'milestones', icon: 'Trophy', color: 'text-warning-500', label: 'Success' },
       // VIF event types (Phase 79)
       { type: 'vif_asset_created', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Image', color: 'text-fuchsia-500', label: 'Visual Created' },
-      { type: 'vif_campaign_launched', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Rocket', color: 'text-blue-500', label: 'Campaign Launched' },
-      { type: 'vif_visual_high_performer', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'TrendingUp', color: 'text-green-500', label: 'High Performer' },
-      { type: 'vif_creative_quality_scored', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Star', color: 'text-yellow-500', label: 'Quality Scored' },
+      { type: 'vif_campaign_launched', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Rocket', color: 'text-info-500', label: 'Campaign Launched' },
+      { type: 'vif_visual_high_performer', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'TrendingUp', color: 'text-success-500', label: 'High Performer' },
+      { type: 'vif_creative_quality_scored', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Star', color: 'text-warning-500', label: 'Quality Scored' },
     ];
 
     const selected = types[Math.floor(Math.random() * types.length)];

@@ -60,9 +60,9 @@ export default function ClientReviewPacksPage() {
 
   const statusConfig = {
     draft: { label: "Draft", color: "bg-bg-hover text-text-secondary", icon: FileText },
-    ready_for_review: { label: "Ready for Review", color: "bg-amber-100 text-amber-700", icon: Clock },
-    approved: { label: "Approved", color: "bg-green-100 text-green-700", icon: CheckCircle },
-    sent: { label: "Sent", color: "bg-blue-100 text-blue-700", icon: Send },
+    ready_for_review: { label: "Ready for Review", color: "bg-warning-100 text-warning-700", icon: Clock },
+    approved: { label: "Approved", color: "bg-success-100 text-success-700", icon: CheckCircle },
+    sent: { label: "Sent", color: "bg-info-100 text-info-700", icon: Send },
   };
 
   return (
@@ -186,8 +186,8 @@ export default function ClientReviewPacksPage() {
                 )}
 
                 {/* Data Notice */}
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <p className="text-xs text-blue-700 dark:text-blue-300">
+                <div className="p-3 bg-info-50 dark:bg-info-900/20 rounded-lg">
+                  <p className="text-xs text-info-700 dark:text-info-300">
                     All metrics in this review are based on real data from the reporting period.
                     No estimates or projections are included.
                   </p>

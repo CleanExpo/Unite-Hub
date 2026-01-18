@@ -135,10 +135,10 @@ export default function ClientStoriesPage() {
               variant="outline"
               className={
                 storyHealth >= 75
-                  ? 'text-green-500 border-green-500/30'
+                  ? 'text-success-500 border-success-500/30'
                   : storyHealth >= 40
-                  ? 'text-yellow-500 border-yellow-500/30'
-                  : 'text-orange-500 border-orange-500/30'
+                  ? 'text-warning-500 border-warning-500/30'
+                  : 'text-warning-600 border-warning-600/30'
               }
             >
               {storyHealth}%
@@ -209,7 +209,7 @@ export default function ClientStoriesPage() {
                       <ul className="space-y-1">
                         {currentStory.narrative.key_wins.map((win, i) => (
                           <li key={i} className="flex items-start gap-2 text-sm">
-                            <Star className="h-3 w-3 text-yellow-500 mt-1 flex-shrink-0" />
+                            <Star className="h-3 w-3 text-warning-500 mt-1 flex-shrink-0" />
                             <span>{win}</span>
                           </li>
                         ))}

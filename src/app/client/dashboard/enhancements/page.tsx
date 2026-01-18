@@ -24,15 +24,15 @@ interface Suggestion {
 const IMPACT_STYLES: Record<string, { label: string; className: string }> = {
   low_effort_high_impact: {
     label: "Low effort / High impact",
-    className: "text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400",
+    className: "text-success-600 bg-success-50 dark:bg-success-900/20 dark:text-success-400",
   },
   medium_effort_medium_impact: {
     label: "Medium effort / Medium impact",
-    className: "text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 dark:text-yellow-400",
+    className: "text-warning-600 bg-warning-50 dark:bg-warning-900/20 dark:text-warning-400",
   },
   high_effort_high_impact: {
     label: "High effort / High impact",
-    className: "text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400",
+    className: "text-info-600 bg-info-50 dark:bg-info-900/20 dark:text-info-400",
   },
 };
 
@@ -104,11 +104,11 @@ export default function EnhancementsPage() {
         </div>
 
         {/* Disclaimer */}
-        <div className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+        <div className="mb-6 bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm text-yellow-700 dark:text-yellow-300">
+              <p className="text-sm text-warning-700 dark:text-warning-300">
                 These are <strong>suggestions only</strong>, not guaranteed results. You control what gets implemented. Nothing changes without your approval.
               </p>
             </div>
