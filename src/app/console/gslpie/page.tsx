@@ -110,7 +110,7 @@ return <TrendingDown className="text-error-400" size={16} />;
       </div>
 
       {/* SLA Alerts */}
-      <div className="mt-8 bg-warning-900/30 border border-yellow-700 rounded-lg p-4">
+      <div className="mt-8 bg-warning-900/30 border border-warning-700 rounded-lg p-4">
         <div className="flex items-center gap-2 text-warning-400 mb-2">
           <AlertTriangle size={20} />
           <span className="font-semibold">SLA Warning</span>

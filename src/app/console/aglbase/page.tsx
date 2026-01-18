@@ -63,8 +63,8 @@ export default function AGLBASEPage() {
                 <div className="h-3 bg-bg-elevated rounded-full overflow-hidden">
                   <div
                     className={`h-full ${
-                      (pool.used / pool.capacity) * 100 >= 90 ? 'bg-red-500' :
-                      (pool.used / pool.capacity) * 100 >= 70 ? 'bg-yellow-500' : 'bg-green-500'
+                      (pool.used / pool.capacity) * 100 >= 90 ? 'bg-error-500' :
+                      (pool.used / pool.capacity) * 100 >= 70 ? 'bg-warning-500' : 'bg-success-500'
                     }`}
                     style={{ width: `${(pool.used / pool.capacity) * 100}%` }}
                   />

@@ -69,7 +69,7 @@ export default function SORIEPage() {
               <div className="mb-2">
                 <div className="h-2 bg-bg-elevated rounded-full overflow-hidden">
                   <div
-                    className={`h-full ${obj.progress >= 80 ? 'bg-green-500' : obj.progress >= 50 ? 'bg-blue-500' : 'bg-yellow-500'}`}
+                    className={`h-full ${obj.progress >= 80 ? 'bg-success-500' : obj.progress >= 50 ? 'bg-info-500' : 'bg-warning-500'}`}
                     style={{ width: `${obj.progress}%` }}
                   />
                 </div>

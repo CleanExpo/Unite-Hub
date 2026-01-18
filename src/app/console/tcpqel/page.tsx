@@ -31,16 +31,16 @@ export default function TCPQELPage() {
       </div>
 
       {/* Current Plan */}
-      <div className="bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg p-6 mb-8">
+      <div className="bg-gradient-to-r from-info-900 to-purple-900 rounded-lg p-6 mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm text-blue-200">Current Plan</div>
+            <div className="text-sm text-info-200">Current Plan</div>
             <div className="text-3xl font-bold">{plan.name}</div>
-            <div className="text-blue-200 mt-1">{plan.engines.length} engines included</div>
+            <div className="text-info-200 mt-1">{plan.engines.length} engines included</div>
           </div>
           <div className="text-right">
             <div className="text-4xl font-bold">${plan.price}</div>
-            <div className="text-blue-200">/month</div>
+            <div className="text-info-200">/month</div>
           </div>
         </div>
       </div>
@@ -89,8 +89,8 @@ export default function TCPQELPage() {
               <div className="h-3 bg-bg-elevated rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all ${
-                    item.percentage > 80 ? 'bg-yellow-500' :
-                    item.percentage > 60 ? 'bg-blue-500' : 'bg-green-500'
+                    item.percentage > 80 ? 'bg-warning-500' :
+                    item.percentage > 60 ? 'bg-info-500' : 'bg-success-500'
                   }`}
                   style={{ width: `${item.percentage}%` }}
                 />
@@ -109,7 +109,7 @@ export default function TCPQELPage() {
         <p className="text-text-muted mb-4">
           Upgrade to Enterprise for unlimited operations and all engines.
         </p>
-        <button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-medium">
+        <button className="bg-accent-600 hover:bg-accent-700 px-6 py-2 rounded-lg font-medium">
           Upgrade to Enterprise
         </button>
       </div>
