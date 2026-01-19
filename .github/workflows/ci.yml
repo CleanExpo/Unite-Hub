@@ -102,7 +102,7 @@ jobs:
         run: npm run test -- tests/guardian-readonly-regression.test.ts
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: ./coverage/coverage-final.json
           flags: unittests
