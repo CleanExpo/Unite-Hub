@@ -83,10 +83,30 @@ Core architectural patterns and development workflows are organized into focused
 
 ## Development Status
 
-**Current**: Phase 5 complete (real-time monitoring, WebSocket alerts, Redis caching)  
-**Synthex**: Phase D45 (market radar)  
-**Tests**: 235+ tests (100% pass)  
+**Current**: Phase 5 complete (real-time monitoring, WebSocket alerts, Redis caching)
+**Synthex**: Phase D45 (market radar)
+**Tests**: 235+ tests (100% pass)
 **Production**: 65% production-ready (P0 gaps documented)
+
+---
+
+## Active Specification (PRIORITY)
+
+**Spec**: `.claude/plans/SPEC-2026-01-23.md` — Unite-Hub Evolution v2.0
+**Goal**: Unified SaaS Command Center with all Anthropic 2025-2026 features
+
+**Key Integrations**:
+- **Brave Search** (`src/lib/integrations/brave-search.ts`) — Real-time web/news/local search
+- **Prompt Caching** — 90% cost savings on cache hits (5m/1h TTL)
+- **Extended Thinking** — Interleaved thinking for tool use
+- **MCP Connector** — Remote MCP server connections
+- **GitHub App** — All repos connected for unified management
+- **Tool Search** — Dynamic tool discovery for large libraries
+
+**Models** (Jan 2026):
+- `claude-opus-4-5-20251101` — Flagship (effort param, thinking preservation)
+- `claude-sonnet-4-5-20250929` — Default (1M context, best coding)
+- `claude-haiku-4-5-20251001` — Fast tasks (structured outputs)
 
 ---
 

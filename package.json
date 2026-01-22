@@ -285,6 +285,7 @@
     "@upstash/redis": "^1.35.7",
     "ably": "^2.17.0",
     "amqplib": "^0.10.9",
+    "brave-search": "^0.9.0",
     "bull": "^4.16.5",
     "cheerio": "^1.1.2",
     "class-variance-authority": "^0.7.1",
