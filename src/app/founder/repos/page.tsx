@@ -39,7 +39,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';
-import { useWorkspace } from '@/hooks/use-workspace';
+import { useWorkspace } from '@/hooks/useWorkspace';
 import { cn } from '@/lib/utils';
 
 interface GitHubRepo {
@@ -85,7 +85,7 @@ const LANGUAGE_COLORS: Record<string, string> = {
 };
 
 export default function ReposDashboardPage() {
-  const { workspaceId } = useWorkspace();
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [filteredRepos, setFilteredRepos] = useState<GitHubRepo[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -99,8 +99,9 @@ export default function ReposDashboardPage() {
 
   const fetchRepos = useCallback(async () => {
     if (!workspaceId) {
-return;
-}
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
@@ -396,7 +397,7 @@ return `${(sizeKb / 1024).toFixed(1)} MB`;
         </div>
 
         {/* Loading State */}
-        {loading ? (
+        {loading || workspaceLoading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="w-8 h-8 animate-spin text-accent-500" />
           </div>
