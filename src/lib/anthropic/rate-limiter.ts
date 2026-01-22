@@ -131,7 +131,7 @@ export async function callAnthropicWithRetry<T>(
   fn: () => Promise<T>,
   options?: RetryOptions & { enableOpenRouterFallback?: boolean }
 ): Promise<RetryResult<T>> {
-  const opts = { ...DEFAULT_OPTIONS, enableOpenRouterFallback: true, ...options };
+  const opts = { ...DEFAULT_OPTIONS, enableOpenRouterFallback: false, ...options };
   const startTime = Date.now();
   let lastError: unknown;
   let anthropicFailed = false;
