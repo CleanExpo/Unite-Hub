@@ -233,6 +233,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@microsoft/microsoft-graph-types": "^2.43.1",
+    "@octokit/auth-app": "^8.1.2",
     "@octokit/rest": "^22.0.1",
     "@openai/agents": "^0.3.7",
     "@openrouter/sdk": "^0.1.11",
