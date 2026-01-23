@@ -7,9 +7,16 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   try {
+    // Rate limit API requests
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+return rateLimitResult;
+}
+
     // Get authorization
     const authHeader = req.headers.get("authorization");
     const token = authHeader?.replace("Bearer ", "");

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import Anthropic from "@anthropic-ai/sdk";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 const anthropic = new Anthropic({
@@ -109,7 +110,7 @@ Return as JSON:
 
   const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
+    model: ANTHROPIC_MODELS.SONNET_4_5,
     max_tokens: 3000,
     messages: [
       {

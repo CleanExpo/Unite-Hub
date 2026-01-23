@@ -4,6 +4,7 @@
 
 import { anthropic } from "@/lib/anthropic/client";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import {
   generateSectionCopyPrompt,
   generateSEOMetadataPrompt,
@@ -46,7 +47,7 @@ export async function generateSectionCopy(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 2000,
       messages: [
         {
@@ -101,7 +102,7 @@ export async function generateSEOMetadata(context: {
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 1000,
       messages: [
         {
@@ -146,7 +147,7 @@ export async function generateCopyTips(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 1500,
       messages: [
         {
@@ -188,7 +189,7 @@ export async function generateDesignTips(pageType: string): Promise<string[]> {
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 1500,
       messages: [
         {
@@ -247,7 +248,7 @@ export async function generateCopyVariations(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 2500,
       messages: [
         {
@@ -297,7 +298,7 @@ export async function improveCopy(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 2000,
       messages: [
         {

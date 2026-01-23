@@ -84,9 +84,9 @@ export const MODEL_CAPABILITIES: Record<ClaudeModel, ModelCapabilities> = {
     supportsStructuredOutputs: true,
     supportsVision: true,
     supportsComputerUse: true,
-    inputPricePerMTok: 5,
-    outputPricePerMTok: 25,
-    cacheHitPricePerMTok: 0.5,
+    inputPricePerMTok: 15,
+    outputPricePerMTok: 75,
+    cacheHitPricePerMTok: 1.5,
   },
   [CLAUDE_MODELS.SONNET_4_5]: {
     contextWindow: 1000000, // 1M context

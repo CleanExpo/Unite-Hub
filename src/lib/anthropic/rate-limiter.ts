@@ -256,7 +256,7 @@ export async function callAnthropicWithRetry<T>(
  * Emergency fallback to OpenRouter when Anthropic fails
  * Attempts to extract request details and retry via OpenRouter
  */
-async function attemptOpenRouterFallback(originalError: unknown): Promise<any> {
+async function attemptOpenRouterFallback(originalError: unknown): Promise<Anthropic.Messages.Message> {
   // This is a simplified fallback - in production you'd need to extract
   // the original request parameters and reconstruct the call
   console.warn('⚠️ OpenRouter fallback triggered but request reconstruction not implemented');
@@ -350,8 +350,13 @@ export function calculateCost(
 ): UsageStats {
   const inputTokens = usage.input_tokens || 0;
   const outputTokens = usage.output_tokens || 0;
-  const cacheReadTokens = (usage as any).cache_read_input_tokens || 0;
-  const cacheCreationTokens = (usage as any).cache_creation_input_tokens || 0;
+  // Extended usage types for cache tokens (official Anthropic SDK type may not include these)
+  const extendedUsage = usage as Anthropic.Messages.Usage & {
+    cache_read_input_tokens?: number;
+    cache_creation_input_tokens?: number;
+  };
+  const cacheReadTokens = extendedUsage.cache_read_input_tokens || 0;
+  const cacheCreationTokens = extendedUsage.cache_creation_input_tokens || 0;
 
   // Get pricing from centralized model configuration
   const pricing = getModelPricing(model);

@@ -3,6 +3,58 @@ import { getSupabaseServer } from "@/lib/supabase";
 import { gmailClient, parseGmailMessage, parseWebhookNotification } from "@/lib/gmail";
 import { publicRateLimit } from "@/lib/rate-limit";
 import { EmailProcessingRequestSchema } from "@/lib/validation/schemas";
+import { withErrorBoundary } from "@/lib/error-boundary";
+
+/**
+ * Lookup workspace by Gmail integration email address
+ * Searches integrations table for the mapped workspace
+ */
+async function getWorkspaceByEmailIntegration(
+  supabase: Awaited<ReturnType<typeof getSupabaseServer>>,
+  emailAddress: string
+): Promise<string | null> {
+  try {
+    // Try to find integration by email address
+    const { data: integration, error } = await supabase
+      .from("integrations")
+      .select("workspace_id")
+      .eq("provider", "gmail")
+      .eq("status", "active")
+      .or(`provider_account_id.eq.${emailAddress},metadata->>email.eq.${emailAddress}`)
+      .single();
+
+    if (!error && integration?.workspace_id) {
+      return integration.workspace_id;
+    }
+
+    // Fallback: check environment-configured email
+    const configuredEmail = process.env.GMAIL_INBOX_EMAIL;
+    if (configuredEmail && emailAddress === configuredEmail) {
+      // Get default workspace for the configured inbox
+      const { data: defaultIntegration } = await supabase
+        .from("integrations")
+        .select("workspace_id")
+        .eq("provider", "gmail")
+        .eq("status", "active")
+        .limit(1)
+        .single();
+
+      if (defaultIntegration?.workspace_id) {
+        console.warn("[email/webhook] Using fallback Gmail integration for:", emailAddress);
+        return defaultIntegration.workspace_id;
+      }
+    }
+
+    console.error("[email/webhook] No Gmail integration found for:", emailAddress);
+    return null;
+  } catch (error) {
+    console.error("[email/webhook] Failed to lookup workspace for email:", {
+      error: error instanceof Error ? error.message : "Unknown error",
+      emailAddress
+    });
+    return null;
+  }
+}
 
 /**
  * POST /api/email/webhook
@@ -10,8 +62,7 @@ import { EmailProcessingRequestSchema } from "@/lib/validation/schemas";
  * Receives notifications when new emails arrive
  */
 
-export async function POST(req: NextRequest) {
-  try {
+export const POST = withErrorBoundary(async (req: NextRequest) => {
     // Apply rate limiting (webhooks are external, use public limit)
     const rateLimitResult = await publicRateLimit(req);
     if (rateLimitResult) {
@@ -33,20 +84,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get default workspace (for webhook processing without user context)
-    // In production, you'd lookup workspace by email integration
-    const { data: workspace } = await supabase
-      .from("workspaces")
-      .select("id")
-      .limit(1)
-      .single();
+    // CRITICAL: Lookup workspace by email integration (not first workspace)
+    // This ensures proper workspace isolation for multi-tenant processing
+    const workspaceId = await getWorkspaceByEmailIntegration(supabase, parsed.emailAddress);
 
-    if (!workspace) {
-      console.error("No workspace found for email processing");
-      return NextResponse.json({ error: "No workspace configured" }, { status: 500 });
+    if (!workspaceId) {
+      console.error("[email/webhook] No workspace found for email:", parsed.emailAddress);
+      return NextResponse.json({ error: "No workspace configured for this email" }, { status: 400 });
     }
-
-    const workspaceId = workspace.id;
 
     // Get OAuth credentials from environment or database
     const credentials = {
@@ -105,14 +150,7 @@ export async function POST(req: NextRequest) {
       processed: processedEmails.length,
       messages: processedEmails,
     });
-  } catch (error) {
-    console.error("Webhook error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Webhook processing failed" },
-      { status: 500 }
-    );
-  }
-}
+});
 
 /**
  * Process incoming email and store in Supabase

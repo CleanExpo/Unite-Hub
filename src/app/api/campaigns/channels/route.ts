@@ -7,11 +7,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 import { createApiLogger } from '@/lib/logger';
 import { getBrandChannels } from '@/lib/campaigns/channelPlaybooks';
+import { apiRateLimit } from '@/lib/rate-limit';
 
 const logger = createApiLogger({ route: '/api/campaigns/channels' });
 
 export async function GET(req: NextRequest) {
   try {
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+return rateLimitResult;
+}
+
     const workspaceId = req.nextUrl.searchParams.get('workspaceId');
     const brandSlug = req.nextUrl.searchParams.get('brandSlug');
 

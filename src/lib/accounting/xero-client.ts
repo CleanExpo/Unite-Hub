@@ -36,10 +36,11 @@ export class XeroService {
       throw new Error('Xero credentials not configured. Set XERO_CLIENT_ID and XERO_CLIENT_SECRET in .env');
     }
 
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3008';
     this.client = new XeroClient({
       clientId: process.env.XERO_CLIENT_ID,
       clientSecret: process.env.XERO_CLIENT_SECRET,
-      redirectUris: [process.env.XERO_REDIRECT_URI || 'http://localhost:3008/api/integrations/xero/callback'],
+      redirectUris: [process.env.XERO_REDIRECT_URI || `${appUrl}/api/integrations/xero/callback`],
       scopes: [
         'accounting.transactions',
         'accounting.contacts',
@@ -60,7 +61,8 @@ export class XeroService {
    * Exchange authorization code for tokens
    */
   async exchangeCodeForToken(code: string): Promise<TokenSet> {
-    const tokenSet = await this.client.apiCallback(`http://localhost:3008/api/integrations/xero/callback?code=${code}`);
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3008';
+    const tokenSet = await this.client.apiCallback(`${appUrl}/api/integrations/xero/callback?code=${code}`);
     return tokenSet;
   }
 

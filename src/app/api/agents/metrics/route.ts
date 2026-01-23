@@ -11,12 +11,18 @@ import { validateUserAndWorkspace } from '@/lib/api-helpers';
 import { successResponse, errorResponse } from '@/lib/api-helpers';
 import { withErrorBoundary } from '@/lib/error-boundary';
 import { getMetricsCollector } from '@/lib/agents/metrics/metricsCollector';
+import { apiRateLimit } from '@/lib/rate-limit';
 
 /**
  * GET /api/agents/metrics
  * Get aggregated metrics for an agent
  */
 export const GET = withErrorBoundary(async (req: NextRequest) => {
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+return rateLimitResult;
+}
+
   const workspaceId = req.nextUrl.searchParams.get('workspaceId');
   const agentName = req.nextUrl.searchParams.get('agentName');
 

@@ -38,12 +38,15 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get("status"); // for abuse flags filtering
     const route = searchParams.get("route"); // for usage stats filtering
 
+    // CRITICAL: workspaceId is required for workspace isolation
+    if (!workspaceId) {
+      return NextResponse.json({ error: "workspaceId required" }, { status: 400 });
+    }
+
     // Check permission (settings.read or owner role)
-    if (workspaceId) {
-      const canView = await hasPermission(user.id, workspaceId, "settings", "read");
-      if (!canView) {
-        return NextResponse.json({ error: "Permission denied" }, { status: 403 });
-      }
+    const canView = await hasPermission(user.id, workspaceId, "settings", "read");
+    if (!canView) {
+      return NextResponse.json({ error: "Permission denied" }, { status: 403 });
     }
 
     // Handle different actions
@@ -69,12 +72,10 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ stats });
     }
 
-    // Default: return all
-    const limits = await listRateLimits(workspaceId || undefined);
-    const flags = workspaceId ? await listAbuseFlags(workspaceId) : [];
-    const stats = workspaceId
-      ? await getUsageStats(workspaceId)
-      : { total_requests: 0, unique_users: 0, avg_response_time: 0 };
+    // Default: return all (workspaceId is now guaranteed)
+    const limits = await listRateLimits(workspaceId);
+    const flags = await listAbuseFlags(workspaceId);
+    const stats = await getUsageStats(workspaceId);
 
     return NextResponse.json({
       limits,

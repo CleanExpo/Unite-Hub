@@ -6,28 +6,31 @@
  */
 
 /**
- * Supported Claude models and their pricing
+ * Supported Claude models and their pricing (January 2026)
+ * @see https://docs.anthropic.com/en/docs/models-overview
  */
 const MODEL_PRICING = {
-  "claude-3-5-haiku-20241022": {
-    inputTokens: 0.8 / 1_000_000, // $0.80 per 1M input tokens
-    outputTokens: 4.0 / 1_000_000, // $4.00 per 1M output tokens
-  },
-  "claude-3-5-sonnet-20241022": {
-    inputTokens: 3.0 / 1_000_000, // $3.00 per 1M input tokens
-    outputTokens: 15.0 / 1_000_000, // $15.00 per 1M output tokens
-  },
-  "claude-3-opus-20250219": {
+  // Claude 4.5 family (latest)
+  "claude-opus-4-5-20251101": {
     inputTokens: 15.0 / 1_000_000, // $15.00 per 1M input tokens
     outputTokens: 75.0 / 1_000_000, // $75.00 per 1M output tokens
   },
-  "claude-haiku-4-5-20251001": {
-    inputTokens: 0.8 / 1_000_000,
-    outputTokens: 4.0 / 1_000_000,
+  "claude-sonnet-4-5-20250929": {
+    inputTokens: 3.0 / 1_000_000, // $3.00 per 1M input tokens
+    outputTokens: 15.0 / 1_000_000, // $15.00 per 1M output tokens
   },
-  "claude-sonnet-4-20250514": {
+  "claude-haiku-4-5-20251001": {
+    inputTokens: 1.0 / 1_000_000, // $1.00 per 1M input tokens
+    outputTokens: 5.0 / 1_000_000, // $5.00 per 1M output tokens
+  },
+  // Legacy models (for backward compatibility)
+  "claude-3-5-sonnet-20241022": {
     inputTokens: 3.0 / 1_000_000,
     outputTokens: 15.0 / 1_000_000,
+  },
+  "claude-3-5-haiku-20241022": {
+    inputTokens: 0.8 / 1_000_000,
+    outputTokens: 4.0 / 1_000_000,
   },
 } as const;
 

@@ -13,9 +13,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { getExtendedThinkingEngine } from "@/lib/ai/extended-thinking-engine";
 import { getThinkingPrompt } from "@/lib/ai/thinking-prompts";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit AI batch operations (expensive)
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+return rateLimitResult;
+}
+
     // Get authorization
     const authHeader = req.headers.get("authorization");
     const token = authHeader?.replace("Bearer ", "");

@@ -1,5 +1,62 @@
 import { Client } from "@microsoft/microsoft-graph-client";
 import { db } from "@/lib/db";
+import { CredentialVault } from "@/server/credentialVault";
+
+/**
+ * Token encryption helpers for secure OAuth token storage
+ * Uses CredentialVault with AES-256-GCM encryption
+ */
+async function encryptAndStoreTokens(
+  orgId: string,
+  integrationId: string,
+  tokens: { accessToken: string; refreshToken?: string | null; expiryDate?: Date | null }
+): Promise<void> {
+  const tokenData = {
+    access_token: tokens.accessToken,
+    refresh_token: tokens.refreshToken,
+    expiry_date: tokens.expiryDate?.getTime(),
+  };
+
+  const result = await CredentialVault.set(
+    orgId,
+    "custom", // Using custom type for Outlook OAuth tokens
+    `outlook_integration_${integrationId}`,
+    tokenData,
+    tokens.expiryDate || undefined
+  );
+
+  if (!result.success) {
+    console.error("[outlook] Failed to encrypt tokens:", result.error);
+    throw new Error(`Failed to secure token storage: ${result.error}`);
+  }
+}
+
+async function getDecryptedTokens(
+  orgId: string,
+  integrationId: string
+): Promise<{ access_token: string; refresh_token?: string; expiry_date?: number } | null> {
+  // Find credential by label
+  const listResult = await CredentialVault.list(orgId);
+  if (!listResult.success || !listResult.credentials) {
+    return null;
+  }
+
+  const credential = listResult.credentials.find(
+    (c) => c.label === `outlook_integration_${integrationId}`
+  );
+
+  if (!credential) {
+    return null;
+  }
+
+  const result = await CredentialVault.get(orgId, credential.id);
+  if (!result.success || !result.credential) {
+    console.error("[outlook] Failed to decrypt tokens:", result.error);
+    return null;
+  }
+
+  return result.credential.data;
+}
 
 // Microsoft OAuth configuration
 const MICROSOFT_AUTH_ENDPOINT = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
@@ -87,15 +144,22 @@ export async function handleOutlookCallback(code: string, orgId: string) {
     const userProfile = await client.api("/me").get();
     const accountEmail = userProfile.mail || userProfile.userPrincipalName;
 
-    // Store integration
+    // Store integration (without plaintext tokens)
     const integration = await db.emailIntegrations.create({
       org_id: orgId,
       provider: "outlook",
       account_email: accountEmail,
-      access_token: tokenData.access_token,
-      refresh_token: tokenData.refresh_token,
+      access_token: "[ENCRYPTED]", // Placeholder - tokens stored in vault
+      refresh_token: "[ENCRYPTED]", // Placeholder - tokens stored in vault
       token_expires_at: expiresAt,
       is_active: true,
+    });
+
+    // CRITICAL: Encrypt and store tokens in credential vault
+    await encryptAndStoreTokens(orgId, integration.id, {
+      accessToken: tokenData.access_token,
+      refreshToken: tokenData.refresh_token,
+      expiryDate: expiresAt,
     });
 
     return integration;
@@ -112,14 +176,20 @@ export async function refreshOutlookToken(integrationId: string) {
   try {
     const integration = await db.emailIntegrations.getById(integrationId);
 
-    if (!integration?.refresh_token) {
+    if (!integration) {
+      throw new Error("Integration not found");
+    }
+
+    // Get decrypted tokens from vault
+    const tokens = await getDecryptedTokens(integration.org_id, integrationId);
+    if (!tokens?.refresh_token) {
       throw new Error("No refresh token available");
     }
 
     const params = new URLSearchParams({
       client_id: process.env.MICROSOFT_CLIENT_ID!,
       client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
-      refresh_token: integration.refresh_token,
+      refresh_token: tokens.refresh_token,
       grant_type: "refresh_token",
     });
 
@@ -139,10 +209,15 @@ export async function refreshOutlookToken(integrationId: string) {
     const tokenData = await response.json();
     const expiresAt = new Date(Date.now() + tokenData.expires_in * 1000);
 
-    // Update integration with new tokens
+    // Update encrypted tokens in vault
+    await encryptAndStoreTokens(integration.org_id, integrationId, {
+      accessToken: tokenData.access_token,
+      refreshToken: tokenData.refresh_token || tokens.refresh_token,
+      expiryDate: expiresAt,
+    });
+
+    // Update expiry in integration record (tokens are encrypted in vault)
     await db.emailIntegrations.update(integrationId, {
-      access_token: tokenData.access_token,
-      refresh_token: tokenData.refresh_token || integration.refresh_token,
       token_expires_at: expiresAt,
     });
 
@@ -166,21 +241,27 @@ async function createGraphClient(integrationId: string) {
     throw new Error("Integration not found");
   }
 
+  // Get decrypted tokens from vault
+  const tokens = await getDecryptedTokens(integration.org_id, integrationId);
+  if (!tokens) {
+    throw new Error("Failed to retrieve encrypted tokens");
+  }
+
   // Refresh token if expired or expiring soon (within 5 minutes)
   const now = new Date();
   const expiresAt = integration.token_expires_at ? new Date(integration.token_expires_at) : null;
   const shouldRefresh = !expiresAt || expiresAt.getTime() - now.getTime() < 5 * 60 * 1000;
 
-  let accessToken = integration.access_token;
+  let accessToken = tokens.access_token;
 
-  if (shouldRefresh && integration.refresh_token) {
+  if (shouldRefresh && tokens.refresh_token) {
     const refreshed = await refreshOutlookToken(integrationId);
     accessToken = refreshed.access_token;
   }
 
   return Client.init({
     authProvider: (done) => {
-      done(null, accessToken!);
+      done(null, accessToken);
     },
   });
 }

@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { withErrorBoundary } from '@/lib/error-boundary';
 import { createClient } from '@supabase/supabase-js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -18,7 +19,7 @@ const supabase = createClient(
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
-export async function POST(req: NextRequest) {
+export const POST = withErrorBoundary(async (req: NextRequest) => {
   try {
     const body = await req.text();
     const signature = req.headers.get('stripe-signature');
@@ -51,13 +52,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ received: true }, { status: 200 });
 
-  } catch (error: any) {
-    console.error('Webhook error:', error);
-    return NextResponse.json({
-      error: error.message || 'Webhook handler failed'
-    }, { status: 400 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Webhook handler failed';
+    console.error('Webhook error:', errorMessage);
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
-}
+});
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const { client_reference_id: workspaceId, customer, subscription } = session;

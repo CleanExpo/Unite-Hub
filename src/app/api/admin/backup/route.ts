@@ -36,23 +36,27 @@ export async function GET(req: NextRequest) {
     const scope = searchParams.get("scope") as BackupScope | null;
     const limit = parseInt(searchParams.get("limit") || "50");
 
+    // CRITICAL: workspaceId is required for workspace isolation
+    if (!workspaceId) {
+      return NextResponse.json({ error: "workspaceId required" }, { status: 400 });
+    }
+
     // Check permission (settings.read or owner role)
-    if (workspaceId) {
-      const canView = await hasPermission(user.id, workspaceId, "settings", "read");
-      if (!canView) {
-        return NextResponse.json({ error: "Permission denied" }, { status: 403 });
-      }
+    const canView = await hasPermission(user.id, workspaceId, "settings", "read");
+    if (!canView) {
+      return NextResponse.json({ error: "Permission denied" }, { status: 403 });
     }
 
     let backups: any[] = [];
     let restores: any[] = [];
 
+    // workspaceId is now guaranteed
     if (jobType === "backup" || jobType === "all") {
-      backups = await listBackupJobs(workspaceId || undefined, scope || undefined, limit);
+      backups = await listBackupJobs(workspaceId, scope || undefined, limit);
     }
 
     if (jobType === "restore" || jobType === "all") {
-      restores = await listRestoreJobs(workspaceId || undefined, limit);
+      restores = await listRestoreJobs(workspaceId, limit);
     }
 
     return NextResponse.json({

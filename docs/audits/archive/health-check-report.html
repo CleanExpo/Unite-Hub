@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Unite-Hub Health Check Report</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #0f172a; color: #e2e8f0; }
+    h1 { color: #60a5fa; border-bottom: 2px solid #1e40af; padding-bottom: 10px; }
+    .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 20px 0; }
+    .summary-card { background: #1e293b; padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #334155; }
+    .summary-card h3 { margin: 0; color: #94a3b8; font-size: 14px; }
+    .summary-card .number { font-size: 36px; font-weight: bold; margin: 10px 0; }
+    .pass { color: #22c55e; }
+    .fail { color: #ef4444; }
+    .warn { color: #f59e0b; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #1e293b; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; }
+    th { background: #0f172a; color: #60a5fa; font-weight: bold; }
+    tr:hover { background: #334155; }
+    .status { padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+    .status.PASS { background: #166534; color: #22c55e; }
+    .status.FAIL { background: #7f1d1d; color: #ef4444; }
+    .status.WARN { background: #78350f; color: #f59e0b; }
+    .screenshots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+    .screenshot { background: #1e293b; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+    .screenshot img { width: 100%; border-radius: 4px; }
+    .screenshot h4 { margin: 10px 0 5px 0; color: #94a3b8; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>🏥 Unite-Hub Health Check Report</h1>
+  <p><strong>Generated:</strong> 14/11/2025, 11:44:55 am</p>
+  <p><strong>Base URL:</strong> http://localhost:3008</p>
+
+  <div class="summary">
+    <div class="summary-card">
+      <h3>Total Tests</h3>
+      <div class="number">28</div>
+    </div>
+    <div class="summary-card">
+      <h3>Passed</h3>
+      <div class="number pass">23</div>
+    </div>
+    <div class="summary-card">
+      <h3>Failed</h3>
+      <div class="number fail">1</div>
+    </div>
+    <div class="summary-card">
+      <h3>Warnings</h3>
+      <div class="number warn">4</div>
+    </div>
+  </div>
+
+  <h2>Test Results</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Test</th>
+        <th>Status</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr>
+          <td>Config</td>
+          <td>Environment File</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>.env.local found</td>
+        </tr>
+      
+        <tr>
+          <td>Config</td>
+          <td>Example File</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>.env.example found</td>
+        </tr>
+      
+        <tr>
+          <td>Config</td>
+          <td>Package Name</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>unite-hub</td>
+        </tr>
+      
+        <tr>
+          <td>Config</td>
+          <td>Package Version</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>1.0.0</td>
+        </tr>
+      
+        <tr>
+          <td>Config</td>
+          <td>Dependencies</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>All core dependencies present</td>
+        </tr>
+      
+        <tr>
+          <td>Homepage</td>
+          <td>Load Status</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Homepage loaded successfully</td>
+        </tr>
+      
+        <tr>
+          <td>Homepage</td>
+          <td>Page Title</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Unite-Hub | AI Marketing CRM</td>
+        </tr>
+      
+        <tr>
+          <td>Homepage</td>
+          <td>Logo/Brand</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Logo visible</td>
+        </tr>
+      
+        <tr>
+          <td>Homepage</td>
+          <td>Navigation</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Navigation present</td>
+        </tr>
+      
+        <tr>
+          <td>Homepage</td>
+          <td>Console Errors</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>No console errors</td>
+        </tr>
+      
+        <tr>
+          <td>Homepage</td>
+          <td>Screenshot</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Screenshot captured</td>
+        </tr>
+      
+        <tr>
+          <td>Landing</td>
+          <td>CTA Buttons</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Found 7 CTA buttons</td>
+        </tr>
+      
+        <tr>
+          <td>Landing</td>
+          <td>Features Section</td>
+          <td><span class="status WARN">WARN</span></td>
+          <td>Limited content</td>
+        </tr>
+      
+        <tr>
+          <td>Pricing</td>
+          <td>Pricing Cards</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Found 3 pricing options</td>
+        </tr>
+      
+        <tr>
+          <td>Pricing</td>
+          <td>Price Display</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Correct pricing ($249/$549) displayed</td>
+        </tr>
+      
+        <tr>
+          <td>Auth</td>
+          <td>Google OAuth Button</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Google sign-in available</td>
+        </tr>
+      
+        <tr>
+          <td>Auth</td>
+          <td>Secure Connection</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Connection is secure</td>
+        </tr>
+      
+        <tr>
+          <td>Dashboard</td>
+          <td>Auth Protection</td>
+          <td><span class="status WARN">WARN</span></td>
+          <td>Dashboard accessible without auth (might be demo mode)</td>
+        </tr>
+      
+        <tr>
+          <td>Dashboard</td>
+          <td>Dashboard Content</td>
+          <td><span class="status FAIL">FAIL</span></td>
+          <td>No dashboard content</td>
+        </tr>
+      
+        <tr>
+          <td>Contacts</td>
+          <td>Contacts Display</td>
+          <td><span class="status WARN">WARN</span></td>
+          <td>No contacts UI found (might be empty state)</td>
+        </tr>
+      
+        <tr>
+          <td>Responsive</td>
+          <td>Mobile Viewport</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Mobile view captured</td>
+        </tr>
+      
+        <tr>
+          <td>Responsive</td>
+          <td>Tablet Viewport</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Tablet view captured</td>
+        </tr>
+      
+        <tr>
+          <td>Performance</td>
+          <td>Page Load Time</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>685ms (excellent)</td>
+        </tr>
+      
+        <tr>
+          <td>Performance</td>
+          <td>Resource Count</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>30 resources loaded</td>
+        </tr>
+      
+        <tr>
+          <td>Performance</td>
+          <td>Large Images</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>0 large images (>500KB)</td>
+        </tr>
+      
+        <tr>
+          <td>Performance</td>
+          <td>Slow Requests</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>0 slow requests (>1s)</td>
+        </tr>
+      
+        <tr>
+          <td>API</td>
+          <td>Health Endpoint</td>
+          <td><span class="status WARN">WARN</span></td>
+          <td>No health check endpoint found</td>
+        </tr>
+      
+        <tr>
+          <td>API</td>
+          <td>Auth Session</td>
+          <td><span class="status PASS">PASS</span></td>
+          <td>Auth session returned 200</td>
+        </tr>
+      
+    </tbody>
+  </table>
+
+  <h2>Screenshots</h2>
+  <div class="screenshots">
+    
+      <div class="screenshot">
+        <img src="auth-signin.png" alt="auth-signin.png">
+        <h4>auth-signin.png</h4>
+      </div>
+    
+      <div class="screenshot">
+        <img src="contacts.png" alt="contacts.png">
+        <h4>contacts.png</h4>
+      </div>
+    
+      <div class="screenshot">
+        <img src="dashboard-overview.png" alt="dashboard-overview.png">
+        <h4>dashboard-overview.png</h4>
+      </div>
+    
+      <div class="screenshot">
+        <img src="homepage.png" alt="homepage.png">
+        <h4>homepage.png</h4>
+      </div>
+    
+      <div class="screenshot">
+        <img src="landing.png" alt="landing.png">
+        <h4>landing.png</h4>
+      </div>
+    
+      <div class="screenshot">
+        <img src="mobile-view.png" alt="mobile-view.png">
+        <h4>mobile-view.png</h4>
+      </div>
+    
+      <div class="screenshot">
+        <img src="pricing.png" alt="pricing.png">
+        <h4>pricing.png</h4>
+      </div>
+    
+      <div class="screenshot">
+        <img src="tablet-view.png" alt="tablet-view.png">
+        <h4>tablet-view.png</h4>
+      </div>
+    
+  </div>
+</body>
+</html>
+  

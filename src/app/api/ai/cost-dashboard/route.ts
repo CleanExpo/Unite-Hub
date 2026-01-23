@@ -8,9 +8,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { getAICostDashboard } from "@/lib/ai/cost-monitor";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   try {
+    // Rate limit API requests
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+return rateLimitResult;
+}
+
     // Get workspace ID from query params
     const workspaceId = req.nextUrl.searchParams.get("workspaceId");
 

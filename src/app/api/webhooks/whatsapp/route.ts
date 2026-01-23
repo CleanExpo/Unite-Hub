@@ -11,6 +11,7 @@ import { WhatsAppService } from '@/lib/services/whatsapp';
 import { processIncomingWhatsAppMessage } from '@/lib/agents/whatsapp-intelligence';
 import { publicRateLimit } from "@/lib/rate-limit";
 import { createApiLogger } from "@/lib/logger";
+import { withErrorBoundary } from "@/lib/error-boundary";
 
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'your-verify-token';
 const logger = createApiLogger({ route: '/api/webhooks/whatsapp' });
@@ -71,40 +72,35 @@ async function getWorkspaceByWhatsAppAccount(
  * GET - WhatsApp webhook verification
  * This is called by WhatsApp to verify your webhook endpoint
  */
-export async function GET(req: NextRequest) {
-  try {
+export const GET = withErrorBoundary(async (req: NextRequest) => {
   // Apply rate limiting
   const rateLimitResult = await publicRateLimit(req);
   if (rateLimitResult) {
     return rateLimitResult;
   }
 
-    const searchParams = req.nextUrl.searchParams;
-    const mode = searchParams.get('hub.mode');
-    const token = searchParams.get('hub.verify_token');
-    const challenge = searchParams.get('hub.challenge');
+  const searchParams = req.nextUrl.searchParams;
+  const mode = searchParams.get('hub.mode');
+  const token = searchParams.get('hub.verify_token');
+  const challenge = searchParams.get('hub.challenge');
 
-    console.log('📞 WhatsApp webhook verification request:', { mode, token });
+  console.log('📞 WhatsApp webhook verification request:', { mode, token });
 
-    // Check if mode and token are correct
-    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
-      console.log('✅ Webhook verified successfully');
-      return new Response(challenge, { status: 200 });
-    }
-
-    console.log('❌ Webhook verification failed');
-    return new Response('Forbidden', { status: 403 });
-  } catch (error) {
-    console.error('Error verifying webhook:', error);
-    return new Response('Internal Server Error', { status: 500 });
+  // Check if mode and token are correct
+  if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+    console.log('✅ Webhook verified successfully');
+    return new Response(challenge, { status: 200 });
   }
-}
+
+  console.log('❌ Webhook verification failed');
+  return new Response('Forbidden', { status: 403 });
+});
 
 /**
  * POST - Receive WhatsApp webhook events
  * Handles incoming messages, status updates, and other events
  */
-export async function POST(req: NextRequest) {
+export const POST = withErrorBoundary(async (req: NextRequest) => {
   try {
     const body = await req.json();
 
@@ -146,7 +142,7 @@ export async function POST(req: NextRequest) {
     // Still return 200 to prevent WhatsApp from retrying
     return NextResponse.json({ success: true }, { status: 200 });
   }
-}
+});
 
 /**
  * Handle incoming messages and status updates

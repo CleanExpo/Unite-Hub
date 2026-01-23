@@ -11,6 +11,42 @@ import { routeIntent } from '@/lib/ai/router/dynamic-router';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { getAnthropicClient } from '@/lib/anthropic/client';
 
+// Type definitions for studio pipeline
+export interface ResearchData {
+  keyFindings: string[];
+  trends: string[];
+  competitorInsights: string[];
+  audienceData: Record<string, unknown>;
+  sources: string[];
+}
+
+export interface ScriptData {
+  hook: string;
+  body: string;
+  callToAction: string;
+  duration: number;
+  platformVariants: Record<string, string>;
+}
+
+export interface VisualData {
+  scenes: Array<{ description: string; duration: number; assets: string[] }>;
+  thumbnails: Record<string, string>;
+  overlays: string[];
+}
+
+export interface VoiceData {
+  audioUrl: string;
+  transcript: string;
+  duration: number;
+}
+
+export interface StudioMetadata {
+  generatedAt: string;
+  aiModel: string;
+  processingTime: number;
+  [key: string]: unknown;
+}
+
 export interface StudioJob {
   id: string;
   workspace_id: string;
@@ -18,11 +54,11 @@ export interface StudioJob {
   platforms: string[];
   current_stage: 'research' | 'script' | 'visual' | 'voice' | 'completed' | 'failed';
   status: 'pending' | 'processing' | 'completed' | 'failed';
-  stage_results: Record<string, any>;
+  stage_results: Record<string, StageResult<unknown>>;
   final_output?: {
     video_urls: Record<string, string>;
     script: string;
-    metadata: Record<string, any>;
+    metadata: StudioMetadata;
   };
   error_message?: string;
   processing_time_ms?: number;
@@ -30,11 +66,11 @@ export interface StudioJob {
   completed_at?: string;
 }
 
-interface StageResult {
+interface StageResult<T = unknown> {
   stage: string;
   success: boolean;
   duration_ms: number;
-  data: any;
+  data: T;
   error?: string;
 }
 
@@ -73,8 +109,9 @@ export async function executeStudioPipeline(jobId: string): Promise<StudioJob | 
     }
 
     // Stage 2: Script Generation
+    const researchData = research.data as { insights: unknown; timestamp: string };
     const script = await executeStage(jobId, 'script', async () => {
-      return await generateScript(job.topic, research.data, job.platforms);
+      return await generateScript(job.topic, researchData, job.platforms);
     });
 
     if (!script.success) {
@@ -83,8 +120,9 @@ export async function executeStudioPipeline(jobId: string): Promise<StudioJob | 
     }
 
     // Stage 3: Visual Generation
+    const scriptData = script.data as ScriptData & { visual_descriptions?: string[]; narration?: string };
     const visual = await executeStage(jobId, 'visual', async () => {
-      return await generateVisuals(script.data, job.platforms);
+      return await generateVisuals(scriptData, job.platforms);
     });
 
     if (!visual.success) {
@@ -94,7 +132,7 @@ export async function executeStudioPipeline(jobId: string): Promise<StudioJob | 
 
     // Stage 4: Voice Generation
     const voice = await executeStage(jobId, 'voice', async () => {
-      return await generateVoiceover(script.data.narration);
+      return await generateVoiceover(scriptData.narration || '');
     });
 
     if (!voice.success) {
@@ -103,8 +141,10 @@ export async function executeStudioPipeline(jobId: string): Promise<StudioJob | 
     }
 
     // Final: Composite all stages
+    const visualData = visual.data as { videos: Record<string, PlatformVisual>; generated_at: string };
+    const voiceData = voice.data as VoiceoverResult;
     const final = await executeStage(jobId, 'composite', async () => {
-      return await compositeOutput(jobId, visual.data, voice.data, script.data);
+      return await compositeOutput(jobId, visualData, voiceData, scriptData);
     });
 
     if (!final.success) {
@@ -114,7 +154,8 @@ export async function executeStudioPipeline(jobId: string): Promise<StudioJob | 
 
     // Finalize job
     const duration = Date.now() - startTime;
-    await completeJob(jobId, final.data, duration);
+    const finalData = final.data as CompositeResult;
+    await completeJob(jobId, finalData, duration);
 
     console.log(`✨ Studio pipeline completed for job ${jobId} in ${duration}ms`);
 
@@ -133,7 +174,7 @@ export async function executeStudioPipeline(jobId: string): Promise<StudioJob | 
 /**
  * Stage 1: Research phase
  */
-async function performResearch(topic: string): Promise<any> {
+async function performResearch(topic: string): Promise<{ insights: unknown; timestamp: string }> {
   console.log(`📚 Stage 1: Researching "${topic}"`);
 
   try {
@@ -170,9 +211,9 @@ Provide:
  */
 async function generateScript(
   topic: string,
-  research: any,
+  research: { insights: unknown; timestamp: string },
   platforms: string[]
-): Promise<any> {
+): Promise<ScriptData & { original_research: unknown }> {
   console.log(`📝 Stage 2: Generating script for platforms: ${platforms.join(', ')}`);
 
   try {
@@ -237,11 +278,18 @@ Provide JSON with:
 /**
  * Stage 3: Visual generation (image and video)
  */
-async function generateVisuals(script: any, platforms: string[]): Promise<any> {
+interface PlatformVisual {
+  video_url: string | undefined;
+  thumbnail_url: string | undefined;
+  duration_seconds: number | undefined;
+  platform: string;
+}
+
+async function generateVisuals(script: ScriptData & { visual_descriptions?: string[] }, platforms: string[]): Promise<{ videos: Record<string, PlatformVisual>; generated_at: string }> {
   console.log(`🎨 Stage 3: Generating visuals for ${platforms.length} platforms`);
 
   try {
-    const visuals: Record<string, any> = {};
+    const visuals: Record<string, PlatformVisual> = {};
 
     for (const platform of platforms) {
       // Use video_generation intent for multimodal synthesis
@@ -251,10 +299,11 @@ async function generateVisuals(script: any, platforms: string[]): Promise<any> {
         platforms: [platform],
       });
 
+      const videoResult = result as { video_url?: string; url?: string; thumbnail_url?: string; duration_seconds?: number };
       visuals[platform] = {
-        video_url: (result as any).video_url || (result as any).url,
-        thumbnail_url: (result as any).thumbnail_url,
-        duration_seconds: (result as any).duration_seconds,
+        video_url: videoResult.video_url || videoResult.url,
+        thumbnail_url: videoResult.thumbnail_url,
+        duration_seconds: videoResult.duration_seconds,
         platform,
       };
 
@@ -274,7 +323,14 @@ async function generateVisuals(script: any, platforms: string[]): Promise<any> {
 /**
  * Stage 4: Voice generation (narration)
  */
-async function generateVoiceover(narration: string): Promise<any> {
+interface VoiceoverResult {
+  narration_text: string;
+  audio_url: string | null;
+  voice_id: string;
+  generated_at: string;
+}
+
+async function generateVoiceover(narration: string): Promise<VoiceoverResult> {
   console.log(`🎙️ Stage 4: Generating voiceover`);
 
   try {
@@ -301,12 +357,21 @@ async function generateVoiceover(narration: string): Promise<any> {
 /**
  * Final: Composite all stages into finished output
  */
+interface CompositeResult {
+  job_id: string;
+  final_videos: Record<string, PlatformVisual>;
+  narration: string;
+  script: ScriptData & { narration?: string };
+  ready_to_post: boolean;
+  quality_score: number;
+}
+
 async function compositeOutput(
   jobId: string,
-  visuals: any,
-  voice: any,
-  script: any
-): Promise<any> {
+  visuals: { videos: Record<string, PlatformVisual>; generated_at: string },
+  voice: VoiceoverResult,
+  script: ScriptData & { narration?: string }
+): Promise<CompositeResult> {
   console.log(`🎬 Finalizing: Compositing all stages`);
 
   try {
@@ -330,11 +395,11 @@ async function compositeOutput(
 /**
  * Execute a pipeline stage with error handling and logging
  */
-async function executeStage(
+async function executeStage<T>(
   jobId: string,
   stageName: string,
-  stageFn: () => Promise<any>
-): Promise<StageResult> {
+  stageFn: () => Promise<T>
+): Promise<StageResult<T>> {
   const stageStart = Date.now();
 
   try {
@@ -419,7 +484,7 @@ async function updateJobStage(jobId: string, stage: string): Promise<void> {
 /**
  * Mark job as completed
  */
-async function completeJob(jobId: string, output: any, duration: number): Promise<void> {
+async function completeJob(jobId: string, output: CompositeResult, duration: number): Promise<void> {
   await supabaseAdmin
     .from('synthex_studio_jobs')
     .update({

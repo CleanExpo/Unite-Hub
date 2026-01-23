@@ -10,12 +10,18 @@ import { getSupabaseServer } from '@/lib/supabase';
 import { validateUserAndWorkspace } from '@/lib/api-helpers';
 import { successResponse, errorResponse } from '@/lib/api-helpers';
 import { withErrorBoundary } from '@/lib/error-boundary';
+import { apiRateLimit } from '@/lib/rate-limit';
 
 /**
  * GET /api/agents/rules
  * List all rules for a workspace, optionally filtered by agent
  */
 export const GET = withErrorBoundary(async (req: NextRequest) => {
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+return rateLimitResult;
+}
+
   const workspaceId = req.nextUrl.searchParams.get('workspaceId');
   if (!workspaceId) {
     return errorResponse('workspaceId required', 400);

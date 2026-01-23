@@ -23,6 +23,130 @@ export interface DataForSEOConfig {
   baseURL?: string;
 }
 
+// Response interfaces for type safety
+export interface SerpKeywordResult {
+  keyword: string;
+  position: number | null;
+  url: string | null;
+  title: string | null;
+  description: string | null;
+}
+
+export interface OnPageScore {
+  score: number;
+  crawledPages: number;
+  pagesWithErrors: number;
+  totalErrors: number;
+  brokenLinks: number;
+  duplicateTitles: number;
+  duplicateDescriptions: number;
+}
+
+export interface CompetitorResult {
+  domain: string;
+  avgPosition: number;
+  sum_position: number;
+  intersections: number;
+  full_domain_metrics: Record<string, unknown>;
+}
+
+export interface KeywordGapResult {
+  keyword: string;
+  searchVolume: number;
+  competition: number;
+  target1Position: number;
+  target2Position: number;
+  gap: number;
+}
+
+export interface BacklinkSummary {
+  totalBacklinks: number;
+  referringDomains: number;
+  referringMainDomains: number;
+  referringIPs: number;
+  rank: number;
+}
+
+export interface LocalGeoPackResult {
+  keyword: string;
+  localPackRank: number | null;
+  title: string | null;
+  address: string | null;
+  rating: number | null;
+  reviewCount: number | null;
+}
+
+// DataForSEO API response types
+interface DataForSEOTask<T> {
+  id: string;
+  status_code: number;
+  status_message: string;
+  data: { keyword?: string };
+  result?: T[];
+}
+
+interface DataForSEOResponse<T> {
+  status_code: number;
+  status_message: string;
+  tasks: DataForSEOTask<T>[];
+}
+
+interface SerpOrganicItem {
+  domain?: string;
+  rank_group?: number;
+  url?: string;
+  title?: string;
+  description?: string;
+}
+
+interface CompetitorItem {
+  domain: string;
+  avg_position: number;
+  sum_position: number;
+  intersections: number;
+  full_domain_metrics: Record<string, unknown>;
+}
+
+interface KeywordGapItem {
+  keyword_data?: {
+    keyword?: string;
+    keyword_info?: {
+      search_volume?: number;
+      competition?: number;
+    };
+  };
+  intersection_result?: {
+    target1?: { rank_absolute?: number };
+    target2?: { rank_absolute?: number };
+  };
+}
+
+interface LocalPackItem {
+  title?: string;
+  address?: string;
+  rating?: { value?: number; votes_count?: number };
+  category?: string;
+  phone?: string;
+  url?: string;
+}
+
+export interface LocalPackResult {
+  title: string | null;
+  address: string | null;
+  rating: number | null;
+  reviews: number | null;
+  category: string | null;
+  phone: string | null;
+  website: string | null;
+}
+
+export interface SocialSignals {
+  facebook: { shares: number; comments: number; reactions: number };
+  twitter: { tweets: number; retweets: number };
+  pinterest: { pins: number };
+  reddit: { posts: number; upvotes: number };
+}
+
 export class DataForSEOClient {
   private client: AxiosInstance;
   private login: string;
@@ -47,7 +171,7 @@ export class DataForSEOClient {
   /**
    * Get SERP keyword rankings for a domain
    */
-  async getSerpKeywords(domain: string, keywords: string[]): Promise<any> {
+  async getSerpKeywords(domain: string, keywords: string[]): Promise<SerpKeywordResult[]> {
     try {
       console.log(`[DataForSEO] Fetching SERP keywords for ${domain}...`);
 
@@ -62,9 +186,9 @@ export class DataForSEOClient {
       });
 
       if (response.data.status_code === 20000) {
-        const results = response.data.tasks.map((task: any) => {
+        const results = response.data.tasks.map((task: DataForSEOTask<{ items?: SerpOrganicItem[] }>) => {
           const organicResults = task.result?.[0]?.items || [];
-          const domainRanking = organicResults.find((item: any) =>
+          const domainRanking = organicResults.find((item: SerpOrganicItem) =>
             item.domain?.includes(domain.replace("https://", "").replace("http://", ""))
           );
 
@@ -90,7 +214,7 @@ export class DataForSEOClient {
   /**
    * Get on-page SEO score for a domain
    */
-  async getOnPageScore(domain: string): Promise<any> {
+  async getOnPageScore(domain: string): Promise<OnPageScore> {
     try {
       console.log(`[DataForSEO] Fetching on-page score for ${domain}...`);
 
@@ -129,7 +253,7 @@ export class DataForSEOClient {
   /**
    * Get competitor SERP analysis
    */
-  async getCompetitorAnalysis(domain: string, competitors: string[]): Promise<any> {
+  async getCompetitorAnalysis(domain: string, competitors: string[]): Promise<CompetitorResult[]> {
     try {
       console.log(`[DataForSEO] Analyzing competitors for ${domain}...`);
 
@@ -147,7 +271,7 @@ export class DataForSEOClient {
       if (response.data.status_code === 20000) {
         const competitors = response.data.tasks[0].result?.[0]?.items || [];
 
-        return competitors.map((comp: any) => ({
+        return competitors.map((comp: CompetitorItem) => ({
           domain: comp.domain,
           avgPosition: comp.avg_position,
           sum_position: comp.sum_position,
@@ -166,7 +290,7 @@ export class DataForSEOClient {
   /**
    * Get keyword gap analysis
    */
-  async getKeywordGap(domain: string, competitors: string[]): Promise<any> {
+  async getKeywordGap(domain: string, competitors: string[]): Promise<KeywordGapResult[]> {
     try {
       console.log(`[DataForSEO] Analyzing keyword gap for ${domain}...`);
 
@@ -185,7 +309,7 @@ export class DataForSEOClient {
       if (response.data.status_code === 20000) {
         const items = response.data.tasks[0].result?.[0]?.items || [];
 
-        return items.map((item: any) => ({
+        return items.map((item: KeywordGapItem) => ({
           keyword: item.keyword_data?.keyword,
           searchVolume: item.keyword_data?.keyword_info?.search_volume,
           competition: item.keyword_data?.keyword_info?.competition,
@@ -208,7 +332,7 @@ export class DataForSEOClient {
   /**
    * Get backlink summary
    */
-  async getBacklinks(domain: string): Promise<any> {
+  async getBacklinks(domain: string): Promise<BacklinkSummary> {
     try {
       console.log(`[DataForSEO] Fetching backlinks for ${domain}...`);
 
@@ -244,7 +368,7 @@ export class DataForSEOClient {
   /**
    * Get local GEO pack rankings
    */
-  async getLocalGeoPack(domain: string, location: string): Promise<any> {
+  async getLocalGeoPack(domain: string, location: string): Promise<LocalPackResult[]> {
     try {
       console.log(`[DataForSEO] Fetching local GEO pack for ${domain} in ${location}...`);
 
@@ -261,14 +385,14 @@ export class DataForSEOClient {
       if (response.data.status_code === 20000) {
         const items = response.data.tasks[0].result?.[0]?.items || [];
 
-        return items.map((item: any) => ({
-          title: item.title,
-          address: item.address,
-          rating: item.rating?.value,
-          reviews: item.rating?.votes_count,
-          category: item.category,
-          phone: item.phone,
-          website: item.url,
+        return items.map((item: LocalPackItem) => ({
+          title: item.title || null,
+          address: item.address || null,
+          rating: item.rating?.value || null,
+          reviews: item.rating?.votes_count || null,
+          category: item.category || null,
+          phone: item.phone || null,
+          website: item.url || null,
         }));
       }
 
@@ -282,7 +406,7 @@ export class DataForSEOClient {
   /**
    * Get social signals (if available)
    */
-  async getSocialSignals(domain: string): Promise<any> {
+  async getSocialSignals(domain: string): Promise<SocialSignals> {
     try {
       console.log(`[DataForSEO] Fetching social signals for ${domain}...`);
 

@@ -15,8 +15,14 @@ import { successResponse, errorResponse } from "@/lib/api-helpers";
 import { withErrorBoundary } from "@/lib/error-boundary";
 import { getCurrentUser } from "@/lib/auth";
 import { executeHealthMonitor } from "@/lib/agents/business-health-monitor";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
 
 export const POST = withErrorBoundary(async (req: NextRequest) => {
+  const rateLimitResult = await aiAgentRateLimit(req);
+  if (rateLimitResult) {
+return rateLimitResult;
+}
+
   const user = await getCurrentUser();
   if (!user) {
     return errorResponse("Unauthorized", 401);

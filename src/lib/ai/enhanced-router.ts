@@ -225,9 +225,9 @@ async function routeToOpenRouter(params: {
   const { taskType, prompt, systemPrompt, maxTokens, workspaceId } = params;
 
   const modelMap = {
-    quick: "anthropic/claude-3-haiku",           // $0.25/$1.25 per MTok
-    standard: "anthropic/claude-3.5-sonnet",     // $3/$15 per MTok
-    complex: "anthropic/claude-3-opus",          // $15/$75 per MTok
+    quick: "anthropic/claude-haiku-4-5-20251001",     // $1/$5 per MTok
+    standard: "anthropic/claude-sonnet-4-5-20250929", // $3/$15 per MTok
+    complex: "anthropic/claude-opus-4-5-20251101",    // $5/$25 per MTok
   };
 
   const modelId = modelMap[taskType];
@@ -411,12 +411,12 @@ async function routeToAnthropic(params: {
  */
 function calculateOpenRouterCost(modelId: string, usage: { input: number; output: number }): number {
   const pricing: Record<string, { input: number; output: number }> = {
-    "anthropic/claude-3-haiku": { input: 0.25 / 1_000_000, output: 1.25 / 1_000_000 },
-    "anthropic/claude-3.5-sonnet": { input: 3 / 1_000_000, output: 15 / 1_000_000 },
-    "anthropic/claude-3-opus": { input: 15 / 1_000_000, output: 75 / 1_000_000 },
+    "anthropic/claude-haiku-4-5-20251001": { input: 1 / 1_000_000, output: 5 / 1_000_000 },
+    "anthropic/claude-sonnet-4-5-20250929": { input: 3 / 1_000_000, output: 15 / 1_000_000 },
+    "anthropic/claude-opus-4-5-20251101": { input: 15 / 1_000_000, output: 75 / 1_000_000 },
   };
 
-  const rates = pricing[modelId] || pricing["anthropic/claude-3.5-sonnet"];
+  const rates = pricing[modelId] || pricing["anthropic/claude-sonnet-4-5-20250929"];
   return (usage.input * rates.input) + (usage.output * rates.output);
 }
 

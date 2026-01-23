@@ -20,8 +20,14 @@ import {
 } from "@/lib/api-helpers";
 import { withErrorBoundary } from "@/lib/error-boundary";
 import { executeRepoAnalysis } from "@/lib/agents/repo-intelligence";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
 
 export const POST = withErrorBoundary(async (req: NextRequest) => {
+  const rateLimitResult = await aiAgentRateLimit(req);
+  if (rateLimitResult) {
+return rateLimitResult;
+}
+
   const body = await req.json();
   const { workspaceId, repoId, analysisType, options } = body;
 

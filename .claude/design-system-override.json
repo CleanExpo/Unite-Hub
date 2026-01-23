@@ -1,0 +1,27 @@
+{
+  "DESIGN_SYSTEM_OVERRIDE": {
+    "PROJECT_MODE": "SCIENTIFIC_LUXURY_TIER",
+    "BANNED_ELEMENTS": [
+      "Standard Bootstrap/Tailwind Cards",
+      "Generic Neon Borders",
+      "Symmetrical Grids (The 'Bento' Trap)",
+      "Standard rounded-lg (0.5rem) corners"
+    ],
+    "MANDATORY_VISUAL_DNA": {
+      "Typography": "Editorial & Monospace mix. (e.g., Geist Sans + JetBrains Mono). Huge headers (text-6xl+), tiny labels (text-xs uppercase).",
+      "Layout_Physics": "Asymmetrical Editorial. 40% / 60% splits. Content must breathe. No walls of boxes.",
+      "Materiality": "Frosted Glass (Backdrop Blur 40px) OR Absolute Void (OLED Black #050505). No gray backgrounds.",
+      "Animation": "GSAP/Framer Only. Elements must 'float' or 'slide' with mass. No instant rendering."
+    },
+    "COMPONENT_RULES": {
+      "The_Council_Cards": "Do NOT use cards. Use 'Data Strips' or 'Holographic Overlays'. Think 'Iron Man HUD' meets 'Swiss Poster Design'.",
+      "Navigation": "Floating Dynamic Island or Vertical Sidebar.",
+      "_note": "INCOMPLETE - Additional rules to be added"
+    }
+  },
+  "_metadata": {
+    "saved_at": "2026-01-23",
+    "status": "PARTIAL - Input was truncated",
+    "source": "User-provided design override"
+  }
+}

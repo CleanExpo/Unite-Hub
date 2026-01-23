@@ -7,9 +7,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withStaffAuth } from '@/lib/middleware/auth';
 import { runAI } from '@/lib/ai/orchestrator';
+import { aiAgentRateLimit } from '@/lib/rate-limit';
 
 export const POST = withStaffAuth(async (req) => {
   try {
+    // Rate limit AI operations
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+return rateLimitResult;
+}
     const body = await req.json();
     const { ideaId, interpretation } = body;
 

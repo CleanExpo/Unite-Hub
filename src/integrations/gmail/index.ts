@@ -395,7 +395,7 @@ export class GmailClient {
   /**
    * Extract email body from message payload
    */
-  private extractBody(payload: any): { text: string; html: string } {
+  private extractBody(payload: gmail_v1.Schema$MessagePart | null | undefined): { text: string; html: string } {
     let text = '';
     let html = '';
 
@@ -666,9 +666,10 @@ return { text, html };
   /**
    * Handle Gmail API errors
    */
-  private handleApiError(error: any, context: string): GmailError {
+  private handleApiError(error: unknown, context: string): GmailError {
+    const apiError = error as { code?: number; message?: string };
     // Rate limit errors
-    if (error.code === 429) {
+    if (apiError.code === 429) {
       return new GmailError(
         `${context}: Rate limit exceeded`,
         GMAIL_ERROR_CODES.RATE_LIMIT,
@@ -678,17 +679,17 @@ return { text, html };
     }
 
     // Quota errors
-    if (error.message?.includes('quota')) {
+    if (apiError.message?.includes('quota')) {
       return new GmailError(
         `${context}: Quota exceeded`,
         GMAIL_ERROR_CODES.QUOTA_EXCEEDED,
-        error.code,
+        apiError.code,
         error
       );
     }
 
     // Token expired
-    if (error.code === 401 || error.message?.includes('Invalid Credentials')) {
+    if (apiError.code === 401 || apiError.message?.includes('Invalid Credentials')) {
       return new GmailError(
         `${context}: Token expired or invalid`,
         GMAIL_ERROR_CODES.TOKEN_EXPIRED,

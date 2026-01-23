@@ -6,9 +6,9 @@
 export type AIProvider = 'openrouter' | 'perplexity' | 'anthropic';
 
 export type AIModel =
-  | 'claude-3.5-sonnet'
-  | 'claude-3-opus'
-  | 'claude-3-haiku'
+  | 'claude-sonnet-4-5'
+  | 'claude-opus-4-5'
+  | 'claude-haiku-4-5'
   | 'gpt-4-turbo'
   | 'gpt-4-vision'
   | 'gpt-3.5-turbo'

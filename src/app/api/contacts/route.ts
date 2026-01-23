@@ -11,6 +11,7 @@ import {
   parseSorting,
 } from "@/lib/api-helpers";
 import { withErrorBoundary, ValidationError, ConflictError, DatabaseError } from "@/lib/errors/boundaries";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/contacts
@@ -29,6 +30,11 @@ import { withErrorBoundary, ValidationError, ConflictError, DatabaseError } from
  * Performance: Uses indexed queries, selective field loading, pagination
  */
 export const GET = withErrorBoundary(async (req: NextRequest) => {
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+return rateLimitResult;
+}
+
   // Get workspace ID from query params
   const workspaceId = req.nextUrl.searchParams.get("workspaceId");
 

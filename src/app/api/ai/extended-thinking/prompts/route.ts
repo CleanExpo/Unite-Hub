@@ -15,8 +15,15 @@ import {
   getPromptsForCategory,
 } from "@/lib/ai/thinking-prompts";
 import { createClient } from '@/lib/supabase/server';
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
+  // Rate limit API requests
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+return rateLimitResult;
+}
+
   // Require authentication - prompts are internal system configuration
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();

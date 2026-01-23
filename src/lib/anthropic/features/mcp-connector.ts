@@ -79,7 +79,7 @@ export const PRECONFIGURED_MCP_SERVERS = {
    */
   filesystem: (basePath: string): MCPServerConfig => ({
     name: "filesystem",
-    url: `http://localhost:3101`,
+    url: process.env.MCP_FILESYSTEM_URL || "http://localhost:3101",
     headers: {
       "X-Base-Path": basePath,
     },
@@ -91,7 +91,7 @@ export const PRECONFIGURED_MCP_SERVERS = {
    */
   database: (): MCPServerConfig => ({
     name: "database",
-    url: `http://localhost:3102`,
+    url: process.env.MCP_DATABASE_URL || "http://localhost:3102",
   }),
 } as const;
 

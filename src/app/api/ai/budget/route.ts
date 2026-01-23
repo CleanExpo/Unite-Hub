@@ -7,9 +7,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { getBudgetLimits, updateBudgetLimits } from "@/lib/ai/cost-monitor";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   try {
+    // Rate limit API requests
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+return rateLimitResult;
+}
     const workspaceId = req.nextUrl.searchParams.get("workspaceId");
 
     if (!workspaceId) {
@@ -59,6 +65,12 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
+    // Rate limit API requests
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+return rateLimitResult;
+}
+
     const body = await req.json();
     const { workspaceId, ...limits } = body;
 

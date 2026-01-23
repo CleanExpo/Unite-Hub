@@ -1,5 +1,62 @@
 import { google } from "googleapis";
 import { db } from "@/lib/db";
+import { CredentialVault } from "@/server/credentialVault";
+
+/**
+ * Token encryption helpers for secure OAuth token storage
+ * Uses CredentialVault with AES-256-GCM encryption
+ */
+async function encryptAndStoreTokens(
+  orgId: string,
+  integrationId: string,
+  tokens: { accessToken: string; refreshToken?: string | null; expiryDate?: number | null }
+): Promise<void> {
+  const tokenData = {
+    access_token: tokens.accessToken,
+    refresh_token: tokens.refreshToken,
+    expiry_date: tokens.expiryDate,
+  };
+
+  const result = await CredentialVault.set(
+    orgId,
+    "gsc_oauth", // Using gsc_oauth type for Google OAuth tokens
+    `gmail_integration_${integrationId}`,
+    tokenData,
+    tokens.expiryDate ? new Date(tokens.expiryDate) : undefined
+  );
+
+  if (!result.success) {
+    console.error("[gmail] Failed to encrypt tokens:", result.error);
+    throw new Error(`Failed to secure token storage: ${result.error}`);
+  }
+}
+
+async function getDecryptedTokens(
+  orgId: string,
+  integrationId: string
+): Promise<{ access_token: string; refresh_token?: string; expiry_date?: number } | null> {
+  // Find credential by label
+  const listResult = await CredentialVault.list(orgId);
+  if (!listResult.success || !listResult.credentials) {
+    return null;
+  }
+
+  const credential = listResult.credentials.find(
+    (c) => c.label === `gmail_integration_${integrationId}`
+  );
+
+  if (!credential) {
+    return null;
+  }
+
+  const result = await CredentialVault.get(orgId, credential.id);
+  if (!result.success || !result.credential) {
+    console.error("[gmail] Failed to decrypt tokens:", result.error);
+    return null;
+  }
+
+  return result.credential.data;
+}
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -37,15 +94,28 @@ export async function handleGmailCallback(
       throw new Error("No access token received");
     }
 
-    // Store integration
+    // Store integration (without plaintext tokens)
     const integration = await db.emailIntegrations.create({
       org_id: orgId,
       provider: "gmail",
       account_email: "", // Will be populated after first sync
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
+      access_token: "[ENCRYPTED]", // Placeholder - tokens stored in vault
+      refresh_token: "[ENCRYPTED]", // Placeholder - tokens stored in vault
       token_expires_at: tokens.expiry_date ? new Date(tokens.expiry_date) : null,
       is_active: true,
+    });
+
+    // CRITICAL: Encrypt and store tokens in credential vault
+    await encryptAndStoreTokens(orgId, integration.id, {
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
+      expiryDate: tokens.expiry_date,
+    });
+
+    // Set credentials for profile lookup
+    oauth2Client.setCredentials({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
     });
 
     // Get user info to store email
@@ -71,14 +141,25 @@ export async function syncGmailEmails(integrationId: string) {
       throw new Error("Integration not found");
     }
 
+    // Get decrypted tokens from vault
+    const tokens = await getDecryptedTokens(integration.org_id, integrationId);
+    if (!tokens) {
+      throw new Error("Failed to retrieve encrypted tokens");
+    }
+
     // Refresh token if needed
     if (integration.token_expires_at && new Date() > integration.token_expires_at) {
       await refreshGmailToken(integrationId);
+      // Re-fetch tokens after refresh
+      const refreshedTokens = await getDecryptedTokens(integration.org_id, integrationId);
+      if (refreshedTokens) {
+        Object.assign(tokens, refreshedTokens);
+      }
     }
 
     oauth2Client.setCredentials({
-      access_token: integration.access_token,
-      refresh_token: integration.refresh_token,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
     });
 
     const gmail = google.gmail({ version: "v1", auth: oauth2Client });
@@ -199,9 +280,15 @@ export async function sendEmailViaGmail(
       throw new Error("Integration not found");
     }
 
+    // Get decrypted tokens from vault
+    const tokens = await getDecryptedTokens(integration.org_id, integrationId);
+    if (!tokens) {
+      throw new Error("Failed to retrieve encrypted tokens");
+    }
+
     oauth2Client.setCredentials({
-      access_token: integration.access_token,
-      refresh_token: integration.refresh_token,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
     });
 
     const gmail = google.gmail({ version: "v1", auth: oauth2Client });
@@ -244,18 +331,31 @@ export async function refreshGmailToken(integrationId: string) {
   try {
     const integration = await db.emailIntegrations.getById(integrationId);
 
-    if (!integration?.refresh_token) {
+    if (!integration) {
+      throw new Error("Integration not found");
+    }
+
+    // Get decrypted tokens from vault
+    const tokens = await getDecryptedTokens(integration.org_id, integrationId);
+    if (!tokens?.refresh_token) {
       throw new Error("No refresh token available");
     }
 
     oauth2Client.setCredentials({
-      refresh_token: integration.refresh_token,
+      refresh_token: tokens.refresh_token,
     });
 
     const { credentials } = await oauth2Client.refreshAccessToken();
 
+    // Update encrypted tokens in vault
+    await encryptAndStoreTokens(integration.org_id, integrationId, {
+      accessToken: credentials.access_token!,
+      refreshToken: tokens.refresh_token, // Keep existing refresh token
+      expiryDate: credentials.expiry_date,
+    });
+
+    // Update expiry in integration record (tokens are encrypted in vault)
     await db.emailIntegrations.update(integrationId, {
-      access_token: credentials.access_token,
       token_expires_at: credentials.expiry_date
         ? new Date(credentials.expiry_date)
         : null,
@@ -280,14 +380,25 @@ export async function syncGmailEmailsWithMultiple(integrationId: string) {
       throw new Error("Integration not found");
     }
 
+    // Get decrypted tokens from vault
+    const tokens = await getDecryptedTokens(integration.org_id, integrationId);
+    if (!tokens) {
+      throw new Error("Failed to retrieve encrypted tokens");
+    }
+
     // Refresh token if needed
     if (integration.token_expires_at && new Date() > integration.token_expires_at) {
       await refreshGmailToken(integrationId);
+      // Re-fetch tokens after refresh
+      const refreshedTokens = await getDecryptedTokens(integration.org_id, integrationId);
+      if (refreshedTokens) {
+        Object.assign(tokens, refreshedTokens);
+      }
     }
 
     oauth2Client.setCredentials({
-      access_token: integration.access_token,
-      refresh_token: integration.refresh_token,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
     });
 
     const gmail = google.gmail({ version: "v1", auth: oauth2Client });

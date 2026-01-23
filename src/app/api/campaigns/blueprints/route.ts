@@ -10,11 +10,17 @@ import { createApiLogger } from '@/lib/logger';
 import { blueprintEngine } from '@/lib/campaigns/multiChannelBlueprintEngine';
 import { campaignEvaluator } from '@/lib/campaigns/campaignEvaluator';
 import { getBrandChannels } from '@/lib/campaigns/channelPlaybooks';
+import { apiRateLimit } from '@/lib/rate-limit';
 
 const logger = createApiLogger({ route: '/api/campaigns/blueprints' });
 
 export async function GET(req: NextRequest) {
   try {
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+return rateLimitResult;
+}
+
     const workspaceId = req.nextUrl.searchParams.get('workspaceId');
     const brandSlug = req.nextUrl.searchParams.get('brandSlug');
     const status = req.nextUrl.searchParams.get('status');

@@ -36,35 +36,35 @@ export * from './types';
  * Defines costs, limits, and optimal use cases for each model
  */
 const MODEL_REGISTRY: Record<AIModel, ModelCapability> = {
-  // OpenRouter - Claude Models
-  'claude-3.5-sonnet': {
+  // OpenRouter - Claude 4.5 Models (January 2026)
+  'claude-sonnet-4-5': {
     provider: 'openrouter',
-    model: 'claude-3.5-sonnet',
-    maxTokens: 200000,
-    supportsVision: false,
+    model: 'claude-sonnet-4-5',
+    maxTokens: 1000000, // 1M context
+    supportsVision: true,
     supportsWebSearch: false,
     costPerMillionPrompt: 3,
     costPerMillionCompletion: 15,
     optimalFor: ['creative-content', 'general'],
   },
-  'claude-3-opus': {
+  'claude-opus-4-5': {
     provider: 'openrouter',
-    model: 'claude-3-opus',
+    model: 'claude-opus-4-5',
     maxTokens: 200000,
-    supportsVision: false,
+    supportsVision: true,
     supportsWebSearch: false,
     costPerMillionPrompt: 15,
     costPerMillionCompletion: 75,
     optimalFor: ['technical-analysis', 'competitor-analysis'],
   },
-  'claude-3-haiku': {
+  'claude-haiku-4-5': {
     provider: 'openrouter',
-    model: 'claude-3-haiku',
+    model: 'claude-haiku-4-5',
     maxTokens: 200000,
-    supportsVision: false,
+    supportsVision: true,
     supportsWebSearch: false,
-    costPerMillionPrompt: 0.25,
-    costPerMillionCompletion: 1.25,
+    costPerMillionPrompt: 1,
+    costPerMillionCompletion: 5,
     optimalFor: ['bulk-generation'],
   },
 
@@ -161,8 +161,8 @@ const TASK_MODEL_MAP: Record<
 > = {
   'creative-content': {
     costOptimal: 'llama-3-70b',
-    qualityOptimal: 'claude-3.5-sonnet',
-    speedOptimal: 'gpt-3.5-turbo',
+    qualityOptimal: 'claude-sonnet-4-5',
+    speedOptimal: 'claude-haiku-4-5',
   },
   'seo-research': {
     costOptimal: 'sonar',
@@ -171,17 +171,17 @@ const TASK_MODEL_MAP: Record<
   },
   'competitor-analysis': {
     costOptimal: 'gemini-pro-1.5',
-    qualityOptimal: 'claude-3-opus',
+    qualityOptimal: 'claude-opus-4-5',
     speedOptimal: 'gpt-4-turbo',
   },
   'technical-analysis': {
     costOptimal: 'gemini-pro-1.5',
-    qualityOptimal: 'claude-3-opus',
+    qualityOptimal: 'claude-opus-4-5',
     speedOptimal: 'gpt-4-turbo',
   },
   'bulk-generation': {
     costOptimal: 'llama-3-70b',
-    qualityOptimal: 'claude-3-haiku',
+    qualityOptimal: 'claude-haiku-4-5',
     speedOptimal: 'llama-3-70b',
   },
   'visual-analysis': {
@@ -195,9 +195,9 @@ const TASK_MODEL_MAP: Record<
     speedOptimal: 'sonar',
   },
   general: {
-    costOptimal: 'gpt-3.5-turbo',
-    qualityOptimal: 'claude-3.5-sonnet',
-    speedOptimal: 'gpt-3.5-turbo',
+    costOptimal: 'claude-haiku-4-5',
+    qualityOptimal: 'claude-sonnet-4-5',
+    speedOptimal: 'claude-haiku-4-5',
   },
 };
 
@@ -426,9 +426,9 @@ export class AIRouter {
    */
   private mapToOpenRouterModel(model: AIModel): string {
     const mapping: Record<string, string> = {
-      'claude-3.5-sonnet': 'anthropic/claude-3.5-sonnet',
-      'claude-3-opus': 'anthropic/claude-3-opus',
-      'claude-3-haiku': 'anthropic/claude-3-haiku',
+      'claude-sonnet-4-5': 'anthropic/claude-sonnet-4-5-20250929',
+      'claude-opus-4-5': 'anthropic/claude-opus-4-5-20251101',
+      'claude-haiku-4-5': 'anthropic/claude-haiku-4-5-20251001',
       'gpt-4-turbo': 'openai/gpt-4-turbo',
       'gpt-4-vision': 'openai/gpt-4-vision-preview',
       'gpt-3.5-turbo': 'openai/gpt-3.5-turbo',
