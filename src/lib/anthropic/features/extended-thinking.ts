@@ -69,6 +69,64 @@ export const THINKING_SUPPORTED_MODELS = [
 export const INTERLEAVED_THINKING_HEADER = "interleaved-thinking-2025-05-14";
 
 /**
+ * Beta header for extended 128K output tokens
+ * Enables max_tokens up to 128,000 for supported models
+ */
+export const OUTPUT_128K_HEADER = "output-128k-2025-02-19";
+
+/**
+ * Beta header for Computer Use capabilities
+ * Required for screenshot, click, type, scroll tools
+ */
+export const COMPUTER_USE_HEADER = "computer-use-2025-01-24";
+
+/**
+ * All available beta headers for reference
+ */
+export const BETA_HEADERS = {
+  INTERLEAVED_THINKING: INTERLEAVED_THINKING_HEADER,
+  OUTPUT_128K: OUTPUT_128K_HEADER,
+  COMPUTER_USE: COMPUTER_USE_HEADER,
+  PROMPT_CACHING: "prompt-caching-2024-07-31",
+} as const;
+
+/**
+ * Combine multiple beta headers into a single string
+ * @param headers - Array of beta header values
+ * @returns Combined beta header string for API request
+ *
+ * @example
+ * const betaHeader = combineBetaHeaders([
+ *   BETA_HEADERS.INTERLEAVED_THINKING,
+ *   BETA_HEADERS.OUTPUT_128K
+ * ]);
+ * // "interleaved-thinking-2025-05-14,output-128k-2025-02-19"
+ */
+export function combineBetaHeaders(headers: string[]): string {
+  return headers.filter(Boolean).join(",");
+}
+
+/**
+ * Get headers object for extended output (128K tokens)
+ * @returns Headers object with output-128k beta
+ */
+export function getExtendedOutputHeaders(): Record<string, string> {
+  return {
+    "anthropic-beta": OUTPUT_128K_HEADER,
+  };
+}
+
+/**
+ * Get headers object for Computer Use
+ * @returns Headers object with computer-use beta
+ */
+export function getComputerUseHeaders(): Record<string, string> {
+  return {
+    "anthropic-beta": COMPUTER_USE_HEADER,
+  };
+}
+
+/**
  * Recommended budget tokens for different use cases
  */
 export const THINKING_BUDGETS = {

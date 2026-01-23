@@ -304,3 +304,124 @@ export function withCodeExecution<
     tools: [...(params.tools || []), codeExecTool],
   };
 }
+
+// ============================================================================
+// Claude Computer Use Tools (Native Anthropic Implementation)
+// ============================================================================
+
+import { COMPUTER_USE_HEADER } from "./extended-thinking";
+
+/**
+ * Computer Use tool types for Claude's native implementation
+ */
+export type ComputerUseToolType = "computer_20241022" | "text_editor_20241022" | "bash_20241022";
+
+export interface ComputerUseToolConfig {
+  /** Display width in pixels */
+  displayWidth: number;
+  /** Display height in pixels */
+  displayHeight: number;
+  /** Display number (default: 1) */
+  displayNumber?: number;
+}
+
+export interface ComputerUseTool {
+  type: ComputerUseToolType;
+  name: "computer" | "str_replace_editor" | "bash";
+  display_width_px?: number;
+  display_height_px?: number;
+  display_number?: number;
+}
+
+/**
+ * Create the Claude native computer use tool
+ *
+ * @param config - Display configuration
+ * @returns Computer use tool definition for Messages API
+ *
+ * @example
+ * const computerTool = createComputerUseTool({
+ *   displayWidth: 1920,
+ *   displayHeight: 1080
+ * });
+ */
+export function createComputerUseTool(config: ComputerUseToolConfig): ComputerUseTool {
+  return {
+    type: "computer_20241022",
+    name: "computer",
+    display_width_px: config.displayWidth,
+    display_height_px: config.displayHeight,
+    display_number: config.displayNumber ?? 1,
+  };
+}
+
+/**
+ * Create the text editor tool for Computer Use
+ */
+export function createTextEditorTool(): ComputerUseTool {
+  return {
+    type: "text_editor_20241022",
+    name: "str_replace_editor",
+  };
+}
+
+/**
+ * Create the bash tool for Computer Use
+ */
+export function createBashTool(): ComputerUseTool {
+  return {
+    type: "bash_20241022",
+    name: "bash",
+  };
+}
+
+/**
+ * Create all standard Computer Use tools
+ *
+ * @param displayConfig - Display configuration for computer tool
+ * @returns Array of all computer use tools
+ */
+export function createComputerUseTools(displayConfig: ComputerUseToolConfig): ComputerUseTool[] {
+  return [
+    createComputerUseTool(displayConfig),
+    createTextEditorTool(),
+    createBashTool(),
+  ];
+}
+
+/**
+ * Add Computer Use tools to message params with required beta header
+ *
+ * @param params - Base message params
+ * @param displayConfig - Display configuration
+ * @returns Updated params with computer use tools and beta header
+ *
+ * @example
+ * const params = withComputerUse(
+ *   { model: "claude-sonnet-4-5", messages: [...] },
+ *   { displayWidth: 1920, displayHeight: 1080 }
+ * );
+ */
+export function withComputerUse<
+  T extends Anthropic.Messages.MessageCreateParamsNonStreaming,
+>(params: T, displayConfig: ComputerUseToolConfig): T & {
+  tools: ComputerUseTool[];
+  betas: string[];
+} {
+  const computerTools = createComputerUseTools(displayConfig);
+
+  return {
+    ...params,
+    tools: [...(params.tools || []), ...computerTools] as any,
+    betas: [COMPUTER_USE_HEADER],
+  };
+}
+
+/**
+ * Get headers for Computer Use API requests
+ */
+export function getComputerUseBetaHeaders(): Record<string, string> {
+  return {
+    "anthropic-beta": COMPUTER_USE_HEADER,
+  };
+}

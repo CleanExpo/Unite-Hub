@@ -46,6 +46,10 @@ export {
   THINKING_SUPPORTED_MODELS,
   INTERLEAVED_THINKING_HEADER,
   THINKING_BUDGETS,
+  // Beta Headers (2025-2026)
+  OUTPUT_128K_HEADER,
+  COMPUTER_USE_HEADER,
+  BETA_HEADERS,
   // Helpers
   createThinkingConfig,
   withThinking,
@@ -57,6 +61,9 @@ export {
   withInterleavedThinking,
   recommendThinkingBudget,
   validateThinkingBudget,
+  combineBetaHeaders,
+  getExtendedOutputHeaders,
+  getComputerUseHeaders,
   // Configs
   QUICK_THINKING_CONFIG,
   DEEP_THINKING_CONFIG,
@@ -101,14 +108,24 @@ export {
   checkAllMCPServersHealth,
 } from "./mcp-connector";
 
-// Code Execution
+// Code Execution & Computer Use
 export {
   // Types
   type CodeExecutionResult,
   type CodeExecutionToolConfig,
+  type ComputerUseToolType,
+  type ComputerUseToolConfig,
+  type ComputerUseTool,
   // Tool Definition
   createCodeExecutionTool,
   createWebSearchTool,
+  // Computer Use Tools (Native Claude Implementation)
+  createComputerUseTool,
+  createTextEditorTool,
+  createBashTool,
+  createComputerUseTools,
+  withComputerUse,
+  getComputerUseBetaHeaders,
   // Helpers
   parseCodeExecutionResult,
   isCodeExecutionToolUse,

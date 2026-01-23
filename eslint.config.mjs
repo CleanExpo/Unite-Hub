@@ -15,6 +15,7 @@ export default [
       'no-constant-binary-expression': 'warn',
       'no-dupe-keys': 'warn',
       'no-unused-vars': 'off',
+      'no-prototype-builtins': 'warn', // Use Object.hasOwn() instead but don't error
     },
   },
   {
@@ -188,6 +189,12 @@ export default [
       'docker/**',
       'coverage/**',
       'scripts/**',
+      // External dependencies
+      'external/**',
+      // Experimental/shadow directories
+      'shadow-observer/**',
+      // Root level orphan files
+      'page.tsx',
     ],
   },
 ];

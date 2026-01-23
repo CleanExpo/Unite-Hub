@@ -11,7 +11,6 @@ const ScoreBar = ({ score }: { score: number }) => {
     <div className="w-full bg-bg-elevated rounded-full h-2">
       <div
         className="bg-accent-500 h-2 rounded-full transition-all duration-300"
-        // eslint-disable-next-line @stylistic/jsx-no-constructed-context-values
         style={{ width: `${safeScore}%` } as React.CSSProperties}
       />
     </div>
@@ -42,13 +41,17 @@ export default function AdoptionOverviewPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     const fetchAdoption = async () => {
       try {
         setLoading(true);
         const res = await fetch(`/api/guardian/meta/adoption/overview?workspaceId=${workspaceId}`);
-        if (!res.ok) throw new Error('Failed to load adoption overview');
+        if (!res.ok) {
+throw new Error('Failed to load adoption overview');
+}
         const data = await res.json();
         setAdoption(data.data);
       } catch (err) {

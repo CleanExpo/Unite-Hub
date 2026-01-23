@@ -55,10 +55,18 @@ export default function GuardianAccessAuditPage() {
     setError(null);
     try {
       const params = new URLSearchParams();
-      if (endpointFilter.trim()) params.set('endpoint', endpointFilter.trim());
-      if (statusCodeFilter.trim()) params.set('statusCode', statusCodeFilter.trim());
-      if (successFilter === 'success') params.set('success', 'true');
-      if (successFilter === 'failure') params.set('success', 'false');
+      if (endpointFilter.trim()) {
+params.set('endpoint', endpointFilter.trim());
+}
+      if (statusCodeFilter.trim()) {
+params.set('statusCode', statusCodeFilter.trim());
+}
+      if (successFilter === 'success') {
+params.set('success', 'true');
+}
+      if (successFilter === 'failure') {
+params.set('success', 'false');
+}
       params.set('limit', '200');
       const qs = params.toString() ? `?${params.toString()}` : '';
 
@@ -83,7 +91,6 @@ export default function GuardianAccessAuditPage() {
   useEffect(() => {
     loadSummary();
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
