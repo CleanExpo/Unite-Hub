@@ -673,3 +673,73 @@
     box-shadow: 0 0 15px rgba(168, 90, 50, 0.3);
   }
 }
+
+/* ===================================
+   Elite Operation Status Animations
+   =================================== */
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes neural-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes thinking-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Elite progress bar gradient animation */
+.elite-progress-gradient {
+  background: linear-gradient(
+    90deg,
+    #ff6b35 0%,
+    #ff8c5a 25%,
+    #ff6b35 50%,
+    #ff5c1a 75%,
+    #ff6b35 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Neural network thinking effect */
+.neural-thinking {
+  background: linear-gradient(
+    -45deg,
+    rgba(255, 107, 53, 0.1),
+    rgba(139, 92, 246, 0.1),
+    rgba(59, 130, 246, 0.1),
+    rgba(255, 107, 53, 0.1)
+  );
+  background-size: 400% 400%;
+  animation: neural-flow 4s ease infinite;
+}

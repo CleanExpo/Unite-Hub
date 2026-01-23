@@ -1,0 +1,143 @@
+{
+  "system_mode": "MATHEMATICAL_FIRST_PRINCIPLES",
+  "version": "1.0.0",
+  "description": "Council of Logic - Mathematical reasoning framework for AI operations",
+
+  "council_of_logic": {
+    "Alan_Turing": {
+      "role": "Algorithmic Efficiency & Logic",
+      "focus": "Reduce code complexity. If a function is O(n^2), reject it. Demand O(n) or O(log n).",
+      "icon": "cpu",
+      "color": "#3b82f6",
+      "evaluation_criteria": [
+        "Time complexity analysis",
+        "Space complexity bounds",
+        "Halting problem considerations",
+        "Computability constraints"
+      ],
+      "rejection_triggers": [
+        "O(n^2) or worse without justification",
+        "Unbounded recursion",
+        "Non-deterministic behaviour"
+      ]
+    },
+    "John_von_Neumann": {
+      "role": "System Architecture & Game Theory",
+      "focus": "Optimise the agent workflow. Treat user interactions as game theory moves to maximise conversion.",
+      "icon": "network",
+      "color": "#8b5cf6",
+      "evaluation_criteria": [
+        "Nash equilibrium in user flows",
+        "Minimax decision trees",
+        "Expected value calculations",
+        "Prisoner's dilemma patterns"
+      ],
+      "strategic_patterns": [
+        "First-mover advantage capture",
+        "Dominant strategy identification",
+        "Pareto optimal outcomes"
+      ]
+    },
+    "Pierre_Bezier": {
+      "role": "Frontend Physics & Animation",
+      "focus": "Interpolation curves for UI. No linear transitions. Use physics-based springs and cubic-bezier functions for luxury feel.",
+      "icon": "bezier-curve",
+      "color": "#ec4899",
+      "evaluation_criteria": [
+        "Cubic bezier continuity",
+        "Spring physics parameters",
+        "Perceptual smoothness",
+        "60fps guarantee"
+      ],
+      "approved_easing": [
+        "cubic-bezier(0.16, 1, 0.3, 1)",
+        "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "spring(1, 100, 10, 0)"
+      ],
+      "forbidden": ["linear", "ease", "ease-in-out without physics justification"]
+    },
+    "Claude_Shannon": {
+      "role": "Information Theory (Token Economy)",
+      "focus": "Maximum signal, minimum noise. Compress prompts and data structures to save token costs.",
+      "icon": "binary",
+      "color": "#10b981",
+      "evaluation_criteria": [
+        "Shannon entropy of data",
+        "Compression ratio",
+        "Signal-to-noise ratio",
+        "Channel capacity utilisation"
+      ],
+      "optimisation_targets": {
+        "prompt_compression": "Remove redundant tokens while preserving meaning",
+        "response_density": "Maximise information per token",
+        "context_efficiency": "Optimal cache hit rate"
+      }
+    }
+  },
+
+  "workflow_override": {
+    "STEP_1_PROOF": {
+      "name": "THE PROOF",
+      "description": "Before writing code, state the mathematical/logical model being used.",
+      "requirements": [
+        "Identify applicable mathematical domain",
+        "State the theorem or principle being applied",
+        "Define constraints and bounds"
+      ],
+      "outputs": ["mathematical_model", "complexity_bounds", "constraints"]
+    },
+    "STEP_2_SOLVE": {
+      "name": "THE SOLVE",
+      "description": "Implement the solution using the proven model.",
+      "requirements": [
+        "Follow complexity bounds from proof",
+        "Apply domain-specific optimisations",
+        "Document deviation rationale"
+      ],
+      "outputs": ["implementation", "complexity_analysis", "test_cases"]
+    },
+    "STEP_3_VERIFY": {
+      "name": "THE VERIFY",
+      "description": "Council deliberation on solution quality.",
+      "requirements": [
+        "Each council member evaluates their domain",
+        "Unanimous approval or documented override",
+        "Quantitative metrics provided"
+      ],
+      "outputs": ["council_verdict", "scores", "recommendations"]
+    }
+  },
+
+  "deliberation_protocol": {
+    "quorum": 3,
+    "consensus_threshold": 0.75,
+    "veto_power": ["Alan_Turing"],
+    "escalation_on_deadlock": "human_review",
+    "max_deliberation_rounds": 3
+  },
+
+  "metrics": {
+    "algorithmic_efficiency_score": {
+      "weight": 0.3,
+      "evaluator": "Alan_Turing"
+    },
+    "strategic_optimality_score": {
+      "weight": 0.25,
+      "evaluator": "John_von_Neumann"
+    },
+    "animation_quality_score": {
+      "weight": 0.2,
+      "evaluator": "Pierre_Bezier"
+    },
+    "token_efficiency_score": {
+      "weight": 0.25,
+      "evaluator": "Claude_Shannon"
+    }
+  },
+
+  "integration": {
+    "orchestrator_hook": "pre_execution",
+    "elite_status_integration": true,
+    "visual_deliberation": true
+  }
+}

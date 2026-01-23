@@ -47,6 +47,13 @@ import { socialInboxAgent } from '@/lib/agents/socialInboxAgent';
 import { preClientIdentityAgent } from '@/lib/agents/preClientIdentityAgent';
 import { cognitiveTwinAgent } from '@/lib/agents/cognitiveTwinAgent';
 
+// Import Council of Logic - Mathematical First Principles
+import {
+  getCouncilOfLogic,
+  type CouncilDeliberation,
+  type MemberVerdict,
+} from '@/lib/agents/council-of-logic';
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -124,6 +131,7 @@ export interface OrchestratorResult {
   plan: OrchestratorPlan;
   outputs: AgentOutput[];
   validation?: ValidationResult;
+  councilDeliberation?: CouncilDeliberation;
   errors: string[];
   tokensUsed: number;
 }
@@ -684,11 +692,81 @@ export async function generatePlan(request: OrchestratorRequest): Promise<Orches
 
 export async function executePlan(
   plan: OrchestratorPlan,
-  request: OrchestratorRequest
+  request: OrchestratorRequest,
+  options?: { skipCouncil?: boolean; councilThreshold?: number }
 ): Promise<OrchestratorResult> {
   const outputs: AgentOutput[] = [];
   const errors: string[] = [];
   let tokensUsed = 0;
+  let councilDeliberation: CouncilDeliberation | undefined;
+
+  // ============================================================================
+  // COUNCIL OF LOGIC - Mathematical First Principles Pre-Execution Hook
+  // ============================================================================
+  // Every operation evaluated by Turing (algorithms), von Neumann (game theory),
+  // Bézier (animation physics), and Shannon (token economy)
+
+  if (!options?.skipCouncil && process.env.ENABLE_COUNCIL_OF_LOGIC !== 'false') {
+    try {
+      const council = getCouncilOfLogic();
+      const threshold = options?.councilThreshold ?? 50;
+
+      // Build code context from plan steps
+      const operationContext = {
+        intent: plan.intent,
+        stepsCount: plan.steps.length,
+        estimatedTokens: plan.estimatedTokens,
+        actions: plan.steps.map(s => `${s.agent}:${s.action}`).join(', '),
+      };
+
+      councilDeliberation = await council.deliberate({
+        operation: `${plan.intent}: ${request.userPrompt.slice(0, 100)}`,
+        context: operationContext,
+        prompt: request.userPrompt,
+      });
+
+      tokensUsed += 500; // Council evaluation tokens
+
+      // Check if council rejected the operation (Turing veto or low score)
+      if (councilDeliberation.finalVerdict === 'rejected') {
+        const turingVerdict = councilDeliberation.verdicts.find(v => v.member === 'Alan_Turing');
+        const rejectionReason = turingVerdict?.reasoning || 'Council rejected operation';
+
+        return {
+          success: false,
+          intent: plan.intent,
+          plan,
+          outputs: [],
+          councilDeliberation,
+          errors: [`Council of Logic rejected: ${rejectionReason}`],
+          tokensUsed,
+        };
+      }
+
+      // Warn if needs revision but allow execution
+      if (councilDeliberation.finalVerdict === 'needs_revision') {
+        const recommendations = councilDeliberation.verdicts
+          .flatMap(v => v.recommendations)
+          .slice(0, 3);
+        errors.push(`Council advisory: Operation approved with recommendations - ${recommendations.join('; ')}`);
+      }
+
+      // Log council scores for monitoring
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[Council of Logic] ${plan.intent} - Score: ${councilDeliberation.overallScore}/100`);
+        councilDeliberation.verdicts.forEach(v => {
+          console.log(`  ${v.member}: ${v.score} (${v.approved ? '✓' : '✗'})`);
+        });
+      }
+    } catch (councilError) {
+      // Don't block execution on council errors, just log
+      console.warn('[Council of Logic] Deliberation failed, proceeding without evaluation:', councilError);
+    }
+  }
+
+  // ============================================================================
+  // STEP EXECUTION
+  // ============================================================================
 
   // Execute steps in order, respecting dependencies
   const completedSteps = new Set<number>();
@@ -727,6 +805,7 @@ export async function executePlan(
     plan,
     outputs,
     validation,
+    councilDeliberation,
     errors,
     tokensUsed,
   };
@@ -4315,17 +4394,56 @@ async function validateOutputs(
 // MAIN ORCHESTRATOR FUNCTION
 // ============================================================================
 
-export async function orchestrate(request: OrchestratorRequest): Promise<OrchestratorResult> {
+export interface OrchestrateOptions {
+  skipCouncil?: boolean;
+  councilThreshold?: number;
+}
+
+export async function orchestrate(
+  request: OrchestratorRequest,
+  options?: OrchestrateOptions
+): Promise<OrchestratorResult> {
   // Step 1: Generate plan
   const plan = await generatePlan(request);
 
-  // Step 2: Execute plan
-  const result = await executePlan(plan, request);
+  // Step 2: Execute plan (with Council of Logic pre-evaluation)
+  const result = await executePlan(plan, request, options);
 
-  // Step 3: Log for audit trail (silent)
-  console.log(`[Orchestrator] Intent: ${result.intent}, Success: ${result.success}, Tokens: ${result.tokensUsed}`);
+  // Step 3: Log for audit trail (including Council verdict)
+  const councilInfo = result.councilDeliberation
+    ? ` | Council: ${result.councilDeliberation.finalVerdict} (${result.councilDeliberation.overallScore}/100)`
+    : '';
+  console.log(`[Orchestrator] Intent: ${result.intent}, Success: ${result.success}, Tokens: ${result.tokensUsed}${councilInfo}`);
 
   return result;
+}
+
+/**
+ * Quick Council evaluation without full orchestration
+ * Use for pre-flight checks on code/prompts
+ */
+export async function evaluateWithCouncil(
+  operation: string,
+  content: { code?: string; prompt?: string; context?: Record<string, unknown> }
+): Promise<CouncilDeliberation> {
+  const council = getCouncilOfLogic();
+  return council.deliberate({
+    operation,
+    code: content.code,
+    prompt: content.prompt,
+    context: content.context,
+  });
+}
+
+/**
+ * Get quick score from a single Council member
+ */
+export async function getCouncilMemberScore(
+  member: 'Alan_Turing' | 'John_von_Neumann' | 'Pierre_Bezier' | 'Claude_Shannon',
+  content: string
+): Promise<{ score: number; feedback: string }> {
+  const council = getCouncilOfLogic();
+  return council.quickEvaluate(member, content);
 }
 
 // ============================================================================

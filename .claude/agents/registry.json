@@ -1,8 +1,50 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2025-12-30",
-  "totalAgents": 43,
+  "version": "1.2.0",
+  "lastUpdated": "2026-01-23",
+  "totalAgents": 46,
   "registry": [
+    {
+      "id": "council-of-logic",
+      "name": "Council of Logic - Mathematical First Principles",
+      "version": "1.0.0",
+      "file": "src/lib/agents/council-of-logic.ts",
+      "configFile": ".claude/agents/profiles/council-of-logic.json",
+      "capabilities": ["algorithmic_analysis", "game_theory_optimization", "animation_physics", "token_economy", "complexity_evaluation", "mathematical_proof"],
+      "queueName": "council-queue",
+      "models": ["claude-haiku-4-5-20251001"],
+      "governance": "AUTONOMOUS",
+      "verification_required": false,
+      "budget_daily_usd": 10.00,
+      "category": "meta_reasoning",
+      "council_members": ["Alan_Turing", "John_von_Neumann", "Pierre_Bezier", "Claude_Shannon"],
+      "note": "Meta-reasoning layer that evaluates all operations through mathematical first principles"
+    },
+    {
+      "id": "technical-cofounder",
+      "name": "Technical Co-Founder & DevOps Lead",
+      "version": "1.0.0",
+      "file": ".claude/agents/profiles/technical-cofounder.json",
+      "capabilities": ["deployment_guidance", "webhook_architecture", "ci_cd_setup", "infrastructure_review", "github_api_automation", "n8n_workflow_design"],
+      "queueName": "leadership-queue",
+      "models": ["claude-opus-4-5-20251101", "claude-sonnet-4-5-20250929"],
+      "governance": "HUMAN_GOVERNED",
+      "verification_required": true,
+      "budget_daily_usd": 50.00,
+      "category": "leadership"
+    },
+    {
+      "id": "senior-architect",
+      "name": "Senior Technical Architect",
+      "version": "1.0.0",
+      "file": ".claude/agents/profiles/senior-architect.json",
+      "capabilities": ["codebase_analysis", "architecture_review", "context_retrieval", "technical_documentation", "system_design", "code_audit"],
+      "queueName": "leadership-queue",
+      "models": ["claude-opus-4-5-20251101", "claude-sonnet-4-5-20250929"],
+      "governance": "HUMAN_GOVERNED",
+      "verification_required": true,
+      "budget_daily_usd": 50.00,
+      "category": "leadership"
+    },
     {
       "id": "email-processor",
       "name": "Email Intelligence Agent",
@@ -538,6 +580,8 @@
     }
   ],
   "categories": {
+    "meta_reasoning": "Mathematical first principles and logical deliberation - Council of Logic evaluates all operations",
+    "leadership": "Strategic leadership and technical architecture agents for guiding production deployment",
     "marketing": "Customer-facing marketing and content agents",
     "founder_intelligence": "Business intelligence and strategic agents",
     "infrastructure": "System coordination and execution agents",
