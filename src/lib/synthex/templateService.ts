@@ -4,6 +4,16 @@
  *
  * Centralized template management with versioning,
  * variable extraction, and usage analytics.
+ *
+ * @deprecated MIGRATING TO STANDALONE SYNTHEX
+ * This service is being extracted to: github.com/CleanExpo/Synthex
+ * New location: lib/services/templates/templateService.ts
+ *
+ * DO NOT add new features here. All new development should happen in Synthex repo.
+ * This file will be removed once Unite-Hub fully delegates to Synthex via webhooks.
+ *
+ * Migration date: 2026-01-24
+ * Target removal: After Synthex V1 launch
  */
 
 import { supabaseAdmin } from '@/lib/supabase';
