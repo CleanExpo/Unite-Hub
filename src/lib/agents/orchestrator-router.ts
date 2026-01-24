@@ -94,6 +94,10 @@ export type AgentIntent =
   | 'cognitive_twin'
   | 'shadow_observer'
   | 'codebase_audit'
+  | 'product_strategy'
+  | 'roadmap_planning'
+  | 'version_planning'
+  | 'issue_synthesis'
   | 'unknown';
 
 export interface OrchestratorRequest {
@@ -378,6 +382,30 @@ const INTENT_PATTERNS: Record<AgentIntent, RegExp[]> = {
     /\b(decision).*(support|recommendation|assist)\b/i,
     /\b(momentum|velocity|trajectory).*(business|growth)\b/i,
   ],
+  product_strategy: [
+    /\b(product.?strateg|strategic.?direction|product.?vision)\b/i,
+    /\b(north.?star|okr|objective|key.?result)\b/i,
+    /\b(strategic.?pillar|vision|mission).*(product)\b/i,
+    /\b(pm|product.?manag).*(strateg|plan|roadmap)\b/i,
+  ],
+  roadmap_planning: [
+    /\b(roadmap|priorit|rank|order).*(feature|initiative|epic)\b/i,
+    /\b(quarter|quarterly.?planning|release.?plan)\b/i,
+    /\b(rice|kano|feature.?priorit|scoring)\b/i,
+    /\b(version|v1|v2|v3|v4|v5).*(plan|roadmap|feature)\b/i,
+  ],
+  version_planning: [
+    /\b(version|release).*(plan|schedule|timeline)\b/i,
+    /\b(v1|v2|v3|v4|v5).*(ready|planning|scope)\b/i,
+    /\b(milestone|sprint|iteration).*(plan|schedule)\b/i,
+    /\b(restoreassist|project).*(version|release)\b/i,
+  ],
+  issue_synthesis: [
+    /\b(issue|task).*(synthe|consolidat|group)\b/i,
+    /\b(linear|jira|github).*(issue|task|ticket)\b/i,
+    /\b(blocker|dependency).*(identify|map|track)\b/i,
+    /\b(development.?task|dev.?task|sprint.?task)\b/i,
+  ],
   unknown: [],
 };
 
@@ -416,6 +444,10 @@ export function classifyIntent(prompt: string): { intent: AgentIntent; confidenc
     social_inbox: 0,
     pre_client: 0,
     cognitive_twin: 0,
+    product_strategy: 0,
+    roadmap_planning: 0,
+    version_planning: 0,
+    issue_synthesis: 0,
     unknown: 0,
   };
 

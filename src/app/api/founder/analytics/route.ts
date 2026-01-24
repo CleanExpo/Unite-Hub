@@ -16,13 +16,14 @@ import {
 } from "@/lib/api-helpers";
 import { withErrorBoundary } from "@/lib/error-boundary";
 import { getSupabaseServer } from "@/lib/supabase";
-import { getCurrentUser } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
 
 export const GET = withErrorBoundary(async (req: NextRequest) => {
-  const user = await getCurrentUser();
-  if (!user) {
+  const authResult = await authenticateRequest(req);
+  if (!authResult) {
     return errorResponse("Unauthorized", 401);
   }
+  const { user } = authResult;
 
   const supabase = getSupabaseServer();
 

@@ -13,7 +13,7 @@
 import { NextRequest } from "next/server";
 import { successResponse, errorResponse } from "@/lib/api-helpers";
 import { withErrorBoundary } from "@/lib/error-boundary";
-import { getCurrentUser } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
 import { executeHealthMonitor } from "@/lib/agents/business-health-monitor";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 
@@ -23,10 +23,11 @@ export const POST = withErrorBoundary(async (req: NextRequest) => {
 return rateLimitResult;
 }
 
-  const user = await getCurrentUser();
-  if (!user) {
+  const authResult = await authenticateRequest(req);
+  if (!authResult) {
     return errorResponse("Unauthorized", 401);
   }
+  const { user } = authResult;
 
   const body = await req.json();
   const { checkType = "quick", businessId } = body;

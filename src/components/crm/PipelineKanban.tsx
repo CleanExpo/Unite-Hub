@@ -1,63 +1,132 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, Reorder } from 'framer-motion';
+import { useWorkspace } from '@/hooks/useWorkspace';
 
-// Pipeline stages based on BizLink design
-const PIPELINE_STAGES = [
-  { id: 'contacted', label: 'Contacted', count: 12 },
-  { id: 'negotiation', label: 'Negotiation', count: 17 },
-  { id: 'offer_sent', label: 'Offer Sent', count: 13 },
-  { id: 'deal_closed', label: 'Deal Closed', count: 12 },
-] as const;
-
-type StageId = (typeof PIPELINE_STAGES)[number]['id'];
+// ============================================================================
+// Types
+// ============================================================================
 
 interface Deal {
   id: string;
   company: string;
+  name: string;
+  email: string;
   description: string;
-  dueDate: string;
-  stage: StageId;
-  comments: number;
-  attachments: number;
-  isExpanded?: boolean;
-  email?: string;
-  address?: string;
-  manager?: string;
+  dueDate: string | null;
+  stage: string;
+  aiScore: number;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
-// Sample data matching BizLink screenshot
-const SAMPLE_DEALS: Deal[] = [
-  { id: '1', company: 'ByteBridge', description: 'Corporate and personal data protection on a turnkey basis', dueDate: '18 Apr', stage: 'contacted', comments: 2, attachments: 1 },
-  { id: '2', company: 'AI Synergy', description: 'Innovative solutions based on artificial intelligence', dueDate: '31 Mar', stage: 'contacted', comments: 1, attachments: 3 },
-  { id: '3', company: 'LeadBoost Agency', description: 'Lead attraction and automation for small business...', dueDate: 'No due date', stage: 'contacted', comments: 4, attachments: 7 },
-  { id: '4', company: 'SkillUp Hub', description: 'Platform for professional development of specialists', dueDate: '09 Mar', stage: 'negotiation', comments: 4, attachments: 1 },
-  { id: '5', company: 'Thera Well', description: 'Platform for psychological support and consultations', dueDate: 'No due date', stage: 'negotiation', comments: 7, attachments: 2 },
-  { id: '6', company: 'SwiftCargo', description: 'International transportation of chemical goods', dueDate: '23 Apr', stage: 'negotiation', comments: 2, attachments: 5 },
-  { id: '7', company: 'FitLife Nutrition', description: 'Nutritious food and nutraceuticals for individuals', dueDate: '10 Mar', stage: 'offer_sent', comments: 1, attachments: 3 },
-  { id: '8', company: 'Prime Estate', description: 'Agency-developer of low-rise elite and commercial real estate', dueDate: '16 Apr', stage: 'offer_sent', comments: 1, attachments: 1, isExpanded: true, email: 'contact@primeestate.com', address: '540 Realty Blvd, Miami, FL 33132', manager: 'Antony Cardenas' },
-  { id: '9', company: 'CloudSphere', description: 'Cloud services for data storage and processing for le...', dueDate: '24 Mar', stage: 'deal_closed', comments: 2, attachments: 1 },
-  { id: '10', company: 'Advantage Medi', description: 'Full cycle of digital advertising and social media promotion', dueDate: '05 Apr', stage: 'deal_closed', comments: 1, attachments: 3 },
-  { id: '11', company: 'Safebank Solutions', description: 'Innovative financial technologies and digital pay...', dueDate: '30 Mar', stage: 'deal_closed', comments: 4, attachments: 7 },
-];
+interface PipelineStage {
+  id: string;
+  label: string;
+  count: number;
+  deals: Deal[];
+}
 
-// Stats data
-const STATS = {
-  newCustomers: [5, 8, 6, 10, 7],
-  successfulDeals: 68,
-  tasksInProgress: 53,
-  prepayments: 15890,
-};
+interface PipelineStats {
+  totalDeals: number;
+  newThisWeek: number;
+  conversionRate: number;
+  avgAiScore: number;
+}
 
-// Team members
-const TEAM_MEMBERS = [
-  { name: 'Sandra Perry', role: 'Product Manager', avatar: 'SP' },
-  { name: 'Antony Cardenas', role: 'Sales Manager', avatar: 'AC' },
-  { name: 'Jamal Connolly', role: 'Growth Marketer', avatar: 'JC' },
-  { name: 'Cara Carr', role: 'SEO Specialist', avatar: 'CC' },
-  { name: 'Iona Rollins', role: 'Designer', avatar: 'IR' },
-];
+interface PipelineData {
+  stages: PipelineStage[];
+  stats: PipelineStats;
+  stageConfig: { id: string; label: string }[];
+}
+
+// ============================================================================
+// Hooks
+// ============================================================================
+
+function usePipelineData() {
+  const { workspaceId } = useWorkspace();
+  const [data, setData] = useState<PipelineData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = useCallback(async (search?: string) => {
+    if (!workspaceId) {
+return;
+}
+
+    try {
+      setLoading(true);
+      const url = new URL('/api/crm/pipeline', window.location.origin);
+      url.searchParams.set('workspaceId', workspaceId);
+      if (search) {
+url.searchParams.set('search', search);
+}
+
+      const res = await fetch(url.toString());
+      if (!res.ok) {
+throw new Error('Failed to fetch pipeline data');
+}
+
+      const json = await res.json();
+      setData(json.data);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }, [workspaceId]);
+
+  const updateStage = useCallback(async (contactId: string, newStage: string) => {
+    if (!workspaceId) {
+return false;
+}
+
+    try {
+      const res = await fetch('/api/crm/pipeline', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contactId, newStage, workspaceId }),
+      });
+
+      if (!res.ok) {
+throw new Error('Failed to update stage');
+}
+
+      // Optimistically update local state
+      setData(prev => {
+        if (!prev) {
+return prev;
+}
+        const updated = { ...prev };
+        updated.stages = updated.stages.map(stage => ({
+          ...stage,
+          deals: stage.deals.map(deal =>
+            deal.id === contactId ? { ...deal, stage: newStage } : deal
+          ).filter(deal => deal.stage === stage.id),
+        }));
+        return updated;
+      });
+
+      return true;
+    } catch {
+      return false;
+    }
+  }, [workspaceId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { data, loading, error, refetch: fetchData, updateStage };
+}
+
+// ============================================================================
+// UI Components
+// ============================================================================
 
 function StatCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
@@ -68,7 +137,7 @@ function StatCard({ children, className = '' }: { children: React.ReactNode; cla
 }
 
 function BarChart({ data, label }: { data: number[]; label: string }) {
-  const max = Math.max(...data);
+  const max = Math.max(...data, 1);
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
   return (
@@ -113,263 +182,285 @@ function CircularProgress({ value, label }: { value: number; label: string }) {
   );
 }
 
-function DealCard({ deal }: { deal: Deal }) {
-  const isOverdue = deal.dueDate === 'No due date';
+function DealCard({
+  deal,
+  onDragStart,
+}: {
+  deal: Deal;
+  onDragStart?: () => void;
+}) {
+  const hasDate = deal.dueDate && deal.dueDate !== 'null';
+  const formattedDate = hasDate
+    ? new Date(deal.dueDate!).toLocaleDateString('en-US', { day: '2-digit', month: 'short' })
+    : 'No due date';
 
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-3 cursor-pointer hover:shadow-md transition-shadow ${
-        deal.isExpanded ? 'ring-2 ring-amber-400' : ''
-      }`}
+      draggable
+      onDragStart={onDragStart}
+      className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-3 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow"
     >
       <div className="flex items-start justify-between mb-2">
         <h4 className="font-medium text-gray-900">{deal.company}</h4>
-        <button className="text-gray-400 hover:text-gray-600">
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          {deal.aiScore > 0 && (
+            <span className="text-xs bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded">
+              {Math.round(deal.aiScore * 100)}%
+            </span>
+          )}
+          <button className="text-gray-400 hover:text-gray-600">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <p className="text-sm text-gray-500 mb-3 line-clamp-2">{deal.description}</p>
+      <p className="text-sm text-gray-500 mb-1">{deal.name}</p>
+      <p className="text-xs text-gray-400 mb-3 truncate">{deal.email}</p>
 
-      {deal.isExpanded && (
-        <div className="mb-3 p-3 bg-gray-50 rounded-lg text-sm space-y-2">
-          <div className="flex items-center gap-2 text-gray-600">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            {deal.address}
-          </div>
-          <div className="flex items-center gap-2 text-gray-600">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            {deal.email}
-          </div>
-          <div className="flex items-center gap-2 text-gray-600 pt-2 border-t">
-            <span className="text-xs text-gray-400">Manager</span>
-            <span className="font-medium">{deal.manager}</span>
-          </div>
-        </div>
+      {deal.description && (
+        <p className="text-sm text-gray-500 mb-3 line-clamp-2">{deal.description}</p>
       )}
 
       <div className="flex items-center justify-between">
         <span className={`text-xs px-2 py-1 rounded-full ${
-          isOverdue
+          !hasDate
             ? 'bg-red-50 text-red-600'
             : 'bg-amber-50 text-amber-700'
         }`}>
-          {deal.dueDate}
+          {formattedDate}
         </span>
 
-        <div className="flex items-center gap-3 text-gray-400 text-xs">
-          <span className="flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            {deal.comments}
-          </span>
-          <span className="flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-            </svg>
-            {deal.attachments}
-          </span>
-        </div>
+        {deal.tags.length > 0 && (
+          <div className="flex gap-1">
+            {deal.tags.slice(0, 2).map((tag, i) => (
+              <span key={i} className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </motion.div>
   );
 }
 
-function PipelineColumn({ stage, deals }: { stage: typeof PIPELINE_STAGES[number]; deals: Deal[] }) {
+function PipelineColumn({
+  stage,
+  onDrop,
+}: {
+  stage: PipelineStage;
+  onDrop: (dealId: string) => void;
+}) {
+  const [isDragOver, setIsDragOver] = useState(false);
+
   return (
-    <div className="flex-1 min-w-[280px]">
+    <div
+      className={`flex-1 min-w-[280px] p-2 rounded-lg transition-colors ${
+        isDragOver ? 'bg-blue-50 border-2 border-dashed border-blue-300' : ''
+      }`}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragOver(true);
+      }}
+      onDragLeave={() => setIsDragOver(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragOver(false);
+        const dealId = e.dataTransfer.getData('dealId');
+        if (dealId) {
+onDrop(dealId);
+}
+      }}
+    >
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-medium text-gray-900">{stage.label}</h3>
         <div className="flex items-center gap-1 text-gray-400 text-sm">
-          <span>{stage.count}</span>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
-          </svg>
+          <span className="bg-gray-100 px-2 py-0.5 rounded-full">{stage.count}</span>
         </div>
       </div>
 
       <div className="space-y-0">
-        {deals.map(deal => (
-          <DealCard key={deal.id} deal={deal} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Sidebar() {
-  return (
-    <div className="w-64 bg-white border-r border-gray-100 p-4 flex flex-col">
-      {/* Logo */}
-      <div className="mb-8">
-        <h1 className="text-xl font-semibold">Unite-Hub</h1>
-      </div>
-
-      {/* Navigation */}
-      <nav className="space-y-1 mb-8">
-        {['Dashboard', 'Tasks', 'Activity', 'Customers', 'Settings'].map((item, i) => (
-          <a
-            key={item}
-            href="#"
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm ${
-              i === 3 ? 'bg-gray-100 text-gray-900 font-medium' : 'text-gray-600 hover:bg-gray-50'
-            }`}
+        {stage.deals.map(deal => (
+          <div
+            key={deal.id}
+            draggable
+            onDragStart={(e) => {
+              e.dataTransfer.setData('dealId', deal.id);
+            }}
           >
-            {item}
-            {item === 'Tasks' && (
-              <span className="ml-auto bg-gray-200 text-gray-600 text-xs px-2 py-0.5 rounded-full">2</span>
-            )}
-          </a>
+            <DealCard deal={deal} />
+          </div>
         ))}
-      </nav>
 
-      {/* Projects */}
-      <div className="mb-8">
-        <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">Projects</h3>
-        <div className="space-y-1">
-          {['BizConnect', 'Growth Hub', 'Conversion Path', 'Marketing'].map((project, i) => (
-            <a
-              key={project}
-              href="#"
-              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
-            >
-              <span className={`w-2 h-2 rounded-full ${
-                ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500'][i]
-              }`} />
-              {project}
-              {i === 0 && <span className="ml-auto text-xs text-gray-400">7</span>}
-            </a>
-          ))}
-        </div>
-      </div>
-
-      {/* Members */}
-      <div className="flex-1">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider">Members</h3>
-          <button className="text-gray-400 hover:text-gray-600">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
-        </div>
-        <div className="space-y-2">
-          {TEAM_MEMBERS.map(member => (
-            <div key={member.name} className="flex items-center gap-3 px-2 py-1.5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-xs font-medium text-gray-600">
-                {member.avatar}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">{member.name}</p>
-                <p className="text-xs text-gray-400 truncate">{member.role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {stage.deals.length === 0 && (
+          <div className="text-center py-8 text-gray-400 text-sm">
+            No deals in this stage
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
+function LoadingSkeleton() {
+  return (
+    <div className="flex gap-4 animate-pulse">
+      {[1, 2, 3, 4].map(i => (
+        <div key={i} className="flex-1 min-w-[280px]">
+          <div className="h-6 bg-gray-200 rounded w-24 mb-4" />
+          <div className="space-y-3">
+            <div className="h-32 bg-gray-100 rounded-xl" />
+            <div className="h-32 bg-gray-100 rounded-xl" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ============================================================================
+// Main Component
+// ============================================================================
 
 export function PipelineKanban() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { data, loading, error, refetch, updateStage } = usePipelineData();
+
+  const handleSearch = useCallback(() => {
+    refetch(searchQuery);
+  }, [refetch, searchQuery]);
+
+  const handleDrop = useCallback(async (stageId: string, dealId: string) => {
+    const success = await updateStage(dealId, stageId);
+    if (success) {
+      refetch(searchQuery);
+    }
+  }, [updateStage, refetch, searchQuery]);
+
+  // Default stats if no data
+  const stats = data?.stats || {
+    totalDeals: 0,
+    newThisWeek: 0,
+    conversionRate: 0,
+    avgAiScore: 0,
+  };
+
+  // Generate weekly chart data based on new deals
+  const weeklyData = [
+    Math.floor(stats.newThisWeek * 0.6),
+    Math.floor(stats.newThisWeek * 0.8),
+    Math.floor(stats.newThisWeek * 0.4),
+    Math.floor(stats.newThisWeek * 1.2),
+    stats.newThisWeek,
+  ];
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-gray-50">
-        {/* Header */}
-        <header className="bg-white border-b border-gray-100 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 flex-1">
-              <div className="relative flex-1 max-w-md">
-                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Search customer..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
-                />
-              </div>
-
-              <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                </svg>
-                Sort by
-              </button>
-
-              <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                Filters
-              </button>
+      {/* Header */}
+      <header className="bg-white border-b border-gray-100 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 flex-1">
+            <div className="relative flex-1 max-w-md">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search contacts..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
+              />
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="w-8 h-8 rounded-full bg-gray-200" />
-              <button className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Add customer
-              </button>
-            </div>
+            <button
+              onClick={handleSearch}
+              className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 border border-gray-200 rounded-lg"
+            >
+              Search
+            </button>
+
+            <button
+              onClick={() => refetch()}
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Refresh
+            </button>
           </div>
-        </header>
 
-        {/* Stats Row */}
-        <div className="px-6 py-4">
-          <div className="grid grid-cols-4 gap-4">
-            <StatCard>
-              <BarChart data={STATS.newCustomers} label="New customers" />
-            </StatCard>
-
-            <StatCard>
-              <CircularProgress value={STATS.successfulDeals} label="Successful deals" />
-            </StatCard>
-
-            <StatCard className="flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-4xl font-semibold">{STATS.tasksInProgress}</p>
-                <p className="text-sm text-gray-500">Tasks in progress</p>
-              </div>
-            </StatCard>
-
-            <StatCard className="flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-4xl font-semibold">${STATS.prepayments.toLocaleString()}</p>
-                <p className="text-sm text-gray-500">Prepayments from customers</p>
-              </div>
-            </StatCard>
+          <div className="flex items-center gap-4">
+            <button className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add contact
+            </button>
           </div>
         </div>
+      </header>
 
-        {/* Kanban Board */}
-        <div className="flex-1 overflow-auto px-6 pb-6">
+      {/* Stats Row */}
+      <div className="px-6 py-4">
+        <div className="grid grid-cols-4 gap-4">
+          <StatCard>
+            <BarChart data={weeklyData} label="New contacts" />
+          </StatCard>
+
+          <StatCard>
+            <CircularProgress value={stats.conversionRate} label="Conversion rate" />
+          </StatCard>
+
+          <StatCard className="flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-4xl font-semibold">{stats.totalDeals}</p>
+              <p className="text-sm text-gray-500">Total contacts</p>
+            </div>
+          </StatCard>
+
+          <StatCard className="flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-4xl font-semibold">{stats.avgAiScore}%</p>
+              <p className="text-sm text-gray-500">Avg. AI Score</p>
+            </div>
+          </StatCard>
+        </div>
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mx-6 mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+          {error}
+          <button onClick={() => refetch()} className="ml-2 underline">
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Kanban Board */}
+      <div className="flex-1 overflow-auto px-6 pb-6">
+        {loading ? (
+          <LoadingSkeleton />
+        ) : (
           <div className="flex gap-4">
-            {PIPELINE_STAGES.map(stage => (
+            {data?.stages.map(stage => (
               <PipelineColumn
                 key={stage.id}
                 stage={stage}
-                deals={SAMPLE_DEALS.filter(d => d.stage === stage.id)}
+                onDrop={(dealId) => handleDrop(stage.id, dealId)}
               />
             ))}
           </div>
-        </div>
+        )}
+      </div>
     </div>
   );
 }

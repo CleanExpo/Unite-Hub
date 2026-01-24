@@ -1,7 +1,7 @@
 {
   "version": "1.2.0",
   "lastUpdated": "2026-01-23",
-  "totalAgents": 46,
+  "totalAgents": 47,
   "registry": [
     {
       "id": "council-of-logic",
@@ -18,6 +18,31 @@
       "category": "meta_reasoning",
       "council_members": ["Alan_Turing", "John_von_Neumann", "Pierre_Bezier", "Claude_Shannon"],
       "note": "Meta-reasoning layer that evaluates all operations through mathematical first principles"
+    },
+    {
+      "id": "senior-product-manager",
+      "name": "Senior Product Manager - Strategic Product Planning",
+      "version": "1.0.0",
+      "file": "src/lib/agents/senior-product-manager.ts",
+      "configFile": ".claude/agents/profiles/senior-product-manager.json",
+      "capabilities": [
+        "roadmap_planning",
+        "feature_prioritization",
+        "issue_synthesis",
+        "version_planning",
+        "sprint_analysis",
+        "dependency_mapping",
+        "release_readiness",
+        "stakeholder_reporting"
+      ],
+      "queueName": "product-manager-queue",
+      "models": ["claude-opus-4-5-20251101", "claude-sonnet-4-5-20250929"],
+      "governance": "HUMAN_GOVERNED",
+      "verification_required": true,
+      "budget_daily_usd": 40.00,
+      "category": "leadership",
+      "integrations": ["linear-mcp"],
+      "note": "AI PM for roadmap planning, RICE/KANO prioritization, and issue synthesis"
     },
     {
       "id": "technical-cofounder",
