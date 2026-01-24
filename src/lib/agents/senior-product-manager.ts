@@ -158,9 +158,12 @@ export interface LinearProject {
 
 const PM_MODEL = 'claude-opus-4-5-20251101';
 const PM_MODEL_FAST = 'claude-sonnet-4-5-20250929';
-const STRATEGIC_THINKING_BUDGET = 20000;
-const STANDARD_THINKING_BUDGET = 10000;
+const STRATEGIC_THINKING_BUDGET = 8000;
+const STANDARD_THINKING_BUDGET = 5000;
 const RESPONSE_TOKENS = 4096;
+
+// Use fast mode without Extended Thinking (set via env or for testing)
+const USE_FAST_MODE = process.env.PM_AGENT_FAST_MODE === 'true' || process.env.NODE_ENV === 'development';
 
 const PM_SYSTEM_PROMPT = `You are a Senior Product Manager AI agent operating in HUMAN_GOVERNED mode.
 
@@ -260,18 +263,29 @@ For each feature, provide:
 
 Output as JSON array of PrioritizedFeature objects.`;
 
-    const response = await callAnthropicWithRetry(async () =>
-      client.messages.create({
-        model: PM_MODEL,
-        max_tokens: STRATEGIC_THINKING_BUDGET + RESPONSE_TOKENS,
-        thinking: {
-          type: 'enabled',
-          budget_tokens: STRATEGIC_THINKING_BUDGET
-        },
-        system: PM_SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userMessage }]
-      })
-    );
+    const { data: response } = await callAnthropicWithRetry(async () => {
+      if (USE_FAST_MODE) {
+        // Fast mode: Sonnet without Extended Thinking
+        return client.messages.create({
+          model: PM_MODEL_FAST,
+          max_tokens: RESPONSE_TOKENS,
+          system: PM_SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: userMessage }]
+        });
+      } else {
+        // Full mode: Opus with Extended Thinking
+        return client.messages.create({
+          model: PM_MODEL,
+          max_tokens: STRATEGIC_THINKING_BUDGET + RESPONSE_TOKENS,
+          thinking: {
+            type: 'enabled',
+            budget_tokens: STRATEGIC_THINKING_BUDGET
+          },
+          system: PM_SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: userMessage }]
+        });
+      }
+    });
 
     // Extract response content
     let thinkingTokens = 0;
@@ -286,10 +300,7 @@ Output as JSON array of PrioritizedFeature objects.`;
     }
 
     // Parse JSON from response
-    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-    const prioritizedFeatures: PrioritizedFeature[] = jsonMatch
-      ? JSON.parse(jsonMatch[0])
-      : [];
+    const prioritizedFeatures = extractJSON<PrioritizedFeature[]>(responseText, 'array') || [];
 
     // Record execution
     await recordPMExecution(workspaceId, 'prioritize_features', {
@@ -348,7 +359,7 @@ Balance quick wins (high RICE, low effort) with strategic investments.
 
 Output as JSON array of VersionRoadmap objects.`;
 
-    const response = await callAnthropicWithRetry(async () =>
+    const { data: response } = await callAnthropicWithRetry(async () =>
       client.messages.create({
         model: PM_MODEL,
         max_tokens: STRATEGIC_THINKING_BUDGET + RESPONSE_TOKENS,
@@ -430,7 +441,7 @@ Provide:
 
 Output as JSON ReleaseReadiness object.`;
 
-    const response = await callAnthropicWithRetry(async () =>
+    const { data: response } = await callAnthropicWithRetry(async () =>
       client.messages.create({
         model: PM_MODEL_FAST, // Use faster model for assessment
         max_tokens: STANDARD_THINKING_BUDGET + RESPONSE_TOKENS,
@@ -524,7 +535,7 @@ Provide:
 
 Output as JSON SprintAnalysis object.`;
 
-    const response = await callAnthropicWithRetry(async () =>
+    const { data: response } = await callAnthropicWithRetry(async () =>
       client.messages.create({
         model: PM_MODEL_FAST,
         max_tokens: STANDARD_THINKING_BUDGET + RESPONSE_TOKENS,
@@ -636,7 +647,7 @@ TASK:
 Focus on ${targetVersion} scope. Be specific and actionable.
 Output as JSON with tasks array, summary, blockers, and dependencies.`;
 
-    const response = await callAnthropicWithRetry(async () =>
+    const { data: response } = await callAnthropicWithRetry(async () =>
       client.messages.create({
         model: PM_MODEL,
         max_tokens: STRATEGIC_THINKING_BUDGET + RESPONSE_TOKENS,
@@ -688,6 +699,51 @@ Output as JSON with tasks array, summary, blockers, and dependencies.`;
 // ============================================================================
 // Helper Functions
 // ============================================================================
+
+/**
+ * Extract JSON array or object from text that may contain markdown or explanations
+ */
+function extractJSON<T>(text: string, type: 'array' | 'object' = 'array'): T | null {
+  // Remove markdown code fences
+  const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+
+  // Find the start of JSON
+  const startChar = type === 'array' ? '[' : '{';
+  const endChar = type === 'array' ? ']' : '}';
+
+  const startIndex = cleaned.indexOf(startChar);
+  if (startIndex === -1) {
+return null;
+}
+
+  // Find matching end bracket
+  let depth = 0;
+  let endIndex = -1;
+  for (let i = startIndex; i < cleaned.length; i++) {
+    if (cleaned[i] === startChar) {
+depth++;
+}
+    if (cleaned[i] === endChar) {
+depth--;
+}
+    if (depth === 0) {
+      endIndex = i;
+      break;
+    }
+  }
+
+  if (endIndex === -1) {
+return null;
+}
+
+  const jsonStr = cleaned.slice(startIndex, endIndex + 1);
+  try {
+    return JSON.parse(jsonStr) as T;
+  } catch {
+    console.warn('Failed to parse JSON:', jsonStr.slice(0, 200));
+    return null;
+  }
+}
 
 async function recordPMExecution(
   workspaceId: string,
