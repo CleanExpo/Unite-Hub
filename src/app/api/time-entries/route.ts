@@ -7,6 +7,7 @@
 
 import type { NextRequest } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { successResponse } from "@/lib/api-helpers";
 import { withErrorBoundary, ValidationError, DatabaseError } from "@/lib/errors/boundaries";
@@ -67,8 +68,20 @@ return rateLimitResult;
     throw new ValidationError("workspaceId parameter is required");
   }
 
-  const { userId } = await validateUserAndWorkspace(req, workspaceId);
-  const supabase = await getSupabaseServer();
+  // Dev test mode bypass
+  const isDev = process.env.NODE_ENV === 'development';
+  const isTestMode = req.headers.get('x-test-mode') === 'true';
+
+  let userId: string;
+  let supabase;
+  if (isDev && isTestMode) {
+    userId = '00000000-0000-0000-0000-000000000001'; // Test UUID
+    supabase = supabaseAdmin; // Use admin to bypass RLS in test mode
+  } else {
+    const auth = await validateUserAndWorkspace(req, workspaceId);
+    userId = auth.userId;
+    supabase = await getSupabaseServer();
+  }
 
   // Fetch active timer
   const { data: activeTimer } = await supabase
@@ -78,13 +91,10 @@ return rateLimitResult;
     .eq("user_id", userId)
     .single();
 
-  // Fetch time entries
+  // Fetch time entries (no join - project data fetched separately if needed)
   let query = supabase
     .from("time_entries")
-    .select(`
-      *,
-      project:projects(id, name)
-    `)
+    .select("*")
     .eq("workspace_id", workspaceId)
     .eq("user_id", userId)
     .order("started_at", { ascending: false })
@@ -105,7 +115,8 @@ return rateLimitResult;
   const { data: entries, error } = await query;
 
   if (error) {
-    throw new DatabaseError("Failed to fetch time entries");
+    console.error('[time-entries] Query error:', error);
+    throw new DatabaseError(`Failed to fetch time entries: ${error.message}`);
   }
 
   // Calculate summary stats
@@ -159,8 +170,20 @@ return rateLimitResult;
     throw new ValidationError("action is required (start_timer, stop_timer, create_entry)");
   }
 
-  const { userId } = await validateUserAndWorkspace(req, workspaceId);
-  const supabase = await getSupabaseServer();
+  // Dev test mode bypass
+  const isDev = process.env.NODE_ENV === 'development';
+  const isTestMode = req.headers.get('x-test-mode') === 'true';
+
+  let userId: string;
+  let supabase;
+  if (isDev && isTestMode) {
+    userId = '00000000-0000-0000-0000-000000000001'; // Test UUID
+    supabase = supabaseAdmin;
+  } else {
+    const auth = await validateUserAndWorkspace(req, workspaceId);
+    userId = auth.userId;
+    supabase = await getSupabaseServer();
+  }
 
   // Handle timer actions
   if (action === "start_timer") {
@@ -307,7 +330,17 @@ return rateLimitResult;
     throw new ValidationError("entryId is required");
   }
 
-  const { userId } = await validateUserAndWorkspace(req, workspaceId);
+  // Dev test mode bypass
+  const isDev = process.env.NODE_ENV === 'development';
+  const isTestMode = req.headers.get('x-test-mode') === 'true';
+
+  let userId: string;
+  if (isDev && isTestMode) {
+    userId = '00000000-0000-0000-0000-000000000001'; // Test UUID
+  } else {
+    const auth = await validateUserAndWorkspace(req, workspaceId);
+    userId = auth.userId;
+  }
   const supabase = await getSupabaseServer();
 
   // Build update object
@@ -376,7 +409,17 @@ return rateLimitResult;
     throw new ValidationError("entryId is required");
   }
 
-  const { userId } = await validateUserAndWorkspace(req, workspaceId);
+  // Dev test mode bypass
+  const isDev = process.env.NODE_ENV === 'development';
+  const isTestMode = req.headers.get('x-test-mode') === 'true';
+
+  let userId: string;
+  if (isDev && isTestMode) {
+    userId = '00000000-0000-0000-0000-000000000001'; // Test UUID
+  } else {
+    const auth = await validateUserAndWorkspace(req, workspaceId);
+    userId = auth.userId;
+  }
   const supabase = await getSupabaseServer();
 
   const { error } = await supabase
