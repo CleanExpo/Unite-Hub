@@ -61,3 +61,16 @@ export type {
 export { fullSync, incrementalSync, syncContacts, syncCompanies, syncEmails } from './sync';
 
 export type { SyncResult } from './sync';
+
+// Entity resolution
+export {
+  calculateSimilarity,
+  findDuplicates,
+  findDuplicatesForContact,
+  mergeContacts,
+  aiResolveConflicts,
+  linkSimilarContacts,
+  getResolutionStats,
+} from './resolution';
+
+export type { SimilarityMatch, MergeStrategy, MergeResult } from './resolution';
