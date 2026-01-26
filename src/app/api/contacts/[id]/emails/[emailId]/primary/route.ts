@@ -3,10 +3,10 @@ import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
-// PUT /api/contacts/[contactId]/emails/[emailId]/primary - Set email as primary
+// PUT /api/contacts/[id]/emails/[emailId]/primary - Set email as primary
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ contactId: string; emailId: string }> }
+  { params }: { params: Promise<{ id: string; emailId: string }> }
 ) {
   try {
   // Apply rate limiting
@@ -18,9 +18,9 @@ export async function PUT(
     // Validate user authentication
     const user = await validateUserAuth(request);
 
-    const { contactId, emailId } = await params;
+    const { id, emailId } = await params;
 
-    const updatedEmail = await db.clientEmails.setPrimary(emailId, contactId);
+    const updatedEmail = await db.clientEmails.setPrimary(emailId, id);
 
     return NextResponse.json({ email: updatedEmail });
   } catch (error: any) {

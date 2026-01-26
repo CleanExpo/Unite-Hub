@@ -3,10 +3,10 @@ import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
-// GET /api/contacts/[contactId]/emails - List all emails for a contact
+// GET /api/contacts/[id]/emails - List all emails for a contact
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ contactId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
   // Apply rate limiting
@@ -18,9 +18,9 @@ export async function GET(
     // Validate user authentication
     const user = await validateUserAuth(request);
 
-    const { contactId } = await params;
+    const { id } = await params;
 
-    const emails = await db.clientEmails.getByContact(contactId);
+    const emails = await db.clientEmails.getByContact(id);
 
     return NextResponse.json({ emails });
   } catch (error: any) {
@@ -40,10 +40,10 @@ export async function GET(
   }
 }
 
-// POST /api/contacts/[contactId]/emails - Add new email to contact
+// POST /api/contacts/[id]/emails - Add new email to contact
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ contactId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Apply rate limiting
@@ -55,7 +55,7 @@ export async function POST(
     // Validate user authentication
     await validateUserAuth(request);
 
-    const { contactId } = await params;
+    const { id } = await params;
     const body = await request.json();
 
     const { email, email_type, label, is_primary } = body;
@@ -68,7 +68,7 @@ export async function POST(
     }
 
     // Check if email already exists for this contact
-    const existingEmails = await db.clientEmails.getByContact(contactId);
+    const existingEmails = await db.clientEmails.getByContact(id);
     const duplicate = existingEmails.find((e) => e.email === email);
 
     if (duplicate) {
@@ -79,7 +79,7 @@ export async function POST(
     }
 
     const newEmail = await db.clientEmails.create({
-      contact_id: contactId,
+      contact_id: id,
       email,
       email_type,
       label: label || null,

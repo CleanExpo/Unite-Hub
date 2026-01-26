@@ -3,10 +3,10 @@ import { getSupabaseServer } from "@/lib/supabase";
 import { validateUserAuth } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
 
-// GET /api/contacts/[contactId] - Get contact details
+// GET /api/contacts/[id] - Get contact details
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ contactId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Apply rate limiting
@@ -15,7 +15,7 @@ export async function GET(
       return rateLimitResult;
     }
 
-    const { contactId } = await params;
+    const { id } = await params;
 
     // Validate user authentication
     const user = await validateUserAuth(request);
@@ -27,7 +27,7 @@ export async function GET(
     const { data: contact, error: contactError } = await supabase
       .from("contacts")
       .select("*")
-      .eq("id", contactId)
+      .eq("id", id)
       .eq("workspace_id", user.orgId)
       .single();
 

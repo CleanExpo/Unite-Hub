@@ -1,11 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)",
-      "Bash(npm test:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(ls *)",
+      "Bash(npm test *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ],
     "deny": [],
     "ask": []

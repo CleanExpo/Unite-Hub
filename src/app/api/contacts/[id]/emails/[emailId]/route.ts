@@ -3,10 +3,10 @@ import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
-// GET /api/contacts/[contactId]/emails/[emailId] - Get specific email
+// GET /api/contacts/[id]/emails/[emailId] - Get specific email
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ contactId: string; emailId: string }> }
+  { params }: { params: Promise<{ id: string; emailId: string }> }
 ) {
   try {
   // Apply rate limiting
@@ -44,10 +44,10 @@ export async function GET(
   }
 }
 
-// PUT /api/contacts/[contactId]/emails/[emailId] - Update email
+// PUT /api/contacts/[id]/emails/[emailId] - Update email
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ contactId: string; emailId: string }> }
+  { params }: { params: Promise<{ id: string; emailId: string }> }
 ) {
   try {
     const { emailId } = await params;
@@ -73,16 +73,16 @@ export async function PUT(
   }
 }
 
-// DELETE /api/contacts/[contactId]/emails/[emailId] - Delete (soft delete) email
+// DELETE /api/contacts/[id]/emails/[emailId] - Delete (soft delete) email
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ contactId: string; emailId: string }> }
+  { params }: { params: Promise<{ id: string; emailId: string }> }
 ) {
   try {
-    const { contactId, emailId } = await params;
+    const { id, emailId } = await params;
 
     // Check that contact has more than one email
-    const emails = await db.clientEmails.getByContact(contactId);
+    const emails = await db.clientEmails.getByContact(id);
     if (emails.length <= 1) {
       return NextResponse.json(
         { error: "Cannot delete the last email. Contact must have at least one email." },

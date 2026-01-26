@@ -1,10 +1,43 @@
+/* Geist Sans & Mono Typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* Light Mode (default) */
+  /* Modern Design Tokens & Light Mode (default) */
   :root {
+    /* Typography */
+    --font-primary: 'Geist Sans', 'Inter', sans-serif;
+    --font-mono: 'Geist Mono', 'Fira Code', monospace;
+
+    /* Borders */
+    --border-style: 1px solid rgba(255, 255, 255, 0.08);
+    --radius-container: 12px;
+    --radius-component: 8px;
+    --radius-bento: 16px;
+
+    /* Glassmorphism */
+    --glass-bg: rgba(10, 10, 10, 0.7);
+    --glass-blur: 12px;
+
+    /* Bento Grid */
+    --bento-gap: 1.5rem;
+
+    /* Unite-Hub Theme (Deep Slate Dark) */
+    --unite-bg-primary: #050505;
+    --unite-bg-surface: #111111;
+    --unite-accent: #3b82f6;
+    --unite-status-ok: #10b981;
+
+    /* Synthex Theme (Midnight Neon) */
+    --synthex-bg-primary: #000000;
+    --synthex-bg-surface: #0a0a0a;
+    --synthex-accent: #a855f7;
+    --synthex-agent-active: #f472b6;
+
+    /* shadcn/ui Light Mode Variables */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -116,5 +149,51 @@
 
   .container-xl {
     @apply max-w-7xl mx-auto;
+  }
+
+  /* Glassmorphism Utility */
+  .glassmorphic {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    border: var(--border-style);
+    border-radius: var(--radius-component);
+  }
+
+  /* Bento Tile */
+  .bento-tile {
+    background: var(--bg-surface, #111111);
+    border: var(--border-style);
+    border-radius: var(--radius-bento);
+    transition: all 0.3s ease;
+  }
+
+  .bento-tile:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* Theme Classes */
+  .theme-unite-hub {
+    --bg-primary: var(--unite-bg-primary);
+    --bg-surface: var(--unite-bg-surface);
+    --accent: var(--unite-accent);
+    --status-ok: var(--unite-status-ok);
+  }
+
+  .theme-synthex {
+    --bg-primary: var(--synthex-bg-primary);
+    --bg-surface: var(--synthex-bg-surface);
+    --accent: var(--synthex-accent);
+    --agent-active: var(--synthex-agent-active);
+
+    /* Radial background grid */
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(244, 114, 182, 0.1) 0%, transparent 50%);
+  }
+
+  /* Glow Effect */
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(var(--accent-rgb, 59, 130, 246), 0.4);
   }
 }

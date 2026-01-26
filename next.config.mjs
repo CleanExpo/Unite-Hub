@@ -1,4 +1,5 @@
 import { withSentryConfig } from '@sentry/nextjs';
+import path from 'node:path';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -32,8 +33,8 @@ const nextConfig = {
 
   // Turbopack configuration (required for Next.js 16)
   turbopack: {
-    // Specify the correct root directory to avoid workspace detection errors
-    root: process.cwd(),
+    // Normalize root directory path for Windows file system consistency
+    root: path.resolve(process.cwd()),
   },
 
   // Enable standalone output for Docker
@@ -79,17 +80,16 @@ const nextConfig = {
         hostname: 'images.unsplash.com',
         pathname: '/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'hoirqrkdgbmvpwutwuwj.supabase.co',
-        pathname: '/storage/v1/object/public/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lksfwktwtmyznckodsau.supabase.co',
-        pathname: '/storage/v1/object/**',
-      },
+      ...(process.env.NEXT_PUBLIC_SUPABASE_URL
+        ? [{
+            protocol: 'https',
+            hostname: new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname,
+            pathname: '/storage/v1/object/**',
+          }]
+        : []
+      ),
     ],
+    qualities: [75, 85],
   },
 
   redirects: async () => [
@@ -165,8 +165,8 @@ export default withSentryConfig(
     // Suppresses source map uploading logs during build
     silent: true,
 
-    org: process.env.SENTRY_ORG,
-    project: process.env.SENTRY_PROJECT,
+    org: process.env.SENTRY_ORG || 'unite-hub',
+    project: process.env.SENTRY_PROJECT || 'unite-hub-web',
   },
   {
     // For all available options, see:
