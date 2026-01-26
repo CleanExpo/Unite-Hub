@@ -104,6 +104,27 @@ BROWSER_ERRORS_RESOLVED.md
 SYSTEM_READY_STATUS.md
 SYSTEM_DIAGNOSTIC_REPORT.md
 
+# Test logs and output files
+*.log
+*-test-*.log
+test-output.log
+integration-test-*.log
+e2e-*.log
+
+# Test summary files (keep in docs/test-reports/)
+/*TESTING*.md
+/*TEST*.md
+/COMPREHENSIVE*.md
+/INTEGRATION*.md
+/E2E*.md
+/TRACK*.md
+/NEXT_STEPS.md
+
+# PR and automation scripts
+create-pr*.bat
+create-pr*.ps1
+.githubpr-*.md
+
 # Setup guides with credentials
 GMAIL_SETUP_GUIDE.md
 ENVIRONMENT_VARIABLES_GUIDE.md
