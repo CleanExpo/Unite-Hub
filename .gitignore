@@ -111,6 +111,11 @@ test-output.log
 integration-test-*.log
 e2e-*.log
 
+# Runtime logs directory
+logs/
+logs/*.log
+logs/*.log.*
+
 # Test summary files (keep in docs/test-reports/)
 /*TESTING*.md
 /*TEST*.md
