@@ -74,3 +74,25 @@ export {
 } from './resolution';
 
 export type { SimilarityMatch, MergeStrategy, MergeResult } from './resolution';
+
+// Pattern detection & analytics
+export {
+  calculateDegreeCentrality,
+  calculateBetweennessCentrality,
+  calculatePageRank,
+  detectCommunities,
+  calculateInfluenceScores,
+  analyzeCommunicationPatterns,
+  calculateRelationshipStrength,
+  getNetworkStats,
+  findShortestPath,
+} from './analytics';
+
+export type {
+  CentralityScores,
+  Community,
+  InfluenceScore,
+  CommunicationPattern,
+  RelationshipStrength,
+  NetworkStats,
+} from './analytics';
