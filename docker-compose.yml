@@ -48,8 +48,15 @@ services:
 
       # Database connection (if using local PostgreSQL instead of Supabase)
       DATABASE_URL: ${DATABASE_URL:-}
+
+      # Neo4j Knowledge Graph
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
     depends_on:
       redis:
+        condition: service_healthy
+      neo4j:
         condition: service_healthy
     networks:
       - unite-hub-network
@@ -135,6 +142,41 @@ services:
       - "com.unite-hub.service=nginx"
     profiles:
       - proxy
+
+  # ==================================================
+  # Neo4j Graph Database - Knowledge Graph
+  # ==================================================
+  neo4j:
+    image: neo4j:5.15-community
+    container_name: unite-hub-neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
+      NEO4J_server_memory_pagecache_size: 512M
+      NEO4J_server_memory_heap_initial__size: 512M
+      NEO4J_server_memory_heap_max__size: 1G
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+      NEO4J_dbms_security_procedures_allowlist: apoc.*
+      NEO4JLABS_PLUGINS: '["apoc", "graph-data-science"]'
+    ports:
+      - "7474:7474"   # HTTP Browser
+      - "7687:7687"   # Bolt protocol
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+      - neo4j-import:/var/lib/neo4j/import
+      - neo4j-plugins:/plugins
+    networks:
+      - unite-hub-network
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "${NEO4J_PASSWORD}", "RETURN 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    labels:
+      - "com.unite-hub.service=neo4j"
+      - "com.unite-hub.database=graph"
 
   # ==================================================
   # MCP Servers - Model Context Protocol Integration
@@ -346,6 +388,14 @@ volumes:
     name: unite-hub-redis-data
   postgres-data:
     name: unite-hub-postgres-data
+  neo4j-data:
+    name: unite-hub-neo4j-data
+  neo4j-logs:
+    name: unite-hub-neo4j-logs
+  neo4j-import:
+    name: unite-hub-neo4j-import
+  neo4j-plugins:
+    name: unite-hub-neo4j-plugins
   prometheus-data:
     name: unite-hub-prometheus-data
   grafana-data:

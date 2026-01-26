@@ -116,6 +116,55 @@ marketing_intelligence:
     vs_traditional: $1,066-6,986/mo
     savings_percent: 94-98%
 
+knowledge_graph:
+  description: Neo4j graph database for entity relationships and pattern detection
+  service: Neo4j Community Edition 5.15
+
+  configuration:
+    - name: NEO4J_URI
+      value: bolt://localhost:7687
+      description: Neo4j connection URI (Bolt protocol)
+      production: bolt://neo4j:7687
+      docker: bolt://neo4j:7687
+
+    - name: NEO4J_USER
+      value: neo4j
+      description: Neo4j database username
+      default: neo4j
+
+    - name: NEO4J_PASSWORD
+      value: your-secure-password
+      description: Neo4j database password
+      security: HIGH - Change default password
+      generation: openssl rand -base64 16
+
+    - name: NEO4J_DATABASE
+      value: neo4j
+      description: Neo4j database name
+      default: neo4j
+      optional: true
+
+  features:
+    - Entity relationship mapping
+    - Contact intelligence and scoring
+    - Communication pattern detection
+    - Influence network analysis
+    - Community detection algorithms
+    - Entity deduplication and resolution
+
+  plugins:
+    - APOC (Awesome Procedures on Cypher)
+    - Graph Data Science (GDS) library
+
+  resources:
+    memory_pagecache: 512M
+    heap_initial: 512M
+    heap_max: 1G
+
+  ports:
+    http: 7474  # Browser interface
+    bolt: 7687  # Database connection
+
 optional:
   description: Optional services for production upgrades
 
