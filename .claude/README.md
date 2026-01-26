@@ -6,6 +6,18 @@
 
 ---
 
+## Task Management
+
+Unite-Hub uses **Beads** (https://github.com/steveyegge/beads) for structured task tracking:
+- Tasks stored in `.beads/` directory (git-backed)
+- View ready tasks: `bd ready`
+- Task details: `bd show <task-id>`
+- JSON output: `bd ready --json` (for AI agent parsing)
+- Complete guide: `commands/task-management.md`
+- Integration plan: `../docs/BEADS_INTEGRATION_PLAN.md`
+
+---
+
 ## Quick Navigation
 
 This directory contains **modular documentation** designed to minimize context bloat while maximizing agent efficiency. Each subdirectory contains specialized documentation that is loaded **on-demand** rather than upfront.
@@ -108,6 +120,7 @@ Organized CLI commands by category:
 
 | File | Purpose |
 |------|---------|
+| `task-management.md` | Beads task tracking (NEW) |
 | `development.md` | Dev server, build, start |
 | `testing.md` | Test commands, coverage |
 | `database.md` | Migration, schema checks |
