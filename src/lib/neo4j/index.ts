@@ -6,6 +6,7 @@
  * @module lib/neo4j
  */
 
+// Client utilities
 export {
   getDriver,
   getSession,
@@ -20,3 +21,43 @@ export {
 } from './client';
 
 export type { Driver, Session, Result } from './client';
+
+// Schema management
+export {
+  NodeTypes,
+  RelationshipTypes,
+  initializeSchema,
+  dropSchema,
+  verifySchema,
+  getSchemaStats,
+} from './schema';
+
+// Entity management
+export {
+  upsertContact,
+  upsertCompany,
+  createEmail,
+  createUser,
+  createWorkspace,
+  linkContactToCompany,
+  linkContacts,
+  recordEmailOpen,
+  recordEmailClick,
+  getContact,
+  getContactsByWorkspace,
+  searchContacts,
+  deleteContact,
+} from './entities';
+
+export type {
+  ContactEntity,
+  CompanyEntity,
+  EmailEntity,
+  UserEntity,
+  WorkspaceEntity,
+} from './entities';
+
+// Data synchronization
+export { fullSync, incrementalSync, syncContacts, syncCompanies, syncEmails } from './sync';
+
+export type { SyncResult } from './sync';
