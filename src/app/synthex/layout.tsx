@@ -23,6 +23,7 @@ import {
   LogOut,
   Menu,
   Radar,
+  FlaskConical,
 } from 'lucide-react';
 
 interface SynthexLayoutProps {
@@ -36,6 +37,7 @@ const navigationItems = [
   { label: 'Analytics', href: '/synthex/analytics', icon: BarChart3 },
   { label: 'SEO', href: '/synthex/seo', icon: Search },
   { label: 'Radar', href: '/synthex/market-radar', icon: Radar },
+  { label: 'Experiments', href: '/synthex/experiments', icon: FlaskConical },
   { label: 'Content', href: '/synthex/content', icon: FileText },
   { label: 'Vault', href: '/synthex/vault', icon: Lock },
   { label: 'AI Assistant', href: '/synthex/assistant', icon: Bot },
