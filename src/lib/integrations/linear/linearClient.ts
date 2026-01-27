@@ -486,6 +486,34 @@ export class LinearClient {
 
     return this.getProject(project.id);
   }
+
+  /**
+   * Update an existing project
+   */
+  async updateProject(projectId: string, input: {
+    name?: string;
+    description?: string;
+    state?: 'planned' | 'started' | 'paused' | 'completed' | 'canceled';
+    startDate?: string;
+    targetDate?: string;
+  }) {
+    // The Linear SDK's updateProject takes (id, input) as separate arguments
+    const updateInput: Record<string, any> = {};
+
+    if (input.name !== undefined) updateInput.name = input.name;
+    if (input.description !== undefined) updateInput.description = input.description;
+    if (input.state !== undefined) updateInput.state = input.state;
+    if (input.startDate !== undefined) updateInput.startDate = input.startDate;
+    if (input.targetDate !== undefined) updateInput.targetDate = input.targetDate;
+
+    const payload = await this.client.updateProject(projectId, updateInput);
+
+    if (!payload.success) {
+      throw new Error('Failed to update Linear project');
+    }
+
+    return this.getProject(projectId);
+  }
 }
 
 /**
