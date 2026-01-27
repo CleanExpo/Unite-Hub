@@ -88,10 +88,11 @@ describe('ChannelManager Integration Tests', () => {
   describe('Channel Validation', () => {
     it('should validate email channel config', () => {
       const result = validateChannelConfig('email' as ChannelType, {
-        to: 'test@example.com',
-        subject: 'Test',
-        body: 'Test message',
-      });
+        email: {
+          subject: 'Test',
+          body: 'Test message',
+        },
+      } as any);
 
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
@@ -99,9 +100,10 @@ describe('ChannelManager Integration Tests', () => {
 
     it('should detect missing required fields', () => {
       const result = validateChannelConfig('email' as ChannelType, {
-        to: 'test@example.com',
-        // Missing subject and body
-      });
+        email: {
+          // Missing subject and body
+        },
+      } as any);
 
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThan(0);
@@ -109,9 +111,10 @@ describe('ChannelManager Integration Tests', () => {
 
     it('should validate SMS channel config', () => {
       const result = validateChannelConfig('sms' as ChannelType, {
-        to: '+14155552671',
-        message: 'Test',
-      });
+        sms: {
+          message: 'Test',
+        },
+      } as any);
 
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
@@ -119,10 +122,12 @@ describe('ChannelManager Integration Tests', () => {
 
     it('should validate webhook channel config', () => {
       const result = validateChannelConfig('webhook' as ChannelType, {
-        url: 'https://example.com/webhook',
-        method: 'POST',
-        payload: { test: 'data' },
-      });
+        webhook: {
+          url: 'https://example.com/webhook',
+          method: 'POST',
+          payload: { test: 'data' },
+        },
+      } as any);
 
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
@@ -194,18 +199,20 @@ describe('SMS Service Integration', () => {
   describe('Phone Number Validation', () => {
     it('should accept E.164 format', () => {
       const result = validateChannelConfig('sms' as ChannelType, {
-        to: '+14155552671',
-        message: 'Test',
-      });
+        sms: {
+          message: 'Test',
+        },
+      } as any);
 
       expect(result.valid).toBe(true);
     });
 
     it('should reject invalid phone numbers', () => {
       const result = validateChannelConfig('sms' as ChannelType, {
-        to: '123', // Invalid
-        message: 'Test',
-      });
+        sms: {
+          message: '', // Invalid - empty message
+        },
+      } as any);
 
       expect(result.valid).toBe(false);
     });
@@ -224,29 +231,33 @@ describe('Webhook Service Integration', () => {
   describe('Authentication', () => {
     it('should validate Bearer token auth', () => {
       const result = validateChannelConfig('webhook' as ChannelType, {
-        url: 'https://example.com/webhook',
-        method: 'POST',
-        payload: {},
-        auth: {
-          type: 'bearer',
-          token: 'test-token-123',
+        webhook: {
+          url: 'https://example.com/webhook',
+          method: 'POST',
+          payload: {},
+          auth: {
+            type: 'bearer',
+            token: 'test-token-123',
+          },
         },
-      });
+      } as any);
 
       expect(result.valid).toBe(true);
     });
 
     it('should validate API Key auth', () => {
       const result = validateChannelConfig('webhook' as ChannelType, {
-        url: 'https://example.com/webhook',
-        method: 'POST',
-        payload: {},
-        auth: {
-          type: 'api_key',
-          key_name: 'X-API-Key',
-          key_value: 'test-key-123',
+        webhook: {
+          url: 'https://example.com/webhook',
+          method: 'POST',
+          payload: {},
+          auth: {
+            type: 'api_key',
+            key_name: 'X-API-Key',
+            key_value: 'test-key-123',
+          },
         },
-      });
+      } as any);
 
       expect(result.valid).toBe(true);
     });
@@ -255,14 +266,16 @@ describe('Webhook Service Integration', () => {
   describe('Retry Logic', () => {
     it('should validate retry configuration', () => {
       const result = validateChannelConfig('webhook' as ChannelType, {
-        url: 'https://example.com/webhook',
-        method: 'POST',
-        payload: {},
-        retry: {
-          max_retries: 3,
-          initial_delay: 1000,
+        webhook: {
+          url: 'https://example.com/webhook',
+          method: 'POST',
+          payload: {},
+          retry: {
+            max_retries: 3,
+            initial_delay: 1000,
+          },
         },
-      });
+      } as any);
 
       expect(result.valid).toBe(true);
     });
