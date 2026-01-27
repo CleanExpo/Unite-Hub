@@ -70,9 +70,13 @@ John`,
   beforeEach(() => {
     vi.clearAllMocks();
 
+    // Create a proper mock function
+    mockAnthropicCreate = vi.fn();
+
     const Anthropic = require('@anthropic-ai/sdk').default;
     const mockInstance = new Anthropic();
-    mockAnthropicCreate = mockInstance.messages.create as Mock;
+    // Replace the create method with our mock
+    mockInstance.messages.create = mockAnthropicCreate;
 
     extractor = new EmailIdeaExtractor();
     // Inject the mock
