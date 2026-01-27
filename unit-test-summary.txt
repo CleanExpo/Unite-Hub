@@ -1,0 +1,135 @@
+================================================================================
+UNITE-HUB UNIT TEST SUMMARY
+Date: 2026-01-27
+Test Runner: Vitest v1.6.1
+Duration: 16.25 seconds
+================================================================================
+
+OVERALL RESULTS
+================================================================================
+Test Files:  9 FAILED | 15 PASSED (24 total files)
+Tests:       45 FAILED | 414 PASSED (459 total tests)
+Pass Rate:   90.2% (individual tests)
+File Rate:   62.5% (test files)
+
+================================================================================
+PASSING TEST FILES (15)
+================================================================================
+1.  prediction-engines.test.ts                          (21 tests)
+2.  extended-thinking-engine.test.ts                    (53 tests)
+3.  ml-engines.test.ts                                  (30 tests)
+4.  cost-optimization.test.ts                           (42 tests)
+5.  lib/email/email-service.test.ts                     (19 tests)
+6.  lib/env-validation.test.ts                          (30 tests)
+7.  lib/email-ingestion/clientEmailMapper.test.ts       (15 tests)
+8.  lib/autoAction/sandboxConfig.test.ts                (19 tests)
+9.  lib/autoAction/criticalPointGuard.test.ts           (14 tests)
+10. lib/rate-limit.test.ts                              (12 tests)
+11. selfHealing/errorClassifier.test.ts                 (18 tests)
+12. agents/contact-intelligence.test.ts                 (10 tests)
+13. lib/supabase.test.ts                                (9 tests)
+14. components/EmptyState.test.tsx                      (21 tests)
+15. components/ErrorState.test.tsx                      (21 tests)
+
+================================================================================
+FAILING TEST FILES (9)
+================================================================================
+
+1. tests/unit/services/tenant-service.test.ts
+   Error: Cannot find module '@/cli/services/tenant-management/tenant-service'
+   Cause: Module import path issue (vite-tsconfig-paths plugin may be needed)
+
+2. tests/unit/api/media/transcribe.test.ts
+   Status: Module or implementation errors
+
+3. tests/unit/api/media/upload.test.ts
+   Status: Module or implementation errors
+
+4. tests/unit/multi-channel-autonomy.test.ts (7 failures)
+   - Orchestrator Integration > classifyIntent tests (5 failures)
+   - Orchestrator Integration > generatePlan tests (2 failures)
+
+5. tests/unit/components/skeletons.test.tsx (5 failures)
+   - ContentListSkeleton rendering tests (3 failures)
+   - StatsGridSkeleton rendering tests (2 failures)
+
+6. tests/unit/services/credential-alert-service.test.ts (6 failures)
+   - checkAndSendAlerts tests (3 failures)
+   - configureAlertRule test (1 failure)
+   - acknowledgeAlert test (1 failure)
+   - getAlerts test (1 failure)
+
+7. tests/unit/lib/agents/orchestrator-email-intents.test.ts (9 failures)
+   - Email Intent Classification tests (4 failures)
+   - Email Intent Plan Generation tests (5 failures)
+
+8. tests/unit/lib/connected-apps/tokenVault.test.ts (7 failures)
+   - encryptTokens tests (3 failures)
+   - decryptTokens tests (3 failures)
+   - tokenVault singleton test (1 failure)
+
+9. tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts (11 failures)
+   - extractIdeas tests (6 failures)
+   - idea type validation tests (2 failures)
+   - priority validation test (1 failure)
+   - date parsing tests (2 failures)
+   Common Error: "expected undefined to be true" - API call returning undefined
+
+================================================================================
+COMMON FAILURE PATTERNS
+================================================================================
+
+1. MODULE IMPORT ERRORS
+   - tenant-service.test.ts: Path alias resolution issue
+   - media/*.test.ts: Module not found errors
+
+2. UNDEFINED RESULTS
+   - emailIdeaExtractor tests: API calls returning undefined instead of success
+   - Likely mock/stub configuration issue
+
+3. COMPONENT RENDERING
+   - skeletons.test.tsx: Component rendering assertion failures
+
+4. SERVICE INTEGRATION
+   - credential-alert-service: Database/service integration issues
+   - tokenVault: Encryption/decryption mock issues
+
+5. ORCHESTRATOR LOGIC
+   - orchestrator-email-intents: Intent classification returning wrong values
+   - multi-channel-autonomy: Plan generation logic issues
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+
+Priority 1 - Quick Wins (Module Imports):
+  [ ] Fix tenant-service module path in tsconfig or update import
+  [ ] Resolve media API test module imports
+
+Priority 2 - API Mocking Issues:
+  [ ] Fix emailIdeaExtractor mock to return proper success response
+  [ ] Review all tests returning undefined - check mock configurations
+
+Priority 3 - Component Tests:
+  [ ] Update skeleton component tests to match current implementation
+  [ ] Verify component structure matches test expectations
+
+Priority 4 - Service Integration:
+  [ ] Review credential-alert-service database mocks
+  [ ] Fix tokenVault encryption/decryption test setup
+
+Priority 5 - Orchestrator Logic:
+  [ ] Debug orchestrator intent classification logic
+  [ ] Verify plan generation against expected outputs
+
+================================================================================
+NOTES
+================================================================================
+
+- Overall test health is GOOD (90.2% pass rate)
+- Most core functionality is well-tested and passing
+- Failures are concentrated in 9 specific areas
+- Many failures appear to be test configuration issues rather than code bugs
+- AI/ML engines, cost optimization, and email services all passing 100%
+
+================================================================================

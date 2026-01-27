@@ -12,6 +12,17 @@ export default defineConfig({
       ['**/components/**/*.test.ts', 'jsdom'],
     ],
     setupFiles: ['./tests/setup.ts'],
+    // Exclude Playwright tests and separate projects
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.next/**',
+      '**/coverage/**',
+      '**/*.spec.ts', // Playwright E2E tests
+      '**/tests/e2e/**', // E2E test directory
+      '**/*.e2e.spec.ts', // E2E test files
+      '**/NodeJS-Starter-V1/**', // Separate project with own test setup
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
@@ -37,6 +48,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@/next': path.resolve(__dirname, './next'),
       '@/convex': path.resolve(__dirname, './convex'),
       '@config': path.resolve(__dirname, './config'),
     },
