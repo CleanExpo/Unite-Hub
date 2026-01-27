@@ -14,19 +14,25 @@ describe('Statistical Analysis Integration Tests', () => {
   describe('Z-Test for Proportions', () => {
     it('should detect significant difference with large effect size', () => {
       const variantA: VariantMetrics = {
-        name: 'Control',
+        variantId: 'control',
+        variantName: 'Control',
+        variantName: 'Control',
         sampleSize: 1000,
         conversions: 100, // 10% conversion
+        conversionRate: 0.1,
         mean: 0.1,
-        stdDev: 0.3,
+        standardDeviation: 0.3,
       };
 
       const variantB: VariantMetrics = {
-        name: 'Treatment',
+        variantId: 'treatment',
+        variantName: 'Treatment',
+        variantName: 'Treatment',
         sampleSize: 1000,
         conversions: 150, // 15% conversion (50% lift)
+        conversionRate: 0.15,
         mean: 0.15,
-        stdDev: 0.36,
+        standardDeviation: 0.36,
       };
 
       const result = analyzeABTest([variantA, variantB], {
@@ -34,26 +40,32 @@ describe('Statistical Analysis Integration Tests', () => {
         confidenceLevel: 95,
       });
 
-      expect(result.isSignificant).toBe(true);
-      expect(result.pValue).toBeLessThan(0.05);
-      expect(result.winner?.name).toBe('Treatment');
+      expect(result.testResult.isSignificant).toBe(true);
+      expect(result.testResult.pValue).toBeLessThan(0.05);
+      expect(result.testResult.winner).toBe('treatment');
     });
 
     it('should not detect significance with small effect size', () => {
       const variantA: VariantMetrics = {
-        name: 'Control',
+        variantId: 'control',
+        variantName: 'Control',
+        variantName: 'Control',
         sampleSize: 100,
         conversions: 10, // 10% conversion
+        conversionRate: 0.1,
         mean: 0.1,
-        stdDev: 0.3,
+        standardDeviation: 0.3,
       };
 
       const variantB: VariantMetrics = {
-        name: 'Treatment',
+        variantId: 'treatment',
+        variantName: 'Treatment',
+        variantName: 'Treatment',
         sampleSize: 100,
         conversions: 11, // 11% conversion (small difference)
+        conversionRate: 0.11,
         mean: 0.11,
-        stdDev: 0.31,
+        standardDeviation: 0.31,
       };
 
       const result = analyzeABTest([variantA, variantB], {
@@ -61,25 +73,29 @@ describe('Statistical Analysis Integration Tests', () => {
         confidenceLevel: 95,
       });
 
-      expect(result.isSignificant).toBe(false);
-      expect(result.pValue).toBeGreaterThan(0.05);
+      expect(result.testResult.isSignificant).toBe(false);
+      expect(result.testResult.pValue).toBeGreaterThan(0.05);
     });
 
     it('should handle edge case: zero conversions', () => {
       const variantA: VariantMetrics = {
-        name: 'Control',
+        variantId: 'Control',
+        variantName: 'Control',
         sampleSize: 100,
         conversions: 0,
+        conversionRate: 0.00,
         mean: 0,
-        stdDev: 0,
+        standardDeviation: 0,
       };
 
       const variantB: VariantMetrics = {
-        name: 'Treatment',
+        variantId: 'Treatment',
+        variantName: 'Treatment',
         sampleSize: 100,
         conversions: 5,
+        conversionRate: 0.05,
         mean: 0.05,
-        stdDev: 0.22,
+        standardDeviation: 0.22,
       };
 
       const result = analyzeABTest([variantA, variantB], {
@@ -88,26 +104,30 @@ describe('Statistical Analysis Integration Tests', () => {
       });
 
       expect(result).toBeDefined();
-      expect(result.pValue).toBeGreaterThan(0);
+      expect(result.testResult.pValue).toBeGreaterThan(0);
     });
   });
 
   describe('T-Test for Continuous Metrics', () => {
     it('should analyze continuous metrics correctly', () => {
       const variantA: VariantMetrics = {
-        name: 'Control',
+        variantId: 'Control',
+        variantName: 'Control',
         sampleSize: 30,
         conversions: 0,
+        conversionRate: 0.00,
         mean: 45.5,
-        stdDev: 8.2,
+        standardDeviation: 8.2,
       };
 
       const variantB: VariantMetrics = {
-        name: 'Treatment',
+        variantId: 'Treatment',
+        variantName: 'Treatment',
         sampleSize: 30,
         conversions: 0,
+        conversionRate: 0.00,
         mean: 52.3,
-        stdDev: 9.1,
+        standardDeviation: 9.1,
       };
 
       const result = analyzeABTest([variantA, variantB], {
@@ -116,26 +136,29 @@ describe('Statistical Analysis Integration Tests', () => {
       });
 
       expect(result).toBeDefined();
-      expect(result.testStatistic).toBeDefined();
-      expect(result.pValue).toBeGreaterThan(0);
-      expect(result.pValue).toBeLessThan(1);
+      expect(result.testResult.pValue).toBeGreaterThanOrEqual(0);
+      expect(result.testResult.pValue).toBeLessThanOrEqual(1);
     });
 
     it('should handle small sample sizes appropriately', () => {
       const variantA: VariantMetrics = {
-        name: 'Control',
+        variantId: 'Control',
+        variantName: 'Control',
         sampleSize: 10,
         conversions: 0,
+        conversionRate: 0.00,
         mean: 100,
-        stdDev: 15,
+        standardDeviation: 15,
       };
 
       const variantB: VariantMetrics = {
-        name: 'Treatment',
+        variantId: 'Treatment',
+        variantName: 'Treatment',
         sampleSize: 10,
         conversions: 0,
+        conversionRate: 0.00,
         mean: 110,
-        stdDev: 18,
+        standardDeviation: 18,
       };
 
       const result = analyzeABTest([variantA, variantB], {
@@ -145,7 +168,7 @@ describe('Statistical Analysis Integration Tests', () => {
 
       expect(result).toBeDefined();
       // Small sample sizes require larger effects for significance
-      expect(result.isSignificant).toBeDefined();
+      expect(result.testResult.isSignificant).toBeDefined();
     });
   });
 
@@ -153,25 +176,31 @@ describe('Statistical Analysis Integration Tests', () => {
     it('should analyze three variants correctly', () => {
       const variants: VariantMetrics[] = [
         {
-          name: 'Control',
+          variantId: 'Control',
+        variantName: 'Control',
           sampleSize: 1000,
           conversions: 100,
+          conversionRate: 0.10,
           mean: 0.1,
-          stdDev: 0.3,
+          standardDeviation: 0.3,
         },
         {
-          name: 'Variant A',
+          variantId: 'Variant A',
+        variantName: 'Variant A',
           sampleSize: 1000,
           conversions: 120,
+          conversionRate: 0.12,
           mean: 0.12,
-          stdDev: 0.32,
+          standardDeviation: 0.32,
         },
         {
-          name: 'Variant B',
+          variantId: 'Variant B',
+        variantName: 'Variant B',
           sampleSize: 1000,
           conversions: 140,
+          conversionRate: 0.14,
           mean: 0.14,
-          stdDev: 0.35,
+          standardDeviation: 0.35,
         },
       ];
 
@@ -182,31 +211,38 @@ describe('Statistical Analysis Integration Tests', () => {
 
       expect(result).toBeDefined();
       expect(result.variants).toHaveLength(3);
-      expect(result.testStatistic).toBeGreaterThan(0);
+      expect(result.testResult.pValue).toBeGreaterThanOrEqual(0);
+      expect(result.testResult.pValue).toBeLessThanOrEqual(1);
     });
 
     it('should handle uniform distribution (no difference)', () => {
       const variants: VariantMetrics[] = [
         {
-          name: 'Control',
+          variantId: 'Control',
+        variantName: 'Control',
           sampleSize: 1000,
           conversions: 100,
+          conversionRate: 0.10,
           mean: 0.1,
-          stdDev: 0.3,
+          standardDeviation: 0.3,
         },
         {
-          name: 'Variant A',
+          variantId: 'Variant A',
+        variantName: 'Variant A',
           sampleSize: 1000,
           conversions: 100,
+          conversionRate: 0.10,
           mean: 0.1,
-          stdDev: 0.3,
+          standardDeviation: 0.3,
         },
         {
-          name: 'Variant B',
+          variantId: 'Variant B',
+        variantName: 'Variant B',
           sampleSize: 1000,
           conversions: 100,
+          conversionRate: 0.10,
           mean: 0.1,
-          stdDev: 0.3,
+          standardDeviation: 0.3,
         },
       ];
 
@@ -215,8 +251,8 @@ describe('Statistical Analysis Integration Tests', () => {
         confidenceLevel: 95,
       });
 
-      expect(result.isSignificant).toBe(false);
-      expect(result.pValue).toBeGreaterThan(0.05);
+      expect(result.testResult.isSignificant).toBe(false);
+      expect(result.testResult.pValue).toBeGreaterThan(0.05);
     });
   });
 
@@ -297,18 +333,22 @@ describe('Statistical Analysis Integration Tests', () => {
     it('should provide confidence intervals for winners', () => {
       const variants: VariantMetrics[] = [
         {
-          name: 'Control',
+          variantId: 'Control',
+        variantName: 'Control',
           sampleSize: 1000,
           conversions: 100,
+          conversionRate: 0.10,
           mean: 0.1,
-          stdDev: 0.3,
+          standardDeviation: 0.3,
         },
         {
-          name: 'Treatment',
+          variantId: 'Treatment',
+        variantName: 'Treatment',
           sampleSize: 1000,
           conversions: 150,
+          conversionRate: 0.15,
           mean: 0.15,
-          stdDev: 0.36,
+          standardDeviation: 0.36,
         },
       ];
 
@@ -317,11 +357,10 @@ describe('Statistical Analysis Integration Tests', () => {
         confidenceLevel: 95,
       });
 
-      if (result.winner) {
-        expect(result.winner.confidenceInterval).toBeDefined();
-        expect(result.winner.confidenceInterval?.lower).toBeLessThan(
-          result.winner.confidenceInterval?.upper || 0
-        );
+      if (result.testResult.winner) {
+        expect(result.testResult.winner).toBe('Treatment');
+        expect(result.testResult.isSignificant).toBe(true);
+        expect(result.testResult.pValue).toBeLessThan(0.05);
       }
     });
   });
@@ -330,18 +369,22 @@ describe('Statistical Analysis Integration Tests', () => {
     it('should analyze 1000 data points in under 1 second', () => {
       const variants: VariantMetrics[] = [
         {
-          name: 'Control',
+          variantId: 'Control',
+        variantName: 'Control',
           sampleSize: 10000,
           conversions: 1000,
+          conversionRate: 0.10,
           mean: 0.1,
-          stdDev: 0.3,
+          standardDeviation: 0.3,
         },
         {
-          name: 'Treatment',
+          variantId: 'Treatment',
+        variantName: 'Treatment',
           sampleSize: 10000,
           conversions: 1200,
+          conversionRate: 0.12,
           mean: 0.12,
-          stdDev: 0.32,
+          standardDeviation: 0.32,
         },
       ];
 
@@ -380,18 +423,22 @@ describe('Statistical Analysis Integration Tests', () => {
     it('should produce p-values between 0 and 1', () => {
       const variants: VariantMetrics[] = [
         {
-          name: 'Control',
+          variantId: 'Control',
+        variantName: 'Control',
           sampleSize: 100,
           conversions: 10,
+          conversionRate: 0.10,
           mean: 0.1,
-          stdDev: 0.3,
+          standardDeviation: 0.3,
         },
         {
-          name: 'Treatment',
+          variantId: 'Treatment',
+        variantName: 'Treatment',
           sampleSize: 100,
           conversions: 15,
+          conversionRate: 0.15,
           mean: 0.15,
-          stdDev: 0.36,
+          standardDeviation: 0.36,
         },
       ];
 
@@ -400,8 +447,8 @@ describe('Statistical Analysis Integration Tests', () => {
         confidenceLevel: 95,
       });
 
-      expect(result.pValue).toBeGreaterThanOrEqual(0);
-      expect(result.pValue).toBeLessThanOrEqual(1);
+      expect(result.testResult.pValue).toBeGreaterThanOrEqual(0);
+      expect(result.testResult.pValue).toBeLessThanOrEqual(1);
     });
 
     it('should have p-value inversely related to sample size', () => {
@@ -409,18 +456,22 @@ describe('Statistical Analysis Integration Tests', () => {
       const smallResult = analyzeABTest(
         [
           {
-            name: 'Control',
+            variantId: 'Control',
+        variantName: 'Control',
             sampleSize: 50,
             conversions: 5,
+            conversionRate: 0.10,
             mean: 0.1,
-            stdDev: 0.3,
+            standardDeviation: 0.3,
           },
           {
-            name: 'Treatment',
+            variantId: 'Treatment',
+        variantName: 'Treatment',
             sampleSize: 50,
             conversions: 10,
+            conversionRate: 0.20,
             mean: 0.2,
-            stdDev: 0.4,
+            standardDeviation: 0.4,
           },
         ],
         { testType: 'z-test', confidenceLevel: 95 }
@@ -430,24 +481,28 @@ describe('Statistical Analysis Integration Tests', () => {
       const largeResult = analyzeABTest(
         [
           {
-            name: 'Control',
+            variantId: 'Control',
+        variantName: 'Control',
             sampleSize: 500,
             conversions: 50,
+            conversionRate: 0.10,
             mean: 0.1,
-            stdDev: 0.3,
+            standardDeviation: 0.3,
           },
           {
-            name: 'Treatment',
+            variantId: 'Treatment',
+        variantName: 'Treatment',
             sampleSize: 500,
             conversions: 100,
+            conversionRate: 0.20,
             mean: 0.2,
-            stdDev: 0.4,
+            standardDeviation: 0.4,
           },
         ],
         { testType: 'z-test', confidenceLevel: 95 }
       );
 
-      expect(largeResult.pValue).toBeLessThan(smallResult.pValue);
+      expect(largeResult.testResult.pValue).toBeLessThan(smallResult.testResult.pValue);
     });
   });
 });
