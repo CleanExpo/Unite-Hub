@@ -24,15 +24,18 @@ vi.mock('openai', () => {
 // Import after mock to get mocked version
 import OpenAI from 'openai';
 
+// Create mock objects that will be reused
+const mockSupabaseBrowser = {
+  auth: {
+    getUser: vi.fn(),
+  },
+};
+
 // Mock dependencies
 vi.mock('@/lib/supabase', () => ({
   getSupabaseServer: vi.fn(),
   getSupabaseAdmin: vi.fn(),
-  supabaseBrowser: {
-    auth: {
-      getUser: vi.fn(),
-    },
-  },
+  supabaseBrowser: mockSupabaseBrowser,
 }));
 
 describe('POST /api/media/transcribe', () => {
@@ -48,6 +51,12 @@ describe('POST /api/media/transcribe', () => {
     const MockedOpenAI = vi.mocked(OpenAI);
     const openaiInstance = new MockedOpenAI({} as any);
     mockCreate = openaiInstance.audio.transcriptions.create;
+
+    // Setup supabaseBrowser mock
+    mockSupabaseBrowser.auth.getUser.mockResolvedValue({
+      data: { user: { id: 'user-123' } },
+      error: null,
+    });
 
     // Mock Supabase
     mockSupabase = {
@@ -68,6 +77,7 @@ describe('POST /api/media/transcribe', () => {
             single: vi.fn().mockResolvedValue({
               data: {
                 id: 'media-123',
+                workspace_id: 'workspace-123',
                 file_type: 'audio',
                 public_url: 'https://storage.example.com/test.mp3',
                 original_filename: 'test.mp3',
@@ -75,20 +85,19 @@ describe('POST /api/media/transcribe', () => {
                 storage_bucket: 'media-uploads',
                 storage_path: 'workspace/file/test.mp3',
                 org_id: 'org-123',
+                transcript: null,
+                transcribed_at: null,
               },
               error: null,
             }),
           }),
         }),
-        update: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            select: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({
-                data: { status: 'analyzing' },
-                error: null,
-              }),
-            }),
-          }),
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        select: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({
+          data: { id: 'media-123', status: 'transcribing' },
+          error: null,
         }),
       }),
       storage: {
