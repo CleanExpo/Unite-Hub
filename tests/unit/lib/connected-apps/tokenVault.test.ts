@@ -49,7 +49,7 @@ describe('TokenVault', () => {
       const tokens: OAuthTokens = {
         accessToken: 'test-access-token',
         refreshToken: 'test-refresh-token',
-        expiresAt: new Date(Date.now()) + 3600000,
+        expiresAt: new Date(Date.now() + 3600000),
         tokenType: 'Bearer',
         scope: 'openid email',
       };
@@ -69,7 +69,7 @@ describe('TokenVault', () => {
     it('should produce different ciphertext for same plaintext (due to IV)', () => {
       const tokens: OAuthTokens = {
         accessToken: 'test-access-token',
-        expiresAt: new Date(Date.now()) + 3600000,
+        expiresAt: new Date(Date.now() + 3600000),
       };
 
       // Reset mock to return different random bytes
