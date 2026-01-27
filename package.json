@@ -101,6 +101,7 @@
     "@google/genai": "^1.30.0",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
+    "@linear/sdk": "^38.0.0",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@microsoft/microsoft-graph-types": "^2.43.1",
     "@openrouter/sdk": "^0.1.11",
