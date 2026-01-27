@@ -30,7 +30,7 @@ vi.mock('@/lib/supabase', () => {
 });
 
 // Mock config
-vi.mock('@/config/emailIngestion.config', () => ({
+vi.mock('@config/emailIngestion.config', () => ({
   emailIngestionConfig: {
     clientMapping: {
       exactEmailMatch: true,

@@ -24,7 +24,7 @@ vi.mock('@anthropic-ai/sdk', () => {
 });
 
 // Mock the config
-vi.mock('@/config/emailIngestion.config', () => ({
+vi.mock('@config/emailIngestion.config', () => ({
   emailIngestionConfig: {
     aiExtraction: {
       enabled: true,
