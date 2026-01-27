@@ -32,6 +32,11 @@ vi.mock('@config/emailIngestion.config', () => ({
       maxTokens: 1024,
       confidenceThreshold: 0.6,
     },
+    ideaExtraction: {
+      enabled: true,
+      minConfidence: 0.7,
+      maxIdeasPerEmail: 5,
+    },
   },
 }));
 

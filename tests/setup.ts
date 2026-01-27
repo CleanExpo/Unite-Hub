@@ -1,11 +1,12 @@
 /**
  * Vitest Test Setup
- * 
+ *
  * Global test configuration, mocks, and utilities
  */
 
 import { vi } from 'vitest';
 import { config } from 'dotenv';
+import '@testing-library/jest-dom/vitest';
 
 // Load test environment variables
 config({ path: '.env.test' });
@@ -63,6 +64,10 @@ global.console = {
 // Set test environment variables
 process.env.NODE_ENV = 'test';
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
 process.env.GOOGLE_APPLICATION_CREDENTIALS = './test-service-account.json';
 process.env.GCP_PROJECT_ID = 'test-project';
+process.env.ANTHROPIC_API_KEY = 'test-anthropic-key';
+process.env.OPENROUTER_API_KEY = 'test-openrouter-key';
+process.env.PERPLEXITY_API_KEY = 'test-perplexity-key';
