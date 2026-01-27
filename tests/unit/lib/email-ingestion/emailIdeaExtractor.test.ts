@@ -5,9 +5,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
-import {
-  EmailIdeaExtractor,
-  emailIdeaExtractor,
+import EmailIdeaExtractor, {
+  getEmailIdeaExtractor,
   EmailContent,
   ExtractionResult,
   ExtractedIdea,
@@ -437,13 +436,17 @@ John`,
   });
 });
 
-describe('emailIdeaExtractor singleton', () => {
-  it('should export a singleton instance', () => {
-    expect(emailIdeaExtractor).toBeDefined();
-    expect(emailIdeaExtractor).toBeInstanceOf(EmailIdeaExtractor);
+describe('getEmailIdeaExtractor singleton', () => {
+  it('should return a singleton instance', () => {
+    const instance1 = getEmailIdeaExtractor();
+    const instance2 = getEmailIdeaExtractor();
+    expect(instance1).toBeDefined();
+    expect(instance1).toBeInstanceOf(EmailIdeaExtractor);
+    expect(instance1).toBe(instance2); // Same instance
   });
 
   it('should have extractIdeas method', () => {
-    expect(typeof emailIdeaExtractor.extractIdeas).toBe('function');
+    const instance = getEmailIdeaExtractor();
+    expect(typeof instance.extractIdeas).toBe('function');
   });
 });
