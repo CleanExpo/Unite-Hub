@@ -22,6 +22,7 @@ import {
   Lock,
   LogOut,
   Menu,
+  Radar,
 } from 'lucide-react';
 
 interface SynthexLayoutProps {
@@ -34,6 +35,7 @@ const navigationItems = [
   { label: 'Campaigns', href: '/synthex/campaigns', icon: Megaphone },
   { label: 'Analytics', href: '/synthex/analytics', icon: BarChart3 },
   { label: 'SEO', href: '/synthex/seo', icon: Search },
+  { label: 'Radar', href: '/synthex/market-radar', icon: Radar },
   { label: 'Content', href: '/synthex/content', icon: FileText },
   { label: 'Vault', href: '/synthex/vault', icon: Lock },
   { label: 'AI Assistant', href: '/synthex/assistant', icon: Bot },
@@ -59,7 +61,7 @@ export default function SynthexLayout({ children }: SynthexLayoutProps) {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex space-x-1">
-              {navigationItems.slice(0, 6).map((item) => {
+              {navigationItems.slice(0, 7).map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link
