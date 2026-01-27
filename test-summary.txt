@@ -1,0 +1,1590 @@
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Unite-Hub[39m
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+ [32m✓[39m tests/integration/seo-leak.test.ts [2m ([22m[2m32 tests[22m[2m)[22m[90m 29[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/billing.test.ts [2m ([22m[2m31 tests[22m[2m)[22m[90m 38[2mms[22m[39m
+ [32m✓[39m tests/integration/multi-channel.test.ts [2m ([22m[2m42 tests[22m[2m)[22m[90m 26[2mms[22m[39m
+ [32m✓[39m tests/integration/cognitive-twin.test.ts [2m ([22m[2m31 tests[22m[2m)[22m[90m 31[2mms[22m[39m
+ [32m✓[39m tests/integration/orchestrator-routing.test.ts [2m ([22m[2m39 tests[22m[2m)[22m[90m 35[2mms[22m[39m
+ [32m✓[39m tests/integration/ai-phill.test.ts [2m ([22m[2m28 tests[22m[2m)[22m[90m 38[2mms[22m[39m
+ [33m❯[39m src/lib/__tests__/deltaEngine.test.ts [2m ([22m[2m26 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 67[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/deltaEngine.test.ts[2m > [22mDeltaEngine - Edge Cases[2m > [22mshould handle zero values without division errors[39m
+[31m     → expected 'STABLE' to be 'IMPROVING' // Object.is equality[39m
+ [33m❯[39m src/lib/__tests__/timeService.test.ts [2m ([22m[2m36 tests[22m [2m|[22m [31m9 failed[39m[2m)[22m[90m 113[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetTimeEntries[2m > [22mshould return entries with totals[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetTimeEntries[2m > [22mshould filter by status[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetTimeEntries[2m > [22mshould filter by date range[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetTimeEntries[2m > [22mshould filter by project[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetTimeEntries[2m > [22mshould filter by staff[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetTimeSummary[2m > [22mshould calculate today totals[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetTimeSummary[2m > [22mshould calculate week totals[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetTimeSummary[2m > [22mshould calculate month totals[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/timeService.test.ts[2m > [22mTime Service - Query Operations[2m > [22mgetPendingApprovals[2m > [22mshould return pending entries[39m
+[31m     → expected false to be true // Object.is equality[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+ [33m❯[39m tests/api/time-tracking-e2e.test.ts [2m ([22m[2m14 tests[22m [2m|[22m [31m14 failed[39m[2m)[22m[90m 193[2mms[22m[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Complete Timer Workflow[2m > [22mshould complete full timer lifecycle: start → stop → approve → sync[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Complete Manual Entry Workflow[2m > [22mshould complete full manual entry lifecycle: create → approve → sync[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Client View Tests[2m > [22mshould display approved entries to client[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Client View Tests[2m > [22mshould filter entries by date range[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Client View Tests[2m > [22mshould calculate correct totals[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Client View Tests[2m > [22mshould not show pending or rejected entries to client[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Bulk Operations[2m > [22mshould bulk approve multiple entries[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Bulk Operations[2m > [22mshould bulk sync multiple entries to Xero[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Multi-User Scenarios[2m > [22mshould prevent staff from approving their own entries[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Multi-User Scenarios[2m > [22mshould prevent staff from syncing to Xero[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Multi-User Scenarios[2m > [22mshould allow admin to view all staff entries[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Error Handling[2m > [22mshould reject timer start when session already active[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Error Handling[2m > [22mshould reject manual entry with invalid hours[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking-e2e.test.ts[2m > [22mE2E - Error Handling[2m > [22mshould reject Xero sync of pending entries[39m
+[31m     → fetch failed[39m
+ [32m✓[39m src/lib/__tests__/financial-reporting.test.ts [2m ([22m[2m40 tests[22m[2m)[22m[90m 33[2mms[22m[39m
+ [32m✓[39m tests/integration/framework-alerts.test.ts [2m ([22m[2m57 tests[22m[2m)[22m[90m 48[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/backlinkEngine.test.ts [2m ([22m[2m15 tests[22m[2m)[22m[90m 40[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+ [32m✓[39m tests/unit/extended-thinking-engine.test.ts [2m ([22m[2m53 tests[22m[2m)[22m[90m 66[2mms[22m[39m
+ [33m❯[39m tests/api/time-tracking.api.test.ts [2m ([22m[2m31 tests[22m [2m|[22m [31m30 failed[39m[2m)[22m[33m 2658[2mms[22m[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/start - Start Timer[2m > [22mshould start timer successfully with all fields[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/start - Start Timer[2m > [22mshould start timer with minimal fields[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/start - Start Timer[2m > [22mshould fail when active session already exists[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/start - Start Timer[2m > [22mshould fail without authentication[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/start - Start Timer[2m > [22mshould fail with invalid token[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/stop - Stop Timer[2m > [22mshould stop timer successfully[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/stop - Stop Timer[2m > [22mshould fail when session not found[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/stop - Stop Timer[2m > [22mshould fail when stopping someone elses session[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/stop - Stop Timer[2m > [22mshould fail without authentication[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/manual - Create Manual Entry[2m > [22mshould create manual entry successfully[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/manual - Create Manual Entry[2m > [22mshould create non-billable entry[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/manual - Create Manual Entry[2m > [22mshould fail with invalid hours (> 24)[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/manual - Create Manual Entry[2m > [22mshould fail with invalid hours (<= 0)[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/manual - Create Manual Entry[2m > [22mshould fail with invalid date format[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/manual - Create Manual Entry[2m > [22mshould fail without description[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mGET /api/staff/time/entries - List Entries[2m > [22mshould list all entries for staff[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mGET /api/staff/time/entries - List Entries[2m > [22mshould filter by status[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mGET /api/staff/time/entries - List Entries[2m > [22mshould filter by date range[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mGET /api/staff/time/entries - List Entries[2m > [22mshould filter by project[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mGET /api/staff/time/entries - List Entries[2m > [22mshould fail without authentication[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mGET /api/staff/time/entries - List Entries[2m > [22mshould allow admin to view all staff entries[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/approve - Approve/Reject Entries[2m > [22mshould approve entry successfully (admin)[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/approve - Approve/Reject Entries[2m > [22mshould reject entry with reason (admin)[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/approve - Approve/Reject Entries[2m > [22mshould fail rejection without reason[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/approve - Approve/Reject Entries[2m > [22mshould bulk approve multiple entries (admin)[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/approve - Approve/Reject Entries[2m > [22mshould fail bulk rejection[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/approve - Approve/Reject Entries[2m > [22mshould fail when staff tries to approve (not admin)[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mPOST /api/staff/time/approve - Approve/Reject Entries[2m > [22mshould fail with invalid action[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mAPI Security & Authorization[2m > [22mshould prevent access without authentication[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/time-tracking.api.test.ts[2m > [22mAPI Security & Authorization[2m > [22mshould enforce role-based access for approval[39m
+[31m     → fetch failed[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+ [33m❯[39m tests/e2e/critical-flows.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+ [33m❯[39m src/lib/__tests__/operatorInsightsService.test.ts [2m ([22m[2m22 tests[22m [2m|[22m [31m7 failed[39m[2m)[22m[90m 88[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/operatorInsightsService.test.ts[2m > [22mOperatorInsightsService[2m > [22mOutcome Recording[2m > [22mshould update outcome and trigger score recalculation[39m
+[31m     → promise rejected "TypeError: supabase.from(...).select(...)…" instead of resolving[39m
+[31m   [33m❯[31m src/lib/__tests__/operatorInsightsService.test.ts[2m > [22mOperatorInsightsService[2m > [22mOutcome Recording[2m > [22mshould log DECISION_OVERTURNED event for overturned outcomes[39m
+[31m     → supabase.from(...).select(...).eq(...).single is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/operatorInsightsService.test.ts[2m > [22mOperatorInsightsService[2m > [22mDecay-Weighted Scoring[2m > [22mshould create default scores for operators with no history[39m
+[31m     → expected undefined to be +0 // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/operatorInsightsService.test.ts[2m > [22mOperatorInsightsService[2m > [22mBias Detection[2m > [22mshould detect APPROVAL_BIAS when approval rate exceeds 85%[39m
+[31m     → Failed to update bias signal: undefined[39m
+[31m   [33m❯[31m src/lib/__tests__/operatorInsightsService.test.ts[2m > [22mOperatorInsightsService[2m > [22mBias Detection[2m > [22mshould detect REJECTION_BIAS when rejection rate exceeds 85%[39m
+[31m     → Failed to update bias signal: undefined[39m
+[31m   [33m❯[31m src/lib/__tests__/operatorInsightsService.test.ts[2m > [22mOperatorInsightsService[2m > [22mBias Detection[2m > [22mshould detect SPEED_BIAS when avg review time under 30 seconds[39m
+[31m     → Failed to update bias signal: undefined[39m
+[31m   [33m❯[31m src/lib/__tests__/operatorInsightsService.test.ts[2m > [22mOperatorInsightsService[2m > [22mBias Detection[2m > [22mshould not detect biases with insufficient review history[39m
+[31m     → expected [ Array(2) ] to have a length of +0 but got 2[39m
+ [33m❯[39m tests/integration/framework-templates.test.ts [2m ([22m[2m44 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 64[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/framework-templates.test.ts[2m > [22mFramework Template Library[2m > [22mTemplate Rating[2m > [22mshould validate rating range (1-5)[39m
+[31m     → expected true to be false // Object.is equality[39m
+ [33m❯[39m src/lib/__tests__/guardrailPolicyService.test.ts [2m ([22m[2m19 tests[22m [2m|[22m [31m19 failed[39m[2m)[22m[90m 69[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mGuardrail Evaluation[2m > [22mshould return ALLOW when no rules match[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mGuardrail Evaluation[2m > [22mshould apply BLOCK action when rule conditions match[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mGuardrail Evaluation[2m > [22mshould apply REQUIRE_QUORUM action with quorum size[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mGuardrail Evaluation[2m > [22mshould collect coaching hints from COACHING rules[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mGuardrail Evaluation[2m > [22mshould apply more restrictive action between multiple rules[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mGuardrail Evaluation[2m > [22mshould set sandboxOnly when in sandbox mode[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mCondition Evaluation[2m > [22mshould match operator_score < threshold[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mCondition Evaluation[2m > [22mshould not match when operator_score >= threshold[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mCondition Evaluation[2m > [22mshould match domain condition[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mCondition Evaluation[2m > [22mshould not match when domain differs[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mSandbox Simulation[2m > [22mshould simulate EMAIL_SEND execution[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mSandbox Simulation[2m > [22mshould fail EMAIL_SEND simulation when missing fields[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mSandbox Simulation[2m > [22mshould simulate CONTENT_PUBLISH with warnings[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mSandbox Simulation[2m > [22mshould simulate DATA_UPDATE execution[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mCoaching Hints[2m > [22mshould record coaching hints when shown[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mCoaching Hints[2m > [22mshould record hint feedback[39m
+[31m     → promise rejected "TypeError: supabase.from is not a function" instead of resolving[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mSandbox History[2m > [22mshould fetch sandbox history for organization[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mSandbox History[2m > [22mshould filter history by operator[39m
+[31m     → supabase.from is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/guardrailPolicyService.test.ts[2m > [22mGuardrailPolicyService[2m > [22mRule Precedence[2m > [22mshould skip inactive rules[39m
+[31m     → supabase.from is not a function[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+ [33m❯[39m tests/e2e/convex-phase3-features.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m src/lib/__tests__/trustModeService.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m src/lib/__tests__/strategySimulation.test.ts [2m ([22m[2m26 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[90m 76[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySimulation.test.ts[2m > [22mStrategySimulationService[2m > [22mSimulation Results[2m > [22mshould get simulations list for organization[39m
+[31m     → expected [] to have a length of 2 but got +0[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySimulation.test.ts[2m > [22mStrategySimulationService[2m > [22mSimulation Results[2m > [22mshould filter simulations by status[39m
+[31m     → expected [] to have a length of 1 but got +0[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+ [33m❯[39m tests/integration/autonomy-lifecycle.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m tests/integration/framework-insights.test.ts [2m ([22m[2m54 tests[22m [2m|[22m [31m8 failed[39m[2m)[22m[90m 66[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight Generation[2m > [22mshould forecast trends accurately[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight Generation[2m > [22mshould identify optimization opportunities[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight Metrics & Data[2m > [22mshould include related data context[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mRecommendation Generation[2m > [22mshould include action items[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mRecommendation Generation[2m > [22mshould define success metrics[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight & Recommendation Linking[2m > [22mshould link insights to recommendations[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight & Recommendation Linking[2m > [22mshould reference related insights[39m
+[31m     → expected undefined to be an instance of Array[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight & Recommendation Linking[2m > [22mshould maintain referential integrity[39m
+[31m     → Cannot read properties of undefined (reading 'length')[39m
+ [33m❯[39m src/lib/__tests__/strategyGraph.test.ts [2m ([22m[2m24 tests[22m [2m|[22m [31m6 failed[39m[2m)[22m[90m 106[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyGraph.test.ts[2m > [22mStrategyGraphService[2m > [22mGraph Traversal[2m > [22mshould get full graph for organization[39m
+[31m     → supabase.from(...).select(...).eq(...).order is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyGraph.test.ts[2m > [22mStrategyGraphService[2m > [22mGraph Traversal[2m > [22mshould get dependencies of a node[39m
+[31m     → supabase.from(...).select(...).eq(...).eq is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyGraph.test.ts[2m > [22mStrategyGraphService[2m > [22mGraph Traversal[2m > [22mshould get dependents of a node[39m
+[31m     → supabase.from(...).select(...).eq(...).eq is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyGraph.test.ts[2m > [22mStrategyGraphService[2m > [22mGraph Traversal[2m > [22mshould return empty array when no dependencies[39m
+[31m     → supabase.from(...).select(...).eq(...).eq is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyGraph.test.ts[2m > [22mStrategyPlannerService[2m > [22mProposal Management[2m > [22mshould get proposals for organization[39m
+[31m     → expected [ { id: 'n1', …(12) }, …(1) ] to have a length of 1 but got 2[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyGraph.test.ts[2m > [22mStrategyPlannerService[2m > [22mProposal Management[2m > [22mshould filter proposals by status[39m
+[31m     → query.eq is not a function[39m
+ [32m✓[39m src/lib/__tests__/enterprise-integration.test.ts [2m ([22m[2m32 tests[22m[2m)[22m[90m 39[2mms[22m[39m
+ [32m✓[39m tests/unit/lib/email/email-service.test.ts [2m ([22m[2m19 tests[22m[2m)[22m[33m 921[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [33m❯[39m tests/integration/founder-os.test.ts [2m ([22m[2m28 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 69[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/founder-os.test.ts[2m > [22mFounder OS Integration[2m > [22mBusiness Intelligence[2m > [22mshould calculate business health score[39m
+[31m     → expected 69.25 to be greater than 70[39m
+ [32m✓[39m src/lib/services/leviathan/__tests__/quad-cloud-engine.test.ts [2m ([22m[2m29 tests[22m[2m)[22m[33m 4794[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [32m✓[39m tests/integration/framework-versioning.test.ts [2m ([22m[2m56 tests[22m[2m)[22m[90m 163[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [32m✓[39m tests/integration/framework-analytics.test.ts [2m ([22m[2m54 tests[22m[2m)[22m[90m 101[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+ [32m✓[39m src/lib/__tests__/enterpriseTeams.test.ts [2m ([22m[2m24 tests[22m[2m)[22m[90m 117[2mms[22m[39m
+ [33m❯[39m src/lib/__tests__/xeroSync.test.ts [2m ([22m[2m20 tests[22m [2m|[22m [31m7 failed[39m[2m)[22m[90m 186[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/xeroSync.test.ts[2m > [22mXero Sync - Line Items Preparation[2m > [22mshould prepare line items from time entries[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/xeroSync.test.ts[2m > [22mXero Sync - Line Items Preparation[2m > [22mshould handle no approved entries found[39m
+[31m     → expected 'supabase.from(...).select(...).in(...…' to be 'No approved, unsynced entries found' // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/xeroSync.test.ts[2m > [22mXero Sync - Line Items Preparation[2m > [22mshould handle database errors[39m
+[31m     → expected 'supabase.from(...).select(...).in(...…' to be 'Database error' // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/xeroSync.test.ts[2m > [22mXero Sync - Sync Operation (Stub)[2m > [22mshould simulate successful sync[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/xeroSync.test.ts[2m > [22mXero Sync - Sync Operation (Stub)[2m > [22mshould handle sync of multiple entries[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/xeroSync.test.ts[2m > [22mXero Sync - Edge Cases[2m > [22mshould handle entries without hourly rate[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/xeroSync.test.ts[2m > [22mXero Sync - Edge Cases[2m > [22mshould only sync approved entries[39m
+[31m     → expected 'supabase.from(...).select(...).in(...…' to be 'No approved, unsynced entries found' // Object.is equality[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+ [33m❯[39m src/lib/__tests__/consensusService.test.ts [2m ([22m[2m24 tests[22m [2m|[22m [31m19 failed[39m[2m)[22m[90m 198[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mVote Weight Calculations[2m > [22mshould assign weight 10 to OWNER votes[39m
+[31m     → Cannot read properties of undefined (reading 'length')[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mVote Weight Calculations[2m > [22mshould assign weight 2 to MANAGER votes[39m
+[31m     → Cannot read properties of undefined (reading 'length')[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mVote Weight Calculations[2m > [22mshould throw error for ANALYST vote attempts[39m
+[31m     → expected [Function] to throw error matching /Analysts can/ but got 'Queue item not found'[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mVote Weight Calculations[2m > [22mshould assign weight 100 for OWNER override[39m
+[31m     → Cannot read properties of undefined (reading 'length')[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mVote Weight Calculations[2m > [22mshould reject MANAGER override attempts[39m
+[31m     → expected [Function] to throw error matching /owners|override/i but got 'Queue item not found'[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mQuorum Rules by Risk Level[2m > [22mshould require min 1 vote and weight 2 for LOW_RISK[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mQuorum Rules by Risk Level[2m > [22mshould require min 2 votes and weight 4 for MEDIUM_RISK[39m
+[31m     → expected undefined to be 'PENDING' // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mQuorum Rules by Risk Level[2m > [22mshould meet MEDIUM_RISK quorum with 2 MANAGER votes[39m
+[31m     → expected undefined to be 4 // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mQuorum Rules by Risk Level[2m > [22mshould require min 2 votes and weight 6 for HIGH_RISK[39m
+[31m     → expected true to be false // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mQuorum Rules by Risk Level[2m > [22mshould meet HIGH_RISK quorum with OWNER vote[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConsensus Determination[2m > [22mshould approve when all votes are APPROVE[39m
+[31m     → expected undefined to be 'APPROVED' // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConsensus Determination[2m > [22mshould reject when reject weight exceeds approve weight[39m
+[31m     → expected undefined to be 'REJECTED' // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConsensus Determination[2m > [22mshould return PENDING when no votes cast[39m
+[31m     → expected undefined to be 'PENDING' // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConsensus Determination[2m > [22mshould handle DEFER votes as neutral[39m
+[31m     → expected undefined to be 1 // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConsensus Determination[2m > [22mshould handle ABSTAIN votes[39m
+[31m     → expected undefined to be 1 // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConflict Detection[2m > [22mshould detect CONFLICTING_VOTES between managers[39m
+[31m     → supabase.from(...).select(...).eq(...).order is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConflict Detection[2m > [22mshould detect EXPIRED_REVIEW for old pending items[39m
+[31m     → supabase.from(...).select(...).eq(...).order is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConflict Detection[2m > [22mshould not flag EXPIRED_REVIEW for recent items[39m
+[31m     → supabase.from(...).select(...).eq(...).order is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/consensusService.test.ts[2m > [22mConsensusService[2m > [22mConflict Detection[2m > [22mshould detect QUORUM_DEADLOCK with equal weights[39m
+[31m     → supabase.from(...).select(...).eq(...).order is not a function[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+ [33m❯[39m src/lib/__tests__/leviathan.test.ts [2m ([22m[2m43 tests[22m [2m|[22m [31m11 failed[39m[2m)[22m[90m 153[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Generation[2m > [22mshould generate valid JSON-LD schema[39m
+[31m     → fabricator.generateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Generation[2m > [22mshould map entity types correctly[39m
+[31m     → Cannot read properties of undefined (reading 'call')[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Generation[2m > [22mshould include @id for canonical URL[39m
+[31m     → fabricator.generateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Generation[2m > [22mshould add type-specific properties for organization[39m
+[31m     → fabricator.generateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Validation[2m > [22mshould validate complete schema[39m
+[31m     → fabricator.validateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Validation[2m > [22mshould detect missing @context[39m
+[31m     → fabricator.validateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Validation[2m > [22mshould detect missing name[39m
+[31m     → fabricator.validateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Validation[2m > [22mshould detect invalid URL[39m
+[31m     → fabricator.validateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mSchema Validation[2m > [22mshould validate sameAs URLs[39m
+[31m     → fabricator.validateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mHTML Generation[2m > [22mshould generate HTML with title[39m
+[31m     → fabricator.generateSchema is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/leviathan.test.ts[2m > [22mFabricatorService[2m > [22mHTML Generation[2m > [22mshould escape HTML entities[39m
+[31m     → fabricator.escapeHtml is not a function[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+ [32m✓[39m tests/integration/ab-testing/statistical-analysis.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[90m 152[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+ [32m✓[39m src/lib/__tests__/enterpriseFoundation.test.ts [2m ([22m[2m25 tests[22m[2m)[22m[90m 24[2mms[22m[39m
+ [32m✓[39m tests/integration/framework-alert-analytics.test.ts [2m ([22m[2m52 tests[22m[2m)[22m[90m 137[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+ [33m❯[39m src/lib/__tests__/strategyRefinement.test.ts [2m ([22m[2m42 tests[22m [2m|[22m [31m35 failed[39m[2m)[22m[90m 240[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mstartRefinementCycle[2m > [22mshould create a new refinement cycle[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mstartRefinementCycle[2m > [22mshould increment cycle number[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculatePerformanceGrade[2m > [22mshould return A for achievement >= 90%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculatePerformanceGrade[2m > [22mshould return B for achievement >= 80%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculatePerformanceGrade[2m > [22mshould return C for achievement >= 70%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculatePerformanceGrade[2m > [22mshould return D for achievement >= 60%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculatePerformanceGrade[2m > [22mshould return F for achievement < 60%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculateSeverity[2m > [22mshould return CRITICAL for drift > 30%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculateSeverity[2m > [22mshould return HIGH for drift > 20%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculateSeverity[2m > [22mshould return MEDIUM for drift > 10%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculateSeverity[2m > [22mshould return LOW for drift <= 10%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculateReinforcementScore[2m > [22mshould return positive score for over-achievement[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculateReinforcementScore[2m > [22mshould return negative score for under-achievement[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculateReinforcementScore[2m > [22mshould cap at -100[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mStrategyRefinementService[2m > [22mcalculateReinforcementScore[2m > [22mshould cap at +100[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22mgetDomainDependencies[2m > [22mshould return all dependencies when no domain specified[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22mgetDomainDependencies[2m > [22mshould filter dependencies by domain[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22mgetDomainDependencies[2m > [22mshould include CONTENT -> SEO dependency[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22mcalculateEntropy[2m > [22mshould return 1 for perfectly balanced allocation[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22mcalculateEntropy[2m > [22mshould return 0 for completely unbalanced allocation[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22mcalculateEntropy[2m > [22mshould return intermediate value for partial balance[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22mcalculateGini[2m > [22mshould return 0 for perfect equality[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22mcalculateGini[2m > [22mshould return high value for high inequality[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22midentifyImbalances[2m > [22mshould identify over-optimized domains[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mCrossDomainCoordinatorService[2m > [22midentifyImbalances[2m > [22mshould identify under-invested domains[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mgenerateExecutionSignals[2m > [22mshould generate positive signal for exceeding target[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mgenerateExecutionSignals[2m > [22mshould generate negative signal for under-achievement[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mgenerateExecutionSignals[2m > [22mshould generate negative signal for missed deadline[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mgenerateExecutionSignals[2m > [22mshould generate signal for resource over-utilization[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mgenerateSimulationSignals[2m > [22mshould generate positive signal for high confidence best path[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mgenerateSimulationSignals[2m > [22mshould generate negative signal for low confidence[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mcalculateAdjustment[2m > [22mshould return STRENGTHEN for strongly positive signals[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mcalculateAdjustment[2m > [22mshould return WEAKEN for moderately negative signals[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mcalculateAdjustment[2m > [22mshould return PAUSE for strongly negative signals[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/strategyRefinement.test.ts[2m > [22mReinforcementAdjustmentEngine[2m > [22mcalculateAdjustment[2m > [22mshould return MAINTAIN for neutral signals[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\strategyRefinement.test.ts[39m
+ [32m✓[39m tests/unit/cost-optimization.test.ts [2m ([22m[2m42 tests[22m[2m)[22m[90m 57[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+ [33m❯[39m src/lib/__tests__/rollbackEngine.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [32m✓[39m src/lib/__tests__/seoCore.test.ts [2m ([22m[2m41 tests[22m[2m)[22m[90m 40[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+ [32m✓[39m src/lib/__tests__/entityEngine.test.ts [2m ([22m[2m12 tests[22m[2m)[22m[90m 54[2mms[22m[39m
+ [33m❯[39m src/lib/__tests__/projectCreator.test.ts [2m ([22m[2m21 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[90m 51[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/projectCreator.test.ts[2m > [22mprojectCreator[2m > [22mcreateProjectFromProposal[2m > [22mshould create project with correct metadata[39m
+[31m     → expected 'Restaurant Management App - Better Pa…' to be 'Restaurant Management App - Better Pa…' // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/projectCreator.test.ts[2m > [22mprojectCreator[2m > [22mTask Generation - With Deliverables[2m > [22mshould set task priorities[39m
+[31m     → expected 'high' to be 'medium' // Object.is equality[39m
+ [33m❯[39m src/lib/__tests__/horizonPlanning.test.ts [2m ([22m[2m29 tests[22m [2m|[22m [31m18 failed[39m[2m)[22m[90m 108[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mLongHorizonPlannerService[2m > [22mcreatePlan[2m > [22mshould create a horizon plan with correct defaults[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mLongHorizonPlannerService[2m > [22mcreatePlan[2m > [22mshould handle custom horizon type with specified days[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mLongHorizonPlannerService[2m > [22mhorizon type days calculation[2m > [22mshould return 30 days for SHORT horizon[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mLongHorizonPlannerService[2m > [22mhorizon type days calculation[2m > [22mshould return 60 days for MEDIUM horizon[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mLongHorizonPlannerService[2m > [22mhorizon type days calculation[2m > [22mshould return 90 days for LONG horizon[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mLongHorizonPlannerService[2m > [22mhorizon type days calculation[2m > [22mshould return 90 days for QUARTERLY horizon[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mLongHorizonPlannerService[2m > [22mgeneratePlan[2m > [22mshould generate steps for all priority domains[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mLongHorizonPlannerService[2m > [22mresolveDependencies[2m > [22mshould identify critical path[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mcreateSnapshot[2m > [22mshould create snapshot with calculated change percent[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mcalculateTrend[2m > [22mshould return UP for positive change > 5%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mcalculateTrend[2m > [22mshould return DOWN for negative change < -5%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mcalculateTrend[2m > [22mshould return STABLE for change between -5% and 5%[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mgetKPIDefinitions[2m > [22mshould return all definitions when no domain specified[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mgetKPIDefinitions[2m > [22mshould filter definitions by domain[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mgetKPIDefinitions[2m > [22mshould include expected SEO metrics[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mgetKPIDefinitions[2m > [22mshould include expected CRO metrics[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mgetDomainSummary[2m > [22mshould calculate overall score and health status[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+[31m   [33m❯[31m src/lib/__tests__/horizonPlanning.test.ts[2m > [22mKPITrackingService[2m > [22mprojectKPIs[2m > [22mshould generate projections for specified number of days[39m
+[31m     → Cannot find module '@/lib/supabase'
+Require stack:
+- C:\Unite-Hub\src\lib\__tests__\horizonPlanning.test.ts[39m
+ [33m❯[39m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts [2m ([22m[2m13 tests[22m [2m|[22m [31m13 failed[39m[2m)[22m[33m 586[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mextractIdeas[2m > [22mshould extract ideas from email content[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mextractIdeas[2m > [22mshould handle emails with no extractable ideas[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mextractIdeas[2m > [22mshould filter ideas below confidence threshold[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mextractIdeas[2m > [22mshould handle API errors gracefully[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mextractIdeas[2m > [22mshould handle malformed JSON response[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mextractIdeas[2m > [22mshould include token usage in result[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22midea type validation[2m > [22mshould accept all valid idea types[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22midea type validation[2m > [22mshould handle unknown idea types[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mpriority validation[2m > [22mshould accept all valid priority levels[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mdate parsing[2m > [22mshould parse relative dates[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mEmailIdeaExtractor[2m > [22mdate parsing[2m > [22mshould handle missing due dates[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mgetEmailIdeaExtractor singleton[2m > [22mshould return a singleton instance[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/lib/email-ingestion/emailIdeaExtractor.test.ts[2m > [22mgetEmailIdeaExtractor singleton[2m > [22mshould have extractIdeas method[39m
+[31m     → [vitest] No "getIdeaExtractionModel" export is defined on the "@config/emailIngestion.config" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+ [33m❯[39m tests/unit/api/media/transcribe.test.ts [2m ([22m[2m10 tests[22m [2m|[22m [31m10 failed[39m[2m)[22m[90m 178[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mPOST /api/media/transcribe[2m > [22mshould successfully transcribe an audio file[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mPOST /api/media/transcribe[2m > [22mshould reject non-audio/video files[39m
+[31m     → expected 500 to be 400 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mPOST /api/media/transcribe[2m > [22mshould handle already transcribed files[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mPOST /api/media/transcribe[2m > [22mshould handle OpenAI API errors gracefully[39m
+[31m     → expected 'Internal server error' to contain 'Transcription failed'[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mPOST /api/media/transcribe[2m > [22mshould require workspaceId parameter[39m
+[31m     → expected 500 to be 400 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mPOST /api/media/transcribe[2m > [22mshould enforce workspace isolation[39m
+[31m     → expected 500 to be 404 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mPOST /api/media/transcribe[2m > [22mshould log to audit trail on success[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mGET /api/media/transcribe[2m > [22mshould retrieve existing transcription[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mGET /api/media/transcribe[2m > [22mshould return 404 if transcription not found[39m
+[31m     → expected 500 to be 404 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/transcribe.test.ts[2m > [22mGET /api/media/transcribe[2m > [22mshould require both mediaId and workspaceId[39m
+[31m     → expected 500 to be 400 // Object.is equality[39m
+ [32m✓[39m src/lib/services/leviathan/__tests__/orchestrator.test.ts [2m ([22m[2m42 tests[22m[2m)[22m[33m 360[2mms[22m[39m
+ [33m❯[39m tests/unit/api/media/upload.test.ts [2m ([22m[2m11 tests[22m [2m|[22m [31m10 failed[39m[2m)[22m[33m 932[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mPOST /api/media/upload[2m > [22mshould successfully upload a video file[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mPOST /api/media/upload[2m > [22mshould reject files over size limit[39m
+[31m     → expected 500 to be 400 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mPOST /api/media/upload[2m > [22mshould reject invalid file types[39m
+[31m     → expected 500 to be 400 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mPOST /api/media/upload[2m > [22mshould enforce workspace access[39m
+[31m     → expected 500 to be 403 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mPOST /api/media/upload[2m > [22mshould rollback storage upload on database error[39m
+[31m     → expected 'Internal server error' to contain 'database'[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mPOST /api/media/upload[2m > [22mshould accept valid tags[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mGET /api/media/upload[2m > [22mshould list all media files for workspace[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mGET /api/media/upload[2m > [22mshould filter by file type[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mGET /api/media/upload[2m > [22mshould require workspace_id parameter[39m
+[31m     → expected 500 to be 400 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/api/media/upload.test.ts[2m > [22mGET /api/media/upload[2m > [22mshould require authentication[39m
+[31m     → expected 500 to be 401 // Object.is equality[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+ [33m❯[39m tests/strategy/strategy-realtime.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+ [33m❯[39m src/lib/__tests__/proposalEngine.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+ [32m✓[39m tests/unit/ml-engines.test.ts [2m ([22m[2m30 tests[22m[2m)[22m[90m 136[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/mvp-dashboard.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[90m 182[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+ [32m✓[39m src/lib/__tests__/proposalService.test.ts [2m ([22m[2m15 tests[22m[2m)[22m[90m 46[2mms[22m[39m
+ [32m✓[39m src/lib/db/__tests__/connection-pool.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[33m 1786[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [33m❯[39m tests/e2e/convex-workflow.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+ [2m[90m↓[39m[22m tests/integration/api/media-pipeline.test.ts [2m ([22m[2m2 tests[22m [2m|[22m [33m2 skipped[39m[2m)[22m
+ [33m❯[39m tests/integration/features/workspace-isolation.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m tests/integration/operator-lifecycle.test.ts [2m ([22m[2m33 tests[22m[2m)[22m[90m 28[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [33m❯[39m src/lib/__tests__/operatorRoleService.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+ [32m✓[39m tests/unit/prediction-engines.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[90m 55[2mms[22m[39m
+ [33m❯[39m tests/e2e/report-generation.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+ [33m❯[39m src/lib/__tests__/signatureProvider.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m src/lib/__tests__/braveClient.test.ts [2m ([22m[2m26 tests[22m[2m)[22m[90m 28[2mms[22m[39m
+ [33m❯[39m tests/integration/api/content.test.ts [2m ([22m[2m15 tests[22m [2m|[22m [31m6 failed[39m[2m)[22m[33m 417[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - GET /api/content[2m > [22mshould return 401 when not authenticated[39m
+[31m     → expected 400 to be 401 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - GET /api/content[2m > [22mshould return content list for authenticated user[39m
+[31m     → expected 400 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - GET /api/content[2m > [22mshould filter content by workspace ID[39m
+[31m     → expected 400 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - POST /api/content[2m > [22mshould return 401 when not authenticated[39m
+[31m     → expected 400 to be 401 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - POST /api/content[2m > [22mshould create new content when authenticated[39m
+[31m     → expected [ 200, 201 ] to include 400[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - Error Handling[2m > [22mshould handle database errors gracefully[39m
+[31m     → expected [ 500, 200 ] to include 400[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+ [33m❯[39m NodeJS-Starter-V1/apps/web/tests/contracts/prd-consumer.pact.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+ [33m❯[39m src/lib/__tests__/executionEngine.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+ [32m✓[39m src/lib/services/leviathan/__tests__/social-stack.test.ts [2m ([22m[2m27 tests[22m[2m)[22m[33m 17184[2mms[22m[39m
+ [32m✓[39m src/lib/services/system/__tests__/finalization.test.ts [2m ([22m[2m50 tests[22m[2m)[22m[33m 24873[2mms[22m[39m
+ [33m❯[39m src/lib/__tests__/tenantProvisioner.test.ts [2m ([22m[2m17 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 60[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantProvisioner.test.ts[2m > [22mTenant Provisioner - Provisioning[2m > [22mshould provision tenant successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+ [33m❯[39m src/lib/__tests__/scopeService.ai.test.ts [2m ([22m[2m12 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 66[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/scopeService.ai.test.ts[2m > [22mscopeService AI Integration[2m > [22mgenerateAIScope[2m > [22mshould handle malformed responses[39m
+[31m     → expected 'Unknown error' to contain 'API error: 400'[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+ [33m❯[39m NodeJS-Starter-V1/apps/web/tests/accessibility/a11y.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m NodeJS-Starter-V1/apps/web/tests/visual/components.visual.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+ [33m❯[39m NodeJS-Starter-V1/apps/web/e2e/prd-generation.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+ [32m✓[39m tests/integration/api/contacts.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[90m 72[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+ [33m❯[39m tests/strategy/strategy-history.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m tests/unit/multi-channel-autonomy.test.ts [2m ([22m[2m48 tests[22m [2m|[22m [31m7 failed[39m[2m)[22m[33m 18943[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/multi-channel-autonomy.test.ts[2m > [22mOrchestrator Integration[2m > [22mclassifyIntent[2m > [22mshould classify social inbox intent[39m
+[31m     → [vitest] No "supabase" export is defined on the "@/lib/supabase" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/multi-channel-autonomy.test.ts[2m > [22mOrchestrator Integration[2m > [22mclassifyIntent[2m > [22mshould classify ads optimization intent[39m
+[31m     → [vitest] No "supabase" export is defined on the "@/lib/supabase" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/multi-channel-autonomy.test.ts[2m > [22mOrchestrator Integration[2m > [22mclassifyIntent[2m > [22mshould classify search audit intent[39m
+[31m     → [vitest] No "supabase" export is defined on the "@/lib/supabase" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/multi-channel-autonomy.test.ts[2m > [22mOrchestrator Integration[2m > [22mclassifyIntent[2m > [22mshould classify browser replay intent[39m
+[31m     → [vitest] No "supabase" export is defined on the "@/lib/supabase" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/multi-channel-autonomy.test.ts[2m > [22mOrchestrator Integration[2m > [22mclassifyIntent[2m > [22mshould classify pattern learning intent[39m
+[31m     → [vitest] No "supabase" export is defined on the "@/lib/supabase" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/multi-channel-autonomy.test.ts[2m > [22mOrchestrator Integration[2m > [22mgeneratePlan[2m > [22mshould generate plan for social inbox management[39m
+[31m     → [vitest] No "supabase" export is defined on the "@/lib/supabase" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [33m❯[31m tests/unit/multi-channel-autonomy.test.ts[2m > [22mOrchestrator Integration[2m > [22mgeneratePlan[2m > [22mshould generate plan for ads optimization[39m
+[31m     → [vitest] No "supabase" export is defined on the "@/lib/supabase" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+ [33m❯[39m tests/unit/lib/connected-apps/tokenVault.test.ts [2m ([22m[2m19 tests[22m [2m|[22m [31m7 failed[39m[2m)[22m[90m 95[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/lib/connected-apps/tokenVault.test.ts[2m > [22mTokenVault[2m > [22mencryptTokens[2m > [22mshould encrypt tokens and return encrypted data[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/unit/lib/connected-apps/tokenVault.test.ts[2m > [22mTokenVault[2m > [22mencryptTokens[2m > [22mshould produce different ciphertext for same plaintext (due to IV)[39m
+[31m     → crypto.randomBytes.mockImplementation is not a function[39m
+[31m   [33m❯[31m tests/unit/lib/connected-apps/tokenVault.test.ts[2m > [22mTokenVault[2m > [22mencryptTokens[2m > [22mshould handle tokens without optional fields[39m
+[31m     → The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined[39m
+[31m   [33m❯[31m tests/unit/lib/connected-apps/tokenVault.test.ts[2m > [22mTokenVault[2m > [22mdecryptTokens[2m > [22mshould handle tokens without refresh token[39m
+[31m     → The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined[39m
+[31m   [33m❯[31m tests/unit/lib/connected-apps/tokenVault.test.ts[2m > [22mTokenVault[2m > [22mdecryptTokens[2m > [22mshould throw error for tampered ciphertext[39m
+[31m     → The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined[39m
+[31m   [33m❯[31m tests/unit/lib/connected-apps/tokenVault.test.ts[2m > [22mTokenVault[2m > [22mdecryptTokens[2m > [22mshould throw error for wrong auth tag[39m
+[31m     → The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined[39m
+[31m   [33m❯[31m tests/unit/lib/connected-apps/tokenVault.test.ts[2m > [22mtokenVault singleton[2m > [22mshould export a singleton instance[39m
+[31m     → expected {} to be an instance of TokenVault[39m
+ [33m❯[39m tests/strategy/strategy-hierarchy.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [33m❯[39m tests/e2e/dashboard.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m tests/unit/lib/agents/orchestrator-email-intents.test.ts [2m ([22m[2m22 tests[22m [2m|[22m [31m9 failed[39m[2m)[22m[90m 142[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Classification[2m > [22mimport_client_emails intent[2m > [22mshould classify email import requests[39m
+[31m     → expected 'unknown' to be 'import_client_emails' // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Classification[2m > [22mimport_client_emails intent[2m > [22mshould classify email sync requests[39m
+[31m     → expected 'unknown' to be 'import_client_emails' // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Classification[2m > [22msummarise_client_ideas intent[2m > [22mshould classify idea summary requests[39m
+[31m     → expected 'unknown' to be 'summarise_client_ideas' // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Classification[2m > [22msummarise_client_ideas intent[2m > [22mshould classify intelligence requests[39m
+[31m     → expected 'import_client_emails' to be 'summarise_client_ideas' // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Plan Generation[2m > [22mimport_client_emails plan[2m > [22mshould generate correct plan for import_client_emails[39m
+[31m     → expected 'unknown' to be 'import_client_emails' // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Plan Generation[2m > [22mimport_client_emails plan[2m > [22mshould have sequential dependencies[39m
+[31m     → Cannot read properties of undefined (reading 'dependsOn')[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Plan Generation[2m > [22msummarise_client_ideas plan[2m > [22mshould generate correct plan for summarise_client_ideas[39m
+[31m     → expected 'unknown' to be 'summarise_client_ideas' // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Plan Generation[2m > [22msummarise_client_ideas plan[2m > [22mshould include clientId in inputs[39m
+[31m     → expected { Object (prompt) } to have property "clientId" with value 'contact-789'[39m
+[31m   [33m❯[31m tests/unit/lib/agents/orchestrator-email-intents.test.ts[2m > [22mEmail Intent Plan Generation[2m > [22mestimated tokens[2m > [22mshould estimate tokens based on step count[39m
+[31m     → expected 2000 to be greater than 6000[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+ [33m❯[39m tests/e2e/client-proposals.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+ [33m❯[39m src/lib/__tests__/projectService.test.ts [2m ([22m[2m18 tests[22m [2m|[22m [31m5 failed[39m[2m)[22m[90m 49[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/projectService.test.ts[2m > [22mprojectService[2m > [22mgetProjectsForClient[2m > [22mshould fetch projects successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/projectService.test.ts[2m > [22mprojectService[2m > [22mgetProjectsForClient[2m > [22mshould filter by status[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/projectService.test.ts[2m > [22mprojectService[2m > [22mgetProjectsForClient[2m > [22mshould respect limit parameter[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/projectService.test.ts[2m > [22mprojectService[2m > [22mgetProjectById[2m > [22mshould fetch project details successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/projectService.test.ts[2m > [22mprojectService[2m > [22massignStaff[2m > [22mshould validate role[39m
+[31m     → expected true to be false // Object.is equality[39m
+ [32m✓[39m src/lib/__tests__/gscClient.test.ts [2m ([22m[2m15 tests[22m[2m)[22m[90m 28[2mms[22m[39m
+ [33m❯[39m tests/unit/lib/env-validation.test.ts [2m ([22m[2m30 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 75[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/lib/env-validation.test.ts[2m > [22mEnvironment Variable Validation[2m > [22mAPI Key Format Validation[2m > [22mshould validate ANTHROPIC_API_KEY format[39m
+[31m     → expected false to be true // Object.is equality[39m
+ [33m❯[39m tests/strategy/strategy-validation.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+ [33m❯[39m tests/strategy/strategy-synergy.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+ [32m✓[39m src/lib/rbac/__tests__/permissions.test.ts [2m ([22m[2m33 tests[22m[2m)[22m[90m 66[2mms[22m[39m
+ [33m❯[39m src/lib/__tests__/strategySignoff.test.ts [2m ([22m[2m16 tests[22m [2m|[22m [31m16 failed[39m[2m)[22m[90m 111[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mgenerateRecommendations[2m > [22mshould generate recommendations from audit data[39m
+[31m     → service.generateRecommendations is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mgenerateRecommendations[2m > [22mshould prioritize critical health score drops[39m
+[31m     → service.generateRecommendations is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mgenerateRecommendations[2m > [22mshould generate keyword recommendations for significant losses[39m
+[31m     → service.generateRecommendations is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mgenerateRecommendations[2m > [22mshould generate backlink recommendations for significant losses[39m
+[31m     → service.generateRecommendations is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mgenerateRecommendations[2m > [22mshould generate technical recommendations for critical issues[39m
+[31m     → service.generateRecommendations is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mgenerateRecommendations[2m > [22mshould return empty array for healthy audit with no issues[39m
+[31m     → service.generateRecommendations is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mcreateSnapshot[2m > [22mshould create a strategy snapshot with all fields[39m
+[31m     → service.createSnapshot is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22msubmitSignoff[2m > [22mshould record an APPROVED decision[39m
+[31m     → service.submitSignoff is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22msubmitSignoff[2m > [22mshould record a REJECTED decision with notes[39m
+[31m     → service.submitSignoff is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22msubmitSignoff[2m > [22mshould record a MODIFIED decision with changes[39m
+[31m     → service.submitSignoff is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22msubmitSignoff[2m > [22mshould handle signoff for entire audit (no recommendation_id)[39m
+[31m     → service.submitSignoff is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mgetSignoffHistory[2m > [22mshould return signoff history for a client[39m
+[31m     → service.getSignoffHistory is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mgetSignoffHistory[2m > [22mshould filter by audit_id[39m
+[31m     → service.getSignoffHistory is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mupdateSnapshotStatus[2m > [22mshould update status to APPROVED when all recommendations approved[39m
+[31m     → service.updateSnapshotStatus is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mupdateSnapshotStatus[2m > [22mshould update status to PARTIAL when some approved[39m
+[31m     → service.updateSnapshotStatus is not a function[39m
+[31m   [33m❯[31m src/lib/__tests__/strategySignoff.test.ts[2m > [22mStrategySignoffService[2m > [22mupdateSnapshotStatus[2m > [22mshould update status to REJECTED when all rejected[39m
+[31m     → service.updateSnapshotStatus is not a function[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+ [32m✓[39m src/lib/__tests__/strategyIntegration.test.ts [2m ([22m[2m22 tests[22m[2m)[22m[90m 32[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/bingClient.test.ts [2m ([22m[2m27 tests[22m[2m)[22m[90m 42[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+ [32m✓[39m tests/unit/lib/autoAction/criticalPointGuard.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[90m 38[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+ [33m❯[39m tests/strategy/strategy-create.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m src/lib/__tests__/tenantOrchestrator.test.ts [2m ([22m[2m13 tests[22m [2m|[22m [31m8 failed[39m[2m)[22m[90m 73[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantOrchestrator.test.ts[2m > [22mTenant Orchestrator - Container Lifecycle[2m > [22mshould start container successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantOrchestrator.test.ts[2m > [22mTenant Orchestrator - Container Lifecycle[2m > [22mshould stop container successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantOrchestrator.test.ts[2m > [22mTenant Orchestrator - Container Lifecycle[2m > [22mshould restart container successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantOrchestrator.test.ts[2m > [22mTenant Orchestrator - Status Monitoring[2m > [22mshould get container status when running[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantOrchestrator.test.ts[2m > [22mTenant Orchestrator - Status Monitoring[2m > [22mshould perform health check successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantOrchestrator.test.ts[2m > [22mTenant Orchestrator - Status Monitoring[2m > [22mshould detect unhealthy container[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantOrchestrator.test.ts[2m > [22mTenant Orchestrator - Status Monitoring[2m > [22mshould handle health check timeout[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/tenantOrchestrator.test.ts[2m > [22mTenant Orchestrator - Resource Metrics[2m > [22mshould get resource metrics successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+ [32m✓[39m tests/unit/lib/email-ingestion/clientEmailMapper.test.ts [2m ([22m[2m15 tests[22m[2m)[22m[90m 57[2mms[22m[39m
+ [32m✓[39m src/lib/services/engines/__tests__/engines.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 502[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+ [32m✓[39m src/lib/__tests__/anomalyDetector.test.ts [2m ([22m[2m22 tests[22m[2m)[22m[90m 67[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+ [33m❯[39m tests/unit/agents/contact-intelligence.test.ts [2m ([22m[2m10 tests[22m [2m|[22m [31m8 failed[39m[2m)[22m[90m 293[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/agents/contact-intelligence.test.ts[2m > [22mContact Intelligence Agent[2m > [22mshould analyze contact and return intelligence data[39m
+[31m     → OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.[39m
+[31m   [33m❯[31m tests/unit/agents/contact-intelligence.test.ts[2m > [22mContact Intelligence Agent[2m > [22mshould call Anthropic API with correct parameters[39m
+[31m     → OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.[39m
+[31m   [33m❯[31m tests/unit/agents/contact-intelligence.test.ts[2m > [22mContact Intelligence Agent[2m > [22mshould use prompt caching for system instructions[39m
+[31m     → OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.[39m
+[31m   [33m❯[31m tests/unit/agents/contact-intelligence.test.ts[2m > [22mContact Intelligence Agent[2m > [22mshould handle contact with no emails[39m
+[31m     → OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.[39m
+[31m   [33m❯[31m tests/unit/agents/contact-intelligence.test.ts[2m > [22mContact Intelligence Agent[2m > [22mshould calculate engagement velocity correctly[39m
+[31m     → OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.[39m
+[31m   [33m❯[31m tests/unit/agents/contact-intelligence.test.ts[2m > [22mContact Intelligence Agent[2m > [22mshould parse JSON response from Claude correctly[39m
+[31m     → OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.[39m
+[31m   [33m❯[31m tests/unit/agents/contact-intelligence.test.ts[2m > [22mContact Intelligence Agent[2m > [22mshould include recent email history in analysis[39m
+[31m     → OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.[39m
+[31m   [33m❯[31m tests/unit/agents/contact-intelligence.test.ts[2m > [22mContact Intelligence Agent[2m > [22mshould respect workspace isolation[39m
+[31m     → OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.[39m
+ [33m❯[39m tests/e2e/auth-flow.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [33m❯[39m tests/e2e/staff-scope-review-ai.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m tests/unit/services/tenant-service.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m tests/unit/lib/autoAction/sandboxConfig.test.ts [2m ([22m[2m19 tests[22m[2m)[22m[90m 27[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [33m❯[39m tests/integration/multi-channel/channel-manager.test.ts [2m ([22m[2m18 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[90m 136[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/multi-channel/channel-manager.test.ts[2m > [22mChannelManager Integration Tests[2m > [22mChannel Execution[2m > [22mshould execute email channel successfully[39m
+[31m     → expected undefined to be 'email' // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/multi-channel/channel-manager.test.ts[2m > [22mChannelManager Integration Tests[2m > [22mChannel Execution[2m > [22mshould execute SMS channel with phone validation[39m
+[31m     → expected undefined to be 'sms' // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/multi-channel/channel-manager.test.ts[2m > [22mChannelManager Integration Tests[2m > [22mError Handling[2m > [22mshould handle invalid channel type[39m
+[31m     → promise resolved "{ success: false, …(2) }" instead of rejecting[39m
+ [32m✓[39m src/lib/__tests__/pnlGenerator.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 52[2mms[22m[39m
+ [33m❯[39m tests/integration/api/auth.test.ts [2m ([22m[2m9 tests[22m [2m|[22m [31m2 failed[39m [2m|[22m [33m5 skipped[39m[2m)[22m[33m 424[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/api/auth.test.ts[2m > [22mAuthentication API Integration Tests[2m > [22mPOST /api/auth/initialize-user[2m > [22mshould return 200 and skip initialization without authentication[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/auth.test.ts[2m > [22mAuthentication API Integration Tests[2m > [22mError Handling[2m > [22mshould return JSON response when not authenticated[39m
+[31m     → expected { success: false, …(3) } to have property "message"[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+ [33m❯[39m src/lib/__tests__/scopeAI.test.ts [2m ([22m[2m12 tests[22m [2m|[22m [31m4 failed[39m[2m)[22m[33m 739[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/scopeAI.test.ts[2m > [22mScopeAI Hybrid Engine[2m > [22mPrompt Generation[2m > [22mshould generate structure check prompt[39m
+[31m     → expected '\nYou are a technical validator ensur…' to contain 'validate'[39m
+[31m   [33m❯[31m src/lib/__tests__/scopeAI.test.ts[2m > [22mScopeAI Hybrid Engine[2m > [22mIntegration Tests (requires OPENROUTER_API_KEY)[2m > [22mshould generate complete scope via hybrid pipeline[39m
+[31m     → OpenRouter API error (draft_generation): {"error":{"message":"No cookie auth credentials found","code":401}}[39m
+[31m   [33m❯[31m src/lib/__tests__/scopeAI.test.ts[2m > [22mScopeAI Hybrid Engine[2m > [22mIntegration Tests (requires OPENROUTER_API_KEY)[2m > [22mshould track costs for all pipeline stages[39m
+[31m     → OpenRouter API error (draft_generation): {"error":{"message":"No cookie auth credentials found","code":401}}[39m
+[31m   [33m❯[31m src/lib/__tests__/scopeAI.test.ts[2m > [22mScopeAI Hybrid Engine[2m > [22mIntegration Tests (requires OPENROUTER_API_KEY)[2m > [22mshould generate increasing scope for Good → Better → Best[39m
+[31m     → OpenRouter API error (draft_generation): {"error":{"message":"No cookie auth credentials found","code":401}}[39m
+ [32m✓[39m tests/unit/lib/rate-limit.test.ts [2m ([22m[2m12 tests[22m[2m)[22m[90m 90[2mms[22m[39m
+ [33m❯[39m src/lib/__tests__/financialReportEngine.test.ts [2m ([22m[2m11 tests[22m [2m|[22m [31m8 failed[39m[2m)[22m[90m 38[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/financialReportEngine.test.ts[2m > [22mFinancial Report Engine - Project Financials[2m > [22mshould fetch all project financials[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/financialReportEngine.test.ts[2m > [22mFinancial Report Engine - Project Financials[2m > [22mshould filter by project ID[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/financialReportEngine.test.ts[2m > [22mFinancial Report Engine - Client Billing[2m > [22mshould fetch all client billing summaries[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/financialReportEngine.test.ts[2m > [22mFinancial Report Engine - Client Billing[2m > [22mshould filter by contact ID[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/financialReportEngine.test.ts[2m > [22mFinancial Report Engine - AI Costs[2m > [22mshould aggregate AI costs by provider and model[39m
+[31m     → expected 0 to be greater than 0[39m
+[31m   [33m❯[31m src/lib/__tests__/financialReportEngine.test.ts[2m > [22mFinancial Report Engine - AI Cost Recording[2m > [22mshould record AI cost with correct calculation[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/financialReportEngine.test.ts[2m > [22mFinancial Report Engine - AI Cost Recording[2m > [22mshould include cache tokens in cost calculation[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [33m❯[31m src/lib/__tests__/financialReportEngine.test.ts[2m > [22mFinancial Report Engine - Materialized Views[2m > [22mshould refresh materialized views successfully[39m
+[31m     → expected false to be true // Object.is equality[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+ [33m❯[39m tests/unit/lib/supabase.test.ts [2m ([22m[2m9 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[90m 237[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/lib/supabase.test.ts[2m > [22mSupabase Client[2m > [22mBrowser Client[2m > [22mshould create browser client with correct config[39m
+[31m     → expected "spy" to be called with arguments: [ 'https://test.supabase.co', …(2) ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[2m  Array [[22m
+[2m    "https://test.supabase.co",[22m
+[2m    "test-anon-key",[22m
+[32m-   ObjectContaining {[90m
+[32m-     "auth": ObjectContaining {[90m
+[31m+   Object {[90m
+[31m+     "auth": Object {[90m
+[2m        "autoRefreshToken": true,[22m
+[2m        "detectSessionInUrl": true,[22m
+[32m-       "flowType": "implicit",[90m
+[31m+       "flowType": "pkce",[90m
+[2m        "persistSession": true,[22m
+[2m      },[22m
+[2m    },[22m
+[2m  ][22m
+[31m[90m
+
+Number of calls: [1m1[22m
+[31m[39m
+[31m   [33m❯[31m tests/unit/lib/supabase.test.ts[2m > [22mSupabase Client[2m > [22mServer Client[2m > [22mshould create server client with cookie handling[39m
+[31m     → expected "spy" to be called with arguments: [ 'https://test.supabase.co', …(2) ][90m
+
+Received: 
+
+[31m[90m
+
+Number of calls: [1m0[22m
+[31m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+ [33m❯[39m NodeJS-Starter-V1/apps/web/__tests__/hooks/use-prd-generation.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+ [32m✓[39m tests/unit/selfHealing/errorClassifier.test.ts [2m ([22m[2m18 tests[22m[2m)[22m[90m 49[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+ [32m✓[39m tests/integration/auth/roleRouting.test.ts [2m ([22m[2m27 tests[22m[2m)[22m[90m 21[2mms[22m[39m
+ [32m✓[39m tests/routing/layouts.test.ts [2m ([22m[2m16 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/xero-invoicing.test.ts [2m ([22m[2m11 tests[22m[2m)[22m[90m 15[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [33m❯[39m tests/unit/services/credential-alert-service.test.ts [2m ([22m[2m6 tests[22m [2m|[22m [31m6 failed[39m[2m)[22m[90m 279[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/services/credential-alert-service.test.ts[2m > [22mCredentialAlertService[2m > [22mcheckAndSendAlerts[2m > [22mshould generate alerts for expiring credentials[39m
+[31m     → Failed to fetch credentials: TypeError: fetch failed[39m
+[31m   [33m❯[31m tests/unit/services/credential-alert-service.test.ts[2m > [22mCredentialAlertService[2m > [22mcheckAndSendAlerts[2m > [22mshould not create duplicate alerts within 24 hours[39m
+[31m     → Failed to fetch credentials: TypeError: fetch failed[39m
+[31m   [33m❯[31m tests/unit/services/credential-alert-service.test.ts[2m > [22mCredentialAlertService[2m > [22mcheckAndSendAlerts[2m > [22mshould classify alerts by severity correctly[39m
+[31m     → Failed to fetch credentials: TypeError: fetch failed[39m
+[31m   [33m❯[31m tests/unit/services/credential-alert-service.test.ts[2m > [22mCredentialAlertService[2m > [22mconfigureAlertRule[2m > [22mshould create alert rule successfully[39m
+[31m     → Failed to create alert rule: TypeError: fetch failed[39m
+[31m   [33m❯[31m tests/unit/services/credential-alert-service.test.ts[2m > [22mCredentialAlertService[2m > [22macknowledgeAlert[2m > [22mshould acknowledge alert successfully[39m
+[31m     → promise rejected "Error: Failed to acknowledge alert: TypeE…" instead of resolving[39m
+[31m   [33m❯[31m tests/unit/services/credential-alert-service.test.ts[2m > [22mCredentialAlertService[2m > [22mgetAlerts[2m > [22mshould retrieve unacknowledged alerts[39m
+[31m     → Failed to get alerts: TypeError: fetch failed[39m
+ [33m❯[39m tests/e2e/email-intelligence-flow.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+ [32m✓[39m src/lib/__tests__/seoCredentialService.test.ts [2m ([22m[2m8 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/scope-planner.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 28[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+ [32m✓[39m src/lib/__tests__/paymentService.test.ts [2m ([22m[2m4 tests[22m[2m)[22m[90m 23[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+ [33m❯[39m tests/phase1/featureFlags.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+ [33m❯[39m tests/e2e/website-audits.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+ [32m✓[39m tests/phase2/client-auth.test.ts [2m ([22m[2m11 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/cache.test.ts [2m ([22m[2m9 tests[22m[2m)[22m[90m 50[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+ [33m❯[39m tests/phase1/auth.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m tests/api/staff.test.ts [2m ([22m[2m4 tests[22m [2m|[22m [31m4 failed[39m[2m)[22m[90m 120[2mms[22m[39m
+[31m   [33m❯[31m tests/api/staff.test.ts[2m > [22mStaff API Routes[2m > [22mPOST /api/auth/staff-login[2m > [22mshould reject invalid credentials[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/staff.test.ts[2m > [22mStaff API Routes[2m > [22mPOST /api/auth/staff-login[2m > [22mshould validate email format[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/staff.test.ts[2m > [22mStaff API Routes[2m > [22mGET /api/staff/me[2m > [22mshould require authentication[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/staff.test.ts[2m > [22mStaff API Routes[2m > [22mGET /api/staff/tasks[2m > [22mshould require authentication[39m
+[31m     → fetch failed[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [33m❯[39m tests/e2e/stripe-checkout.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m tests/phase1/orchestrator.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [32m✓[39m tests/rls/xero-multi-tenant.rls.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 19[2mms[22m[39m
+ [32m✓[39m tests/api/xero-disconnect.api.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 17[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+ [33m❯[39m src/lib/__tests__/integration/api.test.ts [2m ([22m[2m6 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[33m 588[2mms[22m[39m
+[31m   [33m❯[31m src/lib/__tests__/integration/api.test.ts[2m > [22mAPI Integration Tests[2m > [22mHealth Check Endpoint[2m > [22mshould handle rate limiting[39m
+[31m     → expected false to be true // Object.is equality[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+ [32m✓[39m tests/api/xero-status.api.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 9[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+ [33m❯[39m tests/e2e/staff-auth.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+ [32m✓[39m tests/rls/client-ownership.rls.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 22[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+ [32m✓[39m tests/api/xero-connect.api.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 16[2mms[22m[39m
+ [33m❯[39m tests/api/client.test.ts [2m ([22m[2m2 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[90m 246[2mms[22m[39m
+[31m   [33m❯[31m tests/api/client.test.ts[2m > [22mClient API Routes[2m > [22mPOST /api/client/ideas[2m > [22mshould require authentication[39m
+[31m     → fetch failed[39m
+[31m   [33m❯[31m tests/api/client.test.ts[2m > [22mClient API Routes[2m > [22mGET /api/client/proposals[2m > [22mshould require authentication[39m
+[31m     → fetch failed[39m
+ [33m❯[39m tests/e2e/xero-integration.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m tests/e2e/client-auth.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+ [32m✓[39m src/lib/__tests__/clientService.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 9[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }
+
+ [32m✓[39m tests/api/client-ideas.api.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 7[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+ [32m✓[39m src/lib/__tests__/staffService.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 6[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+ [32m✓[39m tests/api/staff-tasks.api.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 6[2mms[22m[39m
+ [33m❯[39m tests/e2e/client-vault.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m tests/e2e/client-ideas.e2e.spec.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+ [33m❯[39m NodeJS-Starter-V1/apps/web/__tests__/components/contractor-availability.test.tsx [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m NodeJS-Starter-V1/apps/web/__tests__/components/prd-components.test.tsx [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+ [33m❯[39m NodeJS-Starter-V1/apps/web/__tests__/components/oauth-components.test.tsx [2m ([22m[2m0 test[22m[2m)[22m
+ [33m❯[39m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx [2m ([22m[2m19 tests[22m [2m|[22m [31m19 failed[39m[2m)[22m[90m 70[2mms[22m[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mRendering[2m > [22mshould render all stat cards[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mRendering[2m > [22mshould display correct stat values[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mRendering[2m > [22mshould render in grid layout[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mColor Coding[2m > [22mshould apply yellow color to pending stat[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mColor Coding[2m > [22mshould apply blue color to in progress stat[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mColor Coding[2m > [22mshould apply green color to completed stat[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mColor Coding[2m > [22mshould apply red color to failed stat[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mEdge Cases[2m > [22mshould handle zero values[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mEdge Cases[2m > [22mshould handle large numbers[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mEdge Cases[2m > [22mshould handle negative numbers (should not occur but test defensive)[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mResponsive Design[2m > [22mshould have mobile responsive classes[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mAccessibility[2m > [22mshould have readable text contrast[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mAccessibility[2m > [22mshould have semantic HTML structure[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mData Accuracy[2m > [22mshould display all stats independently[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mData Accuracy[2m > [22mshould not modify input stats[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mStyling[2m > [22mshould apply correct card styling[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mStyling[2m > [22mshould apply correct text sizing[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mLayout[2m > [22mshould maintain consistent spacing[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/QueueStats.test.tsx[2m > [22mQueueStats Component[2m > [22mLayout[2m > [22mshould render exactly 4 stat cards[39m
+[31m     → React is not defined[39m
+ [33m❯[39m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx [2m ([22m[2m13 tests[22m [2m|[22m [31m10 failed[39m[2m)[22m[90m 79[2mms[22m[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mEmpty State[2m > [22mshould display empty state when no agents exist[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mAgent List Display[2m > [22mshould display list of agents with correct information[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mStatus Colors[2m > [22mshould apply correct colors for active status[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mStatus Colors[2m > [22mshould apply correct colors for idle status[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mSuccess Rate Colors[2m > [22mshould display green for high success rate (>85%)[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mSuccess Rate Colors[2m > [22mshould display yellow for medium success rate (70-85%)[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mSuccess Rate Colors[2m > [22mshould display red for low success rate (<70%)[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mAgent Avatar[2m > [22mshould display correct initials for agent type[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mAccessibility[2m > [22mshould have proper semantic HTML structure[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/dashboard/AgentList.test.tsx[2m > [22mAgentList Component[2m > [22mError Handling[2m > [22mshould handle empty agent data gracefully[39m
+[31m     → React is not defined[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+ [32m✓[39m NodeJS-Starter-V1/apps/web/__tests__/security/xss-prevention.test.tsx [2m ([22m[2m17 tests[22m[2m)[22m[33m 586[2mms[22m[39m
+ [33m❯[39m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx [2m ([22m[2m23 tests[22m [2m|[22m [31m23 failed[39m[2m)[22m[90m 48[2mms[22m[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Rendering[2m > [22mshould render all form fields[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Rendering[2m > [22mshould have proper labels[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Rendering[2m > [22mshould have placeholders[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Validation[2m > [22mshould have required attribute on title field[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Validation[2m > [22mshould have required attribute on description field[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mUser Interactions[2m > [22mshould update title on input change[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mUser Interactions[2m > [22mshould update description on input change[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mUser Interactions[2m > [22mshould change task type selection[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mUser Interactions[2m > [22mshould update priority slider[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Submission - Success[2m > [22mshould submit form with valid data[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Submission - Success[2m > [22mshould reset form after successful submission[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Submission - Success[2m > [22mshould show submitting state during submission[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Submission - Error[2m > [22mshould display error message on failed submission[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Submission - Error[2m > [22mshould re-enable submit button after error[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mForm Submission - Error[2m > [22mshould handle network error[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mAccessibility[2m > [22mshould have proper form structure[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mAccessibility[2m > [22mshould have labels associated with inputs[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mAccessibility[2m > [22mshould have accessible submit button[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mDefault Values[2m > [22mshould have default task type as feature[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mDefault Values[2m > [22mshould have default priority as 5[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mTask Type Options[2m > [22mshould have all task type options[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mPriority Slider[2m > [22mshould have correct range[39m
+[31m     → React is not defined[39m
+[31m   [33m❯[31m NodeJS-Starter-V1/apps/web/__tests__/components/forms/TaskSubmissionForm.test.tsx[2m > [22mTaskSubmissionForm Component[2m > [22mPriority Slider[2m > [22mshould update label when slider changes[39m
+[31m     → React is not defined[39m
+ [32m✓[39m tests/unit/components/EmptyState.test.tsx [2m ([22m[2m21 tests[22m[2m)[22m[33m 1281[2mms[22m[39m
+ [32m✓[39m tests/unit/components/ErrorState.test.tsx [2m ([22m[2m21 tests[22m[2m)[22m[33m 1715[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+ [32m✓[39m tests/components/HotLeadsPanel.test.tsx [2m ([22m[2m12 tests[22m[2m)[22m[33m 1756[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+
+ [32m✓[39m src/components/__tests__/ErrorBoundary.test.tsx [2m ([22m[2m1 test[22m[2m)[22m[90m 8[2mms[22m[39m
+ [33m❯[39m tests/unit/components/skeletons.test.tsx [2m ([22m[2m17 tests[22m [2m|[22m [31m8 failed[39m[2m)[22m[90m 284[2mms[22m[39m
+[31m   [33m❯[31m tests/unit/components/skeletons.test.tsx[2m > [22mContentCardSkeleton[2m > [22mshould have card wrapper[39m
+[31m     → [2mexpect([22m[31mreceived[31m[2m).toBeInTheDocument()[22m
+
+[31mreceived[31m value must be an HTMLElement or an SVGElement.
+[39m
+[31m   [33m❯[31m tests/unit/components/skeletons.test.tsx[2m > [22mContentListSkeleton[2m > [22mshould render default number of skeletons (6)[39m
+[31m     → expected +0 to be 6 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/components/skeletons.test.tsx[2m > [22mContentListSkeleton[2m > [22mshould render custom number of skeletons[39m
+[31m     → expected +0 to be 3 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/components/skeletons.test.tsx[2m > [22mContentListSkeleton[2m > [22mshould handle large count[39m
+[31m     → expected +0 to be 20 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/components/skeletons.test.tsx[2m > [22mStatsCardSkeleton[2m > [22mshould have card wrapper[39m
+[31m     → [2mexpect([22m[31mreceived[31m[2m).toBeInTheDocument()[22m
+
+[31mreceived[31m value must be an HTMLElement or an SVGElement.
+[39m
+[31m   [33m❯[31m tests/unit/components/skeletons.test.tsx[2m > [22mStatsCardSkeleton[2m > [22mshould render icon and stats placeholder[39m
+[31m     → expected 1 to be greater than or equal to 3[39m
+[31m   [33m❯[31m tests/unit/components/skeletons.test.tsx[2m > [22mStatsGridSkeleton[2m > [22mshould render default number of stat cards (4)[39m
+[31m     → expected +0 to be 4 // Object.is equality[39m
+[31m   [33m❯[31m tests/unit/components/skeletons.test.tsx[2m > [22mStatsGridSkeleton[2m > [22mshould render custom number of stat cards[39m
+[31m     → expected +0 to be 6 // Object.is equality[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+ [32m✓[39m src/components/seo/__tests__/SeoDashboardShell.test.tsx [2m ([22m[2m9 tests[22m[2m)[22m[33m 1748[2mms[22m[39m
+[90mstdout[2m | _log (C:\Unite-Hub\node_modules\dotenv\lib\main.js:142:11)[22m[39m
+[dotenv@17.2.3] injecting env (4) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+ [33m❯[39m tests/components/ui.test.tsx [2m ([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m src/components/__tests__/ToastContext.test.tsx [2m ([22m[2m1 test[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m src/components/seo/__tests__/SeoModeToggle.test.tsx [2m ([22m[2m7 tests[22m[2m)[22m[33m 585[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m87 failed[39m[22m[2m | [22m[1m[32m70 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (158)[39m
+[2m      Tests [22m [1m[31m384 failed[39m[22m[2m | [22m[1m[32m2007 passed[39m[22m[2m | [22m[33m7 skipped[39m[90m (2398)[39m
+[2m   Start at [22m 12:11:33
+[2m   Duration [22m 63.48s[2m (transform 41.58s, setup 105.36s, collect 86.17s, tests 90.57s, environment 54.32s, prepare 111.13s)[22m
