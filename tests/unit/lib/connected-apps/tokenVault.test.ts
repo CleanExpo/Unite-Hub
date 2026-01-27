@@ -11,6 +11,16 @@ import type {
   OAuthTokens,
 } from '@/lib/connectedApps/providerTypes';
 
+// Mock config to provide encryption key
+vi.mock('@config/connectedApps.config', () => ({
+  connectedAppsConfig: {
+    tokenVault: {
+      encryptionKey: 'test-encryption-key-for-unit-tests-must-be-long-enough',
+    },
+    tokenRefreshBufferMs: 300000, // 5 minutes default buffer
+  },
+}));
+
 // Mock crypto for consistent test results
 vi.mock('crypto', async () => {
   const actual = await vi.importActual('crypto');
@@ -39,7 +49,7 @@ describe('TokenVault', () => {
       const tokens: OAuthTokens = {
         accessToken: 'test-access-token',
         refreshToken: 'test-refresh-token',
-        expiresAt: Date.now() + 3600000,
+        expiresAt: new Date(Date.now()) + 3600000,
         tokenType: 'Bearer',
         scope: 'openid email',
       };
@@ -59,7 +69,7 @@ describe('TokenVault', () => {
     it('should produce different ciphertext for same plaintext (due to IV)', () => {
       const tokens: OAuthTokens = {
         accessToken: 'test-access-token',
-        expiresAt: Date.now() + 3600000,
+        expiresAt: new Date(Date.now()) + 3600000,
       };
 
       // Reset mock to return different random bytes
@@ -84,7 +94,7 @@ describe('TokenVault', () => {
     it('should handle tokens without optional fields', () => {
       const tokens: OAuthTokens = {
         accessToken: 'minimal-token',
-        expiresAt: Date.now(),
+        expiresAt: new Date(Date.now()),
       };
 
       const encrypted = vault.encryptTokens(tokens);
@@ -100,7 +110,7 @@ describe('TokenVault', () => {
       const originalTokens: OAuthTokens = {
         accessToken: 'my-secret-access-token-12345',
         refreshToken: 'my-secret-refresh-token-67890',
-        expiresAt: 1700000000000,
+        expiresAt: new Date(1700000000000),
         tokenType: 'Bearer',
         scope: 'gmail.readonly gmail.send',
       };
@@ -118,7 +128,7 @@ describe('TokenVault', () => {
     it('should handle tokens without refresh token', () => {
       const originalTokens: OAuthTokens = {
         accessToken: 'access-only-token',
-        expiresAt: Date.now(),
+        expiresAt: new Date(Date.now()),
       };
 
       const encrypted = vault.encryptTokens(originalTokens);
@@ -131,7 +141,7 @@ describe('TokenVault', () => {
     it('should throw error for tampered ciphertext', () => {
       const tokens: OAuthTokens = {
         accessToken: 'test-token',
-        expiresAt: Date.now(),
+        expiresAt: new Date(Date.now()),
       };
 
       const encrypted = vault.encryptTokens(tokens);
@@ -147,7 +157,7 @@ describe('TokenVault', () => {
     it('should throw error for wrong auth tag', () => {
       const tokens: OAuthTokens = {
         accessToken: 'test-token',
-        expiresAt: Date.now(),
+        expiresAt: new Date(Date.now()),
       };
 
       const encrypted = vault.encryptTokens(tokens);
@@ -222,44 +232,32 @@ describe('TokenVault', () => {
 
   describe('isTokenExpired', () => {
     it('should return true for expired tokens', () => {
-      const tokens: OAuthTokens = {
-        accessToken: 'test',
-        expiresAt: Date.now() - 1000, // 1 second ago
-      };
+      const expiresAt = new Date(Date.now() - 1000); // 1 second ago
 
-      expect(vault.isTokenExpired(tokens)).toBe(true);
+      expect(vault.isTokenExpired(expiresAt)).toBe(true);
     });
 
     it('should return true for tokens expiring within buffer', () => {
-      const tokens: OAuthTokens = {
-        accessToken: 'test',
-        expiresAt: Date.now() + 30000, // 30 seconds from now
-      };
+      const expiresAt = new Date(Date.now() + 30000); // 30 seconds from now
 
-      // Default buffer is 5 minutes
-      expect(vault.isTokenExpired(tokens)).toBe(true);
+      // Default buffer is 5 minutes (300000ms)
+      expect(vault.isTokenExpired(expiresAt)).toBe(true);
     });
 
     it('should return false for valid tokens', () => {
-      const tokens: OAuthTokens = {
-        accessToken: 'test',
-        expiresAt: Date.now() + 3600000, // 1 hour from now
-      };
+      const expiresAt = new Date(Date.now() + 3600000); // 1 hour from now
 
-      expect(vault.isTokenExpired(tokens)).toBe(false);
+      expect(vault.isTokenExpired(expiresAt)).toBe(false);
     });
 
     it('should respect custom buffer time', () => {
-      const tokens: OAuthTokens = {
-        accessToken: 'test',
-        expiresAt: Date.now() + 60000, // 1 minute from now
-      };
+      const expiresAt = new Date(Date.now() + 60000); // 1 minute from now
 
       // With 30 second buffer, should not be expired
-      expect(vault.isTokenExpired(tokens, 30000)).toBe(false);
+      expect(vault.isTokenExpired(expiresAt, 30000)).toBe(false);
 
       // With 2 minute buffer, should be expired
-      expect(vault.isTokenExpired(tokens, 120000)).toBe(true);
+      expect(vault.isTokenExpired(expiresAt, 120000)).toBe(true);
     });
   });
 });
