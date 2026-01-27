@@ -7,7 +7,14 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TEST_WORKSPACE } from '../../helpers/auth';
 import { createMockContact, createMockEmail } from '../../helpers/db';
 
-// Mock database first (hoisted)
+// Mock supabase first to prevent initialization errors
+vi.mock('@/lib/supabase', () => ({
+  supabase: {},
+  getSupabaseServer: vi.fn(),
+  getSupabaseAdmin: vi.fn(),
+}));
+
+// Mock database (hoisted)
 vi.mock('@/lib/db');
 
 // Mock Anthropic SDK (hoisted) with factory
