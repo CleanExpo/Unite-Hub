@@ -9,16 +9,20 @@ import { POST, GET } from '@/app/api/media/transcribe/route';
 import * as supabaseModule from '@/lib/supabase';
 
 // Mock OpenAI - set dangerouslyAllowBrowser to prevent browser environment error
-const mockCreate = vi.fn();
-vi.mock('openai', () => ({
-  default: vi.fn().mockImplementation(() => ({
-    audio: {
-      transcriptions: {
-        create: mockCreate,
+vi.mock('openai', () => {
+  return {
+    default: vi.fn().mockImplementation(() => ({
+      audio: {
+        transcriptions: {
+          create: vi.fn(),
+        },
       },
-    },
-  })),
-}));
+    })),
+  };
+});
+
+// Import after mock to get mocked version
+import OpenAI from 'openai';
 
 // Mock dependencies
 vi.mock('@/lib/supabase', () => ({
@@ -35,9 +39,15 @@ describe('POST /api/media/transcribe', () => {
   let mockRequest: Partial<NextRequest>;
   let mockSupabase: any;
   let mockSupabaseAdmin: any;
+  let mockCreate: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Get mockCreate from mocked OpenAI instance
+    const MockedOpenAI = vi.mocked(OpenAI);
+    const openaiInstance = new MockedOpenAI({} as any);
+    mockCreate = openaiInstance.audio.transcriptions.create;
 
     // Mock Supabase
     mockSupabase = {
