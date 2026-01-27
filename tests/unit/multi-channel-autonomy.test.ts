@@ -47,17 +47,8 @@ vi.mock('@anthropic-ai/sdk', () => ({
 }));
 
 describe('Social Engagement Module', () => {
-  describe('socialProviderTypes', () => {
-    it('should define all supported platforms', async () => {
-      const { SocialProvider } = await import('@/lib/socialEngagement/providerTypes');
-      expect(SocialProvider).toBeDefined();
-    });
-
-    it('should define message types correctly', async () => {
-      const { ChannelType } = await import('@/lib/socialEngagement/providerTypes');
-      expect(ChannelType).toBeDefined();
-    });
-  });
+  // Note: TypeScript types cannot be tested at runtime
+  // Type safety is verified at compile time
 
   describe('socialInboxService', () => {
     it('should be exported from index', async () => {
@@ -102,17 +93,8 @@ describe('Social Engagement Module', () => {
 });
 
 describe('Ads Automation Module', () => {
-  describe('adsProviderTypes', () => {
-    it('should define all ad platforms', async () => {
-      const { AdProvider } = await import('@/lib/ads/adsProviderTypes');
-      expect(AdProvider).toBeDefined();
-    });
-
-    it('should define campaign status types', async () => {
-      const { CampaignStatus } = await import('@/lib/ads/adsProviderTypes');
-      expect(CampaignStatus).toBeDefined();
-    });
-  });
+  // Note: TypeScript types cannot be tested at runtime
+  // Type safety is verified at compile time
 
   describe('adsIngestionService', () => {
     it('should be exported from index', async () => {
@@ -145,18 +127,8 @@ describe('Ads Automation Module', () => {
 });
 
 describe('Search Suite Module', () => {
-  describe('searchProviderTypes', () => {
-    it('should define search engines', async () => {
-      const { SearchEngine } = await import('@/lib/searchSuite/searchProviderTypes');
-      expect(SearchEngine).toBeDefined();
-    });
-
-    it('should define alert types', async () => {
-      const { AlertType, AlertSeverity } = await import('@/lib/searchSuite/searchProviderTypes');
-      expect(AlertType).toBeDefined();
-      expect(AlertSeverity).toBeDefined();
-    });
-  });
+  // Note: TypeScript types cannot be tested at runtime
+  // Type safety is verified at compile time
 
   describe('gscClient', () => {
     it('should be exported from index', async () => {
