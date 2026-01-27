@@ -32,6 +32,14 @@ vi.mock('@supabase/ssr', () => ({
   })),
 }));
 
+// Mock next/headers
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(() => ({
+    get: vi.fn((name: string) => ({ value: 'mock-cookie-value' })),
+    set: vi.fn(),
+  })),
+}));
+
 describe('Supabase Client', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -59,7 +67,7 @@ describe('Supabase Client', () => {
             persistSession: true,
             autoRefreshToken: true,
             detectSessionInUrl: true,
-            flowType: 'implicit',
+            flowType: 'pkce',
           }),
         })
       );
