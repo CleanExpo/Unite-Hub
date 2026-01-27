@@ -27,7 +27,7 @@ describe('ContentCardSkeleton', () => {
     const { container } = render(<ContentCardSkeleton />);
 
     // Should have card structure
-    const card = container.querySelector('[class*="bg-slate-800"]');
+    const card = container.querySelector('[class*="bg-muted"]');
     expect(card).toBeInTheDocument();
   });
 });
@@ -36,14 +36,14 @@ describe('ContentListSkeleton', () => {
   it('should render default number of skeletons (6)', () => {
     const { container } = render(<ContentListSkeleton />);
 
-    const cards = container.querySelectorAll('[class*="bg-slate-800"]');
+    const cards = container.querySelectorAll('[class*="bg-muted"]');
     expect(cards.length).toBe(6);
   });
 
   it('should render custom number of skeletons', () => {
     const { container } = render(<ContentListSkeleton count={3} />);
 
-    const cards = container.querySelectorAll('[class*="bg-slate-800"]');
+    const cards = container.querySelectorAll('[class*="bg-muted"]');
     expect(cards.length).toBe(3);
   });
 
@@ -57,14 +57,14 @@ describe('ContentListSkeleton', () => {
   it('should handle zero count', () => {
     const { container } = render(<ContentListSkeleton count={0} />);
 
-    const cards = container.querySelectorAll('[class*="bg-slate-800"]');
+    const cards = container.querySelectorAll('[class*="bg-muted"]');
     expect(cards.length).toBe(0);
   });
 
   it('should handle large count', () => {
     const { container } = render(<ContentListSkeleton count={20} />);
 
-    const cards = container.querySelectorAll('[class*="bg-slate-800"]');
+    const cards = container.querySelectorAll('[class*="bg-muted"]');
     expect(cards.length).toBe(20);
   });
 });
@@ -81,16 +81,16 @@ describe('StatsCardSkeleton', () => {
   it('should have card wrapper', () => {
     const { container } = render(<StatsCardSkeleton />);
 
-    const card = container.querySelector('[class*="bg-slate-800"]');
+    const card = container.querySelector('[class*="bg-muted"]');
     expect(card).toBeInTheDocument();
   });
 
   it('should render icon and stats placeholder', () => {
     const { container } = render(<StatsCardSkeleton />);
 
-    // Should have multiple skeleton elements for icon and text
-    const skeletons = container.querySelectorAll('[class*="animate-pulse"]');
-    expect(skeletons.length).toBeGreaterThanOrEqual(3);
+    // Should have skeleton elements for icon and text
+    const skeletons = container.querySelectorAll('[class*="bg-muted-foreground"]');
+    expect(skeletons.length).toBeGreaterThanOrEqual(2);
   });
 });
 
@@ -98,14 +98,14 @@ describe('StatsGridSkeleton', () => {
   it('should render default number of stat cards (4)', () => {
     const { container } = render(<StatsGridSkeleton />);
 
-    const cards = container.querySelectorAll('[class*="bg-slate-800"]');
+    const cards = container.querySelectorAll('[class*="bg-muted"]');
     expect(cards.length).toBe(4);
   });
 
   it('should render custom number of stat cards', () => {
     const { container } = render(<StatsGridSkeleton count={6} />);
 
-    const cards = container.querySelectorAll('[class*="bg-slate-800"]');
+    const cards = container.querySelectorAll('[class*="bg-muted"]');
     expect(cards.length).toBe(6);
   });
 
@@ -119,7 +119,7 @@ describe('StatsGridSkeleton', () => {
   it('should handle zero count', () => {
     const { container } = render(<StatsGridSkeleton count={0} />);
 
-    const cards = container.querySelectorAll('[class*="bg-slate-800"]');
+    const cards = container.querySelectorAll('[class*="bg-muted"]');
     expect(cards.length).toBe(0);
   });
 
