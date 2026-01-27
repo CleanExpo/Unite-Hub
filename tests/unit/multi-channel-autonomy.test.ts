@@ -205,14 +205,19 @@ describe('Browser Automation Module', () => {
       expect(module.sessionStateStore).toBeDefined();
     });
 
-    it('should have saveSession method', async () => {
+    it('should have createSession method', async () => {
       const { sessionStateStore } = await import('@/lib/browserAutomation');
-      expect(typeof sessionStateStore.saveSession).toBe('function');
+      expect(typeof sessionStateStore.createSession).toBe('function');
     });
 
     it('should have getSession method', async () => {
       const { sessionStateStore } = await import('@/lib/browserAutomation');
       expect(typeof sessionStateStore.getSession).toBe('function');
+    });
+
+    it('should have updateState method', async () => {
+      const { sessionStateStore } = await import('@/lib/browserAutomation');
+      expect(typeof sessionStateStore.updateState).toBe('function');
     });
   });
 
@@ -222,14 +227,19 @@ describe('Browser Automation Module', () => {
       expect(module.domCacheService).toBeDefined();
     });
 
-    it('should have cacheDOM method', async () => {
+    it('should have storeDomMap method', async () => {
       const { domCacheService } = await import('@/lib/browserAutomation');
-      expect(typeof domCacheService.cacheDOM).toBe('function');
+      expect(typeof domCacheService.storeDomMap).toBe('function');
     });
 
-    it('should have getDOM method', async () => {
+    it('should have getDomMap method', async () => {
       const { domCacheService } = await import('@/lib/browserAutomation');
-      expect(typeof domCacheService.getDOM).toBe('function');
+      expect(typeof domCacheService.getDomMap).toBe('function');
+    });
+
+    it('should have findElements method', async () => {
+      const { domCacheService } = await import('@/lib/browserAutomation');
+      expect(typeof domCacheService.findElements).toBe('function');
     });
   });
 
@@ -331,22 +341,22 @@ describe('Orchestrator Integration', () => {
 
 describe('Config Files', () => {
   it('should load socialEngagement config', async () => {
-    const config = await import('@config/socialEngagement');
+    const config = await import('@config/socialEngagement.config');
     expect(config.socialEngagementConfig).toBeDefined();
   });
 
   it('should load adsAutomation config', async () => {
-    const config = await import('@config/adsAutomation');
+    const config = await import('@config/adsAutomation.config');
     expect(config.adsAutomationConfig).toBeDefined();
   });
 
   it('should load searchSuite config', async () => {
-    const config = await import('@config/searchSuite');
+    const config = await import('@config/searchSuite.config');
     expect(config.searchSuiteConfig).toBeDefined();
   });
 
   it('should load browserAutomationBoost config', async () => {
-    const config = await import('@config/browserAutomationBoost');
+    const config = await import('@config/browserAutomationBoost.config');
     expect(config.browserAutomationBoostConfig).toBeDefined();
   });
 });
