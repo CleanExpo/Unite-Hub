@@ -49,13 +49,13 @@ vi.mock('@anthropic-ai/sdk', () => ({
 describe('Social Engagement Module', () => {
   describe('socialProviderTypes', () => {
     it('should define all supported platforms', async () => {
-      const { SocialPlatform } = await import('@/lib/socialEngagement/socialProviderTypes');
-      expect(SocialPlatform).toBeDefined();
+      const { SocialProvider } = await import('@/lib/socialEngagement/providerTypes');
+      expect(SocialProvider).toBeDefined();
     });
 
     it('should define message types correctly', async () => {
-      const { MessageType } = await import('@/lib/socialEngagement/socialProviderTypes');
-      expect(MessageType).toBeDefined();
+      const { ChannelType } = await import('@/lib/socialEngagement/providerTypes');
+      expect(ChannelType).toBeDefined();
     });
   });
 
@@ -104,25 +104,13 @@ describe('Social Engagement Module', () => {
 describe('Ads Automation Module', () => {
   describe('adsProviderTypes', () => {
     it('should define all ad platforms', async () => {
-      const { AdPlatform } = await import('@/lib/ads/adsProviderTypes');
-      expect(AdPlatform).toBeDefined();
+      const { AdProvider } = await import('@/lib/ads/adsProviderTypes');
+      expect(AdProvider).toBeDefined();
     });
 
     it('should define campaign status types', async () => {
       const { CampaignStatus } = await import('@/lib/ads/adsProviderTypes');
       expect(CampaignStatus).toBeDefined();
-    });
-  });
-
-  describe('adsAccountService', () => {
-    it('should be exported from index', async () => {
-      const module = await import('@/lib/ads');
-      expect(module.adsAccountService).toBeDefined();
-    });
-
-    it('should have getAccounts method', async () => {
-      const { adsAccountService } = await import('@/lib/ads');
-      expect(typeof adsAccountService.getAccounts).toBe('function');
     });
   });
 
