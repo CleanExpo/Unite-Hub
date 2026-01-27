@@ -8,10 +8,24 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({
   getSupabaseServer: vi.fn(),
+  getSupabaseAdmin: vi.fn(),
+  getSupabaseServerWithAuth: vi.fn(),
+  supabase: {
+    auth: {
+      getUser: vi.fn(),
+      getSession: vi.fn(),
+    },
+    from: vi.fn(),
+  },
   supabaseBrowser: {
     auth: {
       getUser: vi.fn(),
+      getSession: vi.fn(),
     },
+    from: vi.fn(),
+  },
+  supabaseAdmin: {
+    from: vi.fn(),
   },
 }));
 

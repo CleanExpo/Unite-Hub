@@ -41,6 +41,11 @@ const mockSupabase = createChainableMock();
 
 vi.mock("@/lib/supabase", () => ({
   getSupabaseServer: vi.fn(() => Promise.resolve(mockSupabase)),
+  getSupabaseAdmin: vi.fn(() => mockSupabase),
+  getSupabaseServerWithAuth: vi.fn(() => mockSupabase),
+  supabase: mockSupabase,
+  supabaseBrowser: mockSupabase,
+  supabaseAdmin: mockSupabase,
 }));
 
 // Import after mocking
