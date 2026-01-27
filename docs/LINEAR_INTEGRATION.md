@@ -212,7 +212,7 @@ interface LinearIssue {
 ### Recommended Enhancements
 
 1. **OAuth Integration** - Allow users to connect their own Linear accounts
-2. **Webhook Support** - Real-time updates when issues change in Linear
+2. ✅ **Webhook Support** - Real-time updates when issues change in Linear (IMPLEMENTED - see `docs/LINEAR_WEBHOOKS.md`)
 3. **Two-way Sync** - Automatically sync Unite-Hub tasks with Linear issues
 4. **Dashboard Widget** - Show Linear project status on main dashboard
 5. **Bulk Operations** - Create multiple issues at once
@@ -240,6 +240,8 @@ src/
             route.ts                 # Create issue
             [issueId]/
               route.ts               # Get/Update/Delete issue
+          webhook/
+            route.ts                 # Webhook handler (real-time events)
   components/
     integrations/
       linear/

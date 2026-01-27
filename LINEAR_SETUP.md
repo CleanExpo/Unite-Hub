@@ -12,6 +12,7 @@ I've implemented a complete Linear.app integration for your Unite-Hub workspace.
 - ✅ View all Linear projects with real-time progress
 - ✅ List and manage issues
 - ✅ Create/update/delete issues from Unite-Hub
+- ✅ Webhook support for real-time updates
 - ✅ Beautiful React components with loading states
 - ✅ Full TypeScript type safety
 - ✅ RESTful API routes
