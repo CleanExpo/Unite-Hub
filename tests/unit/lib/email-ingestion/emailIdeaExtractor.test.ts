@@ -36,8 +36,13 @@ vi.mock('@config/emailIngestion.config', () => ({
       enabled: true,
       minConfidence: 0.7,
       maxIdeasPerEmail: 5,
+      extractActionItems: true,
+      extractMeetingRequests: true,
+      extractDeadlines: true,
+      aiModel: 'haiku',
     },
   },
+  getIdeaExtractionModel: vi.fn(() => 'claude-haiku-4-5-20251001'),
 }));
 
 describe('EmailIdeaExtractor', () => {
@@ -45,11 +50,9 @@ describe('EmailIdeaExtractor', () => {
   let mockAnthropicCreate: Mock;
 
   const mockEmail: EmailContent = {
-    id: 'msg-123',
-    threadId: 'thread-456',
     subject: 'Follow up on project proposal',
-    from: { name: 'John Doe', email: 'john@example.com' },
-    to: [{ name: 'Jane Smith', email: 'jane@company.com' }],
+    fromEmail: 'john@example.com',
+    fromName: 'John Doe',
     date: new Date('2024-01-15T10:00:00Z'),
     bodyText: `Hi Jane,
 
@@ -61,8 +64,7 @@ Also, let's schedule a call next Tuesday at 2pm to discuss the timeline.
 
 Thanks,
 John`,
-    bodyHtml: '',
-    snippet: 'I wanted to follow up on our proposal discussion...',
+    isIncoming: true,
   };
 
   beforeEach(() => {
