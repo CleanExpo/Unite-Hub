@@ -22,6 +22,8 @@ export default defineConfig({
       '**/tests/e2e/**', // E2E test directory
       '**/*.e2e.spec.ts', // E2E test files
       '**/NodeJS-Starter-V1/**', // Separate project with own test setup
+      '**/external/**', // External projects (Auto-Claude, etc.)
+      '**/tests/api/**', // HTTP integration tests (require running server)
     ],
     coverage: {
       provider: 'v8',

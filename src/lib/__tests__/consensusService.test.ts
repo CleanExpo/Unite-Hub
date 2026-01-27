@@ -7,37 +7,39 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock Supabase - create a chainable mock
-const createChainableMock = () => {
-  const chain: any = {
-    from: vi.fn(),
-    select: vi.fn(),
-    insert: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-    upsert: vi.fn(),
-    eq: vi.fn(),
-    neq: vi.fn(),
-    order: vi.fn(),
-    limit: vi.fn(),
-    single: vi.fn(),
-    maybeSingle: vi.fn(),
+const { mockSupabase } = vi.hoisted(() => {
+  const createChainableMock = () => {
+    const chain: any = {
+      from: vi.fn(),
+      select: vi.fn(),
+      insert: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+      upsert: vi.fn(),
+      eq: vi.fn(),
+      neq: vi.fn(),
+      order: vi.fn(),
+      limit: vi.fn(),
+      single: vi.fn(),
+      maybeSingle: vi.fn(),
+    };
+
+    // Make all methods return the chain for chaining
+    Object.keys(chain).forEach(key => {
+      if (key !== 'single' && key !== 'maybeSingle') {
+        chain[key].mockReturnValue(chain);
+      }
+    });
+
+    // single and maybeSingle return promises by default
+    chain.single.mockResolvedValue({ data: null, error: null });
+    chain.maybeSingle.mockResolvedValue({ data: null, error: null });
+
+    return chain;
   };
 
-  // Make all methods return the chain for chaining
-  Object.keys(chain).forEach(key => {
-    if (key !== 'single' && key !== 'maybeSingle') {
-      chain[key].mockReturnValue(chain);
-    }
-  });
-
-  // single and maybeSingle return promises by default
-  chain.single.mockResolvedValue({ data: null, error: null });
-  chain.maybeSingle.mockResolvedValue({ data: null, error: null });
-
-  return chain;
-};
-
-const mockSupabase = createChainableMock();
+  return { mockSupabase: createChainableMock() };
+});
 
 vi.mock("@/lib/supabase", () => ({
   getSupabaseServer: vi.fn(() => Promise.resolve(mockSupabase)),

@@ -9,13 +9,16 @@ import { POST, GET } from '@/app/api/media/upload/route';
 import * as supabaseModule from '@/lib/supabase';
 import * as rateLimitModule from '@/lib/rate-limit';
 
-// Create mock objects that will be reused
-const mockSupabaseBrowser = {
-  auth: {
-    getUser: vi.fn(),
-    getSession: vi.fn(),
-  },
-};
+// Create mock objects that will be reused (hoisted above vi.mock)
+const { mockSupabaseBrowser } = vi.hoisted(() => {
+  const mockSupabaseBrowser = {
+    auth: {
+      getUser: vi.fn(),
+      getSession: vi.fn(),
+    },
+  };
+  return { mockSupabaseBrowser };
+});
 
 // Mock dependencies
 vi.mock('@/lib/supabase', () => ({

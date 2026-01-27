@@ -24,12 +24,15 @@ vi.mock('openai', () => {
 // Import after mock to get mocked version
 import OpenAI from 'openai';
 
-// Create mock objects that will be reused
-const mockSupabaseBrowser = {
-  auth: {
-    getUser: vi.fn(),
-  },
-};
+// Create mock objects that will be reused (hoisted above vi.mock)
+const { mockSupabaseBrowser } = vi.hoisted(() => {
+  const mockSupabaseBrowser = {
+    auth: {
+      getUser: vi.fn(),
+    },
+  };
+  return { mockSupabaseBrowser };
+});
 
 // Mock dependencies
 vi.mock('@/lib/supabase', () => ({

@@ -7,27 +7,29 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Create a chainable mock that properly returns itself for all methods
-const createChainableMock = (finalValue: any = { data: null, error: null }) => {
-  const chain: any = {
-    from: vi.fn(() => chain),
-    select: vi.fn(() => chain),
-    insert: vi.fn(() => chain),
-    update: vi.fn(() => chain),
-    delete: vi.fn(() => chain),
-    eq: vi.fn(() => chain),
-    neq: vi.fn(() => chain),
-    in: vi.fn(() => chain),
-    or: vi.fn(() => chain),
-    order: vi.fn(() => chain),
-    limit: vi.fn(() => chain),
-    single: vi.fn(() => Promise.resolve(finalValue)),
-    then: vi.fn((resolve: any) => Promise.resolve(finalValue).then(resolve)),
+const { mockSupabase } = vi.hoisted(() => {
+  const createChainableMock = (finalValue: any = { data: null, error: null }) => {
+    const chain: any = {
+      from: vi.fn(() => chain),
+      select: vi.fn(() => chain),
+      insert: vi.fn(() => chain),
+      update: vi.fn(() => chain),
+      delete: vi.fn(() => chain),
+      eq: vi.fn(() => chain),
+      neq: vi.fn(() => chain),
+      in: vi.fn(() => chain),
+      or: vi.fn(() => chain),
+      order: vi.fn(() => chain),
+      limit: vi.fn(() => chain),
+      single: vi.fn(() => Promise.resolve(finalValue)),
+      then: vi.fn((resolve: any) => Promise.resolve(finalValue).then(resolve)),
+    };
+    return chain;
   };
-  return chain;
-};
 
-// Default mock that returns empty data
-const mockSupabase = createChainableMock({ data: [], error: null });
+  // Default mock that returns empty data
+  return { mockSupabase: createChainableMock({ data: [], error: null }) };
+});
 
 vi.mock("@/lib/supabase", () => ({
   getSupabaseServer: vi.fn(() => Promise.resolve(mockSupabase)),

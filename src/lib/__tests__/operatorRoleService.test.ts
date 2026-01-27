@@ -7,17 +7,27 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock Supabase
-const mockSupabase = {
-  from: vi.fn().mockReturnThis(),
-  select: vi.fn().mockReturnThis(),
-  insert: vi.fn().mockReturnThis(),
-  update: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  single: vi.fn(),
-  order: vi.fn().mockReturnThis(),
-  contains: vi.fn().mockReturnThis(),
-  rpc: vi.fn(),
-};
+const { mockSupabase } = vi.hoisted(() => {
+  const mock: any = {
+    from: vi.fn(),
+    select: vi.fn(),
+    insert: vi.fn(),
+    update: vi.fn(),
+    eq: vi.fn(),
+    single: vi.fn(),
+    order: vi.fn(),
+    contains: vi.fn(),
+    rpc: vi.fn(),
+  };
+  mock.from.mockReturnValue(mock);
+  mock.select.mockReturnValue(mock);
+  mock.insert.mockReturnValue(mock);
+  mock.update.mockReturnValue(mock);
+  mock.eq.mockReturnValue(mock);
+  mock.order.mockReturnValue(mock);
+  mock.contains.mockReturnValue(mock);
+  return { mockSupabase: mock };
+});
 
 vi.mock("@/lib/supabase", () => ({
   getSupabaseServer: vi.fn().mockResolvedValue(mockSupabase),
