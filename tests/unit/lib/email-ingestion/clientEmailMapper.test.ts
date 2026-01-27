@@ -14,19 +14,21 @@ import {
 } from '@/lib/emailIngestion/clientEmailMapper';
 
 // Mock Supabase
-const mockSupabaseClient = {
-  from: vi.fn().mockReturnThis(),
-  select: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  or: vi.fn().mockReturnThis(),
-  ilike: vi.fn().mockReturnThis(),
-  single: vi.fn(),
-};
+vi.mock('@/lib/supabase', () => {
+  const mockSupabaseClient = {
+    from: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    or: vi.fn().mockReturnThis(),
+    ilike: vi.fn().mockReturnThis(),
+    single: vi.fn(),
+  };
 
-vi.mock('@/lib/supabase', () => ({
-  getSupabaseServer: vi.fn(async () => mockSupabaseClient),
-  supabaseAdmin: mockSupabaseClient,
-}));
+  return {
+    getSupabaseServer: vi.fn(async () => mockSupabaseClient),
+    supabaseAdmin: mockSupabaseClient,
+  };
+});
 
 // Mock config
 vi.mock('@/config/emailIngestion.config', () => ({
