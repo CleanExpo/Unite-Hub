@@ -158,3 +158,28 @@ inspect-content.cjs
 # Inspect screenshots
 inspect-*.png
 NodeJS-Starter-V1/
+
+# External projects (separate repos)
+external/
+
+# Playwright MCP screenshots
+.playwright-mcp/
+
+# Test output
+vitest-results.json
+
+# Temp reports
+navigation-report.json
+placeholder-report.json
+
+# Secrets documentation (sensitive)
+ADD_SECRETS_TO_VERCEL.md
+SECRETS_QUICK_REFERENCE.md
+SECRETS_SECURITY_GUIDE.md
+add-to-vercel.ps1
+
+# MCP server generated files
+.claude/mcp_servers/*/node_modules/
+.claude/mcp_servers/*/dist/
+.claude/mcp_servers/*/.env
+.claude/mcp_servers/*/package-lock.json
