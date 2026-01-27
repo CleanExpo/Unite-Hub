@@ -5,12 +5,11 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-  tokenVault,
-  TokenVault,
+import TokenVault, { tokenVault } from '@/lib/connectedApps/tokenVault';
+import type {
   EncryptedTokens,
   OAuthTokens,
-} from '@/lib/connectedApps/tokenVault';
+} from '@/lib/connectedApps/providerTypes';
 
 // Mock crypto for consistent test results
 vi.mock('crypto', async () => {
