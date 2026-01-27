@@ -589,6 +589,118 @@ export async function markInvoiceSent(
 }
 
 /**
+ * Update customer
+ */
+export async function updateCustomer(
+  workspaceId: string,
+  customerId: string,
+  updates: Partial<Omit<Customer, 'id' | 'workspace_id' | 'created_at' | 'updated_at'>>
+): Promise<Customer> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('erp_customers')
+    .update(updates)
+    .eq('workspace_id', workspaceId)
+    .eq('id', customerId)
+    .select()
+    .single();
+
+  if (error) throw new Error(`Failed to update customer: ${error.message}`);
+  return data as Customer;
+}
+
+/**
+ * Update invoice
+ */
+export async function updateInvoice(
+  workspaceId: string,
+  invoiceId: string,
+  updates: Partial<Omit<Invoice, 'id' | 'workspace_id' | 'created_at' | 'updated_at'>>
+): Promise<Invoice> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('erp_invoices')
+    .update(updates)
+    .eq('workspace_id', workspaceId)
+    .eq('id', invoiceId)
+    .select()
+    .single();
+
+  if (error) throw new Error(`Failed to update invoice: ${error.message}`);
+  return data as Invoice;
+}
+
+/**
+ * Delete invoice (only if not paid)
+ */
+export async function deleteInvoice(workspaceId: string, invoiceId: string): Promise<void> {
+  const supabase = await createClient();
+
+  // Check if invoice is paid
+  const invoiceData = await getInvoice(workspaceId, invoiceId);
+  if (!invoiceData) {
+    throw new Error('Invoice not found');
+  }
+
+  if (invoiceData.invoice.status === 'paid' || invoiceData.invoice.status === 'partially_paid') {
+    throw new Error('Cannot delete paid or partially paid invoices');
+  }
+
+  // Delete line items first (CASCADE should handle this, but explicit is safer)
+  await supabase
+    .from('erp_invoice_line_items')
+    .delete()
+    .eq('invoice_id', invoiceId);
+
+  // Delete invoice
+  const { error } = await supabase
+    .from('erp_invoices')
+    .delete()
+    .eq('workspace_id', workspaceId)
+    .eq('id', invoiceId);
+
+  if (error) throw new Error(`Failed to delete invoice: ${error.message}`);
+}
+
+/**
+ * List payments with filters
+ */
+export async function listPayments(
+  workspaceId: string,
+  filters?: {
+    invoice_id?: string;
+    customer_id?: string;
+    status?: PaymentStatus;
+  }
+): Promise<Payment[]> {
+  const supabase = await createClient();
+
+  let query = supabase
+    .from('erp_invoice_payments')
+    .select('*')
+    .eq('workspace_id', workspaceId);
+
+  if (filters?.invoice_id) {
+    query = query.eq('invoice_id', filters.invoice_id);
+  }
+
+  if (filters?.customer_id) {
+    query = query.eq('customer_id', filters.customer_id);
+  }
+
+  if (filters?.status) {
+    query = query.eq('status', filters.status);
+  }
+
+  const { data, error } = await query.order('payment_date', { ascending: false });
+
+  if (error) throw new Error(`Failed to list payments: ${error.message}`);
+  return (data as Payment[]) || [];
+}
+
+/**
  * Update overdue invoices
  * Run daily to check for overdue invoices
  */
