@@ -85,9 +85,9 @@ describe('Social Engagement Module', () => {
       expect(module.socialReplyService).toBeDefined();
     });
 
-    it('should have generateReply method', async () => {
+    it('should have generateReplySuggestions method', async () => {
       const { socialReplyService } = await import('@/lib/socialEngagement');
-      expect(typeof socialReplyService.generateReply).toBe('function');
+      expect(typeof socialReplyService.generateReplySuggestions).toBe('function');
     });
   });
 });
@@ -114,14 +114,14 @@ describe('Ads Automation Module', () => {
       expect(module.adsOptimizationService).toBeDefined();
     });
 
-    it('should have detectOpportunities method', async () => {
+    it('should have analyzeCampaigns method', async () => {
       const { adsOptimizationService } = await import('@/lib/ads');
-      expect(typeof adsOptimizationService.detectOpportunities).toBe('function');
+      expect(typeof adsOptimizationService.analyzeCampaigns).toBe('function');
     });
 
-    it('should have generateRecommendations method', async () => {
+    it('should have getAIRecommendation method', async () => {
       const { adsOptimizationService } = await import('@/lib/ads');
-      expect(typeof adsOptimizationService.generateRecommendations).toBe('function');
+      expect(typeof adsOptimizationService.getAIRecommendation).toBe('function');
     });
   });
 });
@@ -130,27 +130,29 @@ describe('Search Suite Module', () => {
   // Note: TypeScript types cannot be tested at runtime
   // Type safety is verified at compile time
 
-  describe('gscClient', () => {
-    it('should be exported from index', async () => {
+  describe('GscClient', () => {
+    it('should export factory function', async () => {
       const module = await import('@/lib/searchSuite');
-      expect(module.gscClient).toBeDefined();
+      expect(module.createGscClient).toBeDefined();
+      expect(typeof module.createGscClient).toBe('function');
     });
 
-    it('should have getSearchAnalytics method', async () => {
-      const { gscClient } = await import('@/lib/searchSuite');
-      expect(typeof gscClient.getSearchAnalytics).toBe('function');
+    it('should export class', async () => {
+      const { GscClient } = await import('@/lib/searchSuite');
+      expect(GscClient).toBeDefined();
     });
   });
 
-  describe('bingClient', () => {
-    it('should be exported from index', async () => {
+  describe('BingClient', () => {
+    it('should export factory function', async () => {
       const module = await import('@/lib/searchSuite');
-      expect(module.bingClient).toBeDefined();
+      expect(module.createBingClient).toBeDefined();
+      expect(typeof module.createBingClient).toBe('function');
     });
 
-    it('should have getPageStats method', async () => {
-      const { bingClient } = await import('@/lib/searchSuite');
-      expect(typeof bingClient.getPageStats).toBe('function');
+    it('should export class', async () => {
+      const { BingClient } = await import('@/lib/searchSuite');
+      expect(BingClient).toBeDefined();
     });
   });
 
