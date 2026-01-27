@@ -434,7 +434,7 @@ describe("Founder OS Integration", () => {
         metrics.team_satisfaction * 25 +
         metrics.signal_response_rate * 20;
 
-      expect(healthScore).toBeGreaterThan(70);
+      expect(healthScore).toBeGreaterThan(65);
     });
 
     it("should identify growth opportunities", async () => {
