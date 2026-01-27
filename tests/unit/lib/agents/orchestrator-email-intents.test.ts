@@ -8,6 +8,66 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+// Mock all agent imports before importing orchestrator-router
+vi.mock('@/lib/agents/founderOsAgent', () => ({
+  FounderOsAgent: vi.fn().mockImplementation(() => ({})),
+}));
+
+vi.mock('@/lib/agents/aiPhillAgent', () => ({
+  AiPhillAgent: vi.fn().mockImplementation(() => ({})),
+}));
+
+vi.mock('@/lib/agents/seoLeakAgent', () => ({
+  SeoLeakAgent: vi.fn().mockImplementation(() => ({})),
+}));
+
+vi.mock('@/lib/agents/boostBumpAgent', () => ({
+  boostBumpAgent: {},
+}));
+
+vi.mock('@/lib/agents/searchSuiteAgent', () => ({
+  searchSuiteAgent: {},
+}));
+
+vi.mock('@/lib/agents/socialInboxAgent', () => ({
+  socialInboxAgent: {},
+}));
+
+vi.mock('@/lib/agents/preClientIdentityAgent', () => ({
+  preClientIdentityAgent: {},
+}));
+
+vi.mock('@/lib/agents/cognitiveTwinAgent', () => ({
+  cognitiveTwinAgent: {},
+}));
+
+// Mock marketing services
+vi.mock('@/lib/marketing/marketingOverviewService', () => ({
+  getUnifiedDashboard: vi.fn(),
+  propagateBrandConfig: vi.fn(),
+  getPersonaConfig: vi.fn(),
+  getRecommendedContentTypes: vi.fn(),
+}));
+
+vi.mock('@/lib/marketing/socialPlaybookService', () => ({
+  createSocialPlaybook: vi.fn(),
+  updateSocialPlaybook: vi.fn(),
+}));
+
+vi.mock('@/lib/marketing/socialAssetService', () => ({
+  createSocialAsset: vi.fn(),
+}));
+
+vi.mock('@/lib/marketing/decisionMomentService', () => ({
+  createDecisionMap: vi.fn(),
+  createDecisionAsset: vi.fn(),
+}));
+
+vi.mock('@/lib/marketing/visualDemoService', () => ({
+  createVisualDemo: vi.fn(),
+}));
+
 import {
   classifyIntent,
   generatePlan,
