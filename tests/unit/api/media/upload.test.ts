@@ -9,16 +9,19 @@ import { POST, GET } from '@/app/api/media/upload/route';
 import * as supabaseModule from '@/lib/supabase';
 import * as rateLimitModule from '@/lib/rate-limit';
 
+// Create mock objects that will be reused
+const mockSupabaseBrowser = {
+  auth: {
+    getUser: vi.fn(),
+    getSession: vi.fn(),
+  },
+};
+
 // Mock dependencies
 vi.mock('@/lib/supabase', () => ({
   getSupabaseServer: vi.fn(),
   getSupabaseAdmin: vi.fn(),
-  supabaseBrowser: {
-    auth: {
-      getUser: vi.fn(),
-      getSession: vi.fn(),
-    },
-  },
+  supabaseBrowser: mockSupabaseBrowser,
 }));
 
 vi.mock('@/lib/rate-limit', () => ({
@@ -32,6 +35,12 @@ describe('POST /api/media/upload', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Setup supabaseBrowser mock
+    mockSupabaseBrowser.auth.getUser.mockResolvedValue({
+      data: { user: { id: 'user-123' } },
+      error: null,
+    });
 
     // Mock Supabase client
     mockSupabase = {
