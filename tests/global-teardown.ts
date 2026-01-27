@@ -17,7 +17,7 @@ async function globalTeardown() {
   console.log('\n🧹 Global Teardown: Cleaning up test environment...');
 
   const browser = await chromium.launch();
-  const context = await browser.createContext();
+  const context = await browser.newContext();
   const page = await context.newPage();
 
   try {

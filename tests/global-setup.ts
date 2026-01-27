@@ -19,7 +19,7 @@ async function globalSetup() {
 
   // Launch browser for setup tasks
   const browser = await chromium.launch();
-  const context = await browser.createContext();
+  const context = await browser.newContext();
   const page = await context.newPage();
 
   try {
