@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toaster } from "@/components/ui/toaster";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { ClientProvider } from "@/contexts/ClientContext";
 import ClientSelector from "@/components/client/ClientSelector";
 import { useEffect, useState } from "react";
@@ -26,6 +26,7 @@ export default function DashboardLayout({
   const { user, profile, signOut, currentOrganization, organizations, loading: authLoading } = useAuth();
   const [orgId, setOrgId] = useState<string | null>(null);
   const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Automatically refresh session to keep user logged in
   useSessionRefresh();
@@ -39,6 +40,11 @@ export default function DashboardLayout({
     }
     return name.substring(0, 2).toUpperCase();
   };
+
+  // Close mobile menu on navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (currentOrganization?.org_id) {
@@ -151,8 +157,16 @@ export default function DashboardLayout({
           <SessionExpiryWarning />
           {/* Top Navigation */}
           <nav className="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-              <div className="flex items-center gap-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+              <div className="flex items-center gap-4 lg:gap-8">
+                {/* Mobile hamburger */}
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-white"
+                  aria-label="Toggle menu"
+                >
+                  {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
                 <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                   Unite-Hub
                 </Link>
@@ -397,6 +411,56 @@ export default function DashboardLayout({
             </div>
           </nav>
 
+          {/* Mobile Navigation Menu */}
+          {mobileMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              {/* Slide-over panel */}
+              <div className="fixed inset-y-0 left-0 w-72 bg-slate-900 border-r border-slate-700 z-50 lg:hidden overflow-y-auto">
+                <div className="p-4 border-b border-slate-700 flex justify-between items-center">
+                  <span className="text-lg font-bold text-white">Navigation</span>
+                  <button onClick={() => setMobileMenuOpen(false)} className="p-1 text-slate-400 hover:text-white">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <nav className="p-4 space-y-1">
+                  <MobileNavLink href="/dashboard/overview" active={isActive("/dashboard/overview")}>Dashboard</MobileNavLink>
+
+                  <div className="pt-3 pb-1 text-xs font-semibold text-slate-500 uppercase">CRM</div>
+                  <MobileNavLink href="/dashboard/contacts" active={isActive("/dashboard/contacts")}>Contacts</MobileNavLink>
+                  <MobileNavLink href="/dashboard/projects" active={isActive("/dashboard/projects")}>Projects</MobileNavLink>
+                  <MobileNavLink href="/dashboard/brief" active={isActive("/dashboard/brief")}>Client Briefs</MobileNavLink>
+                  <MobileNavLink href="/dashboard/emails" active={isActive("/dashboard/emails")}>Emails</MobileNavLink>
+                  <MobileNavLink href="/dashboard/messages" active={isActive("/dashboard/messages")}>Messages</MobileNavLink>
+                  <MobileNavLink href="/dashboard/meetings" active={isActive("/dashboard/meetings")}>Meetings</MobileNavLink>
+
+                  <div className="pt-3 pb-1 text-xs font-semibold text-slate-500 uppercase">Content</div>
+                  <MobileNavLink href="/dashboard/content" active={isActive("/dashboard/content")}>Content Generation</MobileNavLink>
+                  <MobileNavLink href="/dashboard/media" active={isActive("/dashboard/media")}>Media Library</MobileNavLink>
+                  <MobileNavLink href="/dashboard/calendar" active={isActive("/dashboard/calendar")}>Content Calendar</MobileNavLink>
+                  <MobileNavLink href="/dashboard/campaigns" active={isActive("/dashboard/campaigns")}>Campaigns</MobileNavLink>
+                  <MobileNavLink href="/dashboard/sites" active={isActive("/dashboard/sites")}>Sites</MobileNavLink>
+
+                  <div className="pt-3 pb-1 text-xs font-semibold text-slate-500 uppercase">AI Tools</div>
+                  <MobileNavLink href="/dashboard/intelligence" active={isActive("/dashboard/intelligence")}>Contact Intelligence</MobileNavLink>
+                  <MobileNavLink href="/dashboard/ai-tools" active={isActive("/dashboard/ai-tools")}>AI Assistants</MobileNavLink>
+                  <MobileNavLink href="/dashboard/analytics" active={isActive("/dashboard/analytics")}>Analytics</MobileNavLink>
+                  <MobileNavLink href="/dashboard/seo" active={isActive("/dashboard/seo")}>SEO Tools</MobileNavLink>
+
+                  <div className="pt-3 pb-1 text-xs font-semibold text-slate-500 uppercase">Operations</div>
+                  <MobileNavLink href="/dashboard/billing" active={isActive("/dashboard/billing")}>Billing</MobileNavLink>
+                  <MobileNavLink href="/dashboard/reports" active={isActive("/dashboard/reports")}>Reports</MobileNavLink>
+                  <MobileNavLink href="/dashboard/team" active={isActive("/dashboard/team")}>Team</MobileNavLink>
+                  <MobileNavLink href="/dashboard/settings" active={isActive("/dashboard/settings")}>Settings</MobileNavLink>
+                </nav>
+              </div>
+            </>
+          )}
+
           {/* Main Content */}
           {children}
         </div>
@@ -414,6 +478,21 @@ function NavLink({ href, isActive, children }: { href: string; isActive: boolean
           ? "text-white border-b-2 border-blue-500"
           : "text-slate-400 hover:text-white"
       } pb-1 transition`}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function MobileNavLink({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className={`block px-3 py-2 rounded-md text-sm ${
+        active
+          ? "bg-slate-800 text-white font-medium"
+          : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+      } transition-colors`}
     >
       {children}
     </Link>

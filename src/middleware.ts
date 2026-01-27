@@ -18,6 +18,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { UserRole } from "./lib/auth/userTypes";
+import { validateCsrf } from "./lib/csrf";
 
 /**
  * Normalize legacy role names to new UserRole enum
@@ -50,6 +51,19 @@ export async function middleware(req: NextRequest) {
       headers: req.headers,
     },
   });
+
+  // ===== CSRF PROTECTION FOR API ROUTES =====
+  if (req.nextUrl.pathname.startsWith('/api/')) {
+    const csrf = validateCsrf(req);
+    if (!csrf.valid) {
+      return NextResponse.json(
+        { error: 'CSRF validation failed', message: csrf.reason },
+        { status: 403 }
+      );
+    }
+    // API routes don't need RBAC middleware — return with security headers
+    return addSecurityHeaders(response);
+  }
 
   // ===== PLAYWRIGHT TEST MODE BYPASS =====
   // Allow E2E tests to bypass real Supabase auth
@@ -334,5 +348,7 @@ export const config = {
     "/client/:path*",
     "/crm/:path*",
     "/synthex/:path*",
+    // API routes (CSRF protection)
+    "/api/:path*",
   ],
 };

@@ -11,6 +11,7 @@ import {
   applyQueryFilters,
   parseSorting,
 } from "@/lib/api-helpers";
+import { sanitizeObject } from "@/lib/sanitize";
 
 /**
  * GET /api/contacts
@@ -125,7 +126,8 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const rawBody = await req.json();
+    const body = sanitizeObject(rawBody, ['name', 'email', 'company', 'job_title', 'phone'], 500);
 
     const {
       workspaceId,

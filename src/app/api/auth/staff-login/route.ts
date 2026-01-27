@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { staffLogin } from '@/lib/auth/supabase';
 import { validateBody } from '@/lib/middleware/validation';
+import { strictRateLimit } from '@/lib/rate-limit';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -15,6 +16,9 @@ const loginSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    const rateLimitResult = await strictRateLimit(req);
+    if (rateLimitResult) return rateLimitResult;
+
     // Validate request body
     const { data, error: validationError } = await validateBody(req, loginSchema);
 

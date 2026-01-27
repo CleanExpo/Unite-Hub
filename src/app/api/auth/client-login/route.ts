@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { clientLogin } from '@/lib/auth/supabase';
+import { strictRateLimit } from '@/lib/rate-limit';
 
 /**
  * Client Login API Route
@@ -11,6 +12,9 @@ import { clientLogin } from '@/lib/auth/supabase';
  */
 export async function POST(req: NextRequest) {
   try {
+    const rateLimitResult = await strictRateLimit(req);
+    if (rateLimitResult) return rateLimitResult;
+
     const { email, password } = await req.json();
 
     // Validate input
