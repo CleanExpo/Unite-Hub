@@ -357,22 +357,22 @@ describe('Orchestrator Integration', () => {
 
 describe('Config Files', () => {
   it('should load socialEngagement config', async () => {
-    const config = await import('@/config/socialEngagement');
+    const config = await import('@config/socialEngagement');
     expect(config.socialEngagementConfig).toBeDefined();
   });
 
   it('should load adsAutomation config', async () => {
-    const config = await import('@/config/adsAutomation');
+    const config = await import('@config/adsAutomation');
     expect(config.adsAutomationConfig).toBeDefined();
   });
 
   it('should load searchSuite config', async () => {
-    const config = await import('@/config/searchSuite');
+    const config = await import('@config/searchSuite');
     expect(config.searchSuiteConfig).toBeDefined();
   });
 
   it('should load browserAutomationBoost config', async () => {
-    const config = await import('@/config/browserAutomationBoost');
+    const config = await import('@config/browserAutomationBoost');
     expect(config.browserAutomationBoostConfig).toBeDefined();
   });
 });

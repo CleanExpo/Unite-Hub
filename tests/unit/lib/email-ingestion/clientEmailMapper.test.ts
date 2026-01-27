@@ -5,9 +5,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
-import {
-  ClientEmailMapper,
-  clientEmailMapper,
+import ClientEmailMapper, {
+  getClientEmailMapper,
   EmailParticipant,
   MappingResult,
   Contact,
@@ -365,16 +364,19 @@ describe('ClientEmailMapper', () => {
   });
 });
 
-describe('clientEmailMapper singleton', () => {
-  it('should export a singleton instance', () => {
-    expect(clientEmailMapper).toBeDefined();
-    expect(clientEmailMapper).toBeInstanceOf(ClientEmailMapper);
+describe('getClientEmailMapper singleton', () => {
+  it('should return a singleton instance', () => {
+    const instance1 = getClientEmailMapper();
+    const instance2 = getClientEmailMapper();
+    expect(instance1).toBeDefined();
+    expect(instance1).toBeInstanceOf(ClientEmailMapper);
+    expect(instance1).toBe(instance2); // Same instance
   });
 
   it('should have required methods', () => {
-    expect(typeof clientEmailMapper.mapParticipantToClient).toBe('function');
-    expect(typeof clientEmailMapper.mapEmailParticipants).toBe('function');
-    expect(typeof clientEmailMapper.calculateNameSimilarity).toBe('function');
-    expect(typeof clientEmailMapper.extractDomain).toBe('function');
+    const mapper = getClientEmailMapper();
+    expect(typeof mapper.mapEmailToClient).toBe('function');
+    expect(typeof mapper.calculateNameSimilarity).toBe('function');
+    expect(typeof mapper.extractDomain).toBe('function');
   });
 });
