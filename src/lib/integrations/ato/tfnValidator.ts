@@ -50,18 +50,14 @@ export class TFNValidator {
    * Algorithm for 8-digit TFN:
    * 1. Multiply each of the first 7 digits by its weighting factor (1, 4, 3, 7, 5, 8, 6)
    * 2. Sum all results
-   * 3. Divide by 11
-   * 4. Multiply remainder by 10
-   * 5. If result > 9, subtract 9
-   * 6. Compare with 8th digit
+   * 3. Calculate check digit: sum % 11
+   * 4. Compare with 8th digit
    *
    * Algorithm for 9-digit TFN:
    * 1. Multiply each of the first 8 digits by its weighting factor (1, 4, 3, 7, 5, 8, 6, 9)
    * 2. Sum all results
-   * 3. Divide by 11
-   * 4. Multiply remainder by 10
-   * 5. If result > 9, subtract 9
-   * 6. Compare with 9th digit
+   * 3. Calculate check digit: sum % 11
+   * 4. Compare with 9th digit
    */
   validateCheckDigit(tfn: string): boolean {
     const digits = tfn.replace(/\s/g, '');
@@ -86,14 +82,8 @@ export class TFNValidator {
       sum += tfnDigits[i] * weights[i];
     }
 
-    // Calculate check digit
-    let remainder = sum % 11;
-    let calculatedCheckDigit = remainder * 10;
-
-    // If > 9, subtract 9
-    if (calculatedCheckDigit > 9) {
-      calculatedCheckDigit = calculatedCheckDigit - 9;
-    }
+    // Calculate check digit: simply the remainder when divided by 11
+    const calculatedCheckDigit = sum % 11;
 
     // Compare with actual check digit
     return calculatedCheckDigit === tfnDigits[checkDigitIndex];

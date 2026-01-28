@@ -85,7 +85,7 @@ describe('TFNValidator', () => {
     it('should validate 8-digit TFN check digit', () => {
       // These are test TFNs that pass the check digit algorithm
       // Note: Real TFNs should not be used in tests
-      expect(validator.validateCheckDigit('87654321')).toBe(true);
+      expect(validator.validateCheckDigit('12345677')).toBe(true);
     });
 
     // Valid 9-digit TFNs
@@ -110,9 +110,9 @@ describe('TFNValidator', () => {
 
   describe('validate', () => {
     it('should validate correct 8-digit TFN', async () => {
-      const result = await validator.validate('87654321');
+      const result = await validator.validate('12345677');
       expect(result.isValid).toBe(true);
-      expect(result.tfn).toBe('876 543 21');
+      expect(result.tfn).toBe('123 456 77');
       expect(result.error).toBeUndefined();
     });
 
@@ -136,9 +136,9 @@ describe('TFNValidator', () => {
     });
 
     it('should handle TFN with spaces', async () => {
-      const result = await validator.validate('876 543 21');
+      const result = await validator.validate('123 456 77');
       expect(result.isValid).toBe(true);
-      expect(result.tfn).toBe('876 543 21');
+      expect(result.tfn).toBe('123 456 77');
     });
   });
 
@@ -148,7 +148,7 @@ describe('TFNValidator', () => {
 
   describe('validateBatch', () => {
     it('should validate multiple TFNs', async () => {
-      const tfns = ['87654321', '123456782', '12345678'];
+      const tfns = ['12345677', '123456782', '12345678'];
       const results = await validator.validateBatch(tfns);
 
       expect(results).toHaveLength(3);
@@ -163,10 +163,10 @@ describe('TFNValidator', () => {
     });
 
     it('should format all results', async () => {
-      const tfns = ['87654321', '123456782'];
+      const tfns = ['12345677', '123456782'];
       const results = await validator.validateBatch(tfns);
 
-      expect(results[0].tfn).toBe('876 543 21');
+      expect(results[0].tfn).toBe('123 456 77');
       expect(results[1].tfn).toBe('123 456 782');
     });
   });
@@ -209,7 +209,7 @@ describe('TFNValidator', () => {
     it('should use correct weighting factors for 8-digit', () => {
       // Weighting: [1, 4, 3, 7, 5, 8, 6]
       // This test verifies the algorithm is working as expected
-      const valid8digit = '87654321';
+      const valid8digit = '12345677';
       expect(validator.validateCheckDigit(valid8digit)).toBe(true);
     });
 
