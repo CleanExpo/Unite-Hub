@@ -40,7 +40,7 @@ export interface ProviderMetadata {
 
 export interface OAuthTokens {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string; // Optional - not all providers issue refresh tokens
   expiresAt: Date;
   scope: string[];
   tokenType: string;
@@ -48,7 +48,7 @@ export interface OAuthTokens {
 
 export interface EncryptedTokens {
   encryptedAccessToken: Buffer;
-  encryptedRefreshToken: Buffer;
+  encryptedRefreshToken?: Buffer; // Optional - only present if refreshToken exists
   iv: Buffer;
   expiresAt: Date;
   scope: string[];

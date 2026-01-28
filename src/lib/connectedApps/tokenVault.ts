@@ -82,13 +82,16 @@ class TokenVault {
       accessCipher.getAuthTag(),
     ]);
 
-    // Encrypt refresh token with same IV (different ciphertext due to auth tag)
-    const refreshCipher = crypto.createCipheriv(ALGORITHM, this.encryptionKey, iv);
-    const encryptedRefresh = Buffer.concat([
-      refreshCipher.update(tokens.refreshToken, 'utf8'),
-      refreshCipher.final(),
-      refreshCipher.getAuthTag(),
-    ]);
+    // Encrypt refresh token if present (some providers don't issue refresh tokens)
+    let encryptedRefresh: Buffer | undefined;
+    if (tokens.refreshToken) {
+      const refreshCipher = crypto.createCipheriv(ALGORITHM, this.encryptionKey, iv);
+      encryptedRefresh = Buffer.concat([
+        refreshCipher.update(tokens.refreshToken, 'utf8'),
+        refreshCipher.final(),
+        refreshCipher.getAuthTag(),
+      ]);
+    }
 
     return {
       encryptedAccessToken: encryptedAccess,
@@ -117,11 +120,10 @@ class TokenVault {
         encrypted.iv
       );
 
-      // Decrypt refresh token
-      const refreshToken = this.decryptBuffer(
-        encrypted.encryptedRefreshToken,
-        encrypted.iv
-      );
+      // Decrypt refresh token if present
+      const refreshToken = encrypted.encryptedRefreshToken
+        ? this.decryptBuffer(encrypted.encryptedRefreshToken, encrypted.iv)
+        : undefined;
 
       return {
         accessToken,
