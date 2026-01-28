@@ -59,12 +59,36 @@ Sentry.init({
       console.log('Sentry event (dev mode):', event);
       return null; // Don't send in development
     }
-    
+
     // Add custom context
     if (event.exception) {
       console.error('Error captured by Sentry:', hint.originalException || hint.syntheticException);
     }
-    
-    return event;
+
+    // Sanitize all data to prevent Date serialization issues
+    try {
+      // Convert event to JSON and back to strip Date objects and other non-serializable values
+      const sanitized = JSON.parse(JSON.stringify(event, (key, value) => {
+        // Convert Date objects to ISO strings
+        if (value instanceof Date) {
+          return value.toISOString();
+        }
+        // Remove functions
+        if (typeof value === 'function') {
+          return undefined;
+        }
+        // Handle NaN and Infinity
+        if (typeof value === 'number' && !isFinite(value)) {
+          return null;
+        }
+        return value;
+      }));
+
+      return sanitized;
+    } catch (error) {
+      console.error('Sentry beforeSend sanitization failed:', error);
+      // Return event as-is if sanitization fails
+      return event;
+    }
   },
 });

@@ -47,18 +47,18 @@ Sentry.init({
       console.log('Sentry server event (dev mode):', event);
       return null;
     }
-    
+
     // Log server errors
     if (event.exception) {
       console.error('Server error captured by Sentry:', hint.originalException || hint.syntheticException);
     }
-    
+
     // Scrub sensitive data
     if (event.request) {
       // Remove auth headers
       delete event.request.headers?.['authorization'];
       delete event.request.headers?.['cookie'];
-      
+
       // Remove sensitive query params
       if (event.request.query_string) {
         event.request.query_string = event.request.query_string
@@ -67,7 +67,31 @@ Sentry.init({
           .replace(/password=[^&]*/gi, 'password=[REDACTED]');
       }
     }
-    
-    return event;
+
+    // Sanitize all data to prevent Date serialization issues
+    try {
+      // Convert event to JSON and back to strip Date objects and other non-serializable values
+      const sanitized = JSON.parse(JSON.stringify(event, (key, value) => {
+        // Convert Date objects to ISO strings
+        if (value instanceof Date) {
+          return value.toISOString();
+        }
+        // Remove functions
+        if (typeof value === 'function') {
+          return undefined;
+        }
+        // Handle NaN and Infinity
+        if (typeof value === 'number' && !isFinite(value)) {
+          return null;
+        }
+        return value;
+      }));
+
+      return sanitized;
+    } catch (error) {
+      console.error('Sentry beforeSend sanitization failed:', error);
+      // Return event as-is if sanitization fails
+      return event;
+    }
   },
 });
