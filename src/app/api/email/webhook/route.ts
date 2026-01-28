@@ -3,6 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase";
 import { gmailClient, parseGmailMessage, parseWebhookNotification } from "@/lib/gmail";
 import { publicRateLimit } from "@/lib/rate-limit";
 import { EmailProcessingRequestSchema } from "@/lib/validation/schemas";
+import { uploadAttachments } from "@/lib/gmail/storage";
 
 /**
  * POST /api/email/webhook
@@ -203,11 +204,37 @@ async function processIncomingEmail(supabase: any, parsedEmail: any, workspaceId
       console.error("Failed to store email:", emailError);
     }
 
-    // Handle attachments - store in cloud storage
-    // This would be done asynchronously in production
-    for (const attachment of (parsedEmail.attachments || [])) {
-      // TODO: Upload to cloud storage and create attachment records
-      console.log(`Attachment to process: ${attachment.filename}`);
+    // Handle attachments - upload to Supabase Storage
+    // This is done asynchronously to avoid blocking the webhook response
+    if (parsedEmail.attachments && parsedEmail.attachments.length > 0) {
+      try {
+        const uploadedFiles = await uploadAttachments(
+          parsedEmail.attachments.map(att => ({
+            fileName: att.filename,
+            content: att.data, // Base64 encoded
+            mimeType: att.mimeType
+          })),
+          workspaceId
+        );
+
+        // Create attachment records in database
+        for (const uploaded of uploadedFiles) {
+          await supabase.from("email_attachments").insert({
+            email_id: emailRecord?.id,
+            workspace_id: workspaceId,
+            file_name: uploaded.fileName,
+            file_url: uploaded.fileUrl,
+            mime_type: uploaded.mimeType,
+            file_size: uploaded.fileSize,
+            created_at: new Date().toISOString()
+          });
+        }
+
+        console.log(`✅ Uploaded ${uploadedFiles.length} attachments to Supabase Storage`);
+      } catch (error) {
+        console.error("Failed to upload attachments:", error);
+        // Continue processing - don't fail the entire webhook
+      }
     }
 
     return {
