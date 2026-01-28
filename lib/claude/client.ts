@@ -1,124 +1,44 @@
-import Anthropic from "@anthropic-ai/sdk";
-import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
+/**
+ * Anthropic Claude Client
+ *
+ * ✅ UPGRADED WITH LATEST FEATURES (2025)
+ * - Prompt Caching (90% cost reduction)
+ * - Token Counting
+ * - Extended Thinking
+ * - PDF Support
+ * - Vision Support
+ *
+ * See client-enhanced.ts for new features.
+ * This file maintains backward compatibility.
+ */
 
-// Lazy-initialized Anthropic client
-let _anthropic: Anthropic | null = null;
+// Re-export everything from enhanced client
+export * from './client-enhanced';
 
-function getAnthropicClient(): Anthropic {
-  if (!_anthropic) {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      throw new Error('ANTHROPIC_API_KEY is not configured');
-    }
-    _anthropic = new Anthropic({ apiKey });
-  }
-  return _anthropic;
-}
+// Maintain backward compatibility with existing code
+import { anthropic, createMessage, createStreamingMessage, extractTextContent, parseJSONResponse, rateLimiter, CLAUDE_MODEL, DEFAULT_PARAMS, STREAMING_PARAMS } from './client-enhanced';
 
-// Backward compatible export using Proxy
-export const anthropic = new Proxy({} as Anthropic, {
-  get(_, prop) {
-    return getAnthropicClient()[prop as keyof Anthropic];
-  },
-});
-
-// Model configuration
-export const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929';
-
-// Default message parameters
-export const DEFAULT_PARAMS = {
-  model: CLAUDE_MODEL,
-  max_tokens: 4096,
-  temperature: 0.7,
+export {
+  anthropic,
+  createMessage,
+  createStreamingMessage,
+  extractTextContent,
+  parseJSONResponse,
+  rateLimiter,
+  CLAUDE_MODEL,
+  DEFAULT_PARAMS,
+  STREAMING_PARAMS
 };
 
-// Streaming configuration
-export const STREAMING_PARAMS = {
-  ...DEFAULT_PARAMS,
-  stream: true,
-};
-
-// Create a message with Claude
-export async function createMessage(
-  messages: Anthropic.MessageParam[],
-  systemPrompt?: string,
-  options?: Partial<Anthropic.MessageCreateParams>
-): Promise<Anthropic.Message> {
-  const params: Anthropic.MessageCreateParams = {
-    ...DEFAULT_PARAMS,
-    messages,
-    ...(systemPrompt && { system: systemPrompt }),
-    ...options,
-  };
-
-  return await anthropic.messages.create(params);
-}
-
-// Create a streaming message with Claude
-export async function createStreamingMessage(
-  messages: Anthropic.MessageParam[],
-  systemPrompt?: string,
-  options?: Partial<Anthropic.MessageCreateParams>
-): Promise<AsyncIterable<Anthropic.MessageStreamEvent>> {
-  const params: Anthropic.MessageCreateParams = {
-    ...STREAMING_PARAMS,
-    messages,
-    ...(systemPrompt && { system: systemPrompt }),
-    ...options,
-  };
-
-  return await anthropic.messages.stream(params);
-}
-
-// Helper to extract text content from message
-export function extractTextContent(message: Anthropic.Message): string {
-  const textContent = message.content.find(
-    (block) => block.type === 'text'
-  ) as Anthropic.TextBlock | undefined;
-  return textContent?.text || '';
-}
-
-// Helper to parse JSON response
-export function parseJSONResponse<T>(message: Anthropic.Message): T {
-  const text = extractTextContent(message);
-
-  // Try to find JSON in the response
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error('No JSON found in response');
-  }
-
-  try {
-    return JSON.parse(jsonMatch[0]);
-  } catch (error) {
-    throw new Error(`Failed to parse JSON: ${error}`);
-  }
-}
-
-// Rate limiting helper
-export class RateLimiter {
-  private requests: number[] = [];
-  private maxRequests: number;
-  private timeWindow: number;
-
-  constructor(maxRequests: number = 100, timeWindowMs: number = 60000) {
-    this.maxRequests = maxRequests;
-    this.timeWindow = timeWindowMs;
-  }
-
-  async checkLimit(): Promise<void> {
-    const now = Date.now();
-    this.requests = this.requests.filter(time => now - time < this.timeWindow);
-
-    if (this.requests.length >= this.maxRequests) {
-      const oldestRequest = this.requests[0];
-      const waitTime = this.timeWindow - (now - oldestRequest);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-      return this.checkLimit();
-    }
-
-    this.requests.push(now);
-  }
-}
-
-export const rateLimiter = new RateLimiter();
+// Export enhanced features
+export {
+  createMessageWithCaching,
+  createMessageWithThinking,
+  createMessageWithVision,
+  createMessageWithPDF,
+  countTokens,
+  estimateCost,
+  extractThinkingContent,
+  CLAUDE_OPUS,
+  CLAUDE_HAIKU
+} from './client-enhanced';
