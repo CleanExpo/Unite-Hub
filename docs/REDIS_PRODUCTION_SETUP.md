@@ -18,91 +18,245 @@ Unite-Hub uses Redis for high-performance caching to reduce database load and im
 
 ---
 
-## Production Provider: Upstash Redis
+## Production Options: Self-Hosted Redis
 
-**Recommended**: Upstash Redis (serverless, REST-based, generous free tier)
+**Recommended Approach**: Use DigitalOcean Managed Redis or Docker-based Redis in your existing infrastructure.
 
-### Why Upstash?
-- ✅ **Serverless**: No infrastructure management
-- ✅ **REST API**: Works with Edge/serverless functions
-- ✅ **Global replication**: Low-latency worldwide
-- ✅ **Free tier**: 10,000 commands/day
-- ✅ **Pay-as-you-go**: No monthly minimums
-- ✅ **TLS/SSL**: Built-in encryption
-
-### Alternatives
-- Redis Cloud (traditional Redis)
-- AWS ElastiCache (if using AWS)
-- Azure Cache for Redis (if using Azure)
-- DigitalOcean Managed Redis
+### Why Self-Hosted?
+- ✅ **No external dependencies**: Stays within your infrastructure
+- ✅ **Cost-effective**: No per-operation pricing
+- ✅ **Full control**: Configure exactly as needed
+- ✅ **Privacy**: Data never leaves your infrastructure
+- ✅ **Integration**: Works with existing DigitalOcean setup
 
 ---
 
-## Setup Instructions
+## Setup Options
 
-### Step 1: Create Upstash Redis Instance
+### Option 1: DigitalOcean Managed Redis (Recommended for Production)
 
-1. **Sign up** at https://console.upstash.com/
-2. **Create database**:
-   - Click "Create Database"
-   - Name: `unite-hub-production`
-   - Region: Choose closest to your deployment (e.g., `us-east-1`)
-   - Type: Regional (or Global for multi-region)
-   - TLS: Enabled (recommended)
+**Best for**: Production deployments with high availability needs
 
-3. **Copy credentials**:
-   - Go to database details
-   - Copy **REST URL** (e.g., `https://xxx-xxxxx.upstash.io`)
-   - Copy **REST Token** (starts with `AX...`)
+#### Setup Steps
 
-### Step 2: Configure Environment Variables
+1. **Create Managed Database**:
+   - Log in to DigitalOcean: https://cloud.digitalocean.com/
+   - Navigate to: Databases → Create Database Cluster
+   - Select: **Redis**
+   - Configuration:
+     - **Data center**: Same region as your app (e.g., NYC3)
+     - **Size**: Basic (1 GB RAM, 1 vCPU) - sufficient for most apps
+     - **Name**: `unite-hub-redis-prod`
 
-Add to your production environment (Vercel/Railway/etc.):
+2. **Configure Connection**:
+   - After creation, go to database details
+   - Copy **Connection String**
+   - Format: `rediss://default:password@host:25061`
+   - Note: `rediss://` (with double 's') indicates TLS/SSL
 
-```bash
-# Upstash Redis (Primary - REST API)
-UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
-UPSTASH_REDIS_REST_TOKEN=AXxxxxxxxxxxxxx
+3. **Add Environment Variables**:
+   ```bash
+   # DigitalOcean Managed Redis
+   REDIS_URL=rediss://default:YOUR_PASSWORD@your-redis-do-user-123456-0.db.ondigitalocean.com:25061
+   REDIS_TLS_ENABLED=true
+   REDIS_KEY_PREFIX=unite-hub:
+   ```
 
-# Redis Configuration
-REDIS_KEY_PREFIX=unite-hub:
-REDIS_TLS_ENABLED=true
+4. **Verify Connection**:
+   ```bash
+   node scripts/test-redis.mjs
+   ```
 
-# Legacy/Fallback (Optional - for traditional Redis clients)
-REDIS_URL=redis://default:password@redis.upstash.io:6379
-REDIS_PASSWORD=your-password-here
+**Pricing** (as of 2026):
+- Basic (1 GB): **$15/month**
+- Professional (4 GB): **$60/month**
+- Includes: Automatic backups, high availability, monitoring
+
+---
+
+### Option 2: Docker Redis (Local Development & Small Production)
+
+**Best for**: Local development, staging, small production deployments
+
+#### Using Docker Compose
+
+Add to your `docker-compose.yml`:
+
+```yaml
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: unite-hub-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD:-your-secure-password}
+    volumes:
+      - redis_data:/data
+    networks:
+      - unite-hub-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  redis_data:
+
+networks:
+  unite-hub-network:
 ```
 
-**Security Notes**:
-- ✅ Never commit these values to Git
-- ✅ Use separate databases for production/staging
-- ✅ Rotate tokens every 90 days
-- ✅ Enable TLS in production
-
-### Step 3: Verify Connection
-
-Run the health check endpoint:
+#### Environment Variables
 
 ```bash
-curl https://your-app.com/api/health
+# Docker Redis
+REDIS_URL=redis://localhost:6379
+REDIS_PASSWORD=your-secure-password
+REDIS_TLS_ENABLED=false
+REDIS_KEY_PREFIX=unite-hub:
+```
 
-# Expected response:
-{
-  "status": "healthy",
-  "timestamp": "2026-01-28T...",
-  "database": {
-    "status": "connected",
-    "latency_ms": 45
-  },
-  "cache": {
-    "status": "connected",
-    "provider": "upstash",
-    "hit_rate": "82.5%",
-    "hits": 1250,
-    "misses": 265,
-    "total_operations": 1515
-  }
-}
+#### Start Redis
+
+```bash
+# Start Redis container
+docker-compose up -d redis
+
+# Verify it's running
+docker ps | grep redis
+
+# Test connection
+node scripts/test-redis.mjs
+```
+
+---
+
+### Option 3: Standalone Redis Server
+
+**Best for**: Dedicated server deployments, VPS setups
+
+#### Install Redis (Ubuntu/Debian)
+
+```bash
+# Update package list
+sudo apt update
+
+# Install Redis
+sudo apt install redis-server -y
+
+# Configure Redis
+sudo nano /etc/redis/redis.conf
+```
+
+#### Configure Redis
+
+Edit `/etc/redis/redis.conf`:
+
+```conf
+# Bind to localhost only (or your app server IP)
+bind 127.0.0.1
+
+# Set password
+requirepass your-secure-password-here
+
+# Enable persistence
+save 900 1
+save 300 10
+save 60 10000
+
+# Set max memory (e.g., 1GB)
+maxmemory 1gb
+maxmemory-policy allkeys-lru
+
+# Enable AOF for durability
+appendonly yes
+appendfsync everysec
+```
+
+#### Start Redis
+
+```bash
+# Start Redis service
+sudo systemctl start redis
+
+# Enable on boot
+sudo systemctl enable redis
+
+# Check status
+sudo systemctl status redis
+```
+
+#### Environment Variables
+
+```bash
+REDIS_URL=redis://localhost:6379
+REDIS_PASSWORD=your-secure-password
+REDIS_TLS_ENABLED=false
+REDIS_KEY_PREFIX=unite-hub:
+```
+
+---
+
+### Option 4: In-Memory Fallback (Development Only)
+
+**Best for**: Quick local development without Redis installed
+
+The system automatically uses in-memory caching if Redis is unavailable.
+
+**Characteristics**:
+- ✅ No setup required
+- ✅ Fast for single-instance development
+- ⚠️ Data lost on restart
+- ⚠️ Not shared across multiple processes
+- ❌ **NOT for production** (limited memory, no persistence)
+
+**Usage**: Simply don't set any Redis environment variables.
+
+---
+
+## Environment Variable Configuration
+
+### Production (.env or deployment platform)
+
+```bash
+# ====================================
+# Redis Production Configuration
+# ====================================
+
+# Connection URL (choose based on your setup)
+# DigitalOcean Managed: rediss://default:password@host:25061
+# Docker/Local: redis://localhost:6379
+REDIS_URL=redis://localhost:6379
+
+# Password (if using requirepass)
+REDIS_PASSWORD=your-secure-password-here
+
+# Key prefix to avoid collisions with other apps
+REDIS_KEY_PREFIX=unite-hub:
+
+# TLS/SSL (true for DigitalOcean Managed, false for local Docker)
+REDIS_TLS_ENABLED=false
+
+# Connection settings (optional - defaults shown)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_MAX_RETRIES=3
+REDIS_CONNECT_TIMEOUT=10000
+```
+
+### Development (.env.local)
+
+```bash
+# Local Docker Redis
+REDIS_URL=redis://localhost:6379
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+REDIS_TLS_ENABLED=false
+REDIS_MAX_RETRIES=3
+REDIS_CONNECT_TIMEOUT=10000
 ```
 
 ---
@@ -270,7 +424,7 @@ GET /api/health
 {
   "cache": {
     "status": "connected",
-    "provider": "upstash",
+    "provider": "redis",
     "hit_rate": "82.5%",
     "hits": 1250,
     "misses": 265,
@@ -289,18 +443,32 @@ GET /api/health
 | Metric | Target | Monitoring |
 |--------|--------|------------|
 | Hit Rate | 80%+ | Health endpoint |
-| P95 Latency | <50ms | Upstash dashboard |
+| P95 Latency | <50ms | Application logs |
 | Error Rate | <0.1% | Sentry alerts |
-| Memory Usage | <500MB | Upstash dashboard |
-| Evictions | <1% | Upstash dashboard |
+| Memory Usage | <80% | Redis INFO command |
+| Evictions | <1% | Redis INFO command |
 
-### Alerts
+### Redis Monitoring Commands
 
-Configure alerts in Upstash dashboard:
-- ✅ Hit rate drops below 70%
-- ✅ Error rate exceeds 1%
-- ✅ Memory usage exceeds 80%
-- ✅ Connection failures
+```bash
+# Connect to Redis
+redis-cli -h localhost -p 6379 -a your-password
+
+# Check memory usage
+INFO memory
+
+# Check hit rate
+INFO stats
+
+# Monitor commands in real-time
+MONITOR
+
+# Check connected clients
+CLIENT LIST
+
+# Get slow queries
+SLOWLOG GET 10
+```
 
 ---
 
@@ -419,6 +587,9 @@ For local development, use Docker Redis:
 # Start Redis container
 docker run -d -p 6379:6379 --name redis redis:7-alpine
 
+# Or with password
+docker run -d -p 6379:6379 --name redis redis:7-alpine redis-server --requirepass your-password
+
 # Set environment variable
 export REDIS_URL=redis://localhost:6379
 
@@ -429,82 +600,80 @@ npm run dev
 
 ### Test Script
 
-Create `scripts/test-redis.mjs`:
+Run the test script to verify Redis connection:
 
-```javascript
-import Redis from 'ioredis';
-
-async function testRedis() {
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL;
-
-  if (!url) {
-    console.error('❌ No Redis URL configured');
-    process.exit(1);
-  }
-
-  console.log(`🔌 Connecting to: ${url.split('@')[1] || url.split('//')[1]}`);
-
-  const redis = new Redis(url);
-
-  try {
-    // Test ping
-    const pong = await redis.ping();
-    console.log(`✅ PING response: ${pong}`);
-
-    // Test set/get
-    await redis.set('test:key', 'test-value', 'EX', 60);
-    const value = await redis.get('test:key');
-    console.log(`✅ SET/GET test: ${value === 'test-value' ? 'PASS' : 'FAIL'}`);
-
-    // Test delete
-    await redis.del('test:key');
-    const deleted = await redis.get('test:key');
-    console.log(`✅ DELETE test: ${deleted === null ? 'PASS' : 'FAIL'}`);
-
-    console.log('\n✅ All tests passed! Redis is configured correctly.');
-  } catch (error) {
-    console.error('❌ Redis test failed:', error.message);
-    process.exit(1);
-  } finally {
-    await redis.quit();
-  }
-}
-
-testRedis();
-```
-
-Run test:
 ```bash
 node scripts/test-redis.mjs
+```
+
+**Expected output**:
+```
+============================================================
+  Redis Production Setup Test
+============================================================
+
+ℹ️  Provider: Redis
+ℹ️  Connecting to: localhost:6379
+
+Test 1: Connection
+----------------------------------------
+✅ Successfully connected to Redis
+
+Test 2: PING Command
+----------------------------------------
+✅ PING successful: PONG
+
+[... 8 tests total ...]
+
+============================================================
+  Test Summary
+============================================================
+Total Tests: 8
+✅ Passed: 8
+Failed: 0
+============================================================
+
+✅ ✨ All tests passed! Redis is configured correctly.
 ```
 
 ---
 
 ## Cost Optimization
 
-### Upstash Pricing (2026)
+### DigitalOcean Managed Redis Pricing (2026)
 
-**Free Tier**:
-- 10,000 commands/day
-- 256MB storage
-- Regional replication
+**Basic Plans**:
+- 1 GB RAM: **$15/month**
+- 2 GB RAM: **$30/month**
+- 4 GB RAM: **$60/month**
 
-**Pay-as-you-go**:
-- $0.20 per 100K commands
-- $0.25 per GB storage/month
+**Professional Plans** (High Availability):
+- 4 GB RAM (3 nodes): **$120/month**
+- 8 GB RAM (3 nodes): **$240/month**
 
 **Estimated Costs** (1,000 users):
-- ~500K commands/day = **$1/day** = **$30/month**
-- ~2GB storage = **$0.50/month**
-- **Total: ~$30/month**
+- Development/Staging: **$15/month** (1 GB Basic)
+- Production (small): **$30/month** (2 GB Basic)
+- Production (medium): **$60/month** (4 GB Basic)
+- Production (HA): **$120/month** (4 GB Professional)
+
+### Self-Hosted Cost Comparison
+
+**Docker on VPS**:
+- Small Droplet (2 GB RAM): **$12/month**
+- Medium Droplet (4 GB RAM): **$24/month**
+- **Total with app server**: Shared cost
+
+**Verdict**: Self-hosted is most cost-effective for small-medium deployments.
 
 ### Cost Reduction Tips
 
 1. **Increase TTL** for static data (reduce cache churn)
-2. **Batch operations** to reduce command count
+2. **Batch operations** to reduce round trips
 3. **Use pattern deletion** sparingly (expensive on large datasets)
-4. **Monitor cache hit rate** (low hit rate = wasted operations)
-5. **Compress large values** to reduce storage costs
+4. **Monitor cache hit rate** (low hit rate = wasted memory)
+5. **Compress large values** to reduce memory usage
+6. **Set maxmemory-policy** to `allkeys-lru` for automatic eviction
 
 ---
 
@@ -518,10 +687,10 @@ Error: Redis connection timeout
 ```
 
 **Solutions**:
-- Check Upstash dashboard for downtime
-- Verify firewall allows outbound connections
+- Check Redis is running: `docker ps` or `systemctl status redis`
+- Verify firewall allows port 6379
+- Check REDIS_URL is correct
 - Increase `REDIS_CONNECT_TIMEOUT` (default: 10000ms)
-- Check TLS settings match Upstash config
 
 #### 2. Authentication Failed
 ```
@@ -529,22 +698,33 @@ Error: NOAUTH Authentication required
 ```
 
 **Solutions**:
-- Verify `UPSTASH_REDIS_REST_TOKEN` is correct
-- Check `REDIS_PASSWORD` matches Upstash password
-- Regenerate token in Upstash dashboard if compromised
+- Verify `REDIS_PASSWORD` matches Redis configuration
+- Check `redis.conf` has `requirepass` set
+- For Docker: Ensure `--requirepass` flag is used
 
-#### 3. Circuit Breaker Open
+#### 3. Connection Refused
+```
+Error: connect ECONNREFUSED 127.0.0.1:6379
+```
+
+**Solutions**:
+- Verify Redis is running on the specified host/port
+- Check `bind` directive in `redis.conf` (should include your app IP)
+- For Docker: Ensure port mapping is correct (`-p 6379:6379`)
+- Check firewall rules
+
+#### 4. Circuit Breaker Open
 ```
 [Redis] Circuit breaker is OPEN. Failing fast.
 ```
 
 **Solutions**:
-- Check Upstash status page
+- Check Redis availability
 - Wait for automatic recovery (60 seconds)
 - Manually reset: `cacheManager.resetCircuitBreaker()`
 - Investigate root cause in logs
 
-#### 4. Low Hit Rate
+#### 5. Low Hit Rate
 ```
 cache.hit_rate: 45% (target: 80%+)
 ```
@@ -554,17 +734,19 @@ cache.hit_rate: 45% (target: 80%+)
 - Pre-warm cache on deployment
 - Review cache key patterns (too specific?)
 - Check if invalidation is too aggressive
+- Monitor eviction rate (too high = insufficient memory)
 
-#### 5. Memory Exceeded
+#### 6. Memory Exceeded
 ```
 Error: OOM command not allowed when used memory > 'maxmemory'
 ```
 
 **Solutions**:
-- Upgrade Upstash plan
+- Increase `maxmemory` in `redis.conf`
+- Set `maxmemory-policy` to `allkeys-lru`
 - Reduce TTL for large objects
 - Implement compression for large values
-- Review eviction policy (default: `allkeys-lru`)
+- Upgrade to larger Redis instance
 
 ---
 
@@ -574,29 +756,45 @@ Error: OOM command not allowed when used memory > 'maxmemory'
 
 1. **Environment Variables**:
    - ✅ Never commit to Git
-   - ✅ Use separate credentials for prod/staging/dev
-   - ✅ Rotate tokens every 90 days
+   - ✅ Use separate passwords for prod/staging/dev
+   - ✅ Rotate passwords every 90 days
 
 2. **Network Security**:
-   - ✅ Enable TLS/SSL in production
-   - ✅ Use Upstash's built-in firewall rules
-   - ✅ Restrict access to known IP ranges (if possible)
+   - ✅ Bind Redis to specific IP (not 0.0.0.0)
+   - ✅ Use firewall rules to restrict access
+   - ✅ Enable TLS for managed Redis (DigitalOcean)
+   - ✅ Use VPC/private networking when possible
 
-3. **Data Security**:
+3. **Redis Configuration**:
+   ```conf
+   # Require password
+   requirepass your-strong-password-here
+
+   # Bind to specific interface
+   bind 127.0.0.1 10.0.0.5
+
+   # Disable dangerous commands
+   rename-command FLUSHDB ""
+   rename-command FLUSHALL ""
+   rename-command KEYS ""
+   rename-command CONFIG ""
+   ```
+
+4. **Data Security**:
    - ❌ Never cache sensitive data (passwords, tokens, SSNs)
    - ⚠️ Encrypt PII before caching (if absolutely necessary)
    - ✅ Use short TTLs for user-specific data
 
 ### Key Naming Convention
 
-Use prefixes to organize keys:
+Use prefixes to organize keys and avoid collisions:
 
 ```typescript
 // Good: Namespaced and clear
 unite-hub:contact:abc123
 unite-hub:campaign:stats:xyz789
 
-// Bad: Collision risk
+// Bad: Collision risk with other apps
 contact123
 stats
 ```
@@ -607,15 +805,16 @@ stats
 
 ### Pre-Launch
 
-- [ ] Upstash Redis instance provisioned
+- [ ] Redis instance provisioned (DigitalOcean Managed or Docker)
 - [ ] Environment variables configured in production
+- [ ] Password authentication enabled
 - [ ] Health endpoint returns cache metrics
 - [ ] Cache hit rate monitoring enabled
 - [ ] Circuit breaker tested and configured
 - [ ] Fallback to in-memory tested
-- [ ] Alerts configured in Upstash dashboard
-- [ ] Cost monitoring enabled
-- [ ] Documentation reviewed by team
+- [ ] Test script passes all checks
+- [ ] Persistence enabled (RDB or AOF)
+- [ ] Backup strategy defined
 
 ### Post-Launch Monitoring
 
@@ -623,7 +822,7 @@ stats
 - [ ] Monitor cache hit rate (target: 80%+)
 - [ ] Check error rate (<0.1%)
 - [ ] Verify latency improvements (60-80% reduction)
-- [ ] Review cost vs. budget
+- [ ] Review memory usage
 
 **Week 2**:
 - [ ] Analyze cache key patterns
@@ -632,21 +831,23 @@ stats
 
 **Month 1**:
 - [ ] Review and optimize cache invalidation strategy
-- [ ] Assess whether to upgrade Upstash plan
+- [ ] Assess whether to scale Redis instance
 - [ ] Document any production-specific learnings
+- [ ] Review costs vs. budget
 
 ---
 
 ## References
 
-- **Upstash Docs**: https://docs.upstash.com/redis
-- **ioredis Docs**: https://github.com/redis/ioredis
+- **Redis Official Docs**: https://redis.io/documentation
+- **ioredis Client**: https://github.com/redis/ioredis
 - **Redis Best Practices**: https://redis.io/docs/manual/patterns/
 - **Circuit Breaker Pattern**: https://martinfowler.com/bliki/CircuitBreaker.html
+- **DigitalOcean Managed Redis**: https://docs.digitalocean.com/products/databases/redis/
 
 ---
 
-**Document Version**: 1.0
+**Document Version**: 2.0 (Self-Hosted)
 **Last Updated**: 2026-01-28
 **Status**: Production Ready
 **Next Review**: 2026-02-28 (monthly review after launch)

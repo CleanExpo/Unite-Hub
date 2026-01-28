@@ -22,7 +22,7 @@ interface HealthCheck {
 
 interface CacheMetrics {
   status: "connected" | "degraded" | "disconnected";
-  provider: "redis" | "in-memory" | "upstash";
+  provider: "redis" | "in-memory";
   hit_rate: string;
   hits: number;
   misses: number;
@@ -78,10 +78,9 @@ async function getCacheMetrics(): Promise<CacheMetrics> {
     const metrics = cacheManager.getMetrics();
     const status = await cacheManager.getStatus();
 
-    // Determine provider
-    const hasUpstashUrl = !!process.env.UPSTASH_REDIS_REST_URL;
+    // Determine provider (self-hosted Redis or in-memory fallback)
     const hasRedisUrl = !!process.env.REDIS_URL;
-    const provider = hasUpstashUrl ? "upstash" : hasRedisUrl ? "redis" : "in-memory";
+    const provider = hasRedisUrl ? "redis" : "in-memory";
 
     return {
       status: status as "connected" | "degraded" | "disconnected",
