@@ -11,6 +11,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { db } from '@/lib/db';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { getSupabaseServer } from '@/lib/supabase';
 import {
   threadClusterService,
@@ -458,6 +459,10 @@ Provide health score and recommendations.`;
         ],
       });
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(result.data, 'claude-sonnet-4-5-20250929');
+    logCacheStats('PreClientIdentity:analyzeOpportunity', cacheStats);
 
     const responseText =
       result.data.content[0].type === 'text' ? result.data.content[0].text : '';
