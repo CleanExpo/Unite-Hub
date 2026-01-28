@@ -107,19 +107,19 @@ ALTER TABLE scheduling_communications ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY scheduling_requests_authenticated_read ON scheduling_requests
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY scheduling_conflicts_authenticated_read ON scheduling_conflicts
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY scheduling_availability_history_authenticated_read ON scheduling_availability_history
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY scheduling_communications_authenticated_read ON scheduling_communications
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_scheduling_requests_brand ON scheduling_requests(brand_id);

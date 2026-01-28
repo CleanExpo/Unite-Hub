@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS sandbox_users (
   sandbox_enabled BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   notes TEXT
 );
 
@@ -25,7 +26,7 @@ ALTER TABLE sandbox_users ENABLE ROW LEVEL SECURITY;
 
 -- Admin read/write policy
 CREATE POLICY "admins_manage_sandbox_users" ON sandbox_users
-FOR ALL USING (
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
   auth.uid() IN (
     SELECT user_id FROM user_organizations
     WHERE role IN ('owner', 'admin', 'super_admin')
@@ -51,7 +52,8 @@ CREATE TABLE IF NOT EXISTS sandbox_audit_log (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   action TEXT NOT NULL,
   target_email TEXT NOT NULL,
-  performed_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+performed_by UUID REFERENCES auth.users(id),
   old_value JSONB,
   new_value JSONB,
   created_at TIMESTAMPTZ DEFAULT now()
@@ -66,7 +68,7 @@ ALTER TABLE sandbox_audit_log ENABLE ROW LEVEL SECURITY;
 
 -- Admins can read audit log
 CREATE POLICY "admins_read_sandbox_audit" ON sandbox_audit_log
-FOR SELECT USING (
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
   auth.uid() IN (
     SELECT user_id FROM user_organizations
     WHERE role IN ('owner', 'admin', 'super_admin')

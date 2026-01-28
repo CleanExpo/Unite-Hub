@@ -39,7 +39,7 @@ ALTER TABLE agocss_system_seal ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated)
 CREATE POLICY agocss_seal_select ON agocss_system_seal
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE agocss_system_seal IS 'System deployment seals (Phase 100)';
@@ -85,7 +85,7 @@ ALTER TABLE agocss_validation_results ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated)
 CREATE POLICY agocss_validation_select ON agocss_validation_results
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE agocss_validation_results IS 'System validation check results (Phase 100)';

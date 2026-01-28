@@ -27,7 +27,7 @@ ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY courses_select ON courses
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -39,7 +39,7 @@ CREATE POLICY courses_insert ON courses
 
 CREATE POLICY courses_update ON courses
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -71,7 +71,7 @@ ALTER TABLE lessons ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY lessons_select ON lessons
   FOR SELECT TO authenticated
-  USING (course_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND course_id IN (
     SELECT id FROM courses
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -89,7 +89,7 @@ CREATE POLICY lessons_insert ON lessons
 
 CREATE POLICY lessons_update ON lessons
   FOR UPDATE TO authenticated
-  USING (course_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND course_id IN (
     SELECT id FROM courses
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -115,7 +115,8 @@ CREATE TABLE IF NOT EXISTS lesson_progress (
   CONSTRAINT lesson_progress_lesson_fk
     FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE,
   CONSTRAINT lesson_progress_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -130,7 +131,7 @@ ALTER TABLE lesson_progress ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY lesson_progress_select ON lesson_progress
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 CREATE POLICY lesson_progress_insert ON lesson_progress
   FOR INSERT TO authenticated
@@ -138,7 +139,7 @@ CREATE POLICY lesson_progress_insert ON lesson_progress
 
 CREATE POLICY lesson_progress_update ON lesson_progress
   FOR UPDATE TO authenticated
-  USING (user_id = auth.uid());
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 -- Comment
 COMMENT ON TABLE lesson_progress IS 'User lesson completion tracking (Phase 62)';

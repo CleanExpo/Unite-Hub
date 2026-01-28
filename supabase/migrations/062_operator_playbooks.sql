@@ -19,8 +19,10 @@ CREATE TABLE IF NOT EXISTS operator_playbooks (
   status TEXT NOT NULL DEFAULT 'DRAFT' CHECK (status IN ('DRAFT', 'ACTIVE', 'ARCHIVED')),
 
   -- Ownership
-  created_by UUID REFERENCES auth.users(id),
-  updated_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+updated_by UUID REFERENCES auth.users(id),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -83,11 +85,13 @@ CREATE TABLE IF NOT EXISTS playbook_assignments (
   -- Assignment target
   assignment_type TEXT NOT NULL CHECK (assignment_type IN ('ROLE', 'USER', 'TEAM')),
   target_role TEXT CHECK (target_role IN ('OWNER', 'MANAGER', 'ANALYST')),
-  target_user_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+target_user_id UUID REFERENCES auth.users(id),
   target_team_id UUID,
 
   -- Assignment metadata
-  assigned_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+assigned_by UUID REFERENCES auth.users(id),
   assigned_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
   -- Status
@@ -103,7 +107,8 @@ CREATE TABLE IF NOT EXISTS guardrail_evaluations (
   organization_id UUID NOT NULL,
 
   -- Context
-  operator_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+operator_id UUID REFERENCES auth.users(id),
   proposal_id UUID,
   queue_item_id UUID,
 
@@ -131,7 +136,8 @@ CREATE TABLE IF NOT EXISTS sandbox_executions (
   -- Source
   proposal_id UUID,
   queue_item_id UUID,
-  operator_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+operator_id UUID REFERENCES auth.users(id),
 
   -- Simulation details
   execution_type TEXT NOT NULL,
@@ -155,7 +161,8 @@ CREATE TABLE IF NOT EXISTS sandbox_executions (
 CREATE TABLE IF NOT EXISTS coaching_hints (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id UUID NOT NULL,
-  operator_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+operator_id UUID REFERENCES auth.users(id),
 
   -- Source
   rule_id UUID REFERENCES playbook_rules(id),
@@ -216,7 +223,7 @@ ALTER TABLE coaching_hints ENABLE ROW LEVEL SECURITY;
 
 -- Playbooks: org members can read, managers can modify
 CREATE POLICY playbooks_select ON operator_playbooks
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid()
@@ -232,7 +239,7 @@ CREATE POLICY playbooks_insert ON operator_playbooks
   );
 
 CREATE POLICY playbooks_update ON operator_playbooks
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
@@ -240,7 +247,7 @@ CREATE POLICY playbooks_update ON operator_playbooks
   );
 
 CREATE POLICY playbooks_delete ON operator_playbooks
-  FOR DELETE USING (
+  FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid() AND role = 'OWNER'
@@ -249,7 +256,7 @@ CREATE POLICY playbooks_delete ON operator_playbooks
 
 -- Rules: follow playbook permissions
 CREATE POLICY rules_select ON playbook_rules
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     playbook_id IN (
       SELECT id FROM operator_playbooks
       WHERE organization_id IN (
@@ -271,7 +278,7 @@ CREATE POLICY rules_insert ON playbook_rules
   );
 
 CREATE POLICY rules_update ON playbook_rules
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     playbook_id IN (
       SELECT id FROM operator_playbooks
       WHERE organization_id IN (
@@ -282,7 +289,7 @@ CREATE POLICY rules_update ON playbook_rules
   );
 
 CREATE POLICY rules_delete ON playbook_rules
-  FOR DELETE USING (
+  FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     playbook_id IN (
       SELECT id FROM operator_playbooks
       WHERE organization_id IN (
@@ -294,7 +301,7 @@ CREATE POLICY rules_delete ON playbook_rules
 
 -- Assignments: managers can manage
 CREATE POLICY assignments_select ON playbook_assignments
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid()
@@ -310,7 +317,7 @@ CREATE POLICY assignments_insert ON playbook_assignments
   );
 
 CREATE POLICY assignments_update ON playbook_assignments
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
@@ -318,7 +325,7 @@ CREATE POLICY assignments_update ON playbook_assignments
   );
 
 CREATE POLICY assignments_delete ON playbook_assignments
-  FOR DELETE USING (
+  FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
@@ -327,7 +334,7 @@ CREATE POLICY assignments_delete ON playbook_assignments
 
 -- Guardrail evaluations: read own or org-wide for managers
 CREATE POLICY evals_select ON guardrail_evaluations
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     operator_id = auth.uid() OR
     organization_id IN (
       SELECT organization_id FROM operator_profiles
@@ -340,7 +347,7 @@ CREATE POLICY evals_insert ON guardrail_evaluations
 
 -- Sandbox executions: similar to evaluations
 CREATE POLICY sandbox_select ON sandbox_executions
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     operator_id = auth.uid() OR
     organization_id IN (
       SELECT organization_id FROM operator_profiles
@@ -353,7 +360,7 @@ CREATE POLICY sandbox_insert ON sandbox_executions
 
 -- Coaching hints: operators see own
 CREATE POLICY coaching_select ON coaching_hints
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     operator_id = auth.uid() OR
     organization_id IN (
       SELECT organization_id FROM operator_profiles
@@ -365,4 +372,4 @@ CREATE POLICY coaching_insert ON coaching_hints
   FOR INSERT WITH CHECK (true);
 
 CREATE POLICY coaching_update ON coaching_hints
-  FOR UPDATE USING (operator_id = auth.uid());
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND operator_id = auth.uid());

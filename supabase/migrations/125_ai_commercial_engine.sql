@@ -42,7 +42,7 @@ ALTER TABLE commercial_offers ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY commercial_offers_select ON commercial_offers
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -54,7 +54,7 @@ CREATE POLICY commercial_offers_insert ON commercial_offers
 
 CREATE POLICY commercial_offers_update ON commercial_offers
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -94,7 +94,7 @@ ALTER TABLE offer_performance ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY offer_performance_select ON offer_performance
   FOR SELECT TO authenticated
-  USING (offer_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND offer_id IN (
     SELECT id FROM commercial_offers
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

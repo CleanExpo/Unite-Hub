@@ -143,7 +143,7 @@ BEGIN
   BEGIN
     CREATE POLICY "framework_templates_select_all" ON convex_framework_templates
       FOR SELECT
-      USING (status = 'active');
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND status = 'active');
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 
@@ -411,4 +411,4 @@ END $$;
 --
 -- Total migration size: ~450 lines of production SQL
 -- Deployment impact: ~2-3 seconds for table creation
--- Safe to re-run: All CREATE TABLE IF NOT EXISTS statements are idempotent
+-- Safe to re-run: All CREATE TABLE IF NOT EXISTS statements are idempotent;

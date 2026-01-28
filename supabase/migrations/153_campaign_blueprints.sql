@@ -93,11 +93,14 @@ CREATE TABLE IF NOT EXISTS campaign_blueprints (
 
   -- Audit Trail
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+updated_by UUID REFERENCES auth.users(id),
   approved_at TIMESTAMPTZ,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   rejected_reason TEXT,
 
   -- Performance Tracking (post-deployment)
@@ -136,7 +139,8 @@ CREATE TABLE IF NOT EXISTS campaign_blueprint_revisions (
 
   -- Revision metadata
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
 
   CONSTRAINT unique_revision_number UNIQUE(blueprint_id, revision_number)
 );
@@ -174,7 +178,7 @@ CREATE POLICY campaign_blueprints_founder_policy ON campaign_blueprints
 -- Service role for system operations
 CREATE POLICY campaign_blueprints_service_policy ON campaign_blueprints
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- Revisions policies
@@ -191,7 +195,7 @@ CREATE POLICY blueprint_revisions_founder_policy ON campaign_blueprint_revisions
 
 CREATE POLICY blueprint_revisions_service_policy ON campaign_blueprint_revisions
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- ============================================================================

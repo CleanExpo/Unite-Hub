@@ -8,7 +8,8 @@
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_memory_snapshots (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   snapshot_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   time_range_start TIMESTAMPTZ NOT NULL,
@@ -32,7 +33,8 @@ CREATE INDEX IF NOT EXISTS idx_founder_memory_snapshots_workspace
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_focus_areas (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   label VARCHAR(255) NOT NULL,
   category VARCHAR(100) NOT NULL, -- marketing, sales, delivery, product, clients, engineering, finance, operations
@@ -56,7 +58,8 @@ CREATE INDEX IF NOT EXISTS idx_founder_focus_areas_category
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS cross_client_patterns (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   pattern_type VARCHAR(100) NOT NULL, -- communication, project, opportunity, risk, behavior, sentiment, timing
   title VARCHAR(500) NOT NULL,
@@ -87,7 +90,8 @@ CREATE INDEX IF NOT EXISTS idx_cross_client_patterns_last_seen
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_opportunity_backlog (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   related_client_id UUID REFERENCES contacts(id) ON DELETE SET NULL,
   related_pre_client_id UUID REFERENCES pre_clients(id) ON DELETE SET NULL,
@@ -120,7 +124,8 @@ CREATE INDEX IF NOT EXISTS idx_founder_opportunity_backlog_source
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_risk_register (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   related_client_id UUID REFERENCES contacts(id) ON DELETE SET NULL,
   related_pre_client_id UUID REFERENCES pre_clients(id) ON DELETE SET NULL,
@@ -134,7 +139,8 @@ CREATE TABLE IF NOT EXISTS founder_risk_register (
   category VARCHAR(100), -- client_churn, delivery_delay, revenue, reputation, operational, compliance
   mitigation_status VARCHAR(50) DEFAULT 'identified', -- identified, analyzing, mitigating, accepted, resolved, escalated
   mitigation_plan TEXT,
-  owner_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   due_date DATE,
   detected_at TIMESTAMPTZ DEFAULT NOW(),
   resolved_at TIMESTAMPTZ,
@@ -155,7 +161,8 @@ CREATE INDEX IF NOT EXISTS idx_founder_risk_register_likelihood_impact
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_momentum_scores (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   period_start DATE NOT NULL,
   period_end DATE NOT NULL,
@@ -200,7 +207,8 @@ CREATE INDEX IF NOT EXISTS idx_founder_momentum_scores_overall
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_decision_scenarios (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
   description TEXT,
@@ -233,7 +241,8 @@ CREATE INDEX IF NOT EXISTS idx_founder_decision_scenarios_type
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_weekly_digests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   week_start DATE NOT NULL,
   week_end DATE NOT NULL,
@@ -273,7 +282,8 @@ CREATE INDEX IF NOT EXISTS idx_founder_weekly_digests_workspace
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_next_actions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   action_title VARCHAR(500) NOT NULL,
   action_description TEXT,
@@ -354,31 +364,31 @@ END $$;
 
 -- Create policies: Founder can access their own data
 CREATE POLICY founder_memory_snapshots_owner_policy ON founder_memory_snapshots
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 CREATE POLICY founder_focus_areas_owner_policy ON founder_focus_areas
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 CREATE POLICY cross_client_patterns_owner_policy ON cross_client_patterns
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 CREATE POLICY founder_opportunity_backlog_owner_policy ON founder_opportunity_backlog
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 CREATE POLICY founder_risk_register_owner_policy ON founder_risk_register
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 CREATE POLICY founder_momentum_scores_owner_policy ON founder_momentum_scores
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 CREATE POLICY founder_decision_scenarios_owner_policy ON founder_decision_scenarios
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 CREATE POLICY founder_weekly_digests_owner_policy ON founder_weekly_digests
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 CREATE POLICY founder_next_actions_owner_policy ON founder_next_actions
-  FOR ALL USING (founder_id = auth.uid());
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND founder_id = auth.uid());
 
 -- Workspace member access (for delegated staff with founder role permissions)
 -- Join through workspaces -> organizations -> user_organizations

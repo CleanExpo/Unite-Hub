@@ -37,7 +37,7 @@ ALTER TABLE revenue_opportunities ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY revenue_opportunities_select ON revenue_opportunities
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -89,7 +89,7 @@ ALTER TABLE revenue_actions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY revenue_actions_select ON revenue_actions
   FOR SELECT TO authenticated
-  USING (opportunity_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND opportunity_id IN (
     SELECT id FROM revenue_opportunities
     WHERE org_id IN (
       SELECT org_id FROM user_organizations

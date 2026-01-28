@@ -46,7 +46,7 @@ ALTER TABLE simulation_scenarios ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY simulation_scenarios_select ON simulation_scenarios
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -58,7 +58,7 @@ CREATE POLICY simulation_scenarios_insert ON simulation_scenarios
 
 CREATE POLICY simulation_scenarios_update ON simulation_scenarios
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -95,7 +95,7 @@ ALTER TABLE simulation_results ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY simulation_results_select ON simulation_results
   FOR SELECT TO authenticated
-  USING (scenario_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND scenario_id IN (
     SELECT id FROM simulation_scenarios
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

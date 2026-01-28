@@ -4,7 +4,8 @@
 -- Client Launch Kits table
 CREATE TABLE IF NOT EXISTS client_launch_kits (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Kit status
@@ -44,7 +45,8 @@ CREATE TABLE IF NOT EXISTS client_launch_kits (
 CREATE TABLE IF NOT EXISTS client_onboarding_tasks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   launch_kit_id UUID NOT NULL REFERENCES client_launch_kits(id) ON DELETE CASCADE,
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Task details
   task_key TEXT NOT NULL,
@@ -78,7 +80,8 @@ CREATE TABLE IF NOT EXISTS client_onboarding_tasks (
 -- Client lifecycle events table
 CREATE TABLE IF NOT EXISTS client_lifecycle_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   launch_kit_id UUID REFERENCES client_launch_kits(id) ON DELETE SET NULL,
 
   -- Event details
@@ -116,11 +119,11 @@ ALTER TABLE client_lifecycle_events ENABLE ROW LEVEL SECURITY;
 
 -- Clients can view their own launch kits
 CREATE POLICY "clients_view_own_launch_kits" ON client_launch_kits
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Staff can view all launch kits in their org
 CREATE POLICY "staff_view_org_launch_kits" ON client_launch_kits
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations uo
       WHERE uo.user_id = auth.uid()
@@ -131,25 +134,25 @@ CREATE POLICY "staff_view_org_launch_kits" ON client_launch_kits
 
 -- Clients can view their own tasks
 CREATE POLICY "clients_view_own_tasks" ON client_onboarding_tasks
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Clients can update their own tasks
 CREATE POLICY "clients_update_own_tasks" ON client_onboarding_tasks
-  FOR UPDATE USING (auth.uid() = client_id);
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Clients can view their own lifecycle events
 CREATE POLICY "clients_view_own_events" ON client_lifecycle_events
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Service role can do everything
 CREATE POLICY "service_role_launch_kits" ON client_launch_kits
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_tasks" ON client_onboarding_tasks
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_events" ON client_lifecycle_events
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Update timestamp trigger
 CREATE OR REPLACE FUNCTION update_launch_kit_timestamp()

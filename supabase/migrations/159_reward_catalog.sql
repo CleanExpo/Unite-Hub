@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS reward_catalog (
 CREATE TABLE IF NOT EXISTS reward_redemption_requests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   reward_id uuid NOT NULL REFERENCES reward_catalog(id) ON DELETE RESTRICT,
 
   -- Request details
@@ -51,7 +52,8 @@ CREATE TABLE IF NOT EXISTS reward_redemption_requests (
   -- Founder notes
   founder_notes text,
   founder_action_at timestamp with time zone,
-  founder_action_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_action_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
 
   -- Result
   redemption_id uuid REFERENCES loyalty_credit_ledger(id) ON DELETE SET NULL,
@@ -299,7 +301,7 @@ ALTER TABLE reward_redemption_requests ENABLE ROW LEVEL SECURITY;
 
 -- Reward catalog: Users can view active rewards, founders can manage
 CREATE POLICY reward_catalog_select_user ON reward_catalog
-  FOR SELECT USING (is_active = true);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND is_active = true);
 
 CREATE POLICY reward_catalog_select_founder ON reward_catalog
   FOR SELECT USING (
@@ -337,7 +339,7 @@ CREATE POLICY reward_catalog_update_founder ON reward_catalog
 
 -- Redemption requests: Users can view own, founders can view all
 CREATE POLICY redemption_requests_select_own ON reward_redemption_requests
-  FOR SELECT USING (auth.uid() = user_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 CREATE POLICY redemption_requests_select_founder ON reward_redemption_requests
   FOR SELECT USING (

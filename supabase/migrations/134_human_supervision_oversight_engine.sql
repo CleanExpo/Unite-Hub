@@ -39,7 +39,8 @@ CREATE TABLE hsoe_requests (
   CONSTRAINT hsoe_requests_tenant_fk
     FOREIGN KEY (tenant_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT hsoe_requests_created_by_fk
-    FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -55,7 +56,7 @@ ALTER TABLE hsoe_requests ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY hsoe_requests_select ON hsoe_requests
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -67,7 +68,7 @@ CREATE POLICY hsoe_requests_insert ON hsoe_requests
 
 CREATE POLICY hsoe_requests_update ON hsoe_requests
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -98,7 +99,8 @@ CREATE TABLE hsoe_approvals (
   CONSTRAINT hsoe_approvals_request_fk
     FOREIGN KEY (request_id) REFERENCES hsoe_requests(id) ON DELETE CASCADE,
   CONSTRAINT hsoe_approvals_approver_fk
-    FOREIGN KEY (approver_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (approver_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -114,7 +116,7 @@ ALTER TABLE hsoe_approvals ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (via hsoe_requests)
 CREATE POLICY hsoe_approvals_select ON hsoe_approvals
   FOR SELECT TO authenticated
-  USING (request_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND request_id IN (
     SELECT id FROM hsoe_requests
     WHERE tenant_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -154,7 +156,8 @@ CREATE TABLE hsoe_audit_log (
   CONSTRAINT hsoe_audit_log_request_fk
     FOREIGN KEY (request_id) REFERENCES hsoe_requests(id) ON DELETE CASCADE,
   CONSTRAINT hsoe_audit_log_actor_fk
-    FOREIGN KEY (actor_id) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (actor_id) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -169,7 +172,7 @@ ALTER TABLE hsoe_audit_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (via hsoe_requests)
 CREATE POLICY hsoe_audit_log_select ON hsoe_audit_log
   FOR SELECT TO authenticated
-  USING (request_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND request_id IN (
     SELECT id FROM hsoe_requests
     WHERE tenant_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

@@ -11,7 +11,8 @@
 
 CREATE TABLE IF NOT EXISTS synthex_tenants (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Business info
   business_name TEXT NOT NULL,
@@ -413,4 +414,4 @@ CREATE POLICY "Users can create usage logs for their tenant"
 -- 1. Create synthexOfferEngine.ts to manage pricing logic
 -- 2. Create synthexJobRouter.ts to queue and process jobs
 -- 3. Create synthexAgiBridge.ts to call AGI agents
--- 4. Implement UI onboarding and dashboard pages
+-- 4. Implement UI onboarding and dashboard pages;

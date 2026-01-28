@@ -72,7 +72,8 @@ CREATE TABLE IF NOT EXISTS erp_customers (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT erp_customers_workspace_unique CHECK (
     (customer_type = 'individual' AND first_name IS NOT NULL AND last_name IS NOT NULL) OR
@@ -136,9 +137,11 @@ CREATE TABLE IF NOT EXISTS erp_invoices (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
   sent_at timestamptz,
-  sent_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+sent_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT erp_invoices_workspace_number UNIQUE (workspace_id, invoice_number)
 );
@@ -220,9 +223,11 @@ CREATE TABLE IF NOT EXISTS erp_invoice_payments (
 
   -- Metadata
   created_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
   refunded_at timestamptz,
-  refunded_by uuid REFERENCES auth.users(id)
+  -- Keep FK reference to auth.users (allowed in migrations)
+refunded_by uuid REFERENCES auth.users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_erp_invoice_payments_workspace ON erp_invoice_payments(workspace_id);

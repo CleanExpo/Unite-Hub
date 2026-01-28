@@ -71,15 +71,15 @@ ALTER TABLE founder_overrides ENABLE ROW LEVEL SECURITY;
 -- RLS Policies - Read-only for authenticated users
 CREATE POLICY founder_approvals_authenticated_read ON founder_approvals
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY founder_event_log_authenticated_read ON founder_event_log
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY founder_overrides_authenticated_read ON founder_overrides
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Indexes for fast lookups
 CREATE INDEX IF NOT EXISTS idx_founder_approvals_agent ON founder_approvals(agent);

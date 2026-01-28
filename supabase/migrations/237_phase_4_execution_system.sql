@@ -257,7 +257,7 @@ CREATE POLICY execution_health_snapshots_users_insert ON execution_health_snapsh
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'strategy_l4_items') THEN
-    CREATE POLICY task_propagation_logs_users_select ON task_propagation_logs
+    CREATE POLICY "task_propagation_logs_users_select_task_propagation_logs_1" ON "task_propagation_logs"
       FOR SELECT USING (
         l4_item_id IN (
           SELECT id FROM strategy_l4_items
@@ -270,7 +270,7 @@ BEGIN
   ELSE
     -- Fallback: Simple execution-based policy if strategy_l4_items doesn't exist yet
     CREATE POLICY task_propagation_logs_users_select ON task_propagation_logs
-      FOR SELECT USING (
+      FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         execution_id IN (
           SELECT id FROM strategy_executions
         )

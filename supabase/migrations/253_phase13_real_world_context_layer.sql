@@ -10,7 +10,8 @@
 
 CREATE TABLE IF NOT EXISTS visual_context_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
 
   -- Event identity
@@ -61,7 +62,8 @@ CREATE INDEX idx_visual_context_env_type ON visual_context_events(environment_ty
 
 CREATE TABLE IF NOT EXISTS surroundings_insights (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
 
   -- Insight identity
@@ -120,7 +122,8 @@ CREATE INDEX idx_surroundings_activity ON surroundings_insights(likely_activity,
 
 CREATE TABLE IF NOT EXISTS situation_snapshots (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
 
   -- Snapshot identity
@@ -199,7 +202,8 @@ CREATE INDEX idx_situation_snapshot_safety ON situation_snapshots(safety_score, 
 
 CREATE TABLE IF NOT EXISTS environment_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
 
   -- Profile identity
@@ -264,7 +268,8 @@ CREATE INDEX idx_env_profile_confidence ON environment_profiles(confidence_score
 
 CREATE TABLE IF NOT EXISTS productivity_outcomes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
 
   -- Link to environment
@@ -313,7 +318,8 @@ CREATE INDEX idx_outcome_satisfaction ON productivity_outcomes(satisfaction DESC
 
 CREATE TABLE IF NOT EXISTS capture_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
 
   -- Event identity
@@ -456,4 +462,4 @@ CREATE POLICY "Users can insert their own captures"
 -- Next steps:
 -- 1. Run Supabase caching refresh (SELECT * FROM visual_context_events LIMIT 1;)
 -- 2. Implement application layer for capture events
--- 3. Integrate with Phase 11 (wake-window) and Phase 10 (cognitive state)
+-- 3. Integrate with Phase 11 (wake-window) and Phase 10 (cognitive state);

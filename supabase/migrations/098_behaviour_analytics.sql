@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS behaviour_events (
   CONSTRAINT behaviour_events_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT behaviour_events_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -48,7 +49,7 @@ ALTER TABLE behaviour_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY behaviour_events_select ON behaviour_events
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -100,7 +101,7 @@ ALTER TABLE behaviour_insights ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY behaviour_insights_select ON behaviour_insights
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));

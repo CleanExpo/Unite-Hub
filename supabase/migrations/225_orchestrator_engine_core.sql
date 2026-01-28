@@ -46,8 +46,10 @@ CREATE TABLE IF NOT EXISTS orchestrator_tasks (
   error_message TEXT,
 
   -- Metadata & lineage
-  initiating_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  approver_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+initiating_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+approver_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   metadata JSONB DEFAULT '{}'::JSONB
 );
 

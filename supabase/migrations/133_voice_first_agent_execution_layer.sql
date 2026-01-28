@@ -27,7 +27,8 @@ CREATE TABLE voice_command_sessions (
   CONSTRAINT voice_command_sessions_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT voice_command_sessions_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -43,7 +44,7 @@ ALTER TABLE voice_command_sessions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY voice_command_sessions_select ON voice_command_sessions
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -55,7 +56,7 @@ CREATE POLICY voice_command_sessions_insert ON voice_command_sessions
 
 CREATE POLICY voice_command_sessions_update ON voice_command_sessions
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -88,7 +89,7 @@ ALTER TABLE voice_command_audit ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (via voice_command_sessions)
 CREATE POLICY voice_command_audit_select ON voice_command_audit
   FOR SELECT TO authenticated
-  USING (session_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND session_id IN (
     SELECT id FROM voice_command_sessions
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

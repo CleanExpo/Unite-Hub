@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS ai_usage_logs (
 
   -- Request details
   workspace_id UUID REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
   -- AI provider info
   provider TEXT NOT NULL, -- 'openrouter', 'anthropic_direct', 'google_direct', 'openai_direct'
@@ -314,10 +315,10 @@ CREATE POLICY "workspace_isolation_insert" ON ai_usage_logs
 -- Service role can do anything
 CREATE POLICY "service_role_all_access" ON ai_usage_logs
   FOR ALL
-  USING (auth.role() = 'service_role');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'service_role');
 
 -- Budget limits policies
-CREATE POLICY "workspace_isolation_select" ON ai_budget_limits
+CREATE POLICY "workspace_isolation_select_ai_budget_limits_1" ON "ai_budget_limits"
   FOR SELECT
   USING (
     workspace_id IN (
@@ -337,9 +338,9 @@ CREATE POLICY "workspace_isolation_update" ON ai_budget_limits
     )
   );
 
-CREATE POLICY "service_role_all_access" ON ai_budget_limits
+CREATE POLICY "service_role_all_access_ai_budget_limits_1" ON "ai_budget_limits"
   FOR ALL
-  USING (auth.role() = 'service_role');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'service_role');
 
 -- =====================================================
 -- 6. REFRESH MATERIALIZED VIEW FUNCTION

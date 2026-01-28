@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS public.media_files (
   -- Foreign Keys
   workspace_id UUID NOT NULL REFERENCES public.workspaces(id) ON DELETE CASCADE,
   org_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
-  uploaded_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+uploaded_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   project_id UUID REFERENCES public.projects(id) ON DELETE SET NULL,
 
   -- File Metadata

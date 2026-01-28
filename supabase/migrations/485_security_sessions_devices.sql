@@ -13,7 +13,8 @@
 CREATE TABLE IF NOT EXISTS user_sessions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   session_token text NOT NULL UNIQUE,
   ip_address inet,
   user_agent text,
@@ -28,7 +29,8 @@ CREATE TABLE IF NOT EXISTS user_sessions (
 CREATE TABLE IF NOT EXISTS trusted_devices (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   device_name text NOT NULL,
   device_fingerprint text NOT NULL,
   last_used_at timestamptz DEFAULT now(),

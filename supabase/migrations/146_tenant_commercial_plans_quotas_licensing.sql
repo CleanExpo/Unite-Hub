@@ -28,7 +28,7 @@ ALTER TABLE tcpqel_plans ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated users)
 CREATE POLICY tcpqel_plans_select ON tcpqel_plans
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE tcpqel_plans IS 'Subscription tiers and included engines (Phase 94)';
@@ -60,7 +60,7 @@ ALTER TABLE tcpqel_tenant_plans ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY tcpqel_tenant_plans_select ON tcpqel_tenant_plans
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -72,7 +72,7 @@ CREATE POLICY tcpqel_tenant_plans_insert ON tcpqel_tenant_plans
 
 CREATE POLICY tcpqel_tenant_plans_update ON tcpqel_tenant_plans
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -107,7 +107,7 @@ ALTER TABLE tcpqel_engine_licenses ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY tcpqel_engine_licenses_select ON tcpqel_engine_licenses
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -119,7 +119,7 @@ CREATE POLICY tcpqel_engine_licenses_insert ON tcpqel_engine_licenses
 
 CREATE POLICY tcpqel_engine_licenses_update ON tcpqel_engine_licenses
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

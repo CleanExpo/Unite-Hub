@@ -67,7 +67,7 @@ ALTER TABLE upewe_forecast_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY upewe_forecast_events_select ON upewe_forecast_events
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -109,7 +109,7 @@ ALTER TABLE upewe_signal_cache ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY upewe_signal_cache_select ON upewe_signal_cache
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -121,7 +121,7 @@ CREATE POLICY upewe_signal_cache_insert ON upewe_signal_cache
 
 CREATE POLICY upewe_signal_cache_delete ON upewe_signal_cache
   FOR DELETE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -161,7 +161,7 @@ ALTER TABLE upewe_policy_rules ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY upewe_policy_rules_select ON upewe_policy_rules
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -173,13 +173,13 @@ CREATE POLICY upewe_policy_rules_insert ON upewe_policy_rules
 
 CREATE POLICY upewe_policy_rules_update ON upewe_policy_rules
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
 CREATE POLICY upewe_policy_rules_delete ON upewe_policy_rules
   FOR DELETE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

@@ -34,7 +34,7 @@ ALTER TABLE compliance_templates ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (global read)
 CREATE POLICY compliance_templates_select ON compliance_templates
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY compliance_templates_insert ON compliance_templates
   FOR INSERT TO authenticated
@@ -69,7 +69,7 @@ ALTER TABLE compliance_purchases ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY compliance_purchases_select ON compliance_purchases
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

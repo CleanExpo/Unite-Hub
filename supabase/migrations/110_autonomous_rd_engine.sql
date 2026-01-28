@@ -30,7 +30,7 @@ ALTER TABLE rd_research_reports ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (system-wide, admin access)
 CREATE POLICY rd_research_reports_select ON rd_research_reports
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY rd_research_reports_insert ON rd_research_reports
   FOR INSERT TO authenticated
@@ -74,7 +74,7 @@ ALTER TABLE rd_prototypes ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY rd_prototypes_select ON rd_prototypes
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY rd_prototypes_insert ON rd_prototypes
   FOR INSERT TO authenticated
@@ -82,7 +82,7 @@ CREATE POLICY rd_prototypes_insert ON rd_prototypes
 
 CREATE POLICY rd_prototypes_update ON rd_prototypes
   FOR UPDATE TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE rd_prototypes IS 'R&D prototype outputs (Phase 58)';

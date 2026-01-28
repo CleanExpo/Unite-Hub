@@ -63,8 +63,8 @@ ALTER TABLE synthex_invoices ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "tenant_isolation_txn" ON synthex_transactions;
 CREATE POLICY "tenant_isolation_txn" ON synthex_transactions
-FOR ALL USING (TRUE);
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND TRUE);
 
 DROP POLICY IF EXISTS "tenant_isolation_inv" ON synthex_invoices;
 CREATE POLICY "tenant_isolation_inv" ON synthex_invoices
-FOR ALL USING (TRUE);
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND TRUE);

@@ -164,14 +164,14 @@ DROP POLICY IF EXISTS "authenticated_read_simulation_scenarios" ON simulation_sc
 DROP POLICY IF EXISTS "authenticated_read_simulation_results" ON simulation_results;
 DROP POLICY IF EXISTS "authenticated_read_governance_reports" ON governance_reports;
 
-CREATE POLICY authenticated_read_model_capabilities ON model_capabilities FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_governance_policies ON governance_policies FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_governance_audit ON governance_audit FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_model_routing ON model_routing_decisions FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_model_rewards ON model_rewards FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_risk_boundaries ON risk_boundaries FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_risk_profiles ON risk_profiles FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_risk_assessments ON risk_assessments FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_simulation_scenarios ON simulation_scenarios FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_simulation_results ON simulation_results FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY authenticated_read_governance_reports ON governance_reports FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_model_capabilities ON model_capabilities FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_governance_policies ON governance_policies FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_governance_audit ON governance_audit FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_model_routing ON model_routing_decisions FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_model_rewards ON model_rewards FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_risk_boundaries ON risk_boundaries FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_risk_profiles ON risk_profiles FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_risk_assessments ON risk_assessments FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_simulation_scenarios ON simulation_scenarios FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_simulation_results ON simulation_results FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_governance_reports ON governance_reports FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');

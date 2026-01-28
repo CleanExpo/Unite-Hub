@@ -35,12 +35,14 @@ CREATE TABLE IF NOT EXISTS api_keys (
   -- Status
   is_active boolean DEFAULT true,
   revoked_at timestamptz,
-  revoked_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+revoked_by uuid REFERENCES auth.users(id),
 
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid NOT NULL REFERENCES auth.users(id)
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid NOT NULL REFERENCES auth.users(id)
 );
 
 -- Indexes for performance

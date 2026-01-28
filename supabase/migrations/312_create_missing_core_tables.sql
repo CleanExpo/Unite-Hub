@@ -10,10 +10,12 @@ DROP TABLE IF EXISTS admin_trusted_devices CASCADE;
 
 CREATE TABLE admin_approvals (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   requested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   approved_at TIMESTAMPTZ,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   approval_status TEXT NOT NULL DEFAULT 'pending' CHECK (approval_status IN ('pending', 'approved', 'denied', 'expired')),
   token TEXT UNIQUE,
   expires_at TIMESTAMPTZ,
@@ -22,9 +24,14 @@ CREATE TABLE admin_approvals (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Enable RLS
+ALTER TABLE "admin_approvals" ENABLE ROW LEVEL SECURITY;
+
+
 CREATE TABLE admin_trusted_devices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   device_fingerprint TEXT NOT NULL,
   device_name TEXT,
   user_agent TEXT,
@@ -35,6 +42,10 @@ CREATE TABLE admin_trusted_devices (
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Enable RLS
+ALTER TABLE "admin_trusted_devices" ENABLE ROW LEVEL SECURITY;
+
 
 -- ============================================================
 -- CRM TABLES (use IF NOT EXISTS - may have data)
@@ -79,7 +90,8 @@ CREATE TABLE IF NOT EXISTS client_actions (
   workspace_id UUID NOT NULL,
   action_type TEXT NOT NULL,
   action_data JSONB DEFAULT '{}',
-  performed_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+performed_by UUID REFERENCES auth.users(id),
   performed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -91,7 +103,8 @@ CREATE TABLE IF NOT EXISTS client_actions (
 CREATE TABLE IF NOT EXISTS integrations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   provider TEXT NOT NULL,
   provider_user_id TEXT,
   access_token TEXT,
@@ -153,7 +166,8 @@ CREATE TABLE IF NOT EXISTS social_inbox_messages (
   is_read BOOLEAN NOT NULL DEFAULT false,
   is_replied BOOLEAN NOT NULL DEFAULT false,
   replied_at TIMESTAMPTZ,
-  replied_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+replied_by UUID REFERENCES auth.users(id),
   metadata JSONB DEFAULT '{}',
   received_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

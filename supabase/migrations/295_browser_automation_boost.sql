@@ -8,7 +8,8 @@
 CREATE TABLE IF NOT EXISTS browser_sessions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   session_name TEXT,
   provider TEXT DEFAULT 'chromium' CHECK (provider IN ('chromium', 'firefox', 'webkit')),
   -- Encrypted Session State
@@ -94,7 +95,8 @@ CREATE TABLE IF NOT EXISTS browser_dom_maps (
 CREATE TABLE IF NOT EXISTS browser_replay_tasks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   name TEXT NOT NULL,
   description TEXT,
   category TEXT CHECK (category IN ('login', 'form_fill', 'data_extraction', 'navigation', 'upload', 'download', 'custom')),
@@ -149,7 +151,8 @@ CREATE TABLE IF NOT EXISTS browser_replay_runs (
   replay_task_id UUID NOT NULL REFERENCES browser_replay_tasks(id) ON DELETE CASCADE,
   browser_session_id UUID REFERENCES browser_sessions(id),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  triggered_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+triggered_by UUID REFERENCES auth.users(id),
   trigger_source TEXT CHECK (trigger_source IN ('manual', 'scheduled', 'webhook', 'orchestrator', 'api')),
   -- Execution
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'running', 'completed', 'failed', 'cancelled', 'timeout')),
@@ -175,7 +178,8 @@ CREATE TABLE IF NOT EXISTS browser_replay_runs (
   error_details JSONB DEFAULT '{}',
   -- Approval (if required)
   approval_status TEXT CHECK (approval_status IN ('not_required', 'pending', 'approved', 'rejected')),
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   approved_at TIMESTAMPTZ,
   -- Resource Usage
   memory_used_mb INTEGER,
@@ -217,7 +221,8 @@ CREATE TABLE IF NOT EXISTS browser_learned_patterns (
   converted_at TIMESTAMPTZ,
   -- Status
   status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'learning', 'validated', 'approved', 'rejected')),
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   approved_at TIMESTAMPTZ,
   rejection_reason TEXT,
   metadata JSONB DEFAULT '{}',
@@ -264,7 +269,8 @@ CREATE TABLE IF NOT EXISTS browser_action_logs (
   was_blocked BOOLEAN DEFAULT FALSE,
   blocked_reason TEXT,
   requires_approval BOOLEAN DEFAULT FALSE,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

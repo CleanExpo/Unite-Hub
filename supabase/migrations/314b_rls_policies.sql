@@ -291,7 +291,7 @@ BEGIN
   DROP POLICY IF EXISTS "admin_approvals_admin_manage" ON admin_approvals;
 
   CREATE POLICY "admin_approvals_admin_select" ON admin_approvals
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM profiles p
         WHERE p.id = auth.uid()
@@ -300,7 +300,7 @@ BEGIN
     );
 
   CREATE POLICY "admin_approvals_admin_manage" ON admin_approvals
-    FOR ALL USING (
+    FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM profiles p
         WHERE p.id = auth.uid()
@@ -323,7 +323,7 @@ BEGIN
   DROP POLICY IF EXISTS "admin_trusted_devices_admin_select" ON admin_trusted_devices;
 
   CREATE POLICY "admin_trusted_devices_admin_select" ON admin_trusted_devices
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       user_id = auth.uid() OR
       EXISTS (
         SELECT 1 FROM profiles p
@@ -349,13 +349,13 @@ BEGIN
   DROP POLICY IF EXISTS "user_profiles_admin_all" ON user_profiles;
 
   CREATE POLICY "user_profiles_self_select" ON user_profiles
-    FOR SELECT USING (id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND id = auth.uid());
 
   CREATE POLICY "user_profiles_self_update" ON user_profiles
-    FOR UPDATE USING (id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND id = auth.uid());
 
   CREATE POLICY "user_profiles_admin_all" ON user_profiles
-    FOR ALL USING (
+    FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM profiles p
         WHERE p.id = auth.uid()
@@ -379,7 +379,7 @@ BEGIN
   DROP POLICY IF EXISTS "organizations_owner_manage" ON organizations;
 
   CREATE POLICY "organizations_member_select" ON organizations
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM user_organizations uo
         WHERE uo.org_id = organizations.id
@@ -388,7 +388,7 @@ BEGIN
     );
 
   CREATE POLICY "organizations_owner_manage" ON organizations
-    FOR ALL USING (
+    FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM user_organizations uo
         WHERE uo.org_id = organizations.id
@@ -413,10 +413,10 @@ BEGIN
   DROP POLICY IF EXISTS "user_organizations_admin_manage" ON user_organizations;
 
   CREATE POLICY "user_organizations_self_select" ON user_organizations
-    FOR SELECT USING (user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
   CREATE POLICY "user_organizations_admin_manage" ON user_organizations
-    FOR ALL USING (
+    FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM user_organizations uo
         WHERE uo.org_id = user_organizations.org_id

@@ -35,7 +35,7 @@ ALTER TABLE pricing_rules ENABLE ROW LEVEL SECURITY;
 -- System/service role can access, authenticated users cannot
 CREATE POLICY pricing_rules_deny_all ON pricing_rules
   FOR ALL TO authenticated
-  USING (false)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND false)
   WITH CHECK (false);
 
 -- Trigger for updated_at
@@ -86,7 +86,7 @@ ALTER TABLE pricing_recommendations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY pricing_recommendations_select ON pricing_recommendations
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -100,7 +100,7 @@ CREATE POLICY pricing_recommendations_insert ON pricing_recommendations
 
 CREATE POLICY pricing_recommendations_update ON pricing_recommendations
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));

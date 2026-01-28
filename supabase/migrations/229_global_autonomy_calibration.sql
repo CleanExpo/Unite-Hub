@@ -54,7 +54,8 @@ CREATE TABLE IF NOT EXISTS autonomy_calibration_cycles (
 
   -- Approval tracking
   requires_approval BOOLEAN DEFAULT FALSE, -- Large changes need founder approval
-  approved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   approved_at TIMESTAMP WITH TIME ZONE,
   approval_notes TEXT,
 
@@ -69,7 +70,8 @@ CREATE TABLE IF NOT EXISTS autonomy_calibration_cycles (
   -- Metadata
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_calibration_cycles_workspace ON autonomy_calibration_cycles(workspace_id);

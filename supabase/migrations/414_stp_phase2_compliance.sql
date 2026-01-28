@@ -54,7 +54,8 @@ CREATE TABLE IF NOT EXISTS stp_employees (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT stp_employees_workspace_employee UNIQUE (workspace_id, employee_id)
 );
@@ -113,7 +114,8 @@ CREATE TABLE IF NOT EXISTS stp_pay_runs (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT stp_pay_runs_workspace_employee_period UNIQUE (workspace_id, employee_id, pay_period_start, pay_period_end)
 );
@@ -207,7 +209,8 @@ CREATE TABLE IF NOT EXISTS stp_submissions (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id)
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_stp_submissions_workspace ON stp_submissions(workspace_id);

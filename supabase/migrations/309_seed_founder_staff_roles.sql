@@ -4,13 +4,15 @@
 
 BEGIN;
 
--- Create profiles for any auth.users that don't have profiles yet
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
+Create profiles for any auth.users that don't have profiles yet
 -- This ensures the role update queries below will work
 INSERT INTO profiles (id, email, role)
 SELECT
   id,
   email,
   'CLIENT'::user_role
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
 FROM auth.users
 WHERE id NOT IN (SELECT id FROM profiles WHERE id IS NOT NULL)
 ON CONFLICT (id) DO NOTHING;

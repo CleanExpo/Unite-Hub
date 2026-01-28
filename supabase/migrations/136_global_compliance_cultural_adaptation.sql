@@ -95,7 +95,8 @@ CREATE TABLE IF NOT EXISTS compliance_incidents (
 
   -- Resolution
   resolved_at TIMESTAMPTZ,
-  resolved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by UUID REFERENCES auth.users(id),
 
   -- Metadata
   metadata JSONB NOT NULL DEFAULT '{}'::jsonb

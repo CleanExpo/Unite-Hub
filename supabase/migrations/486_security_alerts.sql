@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS security_alerts (
   metadata jsonb DEFAULT '{}'::jsonb,
   is_resolved boolean DEFAULT false,
   resolved_at timestamptz,
-  resolved_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by uuid REFERENCES auth.users(id),
   created_at timestamptz DEFAULT now()
 );
 

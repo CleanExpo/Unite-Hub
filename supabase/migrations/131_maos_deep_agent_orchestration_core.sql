@@ -47,7 +47,7 @@ ALTER TABLE orchestrator_runs ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY orchestrator_runs_select ON orchestrator_runs
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -59,7 +59,7 @@ CREATE POLICY orchestrator_runs_insert ON orchestrator_runs
 
 CREATE POLICY orchestrator_runs_update ON orchestrator_runs
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -107,7 +107,7 @@ ALTER TABLE agent_invocations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (via orchestrator_runs)
 CREATE POLICY agent_invocations_select ON agent_invocations
   FOR SELECT TO authenticated
-  USING (run_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND run_id IN (
     SELECT id FROM orchestrator_runs
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -125,7 +125,7 @@ CREATE POLICY agent_invocations_insert ON agent_invocations
 
 CREATE POLICY agent_invocations_update ON agent_invocations
   FOR UPDATE TO authenticated
-  USING (run_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND run_id IN (
     SELECT id FROM orchestrator_runs
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -161,7 +161,7 @@ ALTER TABLE deep_agent_workflows ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY deep_agent_workflows_select ON deep_agent_workflows
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -173,7 +173,7 @@ CREATE POLICY deep_agent_workflows_insert ON deep_agent_workflows
 
 CREATE POLICY deep_agent_workflows_update ON deep_agent_workflows
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

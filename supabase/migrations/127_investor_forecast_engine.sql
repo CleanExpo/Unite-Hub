@@ -40,7 +40,7 @@ ALTER TABLE forecast_inputs ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY forecast_inputs_select ON forecast_inputs
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -52,7 +52,7 @@ CREATE POLICY forecast_inputs_insert ON forecast_inputs
 
 CREATE POLICY forecast_inputs_update ON forecast_inputs
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -101,7 +101,7 @@ ALTER TABLE long_term_forecasts ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY long_term_forecasts_select ON long_term_forecasts
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

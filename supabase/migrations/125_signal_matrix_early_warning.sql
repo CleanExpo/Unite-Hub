@@ -28,7 +28,7 @@ ALTER TABLE unified_signal_matrix ENABLE ROW LEVEL SECURITY;
 -- Policy: founders and admins can read all matrix rows
 CREATE POLICY unified_signal_matrix_select ON unified_signal_matrix
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -64,7 +64,8 @@ CREATE TABLE IF NOT EXISTS early_warning_events (
   timeframe_end timestamptz,
   status text NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'acknowledged', 'resolved')),
   resolved_at timestamptz,
-  resolved_by_user_id uuid REFERENCES auth.users(id)
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by_user_id uuid REFERENCES auth.users(id)
 );
 
 -- Indexes for early_warning_events
@@ -80,7 +81,7 @@ ALTER TABLE early_warning_events ENABLE ROW LEVEL SECURITY;
 -- Policy: founders and admins can read all warnings
 CREATE POLICY early_warning_events_select ON early_warning_events
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -98,7 +99,7 @@ CREATE POLICY early_warning_events_insert ON early_warning_events
 -- Policy: founders and admins can update status
 CREATE POLICY early_warning_events_update ON early_warning_events
   FOR UPDATE
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -129,7 +130,7 @@ ALTER TABLE early_warning_factors ENABLE ROW LEVEL SECURITY;
 -- Policy: founders and admins can read factors
 CREATE POLICY early_warning_factors_select ON early_warning_factors
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -138,7 +139,7 @@ CREATE POLICY early_warning_factors_select ON early_warning_factors
 -- Policy: admins can update factors
 CREATE POLICY early_warning_factors_update ON early_warning_factors
   FOR UPDATE
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )

@@ -8,7 +8,8 @@
 
 -- Staff Users Table (Founder, Admin, Developer)
 CREATE TABLE IF NOT EXISTS staff_users (
-  id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email text UNIQUE NOT NULL,
   name text,
   role text NOT NULL CHECK(role IN ('founder', 'admin', 'developer')),
@@ -313,4 +314,4 @@ CREATE TRIGGER update_tasks_updated_at
 -- Total tables created: 9
 -- Total indexes created: 15
 -- Total RLS policies created: 13
--- Total triggers created: 4
+-- Total triggers created: 4;

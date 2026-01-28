@@ -991,7 +991,7 @@ ALTER TABLE seo_leak_recommendations ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "seo_audit_jobs_select_via_business" ON seo_audit_jobs;
 CREATE POLICY "seo_audit_jobs_select_via_business" ON seo_audit_jobs
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_audit_jobs.founder_business_id
@@ -1011,7 +1011,7 @@ CREATE POLICY "seo_audit_jobs_insert_via_business" ON seo_audit_jobs
 
 DROP POLICY IF EXISTS "seo_audit_jobs_update_via_business" ON seo_audit_jobs;
 CREATE POLICY "seo_audit_jobs_update_via_business" ON seo_audit_jobs
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_audit_jobs.founder_business_id
@@ -1021,7 +1021,7 @@ CREATE POLICY "seo_audit_jobs_update_via_business" ON seo_audit_jobs
 
 DROP POLICY IF EXISTS "seo_audit_jobs_delete_via_business" ON seo_audit_jobs;
 CREATE POLICY "seo_audit_jobs_delete_via_business" ON seo_audit_jobs
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_audit_jobs.founder_business_id
@@ -1036,7 +1036,7 @@ CREATE POLICY "seo_audit_jobs_delete_via_business" ON seo_audit_jobs
 
 DROP POLICY IF EXISTS "seo_audit_results_select_via_job" ON seo_audit_results;
 CREATE POLICY "seo_audit_results_select_via_job" ON seo_audit_results
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM seo_audit_jobs saj
             JOIN founder_businesses fb ON fb.id = saj.founder_business_id
@@ -1058,7 +1058,7 @@ CREATE POLICY "seo_audit_results_insert_via_job" ON seo_audit_results
 
 DROP POLICY IF EXISTS "seo_audit_results_update_via_job" ON seo_audit_results;
 CREATE POLICY "seo_audit_results_update_via_job" ON seo_audit_results
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM seo_audit_jobs saj
             JOIN founder_businesses fb ON fb.id = saj.founder_business_id
@@ -1069,7 +1069,7 @@ CREATE POLICY "seo_audit_results_update_via_job" ON seo_audit_results
 
 DROP POLICY IF EXISTS "seo_audit_results_delete_via_job" ON seo_audit_results;
 CREATE POLICY "seo_audit_results_delete_via_job" ON seo_audit_results
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM seo_audit_jobs saj
             JOIN founder_businesses fb ON fb.id = saj.founder_business_id
@@ -1085,7 +1085,7 @@ CREATE POLICY "seo_audit_results_delete_via_job" ON seo_audit_results
 
 DROP POLICY IF EXISTS "content_analysis_jobs_select_via_business" ON content_analysis_jobs;
 CREATE POLICY "content_analysis_jobs_select_via_business" ON content_analysis_jobs
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = content_analysis_jobs.founder_business_id
@@ -1105,7 +1105,7 @@ CREATE POLICY "content_analysis_jobs_insert_via_business" ON content_analysis_jo
 
 DROP POLICY IF EXISTS "content_analysis_jobs_update_via_business" ON content_analysis_jobs;
 CREATE POLICY "content_analysis_jobs_update_via_business" ON content_analysis_jobs
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = content_analysis_jobs.founder_business_id
@@ -1115,7 +1115,7 @@ CREATE POLICY "content_analysis_jobs_update_via_business" ON content_analysis_jo
 
 DROP POLICY IF EXISTS "content_analysis_jobs_delete_via_business" ON content_analysis_jobs;
 CREATE POLICY "content_analysis_jobs_delete_via_business" ON content_analysis_jobs
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = content_analysis_jobs.founder_business_id
@@ -1130,7 +1130,7 @@ CREATE POLICY "content_analysis_jobs_delete_via_business" ON content_analysis_jo
 
 DROP POLICY IF EXISTS "content_opt_results_select_via_job" ON content_optimization_results;
 CREATE POLICY "content_opt_results_select_via_job" ON content_optimization_results
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM content_analysis_jobs caj
             JOIN founder_businesses fb ON fb.id = caj.founder_business_id
@@ -1152,7 +1152,7 @@ CREATE POLICY "content_opt_results_insert_via_job" ON content_optimization_resul
 
 DROP POLICY IF EXISTS "content_opt_results_update_via_job" ON content_optimization_results;
 CREATE POLICY "content_opt_results_update_via_job" ON content_optimization_results
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM content_analysis_jobs caj
             JOIN founder_businesses fb ON fb.id = caj.founder_business_id
@@ -1163,7 +1163,7 @@ CREATE POLICY "content_opt_results_update_via_job" ON content_optimization_resul
 
 DROP POLICY IF EXISTS "content_opt_results_delete_via_job" ON content_optimization_results;
 CREATE POLICY "content_opt_results_delete_via_job" ON content_optimization_results
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM content_analysis_jobs caj
             JOIN founder_businesses fb ON fb.id = caj.founder_business_id
@@ -1179,7 +1179,7 @@ CREATE POLICY "content_opt_results_delete_via_job" ON content_optimization_resul
 
 DROP POLICY IF EXISTS "schema_templates_select_via_business" ON schema_templates;
 CREATE POLICY "schema_templates_select_via_business" ON schema_templates
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = schema_templates.founder_business_id
@@ -1199,7 +1199,7 @@ CREATE POLICY "schema_templates_insert_via_business" ON schema_templates
 
 DROP POLICY IF EXISTS "schema_templates_update_via_business" ON schema_templates;
 CREATE POLICY "schema_templates_update_via_business" ON schema_templates
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = schema_templates.founder_business_id
@@ -1209,7 +1209,7 @@ CREATE POLICY "schema_templates_update_via_business" ON schema_templates
 
 DROP POLICY IF EXISTS "schema_templates_delete_via_business" ON schema_templates;
 CREATE POLICY "schema_templates_delete_via_business" ON schema_templates
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = schema_templates.founder_business_id
@@ -1224,7 +1224,7 @@ CREATE POLICY "schema_templates_delete_via_business" ON schema_templates
 
 DROP POLICY IF EXISTS "generated_schemas_select_via_business" ON generated_schemas;
 CREATE POLICY "generated_schemas_select_via_business" ON generated_schemas
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = generated_schemas.founder_business_id
@@ -1244,7 +1244,7 @@ CREATE POLICY "generated_schemas_insert_via_business" ON generated_schemas
 
 DROP POLICY IF EXISTS "generated_schemas_update_via_business" ON generated_schemas;
 CREATE POLICY "generated_schemas_update_via_business" ON generated_schemas
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = generated_schemas.founder_business_id
@@ -1254,7 +1254,7 @@ CREATE POLICY "generated_schemas_update_via_business" ON generated_schemas
 
 DROP POLICY IF EXISTS "generated_schemas_delete_via_business" ON generated_schemas;
 CREATE POLICY "generated_schemas_delete_via_business" ON generated_schemas
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = generated_schemas.founder_business_id
@@ -1269,7 +1269,7 @@ CREATE POLICY "generated_schemas_delete_via_business" ON generated_schemas
 
 DROP POLICY IF EXISTS "rich_results_select_via_business" ON rich_results_monitoring;
 CREATE POLICY "rich_results_select_via_business" ON rich_results_monitoring
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = rich_results_monitoring.founder_business_id
@@ -1289,7 +1289,7 @@ CREATE POLICY "rich_results_insert_via_business" ON rich_results_monitoring
 
 DROP POLICY IF EXISTS "rich_results_update_via_business" ON rich_results_monitoring;
 CREATE POLICY "rich_results_update_via_business" ON rich_results_monitoring
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = rich_results_monitoring.founder_business_id
@@ -1299,7 +1299,7 @@ CREATE POLICY "rich_results_update_via_business" ON rich_results_monitoring
 
 DROP POLICY IF EXISTS "rich_results_delete_via_business" ON rich_results_monitoring;
 CREATE POLICY "rich_results_delete_via_business" ON rich_results_monitoring
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = rich_results_monitoring.founder_business_id
@@ -1314,7 +1314,7 @@ CREATE POLICY "rich_results_delete_via_business" ON rich_results_monitoring
 
 DROP POLICY IF EXISTS "title_meta_tests_select_via_business" ON title_meta_tests;
 CREATE POLICY "title_meta_tests_select_via_business" ON title_meta_tests
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = title_meta_tests.founder_business_id
@@ -1334,7 +1334,7 @@ CREATE POLICY "title_meta_tests_insert_via_business" ON title_meta_tests
 
 DROP POLICY IF EXISTS "title_meta_tests_update_via_business" ON title_meta_tests;
 CREATE POLICY "title_meta_tests_update_via_business" ON title_meta_tests
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = title_meta_tests.founder_business_id
@@ -1344,7 +1344,7 @@ CREATE POLICY "title_meta_tests_update_via_business" ON title_meta_tests
 
 DROP POLICY IF EXISTS "title_meta_tests_delete_via_business" ON title_meta_tests;
 CREATE POLICY "title_meta_tests_delete_via_business" ON title_meta_tests
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = title_meta_tests.founder_business_id
@@ -1359,7 +1359,7 @@ CREATE POLICY "title_meta_tests_delete_via_business" ON title_meta_tests
 
 DROP POLICY IF EXISTS "ctr_benchmarks_select_via_business" ON ctr_benchmarks;
 CREATE POLICY "ctr_benchmarks_select_via_business" ON ctr_benchmarks
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = ctr_benchmarks.founder_business_id
@@ -1379,7 +1379,7 @@ CREATE POLICY "ctr_benchmarks_insert_via_business" ON ctr_benchmarks
 
 DROP POLICY IF EXISTS "ctr_benchmarks_update_via_business" ON ctr_benchmarks;
 CREATE POLICY "ctr_benchmarks_update_via_business" ON ctr_benchmarks
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = ctr_benchmarks.founder_business_id
@@ -1389,7 +1389,7 @@ CREATE POLICY "ctr_benchmarks_update_via_business" ON ctr_benchmarks
 
 DROP POLICY IF EXISTS "ctr_benchmarks_delete_via_business" ON ctr_benchmarks;
 CREATE POLICY "ctr_benchmarks_delete_via_business" ON ctr_benchmarks
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = ctr_benchmarks.founder_business_id
@@ -1404,7 +1404,7 @@ CREATE POLICY "ctr_benchmarks_delete_via_business" ON ctr_benchmarks
 
 DROP POLICY IF EXISTS "competitor_profiles_select_via_business" ON competitor_profiles;
 CREATE POLICY "competitor_profiles_select_via_business" ON competitor_profiles
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = competitor_profiles.founder_business_id
@@ -1424,7 +1424,7 @@ CREATE POLICY "competitor_profiles_insert_via_business" ON competitor_profiles
 
 DROP POLICY IF EXISTS "competitor_profiles_update_via_business" ON competitor_profiles;
 CREATE POLICY "competitor_profiles_update_via_business" ON competitor_profiles
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = competitor_profiles.founder_business_id
@@ -1434,7 +1434,7 @@ CREATE POLICY "competitor_profiles_update_via_business" ON competitor_profiles
 
 DROP POLICY IF EXISTS "competitor_profiles_delete_via_business" ON competitor_profiles;
 CREATE POLICY "competitor_profiles_delete_via_business" ON competitor_profiles
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = competitor_profiles.founder_business_id
@@ -1449,7 +1449,7 @@ CREATE POLICY "competitor_profiles_delete_via_business" ON competitor_profiles
 
 DROP POLICY IF EXISTS "keyword_gap_select_via_business" ON keyword_gap_analysis;
 CREATE POLICY "keyword_gap_select_via_business" ON keyword_gap_analysis
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = keyword_gap_analysis.founder_business_id
@@ -1469,7 +1469,7 @@ CREATE POLICY "keyword_gap_insert_via_business" ON keyword_gap_analysis
 
 DROP POLICY IF EXISTS "keyword_gap_update_via_business" ON keyword_gap_analysis;
 CREATE POLICY "keyword_gap_update_via_business" ON keyword_gap_analysis
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = keyword_gap_analysis.founder_business_id
@@ -1479,7 +1479,7 @@ CREATE POLICY "keyword_gap_update_via_business" ON keyword_gap_analysis
 
 DROP POLICY IF EXISTS "keyword_gap_delete_via_business" ON keyword_gap_analysis;
 CREATE POLICY "keyword_gap_delete_via_business" ON keyword_gap_analysis
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = keyword_gap_analysis.founder_business_id
@@ -1494,7 +1494,7 @@ CREATE POLICY "keyword_gap_delete_via_business" ON keyword_gap_analysis
 
 DROP POLICY IF EXISTS "content_gap_select_via_business" ON content_gap_analysis;
 CREATE POLICY "content_gap_select_via_business" ON content_gap_analysis
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = content_gap_analysis.founder_business_id
@@ -1514,7 +1514,7 @@ CREATE POLICY "content_gap_insert_via_business" ON content_gap_analysis
 
 DROP POLICY IF EXISTS "content_gap_update_via_business" ON content_gap_analysis;
 CREATE POLICY "content_gap_update_via_business" ON content_gap_analysis
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = content_gap_analysis.founder_business_id
@@ -1524,7 +1524,7 @@ CREATE POLICY "content_gap_update_via_business" ON content_gap_analysis
 
 DROP POLICY IF EXISTS "content_gap_delete_via_business" ON content_gap_analysis;
 CREATE POLICY "content_gap_delete_via_business" ON content_gap_analysis
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = content_gap_analysis.founder_business_id
@@ -1539,7 +1539,7 @@ CREATE POLICY "content_gap_delete_via_business" ON content_gap_analysis
 
 DROP POLICY IF EXISTS "backlink_gap_select_via_business" ON backlink_gap_analysis;
 CREATE POLICY "backlink_gap_select_via_business" ON backlink_gap_analysis
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = backlink_gap_analysis.founder_business_id
@@ -1559,7 +1559,7 @@ CREATE POLICY "backlink_gap_insert_via_business" ON backlink_gap_analysis
 
 DROP POLICY IF EXISTS "backlink_gap_update_via_business" ON backlink_gap_analysis;
 CREATE POLICY "backlink_gap_update_via_business" ON backlink_gap_analysis
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = backlink_gap_analysis.founder_business_id
@@ -1569,7 +1569,7 @@ CREATE POLICY "backlink_gap_update_via_business" ON backlink_gap_analysis
 
 DROP POLICY IF EXISTS "backlink_gap_delete_via_business" ON backlink_gap_analysis;
 CREATE POLICY "backlink_gap_delete_via_business" ON backlink_gap_analysis
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = backlink_gap_analysis.founder_business_id
@@ -1584,7 +1584,7 @@ CREATE POLICY "backlink_gap_delete_via_business" ON backlink_gap_analysis
 
 DROP POLICY IF EXISTS "seo_leak_signals_select_via_business" ON seo_leak_signal_profiles;
 CREATE POLICY "seo_leak_signals_select_via_business" ON seo_leak_signal_profiles
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_leak_signal_profiles.founder_business_id
@@ -1604,7 +1604,7 @@ CREATE POLICY "seo_leak_signals_insert_via_business" ON seo_leak_signal_profiles
 
 DROP POLICY IF EXISTS "seo_leak_signals_update_via_business" ON seo_leak_signal_profiles;
 CREATE POLICY "seo_leak_signals_update_via_business" ON seo_leak_signal_profiles
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_leak_signal_profiles.founder_business_id
@@ -1614,7 +1614,7 @@ CREATE POLICY "seo_leak_signals_update_via_business" ON seo_leak_signal_profiles
 
 DROP POLICY IF EXISTS "seo_leak_signals_delete_via_business" ON seo_leak_signal_profiles;
 CREATE POLICY "seo_leak_signals_delete_via_business" ON seo_leak_signal_profiles
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_leak_signal_profiles.founder_business_id
@@ -1629,7 +1629,7 @@ CREATE POLICY "seo_leak_signals_delete_via_business" ON seo_leak_signal_profiles
 
 DROP POLICY IF EXISTS "seo_leak_rec_select_via_business" ON seo_leak_recommendations;
 CREATE POLICY "seo_leak_rec_select_via_business" ON seo_leak_recommendations
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_leak_recommendations.founder_business_id
@@ -1649,7 +1649,7 @@ CREATE POLICY "seo_leak_rec_insert_via_business" ON seo_leak_recommendations
 
 DROP POLICY IF EXISTS "seo_leak_rec_update_via_business" ON seo_leak_recommendations;
 CREATE POLICY "seo_leak_rec_update_via_business" ON seo_leak_recommendations
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_leak_recommendations.founder_business_id
@@ -1659,7 +1659,7 @@ CREATE POLICY "seo_leak_rec_update_via_business" ON seo_leak_recommendations
 
 DROP POLICY IF EXISTS "seo_leak_rec_delete_via_business" ON seo_leak_recommendations;
 CREATE POLICY "seo_leak_rec_delete_via_business" ON seo_leak_recommendations
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = seo_leak_recommendations.founder_business_id
@@ -1693,4 +1693,4 @@ CREATE POLICY "seo_leak_rec_delete_via_business" ON seo_leak_recommendations
 --   - Include comprehensive COMMENTS explaining Google/Yandex leak alignment
 --   - Use CHECK constraints for enum-like fields
 --   - Have appropriate indexes for common query patterns
--- ============================================================================
+-- ============================================================================;

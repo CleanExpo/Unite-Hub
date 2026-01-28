@@ -106,16 +106,16 @@ ALTER TABLE workflow_metrics ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 CREATE POLICY workflow_executions_authenticated_read ON workflow_executions
-  FOR SELECT USING (auth.role() = 'authenticated');
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY task_executions_authenticated_read ON task_executions
-  FOR SELECT USING (auth.role() = 'authenticated');
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY workflow_templates_authenticated_read ON workflow_templates
-  FOR SELECT USING (auth.role() = 'authenticated');
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY workflow_metrics_authenticated_read ON workflow_metrics
-  FOR SELECT USING (auth.role() = 'authenticated');
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_workflow_executions_brand ON workflow_executions(brand_id);

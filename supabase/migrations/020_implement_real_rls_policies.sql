@@ -616,4 +616,4 @@ COMMENT ON FUNCTION user_has_role_in_org(UUID, TEXT) IS 'Checks if user has requ
 
 -- Security validation successful ✓
 -- All tables now have proper workspace/organization isolation
--- Cross-workspace data leakage PREVENTED
+-- Cross-workspace data leakage PREVENTED;

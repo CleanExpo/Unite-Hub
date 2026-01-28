@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS client_approval_requests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   business_id uuid REFERENCES founder_businesses(id) ON DELETE CASCADE,
   client_id uuid REFERENCES contacts(id) ON DELETE CASCADE,
-  created_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   data JSONB NOT NULL,

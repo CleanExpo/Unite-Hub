@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS business_units (
     name TEXT NOT NULL,
     description TEXT,
     parent_id UUID REFERENCES business_units(id) ON DELETE SET NULL,
-    head_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+head_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     settings JSONB DEFAULT '{}',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -46,7 +47,8 @@ CREATE TABLE IF NOT EXISTS teams (
     name TEXT NOT NULL,
     description TEXT,
     team_type TEXT DEFAULT 'standard' CHECK (team_type IN ('standard', 'project', 'department', 'cross_functional')),
-    lead_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+lead_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     settings JSONB DEFAULT '{}',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -81,7 +83,8 @@ ON CONFLICT (name) DO NOTHING;
 CREATE TABLE IF NOT EXISTS team_members (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     team_id UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     role_id UUID REFERENCES team_roles(id) ON DELETE SET NULL,
     role_name TEXT NOT NULL DEFAULT 'team_member',
     joined_at TIMESTAMPTZ DEFAULT NOW(),
@@ -135,10 +138,12 @@ UPDATE org_roles SET inherits_from = (SELECT id FROM org_roles WHERE name = 'ORG
 -- Assigns org-level roles to users
 CREATE TABLE IF NOT EXISTS user_org_roles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     role_id UUID NOT NULL REFERENCES org_roles(id) ON DELETE CASCADE,
-    granted_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+granted_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     granted_at TIMESTAMPTZ DEFAULT NOW(),
     expires_at TIMESTAMPTZ,
     is_active BOOLEAN DEFAULT TRUE,

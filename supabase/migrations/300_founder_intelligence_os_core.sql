@@ -268,7 +268,7 @@ ALTER TABLE ai_phill_journal_entries ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "founder_businesses_select_own" ON founder_businesses;
 CREATE POLICY "founder_businesses_select_own" ON founder_businesses
-    FOR SELECT USING (owner_user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "founder_businesses_insert_own" ON founder_businesses;
 CREATE POLICY "founder_businesses_insert_own" ON founder_businesses
@@ -276,11 +276,11 @@ CREATE POLICY "founder_businesses_insert_own" ON founder_businesses
 
 DROP POLICY IF EXISTS "founder_businesses_update_own" ON founder_businesses;
 CREATE POLICY "founder_businesses_update_own" ON founder_businesses
-    FOR UPDATE USING (owner_user_id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "founder_businesses_delete_own" ON founder_businesses;
 CREATE POLICY "founder_businesses_delete_own" ON founder_businesses
-    FOR DELETE USING (owner_user_id = auth.uid());
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 -- ============================================================================
 -- RLS POLICIES: founder_business_vault_secrets
@@ -289,7 +289,7 @@ CREATE POLICY "founder_businesses_delete_own" ON founder_businesses
 
 DROP POLICY IF EXISTS "vault_secrets_select_via_business" ON founder_business_vault_secrets;
 CREATE POLICY "vault_secrets_select_via_business" ON founder_business_vault_secrets
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_vault_secrets.founder_business_id
@@ -309,7 +309,7 @@ CREATE POLICY "vault_secrets_insert_via_business" ON founder_business_vault_secr
 
 DROP POLICY IF EXISTS "vault_secrets_update_via_business" ON founder_business_vault_secrets;
 CREATE POLICY "vault_secrets_update_via_business" ON founder_business_vault_secrets
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_vault_secrets.founder_business_id
@@ -319,7 +319,7 @@ CREATE POLICY "vault_secrets_update_via_business" ON founder_business_vault_secr
 
 DROP POLICY IF EXISTS "vault_secrets_delete_via_business" ON founder_business_vault_secrets;
 CREATE POLICY "vault_secrets_delete_via_business" ON founder_business_vault_secrets
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_vault_secrets.founder_business_id
@@ -334,7 +334,7 @@ CREATE POLICY "vault_secrets_delete_via_business" ON founder_business_vault_secr
 
 DROP POLICY IF EXISTS "business_links_select_via_business" ON founder_business_links;
 CREATE POLICY "business_links_select_via_business" ON founder_business_links
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_links.founder_business_id
@@ -354,7 +354,7 @@ CREATE POLICY "business_links_insert_via_business" ON founder_business_links
 
 DROP POLICY IF EXISTS "business_links_update_via_business" ON founder_business_links;
 CREATE POLICY "business_links_update_via_business" ON founder_business_links
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_links.founder_business_id
@@ -364,7 +364,7 @@ CREATE POLICY "business_links_update_via_business" ON founder_business_links
 
 DROP POLICY IF EXISTS "business_links_delete_via_business" ON founder_business_links;
 CREATE POLICY "business_links_delete_via_business" ON founder_business_links
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_links.founder_business_id
@@ -379,7 +379,7 @@ CREATE POLICY "business_links_delete_via_business" ON founder_business_links
 
 DROP POLICY IF EXISTS "business_signals_select_via_business" ON founder_business_signals;
 CREATE POLICY "business_signals_select_via_business" ON founder_business_signals
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_signals.founder_business_id
@@ -399,7 +399,7 @@ CREATE POLICY "business_signals_insert_via_business" ON founder_business_signals
 
 DROP POLICY IF EXISTS "business_signals_update_via_business" ON founder_business_signals;
 CREATE POLICY "business_signals_update_via_business" ON founder_business_signals
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_signals.founder_business_id
@@ -409,7 +409,7 @@ CREATE POLICY "business_signals_update_via_business" ON founder_business_signals
 
 DROP POLICY IF EXISTS "business_signals_delete_via_business" ON founder_business_signals;
 CREATE POLICY "business_signals_delete_via_business" ON founder_business_signals
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = founder_business_signals.founder_business_id
@@ -424,7 +424,7 @@ CREATE POLICY "business_signals_delete_via_business" ON founder_business_signals
 
 DROP POLICY IF EXISTS "os_snapshots_select_own" ON founder_os_snapshots;
 CREATE POLICY "os_snapshots_select_own" ON founder_os_snapshots
-    FOR SELECT USING (owner_user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "os_snapshots_insert_own" ON founder_os_snapshots;
 CREATE POLICY "os_snapshots_insert_own" ON founder_os_snapshots
@@ -432,11 +432,11 @@ CREATE POLICY "os_snapshots_insert_own" ON founder_os_snapshots
 
 DROP POLICY IF EXISTS "os_snapshots_update_own" ON founder_os_snapshots;
 CREATE POLICY "os_snapshots_update_own" ON founder_os_snapshots
-    FOR UPDATE USING (owner_user_id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "os_snapshots_delete_own" ON founder_os_snapshots;
 CREATE POLICY "os_snapshots_delete_own" ON founder_os_snapshots
-    FOR DELETE USING (owner_user_id = auth.uid());
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 -- ============================================================================
 -- RLS POLICIES: ai_phill_insights
@@ -445,7 +445,7 @@ CREATE POLICY "os_snapshots_delete_own" ON founder_os_snapshots
 
 DROP POLICY IF EXISTS "phill_insights_select_own" ON ai_phill_insights;
 CREATE POLICY "phill_insights_select_own" ON ai_phill_insights
-    FOR SELECT USING (owner_user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "phill_insights_insert_own" ON ai_phill_insights;
 CREATE POLICY "phill_insights_insert_own" ON ai_phill_insights
@@ -453,11 +453,11 @@ CREATE POLICY "phill_insights_insert_own" ON ai_phill_insights
 
 DROP POLICY IF EXISTS "phill_insights_update_own" ON ai_phill_insights;
 CREATE POLICY "phill_insights_update_own" ON ai_phill_insights
-    FOR UPDATE USING (owner_user_id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "phill_insights_delete_own" ON ai_phill_insights;
 CREATE POLICY "phill_insights_delete_own" ON ai_phill_insights
-    FOR DELETE USING (owner_user_id = auth.uid());
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 -- ============================================================================
 -- RLS POLICIES: ai_phill_journal_entries
@@ -466,7 +466,7 @@ CREATE POLICY "phill_insights_delete_own" ON ai_phill_insights
 
 DROP POLICY IF EXISTS "journal_entries_select_own" ON ai_phill_journal_entries;
 CREATE POLICY "journal_entries_select_own" ON ai_phill_journal_entries
-    FOR SELECT USING (owner_user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "journal_entries_insert_own" ON ai_phill_journal_entries;
 CREATE POLICY "journal_entries_insert_own" ON ai_phill_journal_entries
@@ -474,11 +474,11 @@ CREATE POLICY "journal_entries_insert_own" ON ai_phill_journal_entries
 
 DROP POLICY IF EXISTS "journal_entries_update_own" ON ai_phill_journal_entries;
 CREATE POLICY "journal_entries_update_own" ON ai_phill_journal_entries
-    FOR UPDATE USING (owner_user_id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "journal_entries_delete_own" ON ai_phill_journal_entries;
 CREATE POLICY "journal_entries_delete_own" ON ai_phill_journal_entries
-    FOR DELETE USING (owner_user_id = auth.uid());
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 -- ============================================================================
 -- TRIGGERS: Auto-update updated_at timestamps

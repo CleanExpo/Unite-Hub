@@ -30,7 +30,7 @@ ALTER TABLE automation_rules ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY automation_rules_select ON automation_rules
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -44,14 +44,14 @@ CREATE POLICY automation_rules_insert ON automation_rules
 
 CREATE POLICY automation_rules_update ON automation_rules
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
 
 CREATE POLICY automation_rules_delete ON automation_rules
   FOR DELETE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -97,7 +97,7 @@ ALTER TABLE automation_matrix ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY automation_matrix_select ON automation_matrix
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -111,14 +111,14 @@ CREATE POLICY automation_matrix_insert ON automation_matrix
 
 CREATE POLICY automation_matrix_update ON automation_matrix
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
 
 CREATE POLICY automation_matrix_delete ON automation_matrix
   FOR DELETE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -163,7 +163,7 @@ ALTER TABLE automation_executions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY automation_executions_select ON automation_executions
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));

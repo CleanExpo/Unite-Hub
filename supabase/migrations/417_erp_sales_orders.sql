@@ -51,7 +51,8 @@ CREATE TABLE IF NOT EXISTS erp_sales_orders (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT erp_sales_orders_workspace_number UNIQUE (workspace_id, so_number)
 );

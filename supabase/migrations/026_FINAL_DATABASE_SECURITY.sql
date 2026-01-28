@@ -193,7 +193,8 @@ CREATE TABLE IF NOT EXISTS interactions (
   interaction_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
   -- Optional: User who created interaction
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
   -- Timestamps
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -525,4 +526,4 @@ ANALYZE interactions;
 -- All tables have proper RLS policies
 -- Interactions table created with full security
 -- No cross-workspace data leakage possible
--- =====================================================
+-- =====================================================;

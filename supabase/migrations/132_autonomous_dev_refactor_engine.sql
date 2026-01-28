@@ -26,7 +26,8 @@ CREATE TABLE dev_refactor_sessions (
   CONSTRAINT dev_refactor_sessions_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT dev_refactor_sessions_user_fk
-    FOREIGN KEY (initiator_user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (initiator_user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -41,7 +42,7 @@ ALTER TABLE dev_refactor_sessions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY dev_refactor_sessions_select ON dev_refactor_sessions
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -53,7 +54,7 @@ CREATE POLICY dev_refactor_sessions_insert ON dev_refactor_sessions
 
 CREATE POLICY dev_refactor_sessions_update ON dev_refactor_sessions
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -98,7 +99,7 @@ ALTER TABLE dev_refactor_changes ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (via dev_refactor_sessions)
 CREATE POLICY dev_refactor_changes_select ON dev_refactor_changes
   FOR SELECT TO authenticated
-  USING (session_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND session_id IN (
     SELECT id FROM dev_refactor_sessions
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -116,7 +117,7 @@ CREATE POLICY dev_refactor_changes_insert ON dev_refactor_changes
 
 CREATE POLICY dev_refactor_changes_update ON dev_refactor_changes
   FOR UPDATE TO authenticated
-  USING (session_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND session_id IN (
     SELECT id FROM dev_refactor_sessions
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

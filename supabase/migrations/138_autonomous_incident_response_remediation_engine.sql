@@ -43,7 +43,8 @@ CREATE TABLE aire_incidents (
   CONSTRAINT aire_incidents_tenant_fk
     FOREIGN KEY (tenant_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT aire_incidents_created_by_fk
-    FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -61,7 +62,7 @@ ALTER TABLE aire_incidents ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY aire_incidents_select ON aire_incidents
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -73,7 +74,7 @@ CREATE POLICY aire_incidents_insert ON aire_incidents
 
 CREATE POLICY aire_incidents_update ON aire_incidents
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -116,7 +117,7 @@ ALTER TABLE aire_runbooks ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY aire_runbooks_select ON aire_runbooks
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -128,13 +129,13 @@ CREATE POLICY aire_runbooks_insert ON aire_runbooks
 
 CREATE POLICY aire_runbooks_update ON aire_runbooks
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
 CREATE POLICY aire_runbooks_delete ON aire_runbooks
   FOR DELETE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -186,7 +187,7 @@ ALTER TABLE aire_actions_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY aire_actions_log_select ON aire_actions_log
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -198,7 +199,7 @@ CREATE POLICY aire_actions_log_insert ON aire_actions_log
 
 CREATE POLICY aire_actions_log_update ON aire_actions_log
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

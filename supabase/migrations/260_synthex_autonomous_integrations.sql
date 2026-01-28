@@ -238,7 +238,7 @@ ALTER TABLE synthex_sync_logs ENABLE ROW LEVEL SECURITY;
 -- Founder can view autonomous integrations
 CREATE POLICY "founders_view_autonomous_integrations" ON synthex_autonomous_integrations
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations
       WHERE user_organizations.user_id = auth.uid()
@@ -249,13 +249,13 @@ CREATE POLICY "founders_view_autonomous_integrations" ON synthex_autonomous_inte
 -- Cron jobs can read/write (via CRON_SECRET verification in endpoint)
 CREATE POLICY "system_manage_automation_schedules" ON synthex_automation_schedules
   FOR ALL
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- Founder can view GA4 metrics
 CREATE POLICY "founders_view_ga4_metrics" ON synthex_ga4_metrics
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations
       WHERE user_organizations.user_id = auth.uid()
@@ -271,7 +271,7 @@ CREATE POLICY "system_insert_ga4_metrics" ON synthex_ga4_metrics
 -- Founder can view GSC metrics
 CREATE POLICY "founders_view_gsc_metrics" ON synthex_gsc_metrics
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations
       WHERE user_organizations.user_id = auth.uid()
@@ -287,7 +287,7 @@ CREATE POLICY "system_insert_gsc_metrics" ON synthex_gsc_metrics
 -- Founder can view Core Vitals
 CREATE POLICY "founders_view_core_vitals" ON synthex_core_vitals_metrics
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations
       WHERE user_organizations.user_id = auth.uid()
@@ -303,7 +303,7 @@ CREATE POLICY "system_insert_core_vitals" ON synthex_core_vitals_metrics
 -- Everyone can view sync logs (non-sensitive)
 CREATE POLICY "public_view_sync_logs" ON synthex_sync_logs
   FOR SELECT
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Cron jobs can insert sync logs
 CREATE POLICY "system_insert_sync_logs" ON synthex_sync_logs
@@ -452,4 +452,4 @@ SELECT
   COUNT(CASE WHEN relname = 'synthex_sync_logs' THEN 1 END) as sync_logs
 FROM pg_class
 WHERE relname LIKE 'synthex_%';
-*/
+*/;

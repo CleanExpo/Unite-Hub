@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS seo_anomalies (
   message TEXT NOT NULL,
   recommendations TEXT[] DEFAULT '{}',
   acknowledged BOOLEAN DEFAULT false,
-  acknowledged_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+acknowledged_by UUID REFERENCES auth.users(id),
   acknowledged_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -64,7 +65,7 @@ ALTER TABLE seo_anomalies ENABLE ROW LEVEL SECURITY;
 -- Staff can view anomalies for clients in their organization
 CREATE POLICY seo_anomalies_select_policy ON seo_anomalies
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM seo_client_profiles cp
       JOIN user_organizations uo ON cp.organization_id = uo.org_id
@@ -76,7 +77,7 @@ CREATE POLICY seo_anomalies_select_policy ON seo_anomalies
 -- Staff can update acknowledgment
 CREATE POLICY seo_anomalies_update_policy ON seo_anomalies
   FOR UPDATE
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM seo_client_profiles cp
       JOIN user_organizations uo ON cp.organization_id = uo.org_id

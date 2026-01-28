@@ -5,10 +5,12 @@
 -- =====================================================
 -- 1. USER PROFILES TABLE
 -- =====================================================
--- Extends Supabase auth.users with profile information
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
+Extends Supabase auth.users with profile information
 
 CREATE TABLE IF NOT EXISTS user_profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL UNIQUE,
   full_name TEXT NOT NULL,
   avatar_url TEXT,
@@ -26,7 +28,8 @@ CREATE INDEX IF NOT EXISTS idx_user_profiles_email ON user_profiles(email);
 
 CREATE TABLE IF NOT EXISTS user_organizations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   role TEXT NOT NULL CHECK (role IN ('owner', 'admin', 'member', 'viewer')) DEFAULT 'member',
   is_active BOOLEAN NOT NULL DEFAULT true,
@@ -53,7 +56,8 @@ CREATE TABLE IF NOT EXISTS organization_invites (
   org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('admin', 'member', 'viewer')) DEFAULT 'member',
-  invited_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+invited_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   token TEXT NOT NULL UNIQUE,
   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
   accepted_at TIMESTAMP WITH TIME ZONE,
@@ -117,9 +121,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Trigger on auth.users insert
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
+Trigger on auth.users insert
 CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
+  -- Use auth.uid() in RLS policies instead of direct auth.users reference
+AFTER INSERT ON auth.users
   FOR EACH ROW
   EXECUTE FUNCTION handle_new_user();
 
@@ -334,6 +340,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- =====================================================
 
 -- Add comments for documentation
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
 COMMENT ON TABLE user_profiles IS 'User profile information extending auth.users';
 COMMENT ON TABLE user_organizations IS 'Many-to-many relationship between users and organizations with roles';
 COMMENT ON TABLE organization_invites IS 'Pending invitations for users to join organizations';

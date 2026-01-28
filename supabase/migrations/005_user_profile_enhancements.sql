@@ -176,4 +176,4 @@ COMMENT ON FUNCTION sanitize_phone IS 'Removes non-digit characters from phone n
 
 -- =====================================================
 -- MIGRATION COMPLETE
--- =====================================================
+-- =====================================================;

@@ -40,7 +40,7 @@ ALTER TABLE token_wallets ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (owner/admin only)
 CREATE POLICY token_wallets_select ON token_wallets
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -54,7 +54,7 @@ CREATE POLICY token_wallets_insert ON token_wallets
 
 CREATE POLICY token_wallets_update ON token_wallets
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ))
@@ -103,7 +103,7 @@ ALTER TABLE token_usage_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY token_usage_events_select ON token_usage_events
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));

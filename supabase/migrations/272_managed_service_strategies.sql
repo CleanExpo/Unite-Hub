@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS managed_service_strategies (
   category_name TEXT,
   full_strategy JSONB NOT NULL,
   defensibility_score NUMERIC DEFAULT 0,
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
@@ -124,7 +125,7 @@ BEGIN
     CREATE POLICY "strategies_workspace_isolation"
       ON managed_service_strategies
       FOR SELECT
-      USING (auth.uid() IS NOT NULL);
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() IS NOT NULL);
   EXCEPTION WHEN duplicate_object THEN
     NULL;
   END;
@@ -142,7 +143,7 @@ BEGIN
     CREATE POLICY "strategies_update"
       ON managed_service_strategies
       FOR UPDATE
-      USING (auth.uid() IS NOT NULL);
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() IS NOT NULL);
   EXCEPTION WHEN duplicate_object THEN
     NULL;
   END;
@@ -151,7 +152,7 @@ BEGIN
     CREATE POLICY "execution_phases_select"
       ON strategy_execution_phases
       FOR SELECT
-      USING (auth.uid() IS NOT NULL);
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() IS NOT NULL);
   EXCEPTION WHEN duplicate_object THEN
     NULL;
   END;
@@ -169,7 +170,7 @@ BEGIN
     CREATE POLICY "mutations_select"
       ON strategy_mutations
       FOR SELECT
-      USING (auth.uid() IS NOT NULL);
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() IS NOT NULL);
   EXCEPTION WHEN duplicate_object THEN
     NULL;
   END;
@@ -178,7 +179,7 @@ BEGIN
     CREATE POLICY "sub_agent_executions_select"
       ON strategy_sub_agent_executions
       FOR SELECT
-      USING (auth.uid() IS NOT NULL);
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() IS NOT NULL);
   EXCEPTION WHEN duplicate_object THEN
     NULL;
   END;

@@ -59,7 +59,8 @@ CREATE TABLE IF NOT EXISTS rate_limit_overrides (
   -- Metadata
   reason TEXT,
   expires_at TIMESTAMPTZ,
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
@@ -79,7 +80,7 @@ ALTER TABLE rate_limit_overrides ENABLE ROW LEVEL SECURITY;
 -- Only founders/admins can manage overrides
 CREATE POLICY "rate_limit_overrides_admin" ON rate_limit_overrides
   FOR ALL TO authenticated
-  USING (public.is_founder() OR public.has_role('ADMIN'))
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND public.is_founder() OR public.has_role('ADMIN'))
   WITH CHECK (public.is_founder() OR public.has_role('ADMIN'));
 
 -- ============================================================================
@@ -95,7 +96,8 @@ CREATE TABLE IF NOT EXISTS blocked_ips (
   blocked_until TIMESTAMPTZ,  -- NULL = permanent block
 
   -- Audit trail
-  blocked_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+blocked_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
   UNIQUE(ip_address)
@@ -110,7 +112,7 @@ ALTER TABLE blocked_ips ENABLE ROW LEVEL SECURITY;
 -- Only founders/admins can manage blocked IPs
 CREATE POLICY "blocked_ips_admin" ON blocked_ips
   FOR ALL TO authenticated
-  USING (public.is_founder() OR public.has_role('ADMIN'))
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND public.is_founder() OR public.has_role('ADMIN'))
   WITH CHECK (public.is_founder() OR public.has_role('ADMIN'));
 
 -- ============================================================================
@@ -250,4 +252,4 @@ SELECT * FROM rate_limit_analytics LIMIT 10;
 
 -- ============================================================================
 -- Migration Complete
--- ============================================================================
+-- ============================================================================;

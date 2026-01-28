@@ -43,7 +43,7 @@ ALTER TABLE board_strategy_reports ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY board_strategy_reports_select ON board_strategy_reports
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -55,7 +55,7 @@ CREATE POLICY board_strategy_reports_insert ON board_strategy_reports
 
 CREATE POLICY board_strategy_reports_update ON board_strategy_reports
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

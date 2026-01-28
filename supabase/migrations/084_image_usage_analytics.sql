@@ -36,7 +36,7 @@ ALTER TABLE image_usage_analytics ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY image_usage_analytics_select ON image_usage_analytics
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -48,7 +48,7 @@ CREATE POLICY image_usage_analytics_insert ON image_usage_analytics
 
 CREATE POLICY image_usage_analytics_update ON image_usage_analytics
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ))
   WITH CHECK (org_id IN (

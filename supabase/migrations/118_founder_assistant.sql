@@ -4,7 +4,8 @@
 -- Founder memory graph nodes
 CREATE TABLE IF NOT EXISTS founder_memory_nodes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Node details
@@ -32,7 +33,8 @@ CREATE TABLE IF NOT EXISTS founder_memory_nodes (
 -- Founder email intelligence
 CREATE TABLE IF NOT EXISTS founder_email_intelligence (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Email reference
@@ -77,7 +79,8 @@ CREATE TABLE IF NOT EXISTS founder_email_intelligence (
 -- Founder daily briefings
 CREATE TABLE IF NOT EXISTS founder_briefings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Briefing details
@@ -109,7 +112,8 @@ CREATE TABLE IF NOT EXISTS founder_briefings (
 -- Founder voice commands log
 CREATE TABLE IF NOT EXISTS founder_voice_commands (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Command details
@@ -136,9 +140,11 @@ CREATE TABLE IF NOT EXISTS founder_voice_commands (
 -- Founder staff insights
 CREATE TABLE IF NOT EXISTS founder_staff_insights (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  staff_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+staff_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Activity metrics
   period_start DATE NOT NULL,
@@ -163,7 +169,8 @@ CREATE TABLE IF NOT EXISTS founder_staff_insights (
 -- Founder financial extractions (invoices/receipts)
 CREATE TABLE IF NOT EXISTS founder_financial_extractions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Source
@@ -204,7 +211,8 @@ CREATE TABLE IF NOT EXISTS founder_financial_extractions (
 
   -- Verification
   verified BOOLEAN DEFAULT false,
-  verified_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+verified_by UUID REFERENCES auth.users(id),
   verified_at TIMESTAMPTZ,
 
   -- Timestamps
@@ -238,41 +246,41 @@ ALTER TABLE founder_financial_extractions ENABLE ROW LEVEL SECURITY;
 
 -- Only founders can access their data
 CREATE POLICY "founder_own_memory" ON founder_memory_nodes
-  FOR ALL USING (auth.uid() = founder_id);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = founder_id);
 
 CREATE POLICY "founder_own_email_intel" ON founder_email_intelligence
-  FOR ALL USING (auth.uid() = founder_id);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = founder_id);
 
 CREATE POLICY "founder_own_briefings" ON founder_briefings
-  FOR ALL USING (auth.uid() = founder_id);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = founder_id);
 
 CREATE POLICY "founder_own_voice_commands" ON founder_voice_commands
-  FOR ALL USING (auth.uid() = founder_id);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = founder_id);
 
 CREATE POLICY "founder_own_staff_insights" ON founder_staff_insights
-  FOR ALL USING (auth.uid() = founder_id);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = founder_id);
 
 CREATE POLICY "founder_own_financials" ON founder_financial_extractions
-  FOR ALL USING (auth.uid() = founder_id);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = founder_id);
 
 -- Service role access
 CREATE POLICY "service_role_memory" ON founder_memory_nodes
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_email_intel" ON founder_email_intelligence
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_briefings" ON founder_briefings
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_voice" ON founder_voice_commands
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_staff_insights" ON founder_staff_insights
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_financials" ON founder_financial_extractions
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Update triggers
 CREATE TRIGGER update_founder_memory_timestamp

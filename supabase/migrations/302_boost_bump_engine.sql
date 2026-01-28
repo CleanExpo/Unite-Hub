@@ -133,7 +133,7 @@ ALTER TABLE boost_results ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "boost_jobs_select_via_business" ON boost_jobs;
 CREATE POLICY "boost_jobs_select_via_business" ON boost_jobs
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         founder_business_id IS NULL
         OR EXISTS (
             SELECT 1 FROM founder_businesses fb
@@ -155,7 +155,7 @@ CREATE POLICY "boost_jobs_insert_via_business" ON boost_jobs
 
 DROP POLICY IF EXISTS "boost_jobs_update_via_business" ON boost_jobs;
 CREATE POLICY "boost_jobs_update_via_business" ON boost_jobs
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         founder_business_id IS NULL
         OR EXISTS (
             SELECT 1 FROM founder_businesses fb
@@ -166,7 +166,7 @@ CREATE POLICY "boost_jobs_update_via_business" ON boost_jobs
 
 DROP POLICY IF EXISTS "boost_jobs_delete_via_business" ON boost_jobs;
 CREATE POLICY "boost_jobs_delete_via_business" ON boost_jobs
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         founder_business_id IS NULL
         OR EXISTS (
             SELECT 1 FROM founder_businesses fb
@@ -182,7 +182,7 @@ CREATE POLICY "boost_jobs_delete_via_business" ON boost_jobs
 
 DROP POLICY IF EXISTS "boost_results_select_via_job" ON boost_results;
 CREATE POLICY "boost_results_select_via_job" ON boost_results
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM boost_jobs bj
             LEFT JOIN founder_businesses fb ON fb.id = bj.founder_business_id
@@ -204,7 +204,7 @@ CREATE POLICY "boost_results_insert_via_job" ON boost_results
 
 DROP POLICY IF EXISTS "boost_results_update_via_job" ON boost_results;
 CREATE POLICY "boost_results_update_via_job" ON boost_results
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM boost_jobs bj
             LEFT JOIN founder_businesses fb ON fb.id = bj.founder_business_id
@@ -215,7 +215,7 @@ CREATE POLICY "boost_results_update_via_job" ON boost_results
 
 DROP POLICY IF EXISTS "boost_results_delete_via_job" ON boost_results;
 CREATE POLICY "boost_results_delete_via_job" ON boost_results
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM boost_jobs bj
             LEFT JOIN founder_businesses fb ON fb.id = bj.founder_business_id

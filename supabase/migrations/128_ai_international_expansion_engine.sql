@@ -43,7 +43,7 @@ ALTER TABLE international_expansion_profiles ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY international_expansion_profiles_select ON international_expansion_profiles
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -55,7 +55,7 @@ CREATE POLICY international_expansion_profiles_insert ON international_expansion
 
 CREATE POLICY international_expansion_profiles_update ON international_expansion_profiles
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -86,7 +86,8 @@ CREATE TABLE international_expansion_tasks (
   CONSTRAINT international_expansion_tasks_profile_fk
     FOREIGN KEY (profile_id) REFERENCES international_expansion_profiles(id) ON DELETE CASCADE,
   CONSTRAINT international_expansion_tasks_assigned_fk
-    FOREIGN KEY (assigned_to) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (assigned_to) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -102,7 +103,7 @@ ALTER TABLE international_expansion_tasks ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY international_expansion_tasks_select ON international_expansion_tasks
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -114,7 +115,7 @@ CREATE POLICY international_expansion_tasks_insert ON international_expansion_ta
 
 CREATE POLICY international_expansion_tasks_update ON international_expansion_tasks
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

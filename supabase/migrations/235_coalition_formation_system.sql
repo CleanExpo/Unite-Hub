@@ -106,19 +106,19 @@ ALTER TABLE coalition_patterns ENABLE ROW LEVEL SECURITY;
 
 -- Service role: Full access
 CREATE POLICY coalition_proposals_service_role ON coalition_proposals
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 CREATE POLICY coalition_members_service_role ON coalition_members
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 CREATE POLICY coalition_roles_service_role ON coalition_roles
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 CREATE POLICY coalition_history_service_role ON coalition_history
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 CREATE POLICY coalition_patterns_service_role ON coalition_patterns
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 -- Founder role: Select only, scoped to workspace
 CREATE POLICY coalition_proposals_founder_select ON coalition_proposals

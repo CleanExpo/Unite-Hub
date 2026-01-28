@@ -5,7 +5,8 @@
 --
 -- IMPORTANT: This migration handles two scoping patterns:
 --   1. Workspace-scoped tables: Use workspace_id → workspaces(id)
---   2. Founder OS tables: Use owner_user_id → auth.users(id) OR founder_business_id
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
+  2. Founder OS tables: Use owner_user_id → auth.users(id) OR founder_business_id
 --
 -- Reference: Check 300-305 migrations for Founder OS schema
 
@@ -74,7 +75,7 @@ BEGIN
     -- Owner can SELECT their own businesses
     CREATE POLICY "founder_businesses_owner_select" ON founder_businesses
       FOR SELECT TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     -- Owner can INSERT their own businesses
     CREATE POLICY "founder_businesses_owner_insert" ON founder_businesses
@@ -84,12 +85,12 @@ BEGIN
     -- Owner can UPDATE their own businesses
     CREATE POLICY "founder_businesses_owner_update" ON founder_businesses
       FOR UPDATE TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     -- Owner can DELETE their own businesses
     CREATE POLICY "founder_businesses_owner_delete" ON founder_businesses
       FOR DELETE TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     RAISE NOTICE 'Created RLS policies for founder_businesses (owner_user_id scoped)';
   END IF;
@@ -111,7 +112,7 @@ BEGIN
     -- Owner can SELECT their own insights
     CREATE POLICY "ai_phill_insights_owner_select" ON ai_phill_insights
       FOR SELECT TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     -- Owner can INSERT their own insights
     CREATE POLICY "ai_phill_insights_owner_insert" ON ai_phill_insights
@@ -133,7 +134,7 @@ BEGIN
 
     CREATE POLICY "ai_phill_journal_owner_select" ON ai_phill_journal_entries
       FOR SELECT TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     CREATE POLICY "ai_phill_journal_owner_insert" ON ai_phill_journal_entries
       FOR INSERT TO authenticated
@@ -158,7 +159,7 @@ BEGIN
 
     CREATE POLICY "cognitive_twin_scores_owner_select" ON cognitive_twin_scores
       FOR SELECT TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     CREATE POLICY "cognitive_twin_scores_owner_insert" ON cognitive_twin_scores
       FOR INSERT TO authenticated
@@ -179,7 +180,7 @@ BEGIN
 
     CREATE POLICY "cognitive_twin_digests_owner_select" ON cognitive_twin_digests
       FOR SELECT TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     RAISE NOTICE 'Created RLS policies for cognitive_twin_digests';
   END IF;
@@ -196,7 +197,7 @@ BEGIN
 
     CREATE POLICY "cognitive_twin_decisions_owner_select" ON cognitive_twin_decisions
       FOR SELECT TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     RAISE NOTICE 'Created RLS policies for cognitive_twin_decisions';
   END IF;
@@ -221,7 +222,7 @@ BEGIN
     -- User can SELECT profiles for businesses they own
     CREATE POLICY "seo_leak_profiles_business_select" ON seo_leak_signal_profiles
       FOR SELECT TO authenticated
-      USING (
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         founder_business_id IN (
           SELECT id FROM founder_businesses WHERE owner_user_id = auth.uid()
         )
@@ -252,7 +253,7 @@ BEGIN
 
     CREATE POLICY "social_inbox_business_select" ON social_inbox_accounts
       FOR SELECT TO authenticated
-      USING (
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         founder_business_id IN (
           SELECT id FROM founder_businesses WHERE owner_user_id = auth.uid()
         )
@@ -281,7 +282,7 @@ BEGIN
 
     CREATE POLICY "social_messages_business_select" ON social_messages
       FOR SELECT TO authenticated
-      USING (
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         social_account_id IN (
           SELECT sia.id FROM social_inbox_accounts sia
           JOIN founder_businesses fb ON sia.founder_business_id = fb.id
@@ -381,7 +382,7 @@ BEGIN
 
     CREATE POLICY "founder_os_snapshots_owner_select" ON founder_os_snapshots
       FOR SELECT TO authenticated
-      USING (owner_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
     RAISE NOTICE 'Created RLS policies for founder_os_snapshots';
   END IF;
@@ -411,4 +412,4 @@ ORDER BY tablename, policyname;
 
 -- ============================================================================
 -- Migration Complete
--- ============================================================================
+-- ============================================================================;

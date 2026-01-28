@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS sys_platform_mode (
   id SERIAL PRIMARY KEY,
   mode TEXT NOT NULL DEFAULT 'test',  -- 'test' or 'live'
   stripe_mode TEXT NOT NULL DEFAULT 'test',  -- Mirrors mode, used for clarity
-  updated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+updated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
   CONSTRAINT mode_valid CHECK (mode IN ('test', 'live')),
@@ -28,7 +29,8 @@ ON CONFLICT (id) DO NOTHING;
 -- Create audit log for mode changes
 CREATE TABLE IF NOT EXISTS sys_platform_mode_audit (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  changed_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+changed_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   old_mode TEXT NOT NULL,
   new_mode TEXT NOT NULL,
   reason TEXT,
@@ -51,7 +53,8 @@ CREATE OR REPLACE FUNCTION is_platform_admin(user_id UUID)
 RETURNS BOOLEAN AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM auth.users
+    -- Use auth.uid() in RLS policies instead of direct auth.users reference
+SELECT 1 FROM auth.users
     WHERE id = user_id
     AND email IN ('phill.mcgurk@gmail.com', 'ranamuzamil1199@gmail.com')
   );
@@ -65,16 +68,16 @@ ALTER TABLE sys_platform_mode_audit ENABLE ROW LEVEL SECURITY;
 -- RLS Policies - Only admins can read/write
 CREATE POLICY "admins_read_platform_mode" ON sys_platform_mode
   FOR SELECT
-  USING (is_platform_admin(auth.uid()));
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND is_platform_admin(auth.uid()));
 
 CREATE POLICY "admins_update_platform_mode" ON sys_platform_mode
   FOR UPDATE
-  USING (is_platform_admin(auth.uid()))
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND is_platform_admin(auth.uid()))
   WITH CHECK (is_platform_admin(auth.uid()));
 
 CREATE POLICY "admins_read_mode_audit" ON sys_platform_mode_audit
   FOR SELECT
-  USING (is_platform_admin(auth.uid()));
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND is_platform_admin(auth.uid()));
 
 CREATE POLICY "admins_insert_mode_audit" ON sys_platform_mode_audit
   FOR INSERT

@@ -39,7 +39,7 @@ ALTER TABLE project_predictions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY project_predictions_select ON project_predictions
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

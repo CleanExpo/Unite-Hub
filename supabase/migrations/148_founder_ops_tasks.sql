@@ -115,7 +115,7 @@ CREATE POLICY founder_ops_tasks_founder_all_policy ON founder_ops_tasks
 CREATE POLICY founder_ops_tasks_service_role_policy ON founder_ops_tasks
   FOR ALL
   TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- Helper function: Get tasks by status

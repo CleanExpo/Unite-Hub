@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS franchises (
   CONSTRAINT franchises_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT franchises_owner_fk
-    FOREIGN KEY (owner_user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (owner_user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -35,7 +36,7 @@ ALTER TABLE franchises ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY franchises_select ON franchises
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ) OR owner_user_id = auth.uid());
 
@@ -47,7 +48,7 @@ CREATE POLICY franchises_insert ON franchises
 
 CREATE POLICY franchises_update ON franchises
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -79,7 +80,7 @@ ALTER TABLE franchise_regions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY franchise_regions_select ON franchise_regions
   FOR SELECT TO authenticated
-  USING (franchise_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND franchise_id IN (
     SELECT id FROM franchises
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -127,7 +128,7 @@ ALTER TABLE franchise_revenue_shares ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY franchise_revenue_shares_select ON franchise_revenue_shares
   FOR SELECT TO authenticated
-  USING (franchise_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND franchise_id IN (
     SELECT id FROM franchises
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -165,7 +166,8 @@ CREATE TABLE IF NOT EXISTS investor_relations (
   CONSTRAINT investor_relations_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT investor_relations_investor_fk
-    FOREIGN KEY (investor_user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (investor_user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -179,7 +181,7 @@ ALTER TABLE investor_relations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY investor_relations_select ON investor_relations
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ) OR investor_user_id = auth.uid());
 

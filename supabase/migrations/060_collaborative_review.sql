@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS review_comments (
   organization_id UUID NOT NULL REFERENCES organizations(org_id) ON DELETE CASCADE,
 
   -- Author
-  author_id UUID NOT NULL REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+author_id UUID NOT NULL REFERENCES auth.users(id),
   author_role TEXT NOT NULL CHECK (author_role IN ('OWNER', 'MANAGER', 'ANALYST')),
 
   -- Content
@@ -31,7 +32,8 @@ CREATE TABLE IF NOT EXISTS review_comments (
   is_edited BOOLEAN DEFAULT false,
   edited_at TIMESTAMPTZ,
   is_resolved BOOLEAN DEFAULT false,
-  resolved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by UUID REFERENCES auth.users(id),
   resolved_at TIMESTAMPTZ,
 
   -- Timestamps
@@ -47,7 +49,8 @@ CREATE TABLE IF NOT EXISTS consensus_votes (
   organization_id UUID NOT NULL REFERENCES organizations(org_id) ON DELETE CASCADE,
 
   -- Voter
-  voter_id UUID NOT NULL REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+voter_id UUID NOT NULL REFERENCES auth.users(id),
   voter_role TEXT NOT NULL CHECK (voter_role IN ('OWNER', 'MANAGER', 'ANALYST')),
 
   -- Vote
@@ -91,7 +94,8 @@ CREATE TABLE IF NOT EXISTS review_conflicts (
   -- Resolution
   status TEXT NOT NULL DEFAULT 'OPEN' CHECK (status IN ('OPEN', 'ESCALATED', 'RESOLVED', 'DISMISSED')),
   resolution TEXT,
-  resolved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by UUID REFERENCES auth.users(id),
   resolved_at TIMESTAMPTZ,
 
   -- Timestamps
@@ -118,7 +122,8 @@ CREATE TABLE IF NOT EXISTS operator_activity_stream (
   ),
 
   -- Actor
-  actor_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+actor_id UUID REFERENCES auth.users(id),
   actor_role TEXT,
 
   -- Related entities

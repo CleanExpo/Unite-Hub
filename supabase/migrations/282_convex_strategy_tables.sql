@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS convex_strategies (
     inputs JSONB NOT NULL DEFAULT '{}',
     outputs JSONB NOT NULL DEFAULT '{}',
     metadata JSONB NOT NULL DEFAULT '{}',
-    created_by UUID REFERENCES auth.users(id),
+    -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -123,7 +124,8 @@ CREATE TABLE IF NOT EXISTS convex_execution_logs (
     outputs JSONB NOT NULL DEFAULT '{}',
     error_message TEXT,
     execution_time_ms INTEGER,
-    created_by UUID REFERENCES auth.users(id),
+    -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     completed_at TIMESTAMPTZ
 );

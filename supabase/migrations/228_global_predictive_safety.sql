@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS safety_events (
   resolution_notes TEXT,
 
   -- Metadata
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
@@ -149,7 +150,8 @@ CREATE TABLE IF NOT EXISTS safety_ledger (
   outcome_notes TEXT,
 
   timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 

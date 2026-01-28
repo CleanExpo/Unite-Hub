@@ -31,7 +31,7 @@ ALTER TABLE ucscel_contracts ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY ucscel_contracts_select ON ucscel_contracts
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -76,7 +76,7 @@ ALTER TABLE ucscel_enforcement_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY ucscel_enforcement_log_select ON ucscel_enforcement_log
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

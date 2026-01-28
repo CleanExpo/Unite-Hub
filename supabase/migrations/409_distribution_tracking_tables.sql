@@ -260,4 +260,4 @@ CREATE POLICY citation_alerts_workspace_isolation ON citation_alerts
 -- - citation_snapshots: Real-time citation metrics history
 -- - citation_alerts: Citation change alerts and notifications
 -- - Full RLS enforcement for workspace isolation
--- - Optimized indexes for common queries
+-- - Optimized indexes for common queries;

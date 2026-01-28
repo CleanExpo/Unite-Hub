@@ -34,7 +34,7 @@ ALTER TABLE award_badges ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY award_badges_select ON award_badges
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -67,7 +67,7 @@ ALTER TABLE award_eligibility_rules ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (global read)
 CREATE POLICY award_eligibility_rules_select ON award_eligibility_rules
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY award_eligibility_rules_insert ON award_eligibility_rules
   FOR INSERT TO authenticated

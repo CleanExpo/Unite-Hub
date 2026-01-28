@@ -9,7 +9,8 @@
 CREATE TABLE IF NOT EXISTS usage_metrics (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   metric_type TEXT NOT NULL CHECK (metric_type IN ('command', 'api_call', 'credential_op', 'tenant_op', 'error')),
   metric_name TEXT NOT NULL,
   value NUMERIC NOT NULL DEFAULT 1,

@@ -45,7 +45,7 @@ ALTER TABLE voice_profiles ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY voice_profiles_select ON voice_profiles
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -58,7 +58,7 @@ CREATE POLICY voice_profiles_insert ON voice_profiles
 
 CREATE POLICY voice_profiles_update ON voice_profiles
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));

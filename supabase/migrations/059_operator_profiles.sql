@@ -4,7 +4,8 @@
 -- Operator Profiles Table
 CREATE TABLE IF NOT EXISTS operator_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(org_id) ON DELETE CASCADE,
 
   -- Role (OWNER > MANAGER > ANALYST)
@@ -57,16 +58,19 @@ CREATE TABLE IF NOT EXISTS operator_approval_queue (
   priority INTEGER NOT NULL DEFAULT 5, -- 1-10, higher = more urgent
 
   -- Assignment
-  assigned_to UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+assigned_to UUID REFERENCES auth.users(id),
   assigned_at TIMESTAMPTZ,
 
   -- Resolution
-  resolved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by UUID REFERENCES auth.users(id),
   resolved_at TIMESTAMPTZ,
   resolution_notes TEXT,
 
   -- Escalation
-  escalated_to UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+escalated_to UUID REFERENCES auth.users(id),
   escalation_reason TEXT,
 
   -- Expiry
@@ -80,7 +84,8 @@ CREATE TABLE IF NOT EXISTS operator_approval_queue (
 -- Operator Notifications Table
 CREATE TABLE IF NOT EXISTS operator_notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(org_id) ON DELETE CASCADE,
 
   -- Notification type

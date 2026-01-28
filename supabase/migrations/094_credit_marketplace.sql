@@ -35,7 +35,7 @@ ALTER TABLE credit_packs ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for authenticated users)
 CREATE POLICY credit_packs_select ON credit_packs
   FOR SELECT TO authenticated
-  USING (is_active = true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND is_active = true);
 
 -- Trigger for updated_at
 CREATE TRIGGER trg_credit_packs_updated_at
@@ -101,7 +101,7 @@ ALTER TABLE upsell_triggers ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY upsell_triggers_select ON upsell_triggers
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -113,7 +113,7 @@ CREATE POLICY upsell_triggers_insert ON upsell_triggers
 
 CREATE POLICY upsell_triggers_update ON upsell_triggers
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

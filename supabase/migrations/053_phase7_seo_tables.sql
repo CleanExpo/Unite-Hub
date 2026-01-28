@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS seo_client_profiles (
   geo_radius_km INTEGER NOT NULL CHECK (geo_radius_km IN (3, 5, 10, 15, 20, 25, 50)),
   geo_config JSONB DEFAULT '{}'::jsonb,
   owner_email TEXT NOT NULL,
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -37,7 +38,8 @@ CREATE TABLE IF NOT EXISTS seo_audit_history (
   health_score INTEGER CHECK (health_score >= 0 AND health_score <= 100),
   report_paths TEXT[],
   error_message TEXT,
-  triggered_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+triggered_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   started_at TIMESTAMPTZ,
   completed_at TIMESTAMPTZ
@@ -87,7 +89,8 @@ CREATE TABLE IF NOT EXISTS autonomy_queue (
   audit_id UUID REFERENCES seo_audit_history(audit_id),
   result JSONB,
   error_message TEXT,
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   started_at TIMESTAMPTZ,
   completed_at TIMESTAMPTZ

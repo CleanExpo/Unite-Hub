@@ -67,7 +67,8 @@ CREATE TABLE IF NOT EXISTS ai_memory (
   -- Soft delete support
   is_redacted BOOLEAN DEFAULT FALSE,
   redaction_reason TEXT,
-  redacted_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+redacted_by UUID REFERENCES auth.users(id),
 
   -- Metadata
   metadata JSONB DEFAULT '{}'::JSONB

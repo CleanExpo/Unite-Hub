@@ -20,7 +20,8 @@ CREATE TABLE strategic_objectives (
   constraints TEXT[] DEFAULT '{}',
   priority VARCHAR(20) NOT NULL CHECK (priority IN ('critical', 'high', 'medium', 'low')) DEFAULT 'medium',
   status VARCHAR(20) NOT NULL CHECK (status IN ('draft', 'active', 'completed', 'archived')) DEFAULT 'draft',
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -322,4 +323,4 @@ CREATE POLICY strategy_patterns_founder_update ON strategy_patterns
   );
 
 -- Note: Timestamps (created_at, updated_at) are managed at the application layer
--- via explicit SET updated_at = NOW() in UPDATE queries
+-- via explicit SET updated_at = NOW() in UPDATE queries;

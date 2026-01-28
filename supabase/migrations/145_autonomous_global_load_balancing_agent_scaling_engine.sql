@@ -60,7 +60,7 @@ ALTER TABLE aglbase_agent_pools ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY aglbase_agent_pools_select ON aglbase_agent_pools
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -72,13 +72,13 @@ CREATE POLICY aglbase_agent_pools_insert ON aglbase_agent_pools
 
 CREATE POLICY aglbase_agent_pools_update ON aglbase_agent_pools
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
 CREATE POLICY aglbase_agent_pools_delete ON aglbase_agent_pools
   FOR DELETE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -121,7 +121,7 @@ ALTER TABLE aglbase_scaling_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY aglbase_scaling_events_select ON aglbase_scaling_events
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -174,7 +174,7 @@ ALTER TABLE aglbase_routing_decisions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY aglbase_routing_decisions_select ON aglbase_routing_decisions
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

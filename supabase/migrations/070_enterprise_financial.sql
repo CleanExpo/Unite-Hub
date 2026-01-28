@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS financial_reports (
     status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'generated', 'finalized', 'archived')),
     generated_at TIMESTAMPTZ,
     finalized_at TIMESTAMPTZ,
-    generated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+generated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
     -- Metadata
     metadata JSONB DEFAULT '{}',
@@ -118,7 +119,8 @@ CREATE TABLE IF NOT EXISTS audit_events (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     workspace_id UUID REFERENCES workspaces(id) ON DELETE SET NULL,
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
     -- Event details
     event_type TEXT NOT NULL,

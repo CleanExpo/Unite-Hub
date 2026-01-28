@@ -7,7 +7,8 @@
 CREATE TABLE IF NOT EXISTS founder_intel_snapshots (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at timestamptz NOT NULL DEFAULT now(),
-  created_by_user_id uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by_user_id uuid REFERENCES auth.users(id),
   scope text NOT NULL CHECK (scope IN ('global', 'client', 'cohort', 'segment')),
   client_id uuid REFERENCES contacts(id),
   title text NOT NULL,
@@ -32,7 +33,7 @@ ALTER TABLE founder_intel_snapshots ENABLE ROW LEVEL SECURITY;
 -- Policy: founders and admins can read all snapshots
 CREATE POLICY founder_intel_snapshots_select ON founder_intel_snapshots
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -66,7 +67,8 @@ CREATE TABLE IF NOT EXISTS founder_intel_alerts (
   metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
   status text NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'acknowledged', 'in_progress', 'resolved', 'dismissed')),
   resolved_at timestamptz,
-  resolved_by_user_id uuid REFERENCES auth.users(id)
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by_user_id uuid REFERENCES auth.users(id)
 );
 
 -- Indexes for founder_intel_alerts
@@ -82,7 +84,7 @@ ALTER TABLE founder_intel_alerts ENABLE ROW LEVEL SECURITY;
 -- Policy: founders and admins can read all alerts
 CREATE POLICY founder_intel_alerts_select ON founder_intel_alerts
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -100,7 +102,7 @@ CREATE POLICY founder_intel_alerts_insert ON founder_intel_alerts
 -- Policy: founders and admins can update status
 CREATE POLICY founder_intel_alerts_update ON founder_intel_alerts
   FOR UPDATE
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -116,7 +118,8 @@ CREATE POLICY founder_intel_alerts_update ON founder_intel_alerts
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS founder_intel_preferences (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL REFERENCES auth.users(id) UNIQUE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id uuid NOT NULL REFERENCES auth.users(id) UNIQUE,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
   risk_thresholds jsonb NOT NULL DEFAULT '{
@@ -153,7 +156,7 @@ ALTER TABLE founder_intel_preferences ENABLE ROW LEVEL SECURITY;
 -- Policy: users can only read their own preferences
 CREATE POLICY founder_intel_preferences_select ON founder_intel_preferences
   FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 -- Policy: users can insert their own preferences
 CREATE POLICY founder_intel_preferences_insert ON founder_intel_preferences
@@ -163,7 +166,7 @@ CREATE POLICY founder_intel_preferences_insert ON founder_intel_preferences
 -- Policy: users can update their own preferences
 CREATE POLICY founder_intel_preferences_update ON founder_intel_preferences
   FOR UPDATE
-  USING (auth.uid() = user_id)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
 -- ============================================================================

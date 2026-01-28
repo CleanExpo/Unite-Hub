@@ -105,7 +105,8 @@ CREATE TABLE IF NOT EXISTS usage_events (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     workspace_id UUID REFERENCES workspaces(id) ON DELETE SET NULL,
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
     -- Event details
     event_type TEXT NOT NULL,
@@ -246,7 +247,7 @@ USING (is_public = TRUE AND is_active = TRUE);
 -- subscriptions policies
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their org's subscription"
+CREATE POLICY "Users can view their org''s subscription"
 ON subscriptions FOR SELECT
 USING (
     org_id IN (
@@ -267,7 +268,7 @@ USING (
 -- usage_events policies
 ALTER TABLE usage_events ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their org's usage"
+CREATE POLICY "Users can view their org''s usage"
 ON usage_events FOR SELECT
 USING (
     org_id IN (
@@ -283,7 +284,7 @@ WITH CHECK (TRUE);
 -- metering_counters policies
 ALTER TABLE metering_counters ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their org's metering"
+CREATE POLICY "Users can view their org''s metering"
 ON metering_counters FOR SELECT
 USING (
     org_id IN (
@@ -295,7 +296,7 @@ USING (
 -- invoice_history policies
 ALTER TABLE invoice_history ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their org's invoices"
+CREATE POLICY "Users can view their org''s invoices"
 ON invoice_history FOR SELECT
 USING (
     org_id IN (
@@ -316,7 +317,7 @@ USING (
 -- plan_overages policies
 ALTER TABLE plan_overages ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their org's overages"
+CREATE POLICY "Users can view their org''s overages"
 ON plan_overages FOR SELECT
 USING (
     org_id IN (
@@ -329,7 +330,7 @@ USING (
 -- HELPER FUNCTIONS
 -- =============================================================================
 
--- Function: Get org's current subscription with plan details
+-- Function: Get org''s current subscription with plan details
 CREATE OR REPLACE FUNCTION get_org_subscription(p_org_id UUID)
 RETURNS TABLE (
     subscription_id UUID,

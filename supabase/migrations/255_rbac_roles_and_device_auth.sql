@@ -2,9 +2,11 @@
 -- Adds role-based access control and device-based approval for admin access
 -- Status: 2025-11-26
 
--- Create profiles table if it doesn't exist (extends auth.users)
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
+Create profiles table if it doesn't exist (extends auth.users)
 CREATE TABLE IF NOT EXISTS public.profiles (
-  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  -- Keep FK reference to auth.users (allowed in migrations)
+id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email TEXT,
   role TEXT DEFAULT 'customer' CHECK (role IN ('admin', 'customer')),
   created_at TIMESTAMP DEFAULT now(),
@@ -34,12 +36,14 @@ WHERE email IN (
 -- Create admin_approvals table for device authorization
 CREATE TABLE IF NOT EXISTS public.admin_approvals (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   ip_address INET,
   user_agent TEXT,
   approved BOOLEAN DEFAULT FALSE,
   approval_token TEXT UNIQUE,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   requested_at TIMESTAMP DEFAULT now(),
   approved_at TIMESTAMP,
   expires_at TIMESTAMP DEFAULT (now() + interval '10 minutes'),
@@ -57,12 +61,14 @@ CREATE INDEX IF NOT EXISTS idx_admin_approvals_expires
 -- Create admin_devices table for trusted device tracking
 CREATE TABLE IF NOT EXISTS public.admin_trusted_devices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   ip_address INET,
   user_agent TEXT,
   device_fingerprint TEXT,
   is_trusted BOOLEAN DEFAULT FALSE,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   last_used TIMESTAMP DEFAULT now(),
   expires_at TIMESTAMP DEFAULT (now() + interval '90 days'),
   created_at TIMESTAMP DEFAULT now()
@@ -81,13 +87,13 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS rls_profiles_self_view ON public.profiles;
 CREATE POLICY rls_profiles_self_view ON public.profiles
   FOR SELECT
-  USING (auth.uid() = id);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = id);
 
 -- RLS Policy: Users can update their own profile (except role)
 DROP POLICY IF EXISTS rls_profiles_self_update ON public.profiles;
 CREATE POLICY rls_profiles_self_update ON public.profiles
   FOR UPDATE
-  USING (auth.uid() = id)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
 -- Enable RLS on admin_approvals table
@@ -97,13 +103,13 @@ ALTER TABLE public.admin_approvals ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS rls_admin_approvals_own ON public.admin_approvals;
 CREATE POLICY rls_admin_approvals_own ON public.admin_approvals
   FOR SELECT
-  USING (auth.uid() = user_id OR auth.uid() = approved_by);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id OR auth.uid() = approved_by);
 
 -- RLS Policy: Only Phill can approve
 DROP POLICY IF EXISTS rls_admin_approvals_approve ON public.admin_approvals;
 CREATE POLICY rls_admin_approvals_approve ON public.admin_approvals
   FOR UPDATE
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM public.profiles
       WHERE id = auth.uid()
@@ -118,7 +124,7 @@ ALTER TABLE public.admin_trusted_devices ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS rls_admin_devices_own ON public.admin_trusted_devices;
 CREATE POLICY rls_admin_devices_own ON public.admin_trusted_devices
   FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 -- Create function to check if admin is approved for this device
 CREATE OR REPLACE FUNCTION public.is_admin_approved(user_id UUID, device_fingerprint TEXT)
@@ -251,7 +257,8 @@ GRANT EXECUTE ON FUNCTION public.trust_admin_device TO authenticated;
 -- Create audit log table
 CREATE TABLE IF NOT EXISTS public.admin_access_audit (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   action TEXT NOT NULL,
   ip_address INET,
   user_agent TEXT,
@@ -274,7 +281,7 @@ ALTER TABLE public.admin_access_audit ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS rls_audit_admin_only ON public.admin_access_audit;
 CREATE POLICY rls_audit_admin_only ON public.admin_access_audit
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM public.profiles
       WHERE id = auth.uid()

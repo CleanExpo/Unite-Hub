@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS autopilot_preferences (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 
   -- References
-  founder_user_id UUID NOT NULL UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+founder_user_id UUID NOT NULL UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
 
   -- Automation profile

@@ -7,7 +7,8 @@
 CREATE TABLE IF NOT EXISTS performance_reality_snapshots (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at timestamptz NOT NULL DEFAULT now(),
-  created_by_user_id uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by_user_id uuid REFERENCES auth.users(id),
   scope text NOT NULL CHECK (scope IN ('global', 'client', 'cohort', 'channel', 'campaign')),
   client_id uuid REFERENCES contacts(id),
   channel text CHECK (channel IN ('facebook', 'instagram', 'linkedin', 'tiktok', 'youtube', 'google', 'email', 'website', 'multi', 'none')),
@@ -38,7 +39,7 @@ ALTER TABLE performance_reality_snapshots ENABLE ROW LEVEL SECURITY;
 -- Policy: founders and admins can read all snapshots
 CREATE POLICY perf_reality_snapshots_select ON performance_reality_snapshots
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -76,7 +77,7 @@ ALTER TABLE performance_attribution_factors ENABLE ROW LEVEL SECURITY;
 -- Policy: founders and admins can read all factors
 CREATE POLICY perf_attribution_factors_select ON performance_attribution_factors
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -85,7 +86,7 @@ CREATE POLICY perf_attribution_factors_select ON performance_attribution_factors
 -- Policy: admins can update factors
 CREATE POLICY perf_attribution_factors_update ON performance_attribution_factors
   FOR UPDATE
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
@@ -123,7 +124,7 @@ ALTER TABLE performance_external_signals ENABLE ROW LEVEL SECURITY;
 -- Policy: founders and admins can read all signals
 CREATE POLICY perf_external_signals_select ON performance_external_signals
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() IN (
       SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )

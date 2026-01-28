@@ -22,7 +22,7 @@ ALTER TABLE benchmark_dimensions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (global read, admin write)
 CREATE POLICY benchmark_dimensions_select ON benchmark_dimensions
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY benchmark_dimensions_insert ON benchmark_dimensions
   FOR INSERT TO authenticated
@@ -61,7 +61,7 @@ ALTER TABLE benchmarks ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY benchmarks_select ON benchmarks
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

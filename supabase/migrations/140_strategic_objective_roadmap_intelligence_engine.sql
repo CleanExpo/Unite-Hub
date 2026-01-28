@@ -46,7 +46,7 @@ ALTER TABLE sorie_objectives ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY sorie_objectives_select ON sorie_objectives
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -58,13 +58,13 @@ CREATE POLICY sorie_objectives_insert ON sorie_objectives
 
 CREATE POLICY sorie_objectives_update ON sorie_objectives
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
 CREATE POLICY sorie_objectives_delete ON sorie_objectives
   FOR DELETE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -106,7 +106,7 @@ ALTER TABLE sorie_roadmaps ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY sorie_roadmaps_select ON sorie_roadmaps
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -118,7 +118,7 @@ CREATE POLICY sorie_roadmaps_insert ON sorie_roadmaps
 
 CREATE POLICY sorie_roadmaps_update ON sorie_roadmaps
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -168,7 +168,7 @@ ALTER TABLE sorie_recommendations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY sorie_recommendations_select ON sorie_recommendations
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -180,7 +180,7 @@ CREATE POLICY sorie_recommendations_insert ON sorie_recommendations
 
 CREATE POLICY sorie_recommendations_update ON sorie_recommendations
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

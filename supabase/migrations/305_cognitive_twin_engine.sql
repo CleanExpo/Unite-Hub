@@ -156,7 +156,7 @@ ALTER TABLE cognitive_twin_decisions ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "cognitive_twin_scores_select_own" ON cognitive_twin_scores;
 CREATE POLICY "cognitive_twin_scores_select_own" ON cognitive_twin_scores
-    FOR SELECT USING (owner_user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "cognitive_twin_scores_insert_own" ON cognitive_twin_scores;
 CREATE POLICY "cognitive_twin_scores_insert_own" ON cognitive_twin_scores
@@ -164,11 +164,11 @@ CREATE POLICY "cognitive_twin_scores_insert_own" ON cognitive_twin_scores
 
 DROP POLICY IF EXISTS "cognitive_twin_scores_update_own" ON cognitive_twin_scores;
 CREATE POLICY "cognitive_twin_scores_update_own" ON cognitive_twin_scores
-    FOR UPDATE USING (owner_user_id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "cognitive_twin_scores_delete_own" ON cognitive_twin_scores;
 CREATE POLICY "cognitive_twin_scores_delete_own" ON cognitive_twin_scores
-    FOR DELETE USING (owner_user_id = auth.uid());
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 -- ============================================================================
 -- RLS POLICIES: cognitive_twin_digests
@@ -176,7 +176,7 @@ CREATE POLICY "cognitive_twin_scores_delete_own" ON cognitive_twin_scores
 
 DROP POLICY IF EXISTS "cognitive_twin_digests_select_own" ON cognitive_twin_digests;
 CREATE POLICY "cognitive_twin_digests_select_own" ON cognitive_twin_digests
-    FOR SELECT USING (owner_user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "cognitive_twin_digests_insert_own" ON cognitive_twin_digests;
 CREATE POLICY "cognitive_twin_digests_insert_own" ON cognitive_twin_digests
@@ -184,11 +184,11 @@ CREATE POLICY "cognitive_twin_digests_insert_own" ON cognitive_twin_digests
 
 DROP POLICY IF EXISTS "cognitive_twin_digests_update_own" ON cognitive_twin_digests;
 CREATE POLICY "cognitive_twin_digests_update_own" ON cognitive_twin_digests
-    FOR UPDATE USING (owner_user_id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "cognitive_twin_digests_delete_own" ON cognitive_twin_digests;
 CREATE POLICY "cognitive_twin_digests_delete_own" ON cognitive_twin_digests
-    FOR DELETE USING (owner_user_id = auth.uid());
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 -- ============================================================================
 -- RLS POLICIES: cognitive_twin_decisions
@@ -196,7 +196,7 @@ CREATE POLICY "cognitive_twin_digests_delete_own" ON cognitive_twin_digests
 
 DROP POLICY IF EXISTS "cognitive_twin_decisions_select_own" ON cognitive_twin_decisions;
 CREATE POLICY "cognitive_twin_decisions_select_own" ON cognitive_twin_decisions
-    FOR SELECT USING (owner_user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "cognitive_twin_decisions_insert_own" ON cognitive_twin_decisions;
 CREATE POLICY "cognitive_twin_decisions_insert_own" ON cognitive_twin_decisions
@@ -204,11 +204,11 @@ CREATE POLICY "cognitive_twin_decisions_insert_own" ON cognitive_twin_decisions
 
 DROP POLICY IF EXISTS "cognitive_twin_decisions_update_own" ON cognitive_twin_decisions;
 CREATE POLICY "cognitive_twin_decisions_update_own" ON cognitive_twin_decisions
-    FOR UPDATE USING (owner_user_id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "cognitive_twin_decisions_delete_own" ON cognitive_twin_decisions;
 CREATE POLICY "cognitive_twin_decisions_delete_own" ON cognitive_twin_decisions
-    FOR DELETE USING (owner_user_id = auth.uid());
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 -- ============================================================================
 -- GRANTS

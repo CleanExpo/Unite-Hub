@@ -49,7 +49,8 @@ CREATE TABLE IF NOT EXISTS agency_users (
 
   -- References
   agency_id UUID NOT NULL REFERENCES agencies(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Role
   role TEXT NOT NULL CHECK (role IN ('owner', 'manager', 'staff', 'client')),

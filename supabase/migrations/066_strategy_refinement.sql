@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS refinement_cycles (
     'CANCELLED'
   )),
 
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -218,7 +219,8 @@ CREATE TABLE IF NOT EXISTS reinforcement_adjustments (
   operator_feedback TEXT,
   operator_approved BOOLEAN,
   approved_at TIMESTAMPTZ,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
 
   -- Outcome tracking
   expected_impact DECIMAL(8,4),
@@ -262,7 +264,7 @@ ALTER TABLE reinforcement_adjustments ENABLE ROW LEVEL SECURITY;
 
 -- Refinement Cycles: org members
 CREATE POLICY refinement_cycles_select ON refinement_cycles
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -278,7 +280,7 @@ CREATE POLICY refinement_cycles_insert ON refinement_cycles
   );
 
 CREATE POLICY refinement_cycles_update ON refinement_cycles
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
@@ -287,7 +289,7 @@ CREATE POLICY refinement_cycles_update ON refinement_cycles
 
 -- Drift Signals: org members
 CREATE POLICY drift_signals_select ON drift_signals
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -303,7 +305,7 @@ CREATE POLICY drift_signals_insert ON drift_signals
   );
 
 CREATE POLICY drift_signals_update ON drift_signals
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -312,7 +314,7 @@ CREATE POLICY drift_signals_update ON drift_signals
 
 -- Domain Balances: org members
 CREATE POLICY domain_balances_select ON domain_balances
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -329,7 +331,7 @@ CREATE POLICY domain_balances_insert ON domain_balances
 
 -- Performance History: org members
 CREATE POLICY performance_history_select ON performance_history
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -346,7 +348,7 @@ CREATE POLICY performance_history_insert ON performance_history
 
 -- Reinforcement Adjustments: org members
 CREATE POLICY reinforcement_adjustments_select ON reinforcement_adjustments
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -362,7 +364,7 @@ CREATE POLICY reinforcement_adjustments_insert ON reinforcement_adjustments
   );
 
 CREATE POLICY reinforcement_adjustments_update ON reinforcement_adjustments
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()

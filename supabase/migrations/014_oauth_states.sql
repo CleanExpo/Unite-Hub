@@ -24,7 +24,7 @@ ALTER TABLE oauth_states ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "oauth_states_user_isolation"
 ON oauth_states
 FOR ALL
-USING (user_id = auth.uid());
+USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 -- Cleanup function for expired states
 CREATE OR REPLACE FUNCTION delete_expired_oauth_states()
