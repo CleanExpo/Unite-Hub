@@ -6,6 +6,7 @@
  */
 
 import { Anthropic } from '@anthropic-ai/sdk';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 
 export interface DecompositionRequest {
   objective: string;
@@ -33,6 +34,9 @@ export class TaskDecomposer {
   constructor() {
     this.anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
+      defaultHeaders: {
+        'anthropic-beta': 'prompt-caching-2024-07-31',
+      },
     });
   }
 
@@ -100,7 +104,13 @@ Provide a structured task breakdown that can be executed sequentially by the ava
       const response = await this.anthropic.messages.create({
         model: 'claude-sonnet-4-5-20250929',
         max_tokens: 4000,
-        system: systemPrompt,
+        system: [
+          {
+            type: 'text',
+            text: systemPrompt,
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
         messages: [
           {
             role: 'user',
@@ -108,6 +118,10 @@ Provide a structured task breakdown that can be executed sequentially by the ava
           },
         ],
       });
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(response, 'claude-sonnet-4-5-20250929');
+      logCacheStats('TaskDecomposer:decompose', cacheStats);
 
       const responseText =
         response.content[0].type === 'text' ? response.content[0].text : '';

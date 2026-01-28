@@ -9,6 +9,7 @@
 import { getSupabaseServer } from '@/lib/supabase';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { TaskDecomposer } from './taskDecomposer';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { ContextUnifier } from './contextUnifier';
 import { RiskSupervisor } from './riskSupervisor';
 import { UncertaintyModel } from './uncertaintyModel';
@@ -65,6 +66,9 @@ export class OrchestratorEngine {
   constructor() {
     this.anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
+      defaultHeaders: {
+        'anthropic-beta': 'prompt-caching-2024-07-31',
+      },
     });
     this.taskDecomposer = new TaskDecomposer();
     this.contextUnifier = new ContextUnifier();
@@ -425,6 +429,10 @@ export class OrchestratorEngine {
         },
       ],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-sonnet-4-5-20250929');
+    logCacheStats('Orchestrator:executeContentAgent', cacheStats);
 
     return {
       status: 'completed',
