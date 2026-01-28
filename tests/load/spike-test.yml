@@ -1,0 +1,70 @@
+# Spike Test - Unite-Hub
+# Tests system behavior under sudden traffic spikes
+
+config:
+  target: "http://localhost:3008"
+  phases:
+    # Normal load
+    - duration: 60
+      arrivalRate: 10
+      name: "Baseline load"
+    # Sudden spike
+    - duration: 30
+      arrivalRate: 500
+      name: "Traffic spike"
+    # Recovery
+    - duration: 60
+      arrivalRate: 10
+      name: "Recovery"
+    # Second spike
+    - duration: 30
+      arrivalRate: 500
+      name: "Second spike"
+    # Final recovery
+    - duration: 60
+      arrivalRate: 10
+      name: "Final recovery"
+  
+  ensure:
+    maxErrorRate: 3
+    p95: 1000
+    p99: 3000
+  
+  plugins:
+    expect: {}
+    metrics-by-endpoint: {}
+
+scenarios:
+  - name: "Health Check"
+    weight: 50
+    flow:
+      - get:
+          url: "/api/health"
+          expect:
+            - statusCode: [200, 429, 503]
+  
+  - name: "API Endpoints"
+    weight: 30
+    flow:
+      - get:
+          url: "/api/csrf-token"
+          expect:
+            - statusCode: [200, 429]
+      
+      - think: 1 # 1 second delay
+      
+      - get:
+          url: "/api/health"
+          expect:
+            - statusCode: [200, 429, 503]
+  
+  - name: "Mixed Load"
+    weight: 20
+    flow:
+      - loop:
+        - get:
+            url: "/"
+          expect:
+            - statusCode: [200, 429, 503]
+        - think: 0.5
+        count: 3
