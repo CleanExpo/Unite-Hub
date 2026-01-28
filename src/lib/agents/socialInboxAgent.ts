@@ -186,8 +186,8 @@ Provide categorization.`;
     });
 
     // Log cache performance
-    const cacheStats = extractCacheStats(result.data, 'claude-sonnet-4-5-20250929');
-    logCacheStats('SocialInbox:analyzeMessage', cacheStats);
+    const cacheStats = extractCacheStats(result.data, 'claude-haiku-4-5-20251001');
+    logCacheStats('SocialInbox:categorizeMessage', cacheStats);
 
     const responseText =
       result.data.content[0].type === 'text' ? result.data.content[0].text : '';
@@ -278,7 +278,7 @@ Generate an appropriate response suggestion.`;
 
     // Log cache performance
     const cacheStats = extractCacheStats(result.data, 'claude-sonnet-4-5-20250929');
-    logCacheStats('SocialInbox:analyzeMessage', cacheStats);
+    logCacheStats('SocialInbox:suggestResponse', cacheStats);
 
     const responseText =
       result.data.content[0].type === 'text' ? result.data.content[0].text : '';
@@ -369,8 +369,8 @@ Provide recommendations for improving social inbox management.`;
     });
 
     // Log cache performance
-    const cacheStats = extractCacheStats(result.data, 'claude-sonnet-4-5-20250929');
-    logCacheStats('SocialInbox:analyzeMessage', cacheStats);
+    const cacheStats = extractCacheStats(result.data, 'claude-haiku-4-5-20251001');
+    logCacheStats('SocialInbox:getInboxInsights', cacheStats);
 
     const responseText =
       result.data.content[0].type === 'text' ? result.data.content[0].text : '';
