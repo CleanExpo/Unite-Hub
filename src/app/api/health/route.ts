@@ -1,7 +1,7 @@
 /**
  * Health Check API Endpoint
  * Used by Docker healthcheck and monitoring systems
- * Checks: Redis, Database, overall system health
+ * Checks: Redis, Database, Cache Metrics, overall system health
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -10,6 +10,7 @@ import { createApiLogger } from "@/lib/logger";
 import { getRedisClient } from "@/lib/redis";
 import { getSupabaseServer } from "@/lib/supabase";
 import { getPoolStats } from "@/lib/db/connection-pool";
+import { cacheManager } from "@/lib/cache/redis-client";
 
 type HealthStatus = "healthy" | "degraded" | "unhealthy";
 
@@ -17,6 +18,22 @@ interface HealthCheck {
   status: HealthStatus;
   latency?: number;
   error?: string;
+}
+
+interface CacheMetrics {
+  status: "connected" | "degraded" | "disconnected";
+  provider: "redis" | "in-memory" | "upstash";
+  hit_rate: string;
+  hits: number;
+  misses: number;
+  total_operations: number;
+  circuit_breaker?: {
+    state: string;
+    failures: number;
+    successes: number;
+    trips: number;
+    is_available: boolean;
+  };
 }
 
 interface HealthResponse {
@@ -29,6 +46,7 @@ interface HealthResponse {
     redis: HealthCheck;
     database: HealthCheck;
   };
+  cache?: CacheMetrics;
   pool?: {
     totalRequests: number;
     successRate: string;
@@ -50,6 +68,39 @@ async function checkRedis(): Promise<HealthCheck> {
     return {
       status: "unhealthy",
       error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+async function getCacheMetrics(): Promise<CacheMetrics> {
+  try {
+    // Get metrics from advanced cache manager
+    const metrics = cacheManager.getMetrics();
+    const status = await cacheManager.getStatus();
+
+    // Determine provider
+    const hasUpstashUrl = !!process.env.UPSTASH_REDIS_REST_URL;
+    const hasRedisUrl = !!process.env.REDIS_URL;
+    const provider = hasUpstashUrl ? "upstash" : hasRedisUrl ? "redis" : "in-memory";
+
+    return {
+      status: status as "connected" | "degraded" | "disconnected",
+      provider,
+      hit_rate: metrics.hit_rate,
+      hits: metrics.hits,
+      misses: metrics.misses,
+      total_operations: metrics.total_operations,
+      circuit_breaker: metrics.circuit_breaker,
+    };
+  } catch (error) {
+    console.error("[Health Check] Cache metrics error:", error);
+    return {
+      status: "disconnected",
+      provider: "in-memory",
+      hit_rate: "0%",
+      hits: 0,
+      misses: 0,
+      total_operations: 0,
     };
   }
 }
@@ -101,9 +152,10 @@ export async function GET(request: NextRequest) {
     // }
 
     // Run health checks in parallel
-    const [redisCheck, dbCheck] = await Promise.all([
+    const [redisCheck, dbCheck, cacheMetrics] = await Promise.all([
       checkRedis(),
       checkDatabase(),
+      getCacheMetrics(),
     ]);
 
     const overallStatus = determineOverallStatus(redisCheck, dbCheck);
@@ -124,6 +176,7 @@ export async function GET(request: NextRequest) {
         redis: redisCheck,
         database: dbCheck,
       },
+      cache: cacheMetrics,
       pool: {
         totalRequests: poolStats.totalRequests,
         successRate,
