@@ -2,7 +2,7 @@
 # Tests basic API endpoints under moderate load
 
 config:
-  target: "http://localhost:3008"
+  target: "http://localhost:3000"
   phases:
     # Warm-up phase
     - duration: 60
