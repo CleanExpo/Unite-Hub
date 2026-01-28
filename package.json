@@ -197,6 +197,7 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.1.6",
     "@playwright/mcp": "^0.0.46",
     "@playwright/test": "^1.57.0",
     "@testing-library/dom": "^10.4.1",

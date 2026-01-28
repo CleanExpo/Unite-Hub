@@ -1,5 +1,12 @@
 import { withSentryConfig } from '@sentry/nextjs';
+import withBundleAnalyzer from '@next/bundle-analyzer';
 import path from 'node:path';
+
+// Enable bundle analyzer with ANALYZE=true environment variable
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+  openAnalyzer: true,
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -100,49 +107,8 @@ const nextConfig = {
     },
   ],
 
-  // Security and caching headers
+  // Security headers
   headers: async () => [
-    // Aggressive caching for static assets (JavaScript, CSS, fonts)
-    {
-      source: '/_next/static/:path*',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=31536000, immutable',
-        },
-      ],
-    },
-    // Aggressive caching for public static files
-    {
-      source: '/static/:path*',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=31536000, immutable',
-        },
-      ],
-    },
-    // Image optimization caching with stale-while-revalidate
-    {
-      source: '/_next/image',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=3600, stale-while-revalidate=86400',
-        },
-      ],
-    },
-    // No caching for API routes (use Redis instead)
-    {
-      source: '/api/:path*',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'no-store, must-revalidate',
-        },
-      ],
-    },
-    // Security headers for all routes
     {
       source: '/:path*',
       headers: [
@@ -196,42 +162,22 @@ const nextConfig = {
   ],
 };
 
-// Wrap with Sentry configuration for error tracking and source maps
-export default withSentryConfig(
-  nextConfig,
-  {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
-
-    // Suppresses source map uploading logs during build
-    silent: true,
-
-    org: process.env.SENTRY_ORG || 'unite-hub',
-    project: process.env.SENTRY_PROJECT || 'unite-hub-web',
-  },
-  {
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    widenClientFileUpload: true,
-
-    // Transpiles SDK to be compatible with IE11 (increases bundle size)
-    transpileClientSDK: true,
-
-    // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-    tunnelRoute: "/monitoring",
-
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
-
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-
-    // Enables automatic instrumentation of Vercel Cron Monitors.
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: true,
-  }
+// Wrap with bundle analyzer, then Sentry
+export default bundleAnalyzer(
+  withSentryConfig(
+    nextConfig,
+    {
+      silent: true,
+      org: process.env.SENTRY_ORG || 'unite-hub',
+      project: process.env.SENTRY_PROJECT || 'unite-hub-web',
+    },
+    {
+      widenClientFileUpload: true,
+      transpileClientSDK: true,
+      tunnelRoute: "/monitoring",
+      hideSourceMaps: true,
+      disableLogger: true,
+      automaticVercelMonitors: true,
+    }
+  )
 );

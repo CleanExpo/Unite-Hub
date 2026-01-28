@@ -1,0 +1,1499 @@
+
+> unite-hub@1.0.0 build
+> cross-env NODE_OPTIONS=--max-old-space-size=16384 next build
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.3 (Turbopack)
+   - Environments: .env.local, .env.production
+   - Experiments (use with caution):
+     · clientTraceMetadata
+     ✓ optimizeCss
+     · optimizePackageImports
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+Turbopack build encountered 4 warnings:
+./src/app/api/folder/create/route.ts:85:24
+The file pattern (<dynamic> '/' <dynamic> '/' <dynamic> | '/app/clients/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | '/app/clients' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | '/app/clients/' <dynamic> | <dynamic> | '/app/clients' <dynamic>) matches 47875 files in [project]/
+[0m [90m 83 |[39m     [36mconst[39m basePath [33m=[39m
+ [90m 84 |[39m       process[33m.[39menv[33m.[39m[33mDOCKER_CLIENT_DATA_PATH[39m [33m||[39m [32m"/app/clients"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 85 |[39m     [36mconst[39m folderPath [33m=[39m path[33m.[39mjoin(basePath[33m,[39m clientId[33m,[39m folderType)[33m;[39m
+ [90m    |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 86 |[39m
+ [90m 87 |[39m     [90m// Check if folder already exists[39m
+ [90m 88 |[39m     [36mtry[39m {[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import trace:
+  App Route:
+    ./src/app/api/folder/create/route.ts
+    ./src/app/api/folder/create/route.ts
+
+
+./src/server/clientDataManager.ts:348:28
+The file pattern (<dynamic> '/' <dynamic> '/audits' | <dynamic> '/audits' | <dynamic> '/' <dynamic> 'audits' | <dynamic> 'audits' | <dynamic> '/' <dynamic> '/snapshots' | <dynamic> '/snapshots' | <dynamic> '/' <dynamic> 'snapshots' | <dynamic> 'snapshots' | <dynamic> '/' <dynamic> '/competitors' | <dynamic> '/competitors' | <dynamic> '/' <dynamic> 'competitors' | <dynamic> 'competitors' | <dynamic> '/' <dynamic> '/keywords' | <dynamic> '/keywords' | <dynamic> '/' <dynamic> 'keywords' | <dynamic> 'keywords' | <dynamic> '/' <dynamic> '/backlinks' | <dynamic> '/backlinks' | <dynamic> '/' <dynamic> 'backlinks' | <dynamic> 'backlinks' | <dynamic> '/' <dynamic> '/geo' | <dynamic> '/geo' | <dynamic> '/' <dynamic> 'geo' | <dynamic> 'geo' | <dynamic> '/' <dynamic> '/reports' | <dynamic> '/reports' | <dynamic> '/' <dynamic> 'reports' | <dynamic> 'reports' | <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | <dynamic>) matches 47875 files in [project]/
+[0m [90m 346 |[39m
+ [90m 347 |[39m       [36mfor[39m ([36mconst[39m category [36mof[39m categories) {
+[31m[1m>[22m[39m[90m 348 |[39m         [36mconst[39m folderPath [33m=[39m path[33m.[39mjoin(basePath[33m,[39m category)[33m;[39m
+ [90m     |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 349 |[39m         [36mconst[39m archivePath [33m=[39m path[33m.[39mjoin(folderPath[33m,[39m [32m"archive"[39m)[33m;[39m
+ [90m 350 |[39m
+ [90m 351 |[39m         [90m// Create archive folder if it doesn't exist[39m[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./src/server/clientDataManager.ts
+    ./src/app/api/folder/create/route.ts
+
+  #2 [App Route]:
+    ./src/server/clientDataManager.ts
+    ./src/app/api/client/init/route.ts
+
+
+./src/server/clientDataManager.ts:360:32
+The file pattern (<dynamic> '/' <dynamic> '/audits/' <dynamic> | <dynamic> '/audits/' <dynamic> | <dynamic> '/' <dynamic> 'audits/' <dynamic> | <dynamic> 'audits/' <dynamic> | <dynamic> '/' <dynamic> '/snapshots/' <dynamic> | <dynamic> '/snapshots/' <dynamic> | <dynamic> '/' <dynamic> 'snapshots/' <dynamic> | <dynamic> 'snapshots/' <dynamic> | <dynamic> '/' <dynamic> '/competitors/' <dynamic> | <dynamic> '/competitors/' <dynamic> | <dynamic> '/' <dynamic> 'competitors/' <dynamic> | <dynamic> 'competitors/' <dynamic> | <dynamic> '/' <dynamic> '/keywords/' <dynamic> | <dynamic> '/keywords/' <dynamic> | <dynamic> '/' <dynamic> 'keywords/' <dynamic> | <dynamic> 'keywords/' <dynamic> | <dynamic> '/' <dynamic> '/backlinks/' <dynamic> | <dynamic> '/backlinks/' <dynamic> | <dynamic> '/' <dynamic> 'backlinks/' <dynamic> | <dynamic> 'backlinks/' <dynamic> | <dynamic> '/' <dynamic> '/geo/' <dynamic> | <dynamic> '/geo/' <dynamic> | <dynamic> '/' <dynamic> 'geo/' <dynamic> | <dynamic> 'geo/' <dynamic> | <dynamic> '/' <dynamic> '/reports/' <dynamic> | <dynamic> '/reports/' <dynamic> | <dynamic> '/' <dynamic> 'reports/' <dynamic> | <dynamic> 'reports/' <dynamic> | <dynamic> '/' <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> '/audits' <dynamic> | <dynamic> '/audits' <dynamic> | <dynamic> '/' <dynamic> 'audits' <dynamic> | <dynamic> 'audits' <dynamic> | <dynamic> '/' <dynamic> '/snapshots' <dynamic> | <dynamic> '/snapshots' <dynamic> | <dynamic> '/' <dynamic> 'snapshots' <dynamic> | <dynamic> 'snapshots' <dynamic> | <dynamic> '/' <dynamic> '/competitors' <dynamic> | <dynamic> '/competitors' <dynamic> | <dynamic> '/' <dynamic> 'competitors' <dynamic> | <dynamic> 'competitors' <dynamic> | <dynamic> '/' <dynamic> '/keywords' <dynamic> | <dynamic> '/keywords' <dynamic> | <dynamic> '/' <dynamic> 'keywords' <dynamic> | <dynamic> 'keywords' <dynamic> | <dynamic> '/' <dynamic> '/backlinks' <dynamic> | <dynamic> '/backlinks' <dynamic> | <dynamic> '/' <dynamic> 'backlinks' <dynamic> | <dynamic> 'backlinks' <dynamic> | <dynamic> '/' <dynamic> '/geo' <dynamic> | <dynamic> '/geo' <dynamic> | <dynamic> '/' <dynamic> 'geo' <dynamic> | <dynamic> 'geo' <dynamic> | <dynamic> '/' <dynamic> '/reports' <dynamic> | <dynamic> '/reports' <dynamic> | <dynamic> '/' <dynamic> 'reports' <dynamic> | <dynamic> 'reports' <dynamic> | <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | <dynamic>) matches 47875 files in [project]/
+[0m [90m 358 |[39m           [36mfor[39m ([36mconst[39m file [36mof[39m files) {
+ [90m 359 |[39m             [36mconst[39m filePath [33m=[39m path[33m.[39mjoin(folderPath[33m,[39m file)[33m;[39m
+[31m[1m>[22m[39m[90m 360 |[39m             [36mconst[39m stat [33m=[39m [36mawait[39m fs[33m.[39mstat(filePath)[33m;[39m
+ [90m     |[39m                                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 361 |[39m
+ [90m 362 |[39m             [90m// Skip if not a file or if in archive folder[39m
+ [90m 363 |[39m             [36mif[39m ([33m![39mstat[33m.[39misFile() [33m||[39m file [33m===[39m [32m"archive"[39m) [36mcontinue[39m[33m;[39m[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./src/server/clientDataManager.ts
+    ./src/app/api/folder/create/route.ts
+
+  #2 [App Route]:
+    ./src/server/clientDataManager.ts
+    ./src/app/api/client/init/route.ts
+
+
+./src/server/clientDataManager.ts:359:30
+The file pattern (<dynamic> '/' <dynamic> '/audits/' <dynamic> | <dynamic> '/audits/' <dynamic> | <dynamic> '/' <dynamic> 'audits/' <dynamic> | <dynamic> 'audits/' <dynamic> | <dynamic> '/' <dynamic> '/snapshots/' <dynamic> | <dynamic> '/snapshots/' <dynamic> | <dynamic> '/' <dynamic> 'snapshots/' <dynamic> | <dynamic> 'snapshots/' <dynamic> | <dynamic> '/' <dynamic> '/competitors/' <dynamic> | <dynamic> '/competitors/' <dynamic> | <dynamic> '/' <dynamic> 'competitors/' <dynamic> | <dynamic> 'competitors/' <dynamic> | <dynamic> '/' <dynamic> '/keywords/' <dynamic> | <dynamic> '/keywords/' <dynamic> | <dynamic> '/' <dynamic> 'keywords/' <dynamic> | <dynamic> 'keywords/' <dynamic> | <dynamic> '/' <dynamic> '/backlinks/' <dynamic> | <dynamic> '/backlinks/' <dynamic> | <dynamic> '/' <dynamic> 'backlinks/' <dynamic> | <dynamic> 'backlinks/' <dynamic> | <dynamic> '/' <dynamic> '/geo/' <dynamic> | <dynamic> '/geo/' <dynamic> | <dynamic> '/' <dynamic> 'geo/' <dynamic> | <dynamic> 'geo/' <dynamic> | <dynamic> '/' <dynamic> '/reports/' <dynamic> | <dynamic> '/reports/' <dynamic> | <dynamic> '/' <dynamic> 'reports/' <dynamic> | <dynamic> 'reports/' <dynamic> | <dynamic> '/' <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> '/audits' <dynamic> | <dynamic> '/audits' <dynamic> | <dynamic> '/' <dynamic> 'audits' <dynamic> | <dynamic> 'audits' <dynamic> | <dynamic> '/' <dynamic> '/snapshots' <dynamic> | <dynamic> '/snapshots' <dynamic> | <dynamic> '/' <dynamic> 'snapshots' <dynamic> | <dynamic> 'snapshots' <dynamic> | <dynamic> '/' <dynamic> '/competitors' <dynamic> | <dynamic> '/competitors' <dynamic> | <dynamic> '/' <dynamic> 'competitors' <dynamic> | <dynamic> 'competitors' <dynamic> | <dynamic> '/' <dynamic> '/keywords' <dynamic> | <dynamic> '/keywords' <dynamic> | <dynamic> '/' <dynamic> 'keywords' <dynamic> | <dynamic> 'keywords' <dynamic> | <dynamic> '/' <dynamic> '/backlinks' <dynamic> | <dynamic> '/backlinks' <dynamic> | <dynamic> '/' <dynamic> 'backlinks' <dynamic> | <dynamic> 'backlinks' <dynamic> | <dynamic> '/' <dynamic> '/geo' <dynamic> | <dynamic> '/geo' <dynamic> | <dynamic> '/' <dynamic> 'geo' <dynamic> | <dynamic> 'geo' <dynamic> | <dynamic> '/' <dynamic> '/reports' <dynamic> | <dynamic> '/reports' <dynamic> | <dynamic> '/' <dynamic> 'reports' <dynamic> | <dynamic> 'reports' <dynamic> | <dynamic> '/' <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | <dynamic> '/' <dynamic> | <dynamic>) matches 92400 files in [project]/
+[0m [90m 357 |[39m
+ [90m 358 |[39m           [36mfor[39m ([36mconst[39m file [36mof[39m files) {
+[31m[1m>[22m[39m[90m 359 |[39m             [36mconst[39m filePath [33m=[39m path[33m.[39mjoin(folderPath[33m,[39m file)[33m;[39m
+ [90m     |[39m                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 360 |[39m             [36mconst[39m stat [33m=[39m [36mawait[39m fs[33m.[39mstat(filePath)[33m;[39m
+ [90m 361 |[39m
+ [90m 362 |[39m             [90m// Skip if not a file or if in archive folder[39m[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./src/server/clientDataManager.ts
+    ./src/app/api/folder/create/route.ts
+
+  #2 [App Route]:
+    ./src/server/clientDataManager.ts
+    ./src/app/api/client/init/route.ts
+
+
+ ✓ Compiled successfully in 74s
+   Running next.config.js provided runAfterProductionCompile ...
+ ✓ Completed runAfterProductionCompile in 1969ms
+   Skipping validation of types
+   Collecting page data using 19 workers ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Database logging transport enabled
+getSupabaseServer: cookies() not available, using anonymous client
+getSupabaseServer: cookies() not available, using anonymous client
+getSupabaseServer: cookies() not available, using anonymous client
+getSupabaseServer: cookies() not available, using anonymous client
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+getSupabaseServer: cookies() not available, using anonymous client
+getSupabaseServer: cookies() not available, using anonymous client
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Anthropic client initialized successfully
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+getSupabaseServer: cookies() not available, using anonymous client
+WhatsApp service initialized without credentials. Set WHATSAPP_PHONE_NUMBER_ID and WHATSAPP_ACCESS_TOKEN.
+WhatsApp service initialized without credentials. Set WHATSAPP_PHONE_NUMBER_ID and WHATSAPP_ACCESS_TOKEN.
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+✅ Database logging transport enabled
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+   Generating static pages using 19 workers (0/644) ...
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+✅ Anthropic client initialized successfully
+getSupabaseServer: cookies() not available, using anonymous client
+✅ Anthropic client initialized successfully
+   Generating static pages using 19 workers (161/644) 
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+   Generating static pages using 19 workers (322/644) 
+getSupabaseServer: cookies() not available, using anonymous client
+✅ Database logging transport enabled
+getSupabaseServer: cookies() not available, using anonymous client
+✅ Database logging transport enabled
+✅ Anthropic client initialized successfully
+✅ Database logging transport enabled
+✅ Anthropic client initialized successfully
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+✅ Database logging transport enabled
+WhatsApp service initialized without credentials. Set WHATSAPP_PHONE_NUMBER_ID and WHATSAPP_ACCESS_TOKEN.
+✅ Anthropic client initialized successfully
+✅ Database logging transport enabled
+✅ Database logging transport enabled
+   Generating static pages using 19 workers (483/644) 
+✅ Anthropic client initialized successfully
+✅ Anthropic client initialized successfully
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+✅ Anthropic client initialized successfully
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+✅ Database logging transport enabled
+getSupabaseServer: cookies() not available, using anonymous client
+✅ Database logging transport enabled
+✅ Anthropic client initialized successfully
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+[Redis] Connection error: AggregateError: 
+    at ignore-listed frames {
+  code: 'ECONNREFUSED'
+}
+ ✓ Generating static pages using 19 workers (644/644) in 3.3s
+   Finalizing page optimization ...
+ ⚠ Failed to copy traced files for D:\Unite-Hub\.next\server\app\_not-found\page.js Error: EINVAL: invalid argument, copyfile 'D:\Unite-Hub\.next\server\chunks\ssr\[externals]_node:inspector_7a4283c6._.js' -> 'D:\Unite-Hub\.next\standalone\.next\server\chunks\ssr\[externals]_node:inspector_7a4283c6._.js'
+    at ignore-listed frames {
+  errno: -4071,
+  code: 'EINVAL',
+  syscall: 'copyfile',
+  path: 'D:\\Unite-Hub\\.next\\server\\chunks\\ssr\\[externals]_node:inspector_7a4283c6._.js',
+  dest: 'D:\\Unite-Hub\\.next\\standalone\\.next\\server\\chunks\\ssr\\[externals]_node:inspector_7a4283c6._.js'
+}
+ ⚠ Failed to copy traced files for D:\Unite-Hub\.next\server\app\api\agent\execute\route.js Error: EINVAL: invalid argument, copyfile 'D:\Unite-Hub\.next\server\chunks\[externals]_node:inspector_7a4283c6._.js' -> 'D:\Unite-Hub\.next\standalone\.next\server\chunks\[externals]_node:inspector_7a4283c6._.js'
+    at ignore-listed frames {
+  errno: -4071,
+  code: 'EINVAL',
+  syscall: 'copyfile',
+  path: 'D:\\Unite-Hub\\.next\\server\\chunks\\[externals]_node:inspector_7a4283c6._.js',
+  dest: 'D:\\Unite-Hub\\.next\\standalone\\.next\\server\\chunks\\[externals]_node:inspector_7a4283c6._.js'
+}
+ ⚠ Failed to copy traced files for D:\Unite-Hub\.next\server\app\api\leviathan\cloud\deploy\route.js Error: EINVAL: invalid argument, copyfile 'D:\Unite-Hub\.next\server\chunks\[externals]_node:async_hooks_b485b2a4._.js' -> 'D:\Unite-Hub\.next\standalone\.next\server\chunks\[externals]_node:async_hooks_b485b2a4._.js'
+    at ignore-listed frames {
+  errno: -4071,
+  code: 'EINVAL',
+  syscall: 'copyfile',
+  path: 'D:\\Unite-Hub\\.next\\server\\chunks\\[externals]_node:async_hooks_b485b2a4._.js',
+  dest: 'D:\\Unite-Hub\\.next\\standalone\\.next\\server\\chunks\\[externals]_node:async_hooks_b485b2a4._.js'
+}
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /about
+├ ƒ /admin/approval-result
+├ ƒ /api
+├ ƒ /api/admin/approve-access
+├ ƒ /api/admin/pending-approvals
+├ ƒ /api/admin/rate-limits
+├ ƒ /api/admin/rate-limits/block-ip
+├ ƒ /api/admin/sandbox-users
+├ ƒ /api/admin/send-approval-email
+├ ƒ /api/admin/trusted-devices
+├ ƒ /api/ads/accounts
+├ ƒ /api/ads/campaigns
+├ ƒ /api/ads/opportunities
+├ ƒ /api/agency/create
+├ ƒ /api/agency/switch
+├ ƒ /api/agent-mandates
+├ ƒ /api/agent/execute
+├ ƒ /api/agent/plan
+├ ƒ /api/agent/status
+├ ƒ /api/agents/contact-intelligence
+├ ƒ /api/agents/content-personalization
+├ ƒ /api/agents/continuous-intelligence
+├ ƒ /api/agents/intelligence-extraction
+├ ƒ /api/ai-consultations
+├ ƒ /api/ai-consultations/[id]
+├ ƒ /api/ai-workload/policies
+├ ƒ /api/ai-workload/snapshots
+├ ƒ /api/ai/analyze-stripe
+├ ƒ /api/ai/auto-reply
+├ ƒ /api/ai/budget
+├ ƒ /api/ai/campaign
+├ ƒ /api/ai/chat
+├ ƒ /api/ai/cost-dashboard
+├ ƒ /api/ai/extended-thinking/batch
+├ ƒ /api/ai/extended-thinking/execute
+├ ƒ /api/ai/extended-thinking/prompts
+├ ƒ /api/ai/extended-thinking/stats
+├ ƒ /api/ai/generate-code
+├ ƒ /api/ai/generate-image
+├ ƒ /api/ai/generate-marketing
+├ ƒ /api/ai/generate-proposal
+├ ƒ /api/ai/hooks
+├ ƒ /api/ai/interpret-idea
+├ ƒ /api/ai/mindmap
+├ ƒ /api/ai/persona
+├ ƒ /api/ai/strategy
+├ ƒ /api/ai/test-models
+├ ƒ /api/aido/auth/ga4/callback
+├ ƒ /api/aido/auth/ga4/url
+├ ƒ /api/aido/auth/gbp/callback
+├ ƒ /api/aido/auth/gbp/url
+├ ƒ /api/aido/auth/gsc/callback
+├ ƒ /api/aido/auth/gsc/url
+├ ƒ /api/aido/clients
+├ ƒ /api/aido/clients/[id]
+├ ƒ /api/aido/content
+├ ƒ /api/aido/content/[id]
+├ ƒ /api/aido/content/generate
+├ ƒ /api/aido/google-curve/analyze
+├ ƒ /api/aido/google-curve/monitor
+├ ƒ /api/aido/google-curve/signals
+├ ƒ /api/aido/intent-clusters
+├ ƒ /api/aido/intent-clusters/generate
+├ ƒ /api/aido/onboarding/generate
+├ ƒ /api/aido/reality-loop/events
+├ ƒ /api/aido/reality-loop/ingest
+├ ƒ /api/aido/reality-loop/process
+├ ƒ /api/aido/topics
+├ ƒ /api/alignment/snapshot
+├ ƒ /api/analytics/overview
+├ ƒ /api/analytics/search-console
+├ ƒ /api/analytics/sync
+├ ƒ /api/analyze/dashboard
+├ ƒ /api/approvals
+├ ƒ /api/approvals/[id]
+├ ƒ /api/approvals/[id]/approve
+├ ƒ /api/approvals/[id]/decline
+├ ƒ /api/arbitration/events
+├ ƒ /api/archive/query
+├ ƒ /api/audit/backlinks
+├ ƒ /api/audit/delta
+├ ƒ /api/audit/entities
+├ ƒ /api/audit/history
+├ ƒ /api/audit/run
+├ ƒ /api/audit/snapshot
+├ ƒ /api/audits
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/auth/client-login
+├ ƒ /api/auth/client-logout
+├ ƒ /api/auth/fix-profile
+├ ƒ /api/auth/initialize-user
+├ ƒ /api/auth/staff-login
+├ ƒ /api/auto-action/approve
+├ ƒ /api/auto-action/logs
+├ ƒ /api/auto-action/session
+├ ƒ /api/autonomy/cron
+├ ƒ /api/autonomy/evaluate
+├ ƒ /api/autonomy/proposals/[id]
+├ ƒ /api/autonomy/propose
+├ ƒ /api/autonomy/queue
+├ ƒ /api/autonomy/rollback
+├ ƒ /api/autonomy/start
+├ ƒ /api/autonomy/status
+├ ƒ /api/autopilot/actions/[id]/approve
+├ ƒ /api/autopilot/actions/[id]/skip
+├ ƒ /api/autopilot/playbooks
+├ ƒ /api/autopilot/preferences
+├ ƒ /api/autopilot/stats
+├ ƒ /api/billing/checkout
+├ ƒ /api/billing/portal
+├ ƒ /api/billing/subscription
+├ ƒ /api/broadcast/messages
+├ ƒ /api/broadcast/receipts
+├ ƒ /api/browser-automation/patterns
+├ ƒ /api/browser-automation/replay
+├ ƒ /api/calendar/[postId]
+├ ƒ /api/calendar/[postId]/approve
+├ ƒ /api/calendar/[postId]/regenerate
+├ ƒ /api/calendar/availability
+├ ƒ /api/calendar/create-meeting
+├ ƒ /api/calendar/detect-meeting
+├ ƒ /api/calendar/events
+├ ƒ /api/calendar/generate
+├ ƒ /api/calendar/suggest-times
+├ ƒ /api/calibration/parameters
+├ ƒ /api/calibration/run
+├ ƒ /api/calibration/status
+├ ƒ /api/campaigns
+├ ƒ /api/campaigns/[campaignId]/ab-test
+├ ƒ /api/campaigns/[campaignId]/workflow
+├ ƒ /api/campaigns/[campaignId]/workflow/[workflowId]
+├ ƒ /api/campaigns/blueprints
+├ ƒ /api/campaigns/blueprints/[id]
+├ ƒ /api/campaigns/channels
+├ ƒ /api/campaigns/drip
+├ ƒ /api/campaigns/from-template
+├ ƒ /api/channels/test
+├ ƒ /api/client-agent/actions
+├ ƒ /api/client-agent/chat
+├ ƒ /api/client-agent/policies
+├ ƒ /api/client-agent/scheduler
+├ ƒ /api/client-approvals
+├ ƒ /api/client/feature-flags
+├ ƒ /api/client/geo
+├ ƒ /api/client/ideas
+├ ƒ /api/client/init
+├ ƒ /api/client/projects/get
+├ ƒ /api/client/projects/list
+├ ƒ /api/client/proposals
+├ ƒ /api/client/proposals/get
+├ ƒ /api/client/proposals/select
+├ ƒ /api/client/review-packs
+├ ƒ /api/client/success
+├ ƒ /api/client/vault
+├ ƒ /api/client/welcome-pack
+├ ƒ /api/clients
+├ ƒ /api/coaching/operator/prompts
+├ ƒ /api/coalition/form
+├ ƒ /api/coalition/history
+├ ƒ /api/coalition/status
+├ ƒ /api/combat/results
+├ ƒ /api/combat/rounds
+├ ƒ /api/competitors
+├ ƒ /api/competitors/[id]
+├ ƒ /api/competitors/analysis/latest
+├ ƒ /api/competitors/analyze
+├ ƒ /api/competitors/compare
+├ ƒ /api/compliance/check
+├ ƒ /api/compliance/incidents
+├ ƒ /api/compliance/policies
+├ ƒ /api/connected-apps
+├ ƒ /api/connected-apps/[id]
+├ ƒ /api/connected-apps/callback/[provider]
+├ ƒ /api/contact/submit
+├ ƒ /api/contacts
+├ ƒ /api/contacts/[id]
+├ ƒ /api/contacts/[id]/emails
+├ ƒ /api/contacts/[id]/emails/[emailId]
+├ ƒ /api/contacts/[id]/emails/[emailId]/primary
+├ ƒ /api/contacts/analyze
+├ ƒ /api/contacts/delete
+├ ƒ /api/contacts/hot-leads
+├ ƒ /api/content
+├ ƒ /api/content/approve
+├ ƒ /api/content/iterate
+├ ƒ /api/content/pending
+├ ƒ /api/correction/start
+├ ƒ /api/correction/status
+├ ƒ /api/council
+├ ƒ /api/creative/adaptive/state
+├ ƒ /api/creative/adaptive/suggest
+├ ƒ /api/creative/insights
+├ ƒ /api/creative/quality
+├ ƒ /api/creative/risk
+├ ƒ /api/cron/health-check
+├ ƒ /api/cron/success-email
+├ ƒ /api/cron/success-insights
+├ ƒ /api/cron/success-score
+├ ƒ /api/cross-tenant/benchmarks
+├ ƒ /api/cross-tenant/boundary
+├ ƒ /api/cross-tenant/cohorts
+├ ƒ /api/cross-tenant/fairness
+├ ƒ /api/cross-tenant/learning
+├ ƒ /api/cross-tenant/patterns
+├ ƒ /api/csrf-token
+├ ƒ /api/decisions/pipeline
+├ ƒ /api/demo/initialize
+├ ƒ /api/deployment-check
+├ ƒ /api/desktop/capabilities
+├ ƒ /api/desktop/command
+├ ƒ /api/diagnostics/logs
+├ ƒ /api/director/alerts
+├ ƒ /api/director/insights
+├ ƒ /api/docs
+├ ƒ /api/early-warning/events
+├ ƒ /api/early-warning/events/[id]
+├ ƒ /api/email-intel/client/[clientId]
+├ ƒ /api/email-intel/client/[clientId]/ideas
+├ ƒ /api/email-intel/client/[clientId]/summary
+├ ƒ /api/email-intel/client/[clientId]/threads
+├ ƒ /api/email-intel/ideas
+├ ƒ /api/email-intel/pending-actions
+├ ƒ /api/email-intel/sync
+├ ƒ /api/email-intel/threads
+├ ƒ /api/email/link
+├ ƒ /api/email/oauth/authorize
+├ ƒ /api/email/oauth/callback
+├ ƒ /api/email/parse
+├ ƒ /api/email/send
+├ ƒ /api/email/sync
+├ ƒ /api/email/unsubscribe
+├ ƒ /api/email/webhook
+├ ƒ /api/emails/process
+├ ƒ /api/emails/send
+├ ƒ /api/engines/aglbase
+├ ƒ /api/engines/aire
+├ ƒ /api/engines/asrs
+├ ƒ /api/engines/egcbi
+├ ƒ /api/engines/grh
+├ ƒ /api/engines/gslpie
+├ ƒ /api/engines/health
+├ ƒ /api/engines/mcse
+├ ƒ /api/engines/orchestrator
+├ ƒ /api/engines/raaoe
+├ ƒ /api/engines/sorie
+├ ƒ /api/engines/tcpqel
+├ ƒ /api/engines/ucscel
+├ ƒ /api/engines/upewe
+├ ƒ /api/enterprise/billing/invoices
+├ ƒ /api/enterprise/billing/plans
+├ ƒ /api/enterprise/billing/subscriptions
+├ ƒ /api/enterprise/billing/usage
+├ ƒ /api/enterprise/init
+├ ƒ /api/enterprise/summary
+├ ƒ /api/enterprise/teams
+├ ƒ /api/enterprise/workspaces
+├ ƒ /api/erp/customers
+├ ƒ /api/erp/customers/[id]
+├ ƒ /api/erp/dashboard
+├ ƒ /api/erp/invoices
+├ ƒ /api/erp/invoices/[id]
+├ ƒ /api/erp/invoices/[id]/payments
+├ ƒ /api/erp/products
+├ ƒ /api/erp/purchase-orders
+├ ƒ /api/erp/purchase-orders/[id]
+├ ƒ /api/erp/purchase-orders/[id]/receive
+├ ƒ /api/erp/reports
+├ ƒ /api/erp/sales-orders
+├ ƒ /api/erp/sales-orders/[id]
+├ ƒ /api/erp/stock/low-stock
+├ ƒ /api/erp/stock/movements
+├ ƒ /api/erp/stock/transfers
+├ ƒ /api/erp/stock/valuation
+├ ƒ /api/erp/warehouses
+├ ƒ /api/evolution/adjustments/logs
+├ ƒ /api/evolution/adjustments/run
+├ ƒ /api/evolution/console/review
+├ ƒ /api/evolution/kernel/run
+├ ƒ /api/evolution/kernel/tasks
+├ ƒ /api/evolution/macro
+├ ƒ /api/evolution/mesh/overview
+├ ƒ /api/evolution/planner/overview
+├ ƒ /api/evolution/planner/schedule
+├ ƒ /api/evolution/proposals
+├ ƒ /api/evolution/qa/check
+├ ƒ /api/evolution/qa/history
+├ ƒ /api/evolution/stability/mode
+├ ƒ /api/evolution/stability/overview
+├ ƒ /api/execution-logs
+├ ƒ /api/executions/[id]/cancel
+├ ƒ /api/executions/[id]/pause
+├ ƒ /api/executions/[id]/resume
+├ ƒ /api/executions/[id]/status
+├ ƒ /api/executions/start
+├ ƒ /api/executive/briefing
+├ ƒ /api/executive/missions
+├ ƒ /api/experiments/sandbox/create
+├ ƒ /api/experiments/sandbox/results
+├ ƒ /api/external/partner/[partnerId]
+├ ƒ /api/folder/archive
+├ ƒ /api/folder/create
+├ ƒ /api/folder/list
+├ ƒ /api/founder-intel/alerts
+├ ƒ /api/founder-intel/alerts/[id]
+├ ƒ /api/founder-intel/briefing
+├ ƒ /api/founder-intel/preferences
+├ ƒ /api/founder-intel/snapshots
+├ ƒ /api/founder-intel/snapshots/[id]
+├ ƒ /api/founder-os/ai-phill/insights
+├ ƒ /api/founder-os/ai-phill/journal
+├ ƒ /api/founder-os/businesses
+├ ƒ /api/founder-os/businesses/[id]
+├ ƒ /api/founder-os/businesses/[id]/signals
+├ ƒ /api/founder-os/businesses/[id]/snapshots
+├ ƒ /api/founder-os/businesses/[id]/vault
+├ ƒ /api/founder-os/cognitive-twin/decisions
+├ ƒ /api/founder-os/cognitive-twin/digests
+├ ƒ /api/founder-os/cognitive-twin/scores
+├ ƒ /api/founder/assistant
+├ ƒ /api/founder/awareness
+├ ƒ /api/founder/business-vault
+├ ƒ /api/founder/business-vault/[businessKey]
+├ ƒ /api/founder/business-vault/[businessKey]/channel
+├ ƒ /api/founder/business-vault/[businessKey]/snapshot
+├ ƒ /api/founder/cognitive-map
+├ ƒ /api/founder/flight-deck/layout
+├ ƒ /api/founder/memory/decision-scenarios
+├ ƒ /api/founder/memory/decision-scenarios/[id]
+├ ƒ /api/founder/memory/forecast
+├ ƒ /api/founder/memory/momentum
+├ ƒ /api/founder/memory/next-actions
+├ ƒ /api/founder/memory/opportunities
+├ ƒ /api/founder/memory/overload
+├ ƒ /api/founder/memory/patterns
+├ ƒ /api/founder/memory/risks
+├ ƒ /api/founder/memory/snapshot
+├ ƒ /api/founder/memory/weekly-digest
+├ ƒ /api/founder/ops/brand-workload
+├ ƒ /api/founder/ops/overview
+├ ƒ /api/founder/ops/queue/daily
+├ ƒ /api/founder/ops/queue/pause
+├ ƒ /api/founder/ops/queue/resume
+├ ƒ /api/founder/ops/queue/weekly
+├ ƒ /api/founder/ops/tasks
+├ ƒ /api/founder/ops/tasks/[taskId]
+├ ƒ /api/founder/platform-mode
+├ ƒ /api/founder/settings/platform-mode
+├ ƒ /api/founder/synthex/setup-analytics
+├ ƒ /api/founder/synthex/sync-core-vitals
+├ ƒ /api/founder/synthex/sync-ga4
+├ ƒ /api/founder/synthex/sync-gsc
+├ ƒ /api/founder/webhooks/stripe-managed-service
+├ ƒ /api/franchise/agency-tree
+├ ƒ /api/franchise/assign-region
+├ ƒ /api/franchise/opportunities
+├ ƒ /api/generated-content
+├ ƒ /api/generated-content/[id]/approve
+├ ƒ /api/governance/charter
+├ ƒ /api/governance/meta/profiles
+├ ƒ /api/governance/meta/settings
+├ ƒ /api/guardian/notifications/logs
+├ ƒ /api/health
+├ ƒ /api/health/anthropic
+├ ƒ /api/health/neo4j
+├ ƒ /api/health/system
+├ ƒ /api/hooks/favorite
+├ ƒ /api/hooks/search
+├ ƒ /api/images/generate
+├ ƒ /api/images/regenerate
+├ ƒ /api/insights/rendered
+├ ƒ /api/integrations/ato/bas
+├ ƒ /api/integrations/ato/bas/calculate
+├ ƒ /api/integrations/ato/bas/submit
+├ ƒ /api/integrations/ato/connect
+├ ƒ /api/integrations/ato/obligations
+├ ƒ /api/integrations/ato/status
+├ ƒ /api/integrations/ato/stp/employees
+├ ƒ /api/integrations/ato/stp/pay-runs
+├ ƒ /api/integrations/ato/stp/pay-runs/[id]/finalize
+├ ƒ /api/integrations/ato/stp/submissions
+├ ƒ /api/integrations/ato/validate-abn
+├ ƒ /api/integrations/ato/verify
+├ ƒ /api/integrations/gmail/authorize
+├ ƒ /api/integrations/gmail/callback
+├ ƒ /api/integrations/gmail/callback-multi
+├ ƒ /api/integrations/gmail/connect
+├ ƒ /api/integrations/gmail/connect-multi
+├ ƒ /api/integrations/gmail/disconnect
+├ ƒ /api/integrations/gmail/list
+├ ƒ /api/integrations/gmail/send
+├ ƒ /api/integrations/gmail/set-primary
+├ ƒ /api/integrations/gmail/sync
+├ ƒ /api/integrations/gmail/sync-all
+├ ƒ /api/integrations/gmail/toggle-sync
+├ ƒ /api/integrations/gmail/update-label
+├ ƒ /api/integrations/google/search-console/analytics
+├ ƒ /api/integrations/google/search-console/sites
+├ ƒ /api/integrations/linear/issues
+├ ƒ /api/integrations/linear/issues/[issueId]
+├ ƒ /api/integrations/linear/projects
+├ ƒ /api/integrations/linear/projects/[projectId]
+├ ƒ /api/integrations/linear/projects/[projectId]/issues
+├ ƒ /api/integrations/linear/webhook
+├ ƒ /api/integrations/list
+├ ƒ /api/integrations/outlook/accounts
+├ ƒ /api/integrations/outlook/calendar/create
+├ ƒ /api/integrations/outlook/calendar/events
+├ ƒ /api/integrations/outlook/callback
+├ ƒ /api/integrations/outlook/connect
+├ ƒ /api/integrations/outlook/disconnect
+├ ƒ /api/integrations/outlook/send
+├ ƒ /api/integrations/outlook/sync
+├ ƒ /api/integrations/xero/callback
+├ ƒ /api/integrations/xero/connect
+├ ƒ /api/integrations/xero/disconnect
+├ ƒ /api/integrations/xero/set-primary
+├ ƒ /api/integrations/xero/status
+├ ƒ /api/integrations/xero/update-label
+├ ƒ /api/intelligence/contact
+├ ƒ /api/intelligence/dashboard
+├ ƒ /api/intelligence/messages
+├ ƒ /api/intelligence/stabilisation-events
+├ ƒ /api/knowledge/artifacts
+├ ƒ /api/knowledge/generate
+├ ƒ /api/landing-pages/[id]
+├ ƒ /api/landing-pages/[id]/alternatives
+├ ƒ /api/landing-pages/[id]/regenerate
+├ ƒ /api/landing-pages/[id]/section
+├ ƒ /api/landing-pages/generate
+├ ƒ /api/leviathan/cloud/deploy
+├ ƒ /api/leviathan/fabricate
+├ ƒ /api/leviathan/orchestrate
+├ ƒ /api/leviathan/social/publish
+├ ƒ /api/load/snapshots
+├ ƒ /api/loyalty/credit
+├ ƒ /api/loyalty/dashboard
+├ ƒ /api/loyalty/founder/approve-redemption
+├ ƒ /api/loyalty/founder/redemption-queue
+├ ƒ /api/loyalty/fraud/alerts
+├ ƒ /api/loyalty/history
+├ ƒ /api/loyalty/redeem
+├ ƒ /api/loyalty/referral/claim
+├ ƒ /api/loyalty/referral/create
+├ ƒ /api/loyalty/rewards
+├ ƒ /api/managed/blue-ocean/generate
+├ ƒ /api/managed/no-bluff/analyze
+├ ƒ /api/managed/projects/create
+├ ƒ /api/managed/reports/generate
+├ ƒ /api/managed/reports/send
+├ ƒ /api/managed/scheduler/weekly
+├ ƒ /api/managed/seo/baseline
+├ ƒ /api/market/baselines
+├ ƒ /api/market/trends
+├ ƒ /api/marketing/events
+├ ƒ /api/marketing/insights
+├ ƒ /api/marketplace/history
+├ ƒ /api/marketplace/start
+├ ƒ /api/marketplace/status
+├ ƒ /api/media/analyze
+├ ƒ /api/media/search
+├ ƒ /api/media/transcribe
+├ ƒ /api/media/upload
+├ ƒ /api/memory/compress
+├ ƒ /api/memory/compressed
+├ ƒ /api/memory/related
+├ ƒ /api/memory/retrieve
+├ ƒ /api/memory/spine
+├ ƒ /api/memory/store
+├ ƒ /api/mesh/node/[nodeId]
+├ ƒ /api/mesh/overview
+├ ƒ /api/metrics
+├ ƒ /api/mindmap/[mindmapId]
+├ ƒ /api/mindmap/[mindmapId]/ai-analyze
+├ ƒ /api/mindmap/[mindmapId]/connections
+├ ƒ /api/mindmap/[mindmapId]/nodes
+├ ƒ /api/mindmap/nodes/[nodeId]
+├ ƒ /api/mindmap/suggestions/[suggestionId]
+├ ƒ /api/ml/anomaly-detection/detect
+├ ƒ /api/ml/cost-tracking/budget
+├ ƒ /api/ml/cost-tracking/summary
+├ ƒ /api/ml/cost-tracking/track
+├ ƒ /api/ml/pattern-detection/detect
+├ ƒ /api/ml/prediction/predict
+├ ƒ /api/monitoring/apm
+├ ƒ /api/monitoring/cache-stats
+├ ƒ /api/monitoring/dashboard
+├ ƒ /api/multi-channel/ads/accounts
+├ ƒ /api/multi-channel/ads/opportunities
+├ ƒ /api/multi-channel/boost/jobs
+├ ƒ /api/multi-channel/search/keywords
+├ ƒ /api/multi-channel/social/accounts
+├ ƒ /api/multi-channel/social/messages
+├ ƒ /api/mvp/dashboard
+├ ƒ /api/narrative/snapshots
+├ ƒ /api/navigator/insights
+├ ƒ /api/navigator/snapshot
+├ ƒ /api/negotiation/decision
+├ ƒ /api/negotiation/start
+├ ƒ /api/negotiation/status
+├ ƒ /api/neo4j/analytics
+├ ƒ /api/neo4j/entities
+├ ƒ /api/neo4j/entities/[id]
+├ ƒ /api/neo4j/query
+├ ƒ /api/neo4j/relationships
+├ ƒ /api/neo4j/relationships/find
+├ ƒ /api/neo4j/resolution
+├ ƒ /api/neo4j/schema
+├ ƒ /api/neo4j/sync
+├ ƒ /api/onboarding/complete-step
+├ ƒ /api/onboarding/skip
+├ ƒ /api/onboarding/start
+├ ƒ /api/onboarding/status
+├ ƒ /api/operator/insights
+├ ƒ /api/operator/playbooks
+├ ƒ /api/operator/profile
+├ ƒ /api/operator/queue
+├ ƒ /api/operator/reports
+├ ƒ /api/operator/review
+├ ƒ /api/opportunities/generate
+├ ƒ /api/opportunities/list
+├ ƒ /api/optimizer/profile
+├ ƒ /api/optimizer/run
+├ ƒ /api/optimizer/status
+├ ƒ /api/orchestration/scheduler
+├ ƒ /api/orchestration/schedules
+├ ƒ /api/orchestrator/execute
+├ ƒ /api/orchestrator/plan
+├ ƒ /api/orchestrator/status
+├ ƒ /api/organization/clients
+├ ƒ /api/organizations
+├ ƒ /api/organizations/create
+├ ƒ /api/pair-operator/chat
+├ ƒ /api/pair-operator/suggestions
+├ ƒ /api/patterns/library
+├ ƒ /api/patterns/match
+├ ƒ /api/payments/create-checkout-session
+├ ƒ /api/payments/stripe-webhook
+├ ƒ /api/performance-reality/external-signals
+├ ƒ /api/performance-reality/snapshots
+├ ƒ /api/performance-reality/snapshots/[id]
+├ ƒ /api/performance-reality/strip
+├ ƒ /api/performance/normalized
+├ ƒ /api/playbooks/intelligence
+├ ƒ /api/posting-execution/execute
+├ ƒ /api/posting-execution/preflight
+├ ƒ /api/posting-execution/rollback
+├ ƒ /api/posting-execution/scheduler
+├ ƒ /api/posting/attempts
+├ ƒ /api/posting/scheduler
+├ ƒ /api/postmortem/incidents
+├ ƒ /api/postmortem/report
+├ ƒ /api/pre-clients
+├ ƒ /api/pre-clients/[id]
+├ ƒ /api/pre-clients/[id]/ingest-history
+├ ƒ /api/pre-clients/[id]/insights
+├ ƒ /api/pre-clients/[id]/threads
+├ ƒ /api/pre-clients/[id]/timeline
+├ ƒ /api/predictions/success
+├ ƒ /api/privacy/subject-access-request
+├ ƒ /api/production/jobs
+├ ƒ /api/profile
+├ ƒ /api/profile/avatar
+├ ƒ /api/profile/update
+├ ƒ /api/projects
+├ ƒ /api/projects/[projectId]/mindmap
+├ ƒ /api/projects/create
+├ ƒ /api/reasoning/start
+├ ƒ /api/reasoning/trace
+├ ƒ /api/regions/[regionId]/snapshot
+├ ƒ /api/regions/convergence/generate
+├ ƒ /api/regions/convergence/packets
+├ ƒ /api/regions/health
+├ ƒ /api/regions/transfer-safety
+├ ƒ /api/report/get
+├ ƒ /api/reports/analytics
+├ ƒ /api/reports/audit
+├ ƒ /api/reports/client
+├ ƒ /api/reports/export
+├ ƒ /api/reports/financial
+├ ƒ /api/reports/preview
+├ ƒ /api/roadmap/generate
+├ ƒ /api/roadmap/list
+├ ƒ /api/safety/enforce
+├ ƒ /api/safety/intervene
+├ ƒ /api/safety/ledger
+├ ƒ /api/safety/status
+├ ƒ /api/scaling-mode/config
+├ ƒ /api/scaling-mode/health
+├ ƒ /api/scaling-mode/history
+├ ƒ /api/scraping/analyze
+├ ƒ /api/scraping/monitor
+├ ƒ /api/search-suite/alerts
+├ ƒ /api/search-suite/keywords
+├ ƒ /api/security/api-keys
+├ ƒ /api/self-healing/jobs
+├ ƒ /api/self-healing/patches
+├ ƒ /api/seo-enhancement/audit
+├ ƒ /api/seo-enhancement/competitors
+├ ƒ /api/seo-enhancement/content
+├ ƒ /api/seo-enhancement/ctr
+├ ƒ /api/seo-enhancement/schema
+├ ƒ /api/seo-leak/audit
+├ ƒ /api/seo-leak/gaps
+├ ƒ /api/seo-leak/schema
+├ ƒ /api/seo-leak/signals
+├ ƒ /api/seo/bing/query
+├ ƒ /api/seo/bing/save-key
+├ ƒ /api/seo/brave/auth-url
+├ ƒ /api/seo/brave/callback
+├ ƒ /api/seo/brave/query
+├ ƒ /api/seo/credentials/list
+├ ƒ /api/seo/gsc/auth-url
+├ ƒ /api/seo/gsc/callback
+├ ƒ /api/seo/gsc/query
+├ ƒ /api/seo/sync-rankings
+├ ƒ /api/sequences/[id]
+├ ƒ /api/sequences/generate
+├ ƒ /api/signal-purity/snapshots
+├ ƒ /api/sites
+├ ƒ /api/sites/scan
+├ ƒ /api/social-inbox/accounts
+├ ƒ /api/social-inbox/messages
+├ ƒ /api/social-inbox/reply
+├ ƒ /api/social-inbox/triage
+├ ƒ /api/social-templates/[id]
+├ ƒ /api/social-templates/[id]/duplicate
+├ ƒ /api/social-templates/[id]/favorite
+├ ƒ /api/social-templates/[id]/track-usage
+├ ƒ /api/social-templates/[id]/variations
+├ ƒ /api/social-templates/bulk
+├ ƒ /api/social-templates/export
+├ ƒ /api/social-templates/generate
+├ ƒ /api/social-templates/search
+├ ƒ /api/social-templates/stats
+├ ƒ /api/staff/activity
+├ ƒ /api/staff/me
+├ ƒ /api/staff/projects
+├ ƒ /api/staff/projects/create
+├ ƒ /api/staff/proposal-scope/get
+├ ƒ /api/staff/proposal-scope/save
+├ ƒ /api/staff/scope-ai/generate
+├ ƒ /api/staff/tasks
+├ ƒ /api/staff/tasks/[id]
+├ ƒ /api/staff/time/approve
+├ ƒ /api/staff/time/entries
+├ ƒ /api/staff/time/manual
+├ ƒ /api/staff/time/start
+├ ƒ /api/staff/time/stop
+├ ƒ /api/staff/time/xero-sync
+├ ƒ /api/storytelling/run
+├ ƒ /api/storytelling/touchpoints
+├ ƒ /api/strategy/create
+├ ƒ /api/strategy/drift
+├ ƒ /api/strategy/evaluate
+├ ƒ /api/strategy/history
+├ ƒ /api/strategy/horizon/generate
+├ ƒ /api/strategy/horizon/kpi
+├ ƒ /api/strategy/horizon/list
+├ ƒ /api/strategy/init
+├ ƒ /api/strategy/nodes
+├ ƒ /api/strategy/refine
+├ ƒ /api/strategy/report
+├ ƒ /api/strategy/signoff
+├ ƒ /api/strategy/simulate
+├ ƒ /api/strategy/status
+├ ƒ /api/stripe/checkout
+├ ƒ /api/stripe/webhook
+├ ƒ /api/subscription/[orgId]
+├ ƒ /api/subscription/cancel
+├ ƒ /api/subscription/downgrade
+├ ƒ /api/subscription/invoices
+├ ƒ /api/subscription/portal
+├ ƒ /api/subscription/reactivate
+├ ƒ /api/subscription/upgrade
+├ ƒ /api/subscriptions/create-checkout
+├ ƒ /api/synthex/billing
+├ ƒ /api/synthex/experiments
+├ ƒ /api/synthex/experiments/[id]
+├ ƒ /api/synthex/invoices
+├ ƒ /api/synthex/job
+├ ƒ /api/synthex/market-radar/alerts
+├ ƒ /api/synthex/market-radar/analyze
+├ ƒ /api/synthex/market-radar/watches
+├ ƒ /api/synthex/offer
+├ ƒ /api/synthex/seo/analyses
+├ ƒ /api/synthex/seo/analyze
+├ ƒ /api/synthex/tenant
+├ ƒ /api/synthex/transactions
+├ ƒ /api/synthex/video/generate
+├ ƒ /api/synthex/video/jobs
+├ ƒ /api/synthex/video/templates
+├ ƒ /api/synthex/visual/brand-kits
+├ ƒ /api/synthex/visual/capabilities
+├ ƒ /api/synthex/visual/generate
+├ ƒ /api/synthex/visual/jobs
+├ ƒ /api/system/health
+├ ƒ /api/team
+├ ƒ /api/team/[id]
+├ ƒ /api/test-opus-4-5
+├ ƒ /api/test-rate-limit
+├ ƒ /api/test-sentry
+├ ƒ /api/test/db
+├ ƒ /api/testing/chaos
+├ ƒ /api/testing/load
+├ ƒ /api/tracking/pixel/[trackingPixelId]
+├ ƒ /api/training/insights
+├ ƒ /api/training/recommendations
+├ ƒ /api/trends/temporal
+├ ƒ /api/trial/activity
+├ ƒ /api/trial/profile
+├ ƒ /api/trial/status
+├ ƒ /api/trust/audit
+├ ƒ /api/trust/configure-scopes
+├ ƒ /api/trust/init
+├ ƒ /api/trust/report
+├ ƒ /api/trust/signature/callback
+├ ƒ /api/trust/signature/init
+├ ƒ /api/trust/status
+├ ƒ /api/trust/verify-ownership
+├ ƒ /api/unite/ai/logs
+├ ƒ /api/v1/agents/orchestrator
+├ ƒ /api/v1/auth/session
+├ ƒ /api/v1/campaigns
+├ ƒ /api/v1/contacts
+├ ƒ /api/v1/contacts/[id]
+├ ƒ /api/v1/emails
+├ ƒ /api/v1/health
+├ ƒ /api/vault/get
+├ ƒ /api/vault/save
+├ ƒ /api/visual/transformation
+├ ƒ /api/voice/log
+├ ƒ /api/webhooks/stripe/[mode]
+├ ƒ /api/webhooks/whatsapp
+├ ƒ /api/whatsapp/conversations
+├ ƒ /api/whatsapp/conversations/[id]/messages
+├ ƒ /api/whatsapp/send
+├ ƒ /api/whatsapp/templates
+├ ƒ /ato/bas
+├ ƒ /ato/stp
+├ ƒ /ato/verify
+├ ƒ /auth/await-approval
+├ ƒ /auth/callback
+├ ƒ /auth/implicit-callback
+├ ƒ /auth/login
+├ ƒ /auth/signin
+├ ƒ /auth/signup
+├ ƒ /billing
+├ ƒ /blog
+├ ƒ /brand-demo
+├ ƒ /careers
+├ ƒ /changelog
+├ ƒ /client
+├ ƒ /client-dashboard
+├ ƒ /client-portal-demo
+├ ƒ /client/ai-consulting
+├ ƒ /client/assistant
+├ ƒ /client/dashboard/activation
+├ ƒ /client/dashboard/alignment
+├ ƒ /client/dashboard/approvals
+├ ƒ /client/dashboard/archive
+├ ƒ /client/dashboard/capabilities
+├ ƒ /client/dashboard/enhancements
+├ ƒ /client/dashboard/journey
+├ ƒ /client/dashboard/overview
+├ ƒ /client/dashboard/packs
+├ ƒ /client/dashboard/performance
+├ ƒ /client/dashboard/production
+├ ƒ /client/dashboard/reports-center
+├ ƒ /client/dashboard/review-packs
+├ ƒ /client/dashboard/roadmap
+├ ƒ /client/dashboard/stories
+├ ƒ /client/dashboard/success
+├ ƒ /client/dashboard/timeline
+├ ƒ /client/dashboard/touchpoints
+├ ƒ /client/dashboard/training
+├ ƒ /client/dashboard/vision
+├ ƒ /client/dashboard/visual-intelligence
+├ ƒ /client/dashboard/visual-intelligence/campaigns
+├ ƒ /client/dashboard/visual-playground
+├ ƒ /client/dashboard/visual-playground/[pillar]
+├ ƒ /client/dashboard/visual-playground/[pillar]/[subpillar]
+├ ƒ /client/dashboard/welcome-pack
+├ ƒ /client/home
+├ ƒ /client/ideas
+├ ƒ /client/login
+├ ƒ /client/onboarding-assistant
+├ ƒ /client/projects
+├ ƒ /client/projects/[id]
+├ ƒ /client/projects/[id]/time
+├ ƒ /client/proposals
+├ ƒ /client/proposals/cancelled
+├ ƒ /client/proposals/checkout
+├ ƒ /client/proposals/success
+├ ƒ /client/reports
+├ ƒ /client/seo
+├ ƒ /client/vault
+├ ƒ /client/workspace
+├ ƒ /console
+├ ƒ /console/aglbase
+├ ƒ /console/aire
+├ ƒ /console/asrs
+├ ƒ /console/egcbi
+├ ƒ /console/grh
+├ ƒ /console/gslpie
+├ ƒ /console/mcse
+├ ƒ /console/raaoe
+├ ƒ /console/sorie
+├ ƒ /console/tcpqel
+├ ƒ /console/ucscel
+├ ƒ /console/upewe
+├ ƒ /contact
+├ ƒ /crm
+├ ƒ /crm/admin/devices
+├ ƒ /dashboard
+├ ƒ /dashboard/admin/sandbox-control
+├ ƒ /dashboard/ai-tools
+├ ƒ /dashboard/ai-tools/code-generator
+├ ƒ /dashboard/ai-tools/marketing-copy
+├ ƒ /dashboard/aido/analytics
+├ ƒ /dashboard/aido/clients
+├ ƒ /dashboard/aido/content
+├ ƒ /dashboard/aido/google-curve
+├ ƒ /dashboard/aido/intent-clusters
+├ ƒ /dashboard/aido/onboarding
+├ ƒ /dashboard/aido/overview
+├ ƒ /dashboard/aido/reality-loop
+├ ƒ /dashboard/aido/settings
+├ ƒ /dashboard/analytics
+├ ƒ /dashboard/approvals
+├ ƒ /dashboard/audits
+├ ƒ /dashboard/billing
+├ ƒ /dashboard/brief
+├ ƒ /dashboard/calendar
+├ ƒ /dashboard/campaigns
+├ ƒ /dashboard/campaigns/drip
+├ ƒ /dashboard/client-assistant
+├ ƒ /dashboard/contacts
+├ ƒ /dashboard/contacts/[id]
+├ ƒ /dashboard/content
+├ ƒ /dashboard/content/templates
+├ ƒ /dashboard/drip-campaigns
+├ ƒ /dashboard/email-templates
+├ ƒ /dashboard/emails
+├ ƒ /dashboard/emails/sequences
+├ ƒ /dashboard/founder/campaigns
+├ ƒ /dashboard/insights
+├ ƒ /dashboard/insights/competitors
+├ ƒ /dashboard/intelligence
+├ ƒ /dashboard/linear
+├ ƒ /dashboard/marketplace
+├ ƒ /dashboard/media
+├ ƒ /dashboard/meetings
+├ ƒ /dashboard/memory
+├ ƒ /dashboard/messages
+├ ƒ /dashboard/messages/whatsapp
+├ ƒ /dashboard/modern
+├ ƒ /dashboard/monitoring
+├ ƒ /dashboard/overview
+├ ƒ /dashboard/pair-operator
+├ ƒ /dashboard/profile
+├ ƒ /dashboard/projects
+├ ƒ /dashboard/projects/[projectId]/mindmap
+├ ƒ /dashboard/projects/new
+├ ƒ /dashboard/queue
+├ ƒ /dashboard/reports
+├ ƒ /dashboard/resources
+├ ƒ /dashboard/resources/landing-pages
+├ ƒ /dashboard/resources/landing-pages/[id]
+├ ƒ /dashboard/scope-review
+├ ƒ /dashboard/seo
+├ ƒ /dashboard/settings
+├ ƒ /dashboard/settings/connected-apps
+├ ƒ /dashboard/settings/integrations
+├ ƒ /dashboard/sites
+├ ƒ /dashboard/tasks
+├ ƒ /dashboard/team
+├ ƒ /dashboard/time-tracker
+├ ƒ /dashboard/vault
+├ ƒ /dashboard/workspaces
+├ ƒ /debug-auth
+├ ƒ /demo
+├ ƒ /demo-workspace
+├ ƒ /demo-workspace/brief
+├ ƒ /demo-workspace/queue
+├ ƒ /demo-workspace/settings
+├ ƒ /demo-workspace/vault
+├ ƒ /demos
+├ ƒ /docs
+├ ƒ /erp
+├ ƒ /erp/dashboard
+├ ƒ /erp/inventory
+├ ƒ /erp/invoicing
+├ ƒ /erp/purchase-orders
+├ ƒ /erp/reports
+├ ƒ /erp/sales-orders
+├ ƒ /features
+├ ƒ /forgot-password
+├ ƒ /founder
+├ ƒ /founder/agency-switcher
+├ ƒ /founder/agency/[agencyId]/dashboard
+├ ƒ /founder/agent-console
+├ ƒ /founder/agents
+├ ƒ /founder/agi-brain
+├ ƒ /founder/agi-console
+├ ƒ /founder/ai-phill
+├ ƒ /founder/ai-workload
+├ ƒ /founder/alignment
+├ ƒ /founder/analysis-agent
+├ ƒ /founder/analytics
+├ ƒ /founder/approvals
+├ ƒ /founder/arbitration
+├ ƒ /founder/autopilot
+├ ƒ /founder/awareness
+├ ƒ /founder/benchmarks
+├ ƒ /founder/blue-ocean
+├ ƒ /founder/boundary
+├ ƒ /founder/brand-matrix
+├ ƒ /founder/broadcasts
+├ ƒ /founder/business-vault
+├ ƒ /founder/business-vault/[businessKey]
+├ ƒ /founder/businesses
+├ ƒ /founder/businesses/[id]
+├ ƒ /founder/businesses/new
+├ ƒ /founder/charter
+├ ƒ /founder/coaching
+├ ƒ /founder/coalition
+├ ƒ /founder/cognitive-map
+├ ƒ /founder/cognitive-twin
+├ ƒ /founder/cognitive-twin/decisions
+├ ƒ /founder/cognitive-twin/decisions/[id]
+├ ƒ /founder/cognitive-twin/decisions/new
+├ ƒ /founder/cognitive-twin/digests
+├ ƒ /founder/cognitive-twin/digests/[id]
+├ ƒ /founder/cognitive-twin/domains/[domain]
+├ ƒ /founder/cohorts
+├ ƒ /founder/combat
+├ ƒ /founder/compliance
+├ ƒ /founder/content-agent
+├ ƒ /founder/convergence
+├ ƒ /founder/coordination-agent
+├ ƒ /founder/council
+├ ƒ /founder/creative-adaptive
+├ ƒ /founder/creative-risk
+├ ƒ /founder/dashboard/alignment
+├ ƒ /founder/dashboard/archive
+├ ƒ /founder/dashboard/assistant
+├ ƒ /founder/dashboard/client-stories
+├ ƒ /founder/dashboard/creative-director
+├ ƒ /founder/dashboard/creative-ops
+├ ƒ /founder/dashboard/creative-reactor
+├ ƒ /founder/dashboard/director
+├ ƒ /founder/dashboard/evolution
+├ ƒ /founder/dashboard/executive
+├ ƒ /founder/dashboard/financials
+├ ƒ /founder/dashboard/first-client-journey
+├ ƒ /founder/dashboard/governance
+├ ƒ /founder/dashboard/orm
+├ ƒ /founder/dashboard/overview
+├ ƒ /founder/dashboard/reports-center
+├ ƒ /founder/dashboard/scaling
+├ ƒ /founder/dashboard/soft-launch
+├ ƒ /founder/dashboard/stability
+├ ƒ /founder/dashboard/story-touchpoints
+├ ƒ /founder/dashboard/timecard
+├ ƒ /founder/decision-pipeline
+├ ƒ /founder/desktop-agent
+├ ƒ /founder/early-warnings
+├ ƒ /founder/email-agent
+├ ƒ /founder/engine-health
+├ ƒ /founder/environment-console
+├ ƒ /founder/evolution
+├ ƒ /founder/evolution/adjustments
+├ ƒ /founder/evolution/kernel
+├ ƒ /founder/evolution/mesh
+├ ƒ /founder/evolution/planner
+├ ƒ /founder/evolution/qa
+├ ƒ /founder/evolution/stability
+├ ƒ /founder/experiments
+├ ƒ /founder/fairness
+├ ƒ /founder/flight-deck
+├ ƒ /founder/franchise
+├ ƒ /founder/franchise-opportunities
+├ ƒ /founder/governance
+├ ƒ /founder/insight-renderer
+├ ƒ /founder/insights
+├ ƒ /founder/intel
+├ ƒ /founder/intel/settings
+├ ƒ /founder/intel/snapshots/[id]
+├ ƒ /founder/intelligence-exchange
+├ ƒ /founder/intelligence-hub
+├ ƒ /founder/journal
+├ ƒ /founder/knowledge
+├ ƒ /founder/learning-loop
+├ ƒ /founder/load-balance
+├ ƒ /founder/macro-evolution
+├ ƒ /founder/mandates
+├ ƒ /founder/market
+├ ƒ /founder/marketing
+├ ƒ /founder/marketing/decision-maps
+├ ƒ /founder/marketing/playbooks
+├ ƒ /founder/marketing/playbooks/[id]
+├ ƒ /founder/marketing/visual-demos
+├ ƒ /founder/memory
+├ ƒ /founder/memory-spine
+├ ƒ /founder/mesh
+├ ƒ /founder/narratives
+├ ƒ /founder/navigator
+├ ƒ /founder/negotiation
+├ ƒ /founder/opportunities
+├ ƒ /founder/ops-hub
+├ ƒ /founder/optimisation-hub
+├ ƒ /founder/optimizer
+├ ƒ /founder/orchestration
+├ ƒ /founder/orchestrator
+├ ƒ /founder/pattern-hub
+├ ƒ /founder/patterns
+├ ƒ /founder/performance-normalization
+├ ƒ /founder/performance-reality
+├ ƒ /founder/performance-reality/[id]
+├ ƒ /founder/playbooks
+├ ƒ /founder/posting-engine
+├ ƒ /founder/posting-execution
+├ ƒ /founder/postmortems
+├ ƒ /founder/pre-clients
+├ ƒ /founder/pre-clients/[id]
+├ ƒ /founder/reasoning
+├ ƒ /founder/regions
+├ ƒ /founder/regions/[regionId]
+├ ƒ /founder/research-agent
+├ ƒ /founder/roadmap
+├ ƒ /founder/safety
+├ ƒ /founder/scaling-mode
+├ ƒ /founder/scheduling-agent
+├ ƒ /founder/settings
+├ ƒ /founder/signal-purity
+├ ƒ /founder/stabilisation
+├ ƒ /founder/strategy
+├ ƒ /founder/success-predictions
+├ ƒ /founder/synthex-portfolio
+├ ƒ /founder/synthex-seo
+├ ƒ /founder/synthex/projects
+├ ƒ /founder/synthex/projects/[projectId]
+├ ƒ /founder/system-health
+├ ƒ /founder/training-insights
+├ ƒ /founder/transfer-safety
+├ ƒ /founder/trends
+├ ƒ /inspiration
+├ ƒ /intake-demo
+├ ƒ /integrations
+├ ƒ /landing
+├ ƒ /landing-local-services
+├ ƒ /landing-restoration
+├ ƒ /landing-trades
+├ ƒ /login
+├ ƒ /modern-demo
+├ ƒ /onboarding
+├ ƒ /onboarding/geo
+├ ƒ /onboarding/step-1-info
+├ ƒ /onboarding/step-2-payment
+├ ƒ /onboarding/step-3-assets
+├ ƒ /onboarding/step-4-contacts
+├ ƒ /portal/dashboard
+├ ƒ /pricing
+├ ƒ /privacy
+├ ƒ /regions/[country]/[city]
+├ ƒ /register
+├ ○ /robots.txt
+├ ƒ /security
+├ ƒ /settings/geo
+├ ƒ /signup
+├ ○ /sitemap.xml
+├ ƒ /staff
+├ ƒ /staff-dashboard
+├ ƒ /staff/activity
+├ ƒ /staff/ads
+├ ƒ /staff/browser-automation
+├ ƒ /staff/dashboard
+├ ƒ /staff/onboarding-assistant
+├ ƒ /staff/projects
+├ ƒ /staff/reports
+├ ƒ /staff/scope-review
+├ ƒ /staff/search-suite
+├ ƒ /staff/seo
+├ ƒ /staff/seo-enhancement
+├ ƒ /staff/settings
+├ ƒ /staff/social-inbox
+├ ƒ /staff/tasks
+├ ƒ /staff/time-tracker
+├ ƒ /subject-access-request
+├ ƒ /support
+├ ƒ /synthex/analytics
+├ ƒ /synthex/assistant
+├ ƒ /synthex/billing
+├ ƒ /synthex/campaigns
+├ ƒ /synthex/content
+├ ƒ /synthex/dashboard
+├ ƒ /synthex/experiments
+├ ƒ /synthex/market-radar
+├ ƒ /synthex/onboarding
+├ ƒ /synthex/projects
+├ ƒ /synthex/seo
+├ ƒ /synthex/vault
+├ ƒ /terms
+├ ƒ /unsubscribe
+├ ƒ /visual-experience-engine
+└ ƒ /wizard/animation-style
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
