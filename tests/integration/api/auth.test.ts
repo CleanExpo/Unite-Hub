@@ -15,7 +15,67 @@ vi.mock('@/lib/rate-limit', () => ({
   apiRateLimit: vi.fn().mockResolvedValue(null),
 }));
 
+// Mock next/headers cookies
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(() => ({
+    get: vi.fn(() => null),
+    set: vi.fn(),
+    delete: vi.fn(),
+  })),
+}));
+
+// Mock @supabase/ssr createServerClient
+vi.mock('@supabase/ssr', () => ({
+  createServerClient: vi.fn(() => ({
+    auth: {
+      getUser: vi.fn().mockResolvedValue({
+        data: { user: null },
+        error: { message: 'No session' },
+      }),
+    },
+  })),
+}));
+
 // Mock Supabase
+const mockSupabaseClient = {
+  auth: {
+    getUser: vi.fn().mockResolvedValue({
+      data: { user: TEST_USER },
+      error: null,
+    }),
+  },
+  from: vi.fn((table: string) => ({
+    select: vi.fn().mockReturnThis(),
+    insert: vi.fn().mockReturnThis(),
+    update: vi.fn().mockReturnThis(),
+    upsert: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    maybeSingle: vi.fn().mockResolvedValue({
+      data: null,
+      error: null,
+    }),
+    single: vi.fn().mockResolvedValue({
+      data: table === 'user_profiles' ? { ...TEST_USER } : null,
+      error: null,
+    }),
+    limit: vi.fn().mockResolvedValue({
+      data: null,
+      error: null,
+    }),
+    then: vi.fn((resolve) =>
+      resolve({
+        data:
+          table === 'organizations'
+            ? [TEST_ORGANIZATION]
+            : table === 'workspaces'
+            ? [TEST_WORKSPACE]
+            : null,
+        error: null,
+      })
+    ),
+  })),
+};
+
 vi.mock('@/lib/supabase', () => ({
   supabaseBrowser: {
     auth: {
@@ -25,45 +85,13 @@ vi.mock('@/lib/supabase', () => ({
       }),
     },
   },
-  getSupabaseServer: vi.fn(async () => ({
-    auth: {
-      getUser: vi.fn().mockResolvedValue({
-        data: { user: TEST_USER },
-        error: null,
-      }),
-    },
-    from: vi.fn((table: string) => ({
-      select: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockReturnThis(),
-      update: vi.fn().mockReturnThis(),
-      upsert: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({
-        data: table === 'user_profiles' ? { ...TEST_USER } : null,
-        error: null,
-      }),
-      limit: vi.fn().mockResolvedValue({
-        data: null,
-        error: null,
-      }),
-      then: vi.fn((resolve) =>
-        resolve({
-          data:
-            table === 'organizations'
-              ? [TEST_ORGANIZATION]
-              : table === 'workspaces'
-              ? [TEST_WORKSPACE]
-              : null,
-          error: null,
-        })
-      ),
-    })),
-  })),
+  getSupabaseServer: vi.fn(async () => mockSupabaseClient),
+  getSupabaseAdmin: vi.fn(() => mockSupabaseClient),
 }));
 
 describe('Authentication API Integration Tests', () => {
   describe('POST /api/auth/initialize-user', () => {
-    it('should return 200 and skip initialization without authentication', async () => {
+    it('should return 401 when not authenticated', async () => {
       const req = createMockRequest({
         method: 'POST',
         url: 'http://localhost:3008/api/auth/initialize-user',
@@ -80,11 +108,16 @@ describe('Authentication API Integration Tests', () => {
       });
 
       const response = await POST(req);
-      // Route returns 200 with "skipping initialization" message when not authenticated
-      expect(response.status).toBe(200);
 
+      // Debug: log the actual response
       const data = await response.json();
-      expect(data.message).toContain('Not authenticated');
+      console.log('Response status:', response.status);
+      console.log('Response data:', JSON.stringify(data, null, 2));
+
+      // Route correctly returns 401 for unauthenticated requests
+      expect(response.status).toBe(401);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Not authenticated');
     });
 
     it.skip('should initialize new user with profile and organization', async () => {
@@ -198,7 +231,7 @@ describe('Authentication API Integration Tests', () => {
       expect(response.status).toBe(500);
     });
 
-    it('should return JSON response when not authenticated', async () => {
+    it('should return JSON error response when not authenticated', async () => {
       const req = createMockRequest({
         method: 'POST',
         url: 'http://localhost:3008/api/auth/initialize-user',
@@ -214,9 +247,13 @@ describe('Authentication API Integration Tests', () => {
       const response = await POST(req);
 
       const data = await response.json();
-      // Route returns 200 with message, not error
-      expect(data).toHaveProperty('message');
-      expect(data.message).toContain('Not authenticated');
+      // Route returns 401 with structured error response
+      expect(response.status).toBe(401);
+      expect(data).toHaveProperty('success');
+      expect(data.success).toBe(false);
+      expect(data).toHaveProperty('error');
+      expect(data.error).toBe('Not authenticated');
+      expect(data).toHaveProperty('created');
     });
   });
 });
