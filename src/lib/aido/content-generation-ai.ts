@@ -7,6 +7,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { createContentAsset, ContentAssetInput } from './database/content-assets';
 import { getIntentCluster } from './database/intent-clusters';
 import { calculateAISourceScore, calculateAuthorityScore, calculateEvergreenScore } from './scoring';
@@ -80,7 +81,7 @@ export async function generateContent(
     const anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY!,
       defaultHeaders: {
-        'anthropic-beta': 'thinking-2025-11-15',
+        'anthropic-beta': 'thinking-2025-11-15,prompt-caching-2024-07-31',
       },
     });
 
@@ -103,7 +104,13 @@ export async function generateContent(
             type: 'enabled',
             budget_tokens: 15000, // High budget for quality content
           },
-          system: systemPrompt,
+          system: [
+            {
+              type: 'text',
+              text: systemPrompt,
+              cache_control: { type: 'ephemeral' },
+            },
+          ],
           messages: [
             {
               role: 'user',
@@ -112,6 +119,10 @@ export async function generateContent(
           ],
         });
       });
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(response.data, 'claude-opus-4-5-20251101');
+      logCacheStats('ContentGeneration:generateContent', cacheStats);
 
       const responseText = response.data.content[0].type === 'text'
         ? response.data.content[0].text
