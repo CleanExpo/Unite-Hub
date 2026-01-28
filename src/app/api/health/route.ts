@@ -93,17 +93,12 @@ function determineOverallStatus(
 }
 
 export async function GET(request: NextRequest) {
-  const logger = createApiLogger({ route: '/api/health' });
-
   try {
-    // Apply rate limiting (public tier - 20 requests per minute)
-    const rateLimitResult = await rateLimit(request, { tier: 'public' });
-    if (!rateLimitResult.success) {
-      logger.warn('Health check rate limited', {
-        ip: request.headers.get('x-forwarded-for')
-      });
-      return rateLimitResult.response;
-    }
+    // Skip rate limiting to avoid any Sentry instrumentation issues
+    // const rateLimitResult = await rateLimit(request, { tier: 'public' });
+    // if (!rateLimitResult.success) {
+    //   return rateLimitResult.response;
+    // }
 
     // Run health checks in parallel
     const [redisCheck, dbCheck] = await Promise.all([
@@ -122,7 +117,7 @@ export async function GET(request: NextRequest) {
     const health: HealthResponse = {
       status: overallStatus,
       timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
+      uptime: Math.round(process.uptime()),
       environment: process.env.NODE_ENV,
       version: "1.0.0",
       checks: {
@@ -132,28 +127,16 @@ export async function GET(request: NextRequest) {
       pool: {
         totalRequests: poolStats.totalRequests,
         successRate,
-        averageResponseTime: Math.round(poolStats.averageResponseTime),
+        averageResponseTime: Math.round(poolStats.averageResponseTime) || 0,
         circuitState: poolStats.circuitState,
       },
     };
 
-    // Log with appropriate level based on status
-    if (overallStatus === "healthy") {
-      logger.http('Health check successful', { checks: health.checks });
-    } else if (overallStatus === "degraded") {
-      logger.warn('Health check degraded', { checks: health.checks });
-    } else {
-      logger.error('Health check unhealthy', { checks: health.checks });
-    }
-
-    // Return appropriate HTTP status
     const httpStatus = overallStatus === "healthy" ? 200 : overallStatus === "degraded" ? 200 : 503;
 
     return NextResponse.json(health, { status: httpStatus });
   } catch (error) {
-    logger.error('Health check failed', {
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
+    console.error('[Health Check] ERROR:', error);
 
     return NextResponse.json(
       {
