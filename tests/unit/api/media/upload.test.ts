@@ -31,6 +31,37 @@ vi.mock('@/lib/rate-limit', () => ({
   rateLimit: vi.fn(),
 }));
 
+// Mock next/headers for server-side operations
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(() => ({
+    get: vi.fn(() => null),
+    set: vi.fn(),
+    delete: vi.fn(),
+  })),
+  headers: vi.fn(() => ({
+    get: vi.fn(() => null),
+  })),
+}));
+
+// Mock @supabase/ssr for server client creation
+vi.mock('@supabase/ssr', () => ({
+  createServerClient: vi.fn(() => ({
+    auth: {
+      getUser: vi.fn().mockResolvedValue({
+        data: { user: { id: 'user-123' } },
+        error: null,
+      }),
+    },
+    from: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn().mockResolvedValue({
+      data: { role: 'owner' },
+      error: null,
+    }),
+  })),
+}));
+
 describe('POST /api/media/upload', () => {
   let mockRequest: Partial<NextRequest>;
   let mockSupabase: any;
