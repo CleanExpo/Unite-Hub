@@ -1,6 +1,6 @@
 # Known Issues Tracker
 
-**Last Updated**: 2026-01-28
+**Last Updated**: 2026-01-28 (Evening) - Health Endpoint Fixed
 
 ---
 
@@ -18,7 +18,7 @@
 ✅ Input sanitization (10 sanitization functions)
 ✅ Load testing suite (Artillery: basic, stress, spike tests)
 
-### Phase 2 (Late 2026-01-28) - Option 2 Path: Thorough Implementation
+### Phase 2 (Afternoon 2026-01-28) - Option 2 Path: Thorough Implementation
 ✅ **Production Build Issues** - ALL RESOLVED
    - Implemented `@/lib/email/emailService.ts` - Email service with metadata support
    - Implemented `@/lib/ai/personalization.ts` - AI content personalization using Claude
@@ -35,6 +35,15 @@
    - Spike test: 31,800 users, graceful degradation verified
    - Performance baselines documented in `docs/PERFORMANCE_BASELINES.md`
 
+### Phase 3 (Evening 2026-01-28) - Health Endpoint Critical Fix
+✅ **Health Endpoint "Invalid time value"** - RESOLVED
+   - Root cause: Sentry instrumentation causing Date serialization issues
+   - Fixed winston timestamp format (`:ms` → `:SSS`)
+   - Added safe Date construction in rate limiter
+   - Temporarily disabled Sentry wrapper (to be re-enabled with proper handling)
+   - Health endpoint now returns valid JSON with full metrics
+   - Commit: `0c569344` - Production monitoring now functional
+
 ## P0 Outstanding (Block Production)
 
 **NONE** - All P0 items resolved! 🎉
@@ -45,10 +54,11 @@
 ✅ ~~Security hardening~~ - **COMPLETE**
 ✅ ~~Load test execution~~ - **COMPLETE**
 ✅ ~~Performance baselines~~ - **COMPLETE**
-⚠️ Health endpoint fix (returns "Invalid time value" error)
-⚠️ Performance optimization (bundle size, CDN, caching layers)
-⚠️ Test coverage improvement (328 failures remaining)
-⚠️ Horizontal scaling setup (for >300 req/s capacity)
+✅ ~~Health endpoint fix~~ - **COMPLETE** (2026-01-28 evening)
+⚠️ **Performance optimization** (bundle size, CDN, caching layers)
+⚠️ **Test coverage improvement** (328 failures remaining)
+⚠️ **Horizontal scaling setup** (for >300 req/s capacity)
+⚠️ **Re-enable Sentry** (with proper Date serialization handling)
 
 ## P0 Recently Completed (2026-01-28)
 
