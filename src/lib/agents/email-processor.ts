@@ -8,6 +8,7 @@ import {
   validatePrompt,
   stabilizeResponse,
 } from "./agent-reliability";
+import { extractCacheStats, logCacheStats } from "@/lib/anthropic/features/prompt-cache";
 
 export interface EmailIntent {
   primary_intent:
@@ -198,16 +199,11 @@ Analyze this email and extract intent and key information.`;
     })
     });
 
-    const message = result.data;;
+    const message = result.data;
 
-    // Log cache performance for cost monitoring
-    console.log("Email Processor - Cache Stats:", {
-      input_tokens: message.usage.input_tokens,
-      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
-      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
-      output_tokens: message.usage.output_tokens,
-      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
-    });
+    // Log cache performance for cost monitoring using centralized utilities
+    const cacheStats = extractCacheStats(message, "claude-sonnet-4-5-20250929");
+    logCacheStats("EmailProcessor:extractEmailIntent", cacheStats);
 
     const responseText =
       message.content[0].type === "text" ? message.content[0].text : "";
@@ -220,13 +216,7 @@ Analyze this email and extract intent and key information.`;
 
     return {
       intent: JSON.parse(cleanJson),
-      cacheStats: {
-        input_tokens: message.usage.input_tokens,
-        cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
-        cache_read_tokens: message.usage.cache_read_input_tokens || 0,
-        output_tokens: message.usage.output_tokens,
-        cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
-      },
+      cacheStats,
     };
   } catch (error) {
     console.error("Error extracting email intent:", error);
@@ -243,10 +233,12 @@ Analyze this email and extract intent and key information.`;
       },
       cacheStats: {
         input_tokens: 0,
+        output_tokens: 0,
         cache_creation_tokens: 0,
         cache_read_tokens: 0,
-        output_tokens: 0,
         cache_hit: false,
+        estimated_cost: 0,
+        estimated_savings: 0,
       },
     };
   }

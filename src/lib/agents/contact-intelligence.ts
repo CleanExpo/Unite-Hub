@@ -1,6 +1,7 @@
 import { anthropic } from "@/lib/anthropic/client";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { db } from "@/lib/db";
+import { extractCacheStats, logCacheStats } from "@/lib/anthropic/features/prompt-cache";
 
 interface ContactIntelligence {
   engagement_score: number;
@@ -113,16 +114,11 @@ Analyze this contact and return your assessment as JSON.`;
     })
     });
 
-    const message = result.data;;
+    const message = result.data;
 
-    // Log cache performance for cost monitoring
-    console.log("Contact Intelligence - Cache Stats:", {
-      input_tokens: message.usage.input_tokens,
-      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
-      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
-      output_tokens: message.usage.output_tokens,
-      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
-    });
+    // Log cache performance for cost monitoring using centralized utilities
+    const cacheStats = extractCacheStats(message, "claude-opus-4-5-20251101");
+    logCacheStats("ContactIntelligence:analyzeContactIntelligence", cacheStats);
 
     // Extract the JSON response
     let jsonText = "";

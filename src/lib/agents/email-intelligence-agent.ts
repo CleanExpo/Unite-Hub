@@ -11,6 +11,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { db } from "@/lib/db";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
+import { extractCacheStats, logCacheStats } from "@/lib/anthropic/features/prompt-cache";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -301,16 +302,9 @@ Analyze this email and extract business intelligence.
       ]
     );
 
-    // Log cache performance
-    const cacheStats = {
-      input_tokens: message.usage.input_tokens,
-      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
-      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
-      output_tokens: message.usage.output_tokens,
-      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
-    };
-
-    console.log("Email Intelligence Cache Stats:", cacheStats);
+    // Log cache performance using centralized utilities
+    const cacheStats = extractCacheStats(message, "claude-sonnet-4-5-20250929");
+    logCacheStats("EmailIntelligence:analyzeEmailForIntelligence", cacheStats);
 
     // Audit log
     await db.auditLogs.create({
