@@ -13,6 +13,8 @@
 import { readQuery, writeQuery, executeTransaction } from './client';
 import { ContactEntity } from './entities';
 import Anthropic from '@anthropic-ai/sdk';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
+import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 
 /**
  * Similarity match result
@@ -489,6 +491,13 @@ export async function mergeContacts(
   };
 }
 
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultHeaders: {
+    'anthropic-beta': 'prompt-caching-2024-07-31',
+  },
+});
+
 /**
  * Use AI to resolve complex merge conflicts
  *
@@ -500,25 +509,38 @@ export async function aiResolveConflicts(
   contact1: ContactEntity,
   contact2: ContactEntity
 ): Promise<ContactEntity> {
-  const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY,
-  });
+  const systemPrompt = `You are an expert at entity resolution. I have two contact records that are likely duplicates. Please analyze them and suggest the best merged record.
 
-  const prompt = `You are an expert at entity resolution. I have two contact records that are likely duplicates. Please analyze them and suggest the best merged record.
+For each conflicting field, choose the most complete, accurate, or recent value. Respond ONLY with valid JSON.`;
 
-Contact 1:
+  const userPrompt = `Contact 1:
 ${JSON.stringify(contact1, null, 2)}
 
 Contact 2:
 ${JSON.stringify(contact2, null, 2)}
 
-Please provide a merged contact record in JSON format. For each conflicting field, choose the most complete, accurate, or recent value. Respond ONLY with valid JSON.`;
+Please provide a merged contact record in JSON format.`;
 
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-5-20250929',
-    max_tokens: 1024,
-    messages: [{ role: 'user', content: prompt }],
+  const result = await callAnthropicWithRetry(async () => {
+    return await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 1024,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
+      messages: [{ role: 'user', content: userPrompt }],
+    });
   });
+
+  const message = result.data;
+
+  // Log cache performance
+  const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+  logCacheStats('Neo4jResolution:aiResolveConflicts', cacheStats);
 
   const content = message.content[0];
   if (content.type !== 'text') {

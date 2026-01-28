@@ -14,11 +14,16 @@
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { createApiLogger } from '@/lib/logger';
 import Anthropic from '@anthropic-ai/sdk';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
+import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 
 const logger = createApiLogger({ context: 'OrchestratorBindings' });
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultHeaders: {
+    'anthropic-beta': 'thinking-2025-11-15,prompt-caching-2024-07-31',
+  },
 });
 
 interface TaskExecutionRequest {
@@ -159,7 +164,13 @@ Please execute this task fully and provide output in JSON format matching the ex
     const messageParams: any = {
       model: 'claude-opus-4-5-20251101',
       max_tokens: useExtendedThinking ? 16000 : 4096,
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
       messages: [
         {
           role: 'user',
@@ -176,7 +187,15 @@ Please execute this task fully and provide output in JSON format matching the ex
       };
     }
 
-    const response = await anthropic.messages.create(messageParams);
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create(messageParams);
+    });
+
+    const response = result.data;
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats(`OrchestratorBindings:executeTask:${agent}`, cacheStats);
 
     // Extract output from response
     let taskOutput: Record<string, any> = {};
