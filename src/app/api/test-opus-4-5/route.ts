@@ -14,11 +14,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+import { anthropic } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     // Test with Claude Opus 4.5
     const messageOptions: any = {
-      model: 'claude-opus-4-5-20251101',
+      model: ANTHROPIC_MODELS.OPUS_4_5,
       max_tokens: 4096,
       messages: [
         {
@@ -71,7 +68,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      model: 'claude-opus-4-5-20251101',
+      model: ANTHROPIC_MODELS.OPUS_4_5,
       modelName: 'Claude Opus 4.5',
       response: textContent?.text || '',
       thinking: thinkingContent?.thinking || null,

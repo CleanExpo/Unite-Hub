@@ -5,7 +5,6 @@
  * CRITICAL: All H2 headings must be direct questions for algorithmic immunity
  */
 
-import Anthropic from '@anthropic-ai/sdk';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { PerplexitySonar } from '@/lib/ai/perplexity-sonar';
 import { createIntentCluster, IntentClusterInput } from './database/intent-clusters';
@@ -69,12 +68,7 @@ export async function generateIntentCluster(
     const allCitations = researchResults.flatMap(r => r.citations);
 
     // Step 2: Claude Opus 4 Extended Thinking to extract intent clusters
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY!,
-      defaultHeaders: {
-        'anthropic-beta': 'thinking-2025-11-15',
-      },
-    });
+    const { anthropic } = await import('@/lib/anthropic/client');
 
     const systemPrompt = `You are an expert SEO strategist specializing in algorithmic immunity for AI-first search (Google AI Overviews, ChatGPT Search, Perplexity).
 

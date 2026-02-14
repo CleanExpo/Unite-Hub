@@ -55,8 +55,8 @@ const getNavigationItems = (role: string) => {
     { name: "My Dashboard", href: "/dashboard/overview", icon: LayoutDashboard, badge: null },
     { name: "My Projects", href: "/dashboard/projects", icon: FolderKanban, badge: 2 },
     { name: "Tasks", href: "/dashboard/tasks", icon: CheckSquare, badge: 8 },
-    { name: "Client Feedback", href: "/dashboard/feedback", icon: MessageSquare, badge: 3 },
-    { name: "Time Tracking", href: "/dashboard/time", icon: BarChart3, badge: null },
+    { name: "Client Feedback", href: "/dashboard/approvals", icon: MessageSquare, badge: 3 },
+    { name: "Time Tracking", href: "/dashboard/time-tracker", icon: BarChart3, badge: null },
     { name: "Settings", href: "/dashboard/settings", icon: Settings, badge: null },
   ];
 

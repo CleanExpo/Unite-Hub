@@ -8,16 +8,17 @@
  * @module agents/cognitiveTwinAgent
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { db } from '@/lib/db';
 import {
-  scoreDomain,
+  computeDomainScore,
   generateDigest,
   simulateDecision,
-  getRecentScores,
-  getRecentDigests,
-  getDecisions,
+  getDomainScores,
+  getDigests,
+  getPendingDecisions,
   type CognitiveDomain,
   type DigestType,
   type DecisionType,
@@ -32,12 +33,7 @@ import {
 // Types & Interfaces
 // ============================================================================
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  defaultHeaders: {
-    'anthropic-beta': 'prompt-caching-2024-07-31',
-  },
-});
+// Using centralized Anthropic client from @/lib/anthropic/client
 
 export interface DomainHealthSnapshot {
   domain: CognitiveDomain;
@@ -80,7 +76,7 @@ export async function scoreDomainHealth(
   domain: CognitiveDomain,
   businessId?: string
 ): Promise<CognitiveTwinScore> {
-  const score = await scoreDomain(ownerUserId, domain, businessId);
+  const score = await computeDomainScore(ownerUserId, domain, businessId);
 
   await db.auditLogs.create({
     workspace_id: ownerUserId,
@@ -108,7 +104,7 @@ export async function getDomainSnapshot(
   const score = await scoreDomainHealth(ownerUserId, domain, businessId);
 
   // Get historical scores to determine trend
-  const recentScores = await getRecentScores(ownerUserId, domain, 3);
+  const recentScores = await getDomainScores(ownerUserId, domain, 3);
 
   let trend: 'improving' | 'stable' | 'declining' = 'stable';
   if (recentScores.length >= 2) {
@@ -221,7 +217,7 @@ Generate executive summary.`;
   try {
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
+        model: ANTHROPIC_MODELS.HAIKU_4_5,
         max_tokens: 500,
         system: [
           {
@@ -314,7 +310,7 @@ Provide risk analysis and 3-5 step implementation plan.`;
   try {
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
+        model: ANTHROPIC_MODELS.SONNET_4_5,
         max_tokens: 1500,
         system: [
           {
@@ -413,7 +409,7 @@ export async function getRecentDomainScores(
   domain: CognitiveDomain,
   limit = 10
 ): Promise<CognitiveTwinScore[]> {
-  return await getRecentScores(ownerUserId, domain, limit);
+  return await getDomainScores(ownerUserId, domain, limit);
 }
 
 /**
@@ -424,7 +420,7 @@ export async function getRecentPeriodicDigests(
   digestType?: DigestType,
   limit = 10
 ): Promise<CognitiveTwinDigest[]> {
-  return await getRecentDigests(ownerUserId, digestType, limit);
+  return await getDigests(ownerUserId, digestType, limit);
 }
 
 /**
@@ -435,7 +431,7 @@ export async function getDecisionHistory(
   decisionType?: DecisionType,
   limit = 20
 ): Promise<CognitiveTwinDecision[]> {
-  return await getDecisions(ownerUserId, decisionType, limit);
+  return await getPendingDecisions(ownerUserId, decisionType, limit);
 }
 
 /**
@@ -540,7 +536,7 @@ Generate comprehensive health summary.`;
   try {
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
+        model: ANTHROPIC_MODELS.SONNET_4_5,
         max_tokens: 1000,
         system: [
           {

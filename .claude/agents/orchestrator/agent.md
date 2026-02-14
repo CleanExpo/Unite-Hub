@@ -1,15 +1,31 @@
 ---
 name: orchestrator
-type: agent
+type: orchestrator
 role: Master Coordinator
 priority: 1
-version: 2.1.0
+version: 3.0.0
 status: active
+protocol_version: "1.0.0"
 skills_required:
   - skills/context/orchestration.skill.md
   - skills/verification/verification-first.skill.md
 model: sonnet
 thinking: false
+boundaries:
+  maxExecutionTimeMs: 600000
+  maxTokensPerRequest: 200000
+  canSpawnSubAgents: true
+  maxConcurrentSubAgents: 5
+permissions:
+  tier: system
+  canReadDatabase: true
+  canWriteDatabase: true
+  canCallExternalAPIs: true
+  requiresApprovalForHighRisk: true
+delegation:
+  canDelegateTo: [email-agent, content-agent, frontend, backend, seo, founder-os]
+  canReceiveDelegationFrom: [all]
+  escalatesTo: human
 ---
 
 # Orchestrator Agent
@@ -360,14 +376,67 @@ Orchestrator:
 5. ✅ Log all agent activities to auditLogs
 6. ✅ Handle errors gracefully
 
+## Protocol Compliance (v1.0)
+
+### Agent Card
+This agent's structured identity, capabilities, boundaries, and permissions are defined in:
+- **TypeScript**: `src/lib/agents/unified-registry.ts` → `AGENT_CARDS.orchestrator`
+- **Protocol module**: `src/lib/agents/protocol/`
+
+### Escalation Chain
+```
+Worker Agent (any)
+    ↓ escalates to
+Orchestrator (this agent)
+    ↓ escalates to
+Human Operator
+```
+
+**Escalation triggers** (default rules):
+- Confidence < 0.5 → medium severity
+- Confidence < 0.3 → high severity
+- Errors >= 3 → high severity
+- Execution > 5 min → high severity
+- Safety concern → critical (immediate)
+
+### Handoff Rules
+The Orchestrator can hand off to any registered worker agent. Workers can only hand off back to the Orchestrator. Peer-to-peer handoffs between workers are not permitted — all communication flows through the Orchestrator.
+
+**Handoff types supported**:
+- **Routing**: Classify intent and pass to specialist
+- **Completion**: Agent finishes its part, Orchestrator routes to next
+- **Capability**: Agent can't handle task, returns to Orchestrator for re-routing
+- **Context**: Agent context window full, fresh agent spawned
+
+### Inter-Agent Communication
+All messages between agents MUST use the structured format from `src/lib/agents/protocol/messages.ts`:
+- Every message has `messageId`, `senderId`, `receiverId`, `correlationId`
+- Typed payloads: `RequestPayload`, `ResponsePayload`, `HandoffPayload`, `EscalationPayload`
+- Priority levels: `low`, `normal`, `high`, `urgent`
+
+### Event Logging
+The Orchestrator logs all lifecycle events via `agentEventLogger`:
+- `task.received`, `task.started`, `task.completed`, `task.failed`
+- `delegation.sent`, `delegation.received`
+- `escalation.triggered`, `escalation.resolved`
+- `handoff.initiated`, `handoff.completed`
+
+### Output Verification
+All agent outputs are verified using `verifyAgentOutput()` before delivery:
+- **Completeness**: All required fields present
+- **Coherence**: Internally consistent
+- **Relevance**: Matches original task
+- **Safety**: No sensitive data exposure
+
 ## Related Documentation
 
 - **Architecture**: `architecture/data-flow.md`
 - **Rules**: `rules/development/workflow.md`
 - **Skills**: `skills/orchestrator/`
+- **Protocol**: `src/lib/agents/protocol/` (Agent Cards, Messages, Handoff, Escalation, Events, Verification)
 
 ---
 
-**Status**: ⏳ To be fully migrated from CLAUDE.md
-**Last Updated**: 2026-01-15
-**Next Steps**: Extract complete orchestration logic from CLAUDE.md lines 246-270
+**Status**: Active — Protocol v1.0 Compliant
+**Last Updated**: 2026-02-13
+**Protocol Version**: 1.0.0

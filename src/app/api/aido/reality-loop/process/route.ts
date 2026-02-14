@@ -62,15 +62,20 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Process events (this would call reality-event-processor.ts AI service)
-    // For now, just mark as processed
-    // TODO: Implement actual AI processing when reality-event-processor.ts is ready
-
+    // Process events with lightweight AI classification
     const results = await Promise.all(
       eventsToProcess.map(async (event: any) => {
         try {
-          await updateRealityEventStatus(event.id, workspaceId, 'processed');
-          return { id: event.id, status: 'success' };
+          // Classify event type and extract actionable signals
+          const classification = classifyRealityEvent(event);
+          await updateRealityEventStatus(
+            event.id,
+            workspaceId,
+            'completed',
+            `Classified as ${classification.type} (${classification.priority})`,
+            { classification: classification.type, priority: classification.priority, signals: classification.signals }
+          );
+          return { id: event.id, status: 'success', classification };
         } catch (err: any) {
           return { id: event.id, status: 'failed', error: err.message };
         }
@@ -95,4 +100,51 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// ---------------------------------------------------------------------------
+// Lightweight Reality Event Classifier (no AI call required)
+// ---------------------------------------------------------------------------
+
+interface EventClassification {
+  type: 'ranking_change' | 'competitor_move' | 'content_signal' | 'technical_alert' | 'unknown';
+  priority: 'high' | 'medium' | 'low';
+  signals: string[];
+}
+
+function classifyRealityEvent(event: Record<string, any>): EventClassification {
+  const eventType = event.event_type || event.type || '';
+  const data = event.data || event.payload || {};
+  const signals: string[] = [];
+
+  // Ranking changes
+  if (eventType.includes('ranking') || eventType.includes('position') || eventType.includes('serp')) {
+    const change = data.positionDelta ?? data.change ?? 0;
+    signals.push(`Position change: ${change > 0 ? '+' : ''}${change}`);
+    return {
+      type: 'ranking_change',
+      priority: Math.abs(change) >= 5 ? 'high' : Math.abs(change) >= 2 ? 'medium' : 'low',
+      signals,
+    };
+  }
+
+  // Competitor activity
+  if (eventType.includes('competitor') || eventType.includes('rival')) {
+    signals.push(`Competitor: ${data.competitorDomain || data.competitor || 'unknown'}`);
+    return { type: 'competitor_move', priority: 'medium', signals };
+  }
+
+  // Content signals
+  if (eventType.includes('content') || eventType.includes('publish') || eventType.includes('index')) {
+    signals.push(`Content event: ${data.url || data.page || 'unknown'}`);
+    return { type: 'content_signal', priority: 'low', signals };
+  }
+
+  // Technical alerts
+  if (eventType.includes('error') || eventType.includes('alert') || eventType.includes('technical')) {
+    signals.push(`Alert: ${data.message || data.description || eventType}`);
+    return { type: 'technical_alert', priority: 'high', signals };
+  }
+
+  return { type: 'unknown', priority: 'low', signals: [`Unclassified: ${eventType}`] };
 }

@@ -8,7 +8,7 @@
 // Provider Types
 // ============================================================================
 
-export type OAuthProvider = 'google' | 'microsoft';
+export type OAuthProvider = 'google' | 'microsoft' | 'meta' | 'linkedin' | 'reddit' | 'youtube';
 
 export type ProviderService =
   | 'gmail'
@@ -16,7 +16,12 @@ export type ProviderService =
   | 'google_drive'
   | 'outlook'
   | 'microsoft_calendar'
-  | 'onedrive';
+  | 'onedrive'
+  | 'facebook_pages'
+  | 'instagram'
+  | 'linkedin_company'
+  | 'reddit_account'
+  | 'youtube_channel';
 
 export type ConnectionStatus = 'active' | 'expired' | 'revoked' | 'error';
 

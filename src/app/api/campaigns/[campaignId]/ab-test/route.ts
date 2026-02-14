@@ -26,10 +26,10 @@ const logger = createApiLogger({ service: 'ABTestAPI' });
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { campaignId: string } }
+  { params }: { params: Promise<{ campaignId: string }> }
 ) {
   try {
-    const { campaignId } = params;
+    const { campaignId } = await params;
 
     logger.info('Getting A/B test results', { campaignId });
 
@@ -58,10 +58,10 @@ export async function GET(
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { campaignId: string } }
+  { params }: { params: Promise<{ campaignId: string }> }
 ) {
   try {
-    const { campaignId } = params;
+    const { campaignId } = await params;
     const body = await request.json();
     const { action } = body;
 

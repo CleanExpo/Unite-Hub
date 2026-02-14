@@ -20,10 +20,10 @@ const logger = createApiLogger({ service: 'WorkflowStateAPI' });
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { campaignId: string; workflowId: string } }
+  { params }: { params: Promise<{ campaignId: string; workflowId: string }> }
 ) {
   try {
-    const { workflowId } = params;
+    const { workflowId } = await params;
 
     logger.info('Getting workflow state', { workflowId });
 
@@ -81,10 +81,10 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { campaignId: string; workflowId: string } }
+  { params }: { params: Promise<{ campaignId: string; workflowId: string }> }
 ) {
   try {
-    const { workflowId } = params;
+    const { workflowId } = await params;
     const body = await request.json();
     const { action } = body;
 

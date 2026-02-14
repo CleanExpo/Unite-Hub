@@ -10,12 +10,13 @@ import { withStaffAuth } from '@/lib/middleware/auth';
 import { supabaseStaff } from '@/lib/auth/supabase';
 import { validateBody, taskSchemas } from '@/lib/middleware/validation';
 
-export const GET = withStaffAuth(async (req, { params }: { params: { id: string } }) => {
+export const GET = withStaffAuth(async (req, context) => {
   try {
+    const { id } = await (context as { params: Promise<{ id: string }> }).params;
     const { data: task, error } = await supabaseStaff
       .from('tasks')
       .select('*, projects(id, client_id, status)')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error || !task) {
@@ -38,8 +39,9 @@ export const GET = withStaffAuth(async (req, { params }: { params: { id: string 
   }
 });
 
-export const PATCH = withStaffAuth(async (req, { params }: { params: { id: string } }) => {
+export const PATCH = withStaffAuth(async (req, context) => {
   try {
+    const { id } = await (context as { params: Promise<{ id: string }> }).params;
     const { data, error: validationError } = await validateBody(req, taskSchemas.update);
 
     if (validationError || !data) {
@@ -52,7 +54,7 @@ export const PATCH = withStaffAuth(async (req, { params }: { params: { id: strin
     const { data: task, error } = await supabaseStaff
       .from('tasks')
       .update(data)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -76,12 +78,13 @@ export const PATCH = withStaffAuth(async (req, { params }: { params: { id: strin
   }
 });
 
-export const DELETE = withStaffAuth(async (req, { params }: { params: { id: string } }) => {
+export const DELETE = withStaffAuth(async (req, context) => {
   try {
+    const { id } = await (context as { params: Promise<{ id: string }> }).params;
     const { error } = await supabaseStaff
       .from('tasks')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       return NextResponse.json(

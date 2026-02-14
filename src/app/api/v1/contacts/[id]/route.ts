@@ -26,9 +26,9 @@ type UpdateContactInput = z.infer<typeof updateContactSchema>;
  * Context type for route handlers with id parameter
  */
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -43,7 +43,7 @@ interface RouteContext {
 export const GET = withAuth(
   async (req: NextRequest, { user, workspace }, context: RouteContext) => {
     try {
-      const { id } = context.params;
+      const { id } = await context.params;
 
       // Validate UUID format
       const uuidRegex =
@@ -109,7 +109,7 @@ export const GET = withAuth(
 export const PUT = withAuth(
   async (req: NextRequest, { user, workspace }, context: RouteContext) => {
     try {
-      const { id } = context.params;
+      const { id } = await context.params;
 
       // Validate UUID format
       const uuidRegex =
@@ -211,7 +211,7 @@ export const PUT = withAuth(
 export const DELETE = withAuth(
   async (req: NextRequest, { user, workspace }, context: RouteContext) => {
     try {
-      const { id } = context.params;
+      const { id } = await context.params;
 
       // Validate UUID format
       const uuidRegex =

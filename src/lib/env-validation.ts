@@ -94,6 +94,66 @@ const ENV_VARIABLES: EnvConfig[] = [
     description: "Stripe price ID for Professional plan",
     example: "price_...",
   },
+
+  // OpenRouter
+  {
+    name: "OPENROUTER_API_KEY",
+    required: false,
+    description: "OpenRouter API key for multi-model routing",
+    example: "sk-or-v1-...",
+  },
+
+  // Security
+  {
+    name: "FIELD_ENCRYPTION_KEY",
+    required: false,
+    description: "AES-256-GCM key for PII field-level encryption (64-char hex)",
+    example: "generate with: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
+  },
+
+  // Social Media Connectors
+  {
+    name: "META_APP_ID",
+    required: false,
+    description: "Facebook/Instagram Meta App ID",
+    example: "123456789012345",
+  },
+  {
+    name: "META_APP_SECRET",
+    required: false,
+    description: "Facebook/Instagram Meta App Secret",
+    example: "abcdef0123456789...",
+  },
+  {
+    name: "LINKEDIN_CLIENT_ID",
+    required: false,
+    description: "LinkedIn OAuth Client ID",
+    example: "77abc12345",
+  },
+  {
+    name: "LINKEDIN_CLIENT_SECRET",
+    required: false,
+    description: "LinkedIn OAuth Client Secret",
+    example: "abcDEF123",
+  },
+  {
+    name: "REDDIT_CLIENT_ID",
+    required: false,
+    description: "Reddit API Client ID",
+    example: "abc123DEF456",
+  },
+  {
+    name: "REDDIT_CLIENT_SECRET",
+    required: false,
+    description: "Reddit API Client Secret",
+    example: "abc123DEF456ghi789",
+  },
+  {
+    name: "YOUTUBE_CHANNEL_ID",
+    required: false,
+    description: "YouTube channel ID (uses Google OAuth above)",
+    example: "UC...",
+  },
 ];
 
 interface ValidationResult {

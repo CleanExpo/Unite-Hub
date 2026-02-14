@@ -11,11 +11,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Shield, Zap, AlertTriangle, Brain } from 'lucide-react';
+import { Shield, Zap, AlertTriangle, Brain, Clock, ChevronRight } from 'lucide-react';
 import { AgentObjectivePanel } from '@/components/agents/AgentObjectivePanel';
 import { AgentPlanViewer } from '@/components/agents/AgentPlanViewer';
 import { AgentExecutionConsole } from '@/components/agents/AgentExecutionConsole';
 import { AgentRiskApprovalModal } from '@/components/agents/AgentRiskApprovalModal';
+import { WorkforceStatusPanel } from '@/components/agents/WorkforceStatusPanel';
 
 export default function FounderAgentsDashboard() {
   const { session, currentOrganization } = useAuth();
@@ -25,13 +26,14 @@ export default function FounderAgentsDashboard() {
     runningExecutions: 0,
     completedPlans: 0,
   });
+  const [recentPlans, setRecentPlans] = useState<any[]>([]);
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [planDetails, setPlanDetails] = useState<any>(null);
 
   const workspaceId = currentOrganization?.org_id || '';
 
-  // Fetch stats
+  // Fetch aggregate stats
   useEffect(() => {
     if (!workspaceId || !session?.access_token) return;
 
@@ -46,13 +48,15 @@ export default function FounderAgentsDashboard() {
 
         if (response.ok) {
           const data = await response.json();
-          // Update stats based on API response
-          setStats({
-            totalPlans: data.summary?.total_steps || 0,
-            pendingApproval: 0, // Would fetch from database
-            runningExecutions: 0,
-            completedPlans: 0,
-          });
+          if (data.aggregate) {
+            setStats({
+              totalPlans: data.aggregate.totalPlans,
+              pendingApproval: data.aggregate.pendingApproval,
+              runningExecutions: data.aggregate.runningExecutions,
+              completedPlans: data.aggregate.completedPlans,
+            });
+            setRecentPlans(data.recentPlans || []);
+          }
         }
       } catch (error) {
         console.error('Failed to fetch stats:', error);
@@ -129,6 +133,14 @@ export default function FounderAgentsDashboard() {
         </Card>
       </div>
 
+      {/* Workforce Engine Status */}
+      {session?.access_token && workspaceId && (
+        <WorkforceStatusPanel
+          workspaceId={workspaceId}
+          accessToken={session.access_token}
+        />
+      )}
+
       {/* Security Notice */}
       <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/30">
         <Shield className="h-4 w-4" />
@@ -138,6 +150,64 @@ export default function FounderAgentsDashboard() {
           Sandbox execution prevents access to system files and harmful commands. Full audit trail logged to Living Intelligence Archive.
         </AlertDescription>
       </Alert>
+
+      {/* Recent Plans */}
+      {recentPlans.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Clock className="h-5 w-5 text-muted-foreground" />
+                <CardTitle className="text-lg">Recent Plans</CardTitle>
+              </div>
+              <Badge variant="outline">{recentPlans.length} plans</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {recentPlans.slice(0, 5).map((plan: any) => (
+                <button
+                  key={plan.id}
+                  onClick={() => {
+                    setSelectedPlanId(plan.id);
+                    setSelectedPlan(plan.plan || null);
+                    setPlanDetails(plan);
+                  }}
+                  className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
+                    selectedPlanId === plan.id
+                      ? 'bg-primary/10 border border-primary/30'
+                      : 'bg-muted/50 hover:bg-muted'
+                  }`}
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">
+                      {plan.objective || 'Untitled Plan'}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {new Date(plan.created_at).toLocaleDateString()} — Risk: {plan.risk_score ?? 'N/A'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 ml-3">
+                    <Badge
+                      variant={
+                        plan.status === 'completed' ? 'default' :
+                        plan.status === 'running' ? 'secondary' :
+                        plan.status === 'pending_approval' ? 'destructive' :
+                        plan.status === 'approved' ? 'outline' :
+                        'outline'
+                      }
+                      className="text-[10px]"
+                    >
+                      {plan.status?.replace('_', ' ') || 'unknown'}
+                    </Badge>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Main Content Tabs */}
       {session?.access_token && (

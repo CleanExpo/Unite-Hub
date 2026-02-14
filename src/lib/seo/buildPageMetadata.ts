@@ -257,12 +257,9 @@ export function buildAlternateLinks(
  *
  * @example
  * ```typescript
- * const productSchema = buildStructuredData('Product', {
- *   name: 'Synthex Professional Plan',
- *   offers: {
- *     price: '297',
- *     priceCurrency: 'USD',
- *   },
+ * const orgSchema = buildStructuredData('Organization', {
+ *   name: 'Unite-Hub',
+ *   description: 'AI-Powered Business Hub',
  * });
  * ```
  */

@@ -238,7 +238,7 @@ export function getEmailTemplate(
 ) {
   const templateFn = EMAIL_TEMPLATES[templateKey];
   if (!templateFn) {
-    throw new Error(\`Email template '\${templateKey}' not found\`);
+    throw new Error(`Email template '${templateKey}' not found`);
   }
   return templateFn(data);
 }

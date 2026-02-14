@@ -54,13 +54,21 @@ export default function AIDOSettingsPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Simulate save delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // TODO: Actually save settings to database
-      // const { supabaseBrowser } = await import('@/lib/supabase');
-      // await supabaseBrowser.from('aido_settings').upsert({...});
-
+      const { supabaseBrowser } = await import('@/lib/supabase');
+      const orgId = currentOrganization?.org_id;
+      if (orgId) {
+        await supabaseBrowser.from('workspace_settings').upsert({
+          workspace_id: orgId,
+          settings_key: 'aido_settings',
+          settings_value: JSON.stringify({
+            aiModel, maxTokens, temperature, autoGenerate,
+            emailSignature, trackOpens, trackClicks, autoReply,
+            emailNotifications, hotLeadAlerts, weeklyReports,
+            integrations: { gscConnected, gbpConnected, ga4Connected, gmailConnected },
+          }),
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'workspace_id,settings_key' });
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {

@@ -79,8 +79,8 @@ export async function middleware(req: NextRequest) {
     console.log(`[MIDDLEWARE TEST MODE] Path: ${pathname}, Role: ${testRole || 'NONE'}`);
 
     // Public routes and auth pages - allow access
-    const publicPaths = ["/", "/pricing", "/landing", "/privacy", "/terms", "/security", "/support", "/api/auth", "/api/cron", "/api/webhooks", "/api/public"];
-    const authPaths = ["/login", "/register", "/forgot-password", "/auth/signin"];
+    const publicPaths = ["/", "/privacy", "/terms", "/security", "/support", "/api/auth", "/api/cron", "/api/webhooks", "/api/public"];
+    const authPaths = ["/login", "/forgot-password", "/auth/signin"];
     const isPublicPath = publicPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
     const isAuthPath = authPaths.some((path) => pathname.startsWith(path));
 
@@ -89,7 +89,7 @@ export async function middleware(req: NextRequest) {
     }
 
     // Protected routes - require test role cookie
-    const protectedPrefixes = ["/dashboard", "/founder", "/staff", "/client", "/crm", "/synthex"];
+    const protectedPrefixes = ["/dashboard", "/founder", "/staff", "/client", "/crm"];
     const isProtectedPath = protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
 
     if (isProtectedPath) {
@@ -175,12 +175,19 @@ export async function middleware(req: NextRequest) {
   const isAuthenticated = !!user && !userError;
   const pathname = req.nextUrl.pathname;
 
+  // Redirect /register to /login (no public signups — invite-only)
+  if (pathname === '/register' || pathname.startsWith('/register/')) {
+    const redirectUrl = req.nextUrl.clone();
+    redirectUrl.pathname = '/login';
+    return NextResponse.redirect(redirectUrl);
+  }
+
   // Auth pages that should redirect if already logged in
-  const authPaths = ["/login", "/register", "/forgot-password"];
+  const authPaths = ["/login", "/forgot-password"];
   const isAuthPath = authPaths.some((path) => pathname.startsWith(path));
 
-  // Public routes (no auth required) - includes marketing pages
-  const publicPaths = ["/", "/pricing", "/landing", "/privacy", "/terms", "/security", "/support", "/api/auth", "/api/cron", "/api/webhooks", "/api/public"];
+  // Public routes (no auth required) - business showcase pages only
+  const publicPaths = ["/", "/privacy", "/terms", "/security", "/support", "/api/auth", "/api/cron", "/api/webhooks", "/api/public"];
   const isPublicPath = publicPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
   // Marketing paths that logged-in founders/staff should bypass
@@ -188,7 +195,7 @@ export async function middleware(req: NextRequest) {
   const isMarketingPath = marketingPaths.includes(pathname);
 
   // Protected route prefixes
-  const protectedPrefixes = ["/dashboard", "/founder", "/staff", "/client", "/crm", "/synthex"];
+  const protectedPrefixes = ["/dashboard", "/founder", "/staff", "/client", "/crm"];
   const isProtectedPath = protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
 
   // Allow public paths for guests
@@ -229,12 +236,6 @@ export async function middleware(req: NextRequest) {
           return NextResponse.redirect(redirectUrl);
         }
 
-        // Redirect from synthex (client dashboard) to founder
-        if (pathname.startsWith('/synthex')) {
-          const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/founder';
-          return NextResponse.redirect(redirectUrl);
-        }
       }
 
       // STAFF: Bypass marketing pages, go to staff dashboard
@@ -333,10 +334,8 @@ export const config = {
   // With PKCE, sessions are in cookies and accessible server-side
   // We can now properly protect all routes
   matcher: [
-    // Marketing pages (redirect authenticated users)
+    // Business showcase (redirect authenticated users to dashboard)
     "/",
-    "/pricing",
-    "/landing",
     // Auth pages (redirect if already authenticated)
     "/login",
     "/register",
@@ -347,7 +346,6 @@ export const config = {
     "/staff/:path*",
     "/client/:path*",
     "/crm/:path*",
-    "/synthex/:path*",
     // API routes (CSRF protection)
     "/api/:path*",
   ],

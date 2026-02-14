@@ -15,7 +15,8 @@
  * @version 1.0.0
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import {
   computeLeakProfile,
@@ -209,12 +210,7 @@ export interface RankingEstimate {
 // Claude API Configuration
 // =============================================================================
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  defaultHeaders: {
-    'anthropic-beta': 'prompt-caching-2024-07-31',
-  },
-});
+// Using centralized Anthropic client from @/lib/anthropic/client
 
 // Static system prompt for SEO analysis (cacheable)
 const SEO_ANALYSIS_SYSTEM_PROMPT = `You are an expert SEO analyst specializing in Google Search ranking factors, with deep knowledge of the Google/DOJ/Yandex algorithm leaks.
@@ -839,7 +835,7 @@ Focus on actionable insights based on the leak signals.`;
 
       const result = await callAnthropicWithRetry(async () => {
         return await anthropic.messages.create({
-          model: 'claude-sonnet-4-5-20250929',
+          model: ANTHROPIC_MODELS.SONNET_4_5,
           max_tokens: 1024,
           system: [
             {
@@ -911,7 +907,7 @@ Return JSON array with enhanced recommendations:
 
       const result = await callAnthropicWithRetry(async () => {
         return await anthropic.messages.create({
-          model: 'claude-sonnet-4-5-20250929',
+          model: ANTHROPIC_MODELS.SONNET_4_5,
           max_tokens: 2048,
           system: [
             {
@@ -972,7 +968,7 @@ Return JSON:
 
       const result = await callAnthropicWithRetry(async () => {
         return await anthropic.messages.create({
-          model: 'claude-sonnet-4-5-20250929',
+          model: ANTHROPIC_MODELS.SONNET_4_5,
           max_tokens: 1024,
           system: [
             {
@@ -1086,7 +1082,7 @@ Return a detailed JSON plan:
 
       const result = await callAnthropicWithRetry(async () => {
         return await anthropic.messages.create({
-          model: 'claude-sonnet-4-5-20250929',
+          model: ANTHROPIC_MODELS.SONNET_4_5,
           max_tokens: 4096,
           system: [
             {
@@ -1168,7 +1164,7 @@ Return JSON array of 5 specific, actionable improvements:
 
       const result = await callAnthropicWithRetry(async () => {
         return await anthropic.messages.create({
-          model: 'claude-sonnet-4-5-20250929',
+          model: ANTHROPIC_MODELS.SONNET_4_5,
           max_tokens: 512,
           system: [
             {
@@ -1256,7 +1252,7 @@ Return detailed E-E-A-T analysis as JSON:
 
       const result = await callAnthropicWithRetry(async () => {
         return await anthropic.messages.create({
-          model: 'claude-sonnet-4-5-20250929',
+          model: ANTHROPIC_MODELS.SONNET_4_5,
           max_tokens: 1024,
           system: [
             {

@@ -3,16 +3,12 @@
  * Uses Claude AI to process incoming WhatsApp messages
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { db } from '../db';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-  defaultHeaders: {
-    "anthropic-beta": "prompt-caching-2024-07-31", // Required for prompt caching
-  },
-});
+// Using centralized Anthropic client from @/lib/anthropic/client
 
 // Static system prompts for caching (90% cost savings)
 const WHATSAPP_ANALYSIS_SYSTEM_PROMPT = `You are an AI assistant analyzing customer messages from WhatsApp Business.
@@ -121,7 +117,7 @@ export async function analyzeWhatsAppMessage(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
+        model: ANTHROPIC_MODELS.SONNET_4_5,
         max_tokens: 1000,
         system: [
           {
@@ -217,7 +213,7 @@ Generate a professional response.`;
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
+        model: ANTHROPIC_MODELS.SONNET_4_5,
         max_tokens: 300,
         system: [
           {
@@ -285,7 +281,7 @@ Analyze and provide update recommendations.`;
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
+        model: ANTHROPIC_MODELS.SONNET_4_5,
         max_tokens: 500,
         system: [
           {

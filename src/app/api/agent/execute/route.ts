@@ -9,6 +9,7 @@ import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
 import { AgentExecutor, createAgentExecutor } from "@/lib/agents/agentExecutor";
 import { AgentArchiveBridge, createAgentArchiveBridge } from "@/lib/agents/agentArchiveBridge";
+import { hookSystem, lifecycleManager, memoryManager, ensureWorkforceReady } from "@/lib/agents/workforce";
 
 export async function POST(req: NextRequest) {
   try {
@@ -155,6 +156,38 @@ export async function POST(req: NextRequest) {
     const archive = createAgentArchiveBridge(workspaceId, userId);
     await archive.logPlanExecutionStarted(planId, runId, plan.plan);
 
+    // Ensure workforce engine is initialized (lazy, runs once)
+    await ensureWorkforceReady(workspaceId);
+
+    // Run workforce pre-execution hooks
+    const hookResult = await hookSystem.execute('pre-execution', {
+      agentId: 'orchestrator',
+      workspaceId,
+      action: `execute:${plan.objective || planId}`,
+      inputs: { planId, objective: plan.objective, stepCount: plan.plan.steps.length },
+      hookChain: [],
+      timestamp: new Date().toISOString(),
+      correlationId: runId,
+    });
+
+    if (!hookResult.shouldProceed) {
+      const blockReasons = hookResult.results
+        .filter((r) => r.action === 'block')
+        .map((r) => r.reason);
+      return NextResponse.json(
+        { error: "Workforce hooks blocked execution", reasons: blockReasons },
+        { status: 403 }
+      );
+    }
+
+    // Spawn orchestrator in lifecycle manager
+    try {
+      await lifecycleManager.spawn('orchestrator');
+      lifecycleManager.startTask('orchestrator', runId, runId);
+    } catch {
+      // May already be spawned or at capacity
+    }
+
     // Execute plan
     const executor = createAgentExecutor(
       workspaceId,
@@ -189,8 +222,54 @@ export async function POST(req: NextRequest) {
             completed_at: executionState.completed_at,
           })
           .eq("id", runId);
+
+        // Complete task in lifecycle manager
+        try {
+          lifecycleManager.completeTask(
+            'orchestrator',
+            runId,
+            executionState.status === 'completed',
+            executionState.completed_at
+              ? new Date(executionState.completed_at).getTime() - Date.now()
+              : 0
+          );
+        } catch {
+          // Best-effort lifecycle tracking
+        }
+
+        // Store execution result in workforce memory
+        try {
+          await memoryManager.set({
+            scope: 'workspace',
+            workspaceId,
+            key: `execution:${planId}`,
+            value: {
+              planId,
+              runId,
+              objective: plan.objective,
+              status: executionState.status,
+              completedSteps: executionState.completed_steps,
+              failedSteps: executionState.failed_steps,
+              completedAt: executionState.completed_at,
+            },
+            importance: 70,
+          });
+        } catch {
+          // Memory storage is best-effort
+        }
+
+        // Run post-execution hooks
+        await hookSystem.execute('post-execution', {
+          agentId: 'orchestrator',
+          workspaceId,
+          action: `execute:${plan.objective || planId}`,
+          inputs: { executionState, planId, runId },
+          hookChain: [],
+          timestamp: new Date().toISOString(),
+          correlationId: runId,
+        });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.error("Error executing plan:", error);
         supabase
           .from("agent_runs")
@@ -199,6 +278,13 @@ export async function POST(req: NextRequest) {
             last_error: error.message,
           })
           .eq("id", runId);
+
+        // Complete task as failed in lifecycle
+        try {
+          lifecycleManager.completeTask('orchestrator', runId, false, 0);
+        } catch {
+          // Best-effort
+        }
       });
 
     // Return immediate response

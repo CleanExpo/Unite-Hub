@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
 
 export async function POST(request: NextRequest) {
   try {
@@ -65,7 +62,7 @@ Help them make decisions about approving or iterating on this content.`;
     // Call Claude API
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-sonnet-4-5-20250929",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 1024,
       system: systemPrompt,
       messages: [

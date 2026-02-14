@@ -6,15 +6,9 @@
  * Features: Prompt caching, extended thinking, workspace isolation
  */
 
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  defaultHeaders: {
-    "anthropic-beta": "prompt-caching-2024-07-31,thinking-2025-11-15",
-  },
-});
 
 // =====================================================
 // TYPES

@@ -582,6 +582,7 @@ export function FrameworkTemplateLibrary({
               </Button>
             </DialogFooter>
           </DialogContent>
+        </Dialog>
         )}
     </>
   );

@@ -5,7 +5,6 @@
  * CRITICAL: Enforces H2 questions, zero fluff, entity verification
  */
 
-import Anthropic from '@anthropic-ai/sdk';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { createContentAsset, ContentAssetInput } from './database/content-assets';
 import { getIntentCluster } from './database/intent-clusters';
@@ -77,12 +76,7 @@ export async function generateContent(
     }
 
     // Generate content with Extended Thinking
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY!,
-      defaultHeaders: {
-        'anthropic-beta': 'thinking-2025-11-15',
-      },
-    });
+    const { anthropic } = await import('@/lib/anthropic/client');
 
     const systemPrompt = buildSystemPrompt(input);
     const userPrompt = buildUserPrompt(input, intentQuestions);

@@ -501,6 +501,136 @@ export class LinkedInClient extends BasePlatformClient {
   }
 }
 
+// Reddit client
+export class RedditClient extends BasePlatformClient {
+  private baseUrl = 'https://oauth.reddit.com';
+
+  protected override async makeRequest<T>(
+    url: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    await this.rateLimiter.waitForSlot();
+
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.config.accessToken}`,
+        'User-Agent': 'UniteHub/1.0',
+        ...options.headers,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Reddit API request failed: ${response.status} - ${error}`);
+    }
+
+    return response.json();
+  }
+
+  async fetchMessages(options: FetchMessagesOptions): Promise<FetchMessagesResult> {
+    const messages: NormalizedMessage[] = [];
+    let nextCursor: string | undefined;
+
+    // Fetch inbox messages and comment replies
+    const params = new URLSearchParams({
+      limit: String(options.limit || 25),
+    });
+
+    if (options.cursor) {
+      params.set('after', options.cursor);
+    }
+
+    const url = `${this.baseUrl}/message/inbox?${params}`;
+    const response = await this.makeRequest<{
+      data: {
+        children: Array<{ data: RedditMessage }>;
+        after?: string;
+      };
+    }>(url);
+
+    for (const child of response.data?.children || []) {
+      messages.push(this.normalizeRedditMessage(child.data));
+    }
+
+    nextCursor = response.data?.after ?? undefined;
+
+    return {
+      messages,
+      nextCursor,
+      hasMore: !!nextCursor,
+    };
+  }
+
+  async sendReply(options: SendReplyOptions): Promise<SendReplyResult> {
+    try {
+      const url = `${this.baseUrl}/api/comment`;
+      const body = new URLSearchParams({
+        thing_id: options.messageId,
+        text: options.text,
+        api_type: 'json',
+      });
+
+      const response = await this.makeRequest<{
+        json: { errors: string[][]; data?: { things: Array<{ data: { id: string } }> } };
+      }>(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+
+      if (response.json?.errors?.length) {
+        return { success: false, error: response.json.errors.map((e) => e.join(': ')).join('; ') };
+      }
+
+      return {
+        success: true,
+        externalId: response.json?.data?.things?.[0]?.data?.id,
+      };
+    } catch (error) {
+      return { success: false, error: String(error) };
+    }
+  }
+
+  async getAccountInfo() {
+    const url = `${this.baseUrl}/api/v1/me`;
+    const response = await this.makeRequest<{
+      id: string;
+      name: string;
+      icon_img?: string;
+      subreddit?: { display_name_prefixed: string };
+    }>(url);
+
+    return {
+      id: response.id,
+      name: response.name,
+      handle: response.subreddit?.display_name_prefixed ?? `u/${response.name}`,
+      profileImage: response.icon_img?.split('?')[0],
+    };
+  }
+
+  private normalizeRedditMessage(msg: RedditMessage): NormalizedMessage {
+    return {
+      externalId: msg.id,
+      provider: 'reddit',
+      channelType: msg.subreddit ? 'comment' : 'dm',
+      direction: 'inbound',
+      content: msg.body,
+      contentType: 'text',
+      author: {
+        id: msg.author,
+        handle: `u/${msg.author}`,
+        name: msg.author,
+      },
+      attachments: [],
+      sentAt: new Date(msg.created_utc * 1000),
+      threadId: msg.parent_id,
+      rawData: msg,
+    };
+  }
+}
+
 // X (Twitter) client
 export class XClient extends BasePlatformClient {
   private baseUrl = 'https://api.twitter.com/2';
@@ -618,6 +748,8 @@ export function createPlatformClient(config: PlatformClientConfig): BasePlatform
       return new TikTokClient(config);
     case 'linkedin':
       return new LinkedInClient(config);
+    case 'reddit':
+      return new RedditClient(config);
     case 'x':
       return new XClient(config);
     default:

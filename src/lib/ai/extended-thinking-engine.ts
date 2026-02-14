@@ -82,7 +82,7 @@ export class ExtendedThinkingEngine {
     this.anthropic = new Anthropic({
       apiKey,
       defaultHeaders: {
-        "anthropic-beta": "interleaved-thinking-2025-05-14",
+        "anthropic-beta": "prompt-caching-2024-07-31,extended-thinking-2025-01-16",
       },
     });
   }
@@ -103,7 +103,7 @@ export class ExtendedThinkingEngine {
 
     try {
       const response = await this.anthropic.messages.create({
-        model: "claude-opus-4-1-20250805",
+        model: "claude-opus-4-5-20251101",
         max_tokens: 4096,
         thinking: {
           type: "enabled",

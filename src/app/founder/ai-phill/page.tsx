@@ -1,206 +1,176 @@
-/**
- * AI Phill Chat Interface
- *
- * Features:
- * - Chat interface with AI business advisor
- * - Recent insights sidebar
- * - Journal entries below
- * - Generate Digest button
- */
+"use client";
 
-'use client';
-
-import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  Sparkles,
-  Send,
-  Bot,
-  User,
-  Lightbulb,
-  FileText,
-  TrendingUp,
-  Calendar,
-  Plus,
-} from 'lucide-react';
-import { PageContainer, Section } from '@/ui/layout/AppGrid';
+  Sparkles, Send, Bot, User, Lightbulb, TrendingUp, Building2, RefreshCw,
+} from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Message {
   id: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: Date;
 }
 
-interface Insight {
-  id: string;
-  title: string;
-  summary: string;
-  businessId: string;
-  businessName: string;
-  timestamp: string;
-  acknowledged: boolean;
-}
-
-interface JournalEntry {
-  id: string;
-  title: string;
-  content: string;
-  timestamp: string;
-  businessId?: string;
-  businessName?: string;
+interface BusinessSummary {
+  business_key: string;
+  display_name: string;
+  channel_count: number;
+  latest_snapshot_date: string | null;
 }
 
 export default function AiPhillPage() {
+  const { session } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
-      role: 'assistant',
+      id: "welcome",
+      role: "assistant",
       content:
         "Hi! I'm AI Phill, your business intelligence advisor. I monitor your portfolio and provide insights based on signals across your businesses. How can I help you today?",
       timestamp: new Date(),
     },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showNewJournal, setShowNewJournal] = useState(false);
-  const [journalTitle, setJournalTitle] = useState('');
-  const [journalContent, setJournalContent] = useState('');
+  const [businesses, setBusinesses] = useState<BusinessSummary[]>([]);
+  const [portfolioStats, setPortfolioStats] = useState({ totalBusinesses: 0, totalChannels: 0, totalSnapshots: 0 });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [insights] = useState<Insight[]>([
-    {
-      id: '1',
-      title: 'Strong SEO Performance',
-      summary: 'Balustrade Co. organic traffic up 25% week-over-week',
-      businessId: '1',
-      businessName: 'Balustrade Co.',
-      timestamp: '2 hours ago',
-      acknowledged: false,
-    },
-    {
-      id: '2',
-      title: 'Competitor Alert',
-      summary: 'New competitor detected in Melbourne market',
-      businessId: '1',
-      businessName: 'Balustrade Co.',
-      timestamp: '1 day ago',
-      acknowledged: false,
-    },
-    {
-      id: '3',
-      title: 'Social Engagement Spike',
-      summary: 'LinkedIn engagement increased 40% this week',
-      businessId: '2',
-      businessName: 'Tech Startup',
-      timestamp: '2 days ago',
-      acknowledged: true,
-    },
-  ]);
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-  const [journalEntries] = useState<JournalEntry[]>([
-    {
-      id: '1',
-      title: 'Q1 Strategy Review',
-      content:
-        'Reviewed Q1 performance across all businesses. Balustrade Co. exceeded targets by 15%. Tech Startup needs focus on customer retention...',
-      timestamp: '3 days ago',
-    },
-    {
-      id: '2',
-      title: 'Marketing Budget Reallocation',
-      content:
-        'Decided to shift 20% of marketing budget from paid ads to content marketing based on AI Phill recommendations...',
-      timestamp: '1 week ago',
-      businessId: '1',
-      businessName: 'Balustrade Co.',
-    },
-  ]);
+  // Fetch portfolio stats for sidebar
+  const fetchPortfolioStats = useCallback(async () => {
+    try {
+      const res = await fetch("/api/founder/business-vault?stats=true");
+      if (res.ok) {
+        const data = await res.json();
+        setBusinesses(data.businesses || []);
+        setPortfolioStats({
+          totalBusinesses: data.totalBusinesses || 0,
+          totalChannels: data.totalChannels || 0,
+          totalSnapshots: data.totalSnapshots || 0,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch portfolio stats:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPortfolioStats();
+  }, [fetchPortfolioStats]);
 
   const handleSendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      role: 'user',
+      role: "user",
       content: input,
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInput('');
+    const currentInput = input;
+    setInput("");
     setIsLoading(true);
 
-    // TODO: Replace with actual API call to AI orchestrator
-    setTimeout(() => {
-      const assistantMessage: Message = {
+    try {
+      // Build context about the portfolio for richer AI responses
+      const portfolioContext = businesses.length > 0
+        ? `The user manages ${portfolioStats.totalBusinesses} businesses: ${businesses.map(b => b.display_name).join(", ")}. They have ${portfolioStats.totalChannels} channels and ${portfolioStats.totalSnapshots} AI snapshots.`
+        : "";
+
+      const res = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
+        body: JSON.stringify({
+          message: currentInput,
+          context: "founder_advisor",
+          workspaceId: undefined,
+          systemContext: portfolioContext,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: data.response || "I apologize, but I couldn't generate a response.",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+      } else {
+        const errorData = await res.json().catch(() => null);
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: `I encountered an issue: ${errorData?.error || "Unable to process your request right now. Please try again."}`,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+      }
+    } catch (err) {
+      console.error("AI chat error:", err);
+      const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content:
-          'Based on the signals I\'m tracking, here\'s what I can tell you: [This will be powered by the AI orchestrator with access to all business data, signals, and historical context.]',
+        role: "assistant",
+        content: "I'm having trouble connecting right now. Please check your internet connection and try again.",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 2000);
-  };
-
-  const handleGenerateDigest = () => {
-    // TODO: Implement digest generation
-    console.log('Generating weekly digest...');
-  };
-
-  const handleSaveJournal = () => {
-    // TODO: Save journal entry to database
-    console.log('Saving journal:', { title: journalTitle, content: journalContent });
-    setShowNewJournal(false);
-    setJournalTitle('');
-    setJournalContent('');
+    }
   };
 
   const suggestedPrompts = [
-    'What are the key trends across my businesses this week?',
-    'Which business needs the most attention right now?',
-    'Generate a performance summary for Balustrade Co.',
-    'What opportunities should I focus on?',
+    "What are the key trends across my businesses this week?",
+    "Which business needs the most attention right now?",
+    "Help me plan my marketing strategy for next month",
+    "What opportunities should I focus on?",
   ];
 
   return (
-    <PageContainer>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
       {/* Header */}
-      <Section>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-100">AI Phill</h1>
-              <p className="text-gray-400 mt-1">Your AI Business Intelligence Advisor</p>
-            </div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-white" />
           </div>
-          <Button
-            onClick={handleGenerateDigest}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Generate Weekly Digest
-          </Button>
+          <div>
+            <h1 className="text-2xl font-bold text-white">AI Phill</h1>
+            <p className="text-sm text-slate-400">Your AI Business Intelligence Advisor</p>
+          </div>
         </div>
-      </Section>
+        <Button variant="ghost" size="icon" onClick={fetchPortfolioStats} className="text-slate-400 hover:text-white">
+          <RefreshCw className="w-4 h-4" />
+        </Button>
+      </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-8">
-        {/* Chat Interface - 2 columns */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Chat Messages */}
-          <Card className="bg-gray-800/50 border-gray-700 flex flex-col h-[600px]">
-            <div className="p-4 border-b border-gray-700">
-              <div className="flex items-center space-x-2">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Chat - 2 columns */}
+        <div className="lg:col-span-2 space-y-4">
+          <Card className="bg-slate-800/50 border-slate-700 flex flex-col h-[600px]">
+            {/* Chat Header */}
+            <div className="p-4 border-b border-slate-700">
+              <div className="flex items-center gap-2">
                 <Bot className="w-5 h-5 text-blue-400" />
-                <h3 className="font-semibold text-gray-100">Chat with AI Phill</h3>
+                <h3 className="font-semibold text-white">Chat with AI Phill</h3>
+                <span className="ml-auto text-xs text-slate-500">Powered by Claude</span>
               </div>
             </div>
 
@@ -209,21 +179,21 @@ export default function AiPhillPage() {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`flex items-start space-x-2 max-w-[80%] ${
-                      message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                    className={`flex items-start gap-2 max-w-[80%] ${
+                      message.role === "user" ? "flex-row-reverse" : ""
                     }`}
                   >
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        message.role === 'user'
-                          ? 'bg-green-600'
-                          : 'bg-gradient-to-br from-blue-600 to-purple-600'
+                        message.role === "user"
+                          ? "bg-emerald-600"
+                          : "bg-gradient-to-br from-blue-600 to-purple-600"
                       }`}
                     >
-                      {message.role === 'user' ? (
+                      {message.role === "user" ? (
                         <User className="w-4 h-4 text-white" />
                       ) : (
                         <Bot className="w-4 h-4 text-white" />
@@ -231,13 +201,13 @@ export default function AiPhillPage() {
                     </div>
                     <div
                       className={`p-3 rounded-lg ${
-                        message.role === 'user'
-                          ? 'bg-green-600/20 border border-green-500/30'
-                          : 'bg-gray-700/50 border border-gray-600'
+                        message.role === "user"
+                          ? "bg-emerald-600/20 border border-emerald-500/30"
+                          : "bg-slate-700/50 border border-slate-600"
                       }`}
                     >
-                      <p className="text-sm text-gray-100">{message.content}</p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-sm text-white whitespace-pre-wrap">{message.content}</p>
+                      <p className="text-[10px] text-slate-500 mt-1">
                         {message.timestamp.toLocaleTimeString()}
                       </p>
                     </div>
@@ -247,38 +217,33 @@ export default function AiPhillPage() {
 
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="flex items-start space-x-2">
+                  <div className="flex items-start gap-2">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
                       <Bot className="w-4 h-4 text-white" />
                     </div>
-                    <div className="bg-gray-700/50 border border-gray-600 p-3 rounded-lg">
-                      <div className="flex space-x-2">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                        <div
-                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                          style={{ animationDelay: '0.1s' }}
-                        />
-                        <div
-                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                          style={{ animationDelay: '0.2s' }}
-                        />
+                    <div className="bg-slate-700/50 border border-slate-600 p-3 rounded-lg">
+                      <div className="flex gap-1.5">
+                        <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" />
+                        <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
+                        <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
                       </div>
                     </div>
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-gray-700">
-              <div className="flex items-center space-x-2">
+            <div className="p-4 border-t border-slate-700">
+              <div className="flex items-center gap-2">
                 <Input
-                  type="text"
                   placeholder="Ask AI Phill anything about your businesses..."
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  className="flex-1 bg-gray-900/50 border-gray-700 text-gray-100"
+                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
+                  className="flex-1 bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
+                  disabled={isLoading}
                 />
                 <Button
                   onClick={handleSendMessage}
@@ -298,138 +263,88 @@ export default function AiPhillPage() {
                 key={idx}
                 variant="outline"
                 onClick={() => setInput(prompt)}
-                className="border-gray-700 text-gray-300 hover:bg-gray-800 justify-start text-left h-auto py-3"
+                className="border-slate-700 text-slate-300 hover:bg-slate-800 justify-start text-left h-auto py-3"
               >
-                <Lightbulb className="w-4 h-4 mr-2 flex-shrink-0" />
+                <Lightbulb className="w-4 h-4 mr-2 flex-shrink-0 text-yellow-400" />
                 <span className="text-sm">{prompt}</span>
               </Button>
             ))}
           </div>
         </div>
 
-        {/* Sidebar - 1 column */}
-        <div className="space-y-6">
-          {/* Recent Insights */}
-          <Card className="bg-gray-800/50 border-gray-700">
-            <div className="p-4 border-b border-gray-700">
-              <h3 className="font-semibold text-gray-100 flex items-center">
-                <TrendingUp className="w-4 h-4 mr-2 text-blue-400" />
-                Recent Insights
-              </h3>
-            </div>
-            <div className="divide-y divide-gray-700">
-              {insights.slice(0, 5).map((insight) => (
-                <div key={insight.id} className="p-4 hover:bg-gray-800/30 transition-colors">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="text-sm font-semibold text-gray-100">{insight.title}</h4>
-                    {!insight.acknowledged && (
-                      <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1" />
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-400 mb-2">{insight.summary}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">{insight.businessName}</span>
-                    <span className="text-xs text-gray-500">{insight.timestamp}</span>
-                  </div>
-                </div>
-              ))}
+        {/* Sidebar */}
+        <div className="space-y-4">
+          {/* Portfolio Overview */}
+          <Card className="bg-slate-800/50 border-slate-700 p-4">
+            <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-blue-400" />
+              Portfolio Overview
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-400">Businesses</span>
+                <span className="text-lg font-bold text-blue-400">{portfolioStats.totalBusinesses}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-400">Channels</span>
+                <span className="text-lg font-bold text-emerald-400">{portfolioStats.totalChannels}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-400">AI Snapshots</span>
+                <span className="text-lg font-bold text-purple-400">{portfolioStats.totalSnapshots}</span>
+              </div>
             </div>
           </Card>
 
-          {/* Quick Stats */}
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
-            <h3 className="font-semibold text-gray-100 mb-4">This Week</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">New Insights</span>
-                <span className="text-lg font-bold text-blue-400">
-                  {insights.filter((i) => !i.acknowledged).length}
-                </span>
+          {/* Business List */}
+          {businesses.length > 0 && (
+            <Card className="bg-slate-800/50 border-slate-700">
+              <div className="p-4 border-b border-slate-700">
+                <h3 className="font-semibold text-white flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-blue-400" />
+                  Your Businesses
+                </h3>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">Journal Entries</span>
-                <span className="text-lg font-bold text-green-400">{journalEntries.length}</span>
+              <div className="divide-y divide-slate-700">
+                {businesses.map((b) => (
+                  <div key={b.business_key} className="p-4 hover:bg-slate-800/30 transition-colors">
+                    <h4 className="text-sm font-medium text-white">{b.display_name}</h4>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-[11px] text-slate-500">
+                        {b.channel_count} channel{b.channel_count !== 1 ? "s" : ""}
+                      </span>
+                      {b.latest_snapshot_date && (
+                        <span className="text-[11px] text-slate-500">
+                          Last snapshot: {new Date(b.latest_snapshot_date).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">Avg Health Score</span>
-                <span className="text-lg font-bold text-yellow-400">84</span>
-              </div>
-            </div>
+            </Card>
+          )}
+
+          {/* Quick Tips */}
+          <Card className="bg-slate-800/50 border-slate-700 p-4">
+            <h3 className="font-semibold text-white mb-3 text-sm">Quick Tips</h3>
+            <ul className="space-y-2 text-xs text-slate-400">
+              <li className="flex items-start gap-2">
+                <Sparkles className="w-3 h-3 text-purple-400 mt-0.5 flex-shrink-0" />
+                Ask about trends, performance, or strategy across your portfolio
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="w-3 h-3 text-purple-400 mt-0.5 flex-shrink-0" />
+                Request competitive analysis or market insights
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="w-3 h-3 text-purple-400 mt-0.5 flex-shrink-0" />
+                Get help planning campaigns or content strategy
+              </li>
+            </ul>
           </Card>
         </div>
       </div>
-
-      {/* Journal Section */}
-      <Section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-100 flex items-center">
-            <Calendar className="w-5 h-5 mr-2 text-purple-400" />
-            Journal Entries
-          </h2>
-          <Button
-            onClick={() => setShowNewJournal(!showNewJournal)}
-            variant="outline"
-            className="border-gray-600"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            New Entry
-          </Button>
-        </div>
-
-        {showNewJournal && (
-          <Card className="bg-gray-800/50 border-gray-700 p-6 mb-6">
-            <div className="space-y-4">
-              <Input
-                type="text"
-                placeholder="Entry title..."
-                value={journalTitle}
-                onChange={(e) => setJournalTitle(e.target.value)}
-                className="bg-gray-900/50 border-gray-700 text-gray-100"
-              />
-              <Textarea
-                placeholder="What's on your mind? Record insights, decisions, or reflections..."
-                value={journalContent}
-                onChange={(e) => setJournalContent(e.target.value)}
-                rows={6}
-                className="bg-gray-900/50 border-gray-700 text-gray-100"
-              />
-              <div className="flex items-center justify-end space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowNewJournal(false)}
-                  className="border-gray-600"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSaveJournal}
-                  disabled={!journalTitle.trim() || !journalContent.trim()}
-                  className="bg-purple-600 hover:bg-purple-700"
-                >
-                  Save Entry
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        <div className="space-y-4">
-          {journalEntries.map((entry) => (
-            <Card key={entry.id} className="bg-gray-800/50 border-gray-700 p-6">
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-semibold text-gray-100">{entry.title}</h3>
-                <span className="text-sm text-gray-500">{entry.timestamp}</span>
-              </div>
-              <p className="text-gray-300 mb-3">{entry.content}</p>
-              {entry.businessName && (
-                <div className="pt-3 border-t border-gray-700">
-                  <span className="text-xs text-gray-400">Related to: {entry.businessName}</span>
-                </div>
-              )}
-            </Card>
-          ))}
-        </div>
-      </Section>
-    </PageContainer>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import {
   generateCompetitorAnalysisPrompt,
@@ -9,10 +10,6 @@ import {
 } from "@/lib/claude/competitor-prompts";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth } from "@/lib/workspace-validation";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
 
 /**
  * POST /api/competitors/analyze
@@ -121,7 +118,7 @@ export async function POST(request: NextRequest) {
     // Call Claude AI
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-sonnet-4-5-20250929",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 8000,
       temperature: 0.7,
       messages: [

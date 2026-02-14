@@ -3,7 +3,8 @@
  * Provides common functionality for all specialized agents
  */
 
-import * as amqp from 'amqplib';
+// DEPRECATED: amqplib removed — Bull queues used instead. This file is unused.
+// import * as amqp from 'amqplib';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 export interface AgentTask {
@@ -31,8 +32,8 @@ export abstract class BaseAgent {
   protected concurrency: number;
   protected prefetchCount: number;
   protected retryDelay: number;
-  protected connection: amqp.Connection | null = null;
-  protected channel: amqp.Channel | null = null;
+  protected connection: unknown | null = null;
+  protected channel: unknown | null = null;
   protected supabase: SupabaseClient;
   protected isRunning: boolean = false;
 
@@ -68,7 +69,7 @@ export abstract class BaseAgent {
 
       // Connect to RabbitMQ
       const rabbitmqUrl = process.env.RABBITMQ_URL || 'amqp://localhost';
-      this.connection = await amqp.connect(rabbitmqUrl);
+      throw new Error('DEPRECATED: RabbitMQ removed. Use Bull queues via workforce engine.');
       this.channel = await this.connection.createChannel();
 
       // Assert queue exists

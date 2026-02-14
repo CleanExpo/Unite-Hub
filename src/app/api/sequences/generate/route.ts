@@ -3,17 +3,14 @@ import { getSupabaseServer } from "@/lib/supabase";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { UUIDSchema } from "@/lib/validation/schemas";
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 /**
  * POST /api/sequences/generate
  * Generate email sequence using Claude AI
  */
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
 
 export async function POST(req: NextRequest) {
   try {
@@ -145,7 +142,7 @@ Format your response as JSON with this structure:
     // Generate sequence with Claude
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-sonnet-4-5-20250929",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 4000,
       messages: [
         {

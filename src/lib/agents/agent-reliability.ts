@@ -10,6 +10,12 @@
  */
 
 import { createApiLogger } from '@/lib/logger';
+import {
+  agentEventLogger,
+  escalationManager,
+  type EscalationMetrics,
+  type EscalationTrigger,
+} from './protocol';
 
 const logger = createApiLogger({ context: 'AgentReliability' });
 
@@ -433,6 +439,7 @@ export async function reliableAgentExecution<T>(
     loopDetected: boolean;
     attempts: number;
     stabilized: boolean;
+    escalation?: EscalationTrigger;
   };
 }> {
   const {
@@ -442,11 +449,29 @@ export async function reliableAgentExecution<T>(
     guardConfig,
   } = options;
 
+  const workspaceId = (params.workspaceId as string) || 'default';
+  const correlationId = (params.correlationId as string) || undefined;
+  const startTime = Date.now();
+
+  // Log task started event
+  agentEventLogger.logTaskStarted(agentId, workspaceId, {
+    taskId: (params.taskId as string) || agentId,
+    description: (params.description as string) || 'Agent execution',
+  }, correlationId);
+
   // Check for loops
   if (enableLoopDetection) {
     const loopResult = detectLoop(agentId, params);
     if (loopResult.isLoop) {
       logger.error('Execution blocked due to loop', { agentId, ...loopResult });
+
+      agentEventLogger.logError(agentId, workspaceId, {
+        operation: 'loop_detection',
+        errorMessage: loopResult.message || 'Execution loop detected',
+        category: 'permanent',
+        impact: 'Execution blocked',
+      }, correlationId);
+
       return {
         success: false,
         error: loopResult.message,
@@ -461,8 +486,22 @@ export async function reliableAgentExecution<T>(
 
   // Execute with guards
   const result = await guardedExecution(fn, guardConfig);
+  const durationMs = Date.now() - startTime;
 
   if (!result.success) {
+    // Log task failed event
+    agentEventLogger.logTaskFailed(agentId, workspaceId, {
+      taskId: (params.taskId as string) || agentId,
+      error: result.error?.message || 'Unknown error',
+    }, durationMs, correlationId);
+
+    // Check escalation triggers
+    const escalation = checkAndEscalate(agentId, {
+      confidenceScore: 0.2, // Low confidence on failure
+      errorCount: result.attempts,
+      executionTimeMs: durationMs,
+    }, workspaceId, { error: result.error?.message, params });
+
     return {
       success: false,
       error: result.error?.message || 'Unknown error',
@@ -470,9 +509,15 @@ export async function reliableAgentExecution<T>(
         loopDetected: false,
         attempts: result.attempts,
         stabilized: false,
+        escalation: escalation || undefined,
       },
     };
   }
+
+  // Log task completed event
+  agentEventLogger.logTaskCompleted(agentId, workspaceId, {
+    taskId: (params.taskId as string) || agentId,
+  }, durationMs, correlationId);
 
   return {
     success: true,
@@ -483,6 +528,19 @@ export async function reliableAgentExecution<T>(
       stabilized: false,
     },
   };
+}
+
+/**
+ * Check escalation metrics and trigger escalation if thresholds are exceeded.
+ * Returns the escalation trigger if one was created, null otherwise.
+ */
+export function checkAndEscalate(
+  agentId: string,
+  metrics: EscalationMetrics,
+  workspaceId: string,
+  context: Record<string, unknown> = {}
+): EscalationTrigger | null {
+  return escalationManager.checkEscalation(agentId, metrics, workspaceId, context);
 }
 
 // ============================================================================
@@ -573,6 +631,9 @@ export const AgentReliability = {
 
   // Validation
   validatePrompt,
+
+  // Escalation (Protocol v1.0)
+  checkAndEscalate,
 };
 
 export default AgentReliability;

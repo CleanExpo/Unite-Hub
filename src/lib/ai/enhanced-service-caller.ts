@@ -25,6 +25,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { anthropic as centralizedClient } from '../anthropic/client';
 import { callAnthropicWithRetry } from '../anthropic/rate-limiter';
 import { validateEnvironmentOrThrow, isCategoryConfigured } from '../config/environment-validator';
 
@@ -94,9 +95,9 @@ const MODEL_IDS: Record<AIModel, string> = {
  * Model pricing (per million tokens)
  */
 const MODEL_PRICING: Record<AIModel, { input: number; output: number }> = {
-  opus: { input: 3.0, output: 15.0 },
-  sonnet: { input: 0.8, output: 4.0 },
-  haiku: { input: 0.15, output: 0.5 },
+  opus: { input: 15.0, output: 75.0 },
+  sonnet: { input: 3.0, output: 15.0 },
+  haiku: { input: 0.80, output: 4.0 },
 };
 
 /**
@@ -187,20 +188,8 @@ export async function callAIService(
   const effectiveModel: AIModel = thinking ? 'opus' : model;
   const modelId = MODEL_IDS[effectiveModel];
 
-  // Get Anthropic client
-  const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY!,
-    ...(caching && {
-      defaultHeaders: {
-        'anthropic-beta': 'prompt-caching-2024-07-31',
-      },
-    }),
-    ...(thinking && {
-      defaultHeaders: {
-        'anthropic-beta': 'thinking-2025-11-15',
-      },
-    }),
-  });
+  // Use centralized Anthropic client (includes all beta headers)
+  const anthropic = centralizedClient;
 
   // Build system messages
   const systemMessages: Anthropic.Messages.MessageCreateParams['system'] = [];

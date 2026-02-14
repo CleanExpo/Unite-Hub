@@ -85,6 +85,16 @@ export type AgentIntent =
   | 'social_inbox'
   | 'pre_client'
   | 'cognitive_twin'
+  | 'process_payment'
+  | 'schedule_appointment'
+  | 'handle_review'
+  | 'create_invoice'
+  | 'create_support_ticket'
+  | 'track_website_lead'
+  | 'monitor_website_uptime'
+  | 'process_webhook'
+  | 'enrich_contact'
+  | 'generate_proposal'
   | 'unknown';
 
 export interface OrchestratorRequest {
@@ -368,6 +378,66 @@ const INTENT_PATTERNS: Record<AgentIntent, RegExp[]> = {
     /\b(decision).*(support|recommendation|assist)\b/i,
     /\b(momentum|velocity|trajectory).*(business|growth)\b/i,
   ],
+  process_payment: [
+    /\b(payment|pay|charge|billing|invoice.?pay)\b/i,
+    /\b(stripe|credit.?card|debit|bank.?transfer)\b/i,
+    /\b(checkout|purchase|subscription|refund)\b/i,
+    /\b(collect.?payment|process.?payment|take.?payment)\b/i,
+  ],
+  schedule_appointment: [
+    /\b(schedule|book|appointment|meeting|calendar)\b/i,
+    /\b(calendly|acuity|booking|slot|availability)\b/i,
+    /\b(reschedule|cancel.?meeting|time.?slot)\b/i,
+    /\b(consultation|call|session).*(book|schedule)\b/i,
+  ],
+  handle_review: [
+    /\b(review|rating|feedback|testimonial)\b/i,
+    /\b(google.?review|yelp|trustpilot|tripadvisor)\b/i,
+    /\b(respond.?to.?review|review.?management)\b/i,
+    /\b(reputation|star.?rating|nps|csat)\b/i,
+  ],
+  create_invoice: [
+    /\b(invoice|bill|receipt|statement)\b/i,
+    /\b(create.?invoice|send.?invoice|generate.?invoice)\b/i,
+    /\b(xero|quickbooks|freshbooks|accounting)\b/i,
+    /\b(overdue|outstanding|payment.?due)\b/i,
+  ],
+  create_support_ticket: [
+    /\b(support|ticket|issue|complaint|help.?desk)\b/i,
+    /\b(customer.?service|support.?request|bug.?report)\b/i,
+    /\b(zendesk|intercom|freshdesk|helpscout)\b/i,
+    /\b(escalate|resolve|close.?ticket|priority)\b/i,
+  ],
+  track_website_lead: [
+    /\b(website.?lead|form.?submission|contact.?form)\b/i,
+    /\b(lead.?capture|landing.?page|lead.?magnet)\b/i,
+    /\b(website.?visitor|page.?visit|conversion)\b/i,
+    /\b(typeform|jotform|webflow|wordpress).*(form|lead)\b/i,
+  ],
+  monitor_website_uptime: [
+    /\b(uptime|downtime|site.?monitor|website.?health)\b/i,
+    /\b(pingdom|uptime.?robot|status.?page)\b/i,
+    /\b(site.?speed|page.?load|lighthouse|core.?web)\b/i,
+    /\b(ssl|certificate|domain.?expir)\b/i,
+  ],
+  process_webhook: [
+    /\b(webhook|callback|notification|event.?trigger)\b/i,
+    /\b(zapier|make|n8n|ifttt|automation)\b/i,
+    /\b(incoming.?webhook|webhook.?endpoint)\b/i,
+    /\b(api.?event|event.?handler|webhook.?receiver)\b/i,
+  ],
+  enrich_contact: [
+    /\b(enrich|augment|enhance).*(contact|lead|profile)\b/i,
+    /\b(contact.?enrich|lead.?enrich|data.?enrich)\b/i,
+    /\b(clearbit|apollo|zoominfo|hunter)\b/i,
+    /\b(company.?info|job.?title|social.?profile).*(find|lookup|enrich)\b/i,
+  ],
+  generate_proposal: [
+    /\b(proposal|quote|estimate|pitch)\b/i,
+    /\b(create.?proposal|generate.?proposal|draft.?proposal)\b/i,
+    /\b(scope.?of.?work|sow|project.?brief)\b/i,
+    /\b(pricing|quotation|offer|bid)\b/i,
+  ],
   unknown: [],
 };
 
@@ -406,6 +476,16 @@ export function classifyIntent(prompt: string): { intent: AgentIntent; confidenc
     social_inbox: 0,
     pre_client: 0,
     cognitive_twin: 0,
+    process_payment: 0,
+    schedule_appointment: 0,
+    handle_review: 0,
+    create_invoice: 0,
+    create_support_ticket: 0,
+    track_website_lead: 0,
+    monitor_website_uptime: 0,
+    process_webhook: 0,
+    enrich_contact: 0,
+    generate_proposal: 0,
     unknown: 0,
   };
 
@@ -663,6 +743,89 @@ export async function generatePlan(request: OrchestratorRequest): Promise<Orches
       );
       break;
 
+    case 'process_payment':
+      steps.push(
+        { agent: 'process_payment', action: 'validate_payment_details', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'process_payment', action: 'create_payment_intent', inputs: {}, dependsOn: [0] },
+        { agent: 'process_payment', action: 'confirm_payment', inputs: {}, dependsOn: [1] }
+      );
+      break;
+
+    case 'schedule_appointment':
+      steps.push(
+        { agent: 'schedule_appointment', action: 'check_availability', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'schedule_appointment', action: 'create_booking', inputs: {}, dependsOn: [0] },
+        { agent: 'schedule_appointment', action: 'send_confirmation', inputs: {}, dependsOn: [1] }
+      );
+      break;
+
+    case 'handle_review':
+      steps.push(
+        { agent: 'handle_review', action: 'fetch_review', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'handle_review', action: 'analyze_sentiment', inputs: {}, dependsOn: [0] },
+        { agent: 'handle_review', action: 'draft_response', inputs: {}, dependsOn: [1] }
+      );
+      break;
+
+    case 'create_invoice':
+      steps.push(
+        { agent: 'create_invoice', action: 'gather_line_items', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'create_invoice', action: 'generate_invoice', inputs: {}, dependsOn: [0] },
+        { agent: 'create_invoice', action: 'send_invoice', inputs: {}, dependsOn: [1] }
+      );
+      break;
+
+    case 'create_support_ticket':
+      steps.push(
+        { agent: 'create_support_ticket', action: 'classify_issue', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'create_support_ticket', action: 'create_ticket', inputs: {}, dependsOn: [0] },
+        { agent: 'create_support_ticket', action: 'assign_ticket', inputs: {}, dependsOn: [1] }
+      );
+      break;
+
+    case 'track_website_lead':
+      steps.push(
+        { agent: 'track_website_lead', action: 'capture_lead_data', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'track_website_lead', action: 'enrich_lead', inputs: {}, dependsOn: [0] },
+        { agent: 'track_website_lead', action: 'assign_score', inputs: {}, dependsOn: [1] },
+        { agent: 'track_website_lead', action: 'trigger_workflow', inputs: {}, dependsOn: [2] }
+      );
+      break;
+
+    case 'monitor_website_uptime':
+      steps.push(
+        { agent: 'monitor_website_uptime', action: 'check_status', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'monitor_website_uptime', action: 'measure_performance', inputs: {}, dependsOn: [0] },
+        { agent: 'monitor_website_uptime', action: 'generate_report', inputs: {}, dependsOn: [1] }
+      );
+      break;
+
+    case 'process_webhook':
+      steps.push(
+        { agent: 'process_webhook', action: 'validate_payload', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'process_webhook', action: 'route_event', inputs: {}, dependsOn: [0] },
+        { agent: 'process_webhook', action: 'execute_action', inputs: {}, dependsOn: [1] }
+      );
+      break;
+
+    case 'enrich_contact':
+      steps.push(
+        { agent: 'enrich_contact', action: 'lookup_contact', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'enrich_contact', action: 'fetch_enrichment_data', inputs: {}, dependsOn: [0] },
+        { agent: 'enrich_contact', action: 'merge_data', inputs: {}, dependsOn: [1] },
+        { agent: 'enrich_contact', action: 'update_score', inputs: {}, dependsOn: [2] }
+      );
+      break;
+
+    case 'generate_proposal':
+      steps.push(
+        { agent: 'generate_proposal', action: 'gather_requirements', inputs: { workspaceId: request.workspaceId, prompt: request.userPrompt } },
+        { agent: 'generate_proposal', action: 'analyze_client_history', inputs: {}, dependsOn: [0] },
+        { agent: 'generate_proposal', action: 'draft_proposal', inputs: {}, dependsOn: [1] },
+        { agent: 'generate_proposal', action: 'format_document', inputs: {}, dependsOn: [2] }
+      );
+      break;
+
     default:
       steps.push({ agent: 'analysis', action: 'clarify_intent', inputs: { prompt: request.userPrompt } });
   }
@@ -807,6 +970,17 @@ async function executeStep(
       return executePreClientStep(step, request, context);
     case 'cognitive_twin':
       return executeCognitiveTwinStep(step, request, context);
+    case 'process_payment':
+    case 'schedule_appointment':
+    case 'handle_review':
+    case 'create_invoice':
+    case 'create_support_ticket':
+    case 'track_website_lead':
+    case 'monitor_website_uptime':
+    case 'process_webhook':
+    case 'enrich_contact':
+    case 'generate_proposal':
+      return executeBusinessCRMStep(step, request, context);
     default:
       throw new Error(`Unknown agent: ${step.agent}`);
   }
@@ -4637,4 +4811,60 @@ export async function handleCompilePortfolioSynopsis(): Promise<{
 }> {
   const { getPortfolioStats } = await import('@/lib/founder/businessVaultService');
   return await getPortfolioStats();
+}
+
+// ============================================================================
+// BUSINESS CRM STEP EXECUTOR
+// ============================================================================
+
+/**
+ * Execute business CRM intent steps (payment, booking, reviews, invoicing,
+ * support, lead tracking, uptime, webhooks, enrichment, proposals).
+ * These are placeholder implementations that return structured responses
+ * ready for integration with external services (Stripe, Calendly, etc.).
+ */
+async function executeBusinessCRMStep(
+  step: PlanStep,
+  request: OrchestratorRequest,
+  context: Record<string, unknown>
+): Promise<AgentOutput> {
+  const agent = step.agent;
+  const action = step.action;
+  const workspaceId = request.workspaceId;
+
+  // All business CRM steps return structured advisory outputs
+  // Actual integrations are wired up as they become available
+  return {
+    agent,
+    action,
+    result: {
+      status: 'advisory',
+      workspaceId,
+      intent: agent,
+      step: action,
+      message: `[${agent}] Step "${action}" requires external integration. ` +
+        `The orchestrator has classified this intent and structured the workflow. ` +
+        `Connect the appropriate service to enable execution.`,
+      requiredIntegration: getRequiredIntegration(agent),
+      prompt: request.userPrompt,
+      context,
+    },
+    confidence: 0.7,
+  };
+}
+
+function getRequiredIntegration(agent: string): string {
+  const integrationMap: Record<string, string> = {
+    process_payment: 'Stripe (already connected)',
+    schedule_appointment: 'Calendly / Acuity Scheduling',
+    handle_review: 'Google Business / Trustpilot API',
+    create_invoice: 'Xero (already connected) / QuickBooks',
+    create_support_ticket: 'Zendesk / Intercom / Freshdesk',
+    track_website_lead: 'Webhook receiver + form provider',
+    monitor_website_uptime: 'UptimeRobot / Pingdom',
+    process_webhook: 'Generic webhook receiver endpoint',
+    enrich_contact: 'Clearbit / Apollo / Hunter.io',
+    generate_proposal: 'Content Agent (Extended Thinking)',
+  };
+  return integrationMap[agent] || 'External service integration required';
 }

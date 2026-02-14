@@ -378,10 +378,10 @@ export class CostTracker {
       // Anthropic
       'claude-opus-4': { prompt: 15, completion: 75 },
       'claude-sonnet-4-5': { prompt: 3, completion: 15 },
-      'claude-haiku-4-5': { prompt: 0.25, completion: 1.25 },
+      'claude-haiku-4-5': { prompt: 0.80, completion: 4 },
 
       // OpenRouter (averaged - actual may vary)
-      'openrouter-claude-3.5-sonnet': { prompt: 3, completion: 15 },
+      'openrouter-claude-sonnet-4-5': { prompt: 3, completion: 15 },
       'openrouter-gpt-4-turbo': { prompt: 10, completion: 30 },
       'openrouter-llama-3-70b': { prompt: 0.5, completion: 0.5 },
 

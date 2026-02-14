@@ -2,7 +2,7 @@
 
 **Version**: 2.0.0
 **Last Updated**: 2026-01-15
-**Status**: ✅ Operational - 7 Active Agents
+**Status**: ✅ Operational - 15 Active Agents
 
 ---
 
@@ -20,7 +20,15 @@ This registry is the **single source of truth** for all operational agents in Un
 | Frontend Specialist | `frontend` | 2.0.0 | ✅ Active | UI/component work, React, Next.js |
 | Backend Specialist | `backend` | 2.0.0 | ✅ Active | API routes, database, Supabase |
 | SEO Intelligence | `seo` | 2.0.0 | ✅ Active | SEO research, Perplexity Sonar |
-| Founder OS | `founder-os` | 2.0.0 | ✅ Active | Founder Intelligence System (8 sub-agents) |
+| Founder OS | `founder-os` | 2.0.0 | ✅ Active | Founder Intelligence System |
+| AI Phill | `ai-phill` | 1.0.0 | ✅ Active | Strategic advisor, Socratic dialogue |
+| SEO Leak | `seo-leak` | 1.0.0 | ✅ Active | Google/DOJ leak-informed SEO analysis |
+| Cognitive Twin | `cognitive-twin` | 1.0.0 | ✅ Active | Business health monitoring, decision sim |
+| Social Inbox | `social-inbox` | 1.0.0 | ✅ Active | Unified social media inbox |
+| Search Suite | `search-suite` | 1.0.0 | ✅ Active | Keyword tracking, SERP monitoring |
+| Pre-Client Identity | `pre-client-identity` | 1.0.0 | ✅ Active | Pre-sales intelligence |
+| WhatsApp Intelligence | `whatsapp-intelligence` | 1.0.0 | ✅ Active | WhatsApp message analysis |
+| Boost Bump | `boost-bump` | 1.0.0 | ✅ Active | White-hat SEO boost orchestration |
 
 ---
 
@@ -314,7 +322,7 @@ User Request
 
 ## Status & Metrics
 
-**Total Agents**: 7 operational (+ 8 sub-agents in Founder OS)
+**Total Agents**: 15 operational
 **Total LOC**: 16,116 lines of production code
 **Test Coverage**: 235+ tests (100% pass rate)
 **Production Readiness**: 65% (targeting 85-90% with Stage 4)
@@ -366,5 +374,111 @@ status: active
 
 ---
 
+## Workforce Engine Integration
+
+Agents in this registry are managed at runtime by the Workforce Engine, which
+provides lifecycle management, skill loading, hooks, memory, and workflow
+orchestration.
+
+**Implementation**: `src/lib/agents/workforce/`
+
+### Runtime Architecture
+
+```
+initializeWorkforce(workspaceId)
+  ├─→ Protocol v1.0 init (Agent Card validation, escalation rules)
+  ├─→ Skill index build (parse .claude/skills/ SKILL.md files)
+  ├─→ Default hooks (safety, audit, permission, rate-limit, token-budget)
+  └─→ Workforce registry (capability index from agents × skills)
+```
+
+### Agent Lifecycle States
+
+Each agent transitions through managed states:
+
+```
+offline → idle → active → busy → idle (cycle)
+              ↘ degraded → maintenance → idle
+```
+
+State transitions are validated against a strict matrix in
+`agent-lifecycle.ts`. Invalid transitions throw errors.
+
+### Per-Agent Execution Flow
+
+When the Workforce Orchestrator assigns a workstream to an agent:
+
+1. **Spawn** — `lifecycleManager.spawn(agentId)` loads Agent Card + Priority 1 skills
+2. **Pre-hooks** — Safety, permission, rate-limit, token-budget checks
+3. **Memory** — Load agent context from persistent memory (importance-weighted)
+4. **Skills** — Load task-matched skills via keyword matching
+5. **Execute** — Delegate to existing orchestrator-router / agentPlanner
+6. **Post-hooks** — Audit logging
+7. **Verify** — Output quality check via Protocol v1.0 verification
+8. **Store** — Persist results in agent memory for future context
+9. **Metrics** — Update execution time, success rate, token usage
+
+### Key Modules
+
+| Module | Purpose |
+|--------|---------|
+| `workforce/types.ts` | Shared types (skills, hooks, workflows, memory) |
+| `workforce/skill-loader.ts` | Parse SKILL.md files, resolve dependencies |
+| `workforce/hooks.ts` | 5 built-in lifecycle hooks (safety, audit, permission, rate-limit, token-budget) |
+| `workforce/enhanced-hooks.ts` | 5 enhanced hooks (PII redaction, brand voice, critic review, draft tracking, health monitor) |
+| `workforce/memory.ts` | Persistent memory (workspace/agent/session scopes) |
+| `workforce/agent-lifecycle.ts` | Agent spawning, state management, permissions |
+| `workforce/registry.ts` | Unified registry combining agents + skills + hooks |
+| `workforce/orchestrator.ts` | Workflow coordinator with parallel workstreams |
+| `workforce/index.ts` | Barrel export + `initializeWorkforce()` |
+
+### Usage
+
+```typescript
+import {
+  initializeWorkforce,
+  workforceOrchestrator,
+} from '@/lib/agents/workforce';
+
+// At startup
+const status = await initializeWorkforce(workspaceId);
+
+// Execute a task
+const result = await workforceOrchestrator.run({
+  workspaceId,
+  objective: 'Process incoming emails and update CRM contacts',
+});
+```
+
+### Enhanced Capabilities (Phase 2.5)
+
+| Capability | Module | Purpose |
+|------------|--------|---------|
+| PII Redaction | `security/pii-redactor.ts` | Detect/redact PII with reversible tokenization + AES-256-GCM field encryption |
+| Critic Agent | `agents/critic-agent.ts` | 6-dimension content quality review (Haiku fast → Sonnet escalation) |
+| Proactive Monitor | `agents/proactive-monitor.ts` | Agent performance, system health, dependency scanning, anomaly detection |
+| Draft Tracker | `agents/draft-tracker.ts` | Content lifecycle (draft → critic → review → approved → published) |
+| Brand Voice Engine | `brands/brand-voice-engine.ts` | RAG-style brand voice profiles, prompt enrichment, voice validation |
+
+### Hook Pipeline (10 hooks, auto-registered at initialization)
+
+```
+Pre-execution:
+  1. Safety Validator     → Block dangerous commands
+  2. Permission Checker   → Validate against Agent Card
+  3. Rate Limiter         → Sliding window enforcement
+  4. Token Budget         → Cumulative token tracking
+  5. PII Redactor         → Strip PII before external calls
+  6. Brand Voice Enricher → Inject voice context for content agents
+
+Post-execution:
+  10. Critic Reviewer     → Auto-review generated content
+  15. Draft Tracker       → Route content through draft pipeline
+  90. Health Monitor      → Record metrics for anomaly detection
+  100. Audit Logger       → Log all actions to event system
+```
+
+---
+
 **This is the canonical agent registry. Do NOT create duplicate agent definitions outside of this registry.**
-**Last Updated**: 2026-01-15
+**Last Updated**: 2026-02-14

@@ -9,13 +9,13 @@ import { getLinearClient } from '@/lib/integrations/linear/linearClient';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
     // TODO: Add authentication check
     // const { userId } = await authenticateRequest(request);
 
-    const { projectId } = params;
+    const { projectId } = await params;
 
     if (!projectId) {
       return NextResponse.json(

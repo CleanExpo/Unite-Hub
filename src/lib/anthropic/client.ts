@@ -78,6 +78,9 @@ class AnthropicClientManager {
         apiKey,
         maxRetries: 0, // We handle retries ourselves
         timeout: 60000, // 60 second timeout
+        defaultHeaders: {
+          "anthropic-beta": "prompt-caching-2024-07-31,pdfs-2024-09-25,extended-thinking-2025-01-16",
+        },
       });
 
       console.log('✅ Anthropic client initialized successfully');

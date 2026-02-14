@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getSupabaseServer } from "@/lib/supabase";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
@@ -12,10 +13,6 @@ import { z } from "zod";
  */
 
 const UUIDSchema = z.string().uuid("Invalid UUID format");
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
 
 export async function POST(
   req: NextRequest,
@@ -148,7 +145,7 @@ Create a fresh version that's more engaging and effective.`;
     // Call Claude AI
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-sonnet-4-5-20250929",
+      model: ANTHROPIC_MODELS.SONNET_4_5,
       max_tokens: 2000,
       system: systemPrompt,
       messages: [{ role: "user", content: userPrompt }],

@@ -15,6 +15,7 @@ export {
   YouTubeClient,
   TikTokClient,
   LinkedInClient,
+  RedditClient,
   XClient,
   type PlatformClientConfig,
   type FetchMessagesOptions,
@@ -44,3 +45,17 @@ export {
   type SendReplyOptions as QueueReplyOptions,
   type ReplyResult,
 } from './socialReplyService';
+
+// Social Posting Service
+export {
+  socialPostingService,
+  SocialPostingService,
+  formatForPlatform,
+  formatForAllPlatforms,
+  type SocialPostInput,
+  type SocialPostResult,
+  type FormattedPost,
+  type PlatformPostOptions,
+  type PostStatus,
+  type PostMedia,
+} from './socialPostingService';

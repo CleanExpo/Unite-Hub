@@ -3,9 +3,10 @@ import { getContentAsset, updateContentAsset } from '@/lib/aido/database/content
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
 
@@ -25,7 +26,7 @@ export async function GET(
       return NextResponse.json({ error: 'Missing workspaceId' }, { status: 400 });
     }
 
-    const asset = await getContentAsset(params.id, workspaceId);
+    const asset = await getContentAsset(id, workspaceId);
 
     if (!asset) {
       return NextResponse.json({ error: 'Content asset not found' }, { status: 404 });
@@ -47,9 +48,10 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
 
@@ -83,7 +85,7 @@ export async function PATCH(
       updates.lastReviewedAt = new Date().toISOString();
     }
 
-    const updated = await updateContentAsset(params.id, workspaceId, updates);
+    const updated = await updateContentAsset(id, workspaceId, updates);
 
     return NextResponse.json({
       success: true,

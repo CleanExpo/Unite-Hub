@@ -1,12 +1,20 @@
 /**
  * Brand Registry
- * Central registry of all brands under Unite-Hub Nexus
+ * Central registry of all businesses managed by Unite-Hub
  *
- * This defines the brands, their categories, and metadata used by:
- * - Founder Ops Hub (task assignment per brand)
- * - Topic discovery (identifying relevant topics per brand)
- * - Content builder (multi-channel blueprints per brand)
- * - Cross-linking rules (when to link between brands)
+ * This defines the businesses, their categories, and metadata used by:
+ * - Founder OS Hub (task assignment per business)
+ * - Topic discovery (identifying relevant topics per business)
+ * - Content builder (multi-channel blueprints per business)
+ * - Cross-linking rules (when to link between businesses)
+ *
+ * Managed Businesses:
+ * 1. Synthex - AI Marketing Agency (separate app, managed from here)
+ * 2. RestoreAssist - Restoration Management Software
+ * 3. CARSI - Cleaning & Restoration Science Institute
+ * 4. Disaster Recovery - Emergency Restoration Services
+ * 5. NRPG - National Restoration Professionals Group
+ * 6. ATO Audit - Tax Audit & Compliance Services
  */
 
 export const brandRegistry = [
@@ -14,20 +22,30 @@ export const brandRegistry = [
     id: 'unite_hub',
     slug: 'unite-hub',
     name: 'Unite-Hub',
-    domain: 'https://unite-hub.io',
-    category: 'CRM Platform',
-    tagline: 'Your daily business command center',
-    description: 'AI-powered CRM and automation platform for trade businesses',
+    domain: 'https://unite-hub.com',
+    category: 'Business Hub',
+    tagline: 'Your Business. One Hub.',
+    description: 'AI-powered Business Hub for managing all businesses from one intelligent dashboard',
     status: 'active',
   },
   {
-    id: 'disaster_recovery_au',
-    slug: 'disaster-recovery',
-    name: 'Disaster Recovery Australia',
-    domain: 'https://www.disasterrecovery.com.au',
-    category: 'Restoration Services',
-    tagline: '24/7 Water, Fire & Mould Specialists',
-    description: 'Emergency restoration services for water, fire, and mould damage',
+    id: 'synthex',
+    slug: 'synthex',
+    name: 'Synthex',
+    domain: 'https://synthex.social',
+    category: 'AI Marketing Agency',
+    tagline: 'Done-for-you marketing using AI',
+    description: 'Performance marketing agency powered by AI (separate application)',
+    status: 'active',
+  },
+  {
+    id: 'restore_assist',
+    slug: 'restore-assist',
+    name: 'RestoreAssist',
+    domain: 'https://restoreassist.com.au',
+    category: 'Restoration Software',
+    tagline: 'Restoration Management Made Simple',
+    description: 'Restoration job management software for water, fire, and mould remediation businesses',
     status: 'active',
   },
   {
@@ -41,13 +59,13 @@ export const brandRegistry = [
     status: 'active',
   },
   {
-    id: 'synthex',
-    slug: 'synthex',
-    name: 'Synthex',
-    domain: 'https://synthex.social',
-    category: 'Marketing Agency',
-    tagline: 'Done-for-you marketing using AI',
-    description: 'Performance marketing agency powered by Unite-Hub',
+    id: 'disaster_recovery_au',
+    slug: 'disaster-recovery',
+    name: 'Disaster Recovery',
+    domain: 'https://www.disasterrecovery.com.au',
+    category: 'Restoration Services',
+    tagline: '24/7 Water, Fire & Mould Specialists',
+    description: 'Emergency restoration services for water, fire, and mould damage',
     status: 'active',
   },
   {
@@ -61,13 +79,13 @@ export const brandRegistry = [
     status: 'active',
   },
   {
-    id: 'unite_group',
-    slug: 'unite-group',
-    name: 'Unite-Group',
-    domain: 'https://unite-group.in',
-    category: 'Holding Company',
-    tagline: 'Technology + AI + Industry Operations',
-    description: 'Umbrella brand for all SaaS, agency, and training products',
+    id: 'ato_audit',
+    slug: 'ato-audit',
+    name: 'ATO Audit',
+    domain: 'https://atoaudit.com.au',
+    category: 'Tax & Compliance',
+    tagline: 'Tax Audit & Compliance Services',
+    description: 'BAS automation, ATO compliance, and tax audit management services',
     status: 'active',
   },
 ] as const;
@@ -90,10 +108,17 @@ export function getBrandBySlug(slug: BrandSlug) {
 }
 
 /**
- * Get all active brands
+ * Get all active brands (businesses)
  */
 export function getActiveBrands() {
   return brandRegistry.filter(b => b.status === 'active');
+}
+
+/**
+ * Get managed businesses (excludes Unite-Hub itself)
+ */
+export function getManagedBusinesses() {
+  return brandRegistry.filter(b => b.status === 'active' && b.id !== 'unite_hub');
 }
 
 /**

@@ -14,14 +14,15 @@ import { getLinearClient } from '@/lib/integrations/linear/linearClient';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
     // TODO: Add authentication check
     // const { userId } = await authenticateRequest(request);
 
+    const { projectId } = await params;
     const linearClient = getLinearClient();
-    const project = await linearClient.getProject(params.projectId);
+    const project = await linearClient.getProject(projectId);
 
     if (!project) {
       return NextResponse.json(
@@ -57,12 +58,13 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
     // TODO: Add authentication check
     // const { userId } = await authenticateRequest(request);
 
+    const { projectId } = await params;
     const body = await request.json();
     const { name, description, state, startDate, targetDate } = body;
 
@@ -79,7 +81,7 @@ export async function PATCH(
     }
 
     const linearClient = getLinearClient();
-    const project = await linearClient.updateProject(params.projectId, {
+    const project = await linearClient.updateProject(projectId, {
       name,
       description,
       state,

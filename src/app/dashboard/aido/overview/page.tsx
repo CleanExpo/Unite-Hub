@@ -71,7 +71,7 @@ export default function AIDOOverviewPage() {
           immunePercentage: parseFloat(contentData.stats.algorithmicImmunity.percentage),
           activeSignals: signalsData.stats.total,
           criticalSignals: signalsData.stats.bySeverity.critical || 0,
-          pendingRecommendations: 0 // TODO: Fetch from recommendations API
+          pendingRecommendations: signalsData.stats.byStatus?.pending || 0
         });
       }
     } catch (error) {

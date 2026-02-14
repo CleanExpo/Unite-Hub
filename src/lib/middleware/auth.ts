@@ -18,10 +18,10 @@ export interface AuthenticatedRequest extends NextRequest {
  * Middleware to require staff authentication
  * Usage: Wrap API route handlers with this middleware
  */
-export async function withStaffAuth(
-  handler: (req: AuthenticatedRequest) => Promise<Response>
+export function withStaffAuth(
+  handler: (req: AuthenticatedRequest, context?: any) => Promise<Response>
 ) {
-  return async (req: NextRequest) => {
+  return async (req: NextRequest, context?: any) => {
     try {
       // Get authorization header
       const authHeader = req.headers.get('authorization');
@@ -75,7 +75,7 @@ export async function withStaffAuth(
       };
 
       // Call the actual handler
-      return await handler(authenticatedReq);
+      return await handler(authenticatedReq, context);
     } catch (error) {
       console.error('Auth middleware error:', error);
       return NextResponse.json(
@@ -89,10 +89,10 @@ export async function withStaffAuth(
 /**
  * Middleware to require client authentication
  */
-export async function withClientAuth(
-  handler: (req: AuthenticatedRequest) => Promise<Response>
+export function withClientAuth(
+  handler: (req: AuthenticatedRequest, context?: any) => Promise<Response>
 ) {
-  return async (req: NextRequest) => {
+  return async (req: NextRequest, context?: any) => {
     try {
       const authHeader = req.headers.get('authorization');
 
@@ -135,7 +135,7 @@ export async function withClientAuth(
         role: 'client',
       };
 
-      return await handler(authenticatedReq);
+      return await handler(authenticatedReq, context);
     } catch (error) {
       console.error('Client auth middleware error:', error);
       return NextResponse.json(

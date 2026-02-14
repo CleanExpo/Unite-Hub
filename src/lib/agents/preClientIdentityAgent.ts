@@ -8,7 +8,8 @@
  * @module agents/preClientIdentityAgent
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { db } from '@/lib/db';
 import { getSupabaseServer } from '@/lib/supabase';
@@ -26,12 +27,7 @@ import {
 // Types & Interfaces
 // ============================================================================
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  defaultHeaders: {
-    'anthropic-beta': 'prompt-caching-2024-07-31',
-  },
-});
+// Using centralized Anthropic client from @/lib/anthropic/client
 
 export interface PreClientProfile {
   id: string;
@@ -441,7 +437,7 @@ Provide health score and recommendations.`;
   try {
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
+        model: ANTHROPIC_MODELS.SONNET_4_5,
         max_tokens: 1500,
         system: [
           {

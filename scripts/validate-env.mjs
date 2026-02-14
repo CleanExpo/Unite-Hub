@@ -42,6 +42,21 @@ const ENV_VARIABLES = [
   { name: "STRIPE_SECRET_KEY", required: false, example: "sk_test_..." },
   { name: "STRIPE_PRICE_ID_STARTER", required: false, example: "price_..." },
   { name: "STRIPE_PRICE_ID_PROFESSIONAL", required: false, example: "price_..." },
+
+  // OpenRouter
+  { name: "OPENROUTER_API_KEY", required: false, example: "sk-or-v1-..." },
+
+  // Security
+  { name: "FIELD_ENCRYPTION_KEY", required: false, example: "64-char hex string (node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\")" },
+
+  // Social Media Connectors
+  { name: "META_APP_ID", required: false, example: "123456789012345" },
+  { name: "META_APP_SECRET", required: false, example: "abcdef0123456789..." },
+  { name: "LINKEDIN_CLIENT_ID", required: false, example: "77abc12345" },
+  { name: "LINKEDIN_CLIENT_SECRET", required: false, example: "abcDEF123" },
+  { name: "REDDIT_CLIENT_ID", required: false, example: "abc123DEF456" },
+  { name: "REDDIT_CLIENT_SECRET", required: false, example: "abc123DEF456ghi789" },
+  { name: "YOUTUBE_CHANNEL_ID", required: false, example: "UC..." },
 ];
 
 let hasErrors = false;

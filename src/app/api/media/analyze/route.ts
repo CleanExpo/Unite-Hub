@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
+import { withRateLimit, aiRateLimit } from "@/lib/security/rate-limiter";
 
 /**
  * POST /api/media/analyze
@@ -14,6 +16,9 @@ import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
  */
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit check (AI endpoint — 30 req/min)
+    const rateLimited = withRateLimit(req, aiRateLimit);
+    if (rateLimited) return rateLimited;
     // ========================================================================
     // 1. AUTHENTICATION
     // ========================================================================
@@ -131,13 +136,6 @@ export async function POST(req: NextRequest) {
     // ========================================================================
     // 6. ANALYZE WITH CLAUDE AI (Opus 4 + Extended Thinking)
     // ========================================================================
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-      defaultHeaders: {
-        "anthropic-beta": "prompt-caching-2024-07-31", // Enable prompt caching
-      },
-    });
-
     const systemPrompt = `You are an AI media analysis expert. Analyze multimedia content and extract actionable insights.
 
 Your analysis should include:
@@ -174,7 +172,7 @@ Format your response as valid JSON with these exact keys:
     try {
       const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: "claude-opus-4-5-20251101",
+        model: ANTHROPIC_MODELS.OPUS_4_5,
         max_tokens: 4000,
         thinking: {
           type: "enabled",
@@ -254,7 +252,7 @@ Format your response as valid JSON with these exact keys:
       .update({
         ai_analysis: analysis,
         ai_analyzed_at: new Date().toISOString(),
-        ai_model_used: "claude-opus-4-5-20251101",
+        ai_model_used: ANTHROPIC_MODELS.OPUS_4_5,
         status: "completed", // Final status
         progress: 100,
       })
@@ -284,7 +282,7 @@ Format your response as valid JSON with these exact keys:
         mediaId,
         filename: mediaFile.original_filename,
         file_type: mediaFile.file_type,
-        model: "claude-opus-4-5-20251101",
+        model: ANTHROPIC_MODELS.OPUS_4_5,
         analysis_summary: analysis.summary,
       },
     });

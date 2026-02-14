@@ -15,6 +15,8 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { anthropic as centralizedAnthropicClient } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { supabaseAdmin } from '@/lib/supabase';
 
@@ -179,17 +181,8 @@ export class FounderOsAgent {
   private thinkingBudget: number;
 
   constructor(config: FounderOsAgentConfig) {
-    const apiKey = config.anthropicApiKey || process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      throw new Error('[FounderOsAgent] ANTHROPIC_API_KEY is not configured');
-    }
-
-    this.anthropic = new Anthropic({
-      apiKey,
-      defaultHeaders: {
-        'anthropic-beta': 'prompt-caching-2024-07-31',
-      },
-    });
+    // Use centralized Anthropic client (cast needed since it's a Proxy)
+    this.anthropic = centralizedAnthropicClient as unknown as Anthropic;
 
     this.governanceMode = config.governanceMode;
     this.enableExtendedThinking = config.enableExtendedThinking ?? true;
@@ -218,19 +211,19 @@ export class FounderOsAgent {
     switch (taskComplexity) {
       case 'high':
         return {
-          model: 'claude-opus-4-5-20251101',
+          model: ANTHROPIC_MODELS.OPUS_4_5,
           maxTokens: 8192,
           useThinking: this.enableExtendedThinking,
         };
       case 'medium':
         return {
-          model: 'claude-sonnet-4-5-20250929',
+          model: ANTHROPIC_MODELS.SONNET_4_5,
           maxTokens: 4096,
           useThinking: false,
         };
       case 'low':
         return {
-          model: 'claude-haiku-4-5-20251001',
+          model: ANTHROPIC_MODELS.HAIKU_4_5,
           maxTokens: 2048,
           useThinking: false,
         };

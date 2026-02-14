@@ -84,6 +84,42 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // If no planId or runId, return aggregate stats for the workspace
+    if (!planId && !runId) {
+      const [plansResult, runsResult] = await Promise.all([
+        supabase
+          .from("agent_execution_plans")
+          .select("id, status, objective, created_at, complexity_score, confidence_score, risk_score")
+          .eq("workspace_id", workspaceId)
+          .order("created_at", { ascending: false })
+          .limit(50),
+        supabase
+          .from("agent_runs")
+          .select("id, status, plan_id, total_steps, completed_steps, failed_steps, skipped_steps, created_at, completed_at")
+          .eq("workspace_id", workspaceId)
+          .order("created_at", { ascending: false })
+          .limit(50),
+      ]);
+
+      const plans = plansResult.data || [];
+      const runs = runsResult.data || [];
+
+      return NextResponse.json({
+        success: true,
+        workspace_id: workspaceId,
+        aggregate: {
+          totalPlans: plans.length,
+          pendingApproval: plans.filter((p) => p.status === "pending_approval").length,
+          runningExecutions: runs.filter((r) => r.status === "running").length,
+          completedPlans: plans.filter((p) => p.status === "completed").length,
+          approvedPlans: plans.filter((p) => p.status === "approved").length,
+          failedPlans: plans.filter((p) => p.status === "failed").length,
+        },
+        recentPlans: plans.slice(0, 10),
+        recentRuns: runs.slice(0, 10),
+      });
+    }
+
     // Get plan details if planId provided
     let planDetails = null;
     if (planId) {

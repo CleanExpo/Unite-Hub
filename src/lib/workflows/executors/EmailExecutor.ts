@@ -9,8 +9,8 @@
 import { createApiLogger } from '@/lib/logger';
 import { VisualNode, ExecutionContext } from '@/lib/models/social-drip-campaign';
 import { NodeExecutor, NodeExecutionResult } from './NodeExecutor';
-import { sendEmail } from '@/lib/email/emailService';
-import { generatePersonalizedContent } from '@/lib/ai/personalization';
+import { sendEmail } from '@/lib/email/email-service';
+import { generatePersonalizedContent } from '@/lib/agents/content-personalization';
 
 const logger = createApiLogger({ service: 'EmailExecutor' });
 

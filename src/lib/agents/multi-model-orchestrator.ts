@@ -3,16 +3,15 @@
  * Coordinates between Claude Sonnet 4.5 (200k context) and Sherlock Think Alpha (1.84M context)
  */
 
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getOpenRouterClient } from "../openrouter";
 import { glob } from "glob";
 import { readFile } from "fs/promises";
 import { join } from "path";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Using centralized Anthropic client from @/lib/anthropic/client
 
 interface ModelCapabilities {
   name: string;
@@ -23,7 +22,7 @@ interface ModelCapabilities {
 
 const MODELS: Record<string, ModelCapabilities> = {
   claude: {
-    name: "claude-sonnet-4-5-20250929",
+    name: ANTHROPIC_MODELS.SONNET_4_5,
     contextWindow: 200_000,
     strengths: [
       "code generation",

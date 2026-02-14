@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,53 +14,86 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Settings, Users, BarChart3, Trash2, Briefcase } from "lucide-react";
+import { Plus, Settings, BarChart3, Briefcase, RefreshCw } from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ErrorState } from "@/components/ErrorState";
 import { EmptyState } from "@/components/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface Workspace {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+  created_at: string;
+  contacts: number;
+  campaigns: number;
+  members: number;
+}
 
 export default function WorkspacesPage() {
+  const { session, currentOrganization } = useAuth();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [workspaces] = useState([
-    {
-      id: 1,
-      name: "Duncan's Marketing",
-      description: "Main agency workspace",
-      clients: 12,
-      campaigns: 24,
-      members: 5,
-      status: "active",
-    },
-    {
-      id: 2,
-      name: "Tech StartUp Co",
-      description: "Client: Tech startup marketing",
-      clients: 3,
-      campaigns: 8,
-      members: 2,
-      status: "active",
-    },
-    {
-      id: 3,
-      name: "eCommerce Solutions",
-      description: "Client: E-commerce platform",
-      clients: 5,
-      campaigns: 12,
-      members: 3,
-      status: "active",
-    },
-  ]);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+
+  const orgId = currentOrganization?.org_id;
+
+  const fetchWorkspaces = useCallback(async () => {
+    if (!orgId || !session?.access_token) return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { supabaseBrowser } = await import("@/lib/supabase");
+
+      // Fetch workspaces for this org
+      const { data: wsData, error: wsError } = await supabaseBrowser
+        .from("workspaces")
+        .select("*")
+        .eq("org_id", orgId)
+        .order("created_at", { ascending: true });
+
+      if (wsError) throw wsError;
+
+      // For each workspace, get contact/campaign counts
+      const enriched: Workspace[] = await Promise.all(
+        (wsData || []).map(async (ws: any) => {
+          const [contactsRes, campaignsRes] = await Promise.allSettled([
+            supabaseBrowser.from("contacts").select("id", { count: "exact", head: true }).eq("workspace_id", ws.id),
+            supabaseBrowser.from("campaigns").select("id", { count: "exact", head: true }).eq("workspace_id", ws.id),
+          ]);
+
+          const contacts = contactsRes.status === "fulfilled" ? (contactsRes.value.count ?? 0) : 0;
+          const campaigns = campaignsRes.status === "fulfilled" ? (campaignsRes.value.count ?? 0) : 0;
+
+          return {
+            id: ws.id,
+            name: ws.name || "Untitled Workspace",
+            description: ws.description || "",
+            status: ws.status || "active",
+            created_at: ws.created_at,
+            contacts,
+            campaigns,
+            members: 0,
+          };
+        })
+      );
+
+      setWorkspaces(enriched);
+    } catch (err: any) {
+      console.error("Failed to fetch workspaces:", err);
+      setError(err.message || "Failed to load workspaces");
+    } finally {
+      setLoading(false);
+    }
+  }, [orgId, session?.access_token]);
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
+    if (orgId && session?.access_token) fetchWorkspaces();
+  }, [orgId, session?.access_token, fetchWorkspaces]);
 
   if (error) {
     return (
@@ -69,7 +102,7 @@ export default function WorkspacesPage() {
         <ErrorState
           title="Failed to Load Workspaces"
           message={error}
-          onRetry={() => setError(null)}
+          onRetry={fetchWorkspaces}
         />
       </div>
     );
@@ -79,7 +112,6 @@ export default function WorkspacesPage() {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         <Breadcrumbs items={[{ label: "Workspaces" }]} />
-
         <div className="flex justify-between items-center">
           <div className="space-y-2">
             <Skeleton className="h-10 w-48" />
@@ -87,7 +119,6 @@ export default function WorkspacesPage() {
           </div>
           <Skeleton className="h-10 w-40" />
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
             <Card key={i} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
@@ -109,11 +140,6 @@ export default function WorkspacesPage() {
                         <Skeleton className="h-8 w-12" />
                       </div>
                     ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Skeleton className="h-9 flex-1" />
-                    <Skeleton className="h-9 w-12" />
-                    <Skeleton className="h-9 w-12" />
                   </div>
                 </div>
               </CardContent>
@@ -151,39 +177,44 @@ export default function WorkspacesPage() {
           </h1>
           <p className="text-slate-400">Manage all your client accounts</p>
         </div>
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
-              <Plus className="w-4 h-4" />
-              New Workspace
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="bg-slate-800/95 backdrop-blur-sm border-slate-700/50">
-            <DialogHeader>
-              <DialogTitle className="text-white">Create New Workspace</DialogTitle>
-              <DialogDescription className="text-slate-400">Add a new client workspace</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label className="text-slate-300 mb-2 block">Workspace Name</Label>
-                <Input
-                  placeholder="Client name or project"
-                  className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
-                />
-              </div>
-              <div>
-                <Label className="text-slate-300 mb-2 block">Description</Label>
-                <Input
-                  placeholder="What is this workspace for?"
-                  className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
-                />
-              </div>
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50">
-                Create Workspace
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={fetchWorkspaces} className="text-slate-400 hover:text-white">
+            <RefreshCw className="w-4 h-4" />
+          </Button>
+          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
+                <Plus className="w-4 h-4" />
+                New Workspace
               </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent className="bg-slate-800/95 backdrop-blur-sm border-slate-700/50">
+              <DialogHeader>
+                <DialogTitle className="text-white">Create New Workspace</DialogTitle>
+                <DialogDescription className="text-slate-400">Add a new client workspace</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-slate-300 mb-2 block">Workspace Name</Label>
+                  <Input
+                    placeholder="Client name or project"
+                    className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+                  />
+                </div>
+                <div>
+                  <Label className="text-slate-300 mb-2 block">Description</Label>
+                  <Input
+                    placeholder="What is this workspace for?"
+                    className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+                  />
+                </div>
+                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50">
+                  Create Workspace
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {/* Workspaces Grid */}
@@ -201,11 +232,10 @@ export default function WorkspacesPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {/* Stats */}
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <p className="text-xs text-slate-400 mb-1">Contacts</p>
-                    <p className="text-2xl font-bold text-white">{workspace.clients}</p>
+                    <p className="text-2xl font-bold text-white">{workspace.contacts}</p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-400 mb-1">Campaigns</p>
@@ -217,7 +247,6 @@ export default function WorkspacesPage() {
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="flex gap-2">
                   <Button size="sm" className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
                     <BarChart3 className="w-4 h-4" />
@@ -229,13 +258,6 @@ export default function WorkspacesPage() {
                     className="border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50 gap-2"
                   >
                     <Settings className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-900/20 hover:border-red-500/50 gap-2"
-                  >
-                    <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
@@ -254,18 +276,21 @@ export default function WorkspacesPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <p className="text-slate-400 text-sm mb-2">Workspaces Used</p>
-              <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">3 / 5</div>
-              <p className="text-xs text-slate-500 mt-1">Upgrade for unlimited</p>
+              <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                {workspaces.length}
+              </div>
             </div>
             <div>
               <p className="text-slate-400 text-sm mb-2">Total Contacts</p>
-              <div className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">20 / 50,000</div>
-              <p className="text-xs text-slate-500 mt-1">Well within limit</p>
+              <div className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                {workspaces.reduce((sum, ws) => sum + ws.contacts, 0)}
+              </div>
             </div>
             <div>
-              <p className="text-slate-400 text-sm mb-2">Team Members</p>
-              <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">10 / Unlimited</div>
-              <p className="text-xs text-slate-500 mt-1">All included</p>
+              <p className="text-slate-400 text-sm mb-2">Total Campaigns</p>
+              <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                {workspaces.reduce((sum, ws) => sum + ws.campaigns, 0)}
+              </div>
             </div>
           </div>
         </CardContent>

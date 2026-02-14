@@ -13,9 +13,9 @@ import { MetadataRoute } from 'next';
 import { getAllRegions } from '@/lib/seo/regionCopy';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://synthex.social';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com';
 
-  // Static marketing pages
+  // Static pages - Business Hub showcase
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -24,19 +24,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/#pricing`,
+      url: `${baseUrl}/#services`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/#how-it-works`,
+      url: `${baseUrl}/#capabilities`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/#features`,
+      url: `${baseUrl}/#about`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,

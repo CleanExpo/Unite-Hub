@@ -482,6 +482,7 @@ export function FrameworkVersionHistory({
               )}
             </DialogFooter>
           </DialogContent>
+        </Dialog>
         )}
 
       {/* Save Version Dialog */}

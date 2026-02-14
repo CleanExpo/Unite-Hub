@@ -13,7 +13,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { createATOClient, BASData, BASPeriod } from './ato-client';
-import { calculateGST } from '@/lib/synthex/financialTrackingEngine';
+// GST calculation is handled inline - financialTrackingEngine was moved to Synthex app
 
 export interface BASPeriodConfig {
   type: 'quarterly' | 'monthly';

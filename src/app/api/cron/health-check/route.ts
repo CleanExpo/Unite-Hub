@@ -8,7 +8,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import Stripe from 'stripe';
 import { logHealthCheck, logUptimeCheck } from '@/lib/monitoring/autonomous-monitor';
 
@@ -21,12 +22,6 @@ function getSupabaseClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL || '',
     process.env.SUPABASE_SERVICE_ROLE_KEY || ''
   );
-}
-
-function getAnthropicClient() {
-  return new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY || '',
-  });
 }
 
 function getStripeClient() {
@@ -85,9 +80,8 @@ export async function GET(req: NextRequest) {
 
     // 2. Anthropic API
     try {
-      const anthropic = getAnthropicClient();
       const message = await anthropic.messages.create({
-        model: 'claude-opus-4-5-20251101',
+        model: ANTHROPIC_MODELS.OPUS_4_5,
         max_tokens: 10,
         messages: [{ role: 'user', content: 'test' }],
       });

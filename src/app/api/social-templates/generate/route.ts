@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getSupabaseServer } from "@/lib/supabase";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
 
 // Platform character limits
 const PLATFORM_LIMITS = {
@@ -154,7 +151,7 @@ Return as JSON array with this structure:
 
   const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
+    model: ANTHROPIC_MODELS.SONNET_4_5,
     max_tokens: 8000,
     messages: [
       {

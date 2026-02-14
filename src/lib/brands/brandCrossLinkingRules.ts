@@ -1,6 +1,6 @@
 /**
  * Brand Cross-Linking Rules
- * Defines when and how to link between brands
+ * Defines when and how to link between businesses managed by Unite-Hub
  *
  * Used by:
  * - Content builder (determining cross-brand references)
@@ -23,14 +23,14 @@ export const brandCrossLinkingRules: CrossLinkRule[] = [
     from: 'carsi',
     to: 'disaster_recovery_au',
     context: 'Training → Real-world application',
-    rule: 'CARSI training courses can reference Disaster Recovery Australia as a leading practitioner example.',
+    rule: 'CARSI training courses can reference Disaster Recovery as a leading practitioner example.',
     frequency: 'common',
   },
   {
     from: 'disaster_recovery_au',
     to: 'carsi',
     context: 'Services → Professional development',
-    rule: 'DRA can recommend CARSI as the trusted education provider behind technician training standards.',
+    rule: 'Disaster Recovery can recommend CARSI as the trusted education provider behind technician training standards.',
     frequency: 'occasional',
   },
   {
@@ -65,35 +65,35 @@ export const brandCrossLinkingRules: CrossLinkRule[] = [
     from: 'disaster_recovery_au',
     to: 'nrpg',
     context: 'Services → Contractor verification',
-    rule: 'DRA can mention NRPG vetting as a marker of quality and standards compliance.',
+    rule: 'Disaster Recovery can mention NRPG vetting as a marker of quality and standards compliance.',
     frequency: 'occasional',
   },
   {
-    from: 'unite_group',
-    to: 'unite_hub',
-    context: 'Holding company → Product',
-    rule: 'Unite-Group can reference Unite-Hub as a key product in the portfolio.',
+    from: 'disaster_recovery_au',
+    to: 'restore_assist',
+    context: 'Services → Job management software',
+    rule: 'Disaster Recovery can reference RestoreAssist as the management platform used for job tracking.',
     frequency: 'occasional',
   },
   {
-    from: 'unite_group',
+    from: 'restore_assist',
     to: 'disaster_recovery_au',
-    context: 'Holding company → Operating company',
-    rule: 'Unite-Group can reference DRA as an operating company in the portfolio.',
-    frequency: 'rare',
+    context: 'Software → Real-world use case',
+    rule: 'RestoreAssist can reference Disaster Recovery as a key client using the platform.',
+    frequency: 'occasional',
   },
   {
-    from: 'unite_group',
+    from: 'restore_assist',
     to: 'carsi',
-    context: 'Holding company → Education division',
-    rule: 'Unite-Group can reference CARSI as education division.',
+    context: 'Software → Training',
+    rule: 'RestoreAssist can reference CARSI training as complementary education for platform users.',
     frequency: 'rare',
   },
   {
-    from: 'unite_group',
-    to: 'synthex',
-    context: 'Holding company → Agency',
-    rule: 'Unite-Group can reference Synthex as marketing agency powered by platform.',
+    from: 'ato_audit',
+    to: 'disaster_recovery_au',
+    context: 'Compliance → Business client',
+    rule: 'ATO Audit can reference disaster recovery businesses as a key industry served.',
     frequency: 'rare',
   },
 ];

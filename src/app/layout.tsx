@@ -27,26 +27,26 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Synthex - AI Marketing Platform for Small Businesses",
-    template: "%s | Synthex"
+    default: "Unite-Hub | Business Hub - AI-Powered Business Management",
+    template: "%s | Unite-Hub"
   },
-  description: "AI-powered marketing without the agency bill. Get website optimization, SEO, social media, and content creation automated for your small business. No retainer. No complexity.",
-  keywords: ["AI marketing platform", "small business marketing", "AI SEO tools", "marketing automation", "local SEO", "social media automation", "AI copywriting", "affordable marketing"],
-  authors: [{ name: "Synthex" }],
-  creator: "Synthex",
-  publisher: "Synthex",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://synthex.social'),
+  description: "Unite-Hub is your AI-powered Business Hub. Manage contacts, deals, campaigns, and operations across all your businesses from one intelligent dashboard.",
+  keywords: ["business hub", "CRM", "AI business management", "contact management", "deal pipeline", "business operations"],
+  authors: [{ name: "Unite-Hub" }],
+  creator: "Unite-Hub",
+  publisher: "Unite-Hub",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com'),
   openGraph: {
-    title: "Synthex - AI Marketing Without the Agency Bill",
-    description: "Finally, an AI platform built for REAL small businesses. Marketing, SEO, branding, and social media handled by AI.",
-    url: 'https://synthex.social',
-    siteName: 'Synthex',
+    title: "Unite-Hub | Your AI-Powered Business Hub",
+    description: "Manage contacts, deals, campaigns, and operations across all your businesses from one intelligent dashboard.",
+    url: process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com',
+    siteName: 'Unite-Hub',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Synthex - AI Marketing Platform',
+        alt: 'Unite-Hub - AI-Powered Business Hub',
       }
     ],
     locale: 'en_US',
@@ -54,11 +54,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Synthex - AI Marketing for Small Businesses',
-    description: 'Marketing automation without the complexity or agency costs',
+    title: 'Unite-Hub | AI-Powered Business Hub',
+    description: 'Manage your businesses from one intelligent dashboard',
     images: ['/og-image.png'],
-    creator: '@synthexsocial',
-    site: '@synthexsocial',
+    creator: '@unitehub',
+    site: '@unitehub',
   },
   icons: {
     icon: [

@@ -7,7 +7,8 @@
  * @module agents/searchSuiteAgent
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { db } from '@/lib/db';
 import {
@@ -22,12 +23,7 @@ import type { SearchKeyword } from '@/lib/searchSuite/searchProviderTypes';
 // Types & Interfaces
 // ============================================================================
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  defaultHeaders: {
-    'anthropic-beta': 'prompt-caching-2024-07-31',
-  },
-});
+// Using centralized Anthropic client from @/lib/anthropic/client
 
 export interface RankingAlert {
   keywordId: string;
@@ -228,7 +224,7 @@ Provide a brief summary.`;
   try {
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
+        model: ANTHROPIC_MODELS.HAIKU_4_5,
         max_tokens: 500,
         system: [
           {
@@ -324,7 +320,7 @@ Identify top 5-10 optimization opportunities.`;
   try {
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
+        model: ANTHROPIC_MODELS.SONNET_4_5,
         max_tokens: 2000,
         system: [
           {

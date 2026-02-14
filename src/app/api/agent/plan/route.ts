@@ -10,6 +10,7 @@ import { apiRateLimit } from "@/lib/rate-limit";
 import { AgentPlanner } from "@/lib/agents/agentPlanner";
 import { AgentSafety, createAgentSafety } from "@/lib/agents/agentSafety";
 import { AgentArchiveBridge, createAgentArchiveBridge } from "@/lib/agents/agentArchiveBridge";
+import { hookSystem, lifecycleManager, ensureWorkforceReady } from "@/lib/agents/workforce";
 
 export async function POST(req: NextRequest) {
   try {
@@ -84,6 +85,37 @@ export async function POST(req: NextRequest) {
         { error: "Only workspace owners can create agent plans" },
         { status: 403 }
       );
+    }
+
+    // Ensure workforce engine is initialized (lazy, runs once)
+    await ensureWorkforceReady(workspaceId);
+
+    // Run workforce pre-execution hooks (safety, permissions, rate-limit)
+    const hookResult = await hookSystem.execute('pre-execution', {
+      agentId: 'orchestrator',
+      workspaceId,
+      action: `plan:${objective}`,
+      inputs: { objective, constraints, maxSteps },
+      hookChain: [],
+      timestamp: new Date().toISOString(),
+      correlationId: `plan-${Date.now()}`,
+    });
+
+    if (!hookResult.shouldProceed) {
+      const blockReasons = hookResult.results
+        .filter((r) => r.action === 'block')
+        .map((r) => r.reason);
+      return NextResponse.json(
+        { error: "Workforce hooks blocked plan generation", reasons: blockReasons },
+        { status: 403 }
+      );
+    }
+
+    // Spawn orchestrator agent in lifecycle manager
+    try {
+      await lifecycleManager.spawn('orchestrator');
+    } catch {
+      // May already be spawned
     }
 
     // Generate plan using AgentPlanner

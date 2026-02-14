@@ -8,11 +8,12 @@
  * 4. Always ensure a model is available
  */
 
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getOpenRouterClient } from "../openrouter";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+// Using centralized Anthropic client from @/lib/anthropic/client
 const openRouter = getOpenRouterClient();
 
 // Model pricing (per 1M tokens) - Updated 2025-11-19
@@ -419,10 +420,10 @@ export class ModelRouter {
     startTime: number
   ): Promise<ModelResponse> {
     const anthropicModel = {
-      "claude-opus-4.5": "claude-opus-4-5-20251101",
-      "claude-opus-4.1": "claude-opus-4-5-20251101",
-      "claude-sonnet-4.5": "claude-sonnet-4-5-20250929",
-      "claude-haiku-4.5": "claude-haiku-4-5-20251001",
+      "claude-opus-4.5": ANTHROPIC_MODELS.OPUS_4_5,
+      "claude-opus-4.1": ANTHROPIC_MODELS.OPUS_4_5,
+      "claude-sonnet-4.5": ANTHROPIC_MODELS.SONNET_4_5,
+      "claude-haiku-4.5": ANTHROPIC_MODELS.HAIKU_4_5,
     }[model];
 
     if (!anthropicModel) {

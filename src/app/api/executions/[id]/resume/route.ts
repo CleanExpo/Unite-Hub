@@ -8,10 +8,10 @@ import { getSupabaseServer } from '@/lib/supabase';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const executionId = params.id;
+    const { id: executionId } = await params;
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
 

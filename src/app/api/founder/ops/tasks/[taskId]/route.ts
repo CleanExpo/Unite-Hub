@@ -42,9 +42,10 @@ async function verifyFounderAccess(workspaceId: string) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { taskId: string } }
+  { params }: { params: Promise<{ taskId: string }> }
 ) {
   try {
+    const { taskId } = await params;
     const workspaceId = req.nextUrl.searchParams.get('workspaceId');
     if (!workspaceId) {
       return NextResponse.json({ error: 'Missing workspaceId' }, { status: 400 });
@@ -55,7 +56,7 @@ export async function GET(
     const { data: task, error } = await supabase
       .from('founder_ops_tasks')
       .select('*')
-      .eq('id', params.taskId)
+      .eq('id', taskId)
       .eq('workspace_id', workspaceId)
       .single();
 
@@ -70,9 +71,10 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { taskId: string } }
+  { params }: { params: Promise<{ taskId: string }> }
 ) {
   try {
+    const { taskId } = await params;
     const body = await req.json();
     const { workspaceId, ...updates } = body;
 
@@ -85,14 +87,14 @@ export async function PATCH(
     const { data: task, error } = await supabase
       .from('founder_ops_tasks')
       .update(updates)
-      .eq('id', params.taskId)
+      .eq('id', taskId)
       .eq('workspace_id', workspaceId)
       .select()
       .single();
 
     if (error) throw error;
 
-    logger.info('Task updated', { taskId: params.taskId });
+    logger.info('Task updated', { taskId });
 
     return NextResponse.json({ success: true, task });
   } catch (error: any) {
@@ -103,9 +105,10 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { taskId: string } }
+  { params }: { params: Promise<{ taskId: string }> }
 ) {
   try {
+    const { taskId } = await params;
     const workspaceId = req.nextUrl.searchParams.get('workspaceId');
     if (!workspaceId) {
       return NextResponse.json({ error: 'Missing workspaceId' }, { status: 400 });
@@ -116,12 +119,12 @@ export async function DELETE(
     const { error } = await supabase
       .from('founder_ops_tasks')
       .delete()
-      .eq('id', params.taskId)
+      .eq('id', taskId)
       .eq('workspace_id', workspaceId);
 
     if (error) throw error;
 
-    logger.info('Task deleted', { taskId: params.taskId });
+    logger.info('Task deleted', { taskId });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

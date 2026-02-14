@@ -44,6 +44,8 @@
     "convex/_generated/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "_disabled",
+    "tests"
   ]
 }

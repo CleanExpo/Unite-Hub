@@ -64,7 +64,7 @@ export class ScopeAI {
 
     // Stage 1: Primary draft (Claude 3.5 Sonnet via OpenRouter)
     const draftResponse = await this.callOpenRouter({
-      model: 'anthropic/claude-3.5-sonnet',
+      model: 'anthropic/claude-sonnet-4-5',
       prompt: this.prompts.initialDraft(input),
       organizationId,
       workspaceId,
@@ -94,7 +94,7 @@ export class ScopeAI {
 
     // Stage 4: Final audit (Claude 3 Haiku - quality gate)
     const finalResponse = await this.callOpenRouter({
-      model: 'anthropic/claude-3-haiku',
+      model: 'anthropic/claude-haiku-4-5',
       prompt: this.prompts.finalAudit(pricingResponse.output, input),
       organizationId,
       workspaceId,
@@ -390,8 +390,8 @@ NOTHING escapes unless PERFECT.
   private static calculateCost(model: string, promptTokens: number, completionTokens: number): number {
     // Pricing per million tokens (approximate - OpenRouter provides exact costs)
     const pricing: Record<string, { prompt: number; completion: number }> = {
-      'anthropic/claude-3.5-sonnet': { prompt: 3, completion: 15 },
-      'anthropic/claude-3-haiku': { prompt: 0.25, completion: 1.25 },
+      'anthropic/claude-sonnet-4-5': { prompt: 3, completion: 15 },
+      'anthropic/claude-haiku-4-5': { prompt: 0.80, completion: 4 },
       'openai/gpt-4-turbo': { prompt: 10, completion: 30 },
       'google/gemini-2.0-flash-exp': { prompt: 0.1, completion: 0.4 },
     };

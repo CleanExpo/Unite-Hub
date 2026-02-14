@@ -61,6 +61,44 @@ const routeLabels: Record<string, string> = {
   vault: 'Vault',
   ideas: 'Ideas',
   'time-tracker': 'Time Tracker',
+  // Founder OS
+  founder: 'Founder OS',
+  agents: 'Agents',
+  'ai-phill': 'AI Phill',
+  businesses: 'Businesses',
+  insights: 'Insights',
+  'agent-console': 'Agent Console',
+  journal: 'Journal',
+  'cognitive-twin': 'Cognitive Twin',
+  // Deal Pipeline
+  deals: 'Deals Pipeline',
+  // Dashboard sections
+  'drip-campaigns': 'Drip Campaigns',
+  'email-templates': 'Email Templates',
+  media: 'Media Library',
+  brief: 'Client Briefs',
+  messages: 'Messages',
+  meetings: 'Meetings',
+  approvals: 'Approvals',
+  audits: 'Audits',
+  seo: 'SEO Tools',
+  queue: 'Task Queue',
+  intelligence: 'Intelligence',
+  monitoring: 'Monitoring',
+  memory: 'Memory',
+  resources: 'Resources',
+  marketplace: 'Marketplace',
+  sites: 'Sites',
+  linear: 'Linear',
+  aido: 'AIDO',
+  // Client portal
+  workspace: 'Workspace',
+  assistant: 'AI Assistant',
+  // Business Portfolio
+  'market-radar': 'Market Radar',
+  experiments: 'Experiments',
+  onboarding: 'Onboarding',
+  portfolio: 'Business Portfolio',
 };
 
 // Helper function to convert kebab-case to Title Case

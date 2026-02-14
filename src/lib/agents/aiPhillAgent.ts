@@ -16,6 +16,8 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { anthropic as centralizedAnthropicClient } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import * as aiPhillAdvisorService from '@/lib/founderOS/aiPhillAdvisorService';
 import * as founderJournalService from '@/lib/founderOS/founderJournalService';
@@ -132,7 +134,7 @@ export interface AgentResult<T> {
 // Constants
 // ============================================================================
 
-const AI_PHILL_MODEL = 'claude-opus-4-5-20251101';
+const AI_PHILL_MODEL = ANTHROPIC_MODELS.OPUS_4_5;
 const DEFAULT_THINKING_BUDGET = 15000;
 const STRATEGIC_THINKING_BUDGET = 20000;
 const QUICK_THINKING_BUDGET = 10000;
@@ -192,18 +194,7 @@ Always structure responses with:
 // Anthropic Client Setup
 // ============================================================================
 
-function getAnthropicClient(): Anthropic {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY is not configured');
-  }
-  return new Anthropic({
-    apiKey,
-    defaultHeaders: {
-      'anthropic-beta': 'prompt-caching-2024-07-31',
-    },
-  });
-}
+// Using centralized Anthropic client from @/lib/anthropic/client
 
 // ============================================================================
 // AI Phill Agent Class
@@ -214,7 +205,8 @@ export class AiPhillAgent {
   private logPrefix = '[AiPhillAgent]';
 
   constructor() {
-    this.anthropic = getAnthropicClient();
+    // Use centralized Anthropic client (cast needed since it's a Proxy)
+    this.anthropic = centralizedAnthropicClient as unknown as Anthropic;
   }
 
   /**

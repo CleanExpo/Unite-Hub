@@ -42,7 +42,7 @@ export const anthropic = new Proxy({} as Anthropic, {
 // Model configuration
 export const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929';
 export const CLAUDE_OPUS = 'claude-opus-4-5-20251101';
-export const CLAUDE_HAIKU = 'claude-3-5-haiku-20241022';
+export const CLAUDE_HAIKU = 'claude-haiku-4-5-20251001';
 
 // Default message parameters
 export const DEFAULT_PARAMS = {
@@ -281,10 +281,11 @@ export function parseJSONResponse<T>(message: Anthropic.Message): T {
 /**
  * Estimate cost for a message
  *
- * Pricing (as of January 2025):
+ * Pricing (Sonnet 4.5, as of 2025):
  * - Input: $3 per million tokens
  * - Output: $15 per million tokens
  * - Cached input: $0.30 per million tokens (90% savings)
+ * For other models, use getModelPricing() from @/lib/anthropic/models
  */
 export async function estimateCost(
   messages: Anthropic.MessageParam[],

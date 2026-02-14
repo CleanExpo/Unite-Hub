@@ -31,6 +31,7 @@ import {
   Settings,
   Brain,
   Calendar,
+  Bot,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -55,6 +56,7 @@ const navItems: NavItem[] = [
   { title: 'Content', href: '/dashboard/content', icon: FileText },
   { title: 'Calendar', href: '/dashboard/calendar', icon: Calendar },
   { title: 'AI Tools', href: '/dashboard/ai-tools/marketing-copy', icon: Brain },
+  { title: 'Agents', href: '/founder/agents', icon: Bot },
   { title: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 

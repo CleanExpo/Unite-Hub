@@ -11,10 +11,10 @@ import { createApiLogger } from '@/lib/logger';
 
 const logger = createApiLogger({ route: '/api/campaigns/blueprints/[id]' });
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const workspaceId = req.nextUrl.searchParams.get('workspaceId');
-    const { id } = params;
 
     if (!workspaceId || !id) {
       return NextResponse.json({ error: 'Missing workspaceId or id' }, { status: 400 });
@@ -69,15 +69,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       revisions: revisions || [],
     });
   } catch (error) {
-    logger.error('Failed to get blueprint', { error, blueprintId: params.id });
+    logger.error('Failed to get blueprint', { error, blueprintId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const workspaceId = req.nextUrl.searchParams.get('workspaceId');
-    const { id } = params;
 
     if (!workspaceId || !id) {
       return NextResponse.json({ error: 'Missing workspaceId or id' }, { status: 400 });
@@ -213,15 +213,15 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       blueprint: updatedBlueprint,
     });
   } catch (error) {
-    logger.error('Failed to update blueprint', { error, blueprintId: params.id });
+    logger.error('Failed to update blueprint', { error, blueprintId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const workspaceId = req.nextUrl.searchParams.get('workspaceId');
-    const { id } = params;
 
     if (!workspaceId || !id) {
       return NextResponse.json({ error: 'Missing workspaceId or id' }, { status: 400 });
@@ -264,7 +264,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       message: 'Blueprint archived successfully',
     });
   } catch (error) {
-    logger.error('Failed to delete blueprint', { error, blueprintId: params.id });
+    logger.error('Failed to delete blueprint', { error, blueprintId: id });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

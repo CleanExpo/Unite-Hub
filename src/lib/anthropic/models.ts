@@ -42,8 +42,8 @@ export const MODEL_PRICING = {
   [ANTHROPIC_MODELS.SONNET_4]: { input: 3, output: 15 },
   [ANTHROPIC_MODELS.SONNET_3_5_V2]: { input: 3, output: 15 },
   [ANTHROPIC_MODELS.SONNET_3_5_V1]: { input: 3, output: 15 },
-  [ANTHROPIC_MODELS.HAIKU_4_5]: { input: 0.25, output: 1.25 },
-  [ANTHROPIC_MODELS.HAIKU_3_5]: { input: 0.25, output: 1.25 },
+  [ANTHROPIC_MODELS.HAIKU_4_5]: { input: 0.80, output: 4 },
+  [ANTHROPIC_MODELS.HAIKU_3_5]: { input: 0.80, output: 4 },
   [ANTHROPIC_MODELS.HAIKU_3]: { input: 0.25, output: 1.25 },
   [ANTHROPIC_MODELS.OPUS_3]: { input: 15, output: 75 },
 } as const;

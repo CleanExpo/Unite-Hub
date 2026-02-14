@@ -91,7 +91,7 @@ export class ABTestScheduler {
 
       // Process each campaign
       let updated = 0;
-      let winnersDeclar ed = 0;
+      let winnersDeclared = 0;
 
       for (const campaign of campaigns) {
         try {
@@ -103,7 +103,7 @@ export class ABTestScheduler {
           if (this.config.enableAutoWinner) {
             const declared = await autoCheckAndDeclareWinner(campaign.id);
             if (declared) {
-              winnersDeclar ed++;
+              winnersDeclared++;
               logger.info('Auto-declared winner', { campaignId: campaign.id });
             }
           }
@@ -118,7 +118,7 @@ export class ABTestScheduler {
       logger.info('A/B test processing complete', {
         totalCampaigns: campaigns.length,
         metricsUpdated: updated,
-        winnersDeclar ed,
+        winnersDeclared,
       });
     } catch (error) {
       logger.error('Failed to process A/B tests', { error });

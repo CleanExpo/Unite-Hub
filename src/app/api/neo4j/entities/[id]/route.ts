@@ -25,10 +25,10 @@ import { readQuery } from '@/lib/neo4j/client';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
     const workspace_id = searchParams.get('workspace_id');
     const type = searchParams.get('type');

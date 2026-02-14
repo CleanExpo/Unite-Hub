@@ -16,6 +16,7 @@ import { RoleBadge } from "@/components/RoleBadge";
 import { PermissionGate } from "@/components/PermissionGate";
 import { PageErrorBoundary } from "@/components/ErrorBoundary";
 import { SessionExpiryWarning } from "@/components/SessionExpiryWarning";
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 
 export default function DashboardLayout({
   children,
@@ -179,7 +180,7 @@ export default function DashboardLayout({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
-                        isActive("/dashboard/contacts") || isActive("/dashboard/projects") || isActive("/dashboard/brief")
+                        isActive("/dashboard/contacts") || isActive("/dashboard/deals") || isActive("/dashboard/projects") || isActive("/dashboard/brief")
                           ? "text-white"
                           : "text-slate-400 hover:text-white"
                       } h-auto px-2 py-1`}>
@@ -191,6 +192,9 @@ export default function DashboardLayout({
                       <DropdownMenuLabel className="text-slate-400">Client Management</DropdownMenuLabel>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/contacts" className="w-full">Contacts</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/deals" className="w-full">Deals Pipeline</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/projects" className="w-full">Projects</Link>
@@ -289,6 +293,9 @@ export default function DashboardLayout({
                       </DropdownMenuItem>
                       <DropdownMenuSeparator className="bg-slate-700" />
                       <DropdownMenuLabel className="text-slate-400">Automation</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/founder/agents" className="w-full">Autonomous Agents</Link>
+                      </DropdownMenuItem>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/queue" className="w-full">Task Queue</Link>
                       </DropdownMenuItem>
@@ -432,6 +439,7 @@ export default function DashboardLayout({
 
                   <div className="pt-3 pb-1 text-xs font-semibold text-slate-500 uppercase">CRM</div>
                   <MobileNavLink href="/dashboard/contacts" active={isActive("/dashboard/contacts")}>Contacts</MobileNavLink>
+                  <MobileNavLink href="/dashboard/deals" active={isActive("/dashboard/deals")}>Deals Pipeline</MobileNavLink>
                   <MobileNavLink href="/dashboard/projects" active={isActive("/dashboard/projects")}>Projects</MobileNavLink>
                   <MobileNavLink href="/dashboard/brief" active={isActive("/dashboard/brief")}>Client Briefs</MobileNavLink>
                   <MobileNavLink href="/dashboard/emails" active={isActive("/dashboard/emails")}>Emails</MobileNavLink>
@@ -448,6 +456,7 @@ export default function DashboardLayout({
                   <div className="pt-3 pb-1 text-xs font-semibold text-slate-500 uppercase">AI Tools</div>
                   <MobileNavLink href="/dashboard/intelligence" active={isActive("/dashboard/intelligence")}>Contact Intelligence</MobileNavLink>
                   <MobileNavLink href="/dashboard/ai-tools" active={isActive("/dashboard/ai-tools")}>AI Assistants</MobileNavLink>
+                  <MobileNavLink href="/founder/agents" active={isActive("/founder/agents")}>Autonomous Agents</MobileNavLink>
                   <MobileNavLink href="/dashboard/analytics" active={isActive("/dashboard/analytics")}>Analytics</MobileNavLink>
                   <MobileNavLink href="/dashboard/seo" active={isActive("/dashboard/seo")}>SEO Tools</MobileNavLink>
 
@@ -460,6 +469,11 @@ export default function DashboardLayout({
               </div>
             </>
           )}
+
+          {/* Breadcrumbs */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4">
+            <Breadcrumbs />
+          </div>
 
           {/* Main Content */}
           {children}

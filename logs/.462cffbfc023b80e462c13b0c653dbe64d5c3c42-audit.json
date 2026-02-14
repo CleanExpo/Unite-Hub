@@ -6,9 +6,14 @@
     "auditLog": "C:\\Unite-Hub\\logs\\.462cffbfc023b80e462c13b0c653dbe64d5c3c42-audit.json",
     "files": [
         {
-            "date": 1769461239138,
-            "name": "C:\\Unite-Hub\\logs\\error-2026-01-27.log",
-            "hash": "87f417907fa62c5655ef924b57159e6cd88c903aa8a68409773d27274726691e"
+            "date": 1771050695837,
+            "name": "C:\\Unite-Hub\\logs\\error-2026-02-14.log",
+            "hash": "52fef32d29ba43bbba3cd879630b7ed876e614f8df5dab2f78a40b0d7950d20c"
+        },
+        {
+            "date": 1771080862600,
+            "name": "C:\\Unite-Hub\\logs\\error-2026-02-15.log",
+            "hash": "0ea081ea8fdf2595a680d1f800972b2f87a92ff8953fd9deadb5650ed4ef5bac"
         }
     ],
     "hashType": "sha256"

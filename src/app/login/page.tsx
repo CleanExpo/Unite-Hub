@@ -95,8 +95,8 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <h2 className="text-white text-[28px] font-bold mb-2.5">Sign In to Your Hub</h2>
-          <p className="text-[#a0aec0] mb-8 text-[15px]">Welcome back! Please enter your details.</p>
+          <h2 className="text-white text-[28px] font-bold mb-2.5">Unite-Hub</h2>
+          <p className="text-[#a0aec0] mb-8 text-[15px]">Sign in to your Business Hub</p>
 
           {/* Error Message */}
           {error && (
@@ -235,9 +235,9 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-8 text-[#a0aec0] text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-[#347bf7] font-semibold hover:opacity-80 transition-opacity">
-              Sign Up Now
+            Client access is by invitation only.{" "}
+            <Link href="/support" className="text-[#347bf7] font-semibold hover:opacity-80 transition-opacity">
+              Contact Us
             </Link>
           </div>
         </div>

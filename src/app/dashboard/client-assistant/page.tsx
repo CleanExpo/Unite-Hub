@@ -25,7 +25,6 @@ import {
 } from 'lucide-react';
 import { AgentChatPanel } from '@/components/clientAgent/AgentChatPanel';
 import { AgentRunHistory } from '@/components/clientAgent/AgentRunHistory';
-import { SafetyIndicator } from '@/components/clientAgent/SafetyBanner';
 
 // Demo workspace ID
 const DEMO_WORKSPACE_ID = 'demo-workspace';

@@ -33,7 +33,7 @@ export class OpenRouterIntelligence {
   private readonly MODEL_MAP: Record<string, { model: string; pricing: ModelPricing; maxTokens: number }> = {
     // Content generation (creative writing, social media)
     'content-quality': {
-      model: 'anthropic/claude-3.5-sonnet',
+      model: 'anthropic/claude-sonnet-4-5',
       pricing: { prompt: 3, completion: 15 },
       maxTokens: 200000
     },
@@ -57,7 +57,7 @@ export class OpenRouterIntelligence {
 
     // Analysis & competitor intelligence
     'analysis-quality': {
-      model: 'anthropic/claude-3-opus',
+      model: 'anthropic/claude-opus-4-5',
       pricing: { prompt: 15, completion: 75 },
       maxTokens: 200000
     },
@@ -76,7 +76,7 @@ export class OpenRouterIntelligence {
 
     // Technical SEO audits
     'technical-quality': {
-      model: 'anthropic/claude-3-opus',
+      model: 'anthropic/claude-opus-4-5',
       pricing: { prompt: 15, completion: 75 },
       maxTokens: 200000
     },
@@ -90,8 +90,8 @@ export class OpenRouterIntelligence {
 
     // Fast, lightweight tasks
     'quick-cost': {
-      model: 'anthropic/claude-3-haiku',
-      pricing: { prompt: 0.25, completion: 1.25 },
+      model: 'anthropic/claude-haiku-4-5',
+      pricing: { prompt: 0.80, completion: 4 },
       maxTokens: 200000
     }
   };
@@ -100,7 +100,7 @@ export class OpenRouterIntelligence {
     this.config = {
       apiKey: apiKey || process.env.OPENROUTER_API_KEY || '',
       baseURL: 'https://openrouter.ai/api/v1',
-      defaultModel: 'anthropic/claude-3.5-sonnet',
+      defaultModel: 'anthropic/claude-sonnet-4-5',
       fallbackModels: [
         'openai/gpt-4-turbo',
         'meta-llama/llama-3-70b-instruct'

@@ -10,10 +10,10 @@ import { getSupabaseServer } from '@/lib/supabase';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const executionId = params.id;
+    const { id: executionId } = await params;
 
     // Get authorization
     const authHeader = req.headers.get('authorization');

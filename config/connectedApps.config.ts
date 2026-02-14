@@ -10,7 +10,7 @@
 // TYPES
 // ============================================================================
 
-export type OAuthProvider = 'google' | 'microsoft';
+export type OAuthProvider = 'google' | 'microsoft' | 'meta' | 'linkedin' | 'reddit' | 'youtube';
 
 export interface OAuthProviderConfig {
   clientId: string;
@@ -32,10 +32,7 @@ export interface TokenVaultConfig {
 
 export interface ConnectedAppsConfig {
   enabled: boolean;
-  providers: {
-    google: OAuthProviderConfig;
-    microsoft: OAuthProviderConfig;
-  };
+  providers: Record<string, OAuthProviderConfig>;
   tokenVault: TokenVaultConfig;
   tokenRefreshBufferMs: number;
   maxConnectionsPerUser: number;
@@ -45,6 +42,7 @@ export interface ConnectedAppsConfig {
     emailIngestion: boolean;
     calendarSync: boolean;
     driveAccess: boolean;
+    socialPosting: boolean;
   };
 }
 
@@ -102,6 +100,79 @@ export const connectedAppsConfig: ConnectedAppsConfig = {
       userInfoEndpoint: 'https://graph.microsoft.com/v1.0/me',
       revokeEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/logout',
     },
+
+    // Meta (Facebook + Instagram) OAuth Configuration
+    meta: {
+      clientId: process.env.META_APP_ID || '',
+      clientSecret: process.env.META_APP_SECRET || '',
+      redirectUri: `${baseUrl}/api/connected-apps/callback/meta`,
+      scopes: [
+        'pages_show_list',
+        'pages_read_engagement',
+        'pages_manage_posts',
+        'pages_messaging',
+        'instagram_basic',
+        'instagram_content_publish',
+        'instagram_manage_comments',
+      ],
+      authorizationEndpoint: 'https://www.facebook.com/v19.0/dialog/oauth',
+      tokenEndpoint: 'https://graph.facebook.com/v19.0/oauth/access_token',
+      userInfoEndpoint: 'https://graph.facebook.com/v19.0/me',
+      revokeEndpoint: 'https://graph.facebook.com/v19.0/me/permissions',
+    },
+
+    // LinkedIn OAuth Configuration
+    linkedin: {
+      clientId: process.env.LINKEDIN_CLIENT_ID || '',
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET || '',
+      redirectUri: `${baseUrl}/api/connected-apps/callback/linkedin`,
+      scopes: [
+        'openid',
+        'profile',
+        'w_member_social',
+        'r_organization_social',
+        'w_organization_social',
+        'rw_organization_admin',
+      ],
+      authorizationEndpoint: 'https://www.linkedin.com/oauth/v2/authorization',
+      tokenEndpoint: 'https://www.linkedin.com/oauth/v2/accessToken',
+      userInfoEndpoint: 'https://api.linkedin.com/v2/userinfo',
+      revokeEndpoint: 'https://www.linkedin.com/oauth/v2/revoke',
+    },
+
+    // Reddit OAuth Configuration
+    reddit: {
+      clientId: process.env.REDDIT_CLIENT_ID || '',
+      clientSecret: process.env.REDDIT_CLIENT_SECRET || '',
+      redirectUri: `${baseUrl}/api/connected-apps/callback/reddit`,
+      scopes: [
+        'identity',
+        'read',
+        'submit',
+        'privatemessages',
+        'history',
+      ],
+      authorizationEndpoint: 'https://www.reddit.com/api/v1/authorize',
+      tokenEndpoint: 'https://www.reddit.com/api/v1/access_token',
+      userInfoEndpoint: 'https://oauth.reddit.com/api/v1/me',
+      revokeEndpoint: 'https://www.reddit.com/api/v1/revoke_token',
+    },
+
+    // YouTube OAuth (uses Google OAuth with YouTube scopes)
+    youtube: {
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      redirectUri: `${baseUrl}/api/connected-apps/callback/youtube`,
+      scopes: [
+        'https://www.googleapis.com/auth/youtube.readonly',
+        'https://www.googleapis.com/auth/youtube.force-ssl',
+        'https://www.googleapis.com/auth/youtube.upload',
+      ],
+      authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
+      tokenEndpoint: 'https://oauth2.googleapis.com/token',
+      userInfoEndpoint: 'https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true',
+      revokeEndpoint: 'https://oauth2.googleapis.com/revoke',
+    },
   },
 
   // Token Vault Configuration (for encrypted storage)
@@ -125,6 +196,7 @@ export const connectedAppsConfig: ConnectedAppsConfig = {
     emailIngestion: process.env.FEATURE_EMAIL_INGESTION !== 'false',
     calendarSync: process.env.FEATURE_CALENDAR_SYNC === 'true',
     driveAccess: process.env.FEATURE_DRIVE_ACCESS === 'true',
+    socialPosting: process.env.FEATURE_SOCIAL_POSTING !== 'false',
   },
 };
 
@@ -148,7 +220,7 @@ export function isConnectedAppsConfigured(): boolean {
  */
 export function isProviderConfigured(provider: OAuthProvider): boolean {
   const config = connectedAppsConfig.providers[provider];
-  return !!config.clientId && !!config.clientSecret;
+  return !!config?.clientId && !!config?.clientSecret;
 }
 
 /**
@@ -162,14 +234,22 @@ export function isFeatureEnabled(feature: keyof ConnectedAppsConfig['featureFlag
  * Get OAuth scopes for a provider
  */
 export function getScopesForProvider(provider: OAuthProvider): string[] {
-  return connectedAppsConfig.providers[provider].scopes;
+  return connectedAppsConfig.providers[provider]?.scopes ?? [];
 }
 
 /**
  * Get filtered scopes based on enabled features
  */
 export function getEnabledScopes(provider: OAuthProvider): string[] {
-  const allScopes = connectedAppsConfig.providers[provider].scopes;
+  const config = connectedAppsConfig.providers[provider];
+  if (!config) return [];
+  const allScopes = config.scopes;
+
+  // Social providers return all scopes directly
+  if (['meta', 'linkedin', 'reddit', 'youtube'].includes(provider)) {
+    return allScopes;
+  }
+
   const enabledScopes = ['openid', 'email', 'profile'];
 
   if (provider === 'microsoft') {
@@ -219,17 +299,24 @@ export function getAuthorizationUrl(
   codeChallenge?: string
 ): string {
   const config = connectedAppsConfig.providers[provider];
+  if (!config) throw new Error(`Provider ${provider} not configured`);
   const scopes = getEnabledScopes(provider);
 
   const params = new URLSearchParams({
     client_id: config.clientId,
     redirect_uri: config.redirectUri,
     response_type: 'code',
-    scope: scopes.join(' '),
+    scope: scopes.join(provider === 'reddit' ? ' ' : ' '),
     state,
-    access_type: 'offline',
-    prompt: 'consent',
   });
+
+  // Provider-specific parameters
+  if (provider === 'reddit') {
+    params.set('duration', 'permanent');
+  } else {
+    params.set('access_type', 'offline');
+    params.set('prompt', 'consent');
+  }
 
   // Add PKCE code challenge if provided
   if (codeChallenge) {
@@ -248,6 +335,10 @@ export function getConfigSummary(): Record<string, unknown> {
     enabled: connectedAppsConfig.enabled,
     googleConfigured: isProviderConfigured('google'),
     microsoftConfigured: isProviderConfigured('microsoft'),
+    metaConfigured: isProviderConfigured('meta'),
+    linkedinConfigured: isProviderConfigured('linkedin'),
+    redditConfigured: isProviderConfigured('reddit'),
+    youtubeConfigured: isProviderConfigured('youtube'),
     encryptionConfigured: !!connectedAppsConfig.tokenVault.encryptionKey,
     maxConnectionsPerUser: connectedAppsConfig.maxConnectionsPerUser,
     featureFlags: connectedAppsConfig.featureFlags,

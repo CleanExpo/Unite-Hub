@@ -1,387 +1,297 @@
-/**
- * Insights Page
- *
- * Features:
- * - Filterable list of AI-generated insights
- * - Domain filter (by business)
- * - Date range filter
- * - Acknowledged vs pending toggle
- */
+"use client";
 
-'use client';
-
-import { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState, useEffect, useCallback } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  TrendingUp,
-  TrendingDown,
-  Activity,
-  Search,
-  Filter,
-  CheckCircle,
-  Circle,
-  Calendar,
-  Building2,
-} from 'lucide-react';
-import { PageContainer, Section } from '@/ui/layout/AppGrid';
+  TrendingUp, TrendingDown, Activity, Search, RefreshCw,
+  Building2, Calendar, Shield, Target, Sparkles, Eye,
+} from "lucide-react";
 
-interface Insight {
+interface AISnapshot {
   id: string;
-  type: 'positive' | 'negative' | 'neutral';
-  title: string;
-  summary: string;
-  details: string;
-  businessId: string;
-  businessName: string;
-  category: string;
-  timestamp: string;
-  acknowledged: boolean;
-  actionable: boolean;
+  business_id: string;
+  snapshot_type: string;
+  summary_markdown: string;
+  navboost_risk_score: number | null;
+  q_star_proxy_score: number | null;
+  eeat_strength_score: number | null;
+  sandbox_risk_score: number | null;
+  behaviour_signal_opportunity_score: number | null;
+  gap_opportunities: Record<string, unknown>;
+  created_at: string;
+}
+
+interface BusinessInfo {
+  business_key: string;
+  display_name: string;
+  channel_count: number;
+  latest_snapshot_date: string | null;
+}
+
+interface SnapshotWithBusiness extends AISnapshot {
+  business_name: string;
 }
 
 export default function InsightsPage() {
-  const [insights, setInsights] = useState<Insight[]>([]);
-  const [filteredInsights, setFilteredInsights] = useState<Insight[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedBusiness, setSelectedBusiness] = useState<string>('all');
-  const [showAcknowledged, setShowAcknowledged] = useState(false);
+  const [snapshots, setSnapshots] = useState<SnapshotWithBusiness[]>([]);
+  const [businesses, setBusinesses] = useState<BusinessInfo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedBusiness, setSelectedBusiness] = useState<string>("all");
 
-  useEffect(() => {
-    // TODO: Replace with actual API call
-    const mockInsights: Insight[] = [
-      {
-        id: '1',
-        type: 'positive',
-        title: 'Strong SEO Performance',
-        summary: 'Organic traffic increased 25% week-over-week',
-        details:
-          'Google Analytics shows a significant increase in organic search traffic. Main drivers are improved rankings for "stainless steel balustrades" and "glass railings Brisbane".',
-        businessId: '1',
-        businessName: 'Balustrade Co.',
-        category: 'SEO',
-        timestamp: '2 hours ago',
-        acknowledged: false,
-        actionable: true,
-      },
-      {
-        id: '2',
-        type: 'neutral',
-        title: 'New Competitor Detected',
-        summary: 'Similar business launched in Melbourne',
-        details:
-          'Market monitoring detected a new competitor offering similar products at comparable pricing. They have limited online presence currently.',
-        businessId: '1',
-        businessName: 'Balustrade Co.',
-        category: 'Competition',
-        timestamp: '1 day ago',
-        acknowledged: false,
-        actionable: true,
-      },
-      {
-        id: '3',
-        type: 'positive',
-        title: 'Social Engagement Spike',
-        summary: 'LinkedIn engagement up 40% this week',
-        details:
-          'Recent posts about product innovation are resonating well with the audience. Recommend continuing similar content strategy.',
-        businessId: '2',
-        businessName: 'Tech Startup',
-        category: 'Social Media',
-        timestamp: '2 days ago',
-        acknowledged: true,
-        actionable: false,
-      },
-      {
-        id: '4',
-        type: 'negative',
-        title: 'Customer Support Delays',
-        summary: 'Average response time increased to 48 hours',
-        details:
-          'Customer inquiries are taking longer to resolve. Consider implementing automated responses or hiring additional support staff.',
-        businessId: '2',
-        businessName: 'Tech Startup',
-        category: 'Customer Service',
-        timestamp: '3 days ago',
-        acknowledged: false,
-        actionable: true,
-      },
-      {
-        id: '5',
-        type: 'positive',
-        title: 'Sales Milestone Achieved',
-        summary: 'Monthly revenue target exceeded by 12%',
-        details:
-          'Strong performance driven by repeat customers and successful email campaign. Consider scaling winning strategies.',
-        businessId: '3',
-        businessName: 'E-commerce Store',
-        category: 'Sales',
-        timestamp: '4 days ago',
-        acknowledged: true,
-        actionable: false,
-      },
-    ];
+  const fetchInsights = useCallback(async () => {
+    try {
+      setLoading(true);
 
-    setInsights(mockInsights);
-    setFilteredInsights(mockInsights);
-    setLoading(false);
+      // Fetch portfolio stats to get business list
+      const statsRes = await fetch("/api/founder/business-vault?stats=true");
+      if (!statsRes.ok) {
+        setLoading(false);
+        return;
+      }
+      const statsData = await statsRes.json();
+      const bizList: BusinessInfo[] = statsData.businesses || [];
+      setBusinesses(bizList);
+
+      // Fetch all businesses with their snapshots
+      const vaultRes = await fetch("/api/founder/business-vault");
+      if (!vaultRes.ok) {
+        setLoading(false);
+        return;
+      }
+      const vaultData = await vaultRes.json();
+      const allBusinesses = vaultData.businesses || [];
+
+      // For each business, fetch its snapshots
+      const allSnapshots: SnapshotWithBusiness[] = [];
+
+      for (const biz of allBusinesses) {
+        try {
+          const snapRes = await fetch(`/api/founder/business-vault/${biz.business_key}/snapshot`);
+          if (snapRes.ok) {
+            const snapData = await snapRes.json();
+            const bizSnapshots = snapData.snapshots || [];
+            for (const snap of bizSnapshots) {
+              allSnapshots.push({
+                ...snap,
+                business_name: biz.display_name,
+              });
+            }
+          }
+        } catch {
+          // Skip businesses with no snapshots
+        }
+      }
+
+      // Sort by created_at descending
+      allSnapshots.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      setSnapshots(allSnapshots);
+    } catch (err) {
+      console.error("Failed to fetch insights:", err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
-    let filtered = insights;
+    fetchInsights();
+  }, [fetchInsights]);
 
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (insight) =>
-          insight.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          insight.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          insight.businessName.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  // Client-side filtering
+  const filtered = snapshots.filter((s) => {
+    const matchesSearch =
+      !searchQuery ||
+      s.summary_markdown.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.snapshot_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.business_name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesBusiness = selectedBusiness === "all" || s.business_name === selectedBusiness;
+    return matchesSearch && matchesBusiness;
+  });
+
+  // Compute aggregate scores
+  const snapshotsWithEeat = snapshots.filter(s => s.eeat_strength_score !== null);
+  const avgEeat = snapshotsWithEeat.length > 0
+    ? Math.round(snapshotsWithEeat.reduce((sum, s) => sum + (s.eeat_strength_score || 0), 0) / snapshotsWithEeat.length)
+    : 0;
+  const snapshotsWithNav = snapshots.filter(s => s.navboost_risk_score !== null);
+  const avgNavboost = snapshotsWithNav.length > 0
+    ? Math.round(snapshotsWithNav.reduce((sum, s) => sum + (s.navboost_risk_score || 0), 0) / snapshotsWithNav.length)
+    : 0;
+  const opportunities = snapshots.filter(s => s.behaviour_signal_opportunity_score && s.behaviour_signal_opportunity_score > 50).length;
+
+  const getScoreColor = (score: number | null, inverted = false) => {
+    if (score === null) return "text-slate-500";
+    if (inverted) {
+      if (score <= 30) return "text-emerald-400";
+      if (score <= 60) return "text-yellow-400";
+      return "text-red-400";
     }
-
-    // Business filter
-    if (selectedBusiness !== 'all') {
-      filtered = filtered.filter((insight) => insight.businessId === selectedBusiness);
-    }
-
-    // Acknowledged filter
-    if (!showAcknowledged) {
-      filtered = filtered.filter((insight) => !insight.acknowledged);
-    }
-
-    setFilteredInsights(filtered);
-  }, [searchQuery, selectedBusiness, showAcknowledged, insights]);
-
-  const businesses = [
-    { id: 'all', name: 'All Businesses' },
-    { id: '1', name: 'Balustrade Co.' },
-    { id: '2', name: 'Tech Startup' },
-    { id: '3', name: 'E-commerce Store' },
-  ];
-
-  const handleAcknowledge = (insightId: string) => {
-    setInsights((prev) =>
-      prev.map((insight) =>
-        insight.id === insightId ? { ...insight, acknowledged: true } : insight
-      )
-    );
+    if (score >= 70) return "text-emerald-400";
+    if (score >= 40) return "text-yellow-400";
+    return "text-red-400";
   };
 
-  const getInsightIcon = (type: Insight['type']) => {
-    if (type === 'positive') return <TrendingUp className="w-5 h-5 text-green-400" />;
-    if (type === 'negative') return <TrendingDown className="w-5 h-5 text-red-400" />;
-    return <Activity className="w-5 h-5 text-yellow-400" />;
+  const getScoreIcon = (score: number | null, inverted = false) => {
+    if (score === null) return <Activity className="w-4 h-4 text-slate-500" />;
+    const isGood = inverted ? score <= 30 : score >= 70;
+    const isBad = inverted ? score > 60 : score < 40;
+    if (isGood) return <TrendingUp className="w-4 h-4 text-emerald-400" />;
+    if (isBad) return <TrendingDown className="w-4 h-4 text-red-400" />;
+    return <Activity className="w-4 h-4 text-yellow-400" />;
   };
-
-  const getInsightColor = (type: Insight['type']) => {
-    if (type === 'positive') return 'border-green-500/30 bg-green-500/10';
-    if (type === 'negative') return 'border-red-500/30 bg-red-500/10';
-    return 'border-yellow-500/30 bg-yellow-500/10';
-  };
-
-  if (loading) {
-    return (
-      <PageContainer>
-        <Section>
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
-          </div>
-        </Section>
-      </PageContainer>
-    );
-  }
 
   return (
-    <PageContainer>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
       {/* Header */}
-      <Section>
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-100">AI Insights</h1>
-          <p className="text-gray-400 mt-2">
-            AI-generated insights and recommendations across your business portfolio
+          <h1 className="text-2xl font-bold text-white">AI Insights</h1>
+          <p className="text-sm text-slate-400 mt-1">
+            AI-generated analysis and signals across your business portfolio
           </p>
         </div>
-      </Section>
-
-      {/* Filters */}
-      <Section>
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Search */}
-            <div className="md:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Search insights..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-900/50 border-gray-700 text-gray-100"
-              />
-            </div>
-
-            {/* Business filter */}
-            <div>
-              <select
-                value={selectedBusiness}
-                onChange={(e) => setSelectedBusiness(e.target.value)}
-                className="w-full h-10 px-3 bg-gray-900/50 border border-gray-700 text-gray-100 rounded-md"
-              >
-                {businesses.map((business) => (
-                  <option key={business.id} value={business.id}>
-                    {business.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Acknowledged toggle */}
-            <div>
-              <Button
-                variant={showAcknowledged ? 'outline' : 'default'}
-                onClick={() => setShowAcknowledged(!showAcknowledged)}
-                className={
-                  showAcknowledged
-                    ? 'w-full border-gray-600'
-                    : 'w-full bg-blue-600 hover:bg-blue-700'
-                }
-              >
-                {showAcknowledged ? 'All' : 'Pending Only'}
-              </Button>
-            </div>
-          </div>
-        </Card>
-      </Section>
+        <Button variant="ghost" size="icon" onClick={fetchInsights} className="text-slate-400 hover:text-white">
+          <RefreshCw className="w-4 h-4" />
+        </Button>
+      </div>
 
       {/* Stats */}
-      <Section>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-400">Total Insights</p>
-                <p className="text-2xl font-bold text-gray-100 mt-1">{insights.length}</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "Total Snapshots", value: snapshots.length, icon: Sparkles, color: "text-blue-400", bg: "bg-blue-500/10" },
+          { label: "Avg E-E-A-T", value: avgEeat || "—", icon: Shield, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+          { label: "Avg NavBoost Risk", value: avgNavboost || "—", icon: Eye, color: "text-yellow-400", bg: "bg-yellow-500/10" },
+          { label: "Opportunities", value: opportunities, icon: Target, color: "text-purple-400", bg: "bg-purple-500/10" },
+        ].map((s) => (
+          <Card key={s.label} className="bg-slate-800/50 border-slate-700">
+            <div className="p-4">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div>
+                <div>
+                  <p className="text-2xl font-bold text-white">{s.value}</p>
+                  <p className="text-xs text-slate-400">{s.label}</p>
+                </div>
               </div>
-              <Activity className="w-8 h-8 text-blue-400" />
             </div>
           </Card>
+        ))}
+      </div>
 
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-400">Pending</p>
-                <p className="text-2xl font-bold text-yellow-400 mt-1">
-                  {insights.filter((i) => !i.acknowledged).length}
-                </p>
-              </div>
-              <Circle className="w-8 h-8 text-yellow-400" />
-            </div>
-          </Card>
-
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-400">Actionable</p>
-                <p className="text-2xl font-bold text-green-400 mt-1">
-                  {insights.filter((i) => i.actionable).length}
-                </p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-green-400" />
-            </div>
-          </Card>
-
-          <Card className="bg-gray-800/50 border-gray-700 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-400">This Week</p>
-                <p className="text-2xl font-bold text-purple-400 mt-1">
-                  {insights.filter((i) => i.timestamp.includes('hours') || i.timestamp.includes('day')).length}
-                </p>
-              </div>
-              <Calendar className="w-8 h-8 text-purple-400" />
-            </div>
-          </Card>
+      {/* Filters */}
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Input
+            placeholder="Search insights..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+          />
         </div>
-      </Section>
+        <select
+          value={selectedBusiness}
+          onChange={(e) => setSelectedBusiness(e.target.value)}
+          className="h-10 px-3 bg-slate-800 border border-slate-700 text-white rounded-md text-sm"
+        >
+          <option value="all">All Businesses</option>
+          {businesses.map((b) => (
+            <option key={b.business_key} value={b.display_name}>
+              {b.display_name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Insights List */}
-      <Section>
-        <div className="space-y-4">
-          {filteredInsights.length === 0 ? (
-            <Card className="bg-gray-800/50 border-gray-700 p-12 text-center">
-              <Activity className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-100 mb-2">No insights found</h3>
-              <p className="text-gray-400">
-                {searchQuery
-                  ? 'Try adjusting your search or filters'
-                  : 'AI Phill will generate insights as signals are detected'}
-              </p>
-            </Card>
-          ) : (
-            filteredInsights.map((insight) => (
-              <Card
-                key={insight.id}
-                className={`border ${getInsightColor(insight.type)} hover:bg-opacity-20 transition-all`}
-              >
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-start space-x-3 flex-1">
-                      {getInsightIcon(insight.type)}
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-100">{insight.title}</h3>
-                          {insight.actionable && (
-                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs font-medium rounded border border-blue-500/30">
-                              Actionable
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-300 mb-2">{insight.summary}</p>
-                        <p className="text-sm text-gray-400 mb-4">{insight.details}</p>
-                        <div className="flex items-center space-x-4 text-xs text-gray-500">
-                          <span className="flex items-center">
-                            <Building2 className="w-3 h-3 mr-1" />
-                            {insight.businessName}
-                          </span>
-                          <span className="flex items-center">
-                            <Filter className="w-3 h-3 mr-1" />
-                            {insight.category}
-                          </span>
-                          <span className="flex items-center">
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {insight.timestamp}
-                          </span>
-                        </div>
-                      </div>
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => <div key={i} className="h-32 bg-slate-800/30 rounded-lg animate-pulse" />)}
+        </div>
+      ) : filtered.length === 0 ? (
+        <Card className="bg-slate-800/30 border-slate-700">
+          <div className="text-center py-16">
+            <Sparkles className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">No insights yet</h3>
+            <p className="text-sm text-slate-400">
+              {searchQuery || selectedBusiness !== "all"
+                ? "Try adjusting your search or filters"
+                : "AI insights will appear here as snapshots are generated for your businesses"}
+            </p>
+          </div>
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map((snapshot) => (
+            <Card key={snapshot.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors">
+              <div className="p-5">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <div className="p-2 bg-slate-700 rounded-lg flex-shrink-0">
+                      <Sparkles className="h-5 w-5 text-purple-400" />
                     </div>
-
-                    <div className="flex items-center space-x-2 ml-4">
-                      {!insight.acknowledged && (
-                        <Button
-                          onClick={() => handleAcknowledge(insight.id)}
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700"
-                        >
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Acknowledge
-                        </Button>
-                      )}
-                      {insight.acknowledged && (
-                        <span className="flex items-center text-sm text-green-400">
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          Acknowledged
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-medium text-white capitalize">
+                          {snapshot.snapshot_type.replace(/_/g, " ")}
+                        </h3>
+                        <span className="text-[10px] px-2 py-0.5 bg-slate-700 text-slate-300 rounded">
+                          {snapshot.snapshot_type}
                         </span>
-                      )}
+                      </div>
+                      <p className="text-sm text-slate-300 line-clamp-3 whitespace-pre-wrap">
+                        {snapshot.summary_markdown.substring(0, 300)}
+                        {snapshot.summary_markdown.length > 300 ? "..." : ""}
+                      </p>
                     </div>
                   </div>
                 </div>
-              </Card>
-            ))
-          )}
+
+                {/* Signal Scores */}
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-3 pt-3 border-t border-slate-700">
+                  {[
+                    { label: "E-E-A-T", value: snapshot.eeat_strength_score, inverted: false },
+                    { label: "NavBoost Risk", value: snapshot.navboost_risk_score, inverted: true },
+                    { label: "Q* Proxy", value: snapshot.q_star_proxy_score, inverted: false },
+                    { label: "Sandbox Risk", value: snapshot.sandbox_risk_score, inverted: true },
+                    { label: "Opportunity", value: snapshot.behaviour_signal_opportunity_score, inverted: false },
+                  ].map((signal) => (
+                    <div key={signal.label} className="flex items-center gap-2">
+                      {getScoreIcon(signal.value, signal.inverted)}
+                      <div>
+                        <p className="text-[10px] text-slate-500">{signal.label}</p>
+                        <p className={`text-sm font-semibold ${getScoreColor(signal.value, signal.inverted)}`}>
+                          {signal.value !== null ? signal.value : "—"}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center gap-4 mt-3 pt-2 text-[11px] text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <Building2 className="w-3 h-3" /> {snapshot.business_name}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {new Date(snapshot.created_at).toLocaleDateString("en-AU", {
+                      day: "numeric", month: "short", year: "numeric",
+                    })}
+                  </span>
+                  {Object.keys(snapshot.gap_opportunities || {}).length > 0 && (
+                    <span className="flex items-center gap-1">
+                      <Target className="w-3 h-3 text-purple-400" />
+                      {Object.keys(snapshot.gap_opportunities).length} gap{Object.keys(snapshot.gap_opportunities).length !== 1 ? "s" : ""} identified
+                    </span>
+                  )}
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
-      </Section>
-    </PageContainer>
+      )}
+    </div>
   );
 }

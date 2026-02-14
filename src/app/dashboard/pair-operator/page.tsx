@@ -2,25 +2,49 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Bot, AlertTriangle, Send } from 'lucide-react';
+import { Bot, AlertTriangle, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function PairOperatorPage() {
+  const { session } = useAuth();
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
-    setMessages(prev => [...prev, { role: 'user', content: input }]);
-    // Simulated response
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: `Regarding "${input}": This is an advisory suggestion. Consider reviewing related metrics and consulting the relevant dashboard. Confidence: 72%`
-      }]);
-    }, 500);
+  const sendMessage = async () => {
+    if (!input.trim() || isLoading) return;
+    const userMsg = input;
+    setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setInput('');
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
+        body: JSON.stringify({
+          message: `[Advisory Mode - Pair Operator] The user is asking an operational advisory question. Provide analysis with a confidence score (0-100%). Be concise and actionable. Question: ${userMsg}`,
+          context: 'pair_operator',
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Unable to generate a response.' }]);
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', content: 'Failed to get a response. Please try again.' }]);
+      }
+    } catch (err) {
+      console.error('Pair operator chat error:', err);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Connection error. Please check your internet and try again.' }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -51,6 +75,14 @@ export default function PairOperatorPage() {
               </div>
             ))
           )}
+          {isLoading && (
+            <div className="text-sm">
+              <div className="inline-block p-2 rounded bg-muted">
+                <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
+                Thinking...
+              </div>
+            </div>
+          )}
         </CardContent>
         <div className="p-4 border-t flex gap-2">
           <Input
@@ -58,8 +90,9 @@ export default function PairOperatorPage() {
             onChange={e => setInput(e.target.value)}
             placeholder="Ask a question..."
             onKeyDown={e => e.key === 'Enter' && sendMessage()}
+            disabled={isLoading}
           />
-          <Button onClick={sendMessage}><Send className="h-4 w-4" /></Button>
+          <Button onClick={sendMessage} disabled={!input.trim() || isLoading}><Send className="h-4 w-4" /></Button>
         </div>
       </Card>
       <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20"><CardContent className="py-4"><div className="flex gap-3"><AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" /><div className="text-sm text-amber-800 dark:text-amber-200"><div className="font-medium mb-1">Pair-Operator Constraints</div><p>No direct system changes. Advisory only mode. All suggestions include confidence. Subject to early warning and compliance veto.</p></div></div></CardContent></Card>

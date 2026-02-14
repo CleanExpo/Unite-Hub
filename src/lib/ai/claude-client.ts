@@ -46,7 +46,7 @@ export async function generateSectionCopy(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-4-5-20250929",
       max_tokens: 2000,
       messages: [
         {
@@ -101,7 +101,7 @@ export async function generateSEOMetadata(context: {
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-4-5-20250929",
       max_tokens: 1000,
       messages: [
         {
@@ -146,7 +146,7 @@ export async function generateCopyTips(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-4-5-20250929",
       max_tokens: 1500,
       messages: [
         {
@@ -188,7 +188,7 @@ export async function generateDesignTips(pageType: string): Promise<string[]> {
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-4-5-20250929",
       max_tokens: 1500,
       messages: [
         {
@@ -247,7 +247,7 @@ export async function generateCopyVariations(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-4-5-20250929",
       max_tokens: 2500,
       messages: [
         {
@@ -297,7 +297,7 @@ export async function improveCopy(
 
     const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-4-5-20250929",
       max_tokens: 2000,
       messages: [
         {

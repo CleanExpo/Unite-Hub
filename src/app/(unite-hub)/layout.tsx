@@ -37,57 +37,57 @@ interface UniteHubLayoutProps {
 const navigationItems = [
   {
     label: 'Dashboard',
-    href: '/unite-hub/dashboard',
+    href: '/dashboard/overview',
     icon: LayoutDashboard,
   },
   {
     label: 'Contacts',
-    href: '/unite-hub/contacts',
+    href: '/dashboard/contacts',
     icon: Users,
   },
   {
     label: 'Campaigns',
-    href: '/unite-hub/campaigns',
+    href: '/dashboard/campaigns',
     icon: Megaphone,
   },
   {
     label: 'Email Intelligence',
-    href: '/unite-hub/email-intel',
+    href: '/dashboard/emails',
     icon: Mail,
   },
   {
     label: 'Projects',
-    href: '/unite-hub/projects',
+    href: '/dashboard/projects',
     icon: FolderKanban,
   },
   {
     label: 'AI Agents',
-    href: '/unite-hub/agents',
+    href: '/founder/agents',
     icon: Brain,
   },
   {
     label: 'Analytics',
-    href: '/unite-hub/analytics',
+    href: '/dashboard/analytics',
     icon: BarChart3,
   },
   {
     label: 'Search Suite',
-    href: '/unite-hub/search-suite',
+    href: '/dashboard/seo',
     icon: Search,
   },
   {
     label: 'Tasks',
-    href: '/unite-hub/tasks',
+    href: '/dashboard/tasks',
     icon: CheckSquare,
   },
   {
     label: 'Activity',
-    href: '/unite-hub/activity',
+    href: '/dashboard/overview',
     icon: Activity,
   },
   {
     label: 'Settings',
-    href: '/unite-hub/settings',
+    href: '/dashboard/settings',
     icon: Settings,
   },
 ];

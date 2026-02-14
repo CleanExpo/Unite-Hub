@@ -5,6 +5,8 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { anthropic as centralizedAnthropicClient } from "@/lib/anthropic/client";
+import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 
 export interface PlanStep {
   step_number: number;
@@ -78,12 +80,11 @@ const SAFE_COMMANDS = [
  */
 export class AgentPlanner {
   private anthropic: Anthropic;
-  private model: string = "claude-opus-4-5-20251101";
+  private model: string = ANTHROPIC_MODELS.OPUS_4_5;
 
   constructor(apiKey?: string) {
-    this.anthropic = new Anthropic({
-      apiKey: apiKey || process.env.ANTHROPIC_API_KEY,
-    });
+    // Use centralized Anthropic client (cast needed since it's a Proxy)
+    this.anthropic = centralizedAnthropicClient as unknown as Anthropic;
   }
 
   /**

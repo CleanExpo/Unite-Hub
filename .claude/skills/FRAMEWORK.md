@@ -584,5 +584,44 @@ Agents load only what they need!
 
 ---
 
+## Runtime Skill Loading (Workforce Engine)
+
+The Skills Framework is now backed by a TypeScript runtime that parses SKILL.md
+files at startup and loads them on demand during agent execution.
+
+**Implementation**: `src/lib/agents/workforce/skill-loader.ts`
+
+### How It Works
+
+1. **Index Build** — `skillLoader.buildIndex()` scans `.claude/skills/` recursively,
+   parsing YAML frontmatter from every `SKILL.md` and `*.skill.md` file.
+2. **Priority Loading** — Priority 1 skills auto-load for every agent invocation.
+   Priority 2 skills load when task keywords match `auto_load_for`. Priority 3
+   skills load only on explicit request. Priority 4 skills are never loaded.
+3. **Task Matching** — `skillLoader.matchSkillsForTask(description)` extracts
+   keywords from the task and matches against each skill's `auto_load_for` array,
+   name, and description. Results are sorted by priority.
+4. **Dependency Resolution** — `skillLoader.resolveDependencies()` performs a
+   topological sort of the dependency tree, detecting circular references.
+5. **Token Budget** — `skillLoader.getTokenBudget(skills)` sums estimated token
+   counts so the orchestrator can stay within context limits.
+
+### Integration Points
+
+- **Agent Lifecycle** — `lifecycleManager.spawn(agentId)` auto-loads Priority 1
+  skills and the agent's own skill file.
+- **Workforce Orchestrator** — Each workstream loads agent skills + task-matched
+  skills before execution.
+- **Workforce Registry** — `workforceRegistry.matchWorkforce(task)` combines
+  agent capabilities with skill keywords for intelligent routing.
+
+### Cache & Hot Reload
+
+- Skills are cached after first parse. Call `skillLoader.clearCache()` to force
+  re-read from disk (e.g., after editing a SKILL.md file).
+- The `resetWorkforce()` function clears all caches for a full restart.
+
+---
+
 **Skills Framework enables 67% context reduction while maintaining full capabilities.**
-**Version**: 2.0.0 | **Status**: Operational
+**Version**: 2.1.0 | **Status**: Operational | **Runtime**: `src/lib/agents/workforce/`
