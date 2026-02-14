@@ -24,7 +24,7 @@ ALTER TABLE branding_packs ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY branding_packs_select ON branding_packs
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -36,7 +36,7 @@ CREATE POLICY branding_packs_insert ON branding_packs
 
 CREATE POLICY branding_packs_update ON branding_packs
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ))
   WITH CHECK (org_id IN (

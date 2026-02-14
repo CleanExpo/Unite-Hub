@@ -34,7 +34,7 @@ ALTER TABLE acehig_dependency_map ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated)
 CREATE POLICY acehig_dependency_select ON acehig_dependency_map
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE acehig_dependency_map IS 'Cross-engine dependency definitions (Phase 99)';
@@ -65,7 +65,7 @@ ALTER TABLE acehig_blocked_cascades ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY acehig_blocked_select ON acehig_blocked_cascades
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

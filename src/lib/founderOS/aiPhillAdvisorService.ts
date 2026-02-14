@@ -12,6 +12,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { supabaseAdmin } from '@/lib/supabase';
 import { listBusinesses, getBusiness, type FounderBusiness } from './founderBusinessRegistryService';
 import { getSignals, type BusinessSignal } from './founderSignalInferenceService';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 
 // ============================================================================
 // Types
@@ -213,9 +214,19 @@ Return ONLY valid JSON.`;
         type: 'enabled',
         budget_tokens: 5000,
       },
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' }, // Cache system prompt for 5 min (90% cost savings)
+        },
+      ],
       messages: [{ role: 'user', content: userPrompt }],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats('AiPhillAdvisor:generateInsight', cacheStats);
 
     // Extract text content
     let responseText = '';

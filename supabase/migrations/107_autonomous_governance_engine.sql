@@ -28,7 +28,7 @@ ALTER TABLE governance_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (system-wide, admin access)
 CREATE POLICY governance_events_select ON governance_events
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY governance_events_insert ON governance_events
   FOR INSERT TO authenticated
@@ -63,7 +63,7 @@ ALTER TABLE governance_reports ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY governance_reports_select ON governance_reports
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY governance_reports_insert ON governance_reports
   FOR INSERT TO authenticated

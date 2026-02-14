@@ -40,7 +40,7 @@ ALTER TABLE raaoe_region_profiles ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated users - reference data)
 CREATE POLICY raaoe_region_profiles_select ON raaoe_region_profiles
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE raaoe_region_profiles IS 'Regional operational profiles and SLA configurations (Phase 91)';
@@ -74,7 +74,7 @@ ALTER TABLE raaoe_tenant_regions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY raaoe_tenant_regions_select ON raaoe_tenant_regions
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -86,7 +86,7 @@ CREATE POLICY raaoe_tenant_regions_insert ON raaoe_tenant_regions
 
 CREATE POLICY raaoe_tenant_regions_update ON raaoe_tenant_regions
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -121,7 +121,7 @@ ALTER TABLE raaoe_actions_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY raaoe_actions_log_select ON raaoe_actions_log
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

@@ -99,16 +99,16 @@ ALTER TABLE task_marketplace_analytics ENABLE ROW LEVEL SECURITY;
 
 -- Service role: Full access
 CREATE POLICY task_marketplace_auctions_service_role ON task_marketplace_auctions
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 CREATE POLICY task_marketplace_bids_service_role ON task_marketplace_bids
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 CREATE POLICY task_marketplace_history_service_role ON task_marketplace_history
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 CREATE POLICY task_marketplace_analytics_service_role ON task_marketplace_analytics
-  FOR ALL USING (true) WITH CHECK (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true) WITH CHECK (true);
 
 -- Founder role: Select only, scoped to workspace
 -- Uses organization-based access control

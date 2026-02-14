@@ -6,6 +6,7 @@
  */
 
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { PerplexitySonar } from '@/lib/ai/perplexity-sonar';
 import { createIntentCluster, IntentClusterInput } from './database/intent-clusters';
 
@@ -120,7 +121,13 @@ Return a JSON object with this structure:
           type: 'enabled',
           budget_tokens: 10000, // Extended thinking for quality extraction
         },
-        system: systemPrompt,
+        system: [
+          {
+            type: 'text',
+            text: systemPrompt,
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
         messages: [
           {
             role: 'user',
@@ -129,6 +136,10 @@ Return a JSON object with this structure:
         ],
       });
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response.data, 'claude-opus-4-5-20251101');
+    logCacheStats('IntentCluster:generateCluster', cacheStats);
 
     // Extract JSON from response
     const responseText = response.data.content[0].type === 'text'

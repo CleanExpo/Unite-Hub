@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS usage_lockouts (
   CONSTRAINT usage_lockouts_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT usage_lockouts_user_fk
-    FOREIGN KEY (unlocked_by) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (unlocked_by) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -37,7 +38,7 @@ ALTER TABLE usage_lockouts ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY usage_lockouts_select ON usage_lockouts
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -51,7 +52,7 @@ CREATE POLICY usage_lockouts_insert ON usage_lockouts
 
 CREATE POLICY usage_lockouts_update ON usage_lockouts
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -79,7 +80,8 @@ CREATE TABLE IF NOT EXISTS usage_warnings (
   CONSTRAINT usage_warnings_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT usage_warnings_user_fk
-    FOREIGN KEY (acknowledged_by) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (acknowledged_by) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -94,7 +96,7 @@ ALTER TABLE usage_warnings ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY usage_warnings_select ON usage_warnings
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -106,7 +108,7 @@ CREATE POLICY usage_warnings_insert ON usage_warnings
 
 CREATE POLICY usage_warnings_update ON usage_warnings
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

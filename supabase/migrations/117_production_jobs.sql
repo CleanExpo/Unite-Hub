@@ -4,7 +4,8 @@
 -- Production jobs table
 CREATE TABLE IF NOT EXISTS production_jobs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Job details
@@ -40,7 +41,8 @@ CREATE TABLE IF NOT EXISTS production_jobs (
   -- Approval workflow
   requires_client_approval BOOLEAN DEFAULT true,
   requires_owner_oversight BOOLEAN DEFAULT false,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   approved_at TIMESTAMPTZ,
   revision_count INTEGER DEFAULT 0,
   revision_notes TEXT,
@@ -62,7 +64,8 @@ CREATE TABLE IF NOT EXISTS production_jobs (
 CREATE TABLE IF NOT EXISTS production_outputs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   job_id UUID NOT NULL REFERENCES production_jobs(id) ON DELETE CASCADE,
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Output details
   output_type TEXT NOT NULL CHECK (output_type IN (
@@ -97,7 +100,8 @@ CREATE TABLE IF NOT EXISTS production_job_history (
   )),
   previous_status TEXT,
   new_status TEXT,
-  user_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id),
   notes TEXT,
 
   -- Timestamps
@@ -145,7 +149,7 @@ ALTER TABLE production_templates ENABLE ROW LEVEL SECURITY;
 
 -- Clients can view their own jobs
 CREATE POLICY "clients_view_own_jobs" ON production_jobs
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Clients can insert jobs (requests)
 CREATE POLICY "clients_insert_own_jobs" ON production_jobs
@@ -153,11 +157,11 @@ CREATE POLICY "clients_insert_own_jobs" ON production_jobs
 
 -- Clients can update their own jobs (cancel, approve)
 CREATE POLICY "clients_update_own_jobs" ON production_jobs
-  FOR UPDATE USING (auth.uid() = client_id);
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Staff can view all jobs in their org
 CREATE POLICY "staff_view_org_jobs" ON production_jobs
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations uo
       WHERE uo.user_id = auth.uid()
@@ -168,7 +172,7 @@ CREATE POLICY "staff_view_org_jobs" ON production_jobs
 
 -- Staff can update jobs (process, approve)
 CREATE POLICY "staff_update_org_jobs" ON production_jobs
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations uo
       WHERE uo.user_id = auth.uid()
@@ -179,11 +183,11 @@ CREATE POLICY "staff_update_org_jobs" ON production_jobs
 
 -- Clients can view their own outputs
 CREATE POLICY "clients_view_own_outputs" ON production_outputs
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Staff can view all outputs in their org
 CREATE POLICY "staff_view_org_outputs" ON production_outputs
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM production_jobs pj
       JOIN user_organizations uo ON uo.org_id = pj.organization_id
@@ -195,7 +199,7 @@ CREATE POLICY "staff_view_org_outputs" ON production_outputs
 
 -- History policies
 CREATE POLICY "clients_view_own_history" ON production_job_history
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM production_jobs pj
       WHERE pj.id = production_job_history.job_id
@@ -204,7 +208,7 @@ CREATE POLICY "clients_view_own_history" ON production_job_history
   );
 
 CREATE POLICY "staff_view_org_history" ON production_job_history
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM production_jobs pj
       JOIN user_organizations uo ON uo.org_id = pj.organization_id
@@ -216,7 +220,7 @@ CREATE POLICY "staff_view_org_history" ON production_job_history
 
 -- Template policies
 CREATE POLICY "staff_view_org_templates" ON production_templates
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations uo
       WHERE uo.user_id = auth.uid()
@@ -227,16 +231,16 @@ CREATE POLICY "staff_view_org_templates" ON production_templates
 
 -- Service role can do everything
 CREATE POLICY "service_role_jobs" ON production_jobs
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_outputs" ON production_outputs
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_history" ON production_job_history
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_templates" ON production_templates
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Update timestamp trigger
 CREATE TRIGGER update_production_jobs_timestamp

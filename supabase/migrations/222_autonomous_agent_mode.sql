@@ -149,7 +149,8 @@ CREATE TABLE IF NOT EXISTS agent_risk_assessments (
   -- Approval workflow
   requires_founder_approval BOOLEAN DEFAULT FALSE,
   approval_status TEXT CHECK (approval_status IN ('pending', 'approved', 'rejected', 'auto_approved', NULL)),
-  approved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   approval_reason TEXT,
   approved_at TIMESTAMPTZ,
 

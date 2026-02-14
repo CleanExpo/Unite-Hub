@@ -100,8 +100,49 @@ const nextConfig = {
     },
   ],
 
-  // Security headers
+  // Security and caching headers
   headers: async () => [
+    // Aggressive caching for static assets (JavaScript, CSS, fonts)
+    {
+      source: '/_next/static/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable',
+        },
+      ],
+    },
+    // Aggressive caching for public static files
+    {
+      source: '/static/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable',
+        },
+      ],
+    },
+    // Image optimization caching with stale-while-revalidate
+    {
+      source: '/_next/image',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=3600, stale-while-revalidate=86400',
+        },
+      ],
+    },
+    // No caching for API routes (use Redis instead)
+    {
+      source: '/api/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'no-store, must-revalidate',
+        },
+      ],
+    },
+    // Security headers for all routes
     {
       source: '/:path*',
       headers: [

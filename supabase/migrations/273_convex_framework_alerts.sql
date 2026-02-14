@@ -206,7 +206,8 @@ CREATE TABLE IF NOT EXISTS convex_framework_alert_notifications (
   CONSTRAINT fk_trigger_id FOREIGN KEY (alert_trigger_id) REFERENCES convex_framework_alert_triggers(id) ON DELETE CASCADE,
   CONSTRAINT fk_alert_rule_id FOREIGN KEY (alert_rule_id) REFERENCES convex_framework_alert_rules(id) ON DELETE CASCADE,
   CONSTRAINT fk_workspace_id FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE,
-  CONSTRAINT fk_recipient_id FOREIGN KEY (recipient_user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+  -- Keep FK reference to auth.users (allowed in migrations)
+CONSTRAINT fk_recipient_id FOREIGN KEY (recipient_user_id) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -315,4 +316,4 @@ BEGIN
   END IF;
 END $$;
 
--- End of Migration 273
+-- End of Migration 273;

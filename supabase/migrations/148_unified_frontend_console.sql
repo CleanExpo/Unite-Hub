@@ -35,7 +35,8 @@ CREATE TABLE ufc_module_access (
   CONSTRAINT ufc_module_access_tenant_fk
     FOREIGN KEY (tenant_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT ufc_module_access_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -49,7 +50,7 @@ ALTER TABLE ufc_module_access ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY ufc_module_access_select ON ufc_module_access
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid() OR tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid() OR tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -69,7 +70,8 @@ CREATE TABLE ufc_user_preferences (
 
   -- Foreign keys
   CONSTRAINT ufc_user_preferences_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -81,7 +83,7 @@ ALTER TABLE ufc_user_preferences ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY ufc_user_preferences_select ON ufc_user_preferences
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 CREATE POLICY ufc_user_preferences_insert ON ufc_user_preferences
   FOR INSERT TO authenticated
@@ -89,7 +91,7 @@ CREATE POLICY ufc_user_preferences_insert ON ufc_user_preferences
 
 CREATE POLICY ufc_user_preferences_update ON ufc_user_preferences
   FOR UPDATE TO authenticated
-  USING (user_id = auth.uid());
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 -- Comment
 COMMENT ON TABLE ufc_user_preferences IS 'User console preferences (Phase 96)';

@@ -110,10 +110,10 @@ FOR DELETE USING (
 
 -- Service role access
 CREATE POLICY "service_role_all_packs" ON visual_concept_packs
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_all_items" ON visual_concept_items
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Grant permissions
 GRANT ALL ON visual_concept_packs TO authenticated;

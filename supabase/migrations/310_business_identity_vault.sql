@@ -90,7 +90,7 @@ BEGIN
     SELECT 1 FROM pg_policies WHERE tablename = 'business_identity_profiles' AND policyname = 'business_identity_profiles_owner_access'
   ) THEN
     CREATE POLICY business_identity_profiles_owner_access ON business_identity_profiles
-      FOR ALL USING (
+      FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         auth.uid() = owner_profile_id
       ) WITH CHECK (
         auth.uid() = owner_profile_id
@@ -104,7 +104,7 @@ BEGIN
     SELECT 1 FROM pg_policies WHERE tablename = 'business_identity_channels' AND policyname = 'business_identity_channels_owner_access'
   ) THEN
     CREATE POLICY business_identity_channels_owner_access ON business_identity_channels
-      FOR ALL USING (
+      FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
           SELECT 1 FROM business_identity_profiles bip
           WHERE bip.id = business_identity_channels.business_id
@@ -126,7 +126,7 @@ BEGIN
     SELECT 1 FROM pg_policies WHERE tablename = 'business_identity_ai_snapshots' AND policyname = 'business_identity_ai_snapshots_owner_access'
   ) THEN
     CREATE POLICY business_identity_ai_snapshots_owner_access ON business_identity_ai_snapshots
-      FOR ALL USING (
+      FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
           SELECT 1 FROM business_identity_profiles bip
           WHERE bip.id = business_identity_ai_snapshots.business_id

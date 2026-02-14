@@ -35,7 +35,7 @@ ALTER TABLE knowledge_graph_nodes ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (global read)
 CREATE POLICY knowledge_graph_nodes_select ON knowledge_graph_nodes
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY knowledge_graph_nodes_insert ON knowledge_graph_nodes
   FOR INSERT TO authenticated
@@ -43,7 +43,7 @@ CREATE POLICY knowledge_graph_nodes_insert ON knowledge_graph_nodes
 
 CREATE POLICY knowledge_graph_nodes_update ON knowledge_graph_nodes
   FOR UPDATE TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE knowledge_graph_nodes IS 'Knowledge graph nodes (Phase 72)';
@@ -81,7 +81,7 @@ ALTER TABLE knowledge_graph_edges ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (global read)
 CREATE POLICY knowledge_graph_edges_select ON knowledge_graph_edges
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY knowledge_graph_edges_insert ON knowledge_graph_edges
   FOR INSERT TO authenticated

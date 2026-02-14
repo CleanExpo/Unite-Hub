@@ -188,9 +188,11 @@ CREATE TABLE IF NOT EXISTS search_volatility_alerts (
   alert_date DATE,
   -- Status
   status TEXT DEFAULT 'open' CHECK (status IN ('open', 'acknowledged', 'investigating', 'resolved', 'dismissed')),
-  acknowledged_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+acknowledged_by UUID REFERENCES auth.users(id),
   acknowledged_at TIMESTAMPTZ,
-  resolved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by UUID REFERENCES auth.users(id),
   resolved_at TIMESTAMPTZ,
   resolution_notes TEXT,
   -- Notifications

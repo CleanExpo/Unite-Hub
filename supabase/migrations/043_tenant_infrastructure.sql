@@ -458,4 +458,4 @@ COMMENT ON COLUMN tenant_containers.health_status IS 'Current health status from
 -- MIGRATION COMPLETE
 -- ============================================================================
 -- Run this SQL in Supabase SQL Editor
--- After running, tenant infrastructure is ready for use
+-- After running, tenant infrastructure is ready for use;

@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS system_errors (
 
   -- Request context (if applicable)
   request_id TEXT,
-  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   workspace_id UUID,
   route TEXT,
   method TEXT,
@@ -31,7 +32,8 @@ CREATE TABLE IF NOT EXISTS system_errors (
   -- Error state
   resolved BOOLEAN DEFAULT FALSE,
   resolved_at TIMESTAMPTZ,
-  resolved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   resolution_notes TEXT,
 
   -- Metadata
@@ -67,7 +69,8 @@ CREATE TABLE IF NOT EXISTS performance_logs (
   route TEXT,
   method TEXT,
   status_code INTEGER,
-  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   workspace_id UUID,
 
   -- Additional metrics

@@ -48,7 +48,8 @@ CREATE TABLE IF NOT EXISTS simulation_runs (
   duration_ms INTEGER,
 
   -- Ownership
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -174,7 +175,8 @@ CREATE TABLE IF NOT EXISTS benchmark_snapshots (
   is_active BOOLEAN NOT NULL DEFAULT true,
 
   -- Ownership
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -203,7 +205,8 @@ CREATE TABLE IF NOT EXISTS simulation_comparisons (
   recommendation_rationale TEXT,
 
   -- Created
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -237,7 +240,7 @@ ALTER TABLE simulation_comparisons ENABLE ROW LEVEL SECURITY;
 
 -- Simulation Runs: org members
 CREATE POLICY simulation_runs_select ON simulation_runs
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -253,7 +256,7 @@ CREATE POLICY simulation_runs_insert ON simulation_runs
   );
 
 CREATE POLICY simulation_runs_update ON simulation_runs
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
@@ -261,7 +264,7 @@ CREATE POLICY simulation_runs_update ON simulation_runs
   );
 
 CREATE POLICY simulation_runs_delete ON simulation_runs
-  FOR DELETE USING (
+  FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role = 'owner'
@@ -270,7 +273,7 @@ CREATE POLICY simulation_runs_delete ON simulation_runs
 
 -- Simulation Steps: via simulation_run
 CREATE POLICY simulation_steps_select ON simulation_steps
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     simulation_run_id IN (
       SELECT id FROM simulation_runs
       WHERE organization_id IN (
@@ -293,7 +296,7 @@ CREATE POLICY simulation_steps_insert ON simulation_steps
 
 -- Simulation Metrics: via simulation_run
 CREATE POLICY simulation_metrics_select ON simulation_metrics
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     simulation_run_id IN (
       SELECT id FROM simulation_runs
       WHERE organization_id IN (
@@ -316,7 +319,7 @@ CREATE POLICY simulation_metrics_insert ON simulation_metrics
 
 -- Benchmark Snapshots: org members
 CREATE POLICY benchmark_snapshots_select ON benchmark_snapshots
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -332,7 +335,7 @@ CREATE POLICY benchmark_snapshots_insert ON benchmark_snapshots
   );
 
 CREATE POLICY benchmark_snapshots_update ON benchmark_snapshots
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
@@ -341,7 +344,7 @@ CREATE POLICY benchmark_snapshots_update ON benchmark_snapshots
 
 -- Simulation Comparisons: org members
 CREATE POLICY simulation_comparisons_select ON simulation_comparisons
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -357,7 +360,7 @@ CREATE POLICY simulation_comparisons_insert ON simulation_comparisons
   );
 
 CREATE POLICY simulation_comparisons_update ON simulation_comparisons
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')

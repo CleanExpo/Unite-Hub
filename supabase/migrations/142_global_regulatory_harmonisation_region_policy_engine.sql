@@ -39,7 +39,7 @@ ALTER TABLE grh_frameworks ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated users - reference data)
 CREATE POLICY grh_frameworks_select ON grh_frameworks
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE grh_frameworks IS 'Global regulatory frameworks reference data (Phase 90)';
@@ -78,7 +78,7 @@ ALTER TABLE grh_region_policies ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY grh_region_policies_select ON grh_region_policies
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -129,7 +129,7 @@ ALTER TABLE grh_global_posture ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY grh_global_posture_select ON grh_global_posture
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -141,7 +141,7 @@ CREATE POLICY grh_global_posture_insert ON grh_global_posture
 
 CREATE POLICY grh_global_posture_update ON grh_global_posture
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

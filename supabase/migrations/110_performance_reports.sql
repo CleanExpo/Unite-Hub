@@ -4,7 +4,8 @@
 -- Performance Reports table
 CREATE TABLE IF NOT EXISTS performance_reports (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   period TEXT NOT NULL CHECK (period IN ('quarterly', 'annual')),
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
@@ -28,16 +29,16 @@ ALTER TABLE performance_reports ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies
 CREATE POLICY "clients_view_own_reports" ON performance_reports
-FOR SELECT USING (client_id = auth.uid());
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND client_id = auth.uid());
 
 CREATE POLICY "clients_insert_own_reports" ON performance_reports
 FOR INSERT WITH CHECK (client_id = auth.uid());
 
 CREATE POLICY "clients_update_own_reports" ON performance_reports
-FOR UPDATE USING (client_id = auth.uid());
+FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND client_id = auth.uid());
 
 CREATE POLICY "service_role_all_reports" ON performance_reports
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Grant permissions
 GRANT ALL ON performance_reports TO authenticated;

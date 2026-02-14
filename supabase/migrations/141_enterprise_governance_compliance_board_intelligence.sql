@@ -54,7 +54,7 @@ ALTER TABLE egcbi_compliance_register ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY egcbi_compliance_select ON egcbi_compliance_register
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -66,7 +66,7 @@ CREATE POLICY egcbi_compliance_insert ON egcbi_compliance_register
 
 CREATE POLICY egcbi_compliance_update ON egcbi_compliance_register
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -106,7 +106,7 @@ ALTER TABLE egcbi_board_reports ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only after creation for immutability)
 CREATE POLICY egcbi_board_reports_select ON egcbi_board_reports
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -167,7 +167,7 @@ ALTER TABLE egcbi_governance_signals ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY egcbi_governance_signals_select ON egcbi_governance_signals
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

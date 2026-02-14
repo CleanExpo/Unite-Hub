@@ -7,7 +7,8 @@
 CREATE TABLE IF NOT EXISTS competitor_analysis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     url TEXT NOT NULL,
     analysis_type TEXT NOT NULL CHECK (analysis_type IN ('basic', 'seo', 'full', 'competitor')),
     data JSONB NOT NULL,

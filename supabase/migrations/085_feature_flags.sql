@@ -32,7 +32,7 @@ ALTER TABLE feature_flags ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY feature_flags_select ON feature_flags
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -45,7 +45,7 @@ CREATE POLICY feature_flags_insert ON feature_flags
 
 CREATE POLICY feature_flags_update ON feature_flags
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role = 'admin'
   ))
@@ -64,7 +64,8 @@ CREATE TABLE IF NOT EXISTS global_settings (
   value JSONB NOT NULL,
   environment TEXT NOT NULL DEFAULT 'production',
   updated_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL
+  -- Keep FK reference to auth.users (allowed in migrations)
+updated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Index for global settings

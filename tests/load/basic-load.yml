@@ -1,0 +1,89 @@
+# Basic Load Test - Unite-Hub
+# Tests basic API endpoints under moderate load
+
+config:
+  target: "http://localhost:3000"
+  phases:
+    # Warm-up phase
+    - duration: 60
+      arrivalRate: 5
+      name: "Warm up"
+    # Ramp-up phase
+    - duration: 120
+      arrivalRate: 10
+      rampTo: 50
+      name: "Ramp up load"
+    # Sustained load phase
+    - duration: 180
+      arrivalRate: 50
+      name: "Sustained load"
+    # Peak load phase
+    - duration: 60
+      arrivalRate: 100
+      name: "Peak load"
+    # Cool down
+    - duration: 60
+      arrivalRate: 10
+      name: "Cool down"
+  
+  # Performance thresholds
+  ensure:
+    maxErrorRate: 1 # Max 1% error rate
+    p95: 500 # 95th percentile response time < 500ms
+    p99: 1000 # 99th percentile response time < 1s
+  
+  # Plugins
+  plugins:
+    expect: {}
+    metrics-by-endpoint: {}
+
+scenarios:
+  - name: "Health Check"
+    weight: 20
+    flow:
+      - get:
+          url: "/api/health"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - hasProperty: status
+  
+  - name: "CSRF Token"
+    weight: 10
+    flow:
+      - get:
+          url: "/api/csrf-token"
+          expect:
+            - statusCode: 200
+            - hasProperty: token
+  
+  - name: "Authentication Flow"
+    weight: 30
+    flow:
+      # Get CSRF token
+      - get:
+          url: "/api/csrf-token"
+          capture:
+            - json: "$.token"
+              as: "csrfToken"
+            - json: "$.headerName"
+              as: "csrfHeader"
+      
+      # Try to access protected route (should fail without auth)
+      - get:
+          url: "/api/contacts/list"
+          expect:
+            - statusCode: [401, 403]
+  
+  - name: "Static Assets"
+    weight: 40
+    flow:
+      - get:
+          url: "/"
+          expect:
+            - statusCode: 200
+      
+      - get:
+          url: "/_next/static/css/app.css"
+          expect:
+            - statusCode: [200, 404] # May not exist

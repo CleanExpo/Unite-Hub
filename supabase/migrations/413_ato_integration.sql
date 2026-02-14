@@ -41,7 +41,8 @@ CREATE TABLE IF NOT EXISTS ato_credentials (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT ato_credentials_workspace_unique UNIQUE (workspace_id)
 );
@@ -141,7 +142,8 @@ CREATE TABLE IF NOT EXISTS bas_lodgements (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT bas_lodgements_workspace_period UNIQUE (workspace_id, period_year, period_quarter, period_month)
 );

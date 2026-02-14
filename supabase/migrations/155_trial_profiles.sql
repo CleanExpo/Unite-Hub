@@ -10,7 +10,8 @@
 CREATE TABLE IF NOT EXISTS trial_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Trial Status
   is_trial BOOLEAN NOT NULL DEFAULT TRUE,

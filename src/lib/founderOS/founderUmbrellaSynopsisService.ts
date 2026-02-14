@@ -12,6 +12,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { supabaseAdmin } from '@/lib/supabase';
 import { listBusinesses, type FounderBusiness } from './founderBusinessRegistryService';
 import { getSignals, type BusinessSignal } from './founderSignalInferenceService';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 
 // ============================================================================
 // Types
@@ -242,8 +243,18 @@ Respond ONLY with valid JSON, no additional text.`;
           content: userPrompt,
         },
       ],
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' }, // Cache for 5 min (90% savings)
+        },
+      ],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats('UmbrellaSynopsis:generateBusinessSynopsis', cacheStats);
 
     // Extract text content from response
     let synopsisText = '';
@@ -393,8 +404,18 @@ Respond ONLY with valid JSON, no additional text.`;
           content: userPrompt,
         },
       ],
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' }, // Cache for 5 min (90% savings)
+        },
+      ],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats('UmbrellaSynopsis:generateUmbrellaSynopsis', cacheStats);
 
     // Extract text content from response
     let synopsisText = '';

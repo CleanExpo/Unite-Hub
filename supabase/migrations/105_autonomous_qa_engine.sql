@@ -33,7 +33,7 @@ ALTER TABLE qa_runs ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY qa_runs_select ON qa_runs
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY qa_runs_insert ON qa_runs
   FOR INSERT TO authenticated
@@ -41,7 +41,7 @@ CREATE POLICY qa_runs_insert ON qa_runs
 
 CREATE POLICY qa_runs_update ON qa_runs
   FOR UPDATE TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE qa_runs IS 'QA test run records (Phase 53)';
@@ -78,7 +78,7 @@ ALTER TABLE qa_failures ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY qa_failures_select ON qa_failures
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY qa_failures_insert ON qa_failures
   FOR INSERT TO authenticated

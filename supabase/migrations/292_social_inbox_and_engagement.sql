@@ -46,7 +46,8 @@ CREATE TABLE IF NOT EXISTS social_threads (
   unread_count INTEGER DEFAULT 0,
   last_message_at TIMESTAMPTZ,
   status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'archived', 'spam')),
-  assigned_to UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+assigned_to UUID REFERENCES auth.users(id),
   labels TEXT[],
   metadata JSONB DEFAULT '{}',
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -110,9 +111,11 @@ CREATE TABLE IF NOT EXISTS social_actions (
   ai_model TEXT,
   ai_confidence NUMERIC(4,3),
   approval_status TEXT DEFAULT 'pending' CHECK (approval_status IN ('pending', 'approved', 'rejected', 'auto_approved')),
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   approved_at TIMESTAMPTZ,
-  performed_by_user_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+performed_by_user_id UUID REFERENCES auth.users(id),
   external_action_id TEXT,
   error_message TEXT,
   performed_at TIMESTAMPTZ,
@@ -136,7 +139,8 @@ CREATE TABLE IF NOT EXISTS social_reply_templates (
   is_ai_template BOOLEAN DEFAULT FALSE,
   usage_count INTEGER DEFAULT 0,
   success_rate NUMERIC(5,2),
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

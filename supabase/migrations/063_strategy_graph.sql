@@ -46,8 +46,10 @@ CREATE TABLE IF NOT EXISTS strategy_nodes (
   tags TEXT[],
 
   -- Ownership
-  created_by UUID REFERENCES auth.users(id),
-  assigned_to UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+assigned_to UUID REFERENCES auth.users(id),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -124,7 +126,8 @@ CREATE TABLE IF NOT EXISTS strategy_objectives (
   supporting_node_ids UUID[],
 
   -- Owner
-  owner_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+owner_id UUID REFERENCES auth.users(id),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -157,7 +160,8 @@ CREATE TABLE IF NOT EXISTS strategy_evaluations (
   metrics_snapshot JSONB DEFAULT '{}',
 
   -- Evaluation metadata
-  evaluated_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+evaluated_by UUID REFERENCES auth.users(id),
   evaluation_type TEXT NOT NULL DEFAULT 'MANUAL' CHECK (evaluation_type IN ('MANUAL', 'AUTOMATED', 'AI_ASSISTED')),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -212,12 +216,15 @@ CREATE TABLE IF NOT EXISTS strategy_proposals (
 
   -- Approval
   requires_approval BOOLEAN NOT NULL DEFAULT true,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   approved_at TIMESTAMPTZ,
 
   -- Ownership
-  created_by UUID REFERENCES auth.users(id),
-  assigned_to UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+assigned_to UUID REFERENCES auth.users(id),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -255,7 +262,7 @@ ALTER TABLE strategy_proposals ENABLE ROW LEVEL SECURITY;
 
 -- Nodes: org members can access
 CREATE POLICY nodes_select ON strategy_nodes
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -271,7 +278,7 @@ CREATE POLICY nodes_insert ON strategy_nodes
   );
 
 CREATE POLICY nodes_update ON strategy_nodes
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
@@ -279,7 +286,7 @@ CREATE POLICY nodes_update ON strategy_nodes
   );
 
 CREATE POLICY nodes_delete ON strategy_nodes
-  FOR DELETE USING (
+  FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role = 'owner'
@@ -288,7 +295,7 @@ CREATE POLICY nodes_delete ON strategy_nodes
 
 -- Edges: follow node permissions
 CREATE POLICY edges_select ON strategy_edges
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -304,7 +311,7 @@ CREATE POLICY edges_insert ON strategy_edges
   );
 
 CREATE POLICY edges_update ON strategy_edges
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
@@ -312,7 +319,7 @@ CREATE POLICY edges_update ON strategy_edges
   );
 
 CREATE POLICY edges_delete ON strategy_edges
-  FOR DELETE USING (
+  FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
@@ -321,7 +328,7 @@ CREATE POLICY edges_delete ON strategy_edges
 
 -- Objectives: org members
 CREATE POLICY objectives_select ON strategy_objectives
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -337,7 +344,7 @@ CREATE POLICY objectives_insert ON strategy_objectives
   );
 
 CREATE POLICY objectives_update ON strategy_objectives
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
@@ -346,7 +353,7 @@ CREATE POLICY objectives_update ON strategy_objectives
 
 -- Evaluations: org members
 CREATE POLICY evaluations_select ON strategy_evaluations
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -363,7 +370,7 @@ CREATE POLICY evaluations_insert ON strategy_evaluations
 
 -- Proposals: org members
 CREATE POLICY proposals_select ON strategy_proposals
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -379,7 +386,7 @@ CREATE POLICY proposals_insert ON strategy_proposals
   );
 
 CREATE POLICY proposals_update ON strategy_proposals
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')

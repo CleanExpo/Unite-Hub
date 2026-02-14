@@ -14,7 +14,8 @@ create table if not exists public.social_playbooks (
   primary_persona text,
   platforms text[] default '{}',
   status text not null default 'draft', -- draft | active | archived
-  created_by uuid references auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -132,81 +133,81 @@ alter table public.marketing_funnel_blueprints enable row level security;
 
 -- RLS Policies for social_playbooks
 create policy "social_playbooks_select" on public.social_playbooks
-  for select using (auth.uid() is not null);
+  for select using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "social_playbooks_insert" on public.social_playbooks
   for insert with check (auth.uid() is not null);
 
 create policy "social_playbooks_update" on public.social_playbooks
-  for update using (auth.uid() is not null);
+  for update using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "social_playbooks_delete" on public.social_playbooks
-  for delete using (auth.uid() is not null);
+  for delete using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 -- RLS Policies for social_assets
 create policy "social_assets_select" on public.social_assets
-  for select using (auth.uid() is not null);
+  for select using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "social_assets_insert" on public.social_assets
   for insert with check (auth.uid() is not null);
 
 create policy "social_assets_update" on public.social_assets
-  for update using (auth.uid() is not null);
+  for update using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "social_assets_delete" on public.social_assets
-  for delete using (auth.uid() is not null);
+  for delete using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 -- RLS Policies for decision_moment_maps
 create policy "decision_moment_maps_select" on public.decision_moment_maps
-  for select using (auth.uid() is not null);
+  for select using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "decision_moment_maps_insert" on public.decision_moment_maps
   for insert with check (auth.uid() is not null);
 
 create policy "decision_moment_maps_update" on public.decision_moment_maps
-  for update using (auth.uid() is not null);
+  for update using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "decision_moment_maps_delete" on public.decision_moment_maps
-  for delete using (auth.uid() is not null);
+  for delete using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 -- RLS Policies for decision_assets
 create policy "decision_assets_select" on public.decision_assets
-  for select using (auth.uid() is not null);
+  for select using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "decision_assets_insert" on public.decision_assets
   for insert with check (auth.uid() is not null);
 
 create policy "decision_assets_update" on public.decision_assets
-  for update using (auth.uid() is not null);
+  for update using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "decision_assets_delete" on public.decision_assets
-  for delete using (auth.uid() is not null);
+  for delete using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 -- RLS Policies for visual_demo_entries (public read for gallery)
 create policy "visual_demo_entries_select" on public.visual_demo_entries
-  for select using (true);
+  for select using (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 create policy "visual_demo_entries_insert" on public.visual_demo_entries
   for insert with check (auth.uid() is not null);
 
 create policy "visual_demo_entries_update" on public.visual_demo_entries
-  for update using (auth.uid() is not null);
+  for update using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "visual_demo_entries_delete" on public.visual_demo_entries
-  for delete using (auth.uid() is not null);
+  for delete using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 -- RLS Policies for marketing_funnel_blueprints
 create policy "marketing_funnel_blueprints_select" on public.marketing_funnel_blueprints
-  for select using (auth.uid() is not null);
+  for select using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "marketing_funnel_blueprints_insert" on public.marketing_funnel_blueprints
   for insert with check (auth.uid() is not null);
 
 create policy "marketing_funnel_blueprints_update" on public.marketing_funnel_blueprints
-  for update using (auth.uid() is not null);
+  for update using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 create policy "marketing_funnel_blueprints_delete" on public.marketing_funnel_blueprints
-  for delete using (auth.uid() is not null);
+  for delete using (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() is not null);
 
 -- Updated_at trigger function
 create or replace function public.update_updated_at_column()

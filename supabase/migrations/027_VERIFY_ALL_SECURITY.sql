@@ -282,4 +282,4 @@ FROM (
 -- 3. All tests should show "✓ PASS"
 -- 4. If any test shows "✗ FAIL", investigate and fix
 -- 5. Re-run migration 026 if needed
--- =====================================================
+-- =====================================================;

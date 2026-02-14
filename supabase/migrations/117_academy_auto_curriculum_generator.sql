@@ -38,7 +38,7 @@ ALTER TABLE auto_curriculum_jobs ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY auto_curriculum_jobs_select ON auto_curriculum_jobs
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -50,7 +50,7 @@ CREATE POLICY auto_curriculum_jobs_insert ON auto_curriculum_jobs
 
 CREATE POLICY auto_curriculum_jobs_update ON auto_curriculum_jobs
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS support_tickets (
   CONSTRAINT support_tickets_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT support_tickets_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -53,7 +54,7 @@ ALTER TABLE support_tickets ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY support_tickets_select ON support_tickets
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -65,7 +66,7 @@ CREATE POLICY support_tickets_insert ON support_tickets
 
 CREATE POLICY support_tickets_update ON support_tickets
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -103,7 +104,7 @@ ALTER TABLE support_sessions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY support_sessions_select ON support_sessions
   FOR SELECT TO authenticated
-  USING (ticket_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND ticket_id IN (
     SELECT id FROM support_tickets
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -121,7 +122,7 @@ CREATE POLICY support_sessions_insert ON support_sessions
 
 CREATE POLICY support_sessions_update ON support_sessions
   FOR UPDATE TO authenticated
-  USING (ticket_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND ticket_id IN (
     SELECT id FROM support_tickets
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

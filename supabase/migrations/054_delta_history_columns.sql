@@ -84,7 +84,8 @@ CREATE TABLE IF NOT EXISTS client_schedules (
   enabled BOOLEAN DEFAULT true,
   last_run_at TIMESTAMPTZ,
   next_run_at TIMESTAMPTZ,
-  created_by UUID NOT NULL REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID NOT NULL REFERENCES auth.users(id),
   client_consent BOOLEAN DEFAULT false,
   consent_given_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -132,7 +133,8 @@ CREATE TABLE IF NOT EXISTS strategy_signoffs (
   audit_id UUID NOT NULL REFERENCES seo_audit_history(audit_id) ON DELETE CASCADE,
   decision TEXT NOT NULL CHECK (decision IN ('APPROVED', 'REJECTED', 'MODIFIED')),
   notes TEXT,
-  decided_by UUID NOT NULL REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+decided_by UUID NOT NULL REFERENCES auth.users(id),
   decided_at TIMESTAMPTZ DEFAULT NOW(),
   action_json JSONB DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ DEFAULT NOW()

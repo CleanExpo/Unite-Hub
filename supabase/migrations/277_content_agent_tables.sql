@@ -78,19 +78,19 @@ ALTER TABLE content_performance ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY content_outputs_authenticated_read ON content_outputs
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY content_variants_authenticated_read ON content_variants
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY content_research_links_authenticated_read ON content_research_links
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY content_performance_authenticated_read ON content_performance
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_content_outputs_brand ON content_outputs(brand_id);

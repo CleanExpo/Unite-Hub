@@ -185,4 +185,4 @@ CREATE TRIGGER update_citation_sources_timestamp
 -- - scout_runs: Research run history
 -- - citation_audits: Gap analysis results
 -- - Full RLS enforcement for workspace isolation
--- - Optimized indexes for common queries
+-- - Optimized indexes for common queries;

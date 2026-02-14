@@ -227,7 +227,8 @@ CREATE TABLE IF NOT EXISTS campaign_versions (
   -- Version Metadata
   change_description TEXT,
   change_type TEXT CHECK (change_type IN ('draft', 'published', 'archived', 'ab_test_started', 'ab_test_completed')),
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
   CONSTRAINT unique_campaign_version UNIQUE(campaign_id, version)
@@ -264,7 +265,7 @@ CREATE POLICY workflow_states_view_policy ON campaign_workflow_states
 
 CREATE POLICY workflow_states_service_policy ON campaign_workflow_states
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- A/B Test Results Policies
@@ -281,7 +282,7 @@ CREATE POLICY ab_test_results_view_policy ON campaign_ab_test_results
 
 CREATE POLICY ab_test_results_service_policy ON campaign_ab_test_results
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- Campaign Events Policies
@@ -298,7 +299,7 @@ CREATE POLICY campaign_events_view_policy ON campaign_events
 
 CREATE POLICY campaign_events_service_policy ON campaign_events
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- Campaign Versions Policies
@@ -315,7 +316,7 @@ CREATE POLICY campaign_versions_view_policy ON campaign_versions
 
 CREATE POLICY campaign_versions_service_policy ON campaign_versions
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- ============================================================================

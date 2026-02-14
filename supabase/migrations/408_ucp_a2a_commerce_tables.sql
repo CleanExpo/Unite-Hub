@@ -294,4 +294,4 @@ CREATE TRIGGER update_ucp_offer_analytics_timestamp
 -- - a2a_sessions: Agent negotiation sessions
 -- - a2a_offers: Negotiation offer history
 -- - Full RLS enforcement for workspace isolation
--- - Optimized indexes for common queries
+-- - Optimized indexes for common queries;

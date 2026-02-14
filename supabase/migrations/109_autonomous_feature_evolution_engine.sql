@@ -49,7 +49,7 @@ ALTER TABLE evolution_proposals ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (system-wide, admin access)
 CREATE POLICY evolution_proposals_select ON evolution_proposals
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY evolution_proposals_insert ON evolution_proposals
   FOR INSERT TO authenticated
@@ -57,7 +57,7 @@ CREATE POLICY evolution_proposals_insert ON evolution_proposals
 
 CREATE POLICY evolution_proposals_update ON evolution_proposals
   FOR UPDATE TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Comment
 COMMENT ON TABLE evolution_proposals IS 'Autonomous feature evolution proposals (Phase 57)';

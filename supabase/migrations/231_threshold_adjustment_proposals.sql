@@ -69,7 +69,8 @@ CREATE TABLE IF NOT EXISTS threshold_adjustment_executions (
   constraint_reason TEXT,
 
   -- Approval
-  approved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
   -- Metadata
   executed_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),

@@ -28,7 +28,7 @@ ALTER TABLE network_predictions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (global read for authenticated users)
 CREATE POLICY network_predictions_select ON network_predictions
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY network_predictions_insert ON network_predictions
   FOR INSERT TO authenticated

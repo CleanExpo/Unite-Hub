@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS observability_logs (
   status_code INTEGER NOT NULL,
   latency_ms INTEGER NOT NULL,
   workspace_id UUID REFERENCES organizations(id) ON DELETE SET NULL,
-  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   error_message TEXT,
   error_stack TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -53,7 +54,8 @@ CREATE TABLE IF NOT EXISTS observability_anomalies (
   metrics JSONB NOT NULL DEFAULT '{}',
   resolved BOOLEAN NOT NULL DEFAULT FALSE,
   resolved_at TIMESTAMPTZ,
-  resolved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+resolved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   detected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -132,7 +134,7 @@ ALTER TABLE observability_route_baselines ENABLE ROW LEVEL SECURITY;
 
 -- Observability logs: FOUNDER/ADMIN only
 CREATE POLICY "observability_logs_admin_select" ON observability_logs
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM profiles p
       WHERE p.id = auth.uid()
@@ -146,7 +148,7 @@ CREATE POLICY "observability_logs_service_insert" ON observability_logs
 
 -- Anomalies: FOUNDER/ADMIN only
 CREATE POLICY "observability_anomalies_admin_select" ON observability_anomalies
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM profiles p
       WHERE p.id = auth.uid()
@@ -155,7 +157,7 @@ CREATE POLICY "observability_anomalies_admin_select" ON observability_anomalies
   );
 
 CREATE POLICY "observability_anomalies_admin_update" ON observability_anomalies
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM profiles p
       WHERE p.id = auth.uid()
@@ -168,7 +170,7 @@ CREATE POLICY "observability_anomalies_service_insert" ON observability_anomalie
 
 -- Health snapshots: FOUNDER/ADMIN only
 CREATE POLICY "observability_health_admin_select" ON observability_health_snapshots
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM profiles p
       WHERE p.id = auth.uid()
@@ -181,7 +183,7 @@ CREATE POLICY "observability_health_service_insert" ON observability_health_snap
 
 -- Route baselines: FOUNDER/ADMIN only
 CREATE POLICY "observability_baselines_admin_select" ON observability_route_baselines
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM profiles p
       WHERE p.id = auth.uid()

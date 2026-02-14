@@ -179,28 +179,28 @@ ALTER TABLE knowledge_graph_edges ENABLE ROW LEVEL SECURITY;
 -- Drop and recreate policies
 DROP POLICY IF EXISTS email_intelligence_workspace_isolation ON email_intelligence;
 CREATE POLICY email_intelligence_workspace_isolation ON email_intelligence
-  FOR ALL USING (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 DROP POLICY IF EXISTS questionnaires_workspace_isolation ON dynamic_questionnaires;
 CREATE POLICY questionnaires_workspace_isolation ON dynamic_questionnaires
-  FOR ALL USING (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 DROP POLICY IF EXISTS tasks_workspace_isolation ON autonomous_tasks;
 CREATE POLICY tasks_workspace_isolation ON autonomous_tasks
-  FOR ALL USING (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 DROP POLICY IF EXISTS strategies_workspace_isolation ON marketing_strategies;
 CREATE POLICY strategies_workspace_isolation ON marketing_strategies
-  FOR ALL USING (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 DROP POLICY IF EXISTS knowledge_nodes_workspace_isolation ON knowledge_graph_nodes;
 CREATE POLICY knowledge_nodes_workspace_isolation ON knowledge_graph_nodes
-  FOR ALL USING (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 DROP POLICY IF EXISTS knowledge_edges_workspace_isolation ON knowledge_graph_edges;
 CREATE POLICY knowledge_edges_workspace_isolation ON knowledge_graph_edges
-  FOR ALL USING (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 DROP POLICY IF EXISTS responses_workspace_isolation ON questionnaire_responses;
 CREATE POLICY responses_workspace_isolation ON questionnaire_responses
-  FOR ALL USING (true);
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);

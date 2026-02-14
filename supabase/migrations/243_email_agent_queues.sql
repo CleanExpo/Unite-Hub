@@ -46,11 +46,11 @@ ALTER TABLE email_delivery_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY email_queue_authenticated_read ON email_queue
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY email_delivery_log_authenticated_read ON email_delivery_log
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_email_queue_brand ON email_queue(brand_id);

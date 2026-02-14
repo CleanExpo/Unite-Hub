@@ -334,7 +334,7 @@ ALTER TABLE managed_service_notifications ENABLE ROW LEVEL SECURITY;
 -- Founders can view/manage their own projects
 CREATE POLICY "founders_manage_projects" ON managed_service_projects
   FOR ALL
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations
       WHERE user_organizations.user_id = auth.uid()
@@ -354,32 +354,32 @@ CREATE POLICY "founders_manage_projects" ON managed_service_projects
 -- System (orchestrator) can read/write all for processing
 CREATE POLICY "system_manage_contracts" ON managed_service_contracts
   FOR ALL
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 CREATE POLICY "system_manage_timelines" ON managed_service_timelines
   FOR ALL
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 CREATE POLICY "system_manage_tasks" ON managed_service_tasks
   FOR ALL
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 CREATE POLICY "system_manage_reports" ON managed_service_reports
   FOR ALL
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 CREATE POLICY "system_manage_stripe_events" ON managed_service_stripe_events
   FOR ALL
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 CREATE POLICY "system_manage_notifications" ON managed_service_notifications
   FOR ALL
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- ============================================================================

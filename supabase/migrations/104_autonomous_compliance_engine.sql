@@ -28,7 +28,7 @@ ALTER TABLE compliance_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY compliance_events_select ON compliance_events
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -75,7 +75,7 @@ ALTER TABLE compliance_violations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY compliance_violations_select ON compliance_violations
   FOR SELECT TO authenticated
-  USING (event_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND event_id IN (
     SELECT id FROM compliance_events
     WHERE org_id IN (
       SELECT org_id FROM user_organizations
@@ -94,7 +94,7 @@ CREATE POLICY compliance_violations_insert ON compliance_violations
 
 CREATE POLICY compliance_violations_update ON compliance_violations
   FOR UPDATE TO authenticated
-  USING (event_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND event_id IN (
     SELECT id FROM compliance_events
     WHERE org_id IN (
       SELECT org_id FROM user_organizations

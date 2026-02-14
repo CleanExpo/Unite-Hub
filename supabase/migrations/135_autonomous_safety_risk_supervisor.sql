@@ -52,7 +52,7 @@ ALTER TABLE asrs_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY asrs_events_select ON asrs_events
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -64,7 +64,7 @@ CREATE POLICY asrs_events_insert ON asrs_events
 
 CREATE POLICY asrs_events_update ON asrs_events
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -113,7 +113,7 @@ ALTER TABLE asrs_policy_rules ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY asrs_policy_rules_select ON asrs_policy_rules
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -125,13 +125,13 @@ CREATE POLICY asrs_policy_rules_insert ON asrs_policy_rules
 
 CREATE POLICY asrs_policy_rules_update ON asrs_policy_rules
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
 CREATE POLICY asrs_policy_rules_delete ON asrs_policy_rules
   FOR DELETE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -154,7 +154,8 @@ CREATE TABLE asrs_block_log (
   CONSTRAINT asrs_block_log_rule_fk
     FOREIGN KEY (rule_id) REFERENCES asrs_policy_rules(id) ON DELETE SET NULL,
   CONSTRAINT asrs_block_log_escalated_fk
-    FOREIGN KEY (escalated_to) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (escalated_to) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -169,7 +170,7 @@ ALTER TABLE asrs_block_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (via asrs_events)
 CREATE POLICY asrs_block_log_select ON asrs_block_log
   FOR SELECT TO authenticated
-  USING (event_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND event_id IN (
     SELECT id FROM asrs_events
     WHERE tenant_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

@@ -129,7 +129,7 @@ BEGIN
   BEGIN
     CREATE POLICY "strategy_shares_select_owner" ON convex_strategy_shares
       FOR SELECT
-      USING (shared_by_user_id = auth.uid() OR shared_with_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND shared_by_user_id = auth.uid() OR shared_with_user_id = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 
@@ -143,14 +143,14 @@ BEGIN
   BEGIN
     CREATE POLICY "strategy_shares_update_owner" ON convex_strategy_shares
       FOR UPDATE
-      USING (shared_by_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND shared_by_user_id = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 
   BEGIN
     CREATE POLICY "strategy_shares_delete_owner" ON convex_strategy_shares
       FOR DELETE
-      USING (shared_by_user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND shared_by_user_id = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 END $$;
@@ -232,14 +232,14 @@ BEGIN
   BEGIN
     CREATE POLICY "strategy_comments_update_author" ON convex_strategy_comments
       FOR UPDATE
-      USING (author_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND author_id = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 
   BEGIN
     CREATE POLICY "strategy_comments_delete_author" ON convex_strategy_comments
       FOR DELETE
-      USING (author_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND author_id = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 END $$;
@@ -371,14 +371,14 @@ BEGIN
   BEGIN
     CREATE POLICY "saved_searches_update" ON convex_saved_searches
       FOR UPDATE
-      USING (created_by = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND created_by = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 
   BEGIN
     CREATE POLICY "saved_searches_delete" ON convex_saved_searches
       FOR DELETE
-      USING (created_by = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND created_by = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 END $$;
@@ -465,4 +465,4 @@ END $$;
 --
 -- Total migration size: ~600 lines of production SQL
 -- Deployment impact: ~2-5 seconds for initial table creation
--- Safe to re-run: All CREATE TABLE IF NOT EXISTS statements are idempotent
+-- Safe to re-run: All CREATE TABLE IF NOT EXISTS statements are idempotent;

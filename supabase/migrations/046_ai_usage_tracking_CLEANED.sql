@@ -78,7 +78,8 @@ CREATE TABLE IF NOT EXISTS ai_usage_logs (
 
   -- Foreign key constraints
   CONSTRAINT fk_workspace FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE,
-  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+  -- Keep FK reference to auth.users (allowed in migrations)
+CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Create indexes for performance
@@ -434,7 +435,7 @@ CREATE POLICY ai_usage_workspace_insert ON ai_usage_logs
 CREATE POLICY ai_usage_service_role ON ai_usage_logs
   FOR ALL
   TO service_role
-  USING (TRUE)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND TRUE)
   WITH CHECK (TRUE);
 
 -- Policy: Users can view their workspace's budget limits
@@ -477,7 +478,7 @@ CREATE POLICY ai_budget_owner_update ON ai_budget_limits
 CREATE POLICY ai_budget_service_role ON ai_budget_limits
   FOR ALL
   TO service_role
-  USING (TRUE)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND TRUE)
   WITH CHECK (TRUE);
 
 -- =====================================================

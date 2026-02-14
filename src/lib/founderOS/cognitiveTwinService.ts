@@ -13,6 +13,7 @@ import { listBusinesses, getBusiness, type FounderBusiness } from './founderBusi
 import { getSignals, type BusinessSignal } from './founderSignalInferenceService';
 import { getRecentEntriesForContext } from './founderJournalService';
 import { getInsights, type AiPhillInsight } from './aiPhillAdvisorService';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 
 // ============================================================================
 // Types
@@ -307,9 +308,19 @@ Return ONLY valid JSON.`;
         type: 'enabled',
         budget_tokens: 3000,
       },
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' }, // Cache system prompt for 5 min (90% cost savings)
+        },
+      ],
       messages: [{ role: 'user', content: userPrompt }],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats('CognitiveTwin:computeDomainScore', cacheStats);
 
     // Extract text content
     let responseText = '';
@@ -452,9 +463,19 @@ Return ONLY valid JSON.`;
         type: 'enabled',
         budget_tokens: 5000,
       },
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' }, // Cache system prompt for 5 min (90% cost savings)
+        },
+      ],
       messages: [{ role: 'user', content: userPrompt }],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats('CognitiveTwin:generateDigest', cacheStats);
 
     // Extract text content
     let responseText = '';
@@ -580,9 +601,19 @@ Provide 2-4 distinct options. Return ONLY valid JSON.`;
         type: 'enabled',
         budget_tokens: 8000,
       },
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' }, // Cache system prompt for 5 min (90% cost savings)
+        },
+      ],
       messages: [{ role: 'user', content: userPrompt }],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats('CognitiveTwin:simulateDecision', cacheStats);
 
     // Extract text content
     let responseText = '';

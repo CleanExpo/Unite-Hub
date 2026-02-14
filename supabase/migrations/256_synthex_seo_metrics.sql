@@ -72,7 +72,8 @@ CREATE TABLE IF NOT EXISTS content_policy_violations (
   violation_severity TEXT NOT NULL CHECK (violation_severity IN ('warning', 'error')),
   validation_score INTEGER CHECK (validation_score >= 0 AND validation_score <= 100),
   blocked_publication BOOLEAN NOT NULL DEFAULT FALSE,
-  reviewed_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+reviewed_by UUID REFERENCES auth.users(id),
   reviewed_at TIMESTAMPTZ,
   resolution TEXT CHECK (resolution IN ('approved', 'rejected', 'revised', 'pending')),
   notes TEXT,
@@ -325,4 +326,4 @@ COMMENT ON FUNCTION detect_keyword_trend IS 'Detect trend (up/down/stable) by co
 -- 1. Configure DATAFORSEO_API_KEY and SEMRUSH_API_KEY in .env
 -- 2. Run initial sync: POST /api/seo/sync-rankings
 -- 3. Set up daily cron job (Vercel Cron or similar)
--- 4. Access founder dashboard at /founder/synthex-seo
+-- 4. Access founder dashboard at /founder/synthex-seo;

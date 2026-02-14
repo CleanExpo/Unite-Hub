@@ -4,7 +4,8 @@
 -- Client Projects table
 CREATE TABLE IF NOT EXISTS client_projects (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   description TEXT,
   status TEXT NOT NULL DEFAULT 'planned' CHECK (status IN ('planned', 'in_progress', 'complete')),
@@ -21,13 +22,13 @@ ALTER TABLE client_projects ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies
 CREATE POLICY "clients_view_own_projects" ON client_projects
-FOR SELECT USING (client_id = auth.uid());
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND client_id = auth.uid());
 
 CREATE POLICY "clients_manage_own_projects" ON client_projects
-FOR ALL USING (client_id = auth.uid());
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND client_id = auth.uid());
 
 CREATE POLICY "service_role_all_projects" ON client_projects
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Client Project Tasks table
 CREATE TABLE IF NOT EXISTS client_project_tasks (
@@ -53,21 +54,21 @@ ALTER TABLE client_project_tasks ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies (through project)
 CREATE POLICY "clients_view_project_tasks" ON client_project_tasks
-FOR SELECT USING (
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
   project_id IN (
     SELECT id FROM client_projects WHERE client_id = auth.uid()
   )
 );
 
 CREATE POLICY "clients_manage_project_tasks" ON client_project_tasks
-FOR ALL USING (
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
   project_id IN (
     SELECT id FROM client_projects WHERE client_id = auth.uid()
   )
 );
 
 CREATE POLICY "service_role_all_tasks" ON client_project_tasks
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Grant permissions
 GRANT ALL ON client_projects TO authenticated;

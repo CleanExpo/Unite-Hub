@@ -39,7 +39,7 @@ ALTER TABLE org_language_settings ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY org_language_settings_select ON org_language_settings
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -52,7 +52,7 @@ CREATE POLICY org_language_settings_insert ON org_language_settings
 
 CREATE POLICY org_language_settings_update ON org_language_settings
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('admin', 'manager')
   ))
@@ -86,7 +86,8 @@ CREATE TABLE IF NOT EXISTS user_language_settings (
   CONSTRAINT user_language_settings_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT user_language_settings_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Unique constraint
   CONSTRAINT user_language_settings_org_user_unique UNIQUE (org_id, user_id)
@@ -102,7 +103,7 @@ ALTER TABLE user_language_settings ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY user_language_settings_select ON user_language_settings
   FOR SELECT TO authenticated
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IN (SELECT org_id FROM user_organizations WHERE user_id = auth.uid())
     AND user_id = auth.uid()
   );
@@ -116,7 +117,7 @@ CREATE POLICY user_language_settings_insert ON user_language_settings
 
 CREATE POLICY user_language_settings_update ON user_language_settings
   FOR UPDATE TO authenticated
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IN (SELECT org_id FROM user_organizations WHERE user_id = auth.uid())
     AND user_id = auth.uid()
   )

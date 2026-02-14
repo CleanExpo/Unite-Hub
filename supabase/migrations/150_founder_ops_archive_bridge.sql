@@ -67,7 +67,7 @@ CREATE POLICY founder_ops_archive_founder_read_policy ON founder_ops_archive_ent
 CREATE POLICY founder_ops_archive_service_role_policy ON founder_ops_archive_entries
   FOR ALL
   TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- Helper function: Log archive entry

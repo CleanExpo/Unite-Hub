@@ -30,7 +30,7 @@ ALTER TABLE workflow_failures ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY workflow_failures_select ON workflow_failures
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -43,7 +43,7 @@ CREATE POLICY workflow_failures_insert ON workflow_failures
 
 CREATE POLICY workflow_failures_update ON workflow_failures
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -75,7 +75,7 @@ ALTER TABLE workflow_heal_attempts ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY workflow_heal_attempts_select ON workflow_heal_attempts
   FOR SELECT TO authenticated
-  USING (failure_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND failure_id IN (
     SELECT id FROM workflow_failures
     WHERE org_id IN (
       SELECT org_id FROM user_organizations

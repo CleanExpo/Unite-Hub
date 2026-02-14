@@ -46,7 +46,7 @@ ALTER TABLE brand_metadata ENABLE ROW LEVEL SECURITY;
 -- RLS Policies for brand_metadata (read-only for authenticated users)
 CREATE POLICY brand_metadata_authenticated_read ON brand_metadata
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Enable RLS on brand_cross_linking_rules
 ALTER TABLE brand_cross_linking_rules ENABLE ROW LEVEL SECURITY;
@@ -54,7 +54,7 @@ ALTER TABLE brand_cross_linking_rules ENABLE ROW LEVEL SECURITY;
 -- RLS Policies for brand_cross_linking_rules (read-only for authenticated users)
 CREATE POLICY brand_cross_linking_rules_authenticated_read ON brand_cross_linking_rules
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Index for lookups
 CREATE INDEX IF NOT EXISTS idx_brand_metadata_brand_id ON brand_metadata(brand_id);

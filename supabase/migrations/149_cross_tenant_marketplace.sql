@@ -35,7 +35,7 @@ ALTER TABLE ctmedp_products ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated)
 CREATE POLICY ctmedp_products_select ON ctmedp_products
   FOR SELECT TO authenticated
-  USING (active = true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND active = true);
 
 -- Comment
 COMMENT ON TABLE ctmedp_products IS 'Marketplace products catalog (Phase 97)';
@@ -74,7 +74,7 @@ ALTER TABLE ctmedp_purchases ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY ctmedp_purchases_select ON ctmedp_purchases
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

@@ -5,6 +5,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { getSupabaseServer } from '@/lib/supabase';
 import {
   LearnedPattern,
@@ -19,6 +20,9 @@ import { browserAutomationConfig } from '../../../config/browserAutomationBoost.
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultHeaders: {
+    'anthropic-beta': 'prompt-caching-2024-07-31',
+  },
 });
 
 export interface LearnFromActionsOptions {
@@ -436,6 +440,13 @@ class PatternLearnerService {
       const response = await anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 1024,
+        system: [
+          {
+            type: 'text',
+            text: 'You are an expert at analyzing browser automation patterns. Extract reusable patterns from browser action sequences.',
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
         messages: [
           {
             role: 'user',
@@ -453,6 +464,10 @@ Return JSON with:
           },
         ],
       });
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(response, 'claude-haiku-4-5-20251001');
+      logCacheStats('PatternLearner:analyzeActions', cacheStats);
 
       const content = response.content[0];
       if (content.type !== 'text') {

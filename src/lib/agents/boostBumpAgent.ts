@@ -35,6 +35,7 @@ import {
 
 // Use centralized lazy-initialized client
 import { anthropic } from '@/lib/anthropic/client';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 
 export interface BoostJobAnalysis {
   recommendedBoostType: BoostType;
@@ -123,6 +124,10 @@ Provide a strategic analysis and boost recommendation.`;
         ],
       });
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(result.data, 'claude-sonnet-4-5-20250929');
+    logCacheStats('BoostBump:analyzeContent', cacheStats);
 
     const responseText =
       result.data.content[0].type === 'text' ? result.data.content[0].text : '';
@@ -432,6 +437,10 @@ Provide 3-5 strategic recommendations for optimization.`;
         ],
       });
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(result.data, 'claude-sonnet-4-5-20250929');
+    logCacheStats('BoostBump:analyzeContent', cacheStats);
 
     const responseText =
       result.data.content[0].type === 'text' ? result.data.content[0].text : '';

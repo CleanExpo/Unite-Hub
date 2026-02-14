@@ -232,7 +232,7 @@ ALTER TABLE pre_client_insights ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "pre_clients_select_own" ON pre_clients;
 CREATE POLICY "pre_clients_select_own" ON pre_clients
-    FOR SELECT USING (owner_user_id = auth.uid());
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "pre_clients_insert_own" ON pre_clients;
 CREATE POLICY "pre_clients_insert_own" ON pre_clients
@@ -240,11 +240,11 @@ CREATE POLICY "pre_clients_insert_own" ON pre_clients
 
 DROP POLICY IF EXISTS "pre_clients_update_own" ON pre_clients;
 CREATE POLICY "pre_clients_update_own" ON pre_clients
-    FOR UPDATE USING (owner_user_id = auth.uid());
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 DROP POLICY IF EXISTS "pre_clients_delete_own" ON pre_clients;
 CREATE POLICY "pre_clients_delete_own" ON pre_clients
-    FOR DELETE USING (owner_user_id = auth.uid());
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND owner_user_id = auth.uid());
 
 -- ============================================================================
 -- RLS POLICIES: pre_client_threads
@@ -253,7 +253,7 @@ CREATE POLICY "pre_clients_delete_own" ON pre_clients
 
 DROP POLICY IF EXISTS "pre_client_threads_select_via_client" ON pre_client_threads;
 CREATE POLICY "pre_client_threads_select_via_client" ON pre_client_threads
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_threads.pre_client_id
@@ -273,7 +273,7 @@ CREATE POLICY "pre_client_threads_insert_via_client" ON pre_client_threads
 
 DROP POLICY IF EXISTS "pre_client_threads_update_via_client" ON pre_client_threads;
 CREATE POLICY "pre_client_threads_update_via_client" ON pre_client_threads
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_threads.pre_client_id
@@ -283,7 +283,7 @@ CREATE POLICY "pre_client_threads_update_via_client" ON pre_client_threads
 
 DROP POLICY IF EXISTS "pre_client_threads_delete_via_client" ON pre_client_threads;
 CREATE POLICY "pre_client_threads_delete_via_client" ON pre_client_threads
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_threads.pre_client_id
@@ -298,7 +298,7 @@ CREATE POLICY "pre_client_threads_delete_via_client" ON pre_client_threads
 
 DROP POLICY IF EXISTS "pre_client_timeline_select_via_client" ON pre_client_timeline;
 CREATE POLICY "pre_client_timeline_select_via_client" ON pre_client_timeline
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_timeline.pre_client_id
@@ -318,7 +318,7 @@ CREATE POLICY "pre_client_timeline_insert_via_client" ON pre_client_timeline
 
 DROP POLICY IF EXISTS "pre_client_timeline_update_via_client" ON pre_client_timeline;
 CREATE POLICY "pre_client_timeline_update_via_client" ON pre_client_timeline
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_timeline.pre_client_id
@@ -328,7 +328,7 @@ CREATE POLICY "pre_client_timeline_update_via_client" ON pre_client_timeline
 
 DROP POLICY IF EXISTS "pre_client_timeline_delete_via_client" ON pre_client_timeline;
 CREATE POLICY "pre_client_timeline_delete_via_client" ON pre_client_timeline
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_timeline.pre_client_id
@@ -343,7 +343,7 @@ CREATE POLICY "pre_client_timeline_delete_via_client" ON pre_client_timeline
 
 DROP POLICY IF EXISTS "pre_client_insights_select_via_client" ON pre_client_insights;
 CREATE POLICY "pre_client_insights_select_via_client" ON pre_client_insights
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_insights.pre_client_id
@@ -363,7 +363,7 @@ CREATE POLICY "pre_client_insights_insert_via_client" ON pre_client_insights
 
 DROP POLICY IF EXISTS "pre_client_insights_update_via_client" ON pre_client_insights;
 CREATE POLICY "pre_client_insights_update_via_client" ON pre_client_insights
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_insights.pre_client_id
@@ -373,7 +373,7 @@ CREATE POLICY "pre_client_insights_update_via_client" ON pre_client_insights
 
 DROP POLICY IF EXISTS "pre_client_insights_delete_via_client" ON pre_client_insights;
 CREATE POLICY "pre_client_insights_delete_via_client" ON pre_client_insights
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM pre_clients pc
             WHERE pc.id = pre_client_insights.pre_client_id

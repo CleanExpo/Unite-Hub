@@ -101,7 +101,8 @@ CREATE TABLE IF NOT EXISTS erp_products (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT erp_products_workspace_sku UNIQUE (workspace_id, sku)
 );
@@ -204,7 +205,8 @@ CREATE TABLE IF NOT EXISTS erp_stock_movements (
 
   -- Metadata
   created_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id)
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_erp_stock_movements_workspace ON erp_stock_movements(workspace_id);
@@ -259,7 +261,8 @@ CREATE TABLE IF NOT EXISTS erp_purchase_orders (
   -- Metadata
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
-  created_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id),
 
   CONSTRAINT erp_purchase_orders_workspace_number UNIQUE (workspace_id, po_number)
 );

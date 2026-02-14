@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets (
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS dashboard_user_prefs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
   widget_order JSONB DEFAULT '[]', -- Array of widget_keys in display order
   hidden_widgets VARCHAR(100)[] DEFAULT '{}', -- Widget keys to hide
@@ -43,7 +44,8 @@ CREATE TABLE IF NOT EXISTS dashboard_user_prefs (
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS dashboard_notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
   type VARCHAR(50) NOT NULL, -- 'info', 'warning', 'error', 'success', 'action'
   title VARCHAR(200) NOT NULL,
@@ -86,12 +88,12 @@ ALTER TABLE dashboard_notifications ENABLE ROW LEVEL SECURITY;
 -- Widgets: Read-only for authenticated users
 CREATE POLICY "dashboard_widgets_select" ON dashboard_widgets
   FOR SELECT TO authenticated
-  USING (is_active = true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND is_active = true);
 
 -- User Preferences: Users can manage their own preferences
 CREATE POLICY "dashboard_user_prefs_select" ON dashboard_user_prefs
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 CREATE POLICY "dashboard_user_prefs_insert" ON dashboard_user_prefs
   FOR INSERT TO authenticated
@@ -99,17 +101,17 @@ CREATE POLICY "dashboard_user_prefs_insert" ON dashboard_user_prefs
 
 CREATE POLICY "dashboard_user_prefs_update" ON dashboard_user_prefs
   FOR UPDATE TO authenticated
-  USING (user_id = auth.uid())
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid())
   WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY "dashboard_user_prefs_delete" ON dashboard_user_prefs
   FOR DELETE TO authenticated
-  USING (user_id = auth.uid());
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 -- Notifications: Users can view/manage their own notifications
 CREATE POLICY "dashboard_notifications_select" ON dashboard_notifications
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 CREATE POLICY "dashboard_notifications_insert" ON dashboard_notifications
   FOR INSERT TO authenticated
@@ -117,12 +119,12 @@ CREATE POLICY "dashboard_notifications_insert" ON dashboard_notifications
 
 CREATE POLICY "dashboard_notifications_update" ON dashboard_notifications
   FOR UPDATE TO authenticated
-  USING (user_id = auth.uid())
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid())
   WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY "dashboard_notifications_delete" ON dashboard_notifications
   FOR DELETE TO authenticated
-  USING (user_id = auth.uid());
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 -- ============================================================================
 -- DEFAULT WIDGETS

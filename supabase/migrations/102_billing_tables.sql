@@ -4,7 +4,8 @@
 -- Subscriptions table
 CREATE TABLE IF NOT EXISTS subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   stripe_subscription_id TEXT UNIQUE NOT NULL,
   stripe_customer_id TEXT NOT NULL,
   status TEXT NOT NULL CHECK (status IN ('active', 'trialing', 'past_due', 'canceled', 'incomplete', 'incomplete_expired', 'unpaid')),
@@ -27,7 +28,8 @@ CREATE INDEX IF NOT EXISTS idx_subscriptions_stripe_id ON subscriptions(stripe_s
 -- Payments table
 CREATE TABLE IF NOT EXISTS payments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   stripe_invoice_id TEXT UNIQUE NOT NULL,
   amount INTEGER NOT NULL,
   currency TEXT NOT NULL DEFAULT 'aud',
@@ -44,7 +46,8 @@ CREATE INDEX IF NOT EXISTS idx_payments_mode ON payments(mode);
 -- Usage records table
 CREATE TABLE IF NOT EXISTS usage_records (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
   usage_type TEXT NOT NULL CHECK (usage_type IN ('ai_tokens', 'audits')),
   quantity INTEGER NOT NULL,
@@ -76,7 +79,8 @@ CREATE INDEX IF NOT EXISTS idx_billing_events_created_at ON billing_events(creat
 -- Notifications table (for billing alerts)
 CREATE TABLE IF NOT EXISTS notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   type TEXT NOT NULL,
   title TEXT NOT NULL,
   message TEXT NOT NULL,
@@ -102,38 +106,38 @@ ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies for subscriptions
 CREATE POLICY "users_view_own_subscriptions" ON subscriptions
-FOR SELECT USING (auth.uid() = user_id);
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 -- RLS policies for payments
 CREATE POLICY "users_view_own_payments" ON payments
-FOR SELECT USING (auth.uid() = user_id);
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 -- RLS policies for usage records
 CREATE POLICY "users_view_own_usage" ON usage_records
-FOR SELECT USING (auth.uid() = user_id);
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 -- RLS policies for notifications
 CREATE POLICY "users_view_own_notifications" ON notifications
-FOR SELECT USING (auth.uid() = user_id);
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 CREATE POLICY "users_update_own_notifications" ON notifications
-FOR UPDATE USING (auth.uid() = user_id);
+FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 -- Service role can insert/update all tables
 CREATE POLICY "service_role_all_subscriptions" ON subscriptions
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_all_payments" ON payments
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_all_usage" ON usage_records
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_all_events" ON billing_events
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_all_notifications" ON notifications
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Grant permissions
 GRANT ALL ON subscriptions TO authenticated;

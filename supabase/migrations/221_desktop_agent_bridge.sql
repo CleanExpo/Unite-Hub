@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS desktop_agent_sessions (
 
   -- Session metadata
   workspace_id UUID NOT NULL,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   agent_version TEXT NOT NULL,
 
   -- Connection details
@@ -103,7 +104,8 @@ CREATE TABLE IF NOT EXISTS desktop_agent_commands (
   -- Session & context
   session_id UUID NOT NULL REFERENCES desktop_agent_sessions(id) ON DELETE CASCADE,
   workspace_id UUID NOT NULL,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Command details
   command_name TEXT NOT NULL,
@@ -113,8 +115,10 @@ CREATE TABLE IF NOT EXISTS desktop_agent_commands (
   -- Approval workflow (for high-risk commands)
   requires_approval BOOLEAN DEFAULT FALSE,
   approval_status TEXT CHECK (approval_status IN ('pending', 'approved', 'rejected', 'auto_approved', NULL)),
-  approval_requested_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  approved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+approval_requested_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   approval_reason TEXT,
   approved_at TIMESTAMPTZ,
 
@@ -168,7 +172,8 @@ CREATE TABLE IF NOT EXISTS desktop_agent_approvals (
   founder_notes TEXT,
 
   -- Approver
-  approved_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Metadata
   metadata JSONB DEFAULT '{}'::JSONB

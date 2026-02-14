@@ -4,7 +4,8 @@
 -- Client engagement events table
 CREATE TABLE IF NOT EXISTS client_engagement_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Event details
@@ -27,7 +28,8 @@ CREATE TABLE IF NOT EXISTS client_engagement_events (
 -- Client success scores table
 CREATE TABLE IF NOT EXISTS client_success_scores (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Score components (0-100 each)
@@ -58,7 +60,8 @@ CREATE TABLE IF NOT EXISTS client_success_scores (
 -- Client insights table
 CREATE TABLE IF NOT EXISTS client_insights (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Insight details
@@ -85,7 +88,8 @@ CREATE TABLE IF NOT EXISTS client_insights (
 -- Momentum alerts table (for staff/owner notifications)
 CREATE TABLE IF NOT EXISTS client_momentum_alerts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Alert details
@@ -99,7 +103,8 @@ CREATE TABLE IF NOT EXISTS client_momentum_alerts (
 
   -- State
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'acknowledged', 'resolved', 'dismissed')),
-  acknowledged_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+acknowledged_by UUID REFERENCES auth.users(id),
   acknowledged_at TIMESTAMPTZ,
   resolved_at TIMESTAMPTZ,
 
@@ -113,7 +118,8 @@ CREATE TABLE IF NOT EXISTS client_momentum_alerts (
 -- Weekly success emails sent
 CREATE TABLE IF NOT EXISTS client_success_emails (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- Email details
@@ -167,11 +173,11 @@ CREATE POLICY "clients_insert_own_events" ON client_engagement_events
 
 -- Clients can view their own engagement events
 CREATE POLICY "clients_view_own_events" ON client_engagement_events
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Staff can view all engagement events in their org
 CREATE POLICY "staff_view_org_events" ON client_engagement_events
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations uo
       WHERE uo.user_id = auth.uid()
@@ -182,11 +188,11 @@ CREATE POLICY "staff_view_org_events" ON client_engagement_events
 
 -- Clients can view their own success scores
 CREATE POLICY "clients_view_own_scores" ON client_success_scores
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Staff can view all scores in their org
 CREATE POLICY "staff_view_org_scores" ON client_success_scores
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations uo
       WHERE uo.user_id = auth.uid()
@@ -197,15 +203,15 @@ CREATE POLICY "staff_view_org_scores" ON client_success_scores
 
 -- Clients can view their own insights
 CREATE POLICY "clients_view_own_insights" ON client_insights
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Clients can update their own insights (mark as read)
 CREATE POLICY "clients_update_own_insights" ON client_insights
-  FOR UPDATE USING (auth.uid() = client_id);
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Staff can view all momentum alerts in their org
 CREATE POLICY "staff_view_org_alerts" ON client_momentum_alerts
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations uo
       WHERE uo.user_id = auth.uid()
@@ -216,7 +222,7 @@ CREATE POLICY "staff_view_org_alerts" ON client_momentum_alerts
 
 -- Staff can update alerts (acknowledge/resolve)
 CREATE POLICY "staff_update_org_alerts" ON client_momentum_alerts
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM user_organizations uo
       WHERE uo.user_id = auth.uid()
@@ -227,23 +233,23 @@ CREATE POLICY "staff_update_org_alerts" ON client_momentum_alerts
 
 -- Clients can view their own emails
 CREATE POLICY "clients_view_own_emails" ON client_success_emails
-  FOR SELECT USING (auth.uid() = client_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = client_id);
 
 -- Service role can do everything
 CREATE POLICY "service_role_engagement" ON client_engagement_events
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_scores" ON client_success_scores
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_insights" ON client_insights
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_alerts" ON client_momentum_alerts
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_emails" ON client_success_emails
-  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+  FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Update timestamp trigger for scores
 CREATE TRIGGER update_client_success_scores_timestamp

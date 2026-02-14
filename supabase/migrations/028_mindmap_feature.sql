@@ -16,8 +16,10 @@ CREATE TABLE IF NOT EXISTS project_mindmaps (
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   version INTEGER NOT NULL DEFAULT 1,
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  last_updated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+last_updated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
@@ -439,4 +441,4 @@ WHERE schemaname = 'public'
 -- 2. Install frontend dependencies (react-flow, dagre, elkjs)
 -- 3. Create API endpoints in src/app/api/mindmap/
 -- 4. Build React components in src/components/mindmap/
--- =====================================================
+-- =====================================================;

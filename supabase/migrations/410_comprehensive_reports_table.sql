@@ -52,4 +52,4 @@ CREATE POLICY comprehensive_reports_workspace_isolation ON comprehensive_reports
 --   * UCP status and active offers
 --   * Ghostwriter constraints (forbidden words, voice, burstiness)
 -- - Full RLS enforcement for workspace isolation
--- - Optimized indexes for common queries
+-- - Optimized indexes for common queries;

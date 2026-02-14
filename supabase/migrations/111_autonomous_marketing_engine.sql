@@ -42,7 +42,7 @@ ALTER TABLE marketing_campaigns ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY marketing_campaigns_select ON marketing_campaigns
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -54,7 +54,7 @@ CREATE POLICY marketing_campaigns_insert ON marketing_campaigns
 
 CREATE POLICY marketing_campaigns_update ON marketing_campaigns
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -94,7 +94,7 @@ ALTER TABLE marketing_assets ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY marketing_assets_select ON marketing_assets
   FOR SELECT TO authenticated
-  USING (campaign_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND campaign_id IN (
     SELECT id FROM marketing_campaigns
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

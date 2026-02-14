@@ -32,7 +32,7 @@ ALTER TABLE candidate_profiles ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY candidate_profiles_select ON candidate_profiles
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -44,7 +44,7 @@ CREATE POLICY candidate_profiles_insert ON candidate_profiles
 
 CREATE POLICY candidate_profiles_update ON candidate_profiles
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -84,7 +84,7 @@ ALTER TABLE job_positions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY job_positions_select ON job_positions
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -96,7 +96,7 @@ CREATE POLICY job_positions_insert ON job_positions
 
 CREATE POLICY job_positions_update ON job_positions
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -137,7 +137,7 @@ ALTER TABLE candidate_evaluations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY candidate_evaluations_select ON candidate_evaluations
   FOR SELECT TO authenticated
-  USING (candidate_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND candidate_id IN (
     SELECT id FROM candidate_profiles
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

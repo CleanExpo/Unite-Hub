@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import MindmapCanvas from "@/components/mindmap/MindmapCanvas";
+import MindmapCanvas from "@/components/mindmap/MindmapCanvasDynamic";
 import AISuggestionPanel from "@/components/mindmap/panels/AISuggestionPanel";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";

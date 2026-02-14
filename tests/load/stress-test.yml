@@ -1,0 +1,68 @@
+# Stress Test - Unite-Hub
+# Tests system behavior under extreme load conditions
+
+config:
+  target: "http://localhost:3000"
+  phases:
+    # Warm-up
+    - duration: 30
+      arrivalRate: 10
+      name: "Warm up"
+    # Gradual increase
+    - duration: 60
+      arrivalRate: 50
+      rampTo: 200
+      name: "Ramp to high load"
+    # Extreme load
+    - duration: 120
+      arrivalRate: 200
+      rampTo: 500
+      name: "Stress test - increasing"
+    # Maximum stress
+    - duration: 60
+      arrivalRate: 500
+      name: "Maximum stress"
+    # Recovery test
+    - duration: 60
+      arrivalRate: 500
+      rampTo: 50
+      name: "Recovery phase"
+  
+  # Relaxed thresholds for stress test
+  ensure:
+    maxErrorRate: 5 # Allow up to 5% errors under extreme load
+    p95: 2000 # 95th percentile < 2s under stress
+    p99: 5000 # 99th percentile < 5s under stress
+  
+  plugins:
+    expect: {}
+    metrics-by-endpoint:
+      includeOnlySummary: true
+
+# Processor for custom logic
+processor: "./load-test-processor.js"
+
+scenarios:
+  - name: "Health Check Flood"
+    weight: 60
+    flow:
+      - get:
+          url: "/api/health"
+          expect:
+            - statusCode: [200, 429, 503] # May rate limit or degrade
+  
+  - name: "CSRF Token Requests"
+    weight: 20
+    flow:
+      - get:
+          url: "/api/csrf-token"
+          expect:
+            - statusCode: [200, 429]
+  
+  - name: "Concurrent Static Assets"
+    weight: 20
+    flow:
+      - get:
+          url: "/"
+          expect:
+            - statusCode: [200, 429, 503]

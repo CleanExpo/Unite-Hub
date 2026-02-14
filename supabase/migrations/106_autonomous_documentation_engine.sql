@@ -44,7 +44,7 @@ ALTER TABLE documentation_tasks ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (allow system docs with null org_id)
 CREATE POLICY documentation_tasks_select ON documentation_tasks
   FOR SELECT TO authenticated
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IS NULL OR
     org_id IN (
       SELECT org_id FROM user_organizations
@@ -63,7 +63,7 @@ CREATE POLICY documentation_tasks_insert ON documentation_tasks
 
 CREATE POLICY documentation_tasks_update ON documentation_tasks
   FOR UPDATE TO authenticated
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IS NULL OR
     org_id IN (
       SELECT org_id FROM user_organizations

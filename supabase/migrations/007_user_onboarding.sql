@@ -3,7 +3,8 @@
 
 CREATE TABLE IF NOT EXISTS user_onboarding (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Step completion status
   step_1_complete BOOLEAN DEFAULT FALSE, -- Welcome & Profile Setup

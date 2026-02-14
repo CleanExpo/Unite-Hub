@@ -42,7 +42,7 @@ ALTER TABLE licensor_profiles ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY licensor_profiles_select ON licensor_profiles
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -54,7 +54,7 @@ CREATE POLICY licensor_profiles_insert ON licensor_profiles
 
 CREATE POLICY licensor_profiles_update ON licensor_profiles
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -99,7 +99,7 @@ ALTER TABLE licensor_revenue_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY licensor_revenue_events_select ON licensor_revenue_events
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -111,7 +111,7 @@ CREATE POLICY licensor_revenue_events_insert ON licensor_revenue_events
 
 CREATE POLICY licensor_revenue_events_update ON licensor_revenue_events
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -159,7 +159,7 @@ ALTER TABLE licensor_territory_zones ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY licensor_territory_zones_select ON licensor_territory_zones
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -171,7 +171,7 @@ CREATE POLICY licensor_territory_zones_insert ON licensor_territory_zones
 
 CREATE POLICY licensor_territory_zones_update ON licensor_territory_zones
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

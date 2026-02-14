@@ -114,7 +114,7 @@ CREATE POLICY workspace_isolation_select ON autonomous_tasks
 DROP POLICY IF EXISTS service_role_all_access ON autonomous_tasks;
 CREATE POLICY service_role_all_access ON autonomous_tasks
   FOR ALL
-  USING (auth.role() = 'service_role');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'service_role');
 
 -- System can insert (for cron jobs)
 DROP POLICY IF EXISTS system_insert ON autonomous_tasks;

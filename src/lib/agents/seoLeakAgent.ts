@@ -18,6 +18,7 @@
 import { anthropic } from '@/lib/anthropic/client';
 import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import {
   computeLeakProfile,
   getProfile,
@@ -849,6 +850,11 @@ Focus on actionable insights based on the leak signals.`;
       });
 
       const message = result.data;
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+      logCacheStats('SEOLeak:analyzeContent', cacheStats);
+
       let jsonText = '';
       for (const block of message.content) {
         if (block.type === 'text') {
@@ -921,6 +927,11 @@ Return JSON array with enhanced recommendations:
       });
 
       const message = result.data;
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+      logCacheStats('SEOLeak:analyzeContent', cacheStats);
+
       let jsonText = '';
       for (const block of message.content) {
         if (block.type === 'text') {
@@ -982,6 +993,11 @@ Return JSON:
       });
 
       const message = result.data;
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+      logCacheStats('SEOLeak:analyzeContent', cacheStats);
+
       let jsonText = '';
       for (const block of message.content) {
         if (block.type === 'text') {
@@ -1096,6 +1112,11 @@ Return a detailed JSON plan:
       });
 
       const message = result.data;
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+      logCacheStats('SEOLeak:analyzeContent', cacheStats);
+
       let jsonText = '';
       for (const block of message.content) {
         if (block.type === 'text') {
@@ -1178,6 +1199,11 @@ Return JSON array of 5 specific, actionable improvements:
       });
 
       const message = result.data;
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+      logCacheStats('SEOLeak:analyzeContent', cacheStats);
+
       let jsonText = '';
       for (const block of message.content) {
         if (block.type === 'text') {
@@ -1266,6 +1292,11 @@ Return detailed E-E-A-T analysis as JSON:
       });
 
       const message = result.data;
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+      logCacheStats('SEOLeak:analyzeContent', cacheStats);
+
       let jsonText = '';
       for (const block of message.content) {
         if (block.type === 'text') {

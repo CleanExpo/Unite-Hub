@@ -56,10 +56,12 @@ ON CONFLICT DO NOTHING;
 CREATE TABLE IF NOT EXISTS workspace_members (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     role_id UUID REFERENCES workspace_roles(id) ON DELETE SET NULL,
     role_name TEXT NOT NULL DEFAULT 'viewer',
-    invited_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+invited_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     invited_at TIMESTAMPTZ DEFAULT NOW(),
     joined_at TIMESTAMPTZ,
     is_active BOOLEAN DEFAULT TRUE,
@@ -99,7 +101,8 @@ CREATE TABLE IF NOT EXISTS org_graph_audit (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     workspace_id UUID REFERENCES workspaces(id) ON DELETE SET NULL,
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     action TEXT NOT NULL CHECK (action IN (
         'workspace_created', 'workspace_deleted', 'workspace_archived',
         'member_added', 'member_removed', 'role_changed',

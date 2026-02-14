@@ -6,7 +6,8 @@
 CREATE TABLE IF NOT EXISTS loyalty_credits (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Credit balance tracking
   balance bigint NOT NULL DEFAULT 0 CHECK (balance >= 0),
@@ -33,7 +34,8 @@ CREATE TABLE IF NOT EXISTS loyalty_credits (
 CREATE TABLE IF NOT EXISTS loyalty_credit_ledger (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   loyalty_credits_id uuid NOT NULL REFERENCES loyalty_credits(id) ON DELETE CASCADE,
 
   -- Transaction details
@@ -55,7 +57,8 @@ CREATE TABLE IF NOT EXISTS loyalty_credit_ledger (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
 
   -- Audit
-  created_by uuid REFERENCES auth.users(id) ON DELETE SET NULL
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by uuid REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Helper function: get current monthly cap progress
@@ -252,7 +255,7 @@ ALTER TABLE loyalty_credit_ledger ENABLE ROW LEVEL SECURITY;
 
 -- Users can view their own credits
 CREATE POLICY loyalty_credits_select_own ON loyalty_credits
-  FOR SELECT USING (auth.uid() = user_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 -- Founders can view workspace credits
 CREATE POLICY loyalty_credits_select_founder ON loyalty_credits
@@ -269,7 +272,7 @@ CREATE POLICY loyalty_credits_select_founder ON loyalty_credits
 
 -- Ledger: Users can view their own
 CREATE POLICY loyalty_credit_ledger_select_own ON loyalty_credit_ledger
-  FOR SELECT USING (auth.uid() = user_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 -- Ledger: Founders can view workspace
 CREATE POLICY loyalty_credit_ledger_select_founder ON loyalty_credit_ledger

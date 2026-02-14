@@ -31,10 +31,42 @@ vi.mock('@/lib/rate-limit', () => ({
   rateLimit: vi.fn(),
 }));
 
+// Mock next/headers for server-side operations
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(() => ({
+    get: vi.fn(() => null),
+    set: vi.fn(),
+    delete: vi.fn(),
+  })),
+  headers: vi.fn(() => ({
+    get: vi.fn(() => null),
+  })),
+}));
+
+// Mock @supabase/ssr for server client creation
+vi.mock('@supabase/ssr', () => ({
+  createServerClient: vi.fn(() => ({
+    auth: {
+      getUser: vi.fn().mockResolvedValue({
+        data: { user: { id: 'user-123' } },
+        error: null,
+      }),
+    },
+    from: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn().mockResolvedValue({
+      data: { role: 'owner' },
+      error: null,
+    }),
+  })),
+}));
+
 describe('POST /api/media/upload', () => {
   let mockRequest: Partial<NextRequest>;
   let mockSupabase: any;
   let mockSupabaseAdmin: any;
+  let mockInsert: any; // Track insert mock for verification
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -45,7 +77,40 @@ describe('POST /api/media/upload', () => {
       error: null,
     });
 
-    // Mock Supabase client
+    // Create reusable mock builders
+    mockInsert = vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({
+        data: {
+          id: 'media-123',
+          filename: 'test.mp4',
+          status: 'processing',
+          workspace_id: 'workspace-123',
+          org_id: 'org-123',
+          uploaded_by: 'user-123',
+          file_type: 'video',
+          mime_type: 'video/mp4',
+          public_url: 'https://storage.example.com/test.mp4',
+        },
+        error: null,
+      }),
+    });
+
+    const createMockQueryBuilder = () => ({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      is: vi.fn().mockReturnThis(),
+      order: vi.fn().mockReturnThis(),
+      insert: mockInsert, // Shared insert mock for verification
+      single: vi.fn().mockResolvedValue({
+        data: {
+          role: 'owner',
+          workspaces: { id: 'workspace-123' },
+        },
+        error: null,
+      }),
+    });
+
     mockSupabase = {
       auth: {
         getUser: vi.fn().mockResolvedValue({
@@ -53,13 +118,7 @@ describe('POST /api/media/upload', () => {
           error: null,
         }),
       },
-      from: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({
-        data: { role: 'owner', workspaces: [{ id: 'workspace-123' }] },
-        error: null,
-      }),
+      from: vi.fn().mockImplementation(() => createMockQueryBuilder()),
       storage: {
         from: vi.fn().mockReturnValue({
           upload: vi.fn().mockResolvedValue({
@@ -69,21 +128,24 @@ describe('POST /api/media/upload', () => {
           getPublicUrl: vi.fn().mockReturnValue({
             data: { publicUrl: 'https://storage.example.com/test.mp4' },
           }),
+          remove: vi.fn().mockResolvedValue({
+            data: null,
+            error: null,
+          }),
         }),
       },
     };
 
     mockSupabaseAdmin = {
-      from: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({
-        data: {
-          id: 'media-123',
-          filename: 'test.mp4',
-          status: 'processing',
-        },
-        error: null,
+      from: vi.fn().mockImplementation((table: string) => {
+        const builder = createMockQueryBuilder();
+        if (table === 'auditLogs') {
+          builder.insert = vi.fn().mockResolvedValue({
+            data: null,
+            error: null,
+          });
+        }
+        return builder;
       }),
     };
 
@@ -114,6 +176,10 @@ describe('POST /api/media/upload', () => {
 
     const response = await POST(mockRequest as NextRequest);
     const data = await response.json();
+
+    // Debug output
+    console.log('Response status:', response.status);
+    console.log('Response data:', JSON.stringify(data, null, 2));
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
@@ -190,16 +256,16 @@ describe('POST /api/media/upload', () => {
   });
 
   it('should enforce workspace access', async () => {
-    mockSupabase.from = vi.fn().mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          single: vi.fn().mockResolvedValue({
-            data: null, // No workspace access
-            error: new Error('Not found'),
-          }),
-        }),
+    // Override to return access denied - need to handle multiple .eq() calls
+    const mockChain = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({
+        data: null, // No workspace access
+        error: new Error('Not found'),
       }),
-    });
+    };
+    mockSupabase.from = vi.fn().mockReturnValue(mockChain);
 
     const file = new File(['content'], 'test.mp4', { type: 'video/mp4' });
     const formData = new FormData();
@@ -221,12 +287,6 @@ describe('POST /api/media/upload', () => {
   });
 
   it('should rollback storage upload on database error', async () => {
-    // Mock database error
-    mockSupabaseAdmin.single.mockResolvedValue({
-      data: null,
-      error: new Error('Database error'),
-    });
-
     // Mock storage remove function
     const mockRemove = vi.fn().mockResolvedValue({ data: null, error: null });
     mockSupabase.storage.from = vi.fn().mockReturnValue({
@@ -238,6 +298,29 @@ describe('POST /api/media/upload', () => {
         data: { publicUrl: 'https://test.com/file' },
       }),
       remove: mockRemove,
+    });
+
+    // Mock database error - override the from() function to return error for media_files
+    mockSupabase.from = vi.fn().mockImplementation((table: string) => {
+      if (table === 'media_files') {
+        return {
+          select: vi.fn().mockReturnThis(),
+          insert: vi.fn().mockReturnThis(),
+          single: vi.fn().mockResolvedValue({
+            data: null,
+            error: new Error('Database error'),
+          }),
+        };
+      }
+      // For other tables (like workspace check), return success
+      return {
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({
+          data: { role: 'owner', workspaces: { id: 'workspace-123' } },
+          error: null,
+        }),
+      };
     });
 
     const file = new File(['content'], 'test.mp4', { type: 'video/mp4' });
@@ -287,7 +370,7 @@ describe('POST /api/media/upload', () => {
     expect(data.success).toBe(true);
 
     // Verify tags were passed to database
-    const insertCall = mockSupabaseAdmin.insert.mock.calls[0][0];
+    const insertCall = mockInsert.mock.calls[0][0];
     expect(insertCall.tags).toEqual(['client', 'demo', 'important']);
   });
 });
@@ -299,6 +382,35 @@ describe('GET /api/media/upload', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    // Create chainable query builder for GET endpoint
+    // Must support optional filters after .order() call
+    const mockQueryChain = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(), // Allow multiple .eq() calls
+      is: vi.fn().mockReturnThis(),
+      order: vi.fn().mockReturnThis(), // Also needs to be chainable!
+      then: vi.fn((resolve) => {
+        // Make the query awaitable (implements Promise interface)
+        return resolve({
+          data: [
+            {
+              id: 'media-1',
+              filename: 'test1.mp4',
+              file_type: 'video',
+              status: 'completed',
+            },
+            {
+              id: 'media-2',
+              filename: 'test2.mp3',
+              file_type: 'audio',
+              status: 'processing',
+            },
+          ],
+          error: null,
+        });
+      }),
+    };
+
     mockSupabase = {
       auth: {
         getUser: vi.fn().mockResolvedValue({
@@ -306,31 +418,7 @@ describe('GET /api/media/upload', () => {
           error: null,
         }),
       },
-      from: vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            is: vi.fn().mockReturnValue({
-              order: vi.fn().mockResolvedValue({
-                data: [
-                  {
-                    id: 'media-1',
-                    filename: 'test1.mp4',
-                    file_type: 'video',
-                    status: 'completed',
-                  },
-                  {
-                    id: 'media-2',
-                    filename: 'test2.mp3',
-                    file_type: 'audio',
-                    status: 'processing',
-                  },
-                ],
-                error: null,
-              }),
-            }),
-          }),
-        }),
-      }),
+      from: vi.fn().mockReturnValue(mockQueryChain),
     };
 
     vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase);
@@ -339,6 +427,7 @@ describe('GET /api/media/upload', () => {
   it('should list all media files for workspace', async () => {
     mockRequest = {
       url: 'http://localhost:3008/api/media/upload?workspace_id=workspace-123',
+      headers: new Headers(), // Add headers for req.headers.get() call
       nextUrl: {
         searchParams: new URLSearchParams('workspace_id=workspace-123'),
       } as any,
@@ -346,6 +435,10 @@ describe('GET /api/media/upload', () => {
 
     const response = await GET(mockRequest as NextRequest);
     const data = await response.json();
+
+    // Debug output
+    console.log('GET Response status:', response.status);
+    console.log('GET Response data:', JSON.stringify(data, null, 2));
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
@@ -356,6 +449,7 @@ describe('GET /api/media/upload', () => {
   it('should filter by file type', async () => {
     mockRequest = {
       url: 'http://localhost:3008/api/media/upload?workspace_id=workspace-123&file_type=video',
+      headers: new Headers(),
       nextUrl: {
         searchParams: new URLSearchParams('workspace_id=workspace-123&file_type=video'),
       } as any,
@@ -371,6 +465,7 @@ describe('GET /api/media/upload', () => {
   it('should require workspace_id parameter', async () => {
     mockRequest = {
       url: 'http://localhost:3008/api/media/upload',
+      headers: new Headers(),
       nextUrl: {
         searchParams: new URLSearchParams(),
       } as any,
@@ -391,6 +486,7 @@ describe('GET /api/media/upload', () => {
 
     mockRequest = {
       url: 'http://localhost:3008/api/media/upload?workspace_id=workspace-123',
+      headers: new Headers(),
       nextUrl: {
         searchParams: new URLSearchParams('workspace_id=workspace-123'),
       } as any,

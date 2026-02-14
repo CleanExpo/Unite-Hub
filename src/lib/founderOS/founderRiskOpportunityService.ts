@@ -11,6 +11,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { supabaseAdmin } from '@/lib/supabase';
 import { getSignals, getSignalSummary, type BusinessSignal } from './founderSignalInferenceService';
 import { getBusiness, type FounderBusiness } from './founderBusinessRegistryService';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 
 // ============================================================================
 // Types
@@ -236,9 +237,19 @@ Return ONLY valid JSON.`;
         type: 'enabled',
         budget_tokens: 3000,
       },
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' }, // Cache system prompt for 5 min (90% cost savings)
+        },
+      ],
       messages: [{ role: 'user', content: userPrompt }],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats('RiskOpportunity:analyzeRisks', cacheStats);
 
     // Extract text content
     let responseText = '';
@@ -358,9 +369,19 @@ Return ONLY valid JSON.`;
         type: 'enabled',
         budget_tokens: 3000,
       },
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' }, // Cache system prompt for 5 min (90% cost savings)
+        },
+      ],
       messages: [{ role: 'user', content: userPrompt }],
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-opus-4-5-20251101');
+    logCacheStats('RiskOpportunity:analyzeOpportunities', cacheStats);
 
     // Extract text content
     let responseText = '';

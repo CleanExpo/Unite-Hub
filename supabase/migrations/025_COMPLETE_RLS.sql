@@ -202,7 +202,7 @@ ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "subscriptions_org_select"
   ON subscriptions FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND is_active = true
@@ -220,11 +220,11 @@ CREATE POLICY "subscriptions_org_insert"
 
 CREATE POLICY "subscriptions_org_update"
   ON subscriptions FOR UPDATE
-  USING (user_has_role_in_org_simple(org_id, 'admin'));
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_has_role_in_org_simple(org_id, 'admin'));
 
 CREATE POLICY "subscriptions_org_delete"
   ON subscriptions FOR DELETE
-  USING (user_has_role_in_org_simple(org_id, 'owner'));
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_has_role_in_org_simple(org_id, 'owner'));
 
 -- =====================================================
 -- FINAL VERIFICATION

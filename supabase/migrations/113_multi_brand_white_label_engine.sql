@@ -31,7 +31,7 @@ ALTER TABLE brands ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY brands_select ON brands
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -43,7 +43,7 @@ CREATE POLICY brands_insert ON brands
 
 CREATE POLICY brands_update ON brands
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -77,7 +77,7 @@ ALTER TABLE brand_settings ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY brand_settings_select ON brand_settings
   FOR SELECT TO authenticated
-  USING (brand_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND brand_id IN (
     SELECT id FROM brands
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
@@ -95,7 +95,7 @@ CREATE POLICY brand_settings_insert ON brand_settings
 
 CREATE POLICY brand_settings_update ON brand_settings
   FOR UPDATE TO authenticated
-  USING (brand_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND brand_id IN (
     SELECT id FROM brands
     WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()

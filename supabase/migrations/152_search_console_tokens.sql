@@ -47,9 +47,11 @@ CREATE TABLE IF NOT EXISTS integration_tokens (
 
   -- Audit
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+updated_by UUID REFERENCES auth.users(id),
 
   -- Ensure only one active token per integration per brand
   CONSTRAINT unique_active_integration UNIQUE(workspace_id, integration_type, brand_slug, is_active)
@@ -129,7 +131,7 @@ CREATE POLICY integration_tokens_founder_policy ON integration_tokens
 -- Service role can perform all operations (for automated token refresh)
 CREATE POLICY integration_tokens_service_policy ON integration_tokens
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- Founder can read usage logs
@@ -528,4 +530,4 @@ COMMENT ON FUNCTION check_token_expiry IS 'Returns tokens expiring within 1 hour
 -- Security Note: Tokens should be encrypted at the application layer before storage
 -- Never log raw tokens in application logs
 -- Use environment variables for service role operations
--- Implement token rotation policy (e.g., refresh every 30 days even if not expired)
+-- Implement token rotation policy (e.g., refresh every 30 days even if not expired);

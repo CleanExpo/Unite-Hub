@@ -39,7 +39,7 @@ ALTER TABLE client_journey_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY client_journey_events_select ON client_journey_events
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -86,7 +86,7 @@ ALTER TABLE client_journey_scores ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY client_journey_scores_select ON client_journey_scores
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -98,7 +98,7 @@ CREATE POLICY client_journey_scores_insert ON client_journey_scores
 
 CREATE POLICY client_journey_scores_update ON client_journey_scores
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

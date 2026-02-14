@@ -48,7 +48,8 @@ CREATE TABLE IF NOT EXISTS horizon_plans (
   source_simulation_id UUID,
 
   -- Ownership
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -86,7 +87,8 @@ CREATE TABLE IF NOT EXISTS horizon_steps (
   -- Resources
   estimated_hours DECIMAL(10,2),
   actual_hours DECIMAL(10,2),
-  assigned_to UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+assigned_to UUID REFERENCES auth.users(id),
 
   -- Risk
   risk_level TEXT NOT NULL DEFAULT 'MEDIUM' CHECK (risk_level IN ('LOW', 'MEDIUM', 'HIGH')),
@@ -208,11 +210,13 @@ CREATE TABLE IF NOT EXISTS horizon_adjustments (
 
   -- Approval
   requires_approval BOOLEAN NOT NULL DEFAULT false,
-  approved_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by UUID REFERENCES auth.users(id),
   approved_at TIMESTAMPTZ,
 
   -- Created by
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -251,7 +255,7 @@ ALTER TABLE horizon_adjustments ENABLE ROW LEVEL SECURITY;
 
 -- Horizon Plans: org members
 CREATE POLICY horizon_plans_select ON horizon_plans
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -267,7 +271,7 @@ CREATE POLICY horizon_plans_insert ON horizon_plans
   );
 
 CREATE POLICY horizon_plans_update ON horizon_plans
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
@@ -275,7 +279,7 @@ CREATE POLICY horizon_plans_update ON horizon_plans
   );
 
 CREATE POLICY horizon_plans_delete ON horizon_plans
-  FOR DELETE USING (
+  FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid() AND role = 'owner'
@@ -284,7 +288,7 @@ CREATE POLICY horizon_plans_delete ON horizon_plans
 
 -- Horizon Steps: via plan
 CREATE POLICY horizon_steps_select ON horizon_steps
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     horizon_plan_id IN (
       SELECT id FROM horizon_plans
       WHERE organization_id IN (
@@ -306,7 +310,7 @@ CREATE POLICY horizon_steps_insert ON horizon_steps
   );
 
 CREATE POLICY horizon_steps_update ON horizon_steps
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     horizon_plan_id IN (
       SELECT id FROM horizon_plans
       WHERE organization_id IN (
@@ -318,7 +322,7 @@ CREATE POLICY horizon_steps_update ON horizon_steps
 
 -- KPI Snapshots: org members
 CREATE POLICY kpi_snapshots_select ON kpi_snapshots
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
@@ -335,7 +339,7 @@ CREATE POLICY kpi_snapshots_insert ON kpi_snapshots
 
 -- Dependency Links: via plan
 CREATE POLICY dependency_links_select ON dependency_links
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     horizon_plan_id IN (
       SELECT id FROM horizon_plans
       WHERE organization_id IN (
@@ -358,7 +362,7 @@ CREATE POLICY dependency_links_insert ON dependency_links
 
 -- Horizon Adjustments: via plan
 CREATE POLICY horizon_adjustments_select ON horizon_adjustments
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     horizon_plan_id IN (
       SELECT id FROM horizon_plans
       WHERE organization_id IN (

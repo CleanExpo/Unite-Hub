@@ -42,7 +42,7 @@ ALTER TABLE ilcie_learning_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY ilcie_learning_events_select ON ilcie_learning_events
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -102,7 +102,7 @@ ALTER TABLE ilcie_recommendations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY ilcie_recommendations_select ON ilcie_recommendations
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -114,7 +114,7 @@ CREATE POLICY ilcie_recommendations_insert ON ilcie_recommendations
 
 CREATE POLICY ilcie_recommendations_update ON ilcie_recommendations
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -150,7 +150,7 @@ ALTER TABLE ilcie_improvement_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY ilcie_improvement_log_select ON ilcie_improvement_log
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

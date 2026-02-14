@@ -11,31 +11,102 @@ import '@testing-library/jest-dom/vitest';
 // Load test environment variables
 config({ path: '.env.test' });
 
-// Mock Supabase client
-vi.mock('@/lib/supabase/server', () => ({
-  createClient: vi.fn(() => ({
-    from: vi.fn(() => ({
-      select: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockReturnThis(),
-      update: vi.fn().mockReturnThis(),
-      delete: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      neq: vi.fn().mockReturnThis(),
-      gt: vi.fn().mockReturnThis(),
-      gte: vi.fn().mockReturnThis(),
-      lt: vi.fn().mockReturnThis(),
-      lte: vi.fn().mockReturnThis(),
-      like: vi.fn().mockReturnThis(),
-      ilike: vi.fn().mockReturnThis(),
-      in: vi.fn().mockReturnThis(),
-      is: vi.fn().mockReturnThis(),
-      order: vi.fn().mockReturnThis(),
-      limit: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: null, error: null }),
-      maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+// =====================================================
+// SUPABASE MOCK FACTORY
+// =====================================================
+
+/**
+ * Creates a chainable Supabase mock that works with all query patterns
+ *
+ * This mock handles:
+ * - Method chaining (select().eq().single())
+ * - Promise resolution (await or .then())
+ * - Multiple query patterns (CRUD operations)
+ * - Custom return values per test
+ */
+function createSupabaseMock(defaultData: any = null) {
+  const createChain = (finalValue: any = { data: defaultData, error: null }): any => {
+    const chain = {
+      from: vi.fn(() => createChain(finalValue)),
+      select: vi.fn(() => createChain(finalValue)),
+      insert: vi.fn(() => createChain(finalValue)),
+      update: vi.fn(() => createChain(finalValue)),
+      delete: vi.fn(() => createChain(finalValue)),
+      upsert: vi.fn(() => createChain(finalValue)),
+      eq: vi.fn(() => createChain(finalValue)),
+      neq: vi.fn(() => createChain(finalValue)),
+      gt: vi.fn(() => createChain(finalValue)),
+      gte: vi.fn(() => createChain(finalValue)),
+      lt: vi.fn(() => createChain(finalValue)),
+      lte: vi.fn(() => createChain(finalValue)),
+      like: vi.fn(() => createChain(finalValue)),
+      ilike: vi.fn(() => createChain(finalValue)),
+      in: vi.fn(() => createChain(finalValue)),
+      is: vi.fn(() => createChain(finalValue)),
+      or: vi.fn(() => createChain(finalValue)),
+      not: vi.fn(() => createChain(finalValue)),
+      order: vi.fn(() => createChain(finalValue)),
+      limit: vi.fn(() => createChain(finalValue)),
+      range: vi.fn(() => createChain(finalValue)),
+      single: vi.fn(() => Promise.resolve(finalValue)),
+      maybeSingle: vi.fn(() => Promise.resolve(finalValue)),
+      then: vi.fn((resolve: any) => Promise.resolve(finalValue).then(resolve)),
+      catch: vi.fn((reject: any) => Promise.reject(finalValue).catch(reject)),
+    };
+    return chain;
+  };
+
+  const mockClient = createChain();
+
+  // Add auth methods
+  mockClient.auth = {
+    getUser: vi.fn(() => Promise.resolve({
+      data: { user: { id: 'test-user-123', email: 'test@example.com' } },
+      error: null,
     })),
-  })),
+    getSession: vi.fn(() => Promise.resolve({
+      data: { session: { access_token: 'test-token', user: { id: 'test-user-123' } } },
+      error: null,
+    })),
+    signInWithPassword: vi.fn(() => Promise.resolve({
+      data: { user: { id: 'test-user-123' }, session: { access_token: 'test-token' } },
+      error: null,
+    })),
+    signOut: vi.fn(() => Promise.resolve({ error: null })),
+  };
+
+  // Add RPC method
+  mockClient.rpc = vi.fn(() => Promise.resolve({ data: null, error: null }));
+
+  // Add storage methods
+  mockClient.storage = {
+    from: vi.fn(() => ({
+      upload: vi.fn(() => Promise.resolve({ data: { path: 'test-file.txt' }, error: null })),
+      download: vi.fn(() => Promise.resolve({ data: new Blob(), error: null })),
+      remove: vi.fn(() => Promise.resolve({ data: null, error: null })),
+      list: vi.fn(() => Promise.resolve({ data: [], error: null })),
+      getPublicUrl: vi.fn(() => ({ data: { publicUrl: 'https://example.com/test.txt' } })),
+    })),
+  };
+
+  return mockClient;
+}
+
+// Create default mock instance
+const defaultMockSupabase = createSupabaseMock();
+
+// Mock @/lib/supabase/server (for server-side imports)
+// Individual tests can override this with their own vi.mock() calls
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn(() => defaultMockSupabase),
 }));
+
+// Note: We don't mock @/lib/supabase globally because many individual test files
+// have their own custom mocks. Global mocking would conflict with test-specific mocks.
+// Tests that need @/lib/supabase should create their own mocks using createSupabaseMock().
+
+// Export factory for tests that need custom mocks
+export { createSupabaseMock };
 
 // Mock Google Secret Manager
 vi.mock('@google-cloud/secret-manager', () => ({

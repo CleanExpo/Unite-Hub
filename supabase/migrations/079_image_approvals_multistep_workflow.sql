@@ -37,9 +37,11 @@ CREATE TABLE IF NOT EXISTS image_approvals (
   CONSTRAINT image_approvals_contact_fk
     FOREIGN KEY (contact_id) REFERENCES contacts(id) ON DELETE SET NULL,
   CONSTRAINT image_approvals_requested_by_fk
-    FOREIGN KEY (requested_by) REFERENCES auth.users(id) ON DELETE SET NULL,
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (requested_by) REFERENCES auth.users(id) ON DELETE SET NULL,
   CONSTRAINT image_approvals_reviewed_by_fk
-    FOREIGN KEY (reviewed_by) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (reviewed_by) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Create indexes
@@ -54,7 +56,7 @@ ALTER TABLE image_approvals ENABLE ROW LEVEL SECURITY;
 -- RLS Policies for org isolation
 CREATE POLICY org_isolation_select ON image_approvals
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -66,7 +68,7 @@ CREATE POLICY org_isolation_insert ON image_approvals
 
 CREATE POLICY org_isolation_update ON image_approvals
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ))
   WITH CHECK (org_id IN (
@@ -75,7 +77,7 @@ CREATE POLICY org_isolation_update ON image_approvals
 
 CREATE POLICY org_isolation_delete ON image_approvals
   FOR DELETE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -85,7 +87,8 @@ CREATE TABLE IF NOT EXISTS image_approvals_audit (
   approval_id UUID NOT NULL REFERENCES image_approvals(id) ON DELETE CASCADE,
   previous_status TEXT,
   new_status TEXT NOT NULL,
-  changed_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+changed_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   changed_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -99,7 +102,7 @@ ALTER TABLE image_approvals_audit ENABLE ROW LEVEL SECURITY;
 -- Audit table inherits access from parent approval record
 CREATE POLICY audit_select ON image_approvals_audit
   FOR SELECT TO authenticated
-  USING (approval_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND approval_id IN (
     SELECT id FROM image_approvals WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
     )

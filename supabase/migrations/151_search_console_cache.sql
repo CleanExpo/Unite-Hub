@@ -186,17 +186,17 @@ CREATE POLICY dataforseo_cache_founder_policy ON dataforseo_cache
 -- Service role can perform all operations (for automated sync)
 CREATE POLICY search_console_cache_service_policy ON search_console_cache
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 CREATE POLICY analytics_cache_service_policy ON analytics_cache
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 CREATE POLICY dataforseo_cache_service_policy ON dataforseo_cache
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- ============================================================================

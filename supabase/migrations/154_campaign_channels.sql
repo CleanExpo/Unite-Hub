@@ -41,9 +41,11 @@ CREATE TABLE IF NOT EXISTS campaign_channels (
 
   -- Audit
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+updated_by UUID REFERENCES auth.users(id),
 
   CONSTRAINT unique_channel_workspace UNIQUE(workspace_id, channel_slug)
 );
@@ -90,7 +92,8 @@ CREATE TABLE IF NOT EXISTS channel_templates (
 
   -- Audit
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  created_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id),
 
   CONSTRAINT unique_template_name UNIQUE(workspace_id, channel_id, template_name)
 );
@@ -140,12 +143,12 @@ CREATE POLICY channel_templates_founder_policy ON channel_templates
 -- Service role policies
 CREATE POLICY campaign_channels_service_policy ON campaign_channels
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 CREATE POLICY channel_templates_service_policy ON channel_templates
   FOR ALL TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- ============================================================================

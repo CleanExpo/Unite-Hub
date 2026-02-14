@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS concierge_sessions (
   CONSTRAINT concierge_sessions_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT concierge_sessions_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -30,7 +31,7 @@ ALTER TABLE concierge_sessions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY concierge_sessions_select ON concierge_sessions
   FOR SELECT TO authenticated
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IN (SELECT org_id FROM user_organizations WHERE user_id = auth.uid())
     AND user_id = auth.uid()
   );
@@ -44,7 +45,7 @@ CREATE POLICY concierge_sessions_insert ON concierge_sessions
 
 CREATE POLICY concierge_sessions_update ON concierge_sessions
   FOR UPDATE TO authenticated
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IN (SELECT org_id FROM user_organizations WHERE user_id = auth.uid())
     AND user_id = auth.uid()
   );
@@ -93,7 +94,7 @@ ALTER TABLE concierge_actions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (via session ownership)
 CREATE POLICY concierge_actions_select ON concierge_actions
   FOR SELECT TO authenticated
-  USING (session_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND session_id IN (
     SELECT id FROM concierge_sessions
     WHERE org_id IN (SELECT org_id FROM user_organizations WHERE user_id = auth.uid())
       AND user_id = auth.uid()

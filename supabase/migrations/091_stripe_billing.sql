@@ -41,7 +41,7 @@ ALTER TABLE stripe_customers ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY stripe_customers_select ON stripe_customers
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -55,7 +55,7 @@ CREATE POLICY stripe_customers_insert ON stripe_customers
 
 CREATE POLICY stripe_customers_update ON stripe_customers
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -111,7 +111,7 @@ ALTER TABLE billing_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY billing_events_select ON billing_events
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -159,7 +159,7 @@ ALTER TABLE topup_queue ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY topup_queue_select ON topup_queue
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -173,7 +173,7 @@ CREATE POLICY topup_queue_insert ON topup_queue
 
 CREATE POLICY topup_queue_update ON topup_queue
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));

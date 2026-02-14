@@ -4,7 +4,8 @@
 -- Voice Navigation Events
 CREATE TABLE IF NOT EXISTS voice_navigation_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   user_role TEXT NOT NULL CHECK (user_role IN ('founder', 'staff', 'client')),
   command_text TEXT NOT NULL,
   recognized_intent TEXT,

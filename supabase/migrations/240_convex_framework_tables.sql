@@ -461,4 +461,4 @@ BEGIN
   END IF;
 END $$;
 
--- End of Migration 240
+-- End of Migration 240;

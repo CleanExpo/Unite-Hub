@@ -178,11 +178,13 @@ CREATE TABLE IF NOT EXISTS ad_optimization_opportunities (
   baseline_metrics JSONB DEFAULT '{}',
   current_metrics JSONB DEFAULT '{}',
   status TEXT DEFAULT 'open' CHECK (status IN ('open', 'reviewing', 'approved', 'rejected', 'applied', 'expired')),
-  reviewed_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+reviewed_by UUID REFERENCES auth.users(id),
   reviewed_at TIMESTAMPTZ,
   review_notes TEXT,
   applied_at TIMESTAMPTZ,
-  applied_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+applied_by UUID REFERENCES auth.users(id),
   expires_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -222,7 +224,8 @@ CREATE TABLE IF NOT EXISTS ad_change_history (
   new_value JSONB,
   change_source TEXT CHECK (change_source IN ('user', 'api', 'automation', 'platform')),
   triggered_by_opportunity_id UUID REFERENCES ad_optimization_opportunities(id),
-  performed_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+performed_by UUID REFERENCES auth.users(id),
   performed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()

@@ -11,12 +11,16 @@
 import { GoogleGenAI } from '@google/genai';
 import Anthropic from "@anthropic-ai/sdk";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { supabaseStaff } from '../auth/supabase';
 
 // Initialize AI clients
 const gemini = new GoogleGenAI(process.env.GOOGLE_AI_API_KEY || '');
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
+  defaultHeaders: {
+    'anthropic-beta': 'thinking-2025-11-15,prompt-caching-2024-07-31',
+  },
 });
 
 /**
@@ -117,35 +121,48 @@ export async function runAI(eventType: AIEventType, payload: any) {
  * Process idea submission using Anthropic Extended Thinking
  */
 async function processIdeaSubmission(payload: { ideaId: string; content: string }) {
-  const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create({
-    model: 'claude-opus-4-5-20251101',
-    max_tokens: 4096,
-    thinking: {
-      type: 'enabled',
-      budget_tokens: 5000,
-    },
-    messages: [
-      {
-        role: 'user',
-        content: `Analyze this client idea submission and structure it:
+  const systemPrompt = `You are an expert business analyst specializing in extracting actionable requirements from client ideas.
 
-Idea: ${payload.content}
-
-Provide:
+Analyze client idea submissions and provide structured analysis with:
 1. Core objective (what they want to achieve)
 2. Suggested approach (technical implementation)
 3. Estimated complexity (simple/medium/complex)
 4. Key requirements extracted
 5. Potential challenges
 
-Format as structured JSON.`,
-      },
-    ],
-  })
-    });
+Always format output as structured JSON.`;
 
-    const message = result.data;;
+  const result = await callAnthropicWithRetry(async () => {
+    return await anthropic.messages.create({
+      model: 'claude-opus-4-5-20251101',
+      max_tokens: 4096,
+      thinking: {
+        type: 'enabled',
+        budget_tokens: 5000,
+      },
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
+      messages: [
+        {
+          role: 'user',
+          content: `Analyze this client idea submission and structure it:
+
+Idea: ${payload.content}`,
+        },
+      ],
+    });
+  });
+
+  const message = result.data;
+
+  // Log cache performance
+  const cacheStats = extractCacheStats(message, 'claude-opus-4-5-20251101');
+  logCacheStats('Orchestrator:processIdeaSubmission', cacheStats);
 
   return {
     status: 'processed',
@@ -158,31 +175,44 @@ Format as structured JSON.`,
  * Generate proposal using Anthropic
  */
 async function generateProposal(payload: { ideaId: string; interpretation: any }) {
-  const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create({
-    model: 'claude-sonnet-4-5-20250929',
-    max_tokens: 4096,
-    messages: [
-      {
-        role: 'user',
-        content: `Generate a detailed project proposal based on this analysis:
+  const systemPrompt = `You are an expert proposal writer specializing in technical project proposals.
 
-${JSON.stringify(payload.interpretation, null, 2)}
-
-Include:
+Generate detailed project proposals that include:
 1. Scope of work (deliverables, features, timeline)
 2. Pricing breakdown (development, design, testing, deployment)
 3. Timeline (phases, milestones, estimated hours)
 4. Technology stack recommendation
 5. Success metrics
 
-Format as structured JSON with these sections.`,
-      },
-    ],
-  })
-    });
+Always format output as structured JSON with these sections.`;
 
-    const message = result.data;;
+  const result = await callAnthropicWithRetry(async () => {
+    return await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 4096,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
+      messages: [
+        {
+          role: 'user',
+          content: `Generate a detailed project proposal based on this analysis:
+
+${JSON.stringify(payload.interpretation, null, 2)}`,
+        },
+      ],
+    });
+  });
+
+  const message = result.data;
+
+  // Log cache performance
+  const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+  logCacheStats('Orchestrator:generateProposal', cacheStats);
 
   return {
     status: 'generated',

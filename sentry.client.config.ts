@@ -1,60 +1,94 @@
 /**
- * Sentry Client-Side Configuration
- *
- * Captures errors and performance data from the browser
+ * Sentry Client Configuration
+ * 
+ * Monitors client-side errors, performance, and user interactions.
+ * Runs in the browser for all client-side React components.
  */
 
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
-const SENTRY_ENVIRONMENT = process.env.NEXT_PUBLIC_VERCEL_ENV || process.env.NODE_ENV || 'development';
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT || process.env.NODE_ENV || 'development';
 
 Sentry.init({
-  dsn: SENTRY_DSN || undefined,
-
-  // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: SENTRY_ENVIRONMENT === 'production' ? 0.1 : 1.0,
-
-  // Capture Replay for 10% of all sessions,
-  // plus 100% of sessions with an error
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
-
-  // Note: if you want to override the automatic release value, do not set a
-  // `release` value here - use the environment variable `SENTRY_RELEASE`, so
-  // that it will also get attached to your source maps
-
-  environment: SENTRY_ENVIRONMENT,
-
-  // Don't send errors in development
-  enabled: SENTRY_ENVIRONMENT !== 'development',
-
-  // Only send errors in production
-  beforeSend(event, hint) {
-    // Don't send errors in development
-    if (SENTRY_ENVIRONMENT === 'development') {
-      return null;
-    }
-
-    // Filter out 401 errors (expected for unauthorized requests)
-    if (event.exception?.values?.[0]?.value?.includes('401')) {
-      return null;
-    }
-
-    // Filter out network errors from user's connection issues
-    if (event.exception?.values?.[0]?.type === 'NetworkError') {
-      return null;
-    }
-
-    return event;
-  },
-
+  dsn: SENTRY_DSN,
+  
+  // Environment configuration
+  environment: ENVIRONMENT,
+  
+  // Performance monitoring
+  tracesSampleRate: ENVIRONMENT === 'production' ? 0.1 : 1.0,
+  
+  // Session replay for debugging
+  replaysSessionSampleRate: 0.1, // 10% of sessions
+  replaysOnErrorSampleRate: 1.0, // 100% of sessions with errors
+  
+  // Integrations
   integrations: [
-    Sentry.replayIntegration({
-      // Mask all text and input content by default
+    new Sentry.BrowserTracing({
+      // Performance monitoring for navigation and HTTP requests
+      tracePropagationTargets: ['localhost', /^https:\/\/[^/]*\.unite-hub\.com/],
+    }),
+    new Sentry.Replay({
+      // Mask all text content for privacy
       maskAllText: true,
       blockAllMedia: true,
     }),
   ],
+  
+  // Error filtering
+  ignoreErrors: [
+    // Browser extensions
+    'top.GLOBALS',
+    'chrome-extension://',
+    'moz-extension://',
+    // Network errors that are expected
+    'NetworkError',
+    'Failed to fetch',
+    // Third-party scripts
+    'ResizeObserver loop limit exceeded',
+  ],
+  
+  // Release tracking
+  release: process.env.NEXT_PUBLIC_SENTRY_RELEASE,
+  
+  // User feedback
+  beforeSend(event, hint) {
+    // Filter out development errors
+    if (ENVIRONMENT === 'development') {
+      console.log('Sentry event (dev mode):', event);
+      return null; // Don't send in development
+    }
+
+    // Add custom context
+    if (event.exception) {
+      console.error('Error captured by Sentry:', hint.originalException || hint.syntheticException);
+    }
+
+    // Sanitize all data to prevent Date serialization issues
+    try {
+      // Convert event to JSON and back to strip Date objects and other non-serializable values
+      const sanitized = JSON.parse(JSON.stringify(event, (key, value) => {
+        // Convert Date objects to ISO strings
+        if (value instanceof Date) {
+          return value.toISOString();
+        }
+        // Remove functions
+        if (typeof value === 'function') {
+          return undefined;
+        }
+        // Handle NaN and Infinity
+        if (typeof value === 'number' && !isFinite(value)) {
+          return null;
+        }
+        return value;
+      }));
+
+      return sanitized;
+    } catch (error) {
+      console.error('Sentry beforeSend sanitization failed:', error);
+      // Return event as-is if sanitization fails
+      return event;
+    }
+  },
 });

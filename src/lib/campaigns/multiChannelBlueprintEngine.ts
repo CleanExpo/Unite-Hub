@@ -5,13 +5,19 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { supabaseAdmin } from '@/lib/supabase';
 import { createApiLogger } from '@/lib/logger';
 import { getChannelPlaybook, getBrandChannels } from './channelPlaybooks';
 
 const logger = createApiLogger({ service: 'multiChannelBlueprintEngine' });
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultHeaders: {
+    'anthropic-beta': 'prompt-caching-2024-07-31',
+  },
+});
 
 export interface BlueprintGenerationRequest {
   topicTitle: string;
@@ -185,8 +191,19 @@ Return ONLY valid JSON with the following structure:
         model: 'claude-sonnet-4-5-20250929',
         max_tokens: 4096,
         temperature: 0.7,
+        system: [
+          {
+            type: 'text',
+            text: `You are an expert content strategist generating ${playbook.channel_name} content.`,
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
         messages: [{ role: 'user', content: systemPrompt }],
       });
+
+      // Log cache performance
+      const cacheStats = extractCacheStats(message, 'claude-sonnet-4-5-20250929');
+      logCacheStats('BlueprintEngine:generateChannelContent', cacheStats);
 
       const contentText = message.content[0].type === 'text' ? message.content[0].text : '';
 

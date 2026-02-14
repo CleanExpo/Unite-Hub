@@ -104,7 +104,8 @@ CREATE TABLE IF NOT EXISTS self_healing_decisions (
   job_id UUID NOT NULL REFERENCES self_healing_jobs(id) ON DELETE CASCADE,
   patch_id UUID REFERENCES self_healing_patches(id) ON DELETE SET NULL,
   decision TEXT NOT NULL,
-  decision_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+decision_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   decision_reason TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -133,7 +134,7 @@ BEGIN
   DROP POLICY IF EXISTS "self_healing_jobs_founder_admin_all" ON self_healing_jobs;
 
   CREATE POLICY "self_healing_jobs_founder_admin_all" ON self_healing_jobs
-    FOR ALL USING (
+    FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM profiles p
         WHERE p.id = auth.uid()
@@ -172,7 +173,7 @@ BEGIN
   DROP POLICY IF EXISTS "self_healing_patches_founder_admin_all" ON self_healing_patches;
 
   CREATE POLICY "self_healing_patches_founder_admin_all" ON self_healing_patches
-    FOR ALL USING (
+    FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM profiles p
         WHERE p.id = auth.uid()
@@ -211,7 +212,7 @@ BEGIN
   DROP POLICY IF EXISTS "self_healing_decisions_founder_admin_all" ON self_healing_decisions;
 
   CREATE POLICY "self_healing_decisions_founder_admin_all" ON self_healing_decisions
-    FOR ALL USING (
+    FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
       EXISTS (
         SELECT 1 FROM profiles p
         WHERE p.id = auth.uid()

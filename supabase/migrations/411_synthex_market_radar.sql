@@ -67,12 +67,12 @@ ALTER TABLE synthex_market_radar_alerts ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "tenant_isolation_watches" ON synthex_market_radar_watches;
 CREATE POLICY "tenant_isolation_watches" ON synthex_market_radar_watches
-FOR ALL USING (TRUE);
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND TRUE);
 
 DROP POLICY IF EXISTS "tenant_isolation_snapshots" ON synthex_market_radar_snapshots;
 CREATE POLICY "tenant_isolation_snapshots" ON synthex_market_radar_snapshots
-FOR ALL USING (TRUE);
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND TRUE);
 
 DROP POLICY IF EXISTS "tenant_isolation_alerts" ON synthex_market_radar_alerts;
 CREATE POLICY "tenant_isolation_alerts" ON synthex_market_radar_alerts
-FOR ALL USING (TRUE);
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND TRUE);

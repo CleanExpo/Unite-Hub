@@ -7,6 +7,7 @@
 
 import { getSupabaseServer } from '@/lib/supabase';
 import Anthropic from '@anthropic-ai/sdk';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import type {
   AIConsultation,
   AIConsultationMessage,
@@ -19,6 +20,9 @@ import type {
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultHeaders: {
+    'anthropic-beta': 'prompt-caching-2024-07-31',
+  },
 });
 
 class AIConsultationService {
@@ -198,9 +202,19 @@ class AIConsultationService {
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 2048,
-      system: systemPrompt,
+      system: [
+        {
+          type: 'text',
+          text: systemPrompt,
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
       messages: claudeMessages,
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(response, 'claude-sonnet-4-5-20250929');
+    logCacheStats('Consultation:processMessage', cacheStats);
 
     const assistantContent =
       response.content[0].type === 'text'

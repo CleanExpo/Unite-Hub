@@ -4,7 +4,8 @@
 -- Client Feature Flags table
 CREATE TABLE IF NOT EXISTS client_feature_flags (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   flag TEXT NOT NULL,
   value BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT now(),
@@ -23,20 +24,20 @@ ALTER TABLE client_feature_flags ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies: users can only access their own flags
 CREATE POLICY "users_view_own_flags" ON client_feature_flags
-FOR SELECT USING (user_id = auth.uid());
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 CREATE POLICY "users_insert_own_flags" ON client_feature_flags
 FOR INSERT WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY "users_update_own_flags" ON client_feature_flags
-FOR UPDATE USING (user_id = auth.uid());
+FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 CREATE POLICY "users_delete_own_flags" ON client_feature_flags
-FOR DELETE USING (user_id = auth.uid());
+FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
 
 -- Service role access
 CREATE POLICY "service_role_all_flags" ON client_feature_flags
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Grant permissions
 GRANT ALL ON client_feature_flags TO authenticated;

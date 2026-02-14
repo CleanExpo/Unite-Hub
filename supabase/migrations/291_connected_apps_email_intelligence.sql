@@ -65,7 +65,8 @@ END $$;
 CREATE TABLE IF NOT EXISTS connected_apps (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Provider info
   provider TEXT NOT NULL CHECK (provider IN ('google', 'microsoft')),
@@ -368,7 +369,8 @@ CREATE TABLE IF NOT EXISTS email_ideas (
 
   -- Status
   status TEXT DEFAULT 'new' CHECK (status IN ('new', 'acknowledged', 'in_progress', 'completed', 'dismissed')),
-  acknowledged_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+acknowledged_by UUID REFERENCES auth.users(id),
   acknowledged_at TIMESTAMPTZ,
   completed_at TIMESTAMPTZ,
 

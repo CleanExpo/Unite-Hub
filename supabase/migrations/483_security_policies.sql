@@ -43,9 +43,11 @@ CREATE TABLE IF NOT EXISTS role_permissions (
 CREATE TABLE IF NOT EXISTS role_assignments (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   role_id uuid NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
-  assigned_by uuid REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+assigned_by uuid REFERENCES auth.users(id),
   created_at timestamptz DEFAULT now(),
   CONSTRAINT role_assignments_tenant_user_role UNIQUE (tenant_id, user_id, role_id)
 );

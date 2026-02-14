@@ -6,7 +6,8 @@
 CREATE TABLE IF NOT EXISTS referral_codes (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Code details
   code varchar(20) NOT NULL UNIQUE,
@@ -33,7 +34,8 @@ CREATE TABLE IF NOT EXISTS referral_codes (
 CREATE TABLE IF NOT EXISTS referral_events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  referrer_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+referrer_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   referral_code_id uuid NOT NULL REFERENCES referral_codes(id) ON DELETE CASCADE,
 
   -- Event details
@@ -43,7 +45,8 @@ CREATE TABLE IF NOT EXISTS referral_events (
   )),
 
   -- Referred user (if applicable)
-  referred_user_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+referred_user_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   referred_email varchar(255),
 
   -- Attribution data
@@ -65,8 +68,10 @@ CREATE TABLE IF NOT EXISTS referral_events (
 CREATE TABLE IF NOT EXISTS referral_attribution (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
-  referrer_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  referred_user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+referrer_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+referred_user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
 
   -- Source
   referral_code_id uuid NOT NULL REFERENCES referral_codes(id) ON DELETE CASCADE,
@@ -84,7 +89,8 @@ CREATE TABLE IF NOT EXISTS referral_attribution (
 
   -- Founder approval (for fraud score >= 70)
   requires_founder_approval boolean NOT NULL DEFAULT false,
-  approved_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+approved_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   approved_at timestamp with time zone,
 
   -- Timestamps
@@ -283,7 +289,7 @@ ALTER TABLE referral_attribution ENABLE ROW LEVEL SECURITY;
 
 -- Referral codes: Users can view own, founders can view workspace
 CREATE POLICY referral_codes_select_own ON referral_codes
-  FOR SELECT USING (auth.uid() = user_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = user_id);
 
 CREATE POLICY referral_codes_select_founder ON referral_codes
   FOR SELECT USING (
@@ -299,7 +305,7 @@ CREATE POLICY referral_codes_select_founder ON referral_codes
 
 -- Referral events: Referrer can view own, founders can view workspace
 CREATE POLICY referral_events_select_own ON referral_events
-  FOR SELECT USING (auth.uid() = referrer_id);
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = referrer_id);
 
 CREATE POLICY referral_events_select_founder ON referral_events
   FOR SELECT USING (
@@ -315,7 +321,7 @@ CREATE POLICY referral_events_select_founder ON referral_events
 
 -- Attribution: Users can view if they're referrer or referred, founders can view workspace
 CREATE POLICY referral_attribution_select_own ON referral_attribution
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     auth.uid() = referrer_id OR auth.uid() = referred_user_id
   );
 

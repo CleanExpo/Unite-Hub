@@ -50,7 +50,7 @@ ALTER TABLE gslpie_region_metrics ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated users - operational data)
 CREATE POLICY gslpie_region_metrics_select ON gslpie_region_metrics
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY gslpie_region_metrics_insert ON gslpie_region_metrics
   FOR INSERT TO authenticated
@@ -110,7 +110,7 @@ ALTER TABLE gslpie_sla_profiles ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY gslpie_sla_profiles_select ON gslpie_sla_profiles
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -122,7 +122,7 @@ CREATE POLICY gslpie_sla_profiles_insert ON gslpie_sla_profiles
 
 CREATE POLICY gslpie_sla_profiles_update ON gslpie_sla_profiles
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -172,7 +172,7 @@ ALTER TABLE gslpie_performance_history ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (read-only for all authenticated users, insert only - immutable)
 CREATE POLICY gslpie_performance_history_select ON gslpie_performance_history
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 CREATE POLICY gslpie_performance_history_insert ON gslpie_performance_history
   FOR INSERT TO authenticated

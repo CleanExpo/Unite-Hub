@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS voice_logs (
   CONSTRAINT voice_logs_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT voice_logs_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -34,7 +35,7 @@ ALTER TABLE voice_logs ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY voice_logs_select ON voice_logs
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

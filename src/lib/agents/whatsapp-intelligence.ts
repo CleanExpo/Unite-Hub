@@ -7,6 +7,7 @@ import { anthropic } from '@/lib/anthropic/client';
 import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { db } from '../db';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 
 // Using centralized Anthropic client from @/lib/anthropic/client
 
@@ -137,14 +138,9 @@ export async function analyzeWhatsAppMessage(
 
     const response = result.data;
 
-    // Log cache performance
-    console.log("WhatsApp Analysis - Cache Stats:", {
-      input_tokens: response.usage.input_tokens,
-      cache_creation_tokens: response.usage.cache_creation_input_tokens || 0,
-      cache_read_tokens: response.usage.cache_read_input_tokens || 0,
-      output_tokens: response.usage.output_tokens,
-      cache_hit: (response.usage.cache_read_input_tokens || 0) > 0,
-    });
+    // Log cache performance using centralized utilities
+    const cacheStats = extractCacheStats(response, 'claude-sonnet-4-5-20250929');
+    logCacheStats('WhatsApp:analyzeMessage', cacheStats);
 
     const content = response.content[0];
     if (content.type !== 'text') {

@@ -279,7 +279,8 @@ CREATE TABLE IF NOT EXISTS convex_notification_preferences (
   updated_at TIMESTAMPTZ DEFAULT now(),
 
   -- Constraints
-  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE,
   CONSTRAINT fk_workspace_id FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE,
   CONSTRAINT unique_user_workspace UNIQUE (user_id, workspace_id)
 );
@@ -296,7 +297,7 @@ BEGIN
   BEGIN
     CREATE POLICY "notification_preferences_user_isolation" ON convex_notification_preferences
       FOR SELECT
-      USING (user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 
@@ -310,7 +311,7 @@ BEGIN
   BEGIN
     CREATE POLICY "notification_preferences_update" ON convex_notification_preferences
       FOR UPDATE
-      USING (user_id = auth.uid());
+      USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND user_id = auth.uid());
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 END $$;
@@ -438,4 +439,4 @@ BEGIN
   END IF;
 END $$;
 
--- End of Migration 274
+-- End of Migration 274;

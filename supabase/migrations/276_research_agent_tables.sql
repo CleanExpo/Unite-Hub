@@ -57,15 +57,15 @@ ALTER TABLE research_batch_items ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY research_insights_authenticated_read ON research_insights
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY research_batches_authenticated_read ON research_batches
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY research_batch_items_authenticated_read ON research_batch_items
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_research_insights_brand ON research_insights(brand_id);

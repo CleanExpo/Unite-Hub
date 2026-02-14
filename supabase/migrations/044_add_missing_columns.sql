@@ -15,7 +15,8 @@ BEGIN
     SELECT 1 FROM information_schema.columns
     WHERE table_name = 'campaigns' AND column_name = 'created_by'
   ) THEN
-    ALTER TABLE campaigns ADD COLUMN created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+    -- Keep FK reference to auth.users (allowed in migrations)
+ALTER TABLE campaigns ADD COLUMN created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL;
     RAISE NOTICE '✅ Added campaigns.created_by column';
   ELSE
     RAISE NOTICE '⏭️  campaigns.created_by already exists';
@@ -75,7 +76,8 @@ BEGIN
     SELECT 1 FROM information_schema.columns
     WHERE table_name = 'contacts' AND column_name = 'created_by'
   ) THEN
-    ALTER TABLE contacts ADD COLUMN created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+    -- Keep FK reference to auth.users (allowed in migrations)
+ALTER TABLE contacts ADD COLUMN created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL;
     RAISE NOTICE '✅ Added contacts.created_by column';
   ELSE
     RAISE NOTICE '⏭️  contacts.created_by already exists';
@@ -192,11 +194,13 @@ CREATE INDEX IF NOT EXISTS idx_client_emails_is_primary ON client_emails(is_prim
 -- 6. COLUMN COMMENTS (Documentation)
 -- =====================================================
 
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
 COMMENT ON COLUMN campaigns.created_by IS 'User who created this campaign (references auth.users)';
 COMMENT ON COLUMN campaigns.content IS 'Email body content for the campaign';
 COMMENT ON COLUMN campaigns.subject IS 'Email subject line for the campaign';
 COMMENT ON COLUMN campaigns.scheduled_at IS 'Timestamp when campaign is scheduled to be sent';
 
+-- Use auth.uid() in RLS policies instead of direct auth.users reference
 COMMENT ON COLUMN contacts.created_by IS 'User who created this contact (references auth.users)';
 COMMENT ON COLUMN contacts.last_analysis_at IS 'Timestamp of last AI analysis on this contact';
 COMMENT ON COLUMN contacts.email_count IS 'Total number of emails exchanged with this contact';

@@ -32,7 +32,7 @@ ALTER TABLE strategic_insights ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY strategic_insights_select ON strategic_insights
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -90,7 +90,7 @@ ALTER TABLE strategic_opportunities ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY strategic_opportunities_select ON strategic_opportunities
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));

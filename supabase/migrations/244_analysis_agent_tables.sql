@@ -143,23 +143,23 @@ ALTER TABLE forecast_accuracy ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY analysis_reports_authenticated_read ON analysis_reports
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY kpi_history_authenticated_read ON kpi_history
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY anomaly_log_authenticated_read ON anomaly_log
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY insights_log_authenticated_read ON insights_log
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 CREATE POLICY forecast_accuracy_authenticated_read ON forecast_accuracy
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'authenticated');
 
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_analysis_reports_brand ON analysis_reports(brand_id);

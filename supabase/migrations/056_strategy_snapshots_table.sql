@@ -24,7 +24,7 @@ ALTER TABLE strategy_snapshots ENABLE ROW LEVEL SECURITY;
 -- Staff can view snapshots for their organization's clients
 CREATE POLICY strategy_snapshots_select_policy ON strategy_snapshots
   FOR SELECT
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     EXISTS (
       SELECT 1 FROM seo_client_profiles cp
       JOIN user_organizations uo ON cp.organization_id = uo.org_id

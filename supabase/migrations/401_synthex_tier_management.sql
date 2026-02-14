@@ -268,12 +268,12 @@ ALTER TABLE synthex_tier_limits ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "tier_limits_select_authenticated" ON synthex_tier_limits
   FOR SELECT TO authenticated
-  USING (true);
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true);
 
 -- Only admins can modify tier limits
 CREATE POLICY "tier_limits_admin_all" ON synthex_tier_limits
   FOR ALL TO authenticated
-  USING (public.has_role('FOUNDER', 'ADMIN'))
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND public.has_role('FOUNDER', 'ADMIN'))
   WITH CHECK (public.has_role('FOUNDER', 'ADMIN'));
 
 -- ============================================================================
@@ -335,4 +335,4 @@ SELECT public.workspace_has_feature('your-workspace-id', 'seo_reports');
 
 -- ============================================================================
 -- Migration Complete
--- ============================================================================
+-- ============================================================================;

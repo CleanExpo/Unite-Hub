@@ -21,7 +21,7 @@
 DROP POLICY IF EXISTS "Users can view email integrations" ON email_integrations;
 
 -- Create workspace-scoped SELECT policy
-CREATE POLICY "workspace_isolation_select" ON email_integrations
+CREATE POLICY "workspace_isolation_select_email_integrations_4" ON "email_integrations"
   FOR SELECT
   USING (
     workspace_id IN (
@@ -71,7 +71,7 @@ CREATE POLICY "workspace_isolation_delete" ON email_integrations
 DROP POLICY IF EXISTS "Service role can manage email integrations" ON email_integrations;
 CREATE POLICY "service_role_all_access" ON email_integrations
   FOR ALL
-  USING (auth.role() = 'service_role');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'service_role');
 
 -- =====================================================
 -- 2. SENT_EMAILS TABLE - Fix Overly Permissive Policy
@@ -81,7 +81,7 @@ CREATE POLICY "service_role_all_access" ON email_integrations
 DROP POLICY IF EXISTS "Users can view sent emails" ON sent_emails;
 
 -- Create workspace-scoped SELECT policy
-CREATE POLICY "workspace_isolation_select" ON sent_emails
+CREATE POLICY "workspace_isolation_select_sent_emails_1" ON "sent_emails"
   FOR SELECT
   USING (
     workspace_id IN (
@@ -93,7 +93,7 @@ CREATE POLICY "workspace_isolation_select" ON sent_emails
 
 -- Create workspace-scoped INSERT policy
 DROP POLICY IF EXISTS "workspace_isolation_insert" ON sent_emails;
-CREATE POLICY "workspace_isolation_insert" ON sent_emails
+CREATE POLICY "workspace_isolation_insert_sent_emails_1" ON "sent_emails"
   FOR INSERT
   WITH CHECK (
     workspace_id IN (
@@ -105,7 +105,7 @@ CREATE POLICY "workspace_isolation_insert" ON sent_emails
 
 -- Create workspace-scoped UPDATE policy
 DROP POLICY IF EXISTS "workspace_isolation_update" ON sent_emails;
-CREATE POLICY "workspace_isolation_update" ON sent_emails
+CREATE POLICY "workspace_isolation_update_sent_emails_1" ON "sent_emails"
   FOR UPDATE
   USING (
     workspace_id IN (
@@ -117,9 +117,9 @@ CREATE POLICY "workspace_isolation_update" ON sent_emails
 
 -- Keep service_role bypass policy for admin operations
 DROP POLICY IF EXISTS "Service role can manage sent emails" ON sent_emails;
-CREATE POLICY "service_role_all_access" ON sent_emails
+CREATE POLICY "service_role_all_access_sent_emails_1" ON "sent_emails"
   FOR ALL
-  USING (auth.role() = 'service_role');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'service_role');
 
 -- =====================================================
 -- 3. EMAIL_OPENS TABLE - Fix Overly Permissive Policy
@@ -128,8 +128,8 @@ CREATE POLICY "service_role_all_access" ON sent_emails
 -- Drop existing overly permissive policy
 DROP POLICY IF EXISTS "Users can view email opens" ON email_opens;
 
--- Create policy based on sent_email relationship
-CREATE POLICY "workspace_isolation_select" ON email_opens
+-- CREATE POLICY "based_sent_email_1" ON "sent_email" relationship
+CREATE POLICY "workspace_isolation_select_email_opens_2" ON "email_opens"
   FOR SELECT
   USING (
     sent_email_id IN (
@@ -142,7 +142,7 @@ CREATE POLICY "workspace_isolation_select" ON email_opens
 
 -- Create INSERT policy for tracking opens
 DROP POLICY IF EXISTS "workspace_isolation_insert" ON email_opens;
-CREATE POLICY "workspace_isolation_insert" ON email_opens
+CREATE POLICY "workspace_isolation_insert_email_opens_2" ON "email_opens"
   FOR INSERT
   WITH CHECK (
     sent_email_id IN (
@@ -155,9 +155,9 @@ CREATE POLICY "workspace_isolation_insert" ON email_opens
 
 -- Keep service_role bypass policy for admin operations
 DROP POLICY IF EXISTS "Service role can manage email opens" ON email_opens;
-CREATE POLICY "service_role_all_access" ON email_opens
+CREATE POLICY "service_role_all_access_email_opens_2" ON "email_opens"
   FOR ALL
-  USING (auth.role() = 'service_role');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'service_role');
 
 -- Allow anonymous INSERT for tracking pixel (public endpoint)
 DROP POLICY IF EXISTS "public_tracking_insert" ON email_opens;
@@ -173,7 +173,7 @@ CREATE POLICY "public_tracking_insert" ON email_opens
 DROP POLICY IF EXISTS "Users can view email clicks" ON email_clicks;
 
 -- Create policy based on sent_email relationship
-CREATE POLICY "workspace_isolation_select" ON email_clicks
+CREATE POLICY "workspace_isolation_select_email_clicks_3" ON "email_clicks"
   FOR SELECT
   USING (
     sent_email_id IN (
@@ -186,7 +186,7 @@ CREATE POLICY "workspace_isolation_select" ON email_clicks
 
 -- Create INSERT policy for tracking clicks
 DROP POLICY IF EXISTS "workspace_isolation_insert" ON email_clicks;
-CREATE POLICY "workspace_isolation_insert" ON email_clicks
+CREATE POLICY "workspace_isolation_insert_email_clicks_3" ON "email_clicks"
   FOR INSERT
   WITH CHECK (
     sent_email_id IN (
@@ -199,13 +199,13 @@ CREATE POLICY "workspace_isolation_insert" ON email_clicks
 
 -- Keep service_role bypass policy for admin operations
 DROP POLICY IF EXISTS "Service role can manage email clicks" ON email_clicks;
-CREATE POLICY "service_role_all_access" ON email_clicks
+CREATE POLICY "service_role_all_access_email_clicks_3" ON "email_clicks"
   FOR ALL
-  USING (auth.role() = 'service_role');
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.role() = 'service_role');
 
 -- Allow anonymous INSERT for tracking links (public endpoint)
 DROP POLICY IF EXISTS "public_tracking_insert" ON email_clicks;
-CREATE POLICY "public_tracking_insert" ON email_clicks
+CREATE POLICY "public_tracking_insert_email_clicks_1" ON "email_clicks"
   FOR INSERT
   WITH CHECK (true); -- Allow tracking link to record clicks
 
@@ -314,4 +314,4 @@ COMMENT ON POLICY "public_tracking_insert" ON email_clicks IS 'Public tracking l
 --
 -- Impact: Prevents data leakage between workspaces
 -- Scope: Affects email_integrations, sent_emails, email_opens, email_clicks tables
--- Compatibility: Existing queries must filter by workspace_id (already enforced by app logic)
+-- Compatibility: Existing queries must filter by workspace_id (already enforced by app logic);

@@ -43,7 +43,7 @@ ALTER TABLE atemrde_expansion_requests ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY atemrde_expansion_select ON atemrde_expansion_requests
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -85,7 +85,7 @@ ALTER TABLE atemrde_provisioning_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY atemrde_provisioning_select ON atemrde_provisioning_log
   FOR SELECT TO authenticated
-  USING (request_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND request_id IN (
     SELECT id FROM atemrde_expansion_requests WHERE tenant_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
     )

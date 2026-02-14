@@ -4,7 +4,8 @@
 -- Reviewer Scores Table - Aggregate performance metrics
 CREATE TABLE IF NOT EXISTS reviewer_scores (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  operator_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+operator_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL,
 
   -- Core metrics (0-100 scale)
@@ -35,7 +36,8 @@ CREATE TABLE IF NOT EXISTS reviewer_scores (
 -- Accuracy History Table - Track decision outcomes over time
 CREATE TABLE IF NOT EXISTS accuracy_history (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  operator_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+operator_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL,
 
   -- Decision context
@@ -62,7 +64,8 @@ CREATE TABLE IF NOT EXISTS accuracy_history (
 -- Bias Signals Table - Track potential reviewer biases
 CREATE TABLE IF NOT EXISTS bias_signals (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  operator_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+operator_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID NOT NULL,
 
   -- Bias classification
@@ -90,7 +93,8 @@ CREATE TABLE IF NOT EXISTS bias_signals (
   -- Status
   status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'ACKNOWLEDGED', 'RESOLVED', 'DISMISSED')),
   acknowledged_at TIMESTAMPTZ,
-  acknowledged_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+acknowledged_by UUID REFERENCES auth.users(id),
   resolution TEXT,
 
   detected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -116,8 +120,10 @@ CREATE TABLE IF NOT EXISTS feedback_events (
   )),
 
   -- Actor and target
-  actor_id UUID REFERENCES auth.users(id),
-  target_operator_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+actor_id UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+target_operator_id UUID REFERENCES auth.users(id),
 
   -- Related entities
   queue_item_id UUID,
@@ -153,7 +159,8 @@ CREATE TABLE IF NOT EXISTS autonomy_tuning (
   -- Status
   status TEXT NOT NULL DEFAULT 'RECOMMENDED' CHECK (status IN ('RECOMMENDED', 'APPLIED', 'REJECTED')),
   applied_at TIMESTAMPTZ,
-  applied_by UUID REFERENCES auth.users(id),
+  -- Keep FK reference to auth.users (allowed in migrations)
+applied_by UUID REFERENCES auth.users(id),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -193,7 +200,7 @@ ALTER TABLE autonomy_tuning ENABLE ROW LEVEL SECURITY;
 
 -- Reviewer scores: operators see own, managers see all in org
 CREATE POLICY reviewer_scores_select ON reviewer_scores
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     operator_id = auth.uid() OR
     organization_id IN (
       SELECT organization_id FROM operator_profiles
@@ -210,7 +217,7 @@ CREATE POLICY reviewer_scores_insert ON reviewer_scores
   );
 
 CREATE POLICY reviewer_scores_update ON reviewer_scores
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
@@ -219,7 +226,7 @@ CREATE POLICY reviewer_scores_update ON reviewer_scores
 
 -- Accuracy history: operators see own
 CREATE POLICY accuracy_history_select ON accuracy_history
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     operator_id = auth.uid() OR
     organization_id IN (
       SELECT organization_id FROM operator_profiles
@@ -232,7 +239,7 @@ CREATE POLICY accuracy_history_insert ON accuracy_history
 
 -- Bias signals: managers can see all in org
 CREATE POLICY bias_signals_select ON bias_signals
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     operator_id = auth.uid() OR
     organization_id IN (
       SELECT organization_id FROM operator_profiles
@@ -249,7 +256,7 @@ CREATE POLICY bias_signals_insert ON bias_signals
   );
 
 CREATE POLICY bias_signals_update ON bias_signals
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
@@ -258,7 +265,7 @@ CREATE POLICY bias_signals_update ON bias_signals
 
 -- Feedback events: org members can read
 CREATE POLICY feedback_events_select ON feedback_events
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid()
@@ -270,7 +277,7 @@ CREATE POLICY feedback_events_insert ON feedback_events
 
 -- Autonomy tuning: managers and owners
 CREATE POLICY autonomy_tuning_select ON autonomy_tuning
-  FOR SELECT USING (
+  FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid()
@@ -286,7 +293,7 @@ CREATE POLICY autonomy_tuning_insert ON autonomy_tuning
   );
 
 CREATE POLICY autonomy_tuning_update ON autonomy_tuning
-  FOR UPDATE USING (
+  FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     organization_id IN (
       SELECT organization_id FROM operator_profiles
       WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')

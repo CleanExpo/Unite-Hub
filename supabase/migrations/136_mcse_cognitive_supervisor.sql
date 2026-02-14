@@ -57,7 +57,7 @@ ALTER TABLE mcse_cognitive_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY mcse_cognitive_events_select ON mcse_cognitive_events
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -69,7 +69,7 @@ CREATE POLICY mcse_cognitive_events_insert ON mcse_cognitive_events
 
 CREATE POLICY mcse_cognitive_events_update ON mcse_cognitive_events
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -102,7 +102,7 @@ ALTER TABLE mcse_policy_rules ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY mcse_policy_rules_select ON mcse_policy_rules
   FOR SELECT TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -114,13 +114,13 @@ CREATE POLICY mcse_policy_rules_insert ON mcse_policy_rules
 
 CREATE POLICY mcse_policy_rules_update ON mcse_policy_rules
   FOR UPDATE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
 CREATE POLICY mcse_policy_rules_delete ON mcse_policy_rules
   FOR DELETE TO authenticated
-  USING (tenant_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND tenant_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

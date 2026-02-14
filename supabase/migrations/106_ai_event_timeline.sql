@@ -4,7 +4,8 @@
 -- AI Event Log table
 CREATE TABLE IF NOT EXISTS ai_event_log (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   model_used TEXT NOT NULL,
   event_type TEXT NOT NULL,
   description TEXT NOT NULL,
@@ -23,14 +24,14 @@ ALTER TABLE ai_event_log ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies: clients can only view their own events
 CREATE POLICY "clients_view_own_events" ON ai_event_log
-FOR SELECT USING (client_id = auth.uid());
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND client_id = auth.uid());
 
 -- Service role can insert events
 CREATE POLICY "service_role_insert_events" ON ai_event_log
 FOR INSERT WITH CHECK (auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "service_role_all_events" ON ai_event_log
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Grant permissions
 GRANT ALL ON ai_event_log TO authenticated;

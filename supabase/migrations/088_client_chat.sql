@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS client_chat_sessions (
   CONSTRAINT client_chat_sessions_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT client_chat_sessions_user_fk
-    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -38,7 +39,7 @@ ALTER TABLE client_chat_sessions ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY client_chat_sessions_select ON client_chat_sessions
   FOR SELECT TO authenticated
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IN (SELECT org_id FROM user_organizations WHERE user_id = auth.uid())
     AND user_id = auth.uid()
   );
@@ -52,7 +53,7 @@ CREATE POLICY client_chat_sessions_insert ON client_chat_sessions
 
 CREATE POLICY client_chat_sessions_update ON client_chat_sessions
   FOR UPDATE TO authenticated
-  USING (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
     org_id IN (SELECT org_id FROM user_organizations WHERE user_id = auth.uid())
     AND user_id = auth.uid()
   )
@@ -106,7 +107,7 @@ ALTER TABLE client_chat_messages ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY client_chat_messages_select ON client_chat_messages
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

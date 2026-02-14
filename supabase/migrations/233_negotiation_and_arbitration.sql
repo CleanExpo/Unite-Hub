@@ -147,7 +147,7 @@ ALTER TABLE agent_negotiation_sessions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "service_role_all_negotiation_sessions"
   ON agent_negotiation_sessions
   FOR ALL
-  USING (auth.uid() = auth.uid()) -- Always true for service role
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = auth.uid()) -- Always true for service role
   WITH CHECK (auth.uid() = auth.uid());
 
 CREATE POLICY "founder_select_negotiation_sessions"
@@ -166,7 +166,7 @@ ALTER TABLE agent_arbitration_decisions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "service_role_all_arbitration_decisions"
   ON agent_arbitration_decisions
   FOR ALL
-  USING (auth.uid() = auth.uid())
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = auth.uid())
   WITH CHECK (auth.uid() = auth.uid());
 
 CREATE POLICY "founder_select_arbitration_decisions"
@@ -185,7 +185,7 @@ ALTER TABLE negotiation_archives ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "service_role_all_archives"
   ON negotiation_archives
   FOR ALL
-  USING (auth.uid() = auth.uid())
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.uid() = auth.uid())
   WITH CHECK (auth.uid() = auth.uid());
 
 CREATE POLICY "founder_select_archives"

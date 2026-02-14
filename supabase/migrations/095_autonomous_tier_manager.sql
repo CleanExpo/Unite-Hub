@@ -52,7 +52,7 @@ ALTER TABLE tier_recommendations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY tier_recommendations_select ON tier_recommendations
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -66,7 +66,7 @@ CREATE POLICY tier_recommendations_insert ON tier_recommendations
 
 CREATE POLICY tier_recommendations_update ON tier_recommendations
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));
@@ -93,7 +93,8 @@ CREATE TABLE IF NOT EXISTS tier_change_events (
   CONSTRAINT tier_change_events_org_fk
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE,
   CONSTRAINT tier_change_events_user_fk
-    FOREIGN KEY (approved_by) REFERENCES auth.users(id) ON DELETE SET NULL
+    -- Keep FK reference to auth.users (allowed in migrations)
+FOREIGN KEY (approved_by) REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
 -- Indexes
@@ -106,7 +107,7 @@ ALTER TABLE tier_change_events ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY tier_change_events_select ON tier_change_events
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations
     WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
   ));

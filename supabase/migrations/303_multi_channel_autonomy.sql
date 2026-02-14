@@ -312,7 +312,7 @@ ALTER TABLE browser_patterns ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "social_inbox_select_via_business" ON social_inbox_accounts;
 CREATE POLICY "social_inbox_select_via_business" ON social_inbox_accounts
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = social_inbox_accounts.founder_business_id
@@ -332,7 +332,7 @@ CREATE POLICY "social_inbox_insert_via_business" ON social_inbox_accounts
 
 DROP POLICY IF EXISTS "social_inbox_update_via_business" ON social_inbox_accounts;
 CREATE POLICY "social_inbox_update_via_business" ON social_inbox_accounts
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = social_inbox_accounts.founder_business_id
@@ -342,7 +342,7 @@ CREATE POLICY "social_inbox_update_via_business" ON social_inbox_accounts
 
 DROP POLICY IF EXISTS "social_inbox_delete_via_business" ON social_inbox_accounts;
 CREATE POLICY "social_inbox_delete_via_business" ON social_inbox_accounts
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = social_inbox_accounts.founder_business_id
@@ -356,7 +356,7 @@ CREATE POLICY "social_inbox_delete_via_business" ON social_inbox_accounts
 
 DROP POLICY IF EXISTS "social_messages_select_via_account" ON social_messages;
 CREATE POLICY "social_messages_select_via_account" ON social_messages
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM social_inbox_accounts sia
             JOIN founder_businesses fb ON fb.id = sia.founder_business_id
@@ -378,7 +378,7 @@ CREATE POLICY "social_messages_insert_via_account" ON social_messages
 
 DROP POLICY IF EXISTS "social_messages_update_via_account" ON social_messages;
 CREATE POLICY "social_messages_update_via_account" ON social_messages
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM social_inbox_accounts sia
             JOIN founder_businesses fb ON fb.id = sia.founder_business_id
@@ -389,7 +389,7 @@ CREATE POLICY "social_messages_update_via_account" ON social_messages
 
 DROP POLICY IF EXISTS "social_messages_delete_via_account" ON social_messages;
 CREATE POLICY "social_messages_delete_via_account" ON social_messages
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM social_inbox_accounts sia
             JOIN founder_businesses fb ON fb.id = sia.founder_business_id
@@ -404,7 +404,7 @@ CREATE POLICY "social_messages_delete_via_account" ON social_messages
 
 DROP POLICY IF EXISTS "ads_accounts_select_via_business" ON ads_accounts;
 CREATE POLICY "ads_accounts_select_via_business" ON ads_accounts
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = ads_accounts.founder_business_id
@@ -424,7 +424,7 @@ CREATE POLICY "ads_accounts_insert_via_business" ON ads_accounts
 
 DROP POLICY IF EXISTS "ads_accounts_update_via_business" ON ads_accounts;
 CREATE POLICY "ads_accounts_update_via_business" ON ads_accounts
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = ads_accounts.founder_business_id
@@ -434,7 +434,7 @@ CREATE POLICY "ads_accounts_update_via_business" ON ads_accounts
 
 DROP POLICY IF EXISTS "ads_accounts_delete_via_business" ON ads_accounts;
 CREATE POLICY "ads_accounts_delete_via_business" ON ads_accounts
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = ads_accounts.founder_business_id
@@ -448,7 +448,7 @@ CREATE POLICY "ads_accounts_delete_via_business" ON ads_accounts
 
 DROP POLICY IF EXISTS "ads_opportunities_select_via_account" ON ads_opportunities;
 CREATE POLICY "ads_opportunities_select_via_account" ON ads_opportunities
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM ads_accounts aa
             JOIN founder_businesses fb ON fb.id = aa.founder_business_id
@@ -470,7 +470,7 @@ CREATE POLICY "ads_opportunities_insert_via_account" ON ads_opportunities
 
 DROP POLICY IF EXISTS "ads_opportunities_update_via_account" ON ads_opportunities;
 CREATE POLICY "ads_opportunities_update_via_account" ON ads_opportunities
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM ads_accounts aa
             JOIN founder_businesses fb ON fb.id = aa.founder_business_id
@@ -481,7 +481,7 @@ CREATE POLICY "ads_opportunities_update_via_account" ON ads_opportunities
 
 DROP POLICY IF EXISTS "ads_opportunities_delete_via_account" ON ads_opportunities;
 CREATE POLICY "ads_opportunities_delete_via_account" ON ads_opportunities
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM ads_accounts aa
             JOIN founder_businesses fb ON fb.id = aa.founder_business_id
@@ -496,7 +496,7 @@ CREATE POLICY "ads_opportunities_delete_via_account" ON ads_opportunities
 
 DROP POLICY IF EXISTS "search_keywords_select_via_business" ON search_keywords;
 CREATE POLICY "search_keywords_select_via_business" ON search_keywords
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = search_keywords.founder_business_id
@@ -516,7 +516,7 @@ CREATE POLICY "search_keywords_insert_via_business" ON search_keywords
 
 DROP POLICY IF EXISTS "search_keywords_update_via_business" ON search_keywords;
 CREATE POLICY "search_keywords_update_via_business" ON search_keywords
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = search_keywords.founder_business_id
@@ -526,7 +526,7 @@ CREATE POLICY "search_keywords_update_via_business" ON search_keywords
 
 DROP POLICY IF EXISTS "search_keywords_delete_via_business" ON search_keywords;
 CREATE POLICY "search_keywords_delete_via_business" ON search_keywords
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = search_keywords.founder_business_id
@@ -540,7 +540,7 @@ CREATE POLICY "search_keywords_delete_via_business" ON search_keywords
 
 DROP POLICY IF EXISTS "browser_patterns_select_via_business" ON browser_patterns;
 CREATE POLICY "browser_patterns_select_via_business" ON browser_patterns
-    FOR SELECT USING (
+    FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = browser_patterns.founder_business_id
@@ -560,7 +560,7 @@ CREATE POLICY "browser_patterns_insert_via_business" ON browser_patterns
 
 DROP POLICY IF EXISTS "browser_patterns_update_via_business" ON browser_patterns;
 CREATE POLICY "browser_patterns_update_via_business" ON browser_patterns
-    FOR UPDATE USING (
+    FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = browser_patterns.founder_business_id
@@ -570,7 +570,7 @@ CREATE POLICY "browser_patterns_update_via_business" ON browser_patterns
 
 DROP POLICY IF EXISTS "browser_patterns_delete_via_business" ON browser_patterns;
 CREATE POLICY "browser_patterns_delete_via_business" ON browser_patterns
-    FOR DELETE USING (
+    FOR DELETE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
         EXISTS (
             SELECT 1 FROM founder_businesses fb
             WHERE fb.id = browser_patterns.founder_business_id

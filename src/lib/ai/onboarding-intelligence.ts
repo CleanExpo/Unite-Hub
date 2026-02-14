@@ -10,9 +10,13 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultHeaders: {
+    'anthropic-beta': 'prompt-caching-2024-07-31',
+  },
 });
 
 // ============================================================================
@@ -193,8 +197,19 @@ IMPORTANT:
   const message = await anthropic.messages.create({
     model: 'claude-opus-4-5-20251101',
     max_tokens: 4096,
+    system: [
+      {
+        type: 'text',
+        text: 'You are an expert business analyst specializing in competitive positioning and value proposition development.',
+        cache_control: { type: 'ephemeral' },
+      },
+    ],
     messages: [{ role: 'user', content: prompt }],
   });
+
+  // Log cache performance
+  const cacheStats = extractCacheStats(message, 'claude-opus-4-5-20251101');
+  logCacheStats('Onboarding:generateBusinessProfile', cacheStats);
 
   const content = message.content[0];
   if (content.type !== 'text') {
@@ -269,8 +284,19 @@ Return ONLY valid JSON, no explanation text`;
   const message = await anthropic.messages.create({
     model: 'claude-opus-4-5-20251101',
     max_tokens: 4096,
+    system: [
+      {
+        type: 'text',
+        text: 'You are an expert content strategist specializing in E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) optimization for Google.',
+        cache_control: { type: 'ephemeral' },
+      },
+    ],
     messages: [{ role: 'user', content: prompt }],
   });
+
+  // Log cache performance
+  const cacheStats = extractCacheStats(message, 'claude-opus-4-5-20251101');
+  logCacheStats('Onboarding:generateAuthorityFigure', cacheStats);
 
   const content = message.content[0];
   if (content.type !== 'text') {
@@ -393,8 +419,19 @@ Return ONLY valid JSON array, no explanation text`;
   const message = await anthropic.messages.create({
     model: 'claude-opus-4-5-20251101',
     max_tokens: 8192,
+    system: [
+      {
+        type: 'text',
+        text: 'You are an expert marketing strategist specializing in audience segmentation and persona development.',
+        cache_control: { type: 'ephemeral' },
+      },
+    ],
     messages: [{ role: 'user', content: prompt }],
   });
+
+  // Log cache performance
+  const cacheStats = extractCacheStats(message, 'claude-opus-4-5-20251101');
+  logCacheStats('Onboarding:generateAudiencePersonas', cacheStats);
 
   const content = message.content[0];
   if (content.type !== 'text') {
@@ -512,8 +549,19 @@ Return ONLY valid JSON, no explanation text`;
   const message = await anthropic.messages.create({
     model: 'claude-opus-4-5-20251101',
     max_tokens: 4096,
+    system: [
+      {
+        type: 'text',
+        text: 'You are an expert content strategist specializing in SEO and audience-driven content planning.',
+        cache_control: { type: 'ephemeral' },
+      },
+    ],
     messages: [{ role: 'user', content: prompt }],
   });
+
+  // Log cache performance
+  const cacheStats = extractCacheStats(message, 'claude-opus-4-5-20251101');
+  logCacheStats('Onboarding:generateContentStrategy', cacheStats);
 
   const content = message.content[0];
   if (content.type !== 'text') {

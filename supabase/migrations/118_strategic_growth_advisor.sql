@@ -52,7 +52,7 @@ ALTER TABLE advisor_recommendations ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY advisor_recommendations_select ON advisor_recommendations
   FOR SELECT TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 
@@ -64,7 +64,7 @@ CREATE POLICY advisor_recommendations_insert ON advisor_recommendations
 
 CREATE POLICY advisor_recommendations_update ON advisor_recommendations
   FOR UPDATE TO authenticated
-  USING (org_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND org_id IN (
     SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
   ));
 

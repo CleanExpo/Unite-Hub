@@ -149,21 +149,32 @@ export async function rateLimit(
   try {
     const result: RateLimiterRes = await limiter.consume(key);
 
-    // Add rate limit headers
+    // Add rate limit headers with safe Date construction
+    const resetTime = result.msBeforeNext && !isNaN(result.msBeforeNext)
+      ? new Date(Date.now() + result.msBeforeNext).toISOString()
+      : new Date(Date.now() + 60000).toISOString(); // Default to 1 minute
+
     const headers = {
       'X-RateLimit-Limit': String(RATE_LIMITS[tier].points),
-      'X-RateLimit-Remaining': String(result.remainingPoints),
-      'X-RateLimit-Reset': String(new Date(Date.now() + result.msBeforeNext).toISOString()),
+      'X-RateLimit-Remaining': String(result.remainingPoints || 0),
+      'X-RateLimit-Reset': String(resetTime),
     };
 
     return {
       success: true,
-      remaining: result.remainingPoints,
+      remaining: result.remainingPoints || 0,
     };
   } catch (rateLimitError) {
     if (rateLimitError instanceof Error) {
       // Rate limit exceeded
-      const retryAfter = Math.ceil((rateLimitError as any).msBeforeNext / 1000);
+      const msBeforeNext = (rateLimitError as any).msBeforeNext;
+      const retryAfter = msBeforeNext && !isNaN(msBeforeNext)
+        ? Math.ceil(msBeforeNext / 1000)
+        : 60; // Default to 60 seconds
+
+      const resetTime = msBeforeNext && !isNaN(msBeforeNext)
+        ? new Date(Date.now() + msBeforeNext).toISOString()
+        : new Date(Date.now() + 60000).toISOString();
 
       return {
         success: false,
@@ -179,7 +190,7 @@ export async function rateLimit(
               'Retry-After': String(retryAfter),
               'X-RateLimit-Limit': String(RATE_LIMITS[tier].points),
               'X-RateLimit-Remaining': '0',
-              'X-RateLimit-Reset': String(new Date(Date.now() + (rateLimitError as any).msBeforeNext).toISOString()),
+              'X-RateLimit-Reset': String(resetTime),
             },
           }
         ),

@@ -1,6 +1,7 @@
 import { anthropic } from "@/lib/anthropic/client";
 import { db } from "@/lib/db";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
+import { extractCacheStats, logCacheStats } from "@/lib/anthropic/features/prompt-cache";
 
 export interface PersonalizedContent {
   subject_lines: string[];
@@ -137,14 +138,9 @@ Generate hyper-personalized ${contentType} email for this prospect.`;
 
     const message = result.data;
 
-    // Log cache performance for cost monitoring
-    console.log("Content Personalization - Cache Stats:", {
-      input_tokens: message.usage.input_tokens,
-      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
-      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
-      output_tokens: message.usage.output_tokens,
-      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
-    });
+    // Log cache performance for cost monitoring using centralized utilities
+    const cacheStats = extractCacheStats(message, "claude-opus-4-5-20251101");
+    logCacheStats("ContentPersonalization:generatePersonalizedContent", cacheStats);
 
     // Extract and parse response
     let jsonText = "";
@@ -202,13 +198,7 @@ Generate hyper-personalized ${contentType} email for this prospect.`;
         content_type: contentType,
         personalization_score: content.personalization_score,
         status: "success",
-        cacheStats: {
-          input_tokens: message.usage.input_tokens,
-          cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
-          cache_read_tokens: message.usage.cache_read_input_tokens || 0,
-          output_tokens: message.usage.output_tokens,
-          cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
-        },
+        cacheStats,
       }
     );
 

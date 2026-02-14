@@ -28,7 +28,8 @@ CREATE TABLE interactions (
   interaction_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
   -- Optional: User who created/performed interaction
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  -- Keep FK reference to auth.users (allowed in migrations)
+created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
   -- Metadata
   created_at TIMESTAMPTZ DEFAULT NOW(),

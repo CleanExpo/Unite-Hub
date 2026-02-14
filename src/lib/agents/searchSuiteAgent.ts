@@ -11,6 +11,7 @@ import { anthropic } from '@/lib/anthropic/client';
 import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { db } from '@/lib/db';
+import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import {
   keywordTrackingService,
   type KeywordFilters,
@@ -242,6 +243,10 @@ Provide a brief summary.`;
       });
     });
 
+    // Log cache performance
+    const cacheStats = extractCacheStats(result.data, 'claude-haiku-4-5-20251001');
+    logCacheStats('SearchSuite:generateRankingSummary', cacheStats);
+
     summary =
       result.data.content[0].type === 'text' ? result.data.content[0].text : summary;
   } catch (error) {
@@ -337,6 +342,10 @@ Identify top 5-10 optimization opportunities.`;
         ],
       });
     });
+
+    // Log cache performance
+    const cacheStats = extractCacheStats(result.data, 'claude-sonnet-4-5-20250929');
+    logCacheStats('SearchSuite:identifyOpportunities', cacheStats);
 
     const responseText =
       result.data.content[0].type === 'text' ? result.data.content[0].text : '';

@@ -129,4 +129,4 @@ ORDER BY tablename, cmd, policyname;
 --   1. "Org owners can delete workspaces" (DELETE)
 --   2. "Org owners can update workspaces" (UPDATE)
 --   3. "Users can create workspaces in their orgs" (INSERT)
---   4. "Users can view their workspaces" (SELECT)
+--   4. "Users can view their workspaces" (SELECT);

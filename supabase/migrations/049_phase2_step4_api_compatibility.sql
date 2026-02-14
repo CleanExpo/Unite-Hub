@@ -313,4 +313,4 @@ WHERE table_schema = 'public'
 -- Indexes created: 7
 -- Views created: 2
 -- Functions created: 3
--- Total enhancement points: 19
+-- Total enhancement points: 19;

@@ -4,7 +4,8 @@
 -- Visual Assets table
 CREATE TABLE IF NOT EXISTS visual_assets (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  -- Keep FK reference to auth.users (allowed in migrations)
+client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   context TEXT NOT NULL,
   type TEXT NOT NULL CHECK (type IN ('image', 'video', 'graph')),
   model_used TEXT NOT NULL,
@@ -42,20 +43,20 @@ ALTER TABLE visual_asset_variants ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies for visual_assets
 CREATE POLICY "clients_view_own_visual_assets" ON visual_assets
-FOR SELECT USING (client_id = auth.uid());
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND client_id = auth.uid());
 
 CREATE POLICY "clients_insert_own_visual_assets" ON visual_assets
 FOR INSERT WITH CHECK (client_id = auth.uid());
 
 CREATE POLICY "clients_update_own_visual_assets" ON visual_assets
-FOR UPDATE USING (client_id = auth.uid());
+FOR UPDATE USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND client_id = auth.uid());
 
 CREATE POLICY "service_role_all_visual_assets" ON visual_assets
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- RLS policies for visual_asset_variants
 CREATE POLICY "clients_view_own_variants" ON visual_asset_variants
-FOR SELECT USING (
+FOR SELECT USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND 
   EXISTS (
     SELECT 1 FROM visual_assets
     WHERE visual_assets.id = visual_asset_variants.visual_asset_id
@@ -64,7 +65,7 @@ FOR SELECT USING (
 );
 
 CREATE POLICY "service_role_all_variants" ON visual_asset_variants
-FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+FOR ALL USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND auth.jwt() ->> 'role' = 'service_role');
 
 -- Grant permissions
 GRANT ALL ON visual_assets TO authenticated;

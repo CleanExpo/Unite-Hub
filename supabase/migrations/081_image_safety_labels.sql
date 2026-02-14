@@ -25,7 +25,7 @@ ALTER TABLE image_safety_labels ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (internal access for admins)
 CREATE POLICY safety_labels_select ON image_safety_labels
   FOR SELECT TO authenticated
-  USING (image_approval_id IN (
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND image_approval_id IN (
     SELECT id FROM image_approvals WHERE org_id IN (
       SELECT org_id FROM user_organizations WHERE user_id = auth.uid()
     )

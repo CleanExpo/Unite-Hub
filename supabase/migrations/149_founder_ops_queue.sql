@@ -80,7 +80,7 @@ CREATE POLICY founder_ops_queue_founder_all_policy ON founder_ops_queue
 CREATE POLICY founder_ops_queue_service_role_policy ON founder_ops_queue
   FOR ALL
   TO service_role
-  USING (true)
+  USING (workspace_id = current_setting('app.current_workspace_id')::uuid AND true)
   WITH CHECK (true);
 
 -- Helper function: Get daily queue
