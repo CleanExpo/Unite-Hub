@@ -1,7 +1,7 @@
 # Claude Code Skills Index
 
-**Last Updated**: November 28, 2025
-**Total Skills**: 19 (13 existing + 6 new)
+**Last Updated**: February 16, 2026
+**Total Skills**: 20 (13 existing + 7 new)
 
 ---
 
@@ -32,6 +32,9 @@
 - 💳 [Stripe Agent](./stripe-agent/SKILL.md) - Payment processing, billing
 - 🎯 [Pre-Client](./pre-client/SKILL.md) - Inbound lead intelligence
 
+**Integrations & Platforms**
+- 🔌 [Composio](./composio/SKILL.md) - Unified API gateway (800+ apps), connection management
+
 **Technical & Infrastructure**
 - 💻 [Backend](./backend/SKILL.md) - API routes, database, RLS, integrations
 - 🎨 [Frontend](./frontend/SKILL.md) - UI/UX, React components, routing
@@ -50,6 +53,7 @@
 
 ### C
 - **Cognitive Twin** (cognitive-twin) - Business health monitoring, 13-domain scoring
+- **Composio** (composio) - Unified API gateway, 800+ app integrations, connection management
 - **Content Agent** (content-agent) - Content generation, personalization
 
 ### D
@@ -122,7 +126,10 @@
 - **Docs** - Documentation
 - **Deployment Audit** - Infrastructure
 
-### 8. Orchestration (1 skill)
+### 8. Integrations & Platforms (1 skill)
+- **Composio** - Unified API gateway (800+ apps)
+
+### 9. Orchestration (1 skill)
 - **Orchestrator** - Workflow coordination
 
 ---
@@ -162,6 +169,9 @@
 ### "Process payments"
 → **Stripe Agent** - Payment, billing, subscription management
 
+### "Connect a third-party app"
+→ **Composio** - Unified API gateway for 800+ integrations
+
 ### "Coordinate workflows"
 → **Orchestrator** - Multi-step, multi-agent pipelines
 
@@ -177,6 +187,17 @@
 ---
 
 ## Skill Details
+
+### NEW Skills (Created Feb 16, 2026)
+
+#### Composio
+```
+File: .claude/skills/composio/SKILL.md
+Purpose: Unified API gateway for 800+ app integrations
+Best for: Connecting third-party apps, managing OAuth, executing cross-platform actions
+Mode: AUTOMATED (with managed auth)
+Key features: Tool discovery, connection management, cross-platform actions, OAuth flows
+```
 
 ### NEW Skills (Created Nov 28, 2025)
 
@@ -346,6 +367,7 @@ Each skill includes "Error Handling" section explaining failure modes.
 | Decision mapping | Decision Moment | 1 hour | Planning |
 | Deployment health | Deployment Audit | 15 min | Analysis |
 | Portfolio management | Founder OS | 1-2 hours | Tracking |
+| App integrations | Composio | Setup once | Auto |
 | Documentation | Docs | 30 min | Writing |
 
 ---

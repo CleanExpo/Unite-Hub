@@ -6,6 +6,17 @@
         "shadcn@latest",
         "mcp"
       ]
+    },
+    "composio": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://backend.composio.dev/v3/mcp/a34e0fe7-4c26-4da1-89e3-be9af2c086ea/mcp?user_id=pg-test-916354cc-3dbe-4fbd-973c-a02ea115698b"
+      ],
+      "env": {
+        "npm_config_yes": "true"
+      }
     }
   }
 }
