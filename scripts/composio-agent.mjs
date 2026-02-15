@@ -37,6 +37,7 @@ const CONNECTIONS = {
   gmail: "ca_wJT3eNeEBNv9",
   github: "ca_Pi7sWzTJrGsv",
   supabase: "ca_xVSVPA1TsRHP",
+  linear: "ca_8xcCyjw2bixa",
 };
 
 // Extra actions to load per toolkit (beyond the default toolkit tools)
@@ -55,6 +56,13 @@ const task =
 
 const taskLower = task.toLowerCase();
 const toolkits = [];
+const isMetaQuery =
+  taskLower.includes("composio") ||
+  taskLower.includes("connected app") ||
+  taskLower.includes("connections") ||
+  taskLower.includes("integrations") ||
+  taskLower.includes("what apps");
+
 if (
   taskLower.includes("email") ||
   taskLower.includes("gmail") ||
@@ -65,8 +73,8 @@ if (
 if (
   taskLower.includes("github") ||
   taskLower.includes("repo") ||
-  taskLower.includes("issue") ||
-  taskLower.includes("pr")
+  (taskLower.includes("issue") && !taskLower.includes("linear")) ||
+  (taskLower.includes("pr") && !taskLower.includes("linear"))
 ) {
   toolkits.push("github");
 }
@@ -77,8 +85,15 @@ if (
 ) {
   toolkits.push("supabase");
 }
-// Default to gmail if no toolkit detected
-if (toolkits.length === 0) toolkits.push("gmail");
+if (
+  taskLower.includes("linear") ||
+  taskLower.includes("ticket") ||
+  taskLower.includes("sprint")
+) {
+  toolkits.push("linear");
+}
+// Default to gmail if no toolkit detected (unless meta query)
+if (toolkits.length === 0 && !isMetaQuery) toolkits.push("gmail");
 
 // Initialize Composio with OpenAI Agents provider
 const provider = new OpenAIAgentsProvider();
@@ -86,6 +101,44 @@ const composio = new Composio({
   apiKey: COMPOSIO_API_KEY,
   provider: provider,
 });
+
+// Handle meta queries (connection listing) without loading toolkit tools
+if (isMetaQuery && toolkits.length === 0) {
+  console.log("Loading connection info...\n");
+
+  const connList = await composio.connectedAccounts.list({
+    user_id: EXTERNAL_USER_ID,
+  });
+  const connections = connList.items ?? connList ?? [];
+
+  const connectionSummary = connections.map((c) => ({
+    id: c.id,
+    app: c.toolkit?.slug || c.appName || c.clientUniqueUserId || "unknown",
+    status: c.status,
+    created: c.createdAt,
+  }));
+
+  const connectionsJson = JSON.stringify(connectionSummary, null, 2);
+
+  // Use a simple agent with connection data baked into instructions
+  const agent = new Agent({
+    name: "Unite-Hub Agent",
+    model: "gpt-4o",
+    instructions: `You are a helpful assistant for Unite-Hub, an AI-first CRM platform.
+The user is asking about their Composio connected apps. Here is the live data:
+
+${connectionsJson}
+
+Present this information in a clean, readable format. Include the app name, status, connection ID, and creation date.
+Known connection IDs: Gmail=${CONNECTIONS.gmail}, GitHub=${CONNECTIONS.github}, Supabase=${CONNECTIONS.supabase}, Linear=${CONNECTIONS.linear}`,
+  });
+
+  console.log(`Running: ${task}\n`);
+  const result = await run(agent, task);
+  console.log(`\nDone`);
+  if (result.finalOutput) console.log(result.finalOutput);
+  process.exit(0);
+}
 
 // Get connected account IDs for selected toolkits
 const connectedAccountIds = toolkits
@@ -139,6 +192,7 @@ const customExecuteFn = async (toolSlug, params) => {
   if (slugUpper.startsWith("GMAIL_")) accountId = CONNECTIONS.gmail;
   else if (slugUpper.startsWith("GITHUB_")) accountId = CONNECTIONS.github;
   else if (slugUpper.startsWith("SUPABASE_")) accountId = CONNECTIONS.supabase;
+  else if (slugUpper.startsWith("LINEAR_")) accountId = CONNECTIONS.linear;
 
   console.log(`  → Executing: ${slug} (version: ${version || "auto"})`);
 
