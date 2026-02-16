@@ -153,7 +153,7 @@ export class TrustModeReportGenerator {
     };
   }
 
-  private processSignatures(signatures: any[]) {
+  private processSignatures(signatures: { status: string }[]) {
     const stats = {
       total: signatures.length,
       signed: 0,
@@ -172,7 +172,7 @@ export class TrustModeReportGenerator {
     return stats;
   }
 
-  private processProposals(proposals: any[]) {
+  private processProposals(proposals: { status: string; domain: string; risk_level: string; approved_by: string | null; created_at: string }[]) {
     const byStatus: Record<string, number> = {};
     const byDomain: Record<string, number> = {};
     const byRisk: Record<string, number> = {};
@@ -209,7 +209,7 @@ export class TrustModeReportGenerator {
     };
   }
 
-  private processExecutions(executions: any[]) {
+  private processExecutions(executions: { autonomy_proposals?: { domain: string } | null; execution_duration_ms?: number; rollback_type?: string | null }[]) {
     const byDomain: Record<string, number> = {};
     let totalDuration = 0;
     let successful = 0;
@@ -241,7 +241,7 @@ export class TrustModeReportGenerator {
     };
   }
 
-  private processRollbacks(proposals: any[]) {
+  private processRollbacks(proposals: { status: string }[]) {
     const stats = {
       total: 0,
       soft_undo: 0,
@@ -259,7 +259,7 @@ export class TrustModeReportGenerator {
     return stats;
   }
 
-  private processAudit(events: any[]) {
+  private processAudit(events: { action_type: string; actor_type: string }[]) {
     const byAction: Record<string, number> = {};
     const byActor: Record<string, number> = {};
 
@@ -276,9 +276,9 @@ export class TrustModeReportGenerator {
   }
 
   private generateRecommendations(
-    proposals: any,
-    executions: any,
-    rollbacks: any
+    proposals: TrustModeReport['proposals'],
+    executions: TrustModeReport['executions'],
+    rollbacks: TrustModeReport['rollbacks']
   ): string[] {
     const recommendations: string[] = [];
 

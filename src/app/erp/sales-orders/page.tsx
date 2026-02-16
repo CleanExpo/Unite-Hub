@@ -101,7 +101,7 @@ export default function SalesOrdersPage() {
 
       const data = await response.json();
       setSalesOrders(data.sales_orders || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching sales orders:', err);
       setError(err.message || 'Failed to load sales orders');
     } finally {

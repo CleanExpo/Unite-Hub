@@ -16,7 +16,7 @@ interface ScheduleItem {
   content_markdown: string;
   media_urls: string[];
   scheduled_for: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 interface ProcessResult {
@@ -132,13 +132,14 @@ async function processSchedule(schedule: ScheduleItem): Promise<ProcessResult> {
       error: execution.errorMessage,
     };
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     // Mark as failed
     await supabase
       .from('campaign_orchestration_schedules')
       .update({
         status: 'failed',
-        execution_result: { error: error.message },
+        execution_result: { error: errorMessage },
       })
       .eq('id', schedule.id);
 
@@ -146,7 +147,7 @@ async function processSchedule(schedule: ScheduleItem): Promise<ProcessResult> {
       scheduleId: schedule.id,
       preflightPassed: false,
       executed: false,
-      error: error.message,
+      error: errorMessage,
     };
   }
 }

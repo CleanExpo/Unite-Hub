@@ -194,7 +194,7 @@ export async function POST(request: NextRequest) {
         parentImageId,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -248,7 +248,7 @@ async function trackImageGeneration(
         .update({ custom_fields: customFields })
         .eq("id", orgId);
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

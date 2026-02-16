@@ -72,7 +72,7 @@ export async function POST(
       alternatives,
       message: "Alternatives generated successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error generating alternatives:", error);
     return NextResponse.json(
       { error: error.message || "Failed to generate alternatives" },

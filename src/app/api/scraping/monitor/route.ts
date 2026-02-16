@@ -160,7 +160,7 @@ export async function POST(req: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Monitoring error:', error);
 
     return NextResponse.json(
@@ -230,7 +230,7 @@ export async function GET(req: NextRequest) {
       data,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching monitoring history:', error);
 
     return NextResponse.json(

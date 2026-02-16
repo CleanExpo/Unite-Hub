@@ -130,7 +130,7 @@ export async function GET(
       relationshipCount: relationships.length,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j entity detail error:', error);
 
     return NextResponse.json(

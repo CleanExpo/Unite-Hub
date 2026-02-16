@@ -63,13 +63,13 @@ export async function runCombatCycle(workspaceId?: string): Promise<CycleResult>
         } else if (combatResult.resultType === 'inconclusive') {
           result.inconclusives++;
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         result.errors.push(`Round ${round.id}: ${error.message}`);
       }
     }
 
     return result;
-  } catch (error: any) {
+  } catch (error: unknown) {
     result.errors.push(`Cycle error: ${error.message}`);
     return result;
   }

@@ -67,13 +67,13 @@ export async function syncWorkspaces(): Promise<{
 
         await createWorkspace(workspaceEntity);
         count++;
-      } catch (err: any) {
+      } catch (err: unknown) {
         errors.push(`Workspace ${workspace.id}: ${err.message}`);
       }
     }
 
     return { count, errors };
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors.push(`Workspace sync failed: ${error.message}`);
     return { count, errors };
   }
@@ -133,13 +133,13 @@ export async function syncContacts(
             }
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         errors.push(`Contact ${contact.id}: ${err.message}`);
       }
     }
 
     return { count, errors };
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors.push(`Contact sync failed: ${error.message}`);
     return { count, errors };
   }
@@ -188,13 +188,13 @@ export async function syncCompanies(
 
         await upsertCompany(companyEntity);
         count++;
-      } catch (err: any) {
+      } catch (err: unknown) {
         errors.push(`Company ${domain}: ${err.message}`);
       }
     }
 
     return { count, errors };
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors.push(`Company sync failed: ${error.message}`);
     return { count, errors };
   }
@@ -242,13 +242,13 @@ export async function syncEmails(
 
         await createEmail(emailEntity);
         count++;
-      } catch (err: any) {
+      } catch (err: unknown) {
         errors.push(`Email ${email.id}: ${err.message}`);
       }
     }
 
     return { count, errors };
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors.push(`Email sync failed: ${error.message}`);
     return { count, errors };
   }
@@ -316,7 +316,7 @@ export async function fullSync(workspaceId: string): Promise<SyncResult> {
     );
 
     return result;
-  } catch (error: any) {
+  } catch (error: unknown) {
     result.success = false;
     result.errors.push({ type: 'system', message: error.message });
     result.duration_ms = Date.now() - startTime;
@@ -400,7 +400,7 @@ export async function incrementalSync(
           updated_at: contact.updated_at,
         });
         result.synced.contacts++;
-      } catch (err: any) {
+      } catch (err: unknown) {
         result.errors.push({ type: 'contact', message: err.message });
       }
     }
@@ -429,7 +429,7 @@ export async function incrementalSync(
           metadata: email.metadata,
         });
         result.synced.emails++;
-      } catch (err: any) {
+      } catch (err: unknown) {
         result.errors.push({ type: 'email', message: err.message });
       }
     }
@@ -442,7 +442,7 @@ export async function incrementalSync(
     );
 
     return result;
-  } catch (error: any) {
+  } catch (error: unknown) {
     result.success = false;
     result.errors.push({ type: 'system', message: error.message });
     result.duration_ms = Date.now() - startTime;

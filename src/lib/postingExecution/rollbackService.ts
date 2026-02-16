@@ -9,6 +9,7 @@ import {
   RollbackInput,
   RollbackStatus,
   PostingChannel,
+  PlatformResponse,
 } from './postingExecutionTypes';
 import { getExecutionById } from './executionService';
 
@@ -86,21 +87,22 @@ export async function initiateRollback(input: RollbackInput): Promise<RollbackRe
 
     return mapToRollbackResult(updated || rollback);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     // Update as failed
     await supabase
       .from('rollback_log')
       .update({
         status: 'failed',
         attempted_at: new Date().toISOString(),
-        error_message: error.message,
+        error_message: errorMessage,
       })
       .eq('id', rollback.id);
 
     return {
       ...mapToRollbackResult(rollback),
       status: 'failed',
-      errorMessage: error.message,
+      errorMessage,
     };
   }
 }
@@ -173,7 +175,7 @@ async function executeRollbackOnChannel(
   success: boolean;
   notSupported?: boolean;
   error?: string;
-  platformResponse?: any;
+  platformResponse?: Record<string, unknown>;
 }> {
   // Get credentials
   const supabase = await getSupabaseServer();
@@ -253,7 +255,7 @@ async function executeRollbackOnChannel(
 async function rollbackFacebook(
   postId: string,
   accessToken: string
-): Promise<{ success: boolean; error?: string; platformResponse?: any }> {
+): Promise<{ success: boolean; error?: string; platformResponse?: Record<string, unknown> }> {
   try {
     const response = await fetch(
       `https://graph.facebook.com/v18.0/${postId}?access_token=${accessToken}`,
@@ -271,8 +273,8 @@ async function rollbackFacebook(
       error: data.error?.message || 'Delete failed',
       platformResponse: data,
     };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -280,7 +282,7 @@ async function rollbackFacebook(
 async function rollbackLinkedIn(
   postId: string,
   accessToken: string
-): Promise<{ success: boolean; error?: string; platformResponse?: any }> {
+): Promise<{ success: boolean; error?: string; platformResponse?: Record<string, unknown> }> {
   try {
     const response = await fetch(
       `https://api.linkedin.com/v2/ugcPosts/${postId}`,
@@ -303,8 +305,8 @@ async function rollbackLinkedIn(
       error: data.message || 'Delete failed',
       platformResponse: data,
     };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -312,7 +314,7 @@ async function rollbackLinkedIn(
 async function rollbackX(
   postId: string,
   accessToken: string
-): Promise<{ success: boolean; error?: string; platformResponse?: any }> {
+): Promise<{ success: boolean; error?: string; platformResponse?: Record<string, unknown> }> {
   try {
     const response = await fetch(
       `https://api.twitter.com/2/tweets/${postId}`,
@@ -335,8 +337,8 @@ async function rollbackX(
       error: data.errors?.[0]?.message || 'Delete failed',
       platformResponse: data,
     };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -344,7 +346,7 @@ async function rollbackX(
 async function rollbackReddit(
   postId: string,
   accessToken: string
-): Promise<{ success: boolean; error?: string; platformResponse?: any }> {
+): Promise<{ success: boolean; error?: string; platformResponse?: Record<string, unknown> }> {
   try {
     const response = await fetch(
       'https://oauth.reddit.com/api/del',
@@ -368,8 +370,8 @@ async function rollbackReddit(
       error: 'Delete failed',
       platformResponse: data,
     };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -377,7 +379,7 @@ async function rollbackReddit(
 async function rollbackYouTube(
   videoId: string,
   accessToken: string
-): Promise<{ success: boolean; error?: string; platformResponse?: any }> {
+): Promise<{ success: boolean; error?: string; platformResponse?: Record<string, unknown> }> {
   try {
     const response = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}`,
@@ -399,8 +401,8 @@ async function rollbackYouTube(
       error: data.error?.message || 'Delete failed',
       platformResponse: data,
     };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
@@ -408,7 +410,7 @@ async function rollbackYouTube(
 async function rollbackGMB(
   postName: string,
   accessToken: string
-): Promise<{ success: boolean; error?: string; platformResponse?: any }> {
+): Promise<{ success: boolean; error?: string; platformResponse?: Record<string, unknown> }> {
   try {
     const response = await fetch(
       `https://mybusiness.googleapis.com/v4/${postName}`,
@@ -430,27 +432,27 @@ async function rollbackGMB(
       error: data.error?.message || 'Delete failed',
       platformResponse: data,
     };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 // Helper
-function mapToRollbackResult(row: any): RollbackResult {
+function mapToRollbackResult(row: Record<string, unknown>): RollbackResult {
   return {
-    id: row.id,
-    executionId: row.execution_id,
-    channel: row.channel,
-    externalPostId: row.external_post_id,
-    rollbackPayload: row.rollback_payload,
-    status: row.status,
-    attemptedAt: row.attempted_at,
-    completedAt: row.completed_at,
-    platformResponse: row.platform_response,
-    errorMessage: row.error_message,
-    requestedBy: row.requested_by,
-    reason: row.reason,
-    metadata: row.metadata,
-    createdAt: row.created_at,
+    id: row.id as string,
+    executionId: row.execution_id as string,
+    channel: row.channel as PostingChannel,
+    externalPostId: row.external_post_id as string | undefined,
+    rollbackPayload: row.rollback_payload as Record<string, unknown> | undefined,
+    status: row.status as RollbackStatus,
+    attemptedAt: row.attempted_at as string | undefined,
+    completedAt: row.completed_at as string | undefined,
+    platformResponse: row.platform_response as PlatformResponse | undefined,
+    errorMessage: row.error_message as string | undefined,
+    requestedBy: row.requested_by as string | undefined,
+    reason: row.reason as string | undefined,
+    metadata: (row.metadata as Record<string, unknown>) || {},
+    createdAt: row.created_at as string,
   };
 }

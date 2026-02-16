@@ -175,7 +175,7 @@ export class PerplexitySonar {
         rawContent: includeRawContent ? data.raw_content : undefined,
         images: includeImages && data.images ? data.images : undefined,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Perplexity Sonar API error:', error);
       throw new Error(`Sonar search failed: ${error.message}`);
     }

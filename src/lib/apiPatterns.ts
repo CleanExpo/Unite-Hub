@@ -6,11 +6,11 @@ import { NextRequest, NextResponse } from "next/server";
  *
  * @interface ApiContext
  * @property {string} clientId - Validated client ID (guaranteed non-null)
- * @property {any} [body] - Parsed JSON request body (if applicable)
+ * @property {unknown} [body] - Parsed JSON request body (if applicable)
  */
 export interface ApiContext {
   clientId: string;
-  body?: any;
+  body?: unknown;
 }
 
 /**
@@ -102,7 +102,7 @@ export async function withClientValidation(
 ): Promise<NextResponse> {
   try {
     let clientId: string | null = null;
-    let body: any = null;
+    let body: unknown = null;
 
     // Step 1: Try to get clientId from header (preferred method)
     // This is the cleanest approach for SPA/API calls
@@ -112,7 +112,7 @@ export async function withClientValidation(
     if (!clientId && (req.method === "POST" || req.method === "PUT" || req.method === "PATCH")) {
       try {
         body = await req.json();
-        clientId = body.clientId;
+        clientId = (body as Record<string, unknown>)?.clientId as string | null;
       } catch (parseError) {
         // Body parsing failed - will be caught in validation below
         console.error("Failed to parse request body:", parseError);
@@ -139,24 +139,30 @@ export async function withClientValidation(
     // Step 5: Execute handler with validated context
     return await handler({ clientId, body });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("API error:", error);
+
+    const message = error instanceof Error ? error.message : "Internal server error";
+    const stack = error instanceof Error ? error.stack : undefined;
+    const details = error instanceof Error && "details" in error
+      ? (error as Error & { details?: string }).details
+      : undefined;
 
     // Determine status code based on error type
     let status = 500;
-    if (error.message?.includes("not found")) {
+    if (message.includes("not found")) {
       status = 404;
-    } else if (error.message?.includes("unauthorized") || error.message?.includes("forbidden")) {
+    } else if (message.includes("unauthorized") || message.includes("forbidden")) {
       status = 403;
-    } else if (error.message?.includes("invalid") || error.message?.includes("required")) {
+    } else if (message.includes("invalid") || message.includes("required")) {
       status = 400;
     }
 
     return NextResponse.json<ApiErrorResponse>(
       {
-        error: error.message || "Internal server error",
-        details: error.details || undefined,
-        stack: process.env.NODE_ENV === "development" ? error.stack : undefined
+        error: message,
+        details: details || undefined,
+        stack: process.env.NODE_ENV === "development" ? stack : undefined
       },
       { status }
     );
@@ -204,23 +210,26 @@ export async function withErrorHandling(
 ): Promise<NextResponse> {
   try {
     return await handler();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("API error:", error);
+
+    const message = error instanceof Error ? error.message : "Internal server error";
+    const stack = error instanceof Error ? error.stack : undefined;
 
     // Determine status code based on error type
     let status = 500;
-    if (error.message?.includes("not found")) {
+    if (message.includes("not found")) {
       status = 404;
-    } else if (error.message?.includes("unauthorized") || error.message?.includes("forbidden")) {
+    } else if (message.includes("unauthorized") || message.includes("forbidden")) {
       status = 403;
-    } else if (error.message?.includes("invalid") || error.message?.includes("required")) {
+    } else if (message.includes("invalid") || message.includes("required")) {
       status = 400;
     }
 
     return NextResponse.json<ApiErrorResponse>(
       {
-        error: error.message || "Internal server error",
-        stack: process.env.NODE_ENV === "development" ? error.stack : undefined
+        error: message,
+        stack: process.env.NODE_ENV === "development" ? stack : undefined
       },
       { status }
     );

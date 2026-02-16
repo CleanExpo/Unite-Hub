@@ -208,7 +208,7 @@ export async function GET(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Statistics fetch error:", error);
     return NextResponse.json(
       { error: "Failed to fetch statistics", details: error.message },

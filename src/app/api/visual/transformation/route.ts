@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const output = visualTransformationService.exportPipelineOutput();
 
     return NextResponse.json(output);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Visual transformation error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to get transformation data" },
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       { error: "Invalid action. Use 'generate' or 'generate-all'" },
       { status: 400 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Visual generation error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to generate visual" },

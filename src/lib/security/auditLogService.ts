@@ -107,7 +107,7 @@ export async function recordAuditEvent(input: RecordAuditEventInput): Promise<Au
     }
 
     return data as AuditEvent;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unexpected error recording audit event:', error);
     return null;
   }
@@ -173,7 +173,7 @@ export async function listAuditEvents(
     }
 
     return (data as AuditEvent[]) || [];
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unexpected error listing audit events:', error);
     return [];
   }
@@ -203,7 +203,7 @@ export async function getAuditEvent(
     }
 
     return data as AuditEvent;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unexpected error getting audit event:', error);
     return null;
   }

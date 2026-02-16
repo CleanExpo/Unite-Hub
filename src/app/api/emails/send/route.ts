@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
       messageId: result.messageId,
       fallbackUsed: result.fallbackUsed,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[send-email] Error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to send email" },

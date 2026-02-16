@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Pattern detection error:", error);
     return NextResponse.json(
       { error: "Pattern detection failed", details: error.message },

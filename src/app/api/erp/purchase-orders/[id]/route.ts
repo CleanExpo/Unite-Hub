@@ -32,7 +32,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     return NextResponse.json(purchaseOrder);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching purchase order:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch purchase order' },
@@ -91,7 +91,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     return NextResponse.json({ purchase_order: result });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating purchase order:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to update purchase order' },

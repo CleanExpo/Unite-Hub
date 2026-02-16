@@ -136,7 +136,7 @@ export default function ERPReportsPage() {
 
       const data = await response.json();
       setReportData(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error generating report:', err);
       setError(err.message || 'Failed to generate report');
     } finally {

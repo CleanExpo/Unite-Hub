@@ -349,7 +349,7 @@ export class VisualTransformationService {
       }
 
       throw new Error("No image data in response");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(`[DALL-E 3] Error generating ${asset.id}:`, error.message);
 
       // Fallback to placeholder if DALL-E fails

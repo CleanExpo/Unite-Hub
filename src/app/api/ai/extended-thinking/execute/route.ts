@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Extended Thinking execution error:", error);
 
     // Distinguish between different error types

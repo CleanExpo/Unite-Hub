@@ -335,7 +335,7 @@ export class AIRouter {
       this.updateUsageStats(taskConfig.task, decision.provider, decision.model, response);
 
       return response;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw new Error(`AI Router execution failed: ${error.message}`);
     } finally {
       const latency = Date.now() - startTime;

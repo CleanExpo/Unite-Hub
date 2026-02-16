@@ -482,7 +482,7 @@ export class AnthropicRateLimiter {
           // Decrement active requests
           this.decrementActiveRequests(options.model);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         lastError = error;
 
         // Track retry

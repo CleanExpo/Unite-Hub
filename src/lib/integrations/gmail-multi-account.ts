@@ -227,7 +227,7 @@ export async function syncGmailEmails(integrationId: string) {
     });
 
     return { imported, total: messages.length };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gmail sync error:", error);
 
     // Store error message
@@ -258,7 +258,7 @@ export async function syncAllGmailAccounts(workspaceId: string) {
         email: integration.email_address,
         ...result,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       results.push({
         integrationId: integration.id,
         email: integration.email_address,

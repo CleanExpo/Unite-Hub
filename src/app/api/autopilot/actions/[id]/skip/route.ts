@@ -43,7 +43,7 @@ export async function POST(
     return NextResponse.json({
       success: true,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Skip action error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

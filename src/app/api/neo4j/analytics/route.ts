@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
       count: Array.isArray(result) ? result.length : result ? 1 : 0,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j analytics error:', error);
 
     return NextResponse.json(
@@ -184,7 +184,7 @@ export async function GET(request: NextRequest) {
       stats,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j analytics stats error:', error);
 
     return NextResponse.json(

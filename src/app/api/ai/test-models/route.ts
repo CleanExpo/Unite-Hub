@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
     };
 
     console.log('✅ OpenAI GPT-4o Mini working:', openaiResult);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ OpenAI GPT-4o Mini failed:', error);
     results.tests.openai_gpt4o_mini = {
       status: 'error',
@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
     };
 
     console.log('✅ Claude 3.5 Sonnet working:', claudeResult.headline);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Claude 3.5 Sonnet failed:', error);
     results.tests.claude_3_5_sonnet = {
       status: 'error',
@@ -104,7 +104,7 @@ export async function GET(req: NextRequest) {
         : 'OpenRouter API key not configured (optional)',
       available_models: ['kwaipilot/kat-coder-pro:free', 'google/gemini-2.0-flash-exp:free'],
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     results.tests.openrouter = {
       status: 'error',
       error: error.message,
@@ -132,7 +132,7 @@ export async function GET(req: NextRequest) {
         'Content-Type': 'application/json',
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -219,7 +219,7 @@ export async function POST(req: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return Response.json({ error: "Unauthorized" }, { status: 401 });

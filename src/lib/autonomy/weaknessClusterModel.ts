@@ -38,7 +38,7 @@ export interface WeaknessNode {
   nodeType: string;
   severity: number; // 1-5
   signal: string;
-  value: any;
+  value: unknown;
   source: string;
   timestamp: string;
 }
@@ -71,6 +71,47 @@ export interface AgentPerformanceIssue {
   degradationPercentage: number;
   trend: 'improving' | 'stable' | 'worsening';
   affectedRuns: number;
+}
+
+interface OrchestrationBottleneck {
+  bottleneck_id: string;
+  task_name: string;
+  execution_time: number;
+  avg_execution_time: number;
+  overhead_percentage: number;
+  affected_steps: number;
+  severity: number;
+}
+
+interface CrossAgentConflict {
+  conflict_id: string;
+  run_id: string;
+  involved_agents: string[];
+  conflict_type: string;
+  failed_steps: number;
+  total_steps: number;
+  severity: number;
+  risk_score: number;
+}
+
+interface TemporalPattern {
+  pattern_id: string;
+  pattern_type: string;
+  hour_of_day?: number;
+  day_of_week?: number;
+  failure_count: number;
+  total_runs: number;
+  failure_rate: number;
+  severity: number;
+}
+
+interface OrchestratorTask {
+  id: string;
+  objective: string;
+  started_at: string | null;
+  completed_at: string | null;
+  total_steps: number;
+  [key: string]: unknown;
 }
 
 class WeaknessClusterModel {
@@ -189,7 +230,13 @@ class WeaknessClusterModel {
       }
 
       // Group by agent and calculate metrics
-      const agentMetrics: Record<string, any> = {};
+      const agentMetrics: Record<string, {
+        runs: number;
+        completedSteps: number;
+        failedSteps: number;
+        riskScores: number[];
+        uncertaintyScores: number[];
+      }> = {};
 
       for (const run of runs) {
         if (!run.active_agents) continue;
@@ -217,7 +264,11 @@ class WeaknessClusterModel {
       const baselineSize = Math.ceil(runs.length * 0.2);
       const baselineRuns = runs.slice(0, baselineSize);
 
-      const baselineMetrics: Record<string, any> = {};
+      const baselineMetrics: Record<string, {
+        successRate: number;
+        avgLatency: number;
+        count: number;
+      }> = {};
       for (const run of baselineRuns) {
         if (!run.active_agents) continue;
 
@@ -282,9 +333,9 @@ class WeaknessClusterModel {
   /**
    * Detect orchestration bottlenecks
    */
-  async detectOrchestrationBottlenecks(workspaceId: string, lookbackDate: string): Promise<any[]> {
+  async detectOrchestrationBottlenecks(workspaceId: string, lookbackDate: string): Promise<OrchestrationBottleneck[]> {
     const supabase = await getSupabaseServer();
-    const bottlenecks: any[] = [];
+    const bottlenecks: OrchestrationBottleneck[] = [];
 
     try {
       // Fetch orchestrator tasks with high latency
@@ -328,9 +379,9 @@ class WeaknessClusterModel {
   /**
    * Identify cross-agent conflicts
    */
-  async identifyCrossAgentConflicts(workspaceId: string, lookbackDate: string): Promise<any[]> {
+  async identifyCrossAgentConflicts(workspaceId: string, lookbackDate: string): Promise<CrossAgentConflict[]> {
     const supabase = await getSupabaseServer();
-    const conflicts: any[] = [];
+    const conflicts: CrossAgentConflict[] = [];
 
     try {
       // Fetch autonomy runs with multiple agents
@@ -374,9 +425,9 @@ class WeaknessClusterModel {
   /**
    * Analyze temporal patterns in failures
    */
-  async analyzeTemporalPatterns(workspaceId: string, lookbackDate: string): Promise<any[]> {
+  async analyzeTemporalPatterns(workspaceId: string, lookbackDate: string): Promise<TemporalPattern[]> {
     const supabase = await getSupabaseServer();
-    const patterns: any[] = [];
+    const patterns: TemporalPattern[] = [];
 
     try {
       // Fetch all autonomy runs
@@ -463,8 +514,8 @@ class WeaknessClusterModel {
    * Private: Check for contradiction between two memories
    */
   private checkForContradiction(
-    mem1: any,
-    mem2: any
+    mem1: { id: string; content: string | null; keywords: string[] | null; importance: number; confidence: number },
+    mem2: { id: string; content: string | null; keywords: string[] | null; importance: number; confidence: number }
   ): { type: string; confidence: number; severity: number } | null {
     // Simple check: opposite keywords
     const keywords1 = (mem1.keywords || []).map((k: string) => k.toLowerCase());
@@ -527,7 +578,7 @@ class WeaknessClusterModel {
   /**
    * Private: Calculate average execution time for tasks
    */
-  private calculateAverageExecutionTime(tasks: any[]): number {
+  private calculateAverageExecutionTime(tasks: OrchestratorTask[]): number {
     if (tasks.length === 0) return 0;
 
     const totalTime = tasks.reduce((sum, task) => {
@@ -540,7 +591,7 @@ class WeaknessClusterModel {
   /**
    * Private: Calculate execution time for a task
    */
-  private calculateTaskExecutionTime(task: any): number {
+  private calculateTaskExecutionTime(task: OrchestratorTask): number {
     if (!task.started_at || !task.completed_at) return 0;
 
     const start = new Date(task.started_at).getTime();
@@ -552,7 +603,13 @@ class WeaknessClusterModel {
   /**
    * Private: Cluster weaknesses by type and relationships
    */
-  private clusterWeaknesses(signals: any): WeaknessCluster[] {
+  private clusterWeaknesses(signals: {
+    memoryContradictions: MemoryContradiction[];
+    agentIssues: AgentPerformanceIssue[];
+    bottlenecks: OrchestrationBottleneck[];
+    conflicts: CrossAgentConflict[];
+    temporalPatterns: TemporalPattern[];
+  }): WeaknessCluster[] {
     const clusters: WeaknessCluster[] = [];
     let clusterId = 0;
 
@@ -582,7 +639,7 @@ class WeaknessClusterModel {
       clusters.push({
         clusterId: `cluster_${clusterId++}`,
         clusterType: 'memory_contradiction',
-        severity: Math.max(...signals.memoryContradictions.map((c: any) => c.severity)),
+        severity: Math.max(...signals.memoryContradictions.map((c) => c.severity)),
         confidence: 75,
         affectedAgents: [],
         affectedMemories: Array.from(affectedMemories),
@@ -619,12 +676,12 @@ class WeaknessClusterModel {
       clusters.push({
         clusterId: `cluster_${clusterId++}`,
         clusterType: 'agent_performance',
-        severity: Math.max(...signals.agentIssues.map((i: any) => Math.min(5, Math.ceil(i.degradationPercentage / 20)))),
+        severity: Math.max(...signals.agentIssues.map((i) => Math.min(5, Math.ceil(i.degradationPercentage / 20)))),
         confidence: 80,
         affectedAgents: Array.from(affectedAgents),
         affectedMemories: [],
         nodes,
-        patterns: signals.agentIssues.map((i: any) => ({
+        patterns: signals.agentIssues.map((i) => ({
           patternId: `pattern_${i.agentName}`,
           type: i.metricType,
           frequency: i.affectedRuns,
@@ -659,7 +716,7 @@ class WeaknessClusterModel {
       clusters.push({
         clusterId: `cluster_${clusterId++}`,
         clusterType: 'orchestration_bottleneck',
-        severity: Math.max(...signals.bottlenecks.map((b: any) => b.severity)),
+        severity: Math.max(...signals.bottlenecks.map((b) => b.severity)),
         confidence: 70,
         affectedAgents: [],
         affectedMemories: [],
@@ -697,7 +754,7 @@ class WeaknessClusterModel {
       clusters.push({
         clusterId: `cluster_${clusterId++}`,
         clusterType: 'cross_agent_conflict',
-        severity: Math.max(...signals.conflicts.map((c: any) => c.severity)),
+        severity: Math.max(...signals.conflicts.map((c) => c.severity)),
         confidence: 75,
         affectedAgents: Array.from(affectedAgents),
         affectedMemories: [],
@@ -730,12 +787,12 @@ class WeaknessClusterModel {
       clusters.push({
         clusterId: `cluster_${clusterId++}`,
         clusterType: 'temporal_pattern',
-        severity: Math.max(...signals.temporalPatterns.map((p: any) => p.severity)),
+        severity: Math.max(...signals.temporalPatterns.map((p) => p.severity)),
         confidence: 65,
         affectedAgents: [],
         affectedMemories: [],
         nodes,
-        patterns: signals.temporalPatterns.map((p: any) => ({
+        patterns: signals.temporalPatterns.map((p) => ({
           patternId: `pattern_${p.pattern_id}`,
           type: p.pattern_type,
           frequency: p.total_runs,

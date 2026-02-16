@@ -3,25 +3,25 @@
  * Centralized error handling and logging for API routes
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export interface APIError {
   message: string;
   code?: string;
   status?: number;
-  details?: any;
+  details?: unknown;
 }
 
 export class AppError extends Error {
   status: number;
   code: string;
-  details?: any;
+  details?: unknown;
 
   constructor(
     message: string,
     status: number = 500,
     code: string = "INTERNAL_ERROR",
-    details?: any
+    details?: unknown
   ) {
     super(message);
     this.name = "AppError";
@@ -53,13 +53,13 @@ export class NotFoundError extends AppError {
 }
 
 export class ValidationError extends AppError {
-  constructor(message: string, details?: any) {
+  constructor(message: string, details?: unknown) {
     super(message, 400, "VALIDATION_ERROR", details);
   }
 }
 
 export class TierLimitError extends AppError {
-  constructor(message: string, details?: any) {
+  constructor(message: string, details?: unknown) {
     super(message, 403, "TIER_LIMIT_EXCEEDED", details);
   }
 }
@@ -140,9 +140,9 @@ export function handleError(error: unknown): NextResponse {
  * Async error wrapper for API routes
  */
 export function asyncHandler(
-  handler: (request: any, context?: any) => Promise<NextResponse>
+  handler: (request: NextRequest, context?: Record<string, unknown>) => Promise<NextResponse>
 ) {
-  return async (request: any, context?: any): Promise<NextResponse> => {
+  return async (request: NextRequest, context?: Record<string, unknown>): Promise<NextResponse> => {
     try {
       return await handler(request, context);
     } catch (error) {
@@ -155,7 +155,7 @@ export function asyncHandler(
  * Validate required fields
  */
 export function validateRequiredFields(
-  data: Record<string, any>,
+  data: Record<string, unknown>,
   requiredFields: string[]
 ): void {
   const missing = requiredFields.filter(
@@ -201,7 +201,7 @@ export function sanitizeInput(input: string): string {
  */
 export async function logError(
   error: Error | AppError,
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): Promise<void> {
   // In production, send to error tracking service (Sentry, LogRocket, etc.)
   console.error("Error logged:", {

@@ -310,7 +310,7 @@ export async function POST(request: NextRequest) {
       count: records.length,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j query execution error:', error);
 
     return NextResponse.json(

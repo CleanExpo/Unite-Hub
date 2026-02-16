@@ -294,7 +294,7 @@ export async function healthCheck(): Promise<{
         address: info.address,
       },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       status: 'unhealthy',
       message: error.message || 'Neo4j health check failed',

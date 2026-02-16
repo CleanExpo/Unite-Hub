@@ -59,7 +59,7 @@ export async function GET(
     };
 
     return NextResponse.json({ success: true, competitor: transformedCompetitor });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -143,7 +143,7 @@ export async function PUT(
       success: true,
       message: "Competitor updated successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -198,7 +198,7 @@ export async function DELETE(
       success: true,
       message: "Competitor deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

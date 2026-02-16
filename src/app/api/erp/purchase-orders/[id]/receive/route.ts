@@ -50,7 +50,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     });
 
     return NextResponse.json(result, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error receiving stock:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to receive stock' },

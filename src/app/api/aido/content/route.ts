@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
       count: assets.length
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get content assets error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },

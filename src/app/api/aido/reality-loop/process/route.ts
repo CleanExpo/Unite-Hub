@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
             { classification: classification.type, priority: classification.priority, signals: classification.signals }
           );
           return { id: event.id, status: 'success', classification };
-        } catch (err: any) {
+        } catch (err: unknown) {
           return { id: event.id, status: 'failed', error: err.message };
         }
       })
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
       message: `Processed ${successful} events successfully${failed > 0 ? `, ${failed} failed` : ''}`
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Process reality events error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },

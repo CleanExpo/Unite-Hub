@@ -119,7 +119,7 @@ export async function GET(
         updatedAt: step.updated_at,
       })),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -244,7 +244,7 @@ export async function PUT(
         updatedAt: updated.updated_at,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -341,7 +341,7 @@ export async function DELETE(
       success: true,
       message: `Sequence "${sequence.name}" deleted successfully`,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
       message: 'SERP monitoring active. Check back in 6 hours for next update.'
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Monitor SERP error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
@@ -138,7 +138,7 @@ export async function GET(req: NextRequest) {
       message: 'Cron job executed successfully'
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Cron monitoring error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },

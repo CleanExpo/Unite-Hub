@@ -64,7 +64,7 @@ export async function routeWithMonitoring(
 
   try {
     response = await routeToModel(routeOptions);
-  } catch (error: any) {
+  } catch (error: unknown) {
     success = false;
     errorMessage = error.message;
     throw error;

@@ -23,7 +23,7 @@ export async function GET(
     const emails = await db.clientEmails.getByContact(id);
 
     return NextResponse.json({ emails });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -90,7 +90,7 @@ export async function POST(
     });
 
     return NextResponse.json({ email: newEmail }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

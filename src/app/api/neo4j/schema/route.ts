@@ -39,7 +39,7 @@ export async function GET() {
       },
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j schema verification error:', error);
 
     return NextResponse.json(
@@ -80,7 +80,7 @@ export async function POST() {
       },
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j schema initialization error:', error);
 
     return NextResponse.json(
@@ -114,7 +114,7 @@ export async function DELETE() {
       warning: 'All constraints and indexes have been removed',
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j schema drop error:', error);
 
     return NextResponse.json(

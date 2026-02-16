@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
       count: events.length
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get reality events error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },

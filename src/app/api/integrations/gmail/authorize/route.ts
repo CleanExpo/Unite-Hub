@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       authUrl,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gmail authorization error:", error);
     return NextResponse.json(
       { error: "Failed to generate authorization URL" },

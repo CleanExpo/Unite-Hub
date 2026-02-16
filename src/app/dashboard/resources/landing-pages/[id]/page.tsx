@@ -157,7 +157,7 @@ export default function LandingPageDetailPage() {
         const data = await response.json();
         throw new Error(data.error || "Failed to update");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message || "Failed to update section",
@@ -209,7 +209,7 @@ export default function LandingPageDetailPage() {
       } else {
         throw new Error(data.error);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message || "Failed to regenerate section",
@@ -265,7 +265,7 @@ export default function LandingPageDetailPage() {
         const data = await response.json();
         throw new Error(data.error || "Failed to update");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message || "Failed to update section",
@@ -313,7 +313,7 @@ export default function LandingPageDetailPage() {
         const data = await response.json();
         throw new Error(data.error || "Failed to update");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message || "Failed to update SEO",

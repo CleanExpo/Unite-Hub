@@ -63,7 +63,7 @@ export async function GET(
     if (error) throw error;
 
     return NextResponse.json({ success: true, task });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Failed to fetch task', { error });
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
@@ -97,7 +97,7 @@ export async function PATCH(
     logger.info('Task updated', { taskId });
 
     return NextResponse.json({ success: true, task });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Failed to update task', { error });
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
@@ -127,7 +127,7 @@ export async function DELETE(
     logger.info('Task deleted', { taskId });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Failed to delete task', { error });
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }

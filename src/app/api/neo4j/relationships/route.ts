@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
       pathCount: paths.length,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j relationship traversal error:', error);
 
     return NextResponse.json(
@@ -210,7 +210,7 @@ export async function GET(request: NextRequest) {
       totalTypes: relationshipTypes.length,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j relationship types error:', error);
 
     return NextResponse.json(

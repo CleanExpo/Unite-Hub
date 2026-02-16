@@ -71,7 +71,7 @@ export default function ContactsPage() {
       }
 
       setAllContacts(data || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching contacts:", err);
       setError(err.message || "An unexpected error occurred");
     } finally {

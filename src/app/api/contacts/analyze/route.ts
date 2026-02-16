@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       success: true,
       analysis,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -91,7 +91,7 @@ export async function PUT(request: NextRequest) {
       errors: results.errors,
       message: `Successfully analyzed ${results.analyzed} contacts (${results.errors} errors)`,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

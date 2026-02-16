@@ -65,7 +65,7 @@ export async function generateImage(
       url: image.url!,
       revisedPrompt: image.revised_prompt,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("DALL-E generation error:", error);
     throw new Error(`Failed to generate image: ${error.message}`);
   }

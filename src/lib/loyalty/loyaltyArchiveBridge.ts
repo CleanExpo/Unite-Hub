@@ -4,11 +4,13 @@
  * Part of v1_1_05: Loyalty & Referral Pivot Engine
  */
 
+import { SupabaseClient } from '@supabase/supabase-js';
+
 export interface LoyaltyArchiveEvent {
   eventType: string; // 'credit_issued', 'credit_redeemed', 'referral_event', 'attribution_created', 'fraud_detected'
   workspaceId: string;
   userId: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   timestamp?: string;
 }
 
@@ -17,7 +19,7 @@ export interface ReferralArchiveEvent {
   workspaceId: string;
   referrerId: string;
   referredUserId?: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   fraudScore?: number;
   timestamp?: string;
 }
@@ -26,7 +28,7 @@ export interface ReferralArchiveEvent {
  * Log a loyalty event to the archive
  */
 export async function logLoyaltyEvent(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   event: LoyaltyArchiveEvent
 ): Promise<{ success: boolean; eventId?: string; message?: string }> {
   try {
@@ -76,7 +78,7 @@ export async function logLoyaltyEvent(
  * Log a referral event to the archive
  */
 export async function logReferralEvent(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   event: ReferralArchiveEvent
 ): Promise<{ success: boolean; eventId?: string; message?: string }> {
   try {
@@ -132,12 +134,12 @@ export async function logReferralEvent(
  * Log a fraud detection event
  */
 export async function logFraudDetection(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   fraudType: string,
   fraudScore: number,
-  details: Record<string, any>
+  details: Record<string, unknown>
 ): Promise<{ success: boolean; eventId?: string; message?: string }> {
   try {
     const { data, error } = await supabaseAdmin
@@ -186,7 +188,7 @@ export async function logFraudDetection(
  * Log a redemption event
  */
 export async function logRedemptionEvent(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   rewardName: string,
@@ -244,13 +246,13 @@ export async function logRedemptionEvent(
  * Get loyalty event history from archive
  */
 export async function getLoyaltyEventHistory(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   eventType?: string,
   limit: number = 50,
   offset: number = 0
-): Promise<any[]> {
+): Promise<Record<string, unknown>[]> {
   try {
     let query = supabaseAdmin
       .from('aiMemory')
@@ -283,13 +285,13 @@ export async function getLoyaltyEventHistory(
  * Get referral event history from archive
  */
 export async function getReferralEventHistory(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   eventType?: string,
   limit: number = 50,
   offset: number = 0
-): Promise<any[]> {
+): Promise<Record<string, unknown>[]> {
   try {
     let query = supabaseAdmin
       .from('aiMemory')
@@ -322,11 +324,11 @@ export async function getReferralEventHistory(
  * Get fraud alerts from audit log
  */
 export async function getFraudAlerts(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   limit: number = 50,
   offset: number = 0
-): Promise<any[]> {
+): Promise<Record<string, unknown>[]> {
   try {
     const { data, error } = await supabaseAdmin
       .from('auditLogs')
@@ -353,7 +355,7 @@ export async function getFraudAlerts(
  * Batch log multiple events
  */
 export async function batchLogEvents(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   events: (LoyaltyArchiveEvent | ReferralArchiveEvent)[]
 ): Promise<{ success: boolean; logged: number; failed: number; message?: string }> {
   let logged = 0;

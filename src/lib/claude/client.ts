@@ -53,7 +53,7 @@ export async function createMessage(
     });
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Claude API error:', error);
     throw new Error(`Claude API request failed: ${error.message}`);
   }
@@ -79,7 +79,7 @@ export function parseJSONResponse<T = any>(response: Anthropic.Message): T {
 
     // Try to parse the entire text as JSON
     return JSON.parse(text);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to parse Claude JSON response:', error);
     throw new Error(`Failed to parse JSON from Claude response: ${error.message}`);
   }

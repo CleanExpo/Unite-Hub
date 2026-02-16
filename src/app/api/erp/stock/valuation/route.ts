@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     );
 
     return NextResponse.json({ valuation });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error calculating inventory valuation:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to calculate inventory valuation' },

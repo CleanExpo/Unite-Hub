@@ -7,21 +7,52 @@ import { getSupabaseServer } from '@/lib/supabase';
 import { getEmailSummary } from './founderEmailService';
 import { getMemoryStats } from './founderMemoryService';
 
+interface EmailSummaryData {
+  total: number;
+  byCategory: Record<string, number>;
+  byPriority: Record<string, number>;
+  actionItemsCount: number;
+}
+
+interface MemoryStatsData {
+  totalNodes: number;
+  byType: Record<string, number>;
+  avgImportance: number;
+  recentlyAccessed: number;
+}
+
+interface FinancialRecord {
+  document_type: string;
+  total_amount: number | null;
+  created_at: string;
+}
+
+interface AlertItem {
+  type: string;
+  message: string;
+  severity: string;
+}
+
+interface InsightItem {
+  insight: string;
+  category: string;
+}
+
 export interface Briefing {
   id: string;
   founder_id: string;
   briefing_date: string;
   briefing_type: 'daily' | 'weekly' | 'monthly' | 'ad_hoc';
   executive_summary: string;
-  key_metrics: Record<string, any>;
-  client_updates: any[];
-  financial_summary: Record<string, any>;
-  staff_activity: any[];
-  action_items: any[];
-  upcoming_events: any[];
-  alerts: any[];
-  ai_insights: any[];
-  recommendations: any[];
+  key_metrics: Record<string, unknown>;
+  client_updates: { id: string; name: string; status: string; score: number | null }[];
+  financial_summary: Record<string, unknown>;
+  staff_activity: { staff_id: string; tasks: number; hours: number }[];
+  action_items: { title: string; priority: string; source: string }[];
+  upcoming_events: unknown[];
+  alerts: { type: string; message: string; severity: string }[];
+  ai_insights: { insight: string; category: string }[];
+  recommendations: { recommendation: string; priority: string }[];
   is_read: boolean;
   created_at: string;
 }
@@ -226,10 +257,10 @@ export async function markBriefingRead(
 
 // Helper functions
 function generateAlerts(
-  emailSummary: any,
-  financials: any[]
-): { type: string; message: string; severity: string }[] {
-  const alerts: { type: string; message: string; severity: string }[] = [];
+  emailSummary: EmailSummaryData,
+  financials: FinancialRecord[]
+): AlertItem[] {
+  const alerts: AlertItem[] = [];
 
   if (emailSummary.byPriority?.urgent > 0) {
     alerts.push({
@@ -261,8 +292,8 @@ function generateAlerts(
 }
 
 function generateActionItems(
-  emailSummary: any,
-  alerts: any[]
+  emailSummary: EmailSummaryData,
+  alerts: AlertItem[]
 ): { title: string; priority: string; source: string }[] {
   const items: { title: string; priority: string; source: string }[] = [];
 
@@ -294,12 +325,12 @@ function generateActionItems(
 }
 
 function generateInsights(
-  emailSummary: any,
-  memoryStats: any,
+  emailSummary: EmailSummaryData,
+  memoryStats: MemoryStatsData,
   invoiceTotal: number,
   receiptTotal: number
-): { insight: string; category: string }[] {
-  const insights: { insight: string; category: string }[] = [];
+): InsightItem[] {
+  const insights: InsightItem[] = [];
 
   if (invoiceTotal > receiptTotal * 2) {
     insights.push({
@@ -326,8 +357,8 @@ function generateInsights(
 }
 
 function generateRecommendations(
-  alerts: any[],
-  insights: any[]
+  alerts: AlertItem[],
+  insights: InsightItem[]
 ): { recommendation: string; priority: string }[] {
   const recommendations: { recommendation: string; priority: string }[] = [];
 
@@ -349,7 +380,7 @@ function generateRecommendations(
 }
 
 function createExecutiveSummary(
-  emailSummary: any,
+  emailSummary: EmailSummaryData,
   invoiceTotal: number,
   receiptTotal: number,
   clientCount: number,

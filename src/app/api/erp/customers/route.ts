@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const customers = await invoicingService.listCustomers(workspaceId);
 
     return NextResponse.json({ customers });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching customers:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch customers' },
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ customer }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating customer:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create customer' },

@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({ data: rollbacks });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Rollback GET error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ data: result });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Rollback POST error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

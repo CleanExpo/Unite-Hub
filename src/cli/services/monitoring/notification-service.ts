@@ -126,7 +126,7 @@ export class NotificationService {
             deliveryStatus[channel] = 'sent';
             break;
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(`Failed to send via ${channel}:`, error.message);
         deliveryStatus[channel] = 'failed';
       }
@@ -319,7 +319,7 @@ export class NotificationService {
             deliveryStatus[channel] = 'sent';
             break;
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(`Retry failed for ${channel}:`, error.message);
         deliveryStatus[channel] = 'failed';
       }

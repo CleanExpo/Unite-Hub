@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
       count: signals.length
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get change signals error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },

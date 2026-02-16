@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
       message: 'Content generated successfully. Review and publish when ready.'
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Generate content error:', error);
 
     // Handle specific validation errors

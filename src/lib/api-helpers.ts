@@ -43,7 +43,7 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function authenticateRequest(req: NextRequest): Promise<{
   user: { id: string; email?: string } | null;
-  supabase: any;
+  supabase: unknown;
   error: NextResponse | null;
 }> {
   try {
@@ -104,7 +104,7 @@ export async function getUserId(req: NextRequest): Promise<{
 // RESPONSE HELPERS
 // ============================================================================
 
-export interface SuccessResponse<T = any> {
+export interface SuccessResponse<T = unknown> {
   success: true;
   data?: T;
   message?: string;
@@ -131,7 +131,7 @@ export interface ErrorResponse {
  * successResponse({ users: [...] }, { count: 10, total: 100 })
  * successResponse(null, null, "Operation completed successfully", 201)
  */
-export function successResponse<T = any>(
+export function successResponse<T = unknown>(
   data?: T,
   meta?: SuccessResponse["meta"],
   message?: string,
@@ -339,7 +339,7 @@ export function validateURL(url: string): boolean {
  * const errors = validateRequired(body, ["name", "email", "password"]);
  * if (errors) return validationError(errors);
  */
-export function validateRequired<T extends Record<string, any>>(
+export function validateRequired<T extends Record<string, unknown>>(
   data: T,
   fields: (keyof T)[]
 ): Record<string, string> | null {
@@ -367,7 +367,7 @@ export function validateRequired<T extends Record<string, any>>(
  *   password: { min: 8, max: 128 }
  * });
  */
-export function validateLength<T extends Record<string, any>>(
+export function validateLength<T extends Record<string, unknown>>(
   data: T,
   constraints: Record<keyof T, { min?: number; max?: number }>
 ): Record<string, string> | null {
@@ -406,7 +406,7 @@ export function validateLength<T extends Record<string, any>>(
  *   role: ["admin", "user"]
  * });
  */
-export function validateEnum<T extends Record<string, any>>(
+export function validateEnum<T extends Record<string, unknown>>(
   data: T,
   enums: Record<keyof T, readonly string[]>
 ): Record<string, string> | null {
@@ -548,8 +548,8 @@ export function createPaginationMeta(
 export function parseQueryFilters(
   params: URLSearchParams,
   filterConfig: Record<string, "eq" | "neq" | "gt" | "gte" | "lt" | "lte" | "like" | "ilike" | "in">
-): Record<string, { operator: string; value: any }> {
-  const filters: Record<string, { operator: string; value: any }> = {};
+): Record<string, { operator: string; value: string | string[] }> {
+  const filters: Record<string, { operator: string; value: string | string[] }> = {};
 
   for (const [field, operator] of Object.entries(filterConfig)) {
     const value = params.get(field);
@@ -577,10 +577,22 @@ export function parseQueryFilters(
  * let query = supabase.from("contacts").select("*");
  * query = applyQueryFilters(query, filters);
  */
-export function applyQueryFilters<T>(
-  query: any,
-  filters: Record<string, { operator: string; value: any }>
-): any {
+interface SupabaseQueryBuilder {
+  eq(column: string, value: string | string[]): SupabaseQueryBuilder;
+  neq(column: string, value: string | string[]): SupabaseQueryBuilder;
+  gt(column: string, value: string | string[]): SupabaseQueryBuilder;
+  gte(column: string, value: string | string[]): SupabaseQueryBuilder;
+  lt(column: string, value: string | string[]): SupabaseQueryBuilder;
+  lte(column: string, value: string | string[]): SupabaseQueryBuilder;
+  like(column: string, value: string | string[]): SupabaseQueryBuilder;
+  ilike(column: string, value: string): SupabaseQueryBuilder;
+  in(column: string, value: string[]): SupabaseQueryBuilder;
+}
+
+export function applyQueryFilters(
+  query: SupabaseQueryBuilder,
+  filters: Record<string, { operator: string; value: string | string[] }>
+): SupabaseQueryBuilder {
   for (const [field, { operator, value }] of Object.entries(filters)) {
     switch (operator) {
       case "eq":
@@ -665,7 +677,7 @@ export function parseSorting(
 /**
  * Formats Supabase errors for API responses
  */
-export function formatSupabaseError(error: any): { message: string; details?: string } {
+export function formatSupabaseError(error: unknown): { message: string; details?: string } {
   if (!error) return { message: "Unknown error" };
 
   // PostgreSQL error codes
@@ -676,16 +688,18 @@ export function formatSupabaseError(error: any): { message: string; details?: st
     "42501": "Permission denied",
   };
 
-  if (error.code && pgErrorMessages[error.code]) {
+  const err = error as Record<string, unknown>;
+
+  if (typeof err.code === "string" && pgErrorMessages[err.code]) {
     return {
-      message: pgErrorMessages[error.code],
-      details: error.message,
+      message: pgErrorMessages[err.code],
+      details: typeof err.message === "string" ? err.message : undefined,
     };
   }
 
   return {
-    message: error.message || "Database operation failed",
-    details: error.hint || error.details,
+    message: typeof err.message === "string" ? err.message : "Database operation failed",
+    details: typeof err.hint === "string" ? err.hint : typeof err.details === "string" ? err.details : undefined,
   };
 }
 
@@ -702,32 +716,35 @@ export function formatSupabaseError(error: any): { message: string; details?: st
  */
 export async function safeAsync<T>(
   operation: () => Promise<NextResponse<T>>,
-  onError?: (error: any) => NextResponse<T>
+  onError?: (error: unknown) => NextResponse<T>
 ): Promise<NextResponse<T>> {
   try {
     return await operation();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[safeAsync] Error:", error);
 
     if (onError) {
       return onError(error);
     }
 
+    const message = error instanceof Error ? error.message : "Internal server error";
+    const stack = error instanceof Error ? error.stack : undefined;
+
     // Default error handling
-    if (error.message?.includes("Unauthorized")) {
+    if (message.includes("Unauthorized")) {
       return unauthorizedError() as NextResponse<T>;
     }
-    if (error.message?.includes("Forbidden")) {
+    if (message.includes("Forbidden")) {
       return forbiddenError() as NextResponse<T>;
     }
-    if (error.message?.includes("not found")) {
+    if (message.includes("not found")) {
       return notFoundError() as NextResponse<T>;
     }
 
     return errorResponse(
-      error.message || "Internal server error",
+      message,
       500,
-      process.env.NODE_ENV === "development" ? error.stack : undefined
+      process.env.NODE_ENV === "development" ? stack : undefined
     ) as NextResponse<T>;
   }
 }
@@ -743,7 +760,7 @@ export async function safeAsync<T>(
  * const { body, error } = await parseRequestBody(req);
  * if (error) return error;
  */
-export async function parseRequestBody<T = any>(
+export async function parseRequestBody<T = unknown>(
   req: Request
 ): Promise<{ body: T | null; error: NextResponse | null }> {
   try {
@@ -767,10 +784,10 @@ export async function parseRequestBody<T = any>(
 export async function extractFields<T extends string>(
   req: Request,
   requiredFields: T[]
-): Promise<{ fields: Record<T, any> | null; error: NextResponse | null }> {
-  const { body, error } = await parseRequestBody(req);
+): Promise<{ fields: Record<T, unknown> | null; error: NextResponse | null }> {
+  const { body, error } = await parseRequestBody<Record<string, unknown>>(req);
 
-  if (error) return { fields: null, error };
+  if (error || !body) return { fields: null, error };
 
   const validationErrors = validateRequired(body, requiredFields);
 
@@ -778,5 +795,5 @@ export async function extractFields<T extends string>(
     return { fields: null, error: validationError(validationErrors) };
   }
 
-  return { fields: body, error: null };
+  return { fields: body as Record<T, unknown>, error: null };
 }

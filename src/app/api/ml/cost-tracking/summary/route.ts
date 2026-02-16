@@ -114,7 +114,7 @@ export async function GET(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Cost summary error:", error);
     return NextResponse.json(
       { error: "Cost summary failed", details: error.message },

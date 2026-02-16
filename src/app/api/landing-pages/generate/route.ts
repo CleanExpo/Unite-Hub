@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
       checklistId: savedChecklist.id,
       message: "Landing page checklist generated successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error generating landing page checklist:", error);
     return NextResponse.json(
       { error: error.message || "Failed to generate checklist" },

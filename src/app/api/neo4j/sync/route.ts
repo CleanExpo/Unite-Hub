@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       ...result,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j sync error:', error);
 
     return NextResponse.json(
@@ -119,7 +119,7 @@ export async function GET() {
       modes: ['full', 'incremental'],
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j sync status error:', error);
 
     return NextResponse.json(

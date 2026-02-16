@@ -133,7 +133,7 @@ export async function processGmailWithGemini(
 
         processed++;
         console.log(`✅ Processed email ${email.id}: ${intelligence.intent} (${intelligence.priority})`);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(`❌ Failed to process email ${email.id}:`, error.message);
         failed++;
 
@@ -151,7 +151,7 @@ export async function processGmailWithGemini(
 
     console.log(`📊 Gmail intelligence: ${processed} processed, ${failed} failed`);
     return { processed, failed, budgetExceeded: false };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Gmail intelligence processing error:', error);
     throw error;
   }

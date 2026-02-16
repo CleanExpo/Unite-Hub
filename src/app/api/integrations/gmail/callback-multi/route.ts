@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(
       `${process.env.NEXT_PUBLIC_URL}/dashboard/settings/integrations?gmail_connected=true&email=${encodeURIComponent(integration.email_address)}`
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gmail callback error:", error);
     return NextResponse.redirect(
       `${process.env.NEXT_PUBLIC_URL}/dashboard/settings/integrations?error=${encodeURIComponent(error.message || "gmail_connection_failed")}`

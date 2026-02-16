@@ -113,7 +113,7 @@ export async function createApiKey(input: CreateApiKeyInput): Promise<CreateApiK
       apiKey: data as ApiKey,
       rawKey, // Return raw key ONLY once
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unexpected error creating API key:', error);
     return null;
   }
@@ -164,7 +164,7 @@ export async function verifyApiKey(
       .catch((err) => console.error('Failed to update API key usage:', err));
 
     return apiKey;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unexpected error verifying API key:', error);
     return null;
   }
@@ -193,7 +193,7 @@ export async function listApiKeys(tenantId: string): Promise<ApiKey[]> {
     }
 
     return (data as ApiKey[]) || [];
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unexpected error listing API keys:', error);
     return [];
   }
@@ -220,7 +220,7 @@ export async function getApiKey(tenantId: string, keyId: string): Promise<ApiKey
     }
 
     return data as ApiKey;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unexpected error getting API key:', error);
     return null;
   }
@@ -259,7 +259,7 @@ export async function revokeApiKey(
     }
 
     return data as ApiKey;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Unexpected error revoking API key:', error);
     return null;
   }

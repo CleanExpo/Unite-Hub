@@ -299,7 +299,7 @@ export class CredentialAlertService {
               }
               break;
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error(`Failed to send alert via ${channel}:`, error.message);
         }
       }

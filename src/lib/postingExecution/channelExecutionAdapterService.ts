@@ -25,7 +25,7 @@ export async function executeOnChannel(
 function getChannelAdapter(
   channel: PostingChannel
 ): (req: ChannelExecutionRequest) => Promise<ChannelExecutionResponse> {
-  const adapters: Record<PostingChannel, any> = {
+  const adapters: Record<PostingChannel, (req: ChannelExecutionRequest) => Promise<ChannelExecutionResponse>> = {
     fb: executeFacebook,
     ig: executeInstagram,
     tiktok: executeTikTok,
@@ -81,10 +81,10 @@ async function executeFacebook(
       url: `https://facebook.com/${data.id}`,
       platformResponse: data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
       errorCode: 'FB_API_ERROR',
     };
   }
@@ -165,10 +165,10 @@ async function executeInstagram(
       url: `https://instagram.com/p/${publish.id}`,
       platformResponse: publish,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
       errorCode: 'IG_API_ERROR',
     };
   }
@@ -221,10 +221,10 @@ async function executeTikTok(
       postId: data.data?.publish_id,
       platformResponse: data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
       errorCode: 'TIKTOK_API_ERROR',
     };
   }
@@ -283,10 +283,10 @@ async function executeLinkedIn(
       url: `https://linkedin.com/feed/update/${data.id}`,
       platformResponse: data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
       errorCode: 'LINKEDIN_API_ERROR',
     };
   }
@@ -349,10 +349,10 @@ async function executeGMB(
       postId: data.name,
       platformResponse: data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
       errorCode: 'GMB_API_ERROR',
     };
   }
@@ -403,10 +403,10 @@ async function executeReddit(
       url: data.json?.data?.url,
       platformResponse: data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
       errorCode: 'REDDIT_API_ERROR',
     };
   }
@@ -486,10 +486,10 @@ async function executeX(
       url: `https://twitter.com/i/status/${data.data?.id}`,
       platformResponse: data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
       errorCode: 'X_API_ERROR',
     };
   }

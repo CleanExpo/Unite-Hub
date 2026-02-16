@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       competitorId: competitor.id,
       message: "Competitor added successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -177,7 +177,7 @@ export async function GET(request: NextRequest) {
     }));
 
     return NextResponse.json({ success: true, competitors: transformedCompetitors });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

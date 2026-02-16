@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       hook: updatedHook,
       message: is_favorite ? "Added to favorites" : "Removed from favorites",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
       hooks: favoriteHooks,
       total: favoriteHooks.length,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

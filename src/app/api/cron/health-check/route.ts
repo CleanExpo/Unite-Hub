@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
       } else {
         logCheck('Database Connection', 'pass', 'Connected');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       logCheck('Database Connection', 'fail', error.message);
     }
 
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
         messages: [{ role: 'user', content: 'test' }],
       });
       logCheck('Anthropic API', 'pass', 'API key valid');
-    } catch (error: any) {
+    } catch (error: unknown) {
       logCheck('Anthropic API', 'fail', error.message);
     }
 
@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
       const stripe = getStripeClient();
       const balance = await stripe.balance.retrieve();
       logCheck('Stripe API', 'pass', `Balance retrieved`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       logCheck('Stripe API', 'fail', error.message);
     }
 
@@ -119,7 +119,7 @@ export async function GET(req: NextRequest) {
         } else {
           logCheck(`Table: ${table}`, 'pass', 'Table exists');
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         logCheck(`Table: ${table}`, 'fail', error.message);
       }
     }
@@ -148,7 +148,7 @@ export async function GET(req: NextRequest) {
       } else {
         logCheck('Site Uptime', 'fail', `Status ${response.status}`);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       logCheck('Site Uptime', 'fail', error.message);
       await logUptimeCheck({
         endpoint: `${process.env.NEXT_PUBLIC_APP_URL}/api/health`,

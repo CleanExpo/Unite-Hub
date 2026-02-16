@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Prediction error:", error);
     return NextResponse.json(
       { error: "Prediction failed", details: error.message },

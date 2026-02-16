@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
       success: true,
       playbooks,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get playbooks error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
       actions,
       autoExecuted: autoResults.filter(r => r.success).length,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Generate playbook error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

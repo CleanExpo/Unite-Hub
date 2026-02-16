@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       topic
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Create topic error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
@@ -110,7 +110,7 @@ export async function GET(req: NextRequest) {
       count: topics.length
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get topics error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },

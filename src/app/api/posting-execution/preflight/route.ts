@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({ data: preflights });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Preflight GET error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ data: result });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Preflight POST error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

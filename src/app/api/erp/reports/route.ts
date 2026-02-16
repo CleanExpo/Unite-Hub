@@ -147,7 +147,7 @@ export async function GET(request: NextRequest) {
       default:
         return NextResponse.json({ error: `Unknown report type: ${reportType}` }, { status: 400 });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error generating report:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to generate report' },

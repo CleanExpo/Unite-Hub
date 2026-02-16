@@ -37,7 +37,7 @@ export async function GET(
       asset
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get content asset error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
@@ -93,7 +93,7 @@ export async function PATCH(
       message: updates.status === 'published' ? 'Content published successfully' : 'Content updated successfully'
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Update content asset error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },

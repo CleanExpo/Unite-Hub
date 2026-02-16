@@ -23,7 +23,7 @@ export async function PUT(
     const updatedEmail = await db.clientEmails.setPrimary(emailId, id);
 
     return NextResponse.json({ email: updatedEmail });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

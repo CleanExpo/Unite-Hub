@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       { error: "Either emailId or batch=true must be provided" },
       { status: 400 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

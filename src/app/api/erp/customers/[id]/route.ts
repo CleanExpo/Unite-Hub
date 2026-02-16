@@ -32,7 +32,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     return NextResponse.json({ customer });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching customer:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch customer' },
@@ -64,7 +64,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const customer = await invoicingService.updateCustomer(workspace_id, id, updates);
 
     return NextResponse.json({ customer });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating customer:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to update customer' },

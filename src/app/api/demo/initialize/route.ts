@@ -325,7 +325,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Demo initialization error:", error);
 
     return NextResponse.json(
@@ -407,7 +407,7 @@ export async function GET(request: NextRequest) {
       },
       message: "Demo environment is fully initialized",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Demo status check error:", error);
 
     return NextResponse.json(
@@ -459,7 +459,7 @@ export async function DELETE(request: NextRequest) {
       message: "Demo data cleaned up successfully",
       note: "All demo organization data has been removed (cascaded deletion)",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Demo cleanup error:", error);
 
     return NextResponse.json(

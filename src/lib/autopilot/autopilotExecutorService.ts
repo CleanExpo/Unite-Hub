@@ -57,7 +57,7 @@ export async function executeAction(
       actionId: action.id,
       result,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Update action with error
     await updateActionState(action.id, 'suggested', {
       error: error.message,

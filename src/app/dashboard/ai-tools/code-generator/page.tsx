@@ -51,7 +51,7 @@ export default function CodeGeneratorPage() {
 
       const data = await response.json();
       setGeneratedCode(data.code || "");
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message || "Failed to generate code");
     } finally {
       setLoading(false);

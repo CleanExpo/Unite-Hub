@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
         const dashboardData = await dashboardService.getDashboardData(workspaceId);
         return NextResponse.json(dashboardData);
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching dashboard data:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch dashboard data' },

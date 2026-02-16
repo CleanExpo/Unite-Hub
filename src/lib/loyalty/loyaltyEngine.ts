@@ -4,7 +4,17 @@
  * Part of v1_1_05: Loyalty & Referral Pivot Engine
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+interface LoyaltyCreditRow {
+  user_id: string;
+  balance: number;
+  lifetime_earned: number;
+  lifetime_redeemed: number;
+  monthly_cap: number;
+  monthly_earned: number;
+  workspace_id: string;
+}
 
 export interface LoyaltyBalance {
   balance: bigint;
@@ -48,7 +58,7 @@ interface TransactionDetails {
  * Enforces monthly caps and returns detailed result
  */
 export async function issueCredits(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   amount: bigint,
@@ -106,7 +116,7 @@ export async function issueCredits(
  * Redeem credits for a reward
  */
 export async function redeemCredits(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   amount: bigint,
@@ -153,7 +163,7 @@ export async function redeemCredits(
  * Get current credit balance for a user
  */
 export async function getBalance(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string
 ): Promise<LoyaltyBalance | null> {
@@ -201,13 +211,13 @@ export async function getBalance(
  * Get credit history with optional filtering
  */
 export async function getCreditHistory(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   limit: number = 50,
   offset: number = 0,
   transactionType?: string
-): Promise<any[]> {
+): Promise<Record<string, unknown>[]> {
   try {
     let query = supabaseAdmin
       .from('loyalty_credit_ledger')
@@ -239,7 +249,7 @@ export async function getCreditHistory(
  * Get monthly credit progress
  */
 export async function getMonthlyProgress(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string
 ): Promise<{
@@ -278,7 +288,7 @@ export async function getMonthlyProgress(
  * Check if user can earn more credits this month
  */
 export async function canEarnMoreCredits(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string
 ): Promise<boolean> {
@@ -290,7 +300,7 @@ export async function canEarnMoreCredits(
  * Get workspace-wide loyalty stats (founder only)
  */
 export async function getWorkspaceStats(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string
 ): Promise<{
   totalUsersWithCredits: number;
@@ -320,22 +330,24 @@ export async function getWorkspaceStats(
       };
     }
 
-    const totalIssued = credits.reduce(
-      (sum: bigint, c: any) => sum + BigInt(c.lifetime_earned),
+    const allCredits: LoyaltyCreditRow[] = credits;
+
+    const totalIssued = allCredits.reduce(
+      (sum: bigint, c) => sum + BigInt(c.lifetime_earned),
       0n
     );
-    const totalRedeemed = credits.reduce(
-      (sum: bigint, c: any) => sum + BigInt(c.lifetime_redeemed),
+    const totalRedeemed = allCredits.reduce(
+      (sum: bigint, c) => sum + BigInt(c.lifetime_redeemed),
       0n
     );
-    const avgBalance = credits.length > 0
-      ? totalIssued / BigInt(credits.length)
+    const avgBalance = allCredits.length > 0
+      ? totalIssued / BigInt(allCredits.length)
       : 0n;
 
-    const topRedeemers = credits
-      .sort((a: any, b: any) => b.lifetime_redeemed - a.lifetime_redeemed)
+    const topRedeemers = allCredits
+      .sort((a, b) => b.lifetime_redeemed - a.lifetime_redeemed)
       .slice(0, 10)
-      .map((c: any) => ({
+      .map((c) => ({
         userId: c.user_id,
         amount: BigInt(c.lifetime_redeemed),
       }));

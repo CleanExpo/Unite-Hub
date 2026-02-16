@@ -79,7 +79,7 @@ export class SecretManagerService {
       try {
         await this.client.getSecret({ name: secretPath });
         secretExists = true;
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (error.code !== 5) {
           // Code 5 = NOT_FOUND
           throw error;
@@ -149,7 +149,7 @@ export class SecretManagerService {
       const secretValue = JSON.parse(jsonString) as SecretValue;
 
       return secretValue;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error.code === 5) {
         // NOT_FOUND
         return null;
@@ -173,7 +173,7 @@ export class SecretManagerService {
 
     try {
       await this.client.deleteSecret({ name: secretPath });
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error.code === 5) {
         // NOT_FOUND - already deleted
         return;
@@ -198,7 +198,7 @@ export class SecretManagerService {
     try {
       await this.client.getSecret({ name: secretPath });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error.code === 5) {
         // NOT_FOUND
         return false;

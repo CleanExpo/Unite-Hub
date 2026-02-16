@@ -57,7 +57,7 @@ Provide only the code without explanations unless specifically asked.`;
       timestamp: new Date().toISOString(),
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return Response.json({ error: "Unauthorized" }, { status: 401 });

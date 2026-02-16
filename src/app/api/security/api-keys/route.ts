@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     const apiKeys = await apiKeyService.listApiKeys(tenantId);
 
     return NextResponse.json({ items: apiKeys });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error listing API keys:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to list API keys' },
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
       rawKey: result.rawKey, // Only returned once!
       warning: 'Save this key now - it will not be shown again',
     }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating API key:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create API key' },
@@ -126,7 +126,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ item: revokedKey });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error revoking API key:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to revoke API key' },

@@ -215,7 +215,7 @@ export async function calculateBetweennessCentrality(
       betweennessCentrality: record.get('betweennessCentrality'),
       degreeCentrality: 0, // Will be populated by combined function
     }));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.warn('[Analytics] GDS library not available, skipping betweenness:', error.message);
     return [];
   }
@@ -280,7 +280,7 @@ export async function calculatePageRank(
       pageRank: record.get('pageRank'),
       degreeCentrality: 0,
     }));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.warn('[Analytics] GDS library not available, skipping PageRank:', error.message);
     return [];
   }
@@ -345,7 +345,7 @@ export async function detectCommunities(workspaceId: string): Promise<Community[
       density: 0, // Calculated separately if needed
       avgAiScore: record.get('avgAiScore'),
     }));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.warn('[Analytics] GDS library not available, using simple clustering:', error.message);
     return await detectCommunitiesSimple(workspaceId);
   }
