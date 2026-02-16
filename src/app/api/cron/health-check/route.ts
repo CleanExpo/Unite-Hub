@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const supabase = getSupabaseClient();
     const checks: Record<string, { status: string; details: string }> = {};
     const criticalIssues: string[] = [];
     const warnings: string[] = [];
@@ -75,19 +76,25 @@ export async function GET(req: NextRequest) {
         logCheck('Database Connection', 'pass', 'Connected');
       }
     } catch (error: unknown) {
-      logCheck('Database Connection', 'fail', error.message);
+      logCheck('Database Connection', 'fail', error instanceof Error ? error.message : String(error));
     }
 
-    // 2. Anthropic API
+    // 2. Anthropic API (lightweight check — validate key exists and format)
     try {
-      const message = await anthropic.messages.create({
-        model: ANTHROPIC_MODELS.OPUS_4_5,
-        max_tokens: 10,
-        messages: [{ role: 'user', content: 'test' }],
-      });
-      logCheck('Anthropic API', 'pass', 'API key valid');
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      if (!apiKey || !apiKey.startsWith('sk-ant-')) {
+        logCheck('Anthropic API', 'fail', 'API key missing or invalid format');
+      } else {
+        // Use cheapest model with minimal tokens to verify connectivity
+        await anthropic.messages.create({
+          model: ANTHROPIC_MODELS.HAIKU_3,
+          max_tokens: 1,
+          messages: [{ role: 'user', content: 'ping' }],
+        });
+        logCheck('Anthropic API', 'pass', 'API key valid');
+      }
     } catch (error: unknown) {
-      logCheck('Anthropic API', 'fail', error.message);
+      logCheck('Anthropic API', 'fail', error instanceof Error ? error.message : String(error));
     }
 
     // 3. Stripe API
@@ -96,7 +103,7 @@ export async function GET(req: NextRequest) {
       const balance = await stripe.balance.retrieve();
       logCheck('Stripe API', 'pass', `Balance retrieved`);
     } catch (error: unknown) {
-      logCheck('Stripe API', 'fail', error.message);
+      logCheck('Stripe API', 'fail', error instanceof Error ? error.message : String(error));
     }
 
     // 4. Critical tables
@@ -120,7 +127,7 @@ export async function GET(req: NextRequest) {
           logCheck(`Table: ${table}`, 'pass', 'Table exists');
         }
       } catch (error: unknown) {
-        logCheck(`Table: ${table}`, 'fail', error.message);
+        logCheck(`Table: ${table}`, 'fail', error instanceof Error ? error.message : String(error));
       }
     }
 
@@ -149,14 +156,15 @@ export async function GET(req: NextRequest) {
         logCheck('Site Uptime', 'fail', `Status ${response.status}`);
       }
     } catch (error: unknown) {
-      logCheck('Site Uptime', 'fail', error.message);
+      const errMsg = error instanceof Error ? error.message : String(error);
+      logCheck('Site Uptime', 'fail', errMsg);
       await logUptimeCheck({
         endpoint: `${process.env.NEXT_PUBLIC_APP_URL}/api/health`,
         method: 'GET',
         expectedStatus: 200,
         actualStatus: 0,
         responseTimeMs: 0,
-        errorMessage: error.message,
+        errorMessage: errMsg,
       });
     }
 

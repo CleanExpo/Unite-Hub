@@ -155,10 +155,11 @@ class HealthCheckManager {
           lastChecked: Date.now(),
         };
       } else {
+        // Redis disconnected but in-memory fallback is functioning
         return {
           name: 'redis',
-          status: 'unhealthy',
-          error: 'Redis disconnected',
+          status: 'degraded',
+          error: 'Redis disconnected, using in-memory fallback',
           lastChecked: Date.now(),
         };
       }
