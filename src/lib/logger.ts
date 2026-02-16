@@ -1,6 +1,8 @@
 import winston from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
+
+// Detect serverless environment (Vercel, AWS Lambda) where filesystem is read-only
+const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.VERCEL_ENV);
 
 // Define log levels
 const levels = {
@@ -56,8 +58,9 @@ if (process.env.NODE_ENV === 'production' || process.env.ENABLE_DB_LOGGING === '
   });
 }
 
-// File transports (only in production or if LOG_TO_FILE is enabled)
-if (process.env.NODE_ENV === 'production' || process.env.LOG_TO_FILE === 'true') {
+// File transports (only when filesystem is writable - skip on serverless platforms)
+if (!isServerless && (process.env.NODE_ENV === 'production' || process.env.LOG_TO_FILE === 'true')) {
+  const DailyRotateFile = require('winston-daily-rotate-file');
   const logDir = process.env.LOG_DIR || path.join(process.cwd(), 'logs');
 
   // Error log
@@ -90,18 +93,27 @@ if (process.env.NODE_ENV === 'production' || process.env.LOG_TO_FILE === 'true')
   );
 }
 
+// Exception/rejection handlers - only use file handlers when filesystem is writable
+const exceptionHandlers: winston.transport[] = [new winston.transports.Console()];
+const rejectionHandlers: winston.transport[] = [new winston.transports.Console()];
+
+if (!isServerless) {
+  const logDir = process.env.LOG_DIR || 'logs';
+  exceptionHandlers.push(
+    new winston.transports.File({ filename: path.join(logDir, 'exceptions.log') })
+  );
+  rejectionHandlers.push(
+    new winston.transports.File({ filename: path.join(logDir, 'rejections.log') })
+  );
+}
+
 // Create logger instance
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || (process.env.NODE_ENV === 'development' ? 'debug' : 'info'),
   levels,
   transports,
-  // Handle uncaught exceptions and unhandled rejections
-  exceptionHandlers: [
-    new winston.transports.File({ filename: path.join(process.env.LOG_DIR || 'logs', 'exceptions.log') }),
-  ],
-  rejectionHandlers: [
-    new winston.transports.File({ filename: path.join(process.env.LOG_DIR || 'logs', 'rejections.log') }),
-  ],
+  exceptionHandlers,
+  rejectionHandlers,
 });
 
 // Export logger and convenience methods
