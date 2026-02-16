@@ -206,7 +206,7 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
         const result = await refreshResponse.json();
         setCalendarPosts(result.data || []);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error generating calendar:", error);
       setError(error.message || "Failed to generate calendar. Please try again.");
     } finally {

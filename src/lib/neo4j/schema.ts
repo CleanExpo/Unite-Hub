@@ -141,7 +141,7 @@ async function createConstraints(): Promise<void> {
   for (const constraint of constraints) {
     try {
       await writeQuery(constraint);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Ignore "already exists" errors
       if (!error.message.includes('already exists')) {
         console.warn(`Constraint creation warning:`, error.message);
@@ -229,7 +229,7 @@ async function createIndexes(): Promise<void> {
   for (const index of indexes) {
     try {
       await writeQuery(index);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Ignore "already exists" errors
       if (!error.message.includes('already exists')) {
         console.warn(`Index creation warning:`, error.message);
@@ -267,7 +267,7 @@ export async function dropSchema(): Promise<void> {
     for (const indexName of indexes) {
       try {
         await writeQuery(`DROP INDEX ${indexName} IF EXISTS`);
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Ignore constraint-backed index errors
         if (!error.message.includes('constraint')) {
           console.warn(`Index drop warning:`, error.message);

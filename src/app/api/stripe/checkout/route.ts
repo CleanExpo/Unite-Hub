@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
       url: session.url,
       customerId: customer.id,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[Stripe Checkout] Error:", error);
     return NextResponse.json(
       {

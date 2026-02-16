@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ sales_orders: salesOrders });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching sales orders:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch sales orders' },
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(result, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating sales order:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create sales order' },

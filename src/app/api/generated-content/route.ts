@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
     }));
 
     return NextResponse.json({ content });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error.message?.includes("Unauthorized")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
         createdAt: data.created_at,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error.message?.includes("Unauthorized")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

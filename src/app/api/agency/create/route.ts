@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       success: true,
       agency,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Create agency error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

@@ -175,7 +175,7 @@ export async function POST(req: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Scraping error:', error);
 
     return NextResponse.json(

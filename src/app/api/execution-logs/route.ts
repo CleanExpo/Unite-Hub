@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ logs: data || [] });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error.message?.includes("Unauthorized")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

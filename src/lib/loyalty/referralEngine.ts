@@ -4,6 +4,42 @@
  * Part of v1_1_05: Loyalty & Referral Pivot Engine
  */
 
+import { SupabaseClient } from '@supabase/supabase-js';
+
+interface ReferralCodeRow {
+  id: string;
+  code: string;
+  campaign: string;
+  times_used: number;
+  referrals_accepted: number;
+  total_credits_issued: number;
+  is_active: boolean;
+  expires_at: string | null;
+  created_at: string;
+}
+
+interface ReferralEventRow {
+  id: string;
+  event_type: string;
+  referred_email: string | null;
+  fraud_score: number;
+  fraud_signals: Record<string, boolean> | null;
+  attribution_confidence: string;
+  is_valid: boolean;
+  created_at: string;
+}
+
+interface ReferralAttributionRow {
+  id: string;
+  referrer_id: string;
+  referred_user_id: string;
+  status: string;
+  referrer_credit_amount: number;
+  referred_user_credit_amount: number;
+  requires_founder_approval: boolean;
+  created_at: string;
+}
+
 export interface ReferralCode {
   id: string;
   code: string;
@@ -42,7 +78,7 @@ export interface ReferralAttribution {
  * Generate a unique referral code for a user
  */
 export async function generateReferralCode(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   campaign: string = 'default'
@@ -83,7 +119,7 @@ export async function generateReferralCode(
  * Get all referral codes for a user
  */
 export async function getUserReferralCodes(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string
 ): Promise<ReferralCode[]> {
@@ -100,7 +136,7 @@ export async function getUserReferralCodes(
       return [];
     }
 
-    return (data || []).map((code: any) => ({
+    return (data || []).map((code: ReferralCodeRow) => ({
       id: code.id,
       code: code.code,
       campaign: code.campaign,
@@ -121,7 +157,7 @@ export async function getUserReferralCodes(
  * Record a referral event and calculate fraud score
  */
 export async function recordReferralEvent(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   referrerId: string,
   referralCodeId: string,
@@ -178,7 +214,7 @@ export async function recordReferralEvent(
  * Get referral events for a user
  */
 export async function getReferrerEvents(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   referrerId: string,
   limit: number = 50,
@@ -198,7 +234,7 @@ export async function getReferrerEvents(
       return [];
     }
 
-    return (data || []).map((event: any) => ({
+    return (data || []).map((event: ReferralEventRow) => ({
       id: event.id,
       eventType: event.event_type,
       referredEmail: event.referred_email,
@@ -218,7 +254,7 @@ export async function getReferrerEvents(
  * Validate and create attribution between referrer and referred user
  */
 export async function createAttribution(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   referrerId: string,
   referredUserId: string,
@@ -271,7 +307,7 @@ export async function createAttribution(
  * Get attributions for a referrer
  */
 export async function getReferrerAttributions(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   referrerId: string,
   status?: string
@@ -294,7 +330,7 @@ export async function getReferrerAttributions(
       return [];
     }
 
-    return (data || []).map((attr: any) => ({
+    return (data || []).map((attr: ReferralAttributionRow) => ({
       id: attr.id,
       referrerId: attr.referrer_id,
       referredUserId: attr.referred_user_id,
@@ -314,7 +350,7 @@ export async function getReferrerAttributions(
  * Get pending attributions requiring founder approval
  */
 export async function getPendingAttributions(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string
 ): Promise<ReferralAttribution[]> {
   try {
@@ -331,7 +367,7 @@ export async function getPendingAttributions(
       return [];
     }
 
-    return (data || []).map((attr: any) => ({
+    return (data || []).map((attr: ReferralAttributionRow) => ({
       id: attr.id,
       referrerId: attr.referrer_id,
       referredUserId: attr.referred_user_id,
@@ -351,7 +387,7 @@ export async function getPendingAttributions(
  * Get referral stats for a user
  */
 export async function getUserReferralStats(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string
 ): Promise<{
@@ -396,20 +432,24 @@ export async function getUserReferralStats(
       };
     }
 
-    const verified = (attributions || []).filter((a: any) => a.status === 'verified');
+    const allAttributions: ReferralAttributionRow[] = attributions || [];
+    const allEvents: ReferralEventRow[] = events || [];
+    const allCodes: ReferralCodeRow[] = codes || [];
+
+    const verified = allAttributions.filter((a) => a.status === 'verified');
     const totalCredits = verified.reduce(
-      (sum: bigint, a: any) => sum + BigInt(a.referrer_credit_amount),
+      (sum: bigint, a) => sum + BigInt(a.referrer_credit_amount),
       0n
     );
 
-    const fraudAlerts = (events || []).filter((e: any) => e.fraud_score >= 70).length;
+    const fraudAlerts = allEvents.filter((e) => e.fraud_score >= 70).length;
 
     return {
-      totalCodeGenerated: (codes || []).length,
-      totalInvitesSent: (events || []).filter((e: any) => e.event_type === 'invite_sent').length,
-      totalAccepted: (attributions || []).filter((a: any) => a.status !== 'rejected').length,
+      totalCodeGenerated: allCodes.length,
+      totalInvitesSent: allEvents.filter((e) => e.event_type === 'invite_sent').length,
+      totalAccepted: allAttributions.filter((a) => a.status !== 'rejected').length,
       totalCreditsEarned: totalCredits,
-      pendingApprovals: (attributions || []).filter((a: any) =>
+      pendingApprovals: allAttributions.filter((a) =>
         a.status === 'pending' && a.requires_founder_approval
       ).length,
       fraudAlerts,

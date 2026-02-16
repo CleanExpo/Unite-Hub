@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       latency_ms: latency,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Opus 4.5 test error:', error);
 
     return NextResponse.json(

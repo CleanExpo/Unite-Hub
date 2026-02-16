@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
         upcoming,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Scheduler GET error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
       { error: 'Invalid action. Use "process"' },
       { status: 400 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Scheduler POST error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

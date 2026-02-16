@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j resolution error:', error);
 
     return NextResponse.json(
@@ -174,7 +174,7 @@ export async function GET(request: NextRequest) {
       stats,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j resolution stats error:', error);
 
     return NextResponse.json(

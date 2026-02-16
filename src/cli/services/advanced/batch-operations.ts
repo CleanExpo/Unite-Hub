@@ -155,7 +155,7 @@ export class BatchOperationsService {
         if (onProgress) {
           onProgress(i + 1, records.length, row, 'success');
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         failed.push({
           item: row,
           error: error.message || 'Unknown error',
@@ -226,7 +226,7 @@ export class BatchOperationsService {
         if (onProgress) {
           onProgress(i + 1, records.length, input, 'success');
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         failed.push({
           item: input,
           error: error.message || 'Unknown error',
@@ -289,7 +289,7 @@ export class BatchOperationsService {
         if (onProgress) {
           onProgress(i + 1, tenantIds.length, tenantId, 'success');
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         failed.push({
           item: tenantId,
           error: error.message || 'Unknown error',
@@ -348,7 +348,7 @@ export class BatchOperationsService {
         if (onProgress) {
           onProgress(i + 1, tenantIds.length, tenantId, 'success');
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         failed.push({
           item: tenantId,
           error: error.message || 'Unknown error',
@@ -410,7 +410,7 @@ export class BatchOperationsService {
         if (onProgress) {
           onProgress(i + 1, workspaceIds.length, workspaceId, 'success');
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         failed.push({
           item: workspaceId,
           error: error.message || 'Unknown error',

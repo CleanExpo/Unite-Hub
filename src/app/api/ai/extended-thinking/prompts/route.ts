@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Prompts fetch error:", error);
     return NextResponse.json(
       { error: "Failed to fetch prompts", details: error.message },

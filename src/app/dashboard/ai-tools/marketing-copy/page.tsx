@@ -53,7 +53,7 @@ export default function MarketingCopyPage() {
 
       const data = await response.json();
       setGeneratedCopy(data.copy);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message || "Failed to generate marketing copy");
     } finally {
       setLoading(false);

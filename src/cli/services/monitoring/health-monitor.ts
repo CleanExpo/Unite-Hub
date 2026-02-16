@@ -131,7 +131,7 @@ export class HealthMonitorService {
         lastChecked: new Date().toISOString(),
         responseTime,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         name: 'Database',
         status: 'unhealthy',
@@ -180,7 +180,7 @@ export class HealthMonitorService {
           shop: tenant.metadata?.shopifyShop,
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         name: 'Shopify API',
         status: 'unhealthy',
@@ -229,7 +229,7 @@ export class HealthMonitorService {
           merchantId: tenant.metadata?.gmcMerchantId,
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         name: 'Google Merchant API',
         status: 'unhealthy',
@@ -320,7 +320,7 @@ export class HealthMonitorService {
           expiringSoon: 0,
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         name: 'Credentials',
         status: 'unhealthy',
@@ -412,7 +412,7 @@ export class HealthMonitorService {
           usedPercent: usedPercent.toFixed(1),
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         name: 'Disk Space',
         status: 'degraded',
@@ -477,7 +477,7 @@ export class HealthMonitorService {
           usedPercent: usedPercent.toFixed(1),
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         name: 'Memory Usage',
         status: 'degraded',

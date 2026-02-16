@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const lowStockProducts = await inventoryService.getLowStockProducts(workspaceId);
 
     return NextResponse.json({ low_stock_products: lowStockProducts });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching low stock products:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch low stock products' },

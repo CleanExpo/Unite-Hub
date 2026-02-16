@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const warehouses = await inventoryService.listWarehouses(workspaceId);
 
     return NextResponse.json({ warehouses });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching warehouses:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch warehouses' },
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ warehouse }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating warehouse:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create warehouse' },

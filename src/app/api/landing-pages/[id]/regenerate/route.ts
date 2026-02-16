@@ -86,7 +86,7 @@ export async function POST(
       success: true,
       message: "Section copy regenerated successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error regenerating section:", error);
     return NextResponse.json(
       { error: error.message || "Failed to regenerate section" },

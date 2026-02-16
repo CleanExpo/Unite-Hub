@@ -244,7 +244,7 @@ export async function POST(request: NextRequest) {
       shortestPathLength: paths.length > 0 ? Math.min(...paths.map((p) => p.pathLength)) : 0,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j relationship find error:', error);
 
     return NextResponse.json(

@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
       offset,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j entities query error:', error);
 
     return NextResponse.json(
@@ -232,7 +232,7 @@ export async function POST(request: NextRequest) {
       count: results.length,
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j entity search error:', error);
 
     return NextResponse.json(

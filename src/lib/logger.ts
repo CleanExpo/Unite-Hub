@@ -109,31 +109,31 @@ export default logger;
 
 // Convenience methods with contextual logging
 export const log = {
-  error: (message: string, meta?: any) => logger.error(message, meta),
-  warn: (message: string, meta?: any) => logger.warn(message, meta),
-  info: (message: string, meta?: any) => logger.info(message, meta),
-  http: (message: string, meta?: any) => logger.http(message, meta),
-  debug: (message: string, meta?: any) => logger.debug(message, meta),
+  error: (message: string, meta?: Record<string, unknown>) => logger.error(message, meta),
+  warn: (message: string, meta?: Record<string, unknown>) => logger.warn(message, meta),
+  info: (message: string, meta?: Record<string, unknown>) => logger.info(message, meta),
+  http: (message: string, meta?: Record<string, unknown>) => logger.http(message, meta),
+  debug: (message: string, meta?: Record<string, unknown>) => logger.debug(message, meta),
 };
 
 // API-specific logger with request tracking
 export function createApiLogger(context: { route?: string; userId?: string; requestId?: string }) {
   return {
-    error: (message: string, meta?: any) =>
+    error: (message: string, meta?: Record<string, unknown>) =>
       logger.error(message, { ...context, ...meta }),
-    warn: (message: string, meta?: any) =>
+    warn: (message: string, meta?: Record<string, unknown>) =>
       logger.warn(message, { ...context, ...meta }),
-    info: (message: string, meta?: any) =>
+    info: (message: string, meta?: Record<string, unknown>) =>
       logger.info(message, { ...context, ...meta }),
-    http: (message: string, meta?: any) =>
+    http: (message: string, meta?: Record<string, unknown>) =>
       logger.http(message, { ...context, ...meta }),
-    debug: (message: string, meta?: any) =>
+    debug: (message: string, meta?: Record<string, unknown>) =>
       logger.debug(message, { ...context, ...meta }),
   };
 }
 
 // Audit logging for sensitive operations
-export function auditLog(action: string, userId: string, details: any) {
+export function auditLog(action: string, userId: string, details: Record<string, unknown>) {
   logger.info('AUDIT', {
     action,
     userId,
@@ -143,7 +143,7 @@ export function auditLog(action: string, userId: string, details: any) {
 }
 
 // Performance logging
-export function perfLog(operation: string, duration: number, meta?: any) {
+export function perfLog(operation: string, duration: number, meta?: Record<string, unknown>) {
   logger.info('PERF', {
     operation,
     duration: `${duration}ms`,
@@ -152,7 +152,7 @@ export function perfLog(operation: string, duration: number, meta?: any) {
 }
 
 // Security logging
-export function securityLog(event: string, severity: 'low' | 'medium' | 'high' | 'critical', details: any) {
+export function securityLog(event: string, severity: 'low' | 'medium' | 'high' | 'critical', details: Record<string, unknown>) {
   const logMethod = severity === 'critical' || severity === 'high' ? logger.error : logger.warn;
   logMethod('SECURITY', {
     event,

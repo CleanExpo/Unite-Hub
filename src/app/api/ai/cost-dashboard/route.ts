@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
     const dashboard = await getAICostDashboard(workspaceId);
 
     return NextResponse.json({ success: true, data: dashboard });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching AI cost dashboard:", error);
     return NextResponse.json(
       { error: "Internal server error", message: error.message },

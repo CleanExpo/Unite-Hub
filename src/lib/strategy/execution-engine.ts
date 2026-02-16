@@ -77,6 +77,22 @@ export interface ExecutionMetrics {
   healthScore: number;
 }
 
+interface AgentTaskRow {
+  id: string;
+  execution_id: string;
+  agent_type: AgentType;
+  description: string;
+  status: TaskStatus;
+  priority: string;
+  dependencies: string[] | null;
+  assigned_at: string | null;
+  completed_at: string | null;
+  result: unknown;
+  error: string | null;
+  retry_count: number;
+  max_retries: number;
+}
+
 /**
  * Main Strategy Execution Engine
  * Orchestrates autonomous execution of strategy L4 tasks
@@ -227,12 +243,14 @@ export class StrategyExecutionEngine {
       if (tasksError) throw tasksError;
       if (!tasks || tasks.length === 0) return;
 
+      const typedTasks = tasks as unknown as AgentTaskRow[];
+
       // Build dependency graph
-      const taskMap = new Map(tasks.map((t) => [t.id, t]));
+      const taskMap = new Map(typedTasks.map((t) => [t.id, t]));
       const processed = new Set<string>();
 
       // Process tasks respecting dependencies
-      for (const task of tasks) {
+      for (const task of typedTasks) {
         await this.processTask(task, taskMap, processed);
       }
 
@@ -260,8 +278,8 @@ export class StrategyExecutionEngine {
    * Process individual task with dependency checking
    */
   private async processTask(
-    task: any,
-    taskMap: Map<string, any>,
+    task: AgentTaskRow,
+    taskMap: Map<string, AgentTaskRow>,
     processed: Set<string>
   ): Promise<void> {
     if (!this.context) return;
@@ -348,7 +366,7 @@ export class StrategyExecutionEngine {
   /**
    * Execute agent task based on type
    */
-  private async executeAgentTask(task: any): Promise<unknown> {
+  private async executeAgentTask(task: AgentTaskRow): Promise<unknown> {
     const { agent_type: agentType } = task;
 
     switch (agentType) {
@@ -369,36 +387,36 @@ export class StrategyExecutionEngine {
     }
   }
 
-  private async executeEmailAgent(task: any): Promise<unknown> {
+  private async executeEmailAgent(task: AgentTaskRow): Promise<unknown> {
     // Delegate to email agent
     console.log(`[EmailAgent] Processing task ${task.id}: ${task.description}`);
     // Implementation in Phase 4 Task 2
     return { status: 'executed', agentType: 'email' };
   }
 
-  private async executeContentAgent(task: any): Promise<unknown> {
+  private async executeContentAgent(task: AgentTaskRow): Promise<unknown> {
     // Delegate to content agent
     console.log(`[ContentAgent] Processing task ${task.id}: ${task.description}`);
     // Implementation in Phase 4 Task 2
     return { status: 'executed', agentType: 'content' };
   }
 
-  private async executeResearchAgent(task: any): Promise<unknown> {
+  private async executeResearchAgent(task: AgentTaskRow): Promise<unknown> {
     console.log(`[ResearchAgent] Processing task ${task.id}: ${task.description}`);
     return { status: 'executed', agentType: 'research' };
   }
 
-  private async executeSchedulingAgent(task: any): Promise<unknown> {
+  private async executeSchedulingAgent(task: AgentTaskRow): Promise<unknown> {
     console.log(`[SchedulingAgent] Processing task ${task.id}: ${task.description}`);
     return { status: 'executed', agentType: 'scheduling' };
   }
 
-  private async executeAnalysisAgent(task: any): Promise<unknown> {
+  private async executeAnalysisAgent(task: AgentTaskRow): Promise<unknown> {
     console.log(`[AnalysisAgent] Processing task ${task.id}: ${task.description}`);
     return { status: 'executed', agentType: 'analysis' };
   }
 
-  private async executeCoordinationAgent(task: any): Promise<unknown> {
+  private async executeCoordinationAgent(task: AgentTaskRow): Promise<unknown> {
     console.log(`[CoordinationAgent] Processing task ${task.id}: ${task.description}`);
     return { status: 'executed', agentType: 'coordination' };
   }

@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(result, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error transferring stock:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to transfer stock' },

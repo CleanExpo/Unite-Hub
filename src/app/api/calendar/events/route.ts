@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       events,
       count: events.length,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       success: true,
       event: createdEvent,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

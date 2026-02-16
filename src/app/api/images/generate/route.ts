@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
           url: result.url,
           revisedPrompt: result.revisedPrompt,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -253,7 +253,7 @@ export async function POST(request: NextRequest) {
       prompt: engineeredPrompt,
       style: recommendedStyle,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -356,7 +356,7 @@ async function checkUsageLimits(
     }
 
     return { allowed: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -408,7 +408,7 @@ async function trackImageGeneration(
         .update({ custom_fields: customFields })
         .eq("id", orgId);
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

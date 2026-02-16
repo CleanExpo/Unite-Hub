@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
           emailId,
           meetingIntent
         );
-      } catch (error: any) {
+      } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       meetingIntent,
       responseEmail,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -32,7 +32,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     return NextResponse.json({ invoice });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching invoice:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch invoice' },
@@ -64,7 +64,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const invoice = await invoicingService.updateInvoice(workspace_id, id, updates);
 
     return NextResponse.json({ invoice });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating invoice:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to update invoice' },
@@ -95,7 +95,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     await invoicingService.deleteInvoice(workspaceId, id);
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting invoice:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to delete invoice' },

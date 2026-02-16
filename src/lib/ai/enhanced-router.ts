@@ -202,7 +202,7 @@ export async function enhancedRouteAI(options: EnhancedRouterOptions): Promise<A
     console.log('🔀 Routing to OpenRouter (cost optimization)');
     return await routeToOpenRouter({ taskType, prompt, systemPrompt, maxTokens, workspaceId });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Enhanced routing error:', error);
 
     // Fallback to OpenRouter on error
@@ -272,7 +272,7 @@ async function routeToOpenRouter(params: {
       latency,
       modelId
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     await trackUsage({
       provider: 'openrouter',
       model: modelId,
@@ -389,7 +389,7 @@ async function routeToAnthropic(params: {
       latency,
       modelId
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     await trackUsage({
       provider: 'anthropic_direct',
       model: modelId,

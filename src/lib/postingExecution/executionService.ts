@@ -10,6 +10,9 @@ import {
   ExecutionStatus,
   ExecutionStats,
   PostingChannel,
+  ChannelCredentials,
+  PreflightResult,
+  PlatformResponse,
 } from './postingExecutionTypes';
 import { getPreflightById } from './preflightService';
 import { executeOnChannel } from './channelExecutionAdapterService';
@@ -90,13 +93,14 @@ export async function executePost(input: ExecutePostInput): Promise<ExecutionRes
 
     return mapToExecutionResult(updated || execution);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     // Update execution as failed
     const { data: failed } = await supabase
       .from('posting_executions')
       .update({
         status: 'failed',
-        error_message: error.message,
+        error_message: errorMessage,
         error_code: 'EXECUTION_ERROR',
         executed_at: new Date().toISOString(),
       })
@@ -240,7 +244,7 @@ export async function retryExecution(executionId: string): Promise<ExecutionResu
 async function getChannelCredentials(
   workspaceId: string,
   channel: PostingChannel
-): Promise<any> {
+): Promise<ChannelCredentials> {
   const supabase = await getSupabaseServer();
 
   const { data } = await supabase
@@ -267,34 +271,34 @@ async function getChannelCredentials(
   };
 }
 
-function generateExecutionTruthNotes(preflight: any, success: boolean): string {
+function generateExecutionTruthNotes(preflight: PreflightResult, success: boolean): string {
   if (success) {
     return `Execution successful. Preflight confidence: ${(preflight.confidenceScore * 100).toFixed(0)}%`;
   }
   return `Execution failed. Preflight confidence was ${(preflight.confidenceScore * 100).toFixed(0)}%`;
 }
 
-function mapToExecutionResult(row: any): ExecutionResult {
+function mapToExecutionResult(row: Record<string, unknown>): ExecutionResult {
   return {
-    id: row.id,
-    preflightId: row.preflight_id,
-    scheduleId: row.schedule_id,
-    clientId: row.client_id,
-    workspaceId: row.workspace_id,
-    channel: row.channel,
-    status: row.status,
-    externalPostId: row.external_post_id,
-    externalUrl: row.external_url,
-    platformResponse: row.platform_response,
-    executionPayload: row.execution_payload,
-    executedAt: row.executed_at,
-    errorMessage: row.error_message,
-    errorCode: row.error_code,
-    retryCount: row.retry_count,
-    truthNotes: row.truth_notes,
-    forcedBy: row.forced_by,
-    forceReason: row.force_reason,
-    metadata: row.metadata,
-    createdAt: row.created_at,
+    id: row.id as string,
+    preflightId: row.preflight_id as string,
+    scheduleId: row.schedule_id as string,
+    clientId: row.client_id as string,
+    workspaceId: row.workspace_id as string,
+    channel: row.channel as PostingChannel,
+    status: row.status as ExecutionStatus,
+    externalPostId: row.external_post_id as string | undefined,
+    externalUrl: row.external_url as string | undefined,
+    platformResponse: row.platform_response as PlatformResponse | undefined,
+    executionPayload: row.execution_payload as ExecutionResult['executionPayload'],
+    executedAt: row.executed_at as string | undefined,
+    errorMessage: row.error_message as string | undefined,
+    errorCode: row.error_code as string | undefined,
+    retryCount: (row.retry_count as number) || 0,
+    truthNotes: row.truth_notes as string | undefined,
+    forcedBy: row.forced_by as string | undefined,
+    forceReason: row.force_reason as string | undefined,
+    metadata: (row.metadata as Record<string, unknown>) || {},
+    createdAt: row.created_at as string,
   };
 }

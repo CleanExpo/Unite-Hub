@@ -255,7 +255,7 @@ Format your response as JSON with this structure:
       })),
       message: "Sequence generated successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

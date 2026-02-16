@@ -166,7 +166,7 @@ export async function POST(req: NextRequest) {
       message: 'Google Curve analysis complete'
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Analyze Google Curve error:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },

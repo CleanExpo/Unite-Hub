@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
       success: true,
       stats,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get stats error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

@@ -48,9 +48,9 @@ export interface MergeResult {
   removedContactId: string;
   conflicts: Array<{
     field: string;
-    value1: any;
-    value2: any;
-    resolution: any;
+    value1: unknown;
+    value2: unknown;
+    resolution: unknown;
     strategy: MergeStrategy;
   }>;
 }
@@ -327,10 +327,10 @@ export async function findDuplicatesForContact(
  */
 function resolveConflict(
   field: string,
-  value1: any,
-  value2: any,
+  value1: unknown,
+  value2: unknown,
   strategy: MergeStrategy
-): any {
+): unknown {
   // Handle null/undefined
   if (!value1 && !value2) return null;
   if (!value1) return value2;
@@ -414,7 +414,7 @@ export async function mergeContacts(
         resolution: resolved,
         strategy,
       });
-      (merged as any)[field] = resolved;
+      (merged as Record<string, unknown>)[field] = resolved;
     }
   }
 

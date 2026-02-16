@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
       message: 'Intent cluster generated successfully'
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Generate intent cluster error:', error);
 
     // Handle specific error types

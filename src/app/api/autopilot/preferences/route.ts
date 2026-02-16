@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
       success: true,
       preferences,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get preferences error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -83,7 +83,7 @@ export async function PUT(req: NextRequest) {
       success: true,
       preferences,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Update preferences error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

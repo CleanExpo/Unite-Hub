@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({ data: results });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Combat results GET error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
       { error: 'Invalid action. Use "run_cycle"' },
       { status: 400 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Combat results POST error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

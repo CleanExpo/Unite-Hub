@@ -52,7 +52,7 @@ export async function GET() {
         status: health.status === 'healthy' ? 200 : 503,
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Neo4j health check error:', error);
 
     return NextResponse.json(

@@ -119,7 +119,7 @@ export abstract class BaseAgent {
           // Record heartbeat
           await this.recordHeartbeat();
 
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error(`❌ Task processing failed:`, error);
 
           const task: AgentTask = JSON.parse(msg.content.toString());

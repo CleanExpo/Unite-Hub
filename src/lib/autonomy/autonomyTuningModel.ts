@@ -54,6 +54,25 @@ export interface CalibratedParameters {
   orchestrationSchedule: Record<string, number>;
 }
 
+interface TuningMetrics {
+  autonomySuccessRate: number;
+  predictionAccuracy: number;
+  falsePositives: number;
+  falseNegatives: number;
+  enforcementEffectiveness: number;
+  blockedByFalsePositives: number;
+  averageResponseTime: number;
+}
+
+interface AggregatedParameters {
+  agentWeights: Record<string, number>;
+  riskWeights: Record<string, number>;
+  uncertaintyScaling: number;
+  reasoningDepthAllocation: Record<string, number>;
+  orchestrationSchedule: Record<string, number>;
+  adjustments: ParameterAdjustment[];
+}
+
 class AutonomyTuningModel {
   private memoryStore = new MemoryStore();
 
@@ -73,8 +92,8 @@ class AutonomyTuningModel {
   async applyCalibrationProposal(params: {
     workspaceId: string;
     cycleId: string;
-    proposals: any[];
-    metrics: any;
+    proposals: unknown[];
+    metrics: TuningMetrics;
     currentParameters: CalibratedParameters;
   }): Promise<TuningResult> {
     const supabase = await getSupabaseServer();
@@ -197,7 +216,7 @@ class AutonomyTuningModel {
    * Compute agent weight adjustments based on performance
    */
   private computeAgentWeightAdjustments(
-    metrics: any,
+    metrics: TuningMetrics,
     currentWeights: Record<string, number>
   ): Record<string, number> {
     const adjustments: Record<string, number> = { ...currentWeights };
@@ -251,7 +270,7 @@ class AutonomyTuningModel {
    * Compute risk weight adjustments for different signal categories
    */
   private computeRiskWeightAdjustments(
-    metrics: any,
+    metrics: TuningMetrics,
     currentWeights: Record<string, number>
   ): Record<string, number> {
     const adjustments: Record<string, number> = { ...currentWeights };
@@ -291,7 +310,7 @@ class AutonomyTuningModel {
    * Compute uncertainty scaling adjustments
    */
   private computeUncertaintyScaling(
-    metrics: any,
+    metrics: TuningMetrics,
     currentScaling: number
   ): number {
     let newScaling = currentScaling;
@@ -312,7 +331,7 @@ class AutonomyTuningModel {
    * Compute reasoning depth tuning based on performance
    */
   private computeReasoningDepthTuning(
-    metrics: any,
+    metrics: TuningMetrics,
     currentAllocation: Record<string, number>
   ): Record<string, number> {
     const adjustments: Record<string, number> = { ...currentAllocation };
@@ -349,7 +368,7 @@ class AutonomyTuningModel {
    * Compute orchestration scheduling adjustments
    */
   private computeOrchestrationScheduling(
-    metrics: any,
+    metrics: TuningMetrics,
     currentSchedule: Record<string, number>
   ): Record<string, number> {
     const adjustments: Record<string, number> = { ...currentSchedule };
@@ -548,8 +567,8 @@ class AutonomyTuningModel {
    */
   private generateExplainabilityNotes(
     adjustments: ParameterAdjustment[],
-    metrics: any,
-    aggregated: any
+    metrics: TuningMetrics,
+    aggregated: AggregatedParameters
   ): string {
     const lines: string[] = [
       '# Autonomy Tuning Adjustments',

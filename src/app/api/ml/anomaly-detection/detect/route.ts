@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Anomaly detection error:", error);
     return NextResponse.json(
       { error: "Anomaly detection failed", details: error.message },

@@ -25,7 +25,8 @@ interface WebSocketMessage {
   clientId?: string;
   channel?: string;
   message?: string;
-  data?: any;
+  workspaceId?: string;
+  data?: unknown;
 }
 
 class AlertWebSocketServer {
@@ -41,10 +42,10 @@ class AlertWebSocketServer {
     errors: 0,
   };
 
-  async initialize(server: any) {
+  async initialize(server: import('http').Server | import('https').Server) {
     this.wss = new WebSocketServer({ server });
 
-    this.wss.on('connection', (ws: WebSocket, req: any) => {
+    this.wss.on('connection', (ws: WebSocket, req: import('http').IncomingMessage) => {
       this.handleConnection(ws, req);
     });
 
@@ -54,7 +55,7 @@ class AlertWebSocketServer {
     console.log('[WebSocket] Server initialized');
   }
 
-  private handleConnection(ws: WebSocket, req: any) {
+  private handleConnection(ws: WebSocket, req: import('http').IncomingMessage) {
     const clientId = this.generateClientId();
     const client: AlertClient = {
       id: clientId,
@@ -72,7 +73,7 @@ class AlertWebSocketServer {
 
     console.log(`[WebSocket] Client ${clientId} connected (total: ${this.metrics.connected_clients})`);
 
-    ws.on('message', (message: any) => {
+    ws.on('message', (message: Buffer | ArrayBuffer | Buffer[]) => {
       try {
         this.metrics.messages_received++;
         const parsed = JSON.parse(message.toString());
@@ -138,11 +139,11 @@ class AlertWebSocketServer {
 
     try {
       const secret = process.env.NEXTAUTH_SECRET || 'fallback-secret';
-      const decoded: any = jwt.verify(token, secret);
+      const decoded = jwt.verify(token, secret) as Record<string, unknown>;
 
       client.authenticated = true;
-      client.workspaceId = decoded.workspaceId || '';
-      client.userId = decoded.sub || decoded.userId || '';
+      client.workspaceId = (decoded.workspaceId as string) || '';
+      client.userId = (decoded.sub as string) || (decoded.userId as string) || '';
 
       this.sendToClient(clientId, {
         type: 'auth_success',
@@ -265,7 +266,7 @@ class AlertWebSocketServer {
   async broadcastAlert(
     workspaceId: string,
     frameworkId: string,
-    alert: any
+    alert: unknown
   ): Promise<number> {
     const channel = `alerts:${workspaceId}:${frameworkId}`;
     const subscribers = this.subscriptions.get(channel);
@@ -302,7 +303,7 @@ class AlertWebSocketServer {
   /**
    * Broadcast to all clients in a workspace
    */
-  async broadcastToWorkspace(workspaceId: string, message: any): Promise<number> {
+  async broadcastToWorkspace(workspaceId: string, message: unknown): Promise<number> {
     let successCount = 0;
 
     this.clients.forEach((client) => {

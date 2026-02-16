@@ -84,7 +84,7 @@ Help them make decisions about approving or iterating on this content.`;
       response: responseText,
       usage: response.usage,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("AI Chat error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to process chat message" },

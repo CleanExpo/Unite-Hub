@@ -114,7 +114,7 @@ export default function SystemHealthPage() {
       const body = await res.json();
       setJobs(body.jobs || []);
       setSummary(body.summary || null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message || 'Unknown error');
     } finally {
       setLoading(false);
@@ -169,7 +169,7 @@ export default function SystemHealthPage() {
       // Refresh jobs
       await fetchJobs();
       await fetchPatches(jobId);
-    } catch (err: any) {
+    } catch (err: unknown) {
       alert(err.message || 'Action failed');
     } finally {
       setActionLoading(null);

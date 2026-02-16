@@ -127,7 +127,7 @@ export function MediaUploader({
       if (onUploadComplete) {
         onUploadComplete(data.media);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Upload error:", error);
       setUploads((prev) =>
         prev.map((u) =>

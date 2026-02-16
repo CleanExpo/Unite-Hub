@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Budget retrieval error:", error);
     return NextResponse.json(
       { error: "Budget retrieval failed", details: error.message },
@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Budget update error:", error);
     return NextResponse.json(
       { error: "Budget update failed", details: error.message },

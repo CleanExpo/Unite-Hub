@@ -41,7 +41,7 @@ export default function ContentPage() {
 
       const { content } = await response.json();
       setContents(content || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to load content:", err);
       setError(err.message || "Failed to load content");
     } finally {

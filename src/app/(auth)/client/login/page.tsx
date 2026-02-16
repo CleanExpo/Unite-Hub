@@ -34,7 +34,7 @@ export default function ClientLoginPage() {
       // Redirect to client portal
       router.push('/client');
       router.refresh();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('An unexpected error occurred');
       setLoading(false);
     }

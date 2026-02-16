@@ -129,7 +129,7 @@ export default function CreateClientModal({ open, onClose }: CreateClientModalPr
       }
 
       handleClose();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error creating client:", err);
       setError(err.message || "Failed to create client. Please try again.");
     } finally {

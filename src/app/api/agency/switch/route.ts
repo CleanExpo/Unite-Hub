@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       success: true,
       context,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Switch agency error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
       success: true,
       tenants,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('List tenants error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

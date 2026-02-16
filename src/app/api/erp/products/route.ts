@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const products = await inventoryService.listProducts(workspaceId, includeStock);
 
     return NextResponse.json({ products });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch products' },
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ product }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating product:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create product' },

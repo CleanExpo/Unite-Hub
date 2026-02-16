@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Cost tracking error:", error);
     return NextResponse.json(
       { error: "Cost tracking failed", details: error.message },

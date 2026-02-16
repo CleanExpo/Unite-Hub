@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       success: true,
       license,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Assign region error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

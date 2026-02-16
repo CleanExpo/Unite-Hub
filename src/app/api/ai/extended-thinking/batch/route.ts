@@ -163,7 +163,7 @@ export async function POST(req: NextRequest) {
           cost: operation.totalCost,
           duration: operation.duration,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         results.push({
           index: i,
           success: false,
@@ -193,7 +193,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Batch execution error:", error);
     return NextResponse.json(
       {

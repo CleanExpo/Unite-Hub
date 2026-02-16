@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     const limits = await getBudgetLimits(workspaceId);
 
     return NextResponse.json({ success: true, data: limits });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching budget limits:", error);
     return NextResponse.json(
       { error: "Internal server error", message: error.message },
@@ -106,7 +106,7 @@ export async function PUT(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, data: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating budget limits:", error);
     return NextResponse.json(
       { error: "Internal server error", message: error.message },

@@ -46,7 +46,7 @@ export async function GET(
     };
 
     return NextResponse.json(transformedChecklist);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching checklist:", error);
     return NextResponse.json(
       { error: error.message || "Failed to fetch checklist" },
@@ -96,7 +96,7 @@ export async function PUT(
       success: true,
       message: "Checklist updated successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating checklist:", error);
     return NextResponse.json(
       { error: error.message || "Failed to update checklist" },
@@ -134,7 +134,7 @@ export async function DELETE(
       success: true,
       message: "Checklist deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting checklist:", error);
     return NextResponse.json(
       { error: error.message || "Failed to delete checklist" },

@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
         message: dalleError.message || "Image generation failed",
       });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error.message?.includes("Unauthorized")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

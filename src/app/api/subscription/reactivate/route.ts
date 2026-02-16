@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
         plan: subscription.plan,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

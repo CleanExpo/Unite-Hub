@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const payments = await invoicingService.listPayments(workspaceId, { invoice_id: id });
 
     return NextResponse.json({ payments });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching payments:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch payments' },
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     });
 
     return NextResponse.json({ payment }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error recording payment:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to record payment' },

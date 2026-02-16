@@ -249,7 +249,7 @@ export class XeroService {
         success: false,
         error: 'No organizations found'
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Xero connection test failed:', error);
       return {
         success: false,

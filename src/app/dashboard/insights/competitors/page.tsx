@@ -130,7 +130,7 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
       setLatestAnalysis(data.analysis);
       alert("Analysis completed successfully!");
       setActiveTab("swot");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error running analysis:", error);
       alert(error.message || "Failed to run analysis");
     } finally {

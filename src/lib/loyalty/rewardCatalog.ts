@@ -4,6 +4,51 @@
  * Part of v1_1_05: Loyalty & Referral Pivot Engine
  */
 
+import { SupabaseClient } from '@supabase/supabase-js';
+
+interface RewardRpcRow {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  credit_cost: number;
+  daily_limit: number | null;
+  daily_remaining: number;
+  metadata: Record<string, unknown> | null;
+}
+
+interface RewardCatalogRow {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  credit_cost: number;
+  is_active: boolean;
+  daily_redemption_limit: number | null;
+  daily_redeemed_count: number;
+  total_redeemed_count: number;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+}
+
+interface RedemptionRequestRow {
+  id: string;
+  user_id: string;
+  reward_id: string;
+  credit_amount_requested: number;
+  status: string;
+  founder_notes: string | null;
+  transparency_message: string | null;
+  created_at: string;
+  founder_action_at: string | null;
+  workspace_id: string;
+}
+
+interface RewardStatRow {
+  name: string;
+  total_redeemed_count: number;
+}
+
 export interface Reward {
   id: string;
   name: string;
@@ -14,7 +59,7 @@ export interface Reward {
   dailyLimit?: bigint;
   dailyRedeemed: bigint;
   totalRedeemed: bigint;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface RedemptionRequest {
@@ -33,7 +78,7 @@ export interface RedemptionRequest {
  * Get available rewards for a workspace
  */
 export async function getAvailableRewards(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userCredits?: bigint
 ): Promise<Reward[]> {
@@ -51,7 +96,7 @@ export async function getAvailableRewards(
       return [];
     }
 
-    return (data || []).map((reward: any) => ({
+    return (data || []).map((reward: RewardRpcRow) => ({
       id: reward.id,
       name: reward.name,
       description: reward.description,
@@ -73,7 +118,7 @@ export async function getAvailableRewards(
  * Get all rewards for a workspace (founder only)
  */
 export async function getAllRewards(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string
 ): Promise<Reward[]> {
   try {
@@ -88,7 +133,7 @@ export async function getAllRewards(
       return [];
     }
 
-    return (data || []).map((reward: any) => ({
+    return (data || []).map((reward: RewardCatalogRow) => ({
       id: reward.id,
       name: reward.name,
       description: reward.description,
@@ -112,7 +157,7 @@ export async function getAllRewards(
  * Create a new reward (founder only)
  */
 export async function createReward(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   reward: {
     name: string;
@@ -120,7 +165,7 @@ export async function createReward(
     category: string;
     creditCost: bigint;
     dailyLimit?: bigint;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
   }
 ): Promise<{ success: boolean; rewardId?: string; message?: string }> {
   try {
@@ -164,7 +209,7 @@ export async function createReward(
  * Update a reward (founder only)
  */
 export async function updateReward(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   rewardId: string,
   updates: Partial<{
@@ -173,11 +218,11 @@ export async function updateReward(
     isActive: boolean;
     creditCost: bigint;
     dailyLimit?: bigint;
-    metadata: Record<string, any>;
+    metadata: Record<string, unknown>;
   }>
 ): Promise<{ success: boolean; message?: string }> {
   try {
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
     };
 
@@ -223,7 +268,7 @@ export async function updateReward(
  * Submit a redemption request
  */
 export async function submitRedemptionRequest(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   rewardId: string
@@ -270,7 +315,7 @@ export async function submitRedemptionRequest(
  * Get user's redemption requests
  */
 export async function getUserRedemptionRequests(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   userId: string,
   status?: string
@@ -296,7 +341,7 @@ export async function getUserRedemptionRequests(
       return [];
     }
 
-    return (data || []).map((request: any) => ({
+    return (data || []).map((request: RedemptionRequestRow) => ({
       id: request.id,
       userId: request.user_id,
       rewardId: request.reward_id,
@@ -317,7 +362,7 @@ export async function getUserRedemptionRequests(
  * Get all pending redemption requests for a workspace (founder only)
  */
 export async function getPendingRedemptionRequests(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string
 ): Promise<RedemptionRequest[]> {
   try {
@@ -337,7 +382,7 @@ export async function getPendingRedemptionRequests(
       return [];
     }
 
-    return (data || []).map((request: any) => ({
+    return (data || []).map((request: RedemptionRequestRow) => ({
       id: request.id,
       userId: request.user_id,
       rewardId: request.reward_id,
@@ -357,7 +402,7 @@ export async function getPendingRedemptionRequests(
  * Approve or reject a redemption request (founder only)
  */
 export async function handleRedemptionRequest(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string,
   requestId: string,
   approved: boolean,
@@ -402,7 +447,7 @@ export async function handleRedemptionRequest(
  * Get reward redemption stats for a workspace (founder only)
  */
 export async function getRedemptionStats(
-  supabaseAdmin: any,
+  supabaseAdmin: SupabaseClient,
   workspaceId: string
 ): Promise<{
   totalRequests: number;
@@ -430,13 +475,13 @@ export async function getRedemptionStats(
       };
     }
 
-    const allRequests = requests || [];
-    const pending = allRequests.filter((r: any) => r.status === 'pending').length;
-    const approved = allRequests.filter((r: any) => r.status === 'approved').length;
-    const rejected = allRequests.filter((r: any) => r.status === 'rejected').length;
+    const allRequests: RedemptionRequestRow[] = requests || [];
+    const pending = allRequests.filter((r) => r.status === 'pending').length;
+    const approved = allRequests.filter((r) => r.status === 'approved').length;
+    const rejected = allRequests.filter((r) => r.status === 'rejected').length;
     const totalCredits = allRequests
-      .filter((r: any) => r.status === 'redeemed')
-      .reduce((sum: bigint, r: any) => sum + BigInt(r.credit_amount_requested), 0n);
+      .filter((r) => r.status === 'redeemed')
+      .reduce((sum: bigint, r) => sum + BigInt(r.credit_amount_requested), 0n);
 
     // Get top rewards
     const { data: rewardStats, error: rewardError } = await supabaseAdmin
@@ -446,7 +491,7 @@ export async function getRedemptionStats(
       .order('total_redeemed_count', { ascending: false })
       .limit(10);
 
-    const topRewards = (rewardStats || []).map((r: any) => ({
+    const topRewards = (rewardStats || []).map((r: RewardStatRow) => ({
       name: r.name,
       redeemed: r.total_redeemed_count,
     }));

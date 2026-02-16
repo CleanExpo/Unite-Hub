@@ -48,7 +48,7 @@ export async function POST(
       success: true,
       result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Approve action error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

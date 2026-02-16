@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({ data: rounds });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Combat rounds GET error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ data: round });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Combat rounds POST error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

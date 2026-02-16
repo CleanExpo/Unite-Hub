@@ -83,7 +83,7 @@ export default function WorkspacesPage() {
       );
 
       setWorkspaces(enriched);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to fetch workspaces:", err);
       setError(err.message || "Failed to load workspaces");
     } finally {

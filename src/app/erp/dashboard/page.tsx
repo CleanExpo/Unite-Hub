@@ -129,7 +129,7 @@ export default function ERPDashboardPage() {
 
       const dashboardData = await response.json();
       setData(dashboardData);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching dashboard data:', err);
       setError(err.message || 'Failed to load dashboard');
     } finally {

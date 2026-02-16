@@ -227,7 +227,7 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
       } else {
         throw new Error(data.error);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message || "Failed to generate checklist",
@@ -267,7 +267,7 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
         const data = await response.json();
         throw new Error(data.error || "Failed to delete");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message || "Failed to delete checklist",

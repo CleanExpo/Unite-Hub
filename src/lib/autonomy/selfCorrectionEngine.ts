@@ -23,7 +23,7 @@ export interface CorrectionCycle {
   predictedFailureType?: string;
   confidence: number; // 0-100
   affectedAgents: string[];
-  weaknessClusters: Record<string, any>;
+  weaknessClusters: Record<string, unknown>;
   improvementActions: Array<{
     actionId: string;
     type: string;
@@ -48,7 +48,7 @@ export interface FailurePrediction {
     signalType: string;
     severity: number; // 1-5
     source: string;
-    value: any;
+    value: unknown;
   }>;
   recommendations: string[];
   suggestedActions: string[];
@@ -68,6 +68,47 @@ export interface WeaknessCluster {
   patterns: string[];
   affectedSystems: string[];
   confidence: number; // 0-100
+}
+
+interface AutonomyRun {
+  id: string;
+  workspace_id: string;
+  status: string;
+  active_agents: string[] | null;
+  completed_steps: number;
+  failed_steps: number;
+  total_steps: number;
+  risk_score: number;
+  uncertainty_score: number;
+  autonomy_score: number;
+  created_at: string;
+  [key: string]: unknown;
+}
+
+interface AutonomyEvent {
+  id: string;
+  run_id: string;
+  created_at: string;
+  [key: string]: unknown;
+}
+
+interface CorrectionGraphNode {
+  id: string;
+  node_type: string;
+  severity: number;
+  related_agent: string | null;
+  notes: string | null;
+  [key: string]: unknown;
+}
+
+interface ImprovementAction {
+  actionId: string;
+  type: string;
+  description: string;
+  targetAgent?: string;
+  expectedImpact: number;
+  riskLevel: 'low' | 'medium' | 'high';
+  estimatedDuration: number;
 }
 
 class SelfCorrectionEngine {
@@ -468,10 +509,10 @@ class SelfCorrectionEngine {
    * Private: Extract failure patterns from recent runs
    */
   private extractFailurePatterns(
-    runs: any[],
-    events: any[]
+    runs: AutonomyRun[],
+    events: AutonomyEvent[]
   ): Array<{ pattern: string; frequency: number; severity: number; agents: string[] }> {
-    const patterns: Record<string, any> = {};
+    const patterns: Record<string, { frequency: number; severity: number; agents: Set<string> }> = {};
 
     for (const run of runs) {
       if (run.failed_steps > 0) {
@@ -520,8 +561,8 @@ class SelfCorrectionEngine {
    */
   private async predictFutureFailures(
     workspaceId: string,
-    patterns: Array<any>,
-    runs: any[]
+    patterns: Array<{ pattern: string; frequency: number; severity: number; agents: string[] }>,
+    runs: AutonomyRun[]
   ): Promise<FailurePrediction[]> {
     const predictions: FailurePrediction[] = [];
 
@@ -555,8 +596,8 @@ class SelfCorrectionEngine {
    */
   private async identifyWeaknessClusters(
     workspaceId: string,
-    patterns: any[],
-    runs: any[]
+    patterns: Array<{ pattern: string; frequency: number; severity: number; agents: string[] }>,
+    runs: AutonomyRun[]
   ): Promise<WeaknessCluster[]> {
     const clusters: WeaknessCluster[] = [];
     const supabase = await getSupabaseServer();
@@ -569,7 +610,7 @@ class SelfCorrectionEngine {
 
     if (graphNodes && graphNodes.length > 0) {
       // Group by node_type
-      const nodesByType: Record<string, any[]> = {};
+      const nodesByType: Record<string, CorrectionGraphNode[]> = {};
       for (const node of graphNodes) {
         if (!nodesByType[node.node_type]) {
           nodesByType[node.node_type] = [];
@@ -631,8 +672,8 @@ class SelfCorrectionEngine {
   private generateImprovementActions(
     predictions: FailurePrediction[],
     clusters: WeaknessCluster[]
-  ): Array<any> {
-    const actions: Array<any> = [];
+  ): Array<ImprovementAction> {
+    const actions: Array<ImprovementAction> = [];
     let actionId = 0;
 
     for (const prediction of predictions) {
@@ -686,7 +727,7 @@ class SelfCorrectionEngine {
    * Private: Execute individual action
    */
   private async executeAction(
-    action: any,
+    action: ImprovementAction,
     workspaceId: string
   ): Promise<{ success: boolean; message: string }> {
     // In production, would execute actual corrective actions
@@ -703,7 +744,7 @@ class SelfCorrectionEngine {
    */
   private async addCorrectionGraphNode(
     cycleId: string,
-    nodeData: any
+    nodeData: { nodeType: string; severity: number; relatedAgent: string; confidence: number; notes: string }
   ): Promise<void> {
     const supabase = await getSupabaseServer();
 
@@ -721,7 +762,7 @@ class SelfCorrectionEngine {
   /**
    * Private: Calculate average metrics from runs
    */
-  private calculateAverageMetrics(runs: any[]): {
+  private calculateAverageMetrics(runs: AutonomyRun[]): {
     autonomyScore: number;
     riskScore: number;
     uncertaintyScore: number;
@@ -742,8 +783,8 @@ class SelfCorrectionEngine {
    */
   private calculateUpdatedWeights(
     agents: string[],
-    beforeMetrics: any,
-    afterMetrics: any
+    beforeMetrics: { autonomyScore: number; riskScore: number; uncertaintyScore: number },
+    afterMetrics: { autonomyScore: number; riskScore: number; uncertaintyScore: number }
   ): Record<string, number> {
     const weights: Record<string, number> = {};
     const improvement =
@@ -760,7 +801,7 @@ class SelfCorrectionEngine {
   /**
    * Private: Generate recommendations from patterns
    */
-  private generateRecommendations(pattern: any): string[] {
+  private generateRecommendations(pattern: { pattern: string; frequency: number; severity: number; agents: string[] }): string[] {
     const recommendations: string[] = [];
 
     if (pattern.pattern.includes('failed_steps')) {
@@ -784,7 +825,7 @@ class SelfCorrectionEngine {
   /**
    * Private: Generate suggested actions from patterns
    */
-  private generateSuggestedActions(pattern: any): string[] {
+  private generateSuggestedActions(pattern: { pattern: string; frequency: number; severity: number; agents: string[] }): string[] {
     const actions: string[] = [];
 
     if (pattern.agents && pattern.agents.length > 0) {

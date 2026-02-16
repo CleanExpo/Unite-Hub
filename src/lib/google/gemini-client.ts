@@ -168,7 +168,7 @@ export async function callGemini3(options: GeminiOptions): Promise<GeminiRespons
       thinkingLevel,
       modelId: 'gemini-3-pro-preview'
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Track failed request
     await trackGeminiUsage({
       provider: 'google_gemini',

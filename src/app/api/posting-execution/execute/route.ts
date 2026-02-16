@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({ data: executions });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Execute GET error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ data: result });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Execute POST error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

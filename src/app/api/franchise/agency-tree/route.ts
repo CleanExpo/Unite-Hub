@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
       children,
       rollup,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Agency tree error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

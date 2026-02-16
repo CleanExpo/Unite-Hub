@@ -8,7 +8,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { supabaseAdmin } from '@/lib/supabase';
 import { createApiLogger } from '@/lib/logger';
-import { getChannelPlaybook, getBrandChannels } from './channelPlaybooks';
+import { ChannelPlaybook, getChannelPlaybook, getBrandChannels } from './channelPlaybooks';
 
 const logger = createApiLogger({ service: 'multiChannelBlueprintEngine' });
 
@@ -19,6 +19,57 @@ const anthropic = new Anthropic({
   },
 });
 
+interface BrandContext {
+  brand_name: string;
+  positioning: string;
+  voice: string;
+  audience: string;
+}
+
+interface AnalyticsInsights {
+  search_volume: number | null;
+  keyword_difficulty?: number;
+  competition: string | null;
+  cpc?: number;
+  uncertainty?: string;
+}
+
+interface ChannelContentItem {
+  channel: string;
+  draft_content: string;
+  headline: string;
+  hook?: string;
+  cta?: string;
+  meta_description?: string;
+  hashtags?: string[];
+  visual_prompts?: string[];
+  word_count?: number;
+  compliance_notes?: string;
+  generated_at?: string;
+  model_used?: string;
+  error?: string;
+}
+
+interface VisualConcept {
+  visual_type: string;
+  description: string;
+  dimensions: string;
+  vif_prompt_id: string;
+  draft_mode: boolean;
+}
+
+interface SEORecommendations {
+  primary_keyword: string;
+  secondary_keywords: string[];
+  target_keyword_density: [number, number];
+  internal_linking_suggestions: string[];
+  meta_title_template: string;
+  meta_description_length: [number, number];
+  schema_markup_recommended: string[];
+  competition_level: string;
+  search_volume: number | string;
+}
+
 export interface BlueprintGenerationRequest {
   topicTitle: string;
   topicKeywords: string[];
@@ -26,22 +77,22 @@ export interface BlueprintGenerationRequest {
   workspaceId: string;
   blueprintType: string;
   primaryObjective: string;
-  targetAudience: any;
+  targetAudience: Record<string, unknown>;
   selectedChannels: string[];
-  analyticsInsights?: any;
+  analyticsInsights?: AnalyticsInsights;
 }
 
 export interface GeneratedBlueprint {
   blueprint_title: string;
-  channels: Record<string, any>;
-  website_content?: any;
-  blog_content?: any;
-  social_content?: any;
-  email_content?: any;
-  video_content?: any;
-  visual_concepts?: any[];
+  channels: Record<string, { enabled: boolean; status: string }>;
+  website_content?: ChannelContentItem;
+  blog_content?: ChannelContentItem;
+  social_content?: Record<string, ChannelContentItem> | null;
+  email_content?: Record<string, ChannelContentItem> | null;
+  video_content?: Record<string, ChannelContentItem> | null;
+  visual_concepts?: VisualConcept[];
   vif_references?: string[];
-  seo_recommendations?: any;
+  seo_recommendations?: SEORecommendations;
   uncertainty_notes: string;
   data_sources: string[];
   ai_confidence_score: number;
@@ -70,7 +121,7 @@ export class MultiChannelBlueprintEngine {
       );
 
       // Generate content for each channel
-      const channelContent: Record<string, any> = {};
+      const channelContent: Record<string, ChannelContentItem> = {};
 
       for (const channel of request.selectedChannels) {
         const playbook = getChannelPlaybook(channel);
@@ -141,12 +192,12 @@ export class MultiChannelBlueprintEngine {
    */
   private async generateChannelContent(
     channel: string,
-    playbook: any,
+    playbook: ChannelPlaybook,
     request: BlueprintGenerationRequest,
-    brandContext: any,
-    analyticsData: any
-  ): Promise<any> {
-    const systemPrompt = `You are an expert content strategist generating ${playbook.channel_name} content for ${brandContext.brand_name}.
+    brandContext: BrandContext,
+    analyticsData: AnalyticsInsights
+  ): Promise<ChannelContentItem> {
+    const systemPrompt = `You are an expert content strategist generating ${playbook.channel} content for ${brandContext.brand_name}.
 
 Brand Voice: ${playbook.brandVoiceGuidelines[request.brandSlug] || 'Professional and engaging'}
 Brand Positioning: ${brandContext.positioning || 'Industry leader'}
@@ -194,7 +245,7 @@ Return ONLY valid JSON with the following structure:
         system: [
           {
             type: 'text',
-            text: `You are an expert content strategist generating ${playbook.channel_name} content.`,
+            text: `You are an expert content strategist generating ${playbook.channel} content.`,
             cache_control: { type: 'ephemeral' },
           },
         ],
@@ -234,9 +285,9 @@ Return ONLY valid JSON with the following structure:
   /**
    * Get brand context from Brand Matrix
    */
-  private async getBrandContext(brandSlug: string, workspaceId: string): Promise<any> {
+  private async getBrandContext(brandSlug: string, workspaceId: string): Promise<BrandContext> {
     // In a full implementation, this would query the Brand Matrix (v1_1_02)
-    const brandProfiles: Record<string, any> = {
+    const brandProfiles: Record<string, BrandContext> = {
       unite_group: {
         brand_name: 'Unite Group',
         positioning: 'Premium stainless steel solutions for commercial and residential projects',
@@ -279,7 +330,7 @@ Return ONLY valid JSON with the following structure:
     workspaceId: string,
     brandSlug: string,
     keywords: string[]
-  ): Promise<any> {
+  ): Promise<AnalyticsInsights> {
     try {
       // Query DataForSEO cache for keyword data
       const { data, error } = await supabaseAdmin.rpc('get_dataforseo_cache', {
@@ -312,7 +363,7 @@ Return ONLY valid JSON with the following structure:
     topicTitle: string,
     brandSlug: string,
     channels: string[]
-  ): Promise<any[]> {
+  ): Promise<VisualConcept[]> {
     const visualNeeds = [];
 
     if (channels.includes('website_landing_page') || channels.includes('website_product_page')) {
@@ -353,9 +404,9 @@ Return ONLY valid JSON with the following structure:
    */
   private generateSEORecommendations(
     keywords: string[],
-    analyticsData: any,
-    channelContent: Record<string, any>
-  ): any {
+    analyticsData: AnalyticsInsights,
+    channelContent: Record<string, ChannelContentItem>
+  ): SEORecommendations {
     return {
       primary_keyword: keywords[0],
       secondary_keywords: keywords.slice(1, 5),
@@ -376,8 +427,8 @@ Return ONLY valid JSON with the following structure:
   /**
    * Structure channels object
    */
-  private structureChannels(selectedChannels: string[]): Record<string, any> {
-    const channels: Record<string, any> = {};
+  private structureChannels(selectedChannels: string[]): Record<string, { enabled: boolean; status: string }> {
+    const channels: Record<string, { enabled: boolean; status: string }> = {};
     selectedChannels.forEach(channel => {
       channels[channel] = { enabled: true, status: 'draft' };
     });
@@ -387,8 +438,8 @@ Return ONLY valid JSON with the following structure:
   /**
    * Consolidate social content from multiple channels
    */
-  private consolidateSocialContent(channelContent: Record<string, any>): any {
-    const socialContent: any = {};
+  private consolidateSocialContent(channelContent: Record<string, ChannelContentItem>): Record<string, ChannelContentItem> | null {
+    const socialContent: Record<string, ChannelContentItem> = {};
 
     ['facebook_post', 'instagram_post', 'linkedin_post', 'tiktok_video'].forEach(channel => {
       if (channelContent[channel]) {
@@ -402,8 +453,8 @@ Return ONLY valid JSON with the following structure:
   /**
    * Consolidate email content
    */
-  private consolidateEmailContent(channelContent: Record<string, any>): any {
-    const emailContent: any = {};
+  private consolidateEmailContent(channelContent: Record<string, ChannelContentItem>): Record<string, ChannelContentItem> | null {
+    const emailContent: Record<string, ChannelContentItem> = {};
 
     ['email_newsletter', 'email_nurture_sequence'].forEach(channel => {
       if (channelContent[channel]) {
@@ -417,8 +468,8 @@ Return ONLY valid JSON with the following structure:
   /**
    * Consolidate video content
    */
-  private consolidateVideoContent(channelContent: Record<string, any>): any {
-    const videoContent: any = {};
+  private consolidateVideoContent(channelContent: Record<string, ChannelContentItem>): Record<string, ChannelContentItem> | null {
+    const videoContent: Record<string, ChannelContentItem> = {};
 
     ['youtube_short', 'tiktok_video'].forEach(channel => {
       if (channelContent[channel]) {
@@ -432,7 +483,7 @@ Return ONLY valid JSON with the following structure:
   /**
    * Generate uncertainty notes based on data quality
    */
-  private generateUncertaintyNotes(analyticsData: any): string {
+  private generateUncertaintyNotes(analyticsData: AnalyticsInsights): string {
     const notes = [];
 
     if (!analyticsData.search_volume) {

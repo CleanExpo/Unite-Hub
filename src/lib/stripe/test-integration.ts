@@ -60,7 +60,7 @@ export async function testStripeConnection(): Promise<{
   try {
     await getProducts();
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
       error: error.message,
@@ -97,7 +97,7 @@ export async function testPriceIds(): Promise<{
       success: errors.length === 0,
       errors,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
       errors: [error.message],
@@ -128,7 +128,7 @@ export async function testCustomerCreation(): Promise<{
       success: true,
       customerId: customer.id,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
       error: error.message,
@@ -160,7 +160,7 @@ export async function testWebhookEndpoint(): Promise<{
       success: response.status === 400 || response.status === 500,
       status: response.status,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
       error: error.message,

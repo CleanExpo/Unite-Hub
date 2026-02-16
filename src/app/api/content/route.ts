@@ -135,7 +135,7 @@ export async function GET(req: NextRequest) {
     const meta = createPaginationMeta(content?.length || 0, count || 0, page, pageSize);
 
     return successResponse(content || [], meta);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/content] Error:", error);
 
     if (error.message?.includes("Unauthorized")) {
@@ -261,7 +261,7 @@ export async function POST(req: NextRequest) {
     }
 
     return successResponse(newContent, undefined, "Content created successfully", 201);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/content] Error:", error);
 
     if (error.message?.includes("Unauthorized")) {
@@ -366,7 +366,7 @@ export async function PATCH(req: NextRequest) {
       content: updatedContent,
       message: "Content updated successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/content] Error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to update content" },
@@ -435,7 +435,7 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({
       message: "Content deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/content] Error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to delete content" },

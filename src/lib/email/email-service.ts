@@ -203,7 +203,7 @@ async function sendViaSendGrid(options: EmailOptions): Promise<EmailResult> {
       provider: 'sendgrid',
       messageId: response[0].headers['x-message-id'] as string,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[EmailService] SendGrid error:', error.response?.body || error);
     return {
       success: false,
@@ -243,7 +243,7 @@ async function sendViaResend(options: EmailOptions): Promise<EmailResult> {
       provider: 'resend',
       messageId: data.id,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[EmailService] Resend error:', error);
     return {
       success: false,
@@ -283,7 +283,7 @@ async function sendViaSMTP(options: EmailOptions): Promise<EmailResult> {
       provider: 'smtp',
       messageId: info.messageId,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[EmailService] SMTP error:', error);
     return {
       success: false,

@@ -153,7 +153,7 @@ export class GmailClient {
       this.setCredentials(gmailTokens);
 
       return gmailTokens;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw new GmailError(
         `Failed to exchange authorization code: ${error.message}`,
         GMAIL_ERROR_CODES.INVALID_CREDENTIALS,
@@ -213,7 +213,7 @@ export class GmailClient {
       this.oauth2Client.setCredentials(credentials);
 
       return result;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Check for invalid_grant error (refresh token expired/revoked)
       if (error.message?.includes('invalid_grant')) {
         throw new GmailError(
@@ -275,7 +275,7 @@ export class GmailClient {
         threadsTotal: profile.threadsTotal,
         historyId: profile.historyId,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error, 'Failed to get Gmail profile');
     }
   }
@@ -310,7 +310,7 @@ export class GmailClient {
         id: msg.id || '',
         threadId: msg.threadId || '',
       }));
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error, 'Failed to fetch messages');
     }
   }
@@ -333,7 +333,7 @@ export class GmailClient {
       });
 
       return response.data as GmailMessage;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error.code === 404) {
         throw new GmailError(
           `Message not found: ${messageId}`,
@@ -495,7 +495,7 @@ export class GmailClient {
         threadId: response.data.threadId,
         labelIds: response.data.labelIds,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw new GmailError(
         `Failed to send email: ${error.message}`,
         GMAIL_ERROR_CODES.SEND_FAILED,
@@ -528,7 +528,7 @@ export class GmailClient {
           removeLabelIds,
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error, `Failed to modify message ${messageId}`);
     }
   }
@@ -546,7 +546,7 @@ export class GmailClient {
         userId: 'me',
         id: messageId,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error, `Failed to trash message ${messageId}`);
     }
   }
@@ -564,7 +564,7 @@ export class GmailClient {
         userId: 'me',
         id: messageId,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error, `Failed to delete message ${messageId}`);
     }
   }
@@ -584,7 +584,7 @@ export class GmailClient {
     try {
       const response = await gmail.users.labels.list({ userId: 'me' });
       return (response.data.labels || []) as GmailLabel[];
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error, 'Failed to get labels');
     }
   }
@@ -608,7 +608,7 @@ export class GmailClient {
         },
       });
       return response.data as GmailLabel;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error, `Failed to create label ${name}`);
     }
   }
@@ -652,7 +652,7 @@ export class GmailClient {
       });
 
       return response.data as GmailDraft;
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleApiError(error, 'Failed to create draft');
     }
   }

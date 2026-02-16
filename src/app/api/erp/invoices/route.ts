@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const invoices = await invoicingService.listInvoices(workspaceId, filters);
 
     return NextResponse.json({ invoices });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching invoices:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch invoices' },
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ invoice }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating invoice:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create invoice' },

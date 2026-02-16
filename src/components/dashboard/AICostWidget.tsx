@@ -65,7 +65,7 @@ export function AICostWidget({ workspaceId }: AICostWidgetProps) {
       const result = await response.json();
       setData(result.data);
       setError(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching AI cost dashboard:", err);
       setError(err.message);
     } finally {
