@@ -79,8 +79,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
       const cookieStore = await cookies();
 
       const cookieClient = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
         {
           cookies: {
             get(name: string) {
