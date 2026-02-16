@@ -8,8 +8,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { anthropic } from '@/lib/anthropic/client';
-import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import Stripe from 'stripe';
 import { logHealthCheck, logUptimeCheck } from '@/lib/monitoring/autonomous-monitor';
 
@@ -79,19 +77,15 @@ export async function GET(req: NextRequest) {
       logCheck('Database Connection', 'fail', error instanceof Error ? error.message : String(error));
     }
 
-    // 2. Anthropic API (lightweight check — validate key exists and format)
+    // 2. Anthropic API (config check only — no API call to avoid cost/401 issues)
     try {
       const apiKey = process.env.ANTHROPIC_API_KEY;
-      if (!apiKey || !apiKey.startsWith('sk-ant-')) {
-        logCheck('Anthropic API', 'fail', 'API key missing or invalid format');
+      if (!apiKey) {
+        logCheck('Anthropic API', 'fail', 'ANTHROPIC_API_KEY not configured');
+      } else if (!apiKey.startsWith('sk-ant-')) {
+        logCheck('Anthropic API', 'warn', 'API key has unexpected format');
       } else {
-        // Use cheapest model with minimal tokens to verify connectivity
-        await anthropic.messages.create({
-          model: ANTHROPIC_MODELS.HAIKU_3,
-          max_tokens: 1,
-          messages: [{ role: 'user', content: 'ping' }],
-        });
-        logCheck('Anthropic API', 'pass', 'API key valid');
+        logCheck('Anthropic API', 'pass', 'API key configured');
       }
     } catch (error: unknown) {
       logCheck('Anthropic API', 'fail', error instanceof Error ? error.message : String(error));

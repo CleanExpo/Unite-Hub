@@ -81,7 +81,8 @@ export async function logError(params: {
       });
 
     if (error) {
-      log.error('Failed to log error to database', { error, params });
+      // Use console.error to avoid DatabaseTransport feedback loop
+      console.error('[autonomous-monitor] Failed to log error to database:', error.message);
       return null;
     }
 
@@ -117,7 +118,8 @@ export async function logError(params: {
 
     return data;
   } catch (error) {
-    log.error('Exception in logError', { error, params });
+    // Use console.error to avoid DatabaseTransport feedback loop
+    console.error('[autonomous-monitor] Exception in logError:', error);
     return null;
   }
 }
@@ -147,13 +149,13 @@ export async function logPerformance(params: {
       });
 
     if (error) {
-      log.error('Failed to log performance metric', { error, params });
+      console.error('[autonomous-monitor] Failed to log performance metric:', error.message);
       return null;
     }
 
     return data;
   } catch (error) {
-    log.error('Exception in logPerformance', { error, params });
+    console.error('[autonomous-monitor] Exception in logPerformance:', error);
     return null;
   }
 }
@@ -190,12 +192,12 @@ export async function logHealthCheck(params: {
       .single();
 
     if (error) {
-      log.error('Failed to log health check', { error, params });
+      console.error('[autonomous-monitor] Failed to log health check:', error.message);
       return null;
     }
 
-    // Send alert if status is degraded or critical
-    if (params.overallStatus !== 'healthy') {
+    // Send alert only for critical status (not degraded — degraded is expected without Redis)
+    if (params.overallStatus === 'critical') {
       await sendHealthAlert({
         healthCheckId: data.id,
         status: params.overallStatus,
@@ -206,7 +208,7 @@ export async function logHealthCheck(params: {
 
     return data.id;
   } catch (error) {
-    log.error('Exception in logHealthCheck', { error, params });
+    console.error('[autonomous-monitor] Exception in logHealthCheck:', error);
     return null;
   }
 }
@@ -237,13 +239,13 @@ export async function logUptimeCheck(params: {
       .single();
 
     if (error) {
-      log.error('Failed to log uptime check', { error, params });
+      console.error('[autonomous-monitor] Failed to log uptime check:', error.message);
       return null;
     }
 
     return data.id;
   } catch (error) {
-    log.error('Exception in logUptimeCheck', { error, params });
+    console.error('[autonomous-monitor] Exception in logUptimeCheck:', error);
     return null;
   }
 }
@@ -305,7 +307,7 @@ async function sendCriticalErrorAlert(params: {
 
     log.info('Critical error alert sent', { errorId: params.errorId, recipients: alertEmails.length });
   } catch (error) {
-    log.error('Failed to send critical error alert', { error, params });
+    console.error('[autonomous-monitor] Failed to send critical error alert:', error);
   }
 }
 
@@ -372,7 +374,7 @@ async function sendHealthAlert(params: {
 
     log.info('Health alert sent', { healthCheckId: params.healthCheckId, recipients: alertEmails.length });
   } catch (error) {
-    log.error('Failed to send health alert', { error, params });
+    console.error('[autonomous-monitor] Failed to send health alert:', error);
   }
 }
 
@@ -385,13 +387,13 @@ export async function getErrorStats(hours: number = 24): Promise<any> {
       .rpc('get_error_stats', { p_hours: hours });
 
     if (error) {
-      log.error('Failed to get error stats', { error });
+      console.error('[autonomous-monitor] Failed to get error stats:', error);
       return null;
     }
 
     return data;
   } catch (error) {
-    log.error('Exception in getErrorStats', { error });
+    console.error('[autonomous-monitor] Exception in getErrorStats:', error);
     return null;
   }
 }
@@ -405,13 +407,13 @@ export async function checkSystemHealth(): Promise<any> {
       .rpc('check_system_health');
 
     if (error) {
-      log.error('Failed to check system health', { error });
+      console.error('[autonomous-monitor] Failed to check system health:', error);
       return null;
     }
 
     return data;
   } catch (error) {
-    log.error('Exception in checkSystemHealth', { error });
+    console.error('[autonomous-monitor] Exception in checkSystemHealth:', error);
     return null;
   }
 }
@@ -428,13 +430,13 @@ export async function getRecentErrors(limit: number = 50): Promise<any[]> {
       .limit(limit);
 
     if (error) {
-      log.error('Failed to get recent errors', { error });
+      console.error('[autonomous-monitor] Failed to get recent errors:', error);
       return [];
     }
 
     return data || [];
   } catch (error) {
-    log.error('Exception in getRecentErrors', { error });
+    console.error('[autonomous-monitor] Exception in getRecentErrors:', error);
     return [];
   }
 }
@@ -453,13 +455,13 @@ export async function getSlowRequests(hours: number = 1, limit: number = 50): Pr
       .limit(limit);
 
     if (error) {
-      log.error('Failed to get slow requests', { error });
+      console.error('[autonomous-monitor] Failed to get slow requests:', error);
       return [];
     }
 
     return data || [];
   } catch (error) {
-    log.error('Exception in getSlowRequests', { error });
+    console.error('[autonomous-monitor] Exception in getSlowRequests:', error);
     return [];
   }
 }
@@ -473,14 +475,14 @@ export async function cleanupOldLogs(): Promise<number> {
       .rpc('cleanup_monitoring_logs');
 
     if (error) {
-      log.error('Failed to cleanup old logs', { error });
+      console.error('[autonomous-monitor] Failed to cleanup old logs:', error);
       return 0;
     }
 
     log.info('Old monitoring logs cleaned up', { deletedCount: data });
     return data || 0;
   } catch (error) {
-    log.error('Exception in cleanupOldLogs', { error });
+    console.error('[autonomous-monitor] Exception in cleanupOldLogs:', error);
     return 0;
   }
 }
