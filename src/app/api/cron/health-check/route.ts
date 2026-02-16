@@ -8,7 +8,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import Stripe from 'stripe';
 import { logHealthCheck, logUptimeCheck } from '@/lib/monitoring/autonomous-monitor';
 
 export const dynamic = 'force-dynamic';
@@ -20,12 +19,6 @@ function getSupabaseClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL || '',
     process.env.SUPABASE_SERVICE_ROLE_KEY || ''
   );
-}
-
-function getStripeClient() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-    apiVersion: '2024-11-20.acacia',
-  });
 }
 
 export async function GET(req: NextRequest) {
@@ -47,7 +40,7 @@ export async function GET(req: NextRequest) {
     let failedChecks = 0;
     let warningsCount = 0;
 
-    // Helper function to log check
+    // Helper function to log check result
     function logCheck(name: string, status: 'pass' | 'fail' | 'warn', details: string) {
       checks[name] = { status, details };
       totalChecks++;
@@ -60,6 +53,8 @@ export async function GET(req: NextRequest) {
         warnings.push(`${name}: ${details}`);
       }
     }
+
+    // ── CRITICAL CHECKS (failures → 'critical' status → email alerts) ──
 
     // 1. Database connectivity
     try {
@@ -77,39 +72,10 @@ export async function GET(req: NextRequest) {
       logCheck('Database Connection', 'fail', error instanceof Error ? error.message : String(error));
     }
 
-    // 2. Anthropic API (config check only — no API call to avoid cost/401 issues)
-    try {
-      const apiKey = process.env.ANTHROPIC_API_KEY;
-      if (!apiKey) {
-        logCheck('Anthropic API', 'fail', 'ANTHROPIC_API_KEY not configured');
-      } else if (!apiKey.startsWith('sk-ant-')) {
-        logCheck('Anthropic API', 'warn', 'API key has unexpected format');
-      } else {
-        logCheck('Anthropic API', 'pass', 'API key configured');
-      }
-    } catch (error: unknown) {
-      logCheck('Anthropic API', 'fail', error instanceof Error ? error.message : String(error));
-    }
+    // 2. Core tables (only tables essential for app operation)
+    const coreTables = ['organizations', 'user_profiles', 'workspaces', 'contacts'];
 
-    // 3. Stripe API
-    try {
-      const stripe = getStripeClient();
-      const balance = await stripe.balance.retrieve();
-      logCheck('Stripe API', 'pass', `Balance retrieved`);
-    } catch (error: unknown) {
-      logCheck('Stripe API', 'fail', error instanceof Error ? error.message : String(error));
-    }
-
-    // 4. Critical tables
-    const criticalTables = [
-      'organizations',
-      'user_profiles',
-      'workspaces',
-      'contacts',
-      'subscriptions',
-    ];
-
-    for (const table of criticalTables) {
+    for (const table of coreTables) {
       try {
         const { error } = await supabase
           .from(table)
@@ -118,23 +84,23 @@ export async function GET(req: NextRequest) {
         if (error) {
           logCheck(`Table: ${table}`, 'fail', error.message);
         } else {
-          logCheck(`Table: ${table}`, 'pass', 'Table exists');
+          logCheck(`Table: ${table}`, 'pass', 'Accessible');
         }
       } catch (error: unknown) {
         logCheck(`Table: ${table}`, 'fail', error instanceof Error ? error.message : String(error));
       }
     }
 
-    // 5. Uptime check for main site
+    // 3. Site uptime
     try {
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3008';
       const uptimeStart = Date.now();
       const response = await fetch(`${siteUrl}/api/health`, {
         method: 'GET',
         headers: { 'User-Agent': 'Unite-Hub-Health-Check' },
+        signal: AbortSignal.timeout(10000),
       });
-      const uptimeEnd = Date.now();
-      const responseTime = uptimeEnd - uptimeStart;
+      const responseTime = Date.now() - uptimeStart;
 
       await logUptimeCheck({
         endpoint: `${siteUrl}/api/health`,
@@ -162,7 +128,55 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Determine overall status
+    // ── NON-CRITICAL CHECKS (failures → 'warn' only, no email alerts) ──
+
+    // 4. Anthropic API (config check only — no API call)
+    try {
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      if (!apiKey) {
+        logCheck('Anthropic API', 'warn', 'ANTHROPIC_API_KEY not configured');
+      } else if (!apiKey.startsWith('sk-ant-')) {
+        logCheck('Anthropic API', 'warn', 'API key has unexpected format');
+      } else {
+        logCheck('Anthropic API', 'pass', 'API key configured');
+      }
+    } catch (error: unknown) {
+      logCheck('Anthropic API', 'warn', error instanceof Error ? error.message : String(error));
+    }
+
+    // 5. Stripe API (config check only — no live API call)
+    try {
+      const stripeKey = process.env.STRIPE_SECRET_KEY;
+      if (!stripeKey) {
+        logCheck('Stripe API', 'warn', 'STRIPE_SECRET_KEY not configured');
+      } else if (!stripeKey.startsWith('sk_')) {
+        logCheck('Stripe API', 'warn', 'Stripe key has unexpected format');
+      } else {
+        logCheck('Stripe API', 'pass', 'Stripe key configured');
+      }
+    } catch (error: unknown) {
+      logCheck('Stripe API', 'warn', error instanceof Error ? error.message : String(error));
+    }
+
+    // 6. Optional tables (warn if missing, not critical)
+    const optionalTables = ['subscriptions'];
+    for (const table of optionalTables) {
+      try {
+        const { error } = await supabase
+          .from(table)
+          .select('*', { count: 'exact', head: true });
+
+        if (error) {
+          logCheck(`Table: ${table}`, 'warn', error.message);
+        } else {
+          logCheck(`Table: ${table}`, 'pass', 'Accessible');
+        }
+      } catch (error: unknown) {
+        logCheck(`Table: ${table}`, 'warn', error instanceof Error ? error.message : String(error));
+      }
+    }
+
+    // ── DETERMINE OVERALL STATUS ──
     let overallStatus: 'healthy' | 'degraded' | 'critical' = 'healthy';
     if (failedChecks > 0) {
       overallStatus = 'critical';
@@ -170,7 +184,7 @@ export async function GET(req: NextRequest) {
       overallStatus = 'degraded';
     }
 
-    // Log health check to database
+    // Log health check to database (errors logged to console, won't trigger alerts)
     const executionTime = Date.now() - startTime;
     await logHealthCheck({
       overallStatus,
@@ -194,6 +208,7 @@ export async function GET(req: NextRequest) {
         failed: failedChecks,
         warnings: warningsCount,
       },
+      details: checks,
       executionTimeMs: executionTime,
     });
   } catch (error) {
