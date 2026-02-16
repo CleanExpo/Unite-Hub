@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { createServerClient as createSSRServerClient, type CookieOptions } from '@supabase/ssr';
+import { createBrowserClient, createServerClient as createSSRServerClient, type CookieOptions } from '@supabase/ssr';
 
 // Get environment variables with proper fallbacks
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -15,34 +15,24 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Client-side (browser) - lazy initialization
-let _supabaseBrowser: ReturnType<typeof createClient> | null = null;
+// Uses createBrowserClient from @supabase/ssr to store auth data (including
+// PKCE code_verifier) in cookies, making it accessible to server-side callbacks
+let _supabaseBrowser: ReturnType<typeof createBrowserClient> | null = null;
 
 function getSupabaseBrowser() {
   if (!_supabaseBrowser) {
     if (!supabaseUrl || !supabaseAnonKey) {
       throw new Error('Supabase environment variables are not configured. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
     }
-    _supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        // Enable session persistence
-        persistSession: true,
-        // Automatically refresh tokens before they expire
-        autoRefreshToken: true,
-        // Detect session in URL (for OAuth callbacks)
-        detectSessionInUrl: true,
-        // PKCE Flow: Sessions stored in cookies, accessible server-side
-        // This replaces implicit flow which stored in localStorage
-        flowType: 'pkce',
-      },
-    });
+    _supabaseBrowser = createBrowserClient(supabaseUrl, supabaseAnonKey);
   }
   return _supabaseBrowser;
 }
 
 // Export lazy-initialized client
-export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+export const supabase = new Proxy({} as ReturnType<typeof createBrowserClient>, {
   get(target, prop) {
-    return getSupabaseBrowser()[prop as keyof ReturnType<typeof createClient>];
+    return getSupabaseBrowser()[prop as keyof ReturnType<typeof createBrowserClient>];
   }
 });
 
