@@ -3,7 +3,76 @@
  * Tests all 11 service layer functions with edge cases
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import * as timeEngine from '../timetracking/timeEngine';
+
+// Create a fully chainable mock for Supabase
+const { mockSupabase, setQueryResults } = vi.hoisted(() => {
+  let queryResults: any[] = [];
+  let queryIndex = 0;
+
+  const createQueryChain = () => {
+    const chain: any = {};
+    const methods = [
+      "select", "insert", "update", "delete", "upsert",
+      "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+      "is", "in", "or", "not", "order", "limit", "range",
+      "match", "filter", "contains", "containedBy", "textSearch",
+    ];
+    methods.forEach((m) => {
+      chain[m] = vi.fn().mockReturnValue(chain);
+    });
+    chain.single = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.maybeSingle = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.then = vi.fn().mockImplementation((resolve: any, reject?: any) => {
+      const result = queryResults[queryIndex] || { data: [], error: null };
+      queryIndex++;
+      return Promise.resolve(result).then(resolve, reject);
+    });
+    return chain;
+  };
+
+  const queryChain = createQueryChain();
+  const mock: any = {
+    from: vi.fn().mockReturnValue(queryChain),
+  };
+  const chainMethods = [
+    "select", "insert", "update", "delete", "upsert",
+    "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+    "is", "in", "or", "not", "order", "limit", "range",
+    "match", "filter", "contains", "containedBy", "textSearch",
+    "single", "maybeSingle",
+  ];
+  chainMethods.forEach((m) => {
+    mock[m] = queryChain[m];
+  });
+
+  return {
+    mockSupabase: mock,
+    setQueryResults: (results: any[]) => {
+      queryResults = results;
+      queryIndex = 0;
+    },
+  };
+});
+
+// Mock Supabase
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => Promise.resolve(mockSupabase)),
+}));
+
+// Mock time engine
+vi.mock('../timetracking/timeEngine');
+
+// Import after mocks
 import {
   getStaffActiveSession,
   startTimer,
@@ -16,40 +85,6 @@ import {
   bulkApproveEntries,
   getPendingApprovals,
 } from '../services/staff/timeService';
-import * as timeEngine from '../timetracking/timeEngine';
-
-// Mock Supabase
-vi.mock('@/lib/supabase', () => ({
-  getSupabaseServer: vi.fn(() => ({
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          single: vi.fn(() => ({ data: null, error: null })),
-          order: vi.fn(() => ({ data: [], error: null })),
-          gte: vi.fn(() => ({
-            lte: vi.fn(() => ({ data: [], error: null })),
-          })),
-        })),
-        is: vi.fn(() => ({ data: [], error: null })),
-      })),
-      insert: vi.fn(() => ({
-        select: vi.fn(() => ({
-          single: vi.fn(() => ({ data: {}, error: null })),
-        })),
-      })),
-      update: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          select: vi.fn(() => ({
-            single: vi.fn(() => ({ data: {}, error: null })),
-          })),
-        })),
-      })),
-    })),
-  })),
-}));
-
-// Mock time engine
-vi.mock('../timetracking/timeEngine');
 
 describe('Time Service - Timer Operations', () => {
   const mockStaffId = '550e8400-e29b-41d4-a716-446655440001';
@@ -230,7 +265,7 @@ describe('Time Service - Timer Operations', () => {
         staffId: mockStaffId,
         hours: 2.25, // 2 hours 15 minutes
         entryType: 'timer' as const,
-        totalAmount: 168.75, // 2.25 × 75
+        totalAmount: 168.75, // 2.25 x 75
       };
 
       vi.mocked(timeEngine.stopTimeSession).mockResolvedValue({
@@ -366,24 +401,20 @@ describe('Time Service - Manual Entries', () => {
 describe('Time Service - Query Operations', () => {
   const mockOrgId = '550e8400-e29b-41d4-a716-446655440002';
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe('getTimeEntries', () => {
     it('should return entries with totals', async () => {
-      const mockEntries = [
-        {
-          id: 'entry-1',
-          hours: 3.5,
-          totalAmount: 262.5,
-          status: 'approved',
-        },
-        {
-          id: 'entry-2',
-          hours: 2.0,
-          totalAmount: 150.0,
-          status: 'pending',
-        },
-      ];
+      // getTimeEntries: .from().select().eq().order().order().range() -> thenable
+      setQueryResults([
+        { data: [
+          { id: 'entry-1', hours: '3.5', total_amount: '262.5', status: 'approved', staff_id: 's1', organization_id: mockOrgId, date: '2025-11-19', entry_type: 'manual', billable: true, created_at: '2025-11-19' },
+          { id: 'entry-2', hours: '2.0', total_amount: '150.0', status: 'pending', staff_id: 's1', organization_id: mockOrgId, date: '2025-11-18', entry_type: 'timer', billable: true, created_at: '2025-11-18' },
+        ], error: null },
+      ]);
 
-      // Mock would return these entries
       const result = await getTimeEntries({
         organizationId: mockOrgId,
       });
@@ -393,6 +424,10 @@ describe('Time Service - Query Operations', () => {
     });
 
     it('should filter by status', async () => {
+      setQueryResults([
+        { data: [], error: null },
+      ]);
+
       const result = await getTimeEntries({
         organizationId: mockOrgId,
         status: 'pending',
@@ -402,6 +437,10 @@ describe('Time Service - Query Operations', () => {
     });
 
     it('should filter by date range', async () => {
+      setQueryResults([
+        { data: [], error: null },
+      ]);
+
       const result = await getTimeEntries({
         organizationId: mockOrgId,
         startDate: '2025-11-01',
@@ -412,6 +451,10 @@ describe('Time Service - Query Operations', () => {
     });
 
     it('should filter by project', async () => {
+      setQueryResults([
+        { data: [], error: null },
+      ]);
+
       const result = await getTimeEntries({
         organizationId: mockOrgId,
         projectId: 'proj-123',
@@ -421,6 +464,10 @@ describe('Time Service - Query Operations', () => {
     });
 
     it('should filter by staff', async () => {
+      setQueryResults([
+        { data: [], error: null },
+      ]);
+
       const result = await getTimeEntries({
         organizationId: mockOrgId,
         staffId: '550e8400-e29b-41d4-a716-446655440001',
@@ -432,6 +479,13 @@ describe('Time Service - Query Operations', () => {
 
   describe('getTimeSummary', () => {
     it('should calculate today totals', async () => {
+      // getTimeSummary makes 3 parallel queries, all thenable
+      setQueryResults([
+        { data: [{ hours: '2.0', total_amount: '150.0' }], error: null }, // today
+        { data: [{ hours: '10.0', total_amount: '750.0' }], error: null }, // week
+        { data: [{ hours: '40.0', total_amount: '3000.0' }], error: null }, // month
+      ]);
+
       const result = await getTimeSummary(
         '550e8400-e29b-41d4-a716-446655440001',
         mockOrgId
@@ -447,6 +501,12 @@ describe('Time Service - Query Operations', () => {
     });
 
     it('should calculate week totals', async () => {
+      setQueryResults([
+        { data: [], error: null }, // today
+        { data: [{ hours: '8.0', total_amount: '600.0' }], error: null }, // week
+        { data: [{ hours: '32.0', total_amount: '2400.0' }], error: null }, // month
+      ]);
+
       const result = await getTimeSummary(
         '550e8400-e29b-41d4-a716-446655440001',
         mockOrgId
@@ -459,6 +519,12 @@ describe('Time Service - Query Operations', () => {
     });
 
     it('should calculate month totals', async () => {
+      setQueryResults([
+        { data: [], error: null }, // today
+        { data: [], error: null }, // week
+        { data: [{ hours: '80.0', total_amount: '6000.0' }], error: null }, // month
+      ]);
+
       const result = await getTimeSummary(
         '550e8400-e29b-41d4-a716-446655440001',
         mockOrgId
@@ -473,6 +539,11 @@ describe('Time Service - Query Operations', () => {
 
   describe('getPendingApprovals', () => {
     it('should return pending entries', async () => {
+      // getPendingApprovals calls getTimeEntries
+      setQueryResults([
+        { data: [], error: null },
+      ]);
+
       const result = await getPendingApprovals(mockOrgId);
 
       expect(result.success).toBe(true);
@@ -480,6 +551,12 @@ describe('Time Service - Query Operations', () => {
     });
 
     it('should only return pending status', async () => {
+      setQueryResults([
+        { data: [
+          { id: 'e1', hours: '1.0', total_amount: '75.0', status: 'pending', staff_id: 's1', organization_id: mockOrgId, date: '2025-11-19', entry_type: 'manual', billable: true, created_at: '2025-11-19' },
+        ], error: null },
+      ]);
+
       const result = await getPendingApprovals(mockOrgId);
 
       if (result.entries && result.entries.length > 0) {
@@ -650,6 +727,10 @@ describe('Time Service - Approval Operations', () => {
 
 describe('Time Service - Edge Cases', () => {
   it('should handle missing organization gracefully', async () => {
+    setQueryResults([
+      { data: [], error: null },
+    ]);
+
     const result = await getTimeEntries({
       organizationId: '',
     });
@@ -671,7 +752,7 @@ describe('Time Service - Edge Cases', () => {
       success: true,
       entry: {
         hours: 0.01,
-        totalAmount: 0.75, // 0.01 × 75
+        totalAmount: 0.75, // 0.01 x 75
       } as any,
     });
 

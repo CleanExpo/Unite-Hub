@@ -5,28 +5,73 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// Create chainable mock with vi.hoisted
+const { mockSupabaseInstance, mockGetSupabaseServer, resetMockChain } = vi.hoisted(() => {
+  const queryResults: any[] = [];
+
+  const createQueryBuilder = (): any => {
+    const builder: any = {};
+    const chainMethods = ['from', 'select', 'insert', 'update', 'delete', 'upsert', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike', 'is', 'in', 'order', 'limit', 'range', 'match', 'not', 'or', 'filter', 'contains', 'containedBy', 'textSearch', 'overlaps'];
+    chainMethods.forEach(m => { builder[m] = vi.fn().mockReturnValue(builder); });
+    builder.single = vi.fn().mockImplementation(() => {
+      const result = queryResults.shift() || { data: null, error: null };
+      return Promise.resolve(result);
+    });
+    builder.maybeSingle = vi.fn().mockImplementation(() => {
+      const result = queryResults.shift() || { data: null, error: null };
+      return Promise.resolve(result);
+    });
+    builder.then = (resolve: any, reject?: any) => {
+      const result = queryResults.shift() || { data: [], error: null };
+      return Promise.resolve(resolve(result));
+    };
+    return builder;
+  };
+
+  const queryBuilder = createQueryBuilder();
+
+  const mock: any = {
+    _setResults: (results: any[]) => { queryResults.length = 0; queryResults.push(...results); },
+    from: vi.fn().mockReturnValue(queryBuilder),
+    rpc: vi.fn().mockReturnValue(queryBuilder),
+    auth: { getUser: vi.fn(), getSession: vi.fn() },
+  };
+
+  Object.keys(queryBuilder).forEach(k => {
+    if (k !== 'then') mock[k] = queryBuilder[k];
+  });
+
+  const mockGSS = vi.fn().mockResolvedValue(mock);
+  const resetFn = () => {
+    queryResults.length = 0;
+    const chainMethods = ['from', 'select', 'insert', 'update', 'delete', 'upsert', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike', 'is', 'in', 'order', 'limit', 'range', 'match', 'not', 'or', 'filter', 'contains', 'containedBy', 'textSearch', 'overlaps'];
+    chainMethods.forEach(m => { queryBuilder[m].mockReturnValue(queryBuilder); });
+    mock.from.mockReturnValue(queryBuilder);
+    queryBuilder.single.mockImplementation(() => {
+      const result = queryResults.shift() || { data: null, error: null };
+      return Promise.resolve(result);
+    });
+    queryBuilder.maybeSingle.mockImplementation(() => {
+      const result = queryResults.shift() || { data: null, error: null };
+      return Promise.resolve(result);
+    });
+    mockGSS.mockResolvedValue(mock);
+  };
+  return {
+    mockSupabaseInstance: mock,
+    mockGetSupabaseServer: mockGSS,
+    resetMockChain: resetFn,
+  };
+});
+
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({
-  getSupabaseServer: vi.fn(),
+  getSupabaseServer: mockGetSupabaseServer,
   getSupabaseAdmin: vi.fn(),
   getSupabaseServerWithAuth: vi.fn(),
-  supabase: {
-    auth: {
-      getUser: vi.fn(),
-      getSession: vi.fn(),
-    },
-    from: vi.fn(),
-  },
-  supabaseBrowser: {
-    auth: {
-      getUser: vi.fn(),
-      getSession: vi.fn(),
-    },
-    from: vi.fn(),
-  },
-  supabaseAdmin: {
-    from: vi.fn(),
-  },
+  supabase: { auth: { getUser: vi.fn(), getSession: vi.fn() }, from: vi.fn() },
+  supabaseBrowser: { auth: { getUser: vi.fn(), getSession: vi.fn() }, from: vi.fn() },
+  supabaseAdmin: { from: vi.fn() },
 }));
 
 // Import after mocking
@@ -44,24 +89,14 @@ import {
   Trend,
 } from '../strategy/kpiTrackingService';
 
+// resetChain is now resetMockChain from vi.hoisted
+
 describe('LongHorizonPlannerService', () => {
   let service: LongHorizonPlannerService;
-  let mockSupabase: any;
 
   beforeEach(() => {
+    resetMockChain();
     service = new LongHorizonPlannerService();
-    mockSupabase = {
-      from: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      update: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn(),
-      order: vi.fn().mockReturnThis(),
-    };
-
-    const { getSupabaseServer } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
   });
 
   describe('createPlan', () => {
@@ -75,7 +110,9 @@ describe('LongHorizonPlannerService', () => {
         status: 'DRAFT',
       };
 
-      mockSupabase.single.mockResolvedValue({ data: mockPlan, error: null });
+      mockSupabaseInstance._setResults([
+        { data: mockPlan, error: null },
+      ]);
 
       const result = await service.createPlan({
         organization_id: 'org-123',
@@ -85,7 +122,7 @@ describe('LongHorizonPlannerService', () => {
 
       expect(result.id).toBe('plan-123');
       expect(result.status).toBe('DRAFT');
-      expect(mockSupabase.from).toHaveBeenCalledWith('horizon_plans');
+      expect(mockSupabaseInstance.from).toHaveBeenCalledWith('horizon_plans');
     });
 
     it('should handle custom horizon type with specified days', async () => {
@@ -97,7 +134,9 @@ describe('LongHorizonPlannerService', () => {
         days_total: 45,
       };
 
-      mockSupabase.single.mockResolvedValue({ data: mockPlan, error: null });
+      mockSupabaseInstance._setResults([
+        { data: mockPlan, error: null },
+      ]);
 
       const result = await service.createPlan({
         organization_id: 'org-123',
@@ -112,22 +151,22 @@ describe('LongHorizonPlannerService', () => {
 
   describe('horizon type days calculation', () => {
     it('should return 30 days for SHORT horizon', () => {
-      const days = (service as any).getHorizonDays('SHORT');
+      const days = (service as any).horizonDays['SHORT'];
       expect(days).toBe(30);
     });
 
     it('should return 60 days for MEDIUM horizon', () => {
-      const days = (service as any).getHorizonDays('MEDIUM');
+      const days = (service as any).horizonDays['MEDIUM'];
       expect(days).toBe(60);
     });
 
     it('should return 90 days for LONG horizon', () => {
-      const days = (service as any).getHorizonDays('LONG');
+      const days = (service as any).horizonDays['LONG'];
       expect(days).toBe(90);
     });
 
     it('should return 90 days for QUARTERLY horizon', () => {
-      const days = (service as any).getHorizonDays('QUARTERLY');
+      const days = (service as any).horizonDays['QUARTERLY'];
       expect(days).toBe(90);
     });
   });
@@ -142,14 +181,64 @@ describe('LongHorizonPlannerService', () => {
         days_total: 30,
         start_date: new Date().toISOString(),
         end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        is_rolling: true,
+        roll_frequency_days: 7,
       };
 
-      mockSupabase.single.mockResolvedValue({ data: mockPlan, error: null });
-      mockSupabase.select.mockResolvedValue({ data: [], error: null });
+      // generatePlan flow:
+      // 1. createPlan: insert().select().single() -> plan
+      // 2. For each domain (5 default): stepsPerDomain = ceil(30/15)=2, so 2 steps each
+      //    - generateDomainSteps: 2 x insert().select().single() per domain = 10 total
+      // 3. Dependencies within domain: 1 per domain = 5 deps, insert().select().single()
+      // 4. Cross-domain dep (SEO depends on CONTENT if CONTENT processed first)
+      // 5. calculatePlanScores + updatePlanScores (then-able)
+      const results: any[] = [
+        // Plan creation
+        { data: mockPlan, error: null },
+      ];
 
-      const result = await service.generatePlan('org-123', 'SHORT', {
-        priorityDomains: ['SEO', 'CONTENT'],
-      });
+      // 5 domains x 2 steps = 10 step inserts
+      for (let d = 0; d < 5; d++) {
+        const domains = ['SEO', 'GEO', 'CONTENT', 'ADS', 'CRO'];
+        for (let s = 0; s < 2; s++) {
+          results.push({
+            data: {
+              id: `step-${d}-${s}`,
+              horizon_plan_id: 'plan-789',
+              name: `Step ${s}`,
+              step_number: d * 2 + s + 1,
+              domain: domains[d],
+              start_day: s * 15,
+              end_day: (s + 1) * 15 - 1,
+              duration_days: 15,
+              target_kpis: {},
+              risk_level: 'LOW',
+              risk_factors: { complexity: 0.1 },
+            },
+            error: null,
+          });
+        }
+      }
+
+      // 5 within-domain deps + possible cross-domain deps
+      for (let i = 0; i < 8; i++) {
+        results.push({
+          data: {
+            id: `dep-${i}`,
+            horizon_plan_id: 'plan-789',
+            source_step_id: `step-${i}`,
+            target_step_id: `step-${i + 1}`,
+            link_type: 'FINISH_TO_START',
+            lag_days: 0,
+            is_critical: true,
+          },
+          error: null,
+        });
+      }
+
+      mockSupabaseInstance._setResults(results);
+
+      const result = await service.generatePlan('org-123', 'SHORT');
 
       expect(result.plan.id).toBe('plan-789');
       expect(result.steps.length).toBeGreaterThan(0);
@@ -159,22 +248,26 @@ describe('LongHorizonPlannerService', () => {
   describe('resolveDependencies', () => {
     it('should identify critical path', async () => {
       const mockSteps = [
-        { id: 'step-1', step_number: 1, start_day: 0, end_day: 5 },
-        { id: 'step-2', step_number: 2, start_day: 5, end_day: 10 },
-        { id: 'step-3', step_number: 3, start_day: 10, end_day: 15 },
+        { id: 'step-1', step_number: 1, start_day: 0, end_day: 5, duration_days: 5 },
+        { id: 'step-2', step_number: 2, start_day: 5, end_day: 10, duration_days: 5 },
+        { id: 'step-3', step_number: 3, start_day: 10, end_day: 15, duration_days: 5 },
       ];
 
       const mockDeps = [
-        { source_step_id: 'step-1', target_step_id: 'step-2', lag_days: 0 },
-        { source_step_id: 'step-2', target_step_id: 'step-3', lag_days: 0 },
+        { source_step_id: 'step-1', target_step_id: 'step-2', link_type: 'FINISH_TO_START', lag_days: 0 },
+        { source_step_id: 'step-2', target_step_id: 'step-3', link_type: 'FINISH_TO_START', lag_days: 0 },
       ];
 
-      mockSupabase.select.mockImplementation(() => ({
-        eq: vi.fn().mockReturnThis(),
-        order: vi.fn().mockResolvedValue({ data: mockSteps, error: null }),
-      }));
+      // getPlan calls:
+      // 1. horizon_plans select().eq().single() -> plan
+      // 2. horizon_steps select().eq().order() -> then-able (steps)
+      // 3. dependency_links select().eq() -> then-able (deps)
+      mockSupabaseInstance._setResults([
+        { data: { id: 'plan-123', organization_id: 'org-123' }, error: null },
+        { data: mockSteps, error: null },
+        { data: mockDeps, error: null },
+      ]);
 
-      // This is a simplified test - full implementation would need proper mocking
       const result = await service.resolveDependencies('plan-123');
 
       expect(result.criticalPath).toBeDefined();
@@ -186,22 +279,10 @@ describe('LongHorizonPlannerService', () => {
 
 describe('KPITrackingService', () => {
   let service: KPITrackingService;
-  let mockSupabase: any;
 
   beforeEach(() => {
+    resetMockChain();
     service = new KPITrackingService();
-    mockSupabase = {
-      from: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      gte: vi.fn().mockReturnThis(),
-      single: vi.fn(),
-      order: vi.fn().mockReturnThis(),
-    };
-
-    const { getSupabaseServer } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
   });
 
   describe('createSnapshot', () => {
@@ -217,7 +298,9 @@ describe('KPITrackingService', () => {
         trend: 'UP',
       };
 
-      mockSupabase.single.mockResolvedValue({ data: mockSnapshot, error: null });
+      mockSupabaseInstance._setResults([
+        { data: mockSnapshot, error: null },
+      ]);
 
       const result = await service.createSnapshot({
         organization_id: 'org-123',
@@ -325,7 +408,11 @@ describe('KPITrackingService', () => {
       ];
 
       vi.spyOn(service, 'getKPITrends').mockResolvedValue(mockTrends as any);
-      mockSupabase.order.mockResolvedValue({ data: [], error: null });
+
+      // projectKPIs calls supabase for historical data (then-able)
+      mockSupabaseInstance._setResults([
+        { data: [], error: null },
+      ]);
 
       const result = await service.projectKPIs('org-123', 'SEO', 30);
 

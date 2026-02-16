@@ -6,19 +6,63 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock Supabase
-const mockSupabase = {
-  from: vi.fn().mockReturnThis(),
-  select: vi.fn().mockReturnThis(),
-  insert: vi.fn().mockReturnThis(),
-  update: vi.fn().mockReturnThis(),
-  delete: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  in: vi.fn().mockReturnThis(),
-  or: vi.fn().mockReturnThis(),
-  order: vi.fn().mockReturnThis(),
-  single: vi.fn(),
-};
+// Create a fully chainable mock for Supabase
+const { mockSupabase, setQueryResults } = vi.hoisted(() => {
+  let queryResults: any[] = [];
+  let queryIndex = 0;
+
+  const createQueryChain = () => {
+    const chain: any = {};
+    const methods = [
+      "select", "insert", "update", "delete", "upsert",
+      "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+      "is", "in", "or", "not", "order", "limit", "range",
+      "match", "filter", "contains", "containedBy", "textSearch",
+    ];
+    methods.forEach((m) => {
+      chain[m] = vi.fn().mockReturnValue(chain);
+    });
+    chain.single = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.maybeSingle = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.then = vi.fn().mockImplementation((resolve: any, reject?: any) => {
+      const result = queryResults[queryIndex] || { data: [], error: null };
+      queryIndex++;
+      return Promise.resolve(result).then(resolve, reject);
+    });
+    return chain;
+  };
+
+  const queryChain = createQueryChain();
+  const mock: any = {
+    from: vi.fn().mockReturnValue(queryChain),
+  };
+  const chainMethods = [
+    "select", "insert", "update", "delete", "upsert",
+    "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+    "is", "in", "or", "not", "order", "limit", "range",
+    "match", "filter", "contains", "containedBy", "textSearch",
+    "single", "maybeSingle",
+  ];
+  chainMethods.forEach((m) => {
+    mock[m] = queryChain[m];
+  });
+
+  return {
+    mockSupabase: mock,
+    setQueryResults: (results: any[]) => {
+      queryResults = results;
+      queryIndex = 0;
+    },
+  };
+});
 
 vi.mock("@/lib/supabase", () => ({
   getSupabaseServer: vi.fn(() => Promise.resolve(mockSupabase)),
@@ -26,9 +70,6 @@ vi.mock("@/lib/supabase", () => ({
 
 import {
   StrategyGraphService,
-  NodeType,
-  EdgeType,
-  RiskLevel,
   CreateNodeRequest,
   CreateEdgeRequest,
 } from "../strategy/strategyGraphService";
@@ -61,7 +102,9 @@ describe("StrategyGraphService", () => {
         progress: 0,
       };
 
-      mockSupabase.single.mockResolvedValueOnce({ data: mockNode, error: null });
+      setQueryResults([
+        { data: mockNode, error: null },
+      ]);
 
       const request: CreateNodeRequest = {
         organization_id: "org-1",
@@ -88,7 +131,9 @@ describe("StrategyGraphService", () => {
         risk_level: "HIGH_RISK",
       };
 
-      mockSupabase.single.mockResolvedValueOnce({ data: mockNode, error: null });
+      setQueryResults([
+        { data: mockNode, error: null },
+      ]);
 
       const request: CreateNodeRequest = {
         organization_id: "org-1",
@@ -106,10 +151,9 @@ describe("StrategyGraphService", () => {
     });
 
     it("should throw error when node creation fails", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: null,
-        error: { message: "Database error" },
-      });
+      setQueryResults([
+        { data: null, error: { message: "Database error" } },
+      ]);
 
       const request: CreateNodeRequest = {
         organization_id: "org-1",
@@ -128,7 +172,9 @@ describe("StrategyGraphService", () => {
         node_type: "TACTIC",
       };
 
-      mockSupabase.single.mockResolvedValueOnce({ data: mockNode, error: null });
+      setQueryResults([
+        { data: mockNode, error: null },
+      ]);
 
       const result = await service.getNode("node-1");
 
@@ -137,10 +183,9 @@ describe("StrategyGraphService", () => {
     });
 
     it("should return null for non-existent node", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: null,
-        error: { code: "PGRST116" },
-      });
+      setQueryResults([
+        { data: null, error: { code: "PGRST116" } },
+      ]);
 
       const result = await service.getNode("non-existent");
 
@@ -155,7 +200,9 @@ describe("StrategyGraphService", () => {
         status: "IN_PROGRESS",
       };
 
-      mockSupabase.single.mockResolvedValueOnce({ data: mockUpdated, error: null });
+      setQueryResults([
+        { data: mockUpdated, error: null },
+      ]);
 
       const result = await service.updateNode("node-1", {
         progress: 50,
@@ -167,7 +214,10 @@ describe("StrategyGraphService", () => {
     });
 
     it("should delete a node", async () => {
-      mockSupabase.eq.mockResolvedValueOnce({ error: null });
+      // deleteNode: .from().delete().eq() -> thenable
+      setQueryResults([
+        { data: null, error: null },
+      ]);
 
       await expect(service.deleteNode("node-1")).resolves.not.toThrow();
 
@@ -178,22 +228,15 @@ describe("StrategyGraphService", () => {
 
   describe("Edge Operations", () => {
     it("should create an edge between nodes", async () => {
-      // Mock node existence checks
-      mockSupabase.single
-        .mockResolvedValueOnce({ data: { id: "node-1" }, error: null })
-        .mockResolvedValueOnce({ data: { id: "node-2" }, error: null })
-        .mockResolvedValueOnce({
-          data: {
-            id: "edge-1",
-            source_node_id: "node-1",
-            target_node_id: "node-2",
-            edge_type: "ENABLES",
-          },
-          error: null,
-        });
-
-      // Mock empty edges for cycle check
-      mockSupabase.eq.mockReturnThis();
+      // createEdge flow:
+      // 1. source node .single()
+      // 2. target node .single()
+      // 3. insert edge .single()
+      setQueryResults([
+        { data: { id: "node-1" }, error: null },
+        { data: { id: "node-2" }, error: null },
+        { data: { id: "edge-1", source_node_id: "node-1", target_node_id: "node-2", edge_type: "ENABLES" }, error: null },
+      ]);
 
       const request: CreateEdgeRequest = {
         organization_id: "org-1",
@@ -208,9 +251,10 @@ describe("StrategyGraphService", () => {
     });
 
     it("should throw error when source node not found", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({ data: null, error: null })
-        .mockResolvedValueOnce({ data: { id: "node-2" }, error: null });
+      setQueryResults([
+        { data: null, error: null },
+        { data: { id: "node-2" }, error: null },
+      ]);
 
       const request: CreateEdgeRequest = {
         organization_id: "org-1",
@@ -230,7 +274,10 @@ describe("StrategyGraphService", () => {
         { id: "edge-2", source_node_id: "n2", target_node_id: "n3" },
       ];
 
-      mockSupabase.eq.mockResolvedValueOnce({ data: mockEdges, error: null });
+      // getEdges: .from().select().eq() -> thenable (no nodeIds filter)
+      setQueryResults([
+        { data: mockEdges, error: null },
+      ]);
 
       const result = await service.getEdges("org-1");
 
@@ -245,13 +292,16 @@ describe("StrategyGraphService", () => {
         { id: "n2", name: "Node 2", node_type: "TACTIC" },
       ];
       const mockEdges = [
-        { id: "e1", source_node_id: "n2", target_node_id: "n1", edge_type: "ENABLES" },
+        { id: "e1", source_node_id: "n2", target_node_id: "n1", edge_type: "ENABLES", is_critical: false },
       ];
 
-      // Mock getNodes
-      mockSupabase.order.mockResolvedValueOnce({ data: mockNodes, error: null });
-      // Mock getEdges
-      mockSupabase.eq.mockResolvedValueOnce({ data: mockEdges, error: null });
+      // getGraph calls getNodes then getEdges:
+      // 1. getNodes: .from().select().eq().order() -> thenable
+      // 2. getEdges: .from().select().eq() -> thenable
+      setQueryResults([
+        { data: mockNodes, error: null },
+        { data: mockEdges, error: null },
+      ]);
 
       const result = await service.getGraph("org-1");
 
@@ -271,8 +321,13 @@ describe("StrategyGraphService", () => {
         { id: "dep-2", name: "Dependency 2" },
       ];
 
-      mockSupabase.eq.mockResolvedValueOnce({ data: mockEdges, error: null });
-      mockSupabase.in.mockResolvedValueOnce({ data: mockNodes, error: null });
+      // getDependencies:
+      // 1. get edges .from().select().eq().eq() -> thenable
+      // 2. get nodes .from().select().in() -> thenable
+      setQueryResults([
+        { data: mockEdges, error: null },
+        { data: mockNodes, error: null },
+      ]);
 
       const result = await service.getDependencies("node-1");
 
@@ -283,8 +338,13 @@ describe("StrategyGraphService", () => {
       const mockEdges = [{ source_node_id: "dependent-1" }];
       const mockNodes = [{ id: "dependent-1", name: "Dependent Node" }];
 
-      mockSupabase.eq.mockResolvedValueOnce({ data: mockEdges, error: null });
-      mockSupabase.in.mockResolvedValueOnce({ data: mockNodes, error: null });
+      // getDependents:
+      // 1. get edges -> thenable
+      // 2. get nodes -> thenable
+      setQueryResults([
+        { data: mockEdges, error: null },
+        { data: mockNodes, error: null },
+      ]);
 
       const result = await service.getDependents("node-1");
 
@@ -292,7 +352,9 @@ describe("StrategyGraphService", () => {
     });
 
     it("should return empty array when no dependencies", async () => {
-      mockSupabase.eq.mockResolvedValueOnce({ data: [], error: null });
+      setQueryResults([
+        { data: [], error: null },
+      ]);
 
       const result = await service.getDependencies("node-1");
 
@@ -420,9 +482,7 @@ describe("StrategyPlannerService", () => {
 
       const result = await service.generateProposalFromSignals("org-1", signals);
 
-      // 2 critical signals = 30% traffic increase
       expect(result.estimatedImpact.trafficIncrease).toBe(30);
-      // 2 critical signals = 20% conversion improvement
       expect(result.estimatedImpact.conversionImprovement).toBe(20);
     });
 
@@ -530,7 +590,10 @@ describe("StrategyPlannerService", () => {
         },
       ];
 
-      mockSupabase.order.mockResolvedValueOnce({ data: mockProposals, error: null });
+      // getProposals: .from().select().eq().order() -> thenable
+      setQueryResults([
+        { data: mockProposals, error: null },
+      ]);
 
       const result = await service.getProposals("org-1");
 
@@ -556,7 +619,10 @@ describe("StrategyPlannerService", () => {
         },
       ];
 
-      mockSupabase.order.mockResolvedValueOnce({ data: mockProposals, error: null });
+      // getProposals with status: .from().select().eq().order().eq() -> thenable
+      setQueryResults([
+        { data: mockProposals, error: null },
+      ]);
 
       const result = await service.getProposals("org-1", "ACTIVE");
 

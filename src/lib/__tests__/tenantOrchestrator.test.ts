@@ -4,18 +4,60 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  startTenantContainer,
-  stopTenantContainer,
-  restartTenantContainer,
-  getContainerStatus,
-  performHealthCheck,
-  getResourceMetrics,
-} from '../tenants/tenantOrchestrator';
+
+// Create chainable Supabase mock with chainProxy pattern.
+// Root mock has NO .then (so await getSupabaseServer() works).
+// Chain methods return chainProxy which HAS .then for terminal queries.
+const { mockSupabase } = vi.hoisted(() => {
+  const queryResults: any[] = [];
+
+  const mock: any = {
+    _queryResults: queryResults,
+    _setResults: (results: any[]) => {
+      queryResults.length = 0;
+      queryResults.push(...results);
+    },
+  };
+
+  const chainProxy: any = {};
+
+  const chainMethods = [
+    'from', 'select', 'insert', 'update', 'delete', 'upsert',
+    'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike',
+    'is', 'in', 'order', 'limit', 'range', 'match', 'not',
+    'or', 'filter', 'contains', 'containedBy', 'textSearch', 'overlaps',
+  ];
+  chainMethods.forEach((m) => {
+    const fn = vi.fn().mockReturnValue(chainProxy);
+    mock[m] = fn;
+    chainProxy[m] = fn;
+  });
+
+  const singleFn = vi.fn().mockImplementation(() => {
+    const result = queryResults.shift() || { data: null, error: null };
+    return Promise.resolve(result);
+  });
+  const maybeSingleFn = vi.fn().mockImplementation(() => {
+    const result = queryResults.shift() || { data: null, error: null };
+    return Promise.resolve(result);
+  });
+
+  mock.single = singleFn;
+  mock.maybeSingle = maybeSingleFn;
+  chainProxy.single = singleFn;
+  chainProxy.maybeSingle = maybeSingleFn;
+
+  chainProxy.then = (resolve: any) => {
+    const result = queryResults.shift() || { data: [], error: null };
+    return resolve(result);
+  };
+
+  return { mockSupabase: mock };
+});
 
 // Mock child_process
 vi.mock('child_process', () => ({
-  exec: vi.fn((cmd, opts, callback) => {
+  exec: vi.fn((cmd: string, opts: any, callback: any) => {
     if (callback) {
       callback(null, { stdout: 'mock output', stderr: '' });
     }
@@ -23,14 +65,14 @@ vi.mock('child_process', () => ({
 }));
 
 vi.mock('util', () => ({
-  promisify: vi.fn((fn) => async (cmd: string) => {
+  promisify: vi.fn(() => async (cmd: string) => {
     if (cmd.includes('docker-compose up')) {
       return { stdout: 'Started', stderr: '' };
     }
     if (cmd.includes('docker-compose down')) {
       return { stdout: 'Stopped', stderr: '' };
     }
-    if (cmd.includes('docker-compose ps')) {
+    if (cmd.includes('docker-compose ps') || cmd.includes('ps -q')) {
       return { stdout: 'abc123\n', stderr: '' };
     }
     if (cmd.includes('docker inspect')) {
@@ -45,30 +87,17 @@ vi.mock('util', () => ({
 
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({
-  getSupabaseServer: vi.fn(() => ({
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          single: vi.fn(() => ({
-            data: {
-              id: 'container-id',
-              container_name: 'tenant_test',
-              container_id: 'docker-id-123',
-              status: 'running',
-              tenant_url: 'http://localhost:3001',
-              image_tag: 'latest',
-            },
-            error: null,
-          })),
-        })),
-      })),
-      update: vi.fn(() => ({
-        eq: vi.fn(() => ({ error: null })),
-      })),
-      insert: vi.fn(() => ({ error: null })),
-    })),
-  })),
+  getSupabaseServer: vi.fn().mockResolvedValue(mockSupabase),
 }));
+
+import {
+  startTenantContainer,
+  stopTenantContainer,
+  restartTenantContainer,
+  getContainerStatus,
+  performHealthCheck,
+  getResourceMetrics,
+} from '../tenants/tenantOrchestrator';
 
 // Mock fetch for health checks
 global.fetch = vi.fn(() =>
@@ -78,28 +107,40 @@ global.fetch = vi.fn(() =>
   } as Response)
 );
 
+const defaultContainer = {
+  id: 'container-id',
+  container_name: 'tenant_test',
+  container_id: 'docker-id-123',
+  status: 'stopped',
+  tenant_url: 'http://localhost:3001',
+  image_tag: 'latest',
+};
+
+function resetMocks() {
+  mockSupabase._setResults([]);
+}
+
 describe('Tenant Orchestrator - Container Lifecycle', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    resetMocks();
   });
 
   it('should start container successfully', async () => {
+    mockSupabase._setResults([
+      { data: { ...defaultContainer, status: 'stopped' }, error: null },
+      { error: null },
+      { error: null },
+    ]);
+
     const result = await startTenantContainer('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(true);
     expect(result.containerId).toBeDefined();
   });
 
   it('should fail to start if container not found', async () => {
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            single: vi.fn(() => ({ data: null, error: { message: 'Not found' } })),
-          })),
-        })),
-      })),
-    } as any);
+    mockSupabase._setResults([
+      { data: null, error: { message: 'Not found' } },
+    ]);
 
     const result = await startTenantContainer('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(false);
@@ -107,19 +148,9 @@ describe('Tenant Orchestrator - Container Lifecycle', () => {
   });
 
   it('should fail if container already running', async () => {
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            single: vi.fn(() => ({
-              data: { id: 'test', status: 'running' },
-              error: null,
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    mockSupabase._setResults([
+      { data: { ...defaultContainer, status: 'running' }, error: null },
+    ]);
 
     const result = await startTenantContainer('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(false);
@@ -127,24 +158,19 @@ describe('Tenant Orchestrator - Container Lifecycle', () => {
   });
 
   it('should stop container successfully', async () => {
+    mockSupabase._setResults([
+      { data: { ...defaultContainer, status: 'running' }, error: null },
+      { error: null },
+    ]);
+
     const result = await stopTenantContainer('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(true);
   });
 
   it('should fail to stop if already stopped', async () => {
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            single: vi.fn(() => ({
-              data: { id: 'test', status: 'stopped' },
-              error: null,
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    mockSupabase._setResults([
+      { data: { ...defaultContainer, status: 'stopped' }, error: null },
+    ]);
 
     const result = await stopTenantContainer('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(false);
@@ -152,38 +178,66 @@ describe('Tenant Orchestrator - Container Lifecycle', () => {
   });
 
   it('should restart container successfully', async () => {
+    mockSupabase._setResults([
+      // stop: get container
+      { data: { ...defaultContainer, status: 'running' }, error: null },
+      // stop: update status
+      { error: null },
+      // start: get container
+      { data: { ...defaultContainer, status: 'stopped' }, error: null },
+      // start: update status
+      { error: null },
+      // start: insert deployment
+      { error: null },
+    ]);
+
     const result = await restartTenantContainer('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(true);
   });
 });
 
 describe('Tenant Orchestrator - Status Monitoring', () => {
+  beforeEach(() => {
+    resetMocks();
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        status: 200,
+        ok: true,
+      } as Response)
+    );
+  });
+
   it('should get container status when running', async () => {
+    mockSupabase._setResults([
+      { data: { ...defaultContainer, status: 'running', container_id: 'docker-id-123', health_status: 'healthy' }, error: null },
+    ]);
+
     const status = await getContainerStatus('550e8400-e29b-41d4-a716-446655440001');
     expect(status.running).toBe(true);
     expect(status.containerId).toBeDefined();
   });
 
   it('should return not running if container ID is null', async () => {
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            single: vi.fn(() => ({
-              data: { id: 'test', container_id: null },
-              error: null,
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    mockSupabase._setResults([
+      { data: { id: 'test', container_id: null }, error: null },
+    ]);
 
     const status = await getContainerStatus('550e8400-e29b-41d4-a716-446655440001');
     expect(status.running).toBe(false);
   });
 
   it('should perform health check successfully', async () => {
+    mockSupabase._setResults([
+      // performHealthCheck: get container
+      { data: { ...defaultContainer, status: 'running', container_id: 'docker-id-123', health_status: 'healthy' }, error: null },
+      // getContainerStatus: get container
+      { data: { ...defaultContainer, status: 'running', container_id: 'docker-id-123', health_status: 'healthy' }, error: null },
+      // insert health record -> then
+      { error: null },
+      // update container health -> then
+      { error: null },
+    ]);
+
     const result = await performHealthCheck('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(true);
     expect(result.healthy).toBe(true);
@@ -198,6 +252,13 @@ describe('Tenant Orchestrator - Status Monitoring', () => {
       } as Response)
     );
 
+    mockSupabase._setResults([
+      { data: { ...defaultContainer, status: 'running', container_id: 'docker-id-123' }, error: null },
+      { data: { ...defaultContainer, status: 'running', container_id: 'docker-id-123' }, error: null },
+      { error: null },
+      { error: null },
+    ]);
+
     const result = await performHealthCheck('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(true);
     expect(result.healthy).toBe(false);
@@ -208,6 +269,13 @@ describe('Tenant Orchestrator - Status Monitoring', () => {
       Promise.reject(new Error('Timeout'))
     );
 
+    mockSupabase._setResults([
+      { data: { ...defaultContainer, status: 'running', container_id: 'docker-id-123' }, error: null },
+      { data: { ...defaultContainer, status: 'running', container_id: 'docker-id-123' }, error: null },
+      { error: null },
+      { error: null },
+    ]);
+
     const result = await performHealthCheck('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(true);
     expect(result.healthy).toBe(false);
@@ -216,7 +284,16 @@ describe('Tenant Orchestrator - Status Monitoring', () => {
 });
 
 describe('Tenant Orchestrator - Resource Metrics', () => {
+  beforeEach(() => {
+    resetMocks();
+  });
+
   it('should get resource metrics successfully', async () => {
+    mockSupabase._setResults([
+      { data: { ...defaultContainer, container_id: 'docker-id-123' }, error: null },
+      { error: null },
+    ]);
+
     const result = await getResourceMetrics('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(true);
     expect(result.metrics).toBeDefined();
@@ -225,16 +302,9 @@ describe('Tenant Orchestrator - Resource Metrics', () => {
   });
 
   it('should fail if container not found', async () => {
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            single: vi.fn(() => ({ data: null, error: { message: 'Not found' } })),
-          })),
-        })),
-      })),
-    } as any);
+    mockSupabase._setResults([
+      { data: null, error: { message: 'Not found' } },
+    ]);
 
     const result = await getResourceMetrics('550e8400-e29b-41d4-a716-446655440001');
     expect(result.success).toBe(false);

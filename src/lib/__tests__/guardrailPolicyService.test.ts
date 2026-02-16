@@ -6,29 +6,69 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Create a chainable mock that properly returns itself for all methods
-const { mockSupabase } = vi.hoisted(() => {
-  const createChainableMock = (finalValue: any = { data: null, error: null }) => {
-    const chain: any = {
-      from: vi.fn(() => chain),
-      select: vi.fn(() => chain),
-      insert: vi.fn(() => chain),
-      update: vi.fn(() => chain),
-      delete: vi.fn(() => chain),
-      eq: vi.fn(() => chain),
-      neq: vi.fn(() => chain),
-      in: vi.fn(() => chain),
-      or: vi.fn(() => chain),
-      order: vi.fn(() => chain),
-      limit: vi.fn(() => chain),
-      single: vi.fn(() => Promise.resolve(finalValue)),
-      then: vi.fn((resolve: any) => Promise.resolve(finalValue).then(resolve)),
-    };
+// Create a fully chainable mock for Supabase
+// Key insight: the root supabase object must NOT be thenable (no .then),
+// otherwise Promise.resolve(supabase) will try to resolve it as a thenable.
+// Instead, .from() returns a query chain that IS thenable.
+const { mockSupabase, setQueryResults } = vi.hoisted(() => {
+  let queryResults: any[] = [];
+  let queryIndex = 0;
+
+  const createQueryChain = () => {
+    const chain: any = {};
+    const methods = [
+      "select", "insert", "update", "delete", "upsert",
+      "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+      "is", "in", "or", "not", "order", "limit", "range",
+      "match", "filter", "contains", "containedBy", "textSearch",
+    ];
+    methods.forEach((m) => {
+      chain[m] = vi.fn().mockReturnValue(chain);
+    });
+    chain.single = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.maybeSingle = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    // Make query chain thenable for `const { data } = await supabase.from(...).select(...).eq(...)`
+    chain.then = vi.fn().mockImplementation((resolve: any, reject?: any) => {
+      const result = queryResults[queryIndex] || { data: [], error: null };
+      queryIndex++;
+      return Promise.resolve(result).then(resolve, reject);
+    });
     return chain;
   };
 
-  // Default mock that returns empty data
-  return { mockSupabase: createChainableMock({ data: [], error: null }) };
+  // Root supabase object - must NOT have .then so Promise.resolve() works
+  const queryChain = createQueryChain();
+  const mock: any = {
+    from: vi.fn().mockReturnValue(queryChain),
+  };
+  // Expose chain methods on root for test assertions (e.g. mockSupabase.eq)
+  // but explicitly exclude 'then' so root is NOT thenable
+  const chainMethods = [
+    "select", "insert", "update", "delete", "upsert",
+    "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+    "is", "in", "or", "not", "order", "limit", "range",
+    "match", "filter", "contains", "containedBy", "textSearch",
+    "single", "maybeSingle",
+  ];
+  chainMethods.forEach((m) => {
+    mock[m] = queryChain[m];
+  });
+
+  return {
+    mockSupabase: mock,
+    setQueryResults: (results: any[]) => {
+      queryResults = results;
+      queryIndex = 0;
+    },
+  };
 });
 
 vi.mock("@/lib/supabase", () => ({
@@ -48,20 +88,41 @@ describe("GuardrailPolicyService", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    setQueryResults([]);
     service = new GuardrailPolicyService();
   });
 
+  // Helper: set up results for evaluateGuardrails flow
+  // The source does these queries in order:
+  // 1. .single() -> operator profile (role)
+  // 2. .then() -> playbook assignments (via or())
+  // 3. .then() -> active playbooks (via or())
+  // 4. .then() -> playbook rules (via order())
+  // 5. .then() -> log evaluation (insert, thenable)
+  function setupEvalResults(opts: {
+    profile?: any;
+    assignments?: any[];
+    playbooks?: any[];
+    rules?: any[];
+  }) {
+    setQueryResults([
+      // 1. operator profile .single()
+      { data: opts.profile || { role: "ANALYST" }, error: null },
+      // 2. playbook_assignments .or() -> thenable
+      { data: opts.assignments || [], error: null },
+      // 3. operator_playbooks .or() -> thenable
+      { data: opts.playbooks || [], error: null },
+      // 4. playbook_rules .order() -> thenable
+      { data: opts.rules || [], error: null },
+      // 5. guardrail_evaluations .insert() -> thenable
+      { data: null, error: null },
+    ]);
+  }
+
   describe("Guardrail Evaluation", () => {
     it("should return ALLOW when no rules match", async () => {
-      // Mock no assignments
-      mockSupabase.or.mockReturnValueOnce({
-        data: [],
-        error: null,
-      });
-
-      // Mock insert for evaluation log
-      mockSupabase.from.mockReturnValue({
-        insert: vi.fn().mockReturnValue({ error: null }),
+      setupEvalResults({
+        assignments: [], // no assignments -> returns early
       });
 
       const result = await service.evaluateGuardrails({
@@ -74,27 +135,11 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should apply BLOCK action when rule conditions match", async () => {
-      // Mock operator profile
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "ANALYST" },
-        error: null,
-      });
-
-      // Mock assignments
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      // Mock playbooks
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      // Mock rules
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "ANALYST" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             playbook_id: "pb-1",
@@ -107,7 +152,6 @@ describe("GuardrailPolicyService", () => {
             is_active: true,
           },
         ],
-        error: null,
       });
 
       const result = await service.evaluateGuardrails({
@@ -121,23 +165,11 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should apply REQUIRE_QUORUM action with quorum size", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "MANAGER" },
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "MANAGER" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             rule_name: "Require quorum for high risk",
@@ -149,7 +181,6 @@ describe("GuardrailPolicyService", () => {
             is_active: true,
           },
         ],
-        error: null,
       });
 
       const result = await service.evaluateGuardrails({
@@ -164,23 +195,11 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should collect coaching hints from COACHING rules", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "ANALYST" },
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "ANALYST" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             rule_name: "Coach new operators",
@@ -194,7 +213,6 @@ describe("GuardrailPolicyService", () => {
             is_active: true,
           },
         ],
-        error: null,
       });
 
       const result = await service.evaluateGuardrails({
@@ -208,23 +226,11 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should apply more restrictive action between multiple rules", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "MANAGER" },
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "MANAGER" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             rule_name: "Allow normal",
@@ -246,7 +252,6 @@ describe("GuardrailPolicyService", () => {
             is_active: true,
           },
         ],
-        error: null,
       });
 
       const result = await service.evaluateGuardrails({
@@ -260,9 +265,8 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should set sandboxOnly when in sandbox mode", async () => {
-      mockSupabase.or.mockReturnValueOnce({
-        data: [],
-        error: null,
+      setupEvalResults({
+        assignments: [], // no assignments -> ALLOW
       });
 
       const result = await service.evaluateGuardrails({
@@ -277,23 +281,11 @@ describe("GuardrailPolicyService", () => {
 
   describe("Condition Evaluation", () => {
     it("should match operator_score < threshold", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "ANALYST" },
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "ANALYST" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             rule_name: "Block low",
@@ -305,7 +297,6 @@ describe("GuardrailPolicyService", () => {
             is_active: true,
           },
         ],
-        error: null,
       });
 
       // Score 30 < 40, should match
@@ -319,23 +310,11 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should not match when operator_score >= threshold", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "ANALYST" },
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "ANALYST" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             rule_name: "Block low",
@@ -347,7 +326,6 @@ describe("GuardrailPolicyService", () => {
             is_active: true,
           },
         ],
-        error: null,
       });
 
       // Score 50 >= 40, should not match
@@ -361,23 +339,11 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should match domain condition", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "MANAGER" },
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "MANAGER" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             rule_name: "Extra care for SEO",
@@ -389,7 +355,6 @@ describe("GuardrailPolicyService", () => {
             is_active: true,
           },
         ],
-        error: null,
       });
 
       const result = await service.evaluateGuardrails({
@@ -402,23 +367,11 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should not match when domain differs", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "MANAGER" },
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "MANAGER" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             rule_name: "Extra care for SEO",
@@ -430,7 +383,6 @@ describe("GuardrailPolicyService", () => {
             is_active: true,
           },
         ],
-        error: null,
       });
 
       const result = await service.evaluateGuardrails({
@@ -445,14 +397,12 @@ describe("GuardrailPolicyService", () => {
 
   describe("Sandbox Simulation", () => {
     it("should simulate EMAIL_SEND execution", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { id: "sim-1" },
-        error: null,
-      });
-
-      mockSupabase.from.mockReturnValue({
-        insert: vi.fn().mockReturnValue({ error: null }),
-      });
+      setQueryResults([
+        // 1. sandbox_executions insert().select().single()
+        { data: { id: "sim-1" }, error: null },
+        // 2. feedback_events insert() -> thenable
+        { data: null, error: null },
+      ]);
 
       const result = await service.runSandboxSimulation(
         "org-1",
@@ -471,14 +421,10 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should fail EMAIL_SEND simulation when missing fields", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { id: "sim-1" },
-        error: null,
-      });
-
-      mockSupabase.from.mockReturnValue({
-        insert: vi.fn().mockReturnValue({ error: null }),
-      });
+      setQueryResults([
+        { data: { id: "sim-1" }, error: null },
+        { data: null, error: null },
+      ]);
 
       const result = await service.runSandboxSimulation(
         "org-1",
@@ -495,14 +441,10 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should simulate CONTENT_PUBLISH with warnings", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { id: "sim-1" },
-        error: null,
-      });
-
-      mockSupabase.from.mockReturnValue({
-        insert: vi.fn().mockReturnValue({ error: null }),
-      });
+      setQueryResults([
+        { data: { id: "sim-1" }, error: null },
+        { data: null, error: null },
+      ]);
 
       const result = await service.runSandboxSimulation(
         "org-1",
@@ -521,14 +463,10 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should simulate DATA_UPDATE execution", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { id: "sim-1" },
-        error: null,
-      });
-
-      mockSupabase.from.mockReturnValue({
-        insert: vi.fn().mockReturnValue({ error: null }),
-      });
+      setQueryResults([
+        { data: { id: "sim-1" }, error: null },
+        { data: null, error: null },
+      ]);
 
       const result = await service.runSandboxSimulation(
         "org-1",
@@ -546,17 +484,15 @@ describe("GuardrailPolicyService", () => {
 
   describe("Coaching Hints", () => {
     it("should record coaching hints when shown", async () => {
-      // Mock score fetch
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { reliability_score: 60, accuracy_score: 55 },
-        error: null,
-      });
-
-      // Mock evaluateGuardrails (simplified)
-      mockSupabase.or.mockReturnValueOnce({
-        data: [],
-        error: null,
-      });
+      setQueryResults([
+        // 1. getCoachingHints -> reviewer_scores .single()
+        { data: { reliability_score: 60, accuracy_score: 55 }, error: null },
+        // 2-5: evaluateGuardrails inner calls (profile, assignments, playbooks, rules, log)
+        { data: { role: "ANALYST" }, error: null },
+        { data: [], error: null }, // no assignments -> early return
+        // 6. logEvaluation thenable
+        { data: null, error: null },
+      ]);
 
       const hints = await service.getCoachingHints(
         "org-1",
@@ -568,9 +504,10 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should record hint feedback", async () => {
-      mockSupabase.eq.mockReturnValueOnce({
-        error: null,
-      });
+      setQueryResults([
+        // recordHintFeedback -> .update().eq() -> thenable
+        { data: null, error: null },
+      ]);
 
       await expect(
         service.recordHintFeedback("hint-1", true, "Very helpful!")
@@ -580,19 +517,22 @@ describe("GuardrailPolicyService", () => {
 
   describe("Sandbox History", () => {
     it("should fetch sandbox history for organization", async () => {
-      mockSupabase.limit.mockReturnValueOnce({
-        data: [
-          {
-            id: "sim-1",
-            simulated_result: { status: "SUCCESS" },
-            would_have_succeeded: true,
-            simulated_side_effects: [],
-            insights: ["Test insight"],
-            warnings: [],
-          },
-        ],
-        error: null,
-      });
+      setQueryResults([
+        // getSandboxHistory -> thenable
+        {
+          data: [
+            {
+              id: "sim-1",
+              simulated_result: { status: "SUCCESS" },
+              would_have_succeeded: true,
+              simulated_side_effects: [],
+              insights: ["Test insight"],
+              warnings: [],
+            },
+          ],
+          error: null,
+        },
+      ]);
 
       const history = await service.getSandboxHistory("org-1");
 
@@ -601,10 +541,9 @@ describe("GuardrailPolicyService", () => {
     });
 
     it("should filter history by operator", async () => {
-      mockSupabase.limit.mockReturnValueOnce({
-        data: [],
-        error: null,
-      });
+      setQueryResults([
+        { data: [], error: null },
+      ]);
 
       await service.getSandboxHistory("org-1", "op-1", 10);
 
@@ -614,23 +553,11 @@ describe("GuardrailPolicyService", () => {
 
   describe("Rule Precedence", () => {
     it("should skip inactive rules", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { role: "ANALYST" },
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ playbook_id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.or.mockReturnValueOnce({
-        data: [{ id: "pb-1" }],
-        error: null,
-      });
-
-      mockSupabase.order.mockReturnValueOnce({
-        data: [
+      setupEvalResults({
+        profile: { role: "ANALYST" },
+        assignments: [{ playbook_id: "pb-1" }],
+        playbooks: [{ id: "pb-1" }],
+        rules: [
           {
             id: "rule-1",
             rule_name: "Disabled block",
@@ -642,7 +569,6 @@ describe("GuardrailPolicyService", () => {
             is_active: false, // Inactive
           },
         ],
-        error: null,
       });
 
       const result = await service.evaluateGuardrails({

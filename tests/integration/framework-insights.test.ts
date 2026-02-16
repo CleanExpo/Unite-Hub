@@ -34,24 +34,38 @@ const mockInsights = {
     title: 'Usage Peaks on Tuesdays and Wednesdays',
     severity: 'info',
     aiConfidence: 88,
+    relatedData: { peakDays: ['Tuesday', 'Wednesday'], avgIncrease: 34 },
   },
   anomaly: {
     type: 'anomaly',
     title: 'Unusual Drop in Effectiveness Score',
     severity: 'warning',
     aiConfidence: 82,
+    metrics: {
+      currentValue: 62,
+      previousValue: 78,
+      change: -16,
+      changePercent: -20.5,
+    },
   },
   trend: {
     type: 'trend',
     title: '30-Day Adoption Forecast: +18% Growth',
     severity: 'info',
     aiConfidence: 91,
+    metrics: {
+      currentValue: 72,
+      previousValue: 61,
+      change: 11,
+      changePercent: 18.0,
+    },
   },
   opportunity: {
     type: 'opportunity',
     title: 'Opportunity: Untapped High-Value Components',
     severity: 'info',
     aiConfidence: 87,
+    relatedData: { components: ['Value Proposition', 'Target Audience'], potentialValue: 2500 },
   },
 };
 
@@ -70,6 +84,9 @@ const mockRecommendations = {
       estimatedValue: 1250,
     },
     aiConfidence: 92,
+    actionItems: ['Review current component', 'Apply optimization template', 'Test with users'],
+    successMetrics: ['Adoption rate +22%', 'Effectiveness score +15%'],
+    relatedInsights: ['insight_perf_001', 'insight_opp_001'],
   },
   strategic: {
     category: 'strategy',
@@ -84,6 +101,9 @@ const mockRecommendations = {
       estimatedValue: 5000,
     },
     aiConfidence: 88,
+    actionItems: ['Research competitors', 'Design framework structure', 'Implement and test'],
+    successMetrics: ['Market coverage +40%', 'Intelligence accuracy 90%+'],
+    relatedInsights: ['insight_trend_001'],
   },
   growth: {
     category: 'growth',
@@ -98,6 +118,9 @@ const mockRecommendations = {
       estimatedValue: 8500,
     },
     aiConfidence: 91,
+    actionItems: ['Define enterprise features', 'Build collaboration tools', 'Beta launch'],
+    successMetrics: ['Enterprise signups 50+', 'Team adoption 80%+'],
+    relatedInsights: ['insight_opp_001', 'insight_trend_001'],
   },
 };
 

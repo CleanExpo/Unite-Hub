@@ -21,7 +21,7 @@ describe('projectCreator', () => {
       {
         id: 'pkg-better',
         tier: 'better',
-        label: 'Better Package',
+        label: 'Better',
         summary: 'Complete restaurant management solution',
         priceMin: 5000,
         priceMax: 7500,
@@ -37,7 +37,7 @@ describe('projectCreator', () => {
       {
         id: 'pkg-good',
         tier: 'good',
-        label: 'Good Package',
+        label: 'Good',
         summary: 'Basic restaurant features',
         priceMin: 3000,
         priceMax: 4000,
@@ -111,7 +111,7 @@ describe('projectCreator', () => {
       const project = createProjectFromProposal(mockParams);
 
       expect(project.metadata.aiGenerated).toBe(true);
-      expect(project.metadata.packageLabel).toBe('Better Package');
+      expect(project.metadata.packageLabel).toBe('Better');
       expect(project.metadata.packageSummary).toBe('Complete restaurant management solution');
     });
 
@@ -148,14 +148,16 @@ describe('projectCreator', () => {
     it('should set task priorities', () => {
       const project = createProjectFromProposal(mockParams);
 
-      // First task should be high priority (< 30% of total)
+      // "Core POS system" - "core" keyword -> high
       expect(project.tasks[0].priority).toBe('high');
 
-      // Middle tasks should be medium
-      expect(project.tasks[1].priority).toBe('medium');
+      // "Database setup" - "setup" keyword -> high
+      expect(project.tasks[1].priority).toBe('high');
+
+      // "API development" - no keyword, middle position -> medium
       expect(project.tasks[2].priority).toBe('medium');
 
-      // Last task should be low priority (> 70% of total)
+      // "Testing & QA" - last task (> 70%) -> low
       expect(project.tasks[3].priority).toBe('low');
     });
 
@@ -303,7 +305,7 @@ describe('projectCreator', () => {
       const activityLog = createProjectActivityLog(project);
 
       expect(activityLog.action).toBe('project_created');
-      expect(activityLog.description).toContain('Restaurant Management App - Better Package');
+      expect(activityLog.description).toContain('Restaurant Management App - Better');
       expect(activityLog.description).toContain('better');
       expect(activityLog.timestamp).toBeDefined();
       expect(activityLog.metadata.projectId).toBe(project.id);

@@ -7,19 +7,63 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock Supabase
-const mockSupabase = {
-  from: vi.fn().mockReturnThis(),
-  select: vi.fn().mockReturnThis(),
-  insert: vi.fn().mockReturnThis(),
-  update: vi.fn().mockReturnThis(),
-  delete: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  in: vi.fn().mockReturnThis(),
-  order: vi.fn().mockReturnThis(),
-  limit: vi.fn().mockReturnThis(),
-  single: vi.fn(),
-};
+// Create a fully chainable mock for Supabase
+const { mockSupabase, setQueryResults } = vi.hoisted(() => {
+  let queryResults: any[] = [];
+  let queryIndex = 0;
+
+  const createQueryChain = () => {
+    const chain: any = {};
+    const methods = [
+      "select", "insert", "update", "delete", "upsert",
+      "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+      "is", "in", "or", "not", "order", "limit", "range",
+      "match", "filter", "contains", "containedBy", "textSearch",
+    ];
+    methods.forEach((m) => {
+      chain[m] = vi.fn().mockReturnValue(chain);
+    });
+    chain.single = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.maybeSingle = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.then = vi.fn().mockImplementation((resolve: any, reject?: any) => {
+      const result = queryResults[queryIndex] || { data: [], error: null };
+      queryIndex++;
+      return Promise.resolve(result).then(resolve, reject);
+    });
+    return chain;
+  };
+
+  const queryChain = createQueryChain();
+  const mock: any = {
+    from: vi.fn().mockReturnValue(queryChain),
+  };
+  const chainMethods = [
+    "select", "insert", "update", "delete", "upsert",
+    "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+    "is", "in", "or", "not", "order", "limit", "range",
+    "match", "filter", "contains", "containedBy", "textSearch",
+    "single", "maybeSingle",
+  ];
+  chainMethods.forEach((m) => {
+    mock[m] = queryChain[m];
+  });
+
+  return {
+    mockSupabase: mock,
+    setQueryResults: (results: any[]) => {
+      queryResults = results;
+      queryIndex = 0;
+    },
+  };
+});
 
 vi.mock("@/lib/supabase", () => ({
   getSupabaseServer: vi.fn(() => Promise.resolve(mockSupabase)),
@@ -59,7 +103,9 @@ describe("StrategySimulationService", () => {
         time_horizon_days: 90,
       };
 
-      mockSupabase.single.mockResolvedValueOnce({ data: mockSimulation, error: null });
+      setQueryResults([
+        { data: mockSimulation, error: null },
+      ]);
 
       const result = await service.createSimulation({
         organization_id: "org-1",
@@ -84,7 +130,9 @@ describe("StrategySimulationService", () => {
         status: "PENDING",
       };
 
-      mockSupabase.single.mockResolvedValueOnce({ data: mockSimulation, error: null });
+      setQueryResults([
+        { data: mockSimulation, error: null },
+      ]);
 
       const result = await service.createSimulation({
         organization_id: "org-1",
@@ -102,10 +150,9 @@ describe("StrategySimulationService", () => {
     });
 
     it("should throw error on creation failure", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: null,
-        error: { message: "Database error" },
-      });
+      setQueryResults([
+        { data: null, error: { message: "Database error" } },
+      ]);
 
       await expect(
         service.createSimulation({
@@ -127,8 +174,10 @@ describe("StrategySimulationService", () => {
         source_node_ids: [],
       };
 
-      mockSupabase.eq.mockReturnThis();
-      mockSupabase.single.mockResolvedValue({ data: mockRun, error: null });
+      setQueryResults([
+        { data: mockRun, error: null }, // fetch simulation
+        { data: null, error: null }, // update to RUNNING
+      ]);
 
       // Mock the run flow - this will fail due to complex interactions
       // but we can verify the update was called
@@ -144,10 +193,9 @@ describe("StrategySimulationService", () => {
 
   describe("Simulation Results", () => {
     it("should return null for non-completed simulation", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { id: "sim-1", status: "RUNNING" },
-        error: null,
-      });
+      setQueryResults([
+        { data: { id: "sim-1", status: "RUNNING" }, error: null },
+      ]);
 
       const result = await service.getSimulationResults("sim-1");
       expect(result).toBeNull();
@@ -159,7 +207,10 @@ describe("StrategySimulationService", () => {
         { id: "sim-2", name: "Sim 2", status: "PENDING" },
       ];
 
-      mockSupabase.limit.mockResolvedValueOnce({ data: mockSimulations, error: null });
+      // getSimulations: .from().select().eq().order().limit() -> thenable
+      setQueryResults([
+        { data: mockSimulations, error: null },
+      ]);
 
       const result = await service.getSimulations("org-1");
       expect(result).toHaveLength(2);
@@ -170,7 +221,10 @@ describe("StrategySimulationService", () => {
         { id: "sim-1", name: "Completed", status: "COMPLETED" },
       ];
 
-      mockSupabase.limit.mockResolvedValueOnce({ data: mockSimulations, error: null });
+      // getSimulations with status: .from().select().eq().order().eq().limit() -> thenable
+      setQueryResults([
+        { data: mockSimulations, error: null },
+      ]);
 
       const result = await service.getSimulations("org-1", { status: "COMPLETED" });
       expect(result).toHaveLength(1);
@@ -180,10 +234,9 @@ describe("StrategySimulationService", () => {
 
   describe("Benchmark Creation", () => {
     it("should create a benchmark snapshot", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { id: "bench-1" },
-        error: null,
-      });
+      setQueryResults([
+        { data: { id: "bench-1" }, error: null },
+      ]);
 
       const result = await service.createBenchmark(
         "org-1",
@@ -196,10 +249,9 @@ describe("StrategySimulationService", () => {
     });
 
     it("should include optional parameters in benchmark", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { id: "bench-2" },
-        error: null,
-      });
+      setQueryResults([
+        { data: { id: "bench-2" }, error: null },
+      ]);
 
       await service.createBenchmark(
         "org-1",
@@ -314,7 +366,6 @@ describe("StrategyEvaluationService", () => {
 
       const evaluations = service.evaluatePaths(result);
 
-      // CI should be approximately mean +/- 1.96 * stdDev
       const [low, high] = evaluations[0].confidenceInterval;
       expect(high - low).toBeGreaterThan(0);
     });
@@ -377,7 +428,7 @@ describe("StrategyEvaluationService", () => {
       expect(results).toHaveLength(1);
       expect(results[0].parameter).toBe("success_probability");
       expect(results[0].baselineValue).toBe(0.8);
-      expect(results[0].range).toHaveLength(11); // 0% to 200% in 10 steps
+      expect(results[0].range).toHaveLength(11);
       expect(results[0].sensitivity).toBeDefined();
     });
 
@@ -394,41 +445,37 @@ describe("StrategyEvaluationService", () => {
 
       const results = service.performSensitivityAnalysis(path);
 
-      expect(results).toHaveLength(3); // Default parameters
+      expect(results).toHaveLength(3);
     });
   });
 
   describe("Path Comparison", () => {
     it("should compare paths and store result", async () => {
-      const mockSteps = [
-        {
-          path_id: "p1",
-          success_probability: 0.8,
-          expected_value: 2000,
-          variance: 50000,
-          expected_duration_hours: 20,
-          risk_factors: { complexity: 0.2 },
-        },
-        {
-          path_id: "p2",
-          success_probability: 0.7,
-          expected_value: 2500,
-          variance: 60000,
-          expected_duration_hours: 25,
-          risk_factors: { complexity: 0.3 },
-        },
-      ];
+      setQueryResults([
+        { data: [
+          {
+            path_id: "p1",
+            success_probability: 0.8,
+            expected_value: 2000,
+            variance: 50000,
+            expected_duration_hours: 20,
+            risk_factors: { complexity: 0.2 },
+          },
+          {
+            path_id: "p2",
+            success_probability: 0.7,
+            expected_value: 2500,
+            variance: 60000,
+            expected_duration_hours: 25,
+            risk_factors: { complexity: 0.3 },
+          },
+        ], error: null },
+      ]);
 
-      mockSupabase.eq.mockReturnThis();
-      mockSupabase.single.mockResolvedValue({ data: mockSteps, error: null });
-
-      // The comparison will fail in test env due to mock limitations
-      // but we can verify the setup
       expect(service).toBeDefined();
     });
 
     it("should generate rationale for recommendation", () => {
-      // Test the rationale generation logic indirectly
       const paths = [
         { pathId: "p1", steps: [], totalExpectedValue: 5000, totalVariance: 100000, successProbability: 0.8, duration: 50, riskScore: 0.2 },
       ];
@@ -451,7 +498,6 @@ describe("StrategyEvaluationService", () => {
       const lowTolerance = service.evaluatePaths(result, { riskTolerance: 0.2 });
       const highTolerance = service.evaluatePaths(result, { riskTolerance: 0.8 });
 
-      // Higher risk tolerance should result in higher risk-adjusted value
       expect(highTolerance[0].riskAdjustedValue).toBeGreaterThan(lowTolerance[0].riskAdjustedValue);
     });
 
@@ -464,7 +510,6 @@ describe("StrategyEvaluationService", () => {
       const highValue = service.evaluatePaths(result, { valueWeight: 0.8 });
       const lowValue = service.evaluatePaths(result, { valueWeight: 0.2 });
 
-      // Different weights should produce different scores
       expect(highValue[0].score).not.toBe(lowValue[0].score);
     });
   });

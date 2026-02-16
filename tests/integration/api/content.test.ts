@@ -9,6 +9,10 @@ import { createAuthenticatedRequest, parseJsonResponse } from '../../helpers/api
 import { TEST_WORKSPACE, TEST_USER } from '../../helpers/auth';
 import { mockSupabaseClient } from '../../helpers/db';
 
+// Valid UUIDs for route validation
+const VALID_WORKSPACE_ID = 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d';
+const VALID_CONTACT_ID = 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e';
+
 // Mock workspace validation - MUST be before route imports
 vi.mock('@/lib/workspace-validation', () => ({
   validateUserAuth: vi.fn().mockResolvedValue({
@@ -19,7 +23,7 @@ vi.mock('@/lib/workspace-validation', () => ({
   validateUserAndWorkspace: vi.fn().mockResolvedValue({
     userId: TEST_USER.id,
     orgId: TEST_WORKSPACE.org_id,
-    workspaceId: TEST_WORKSPACE.id,
+    workspaceId: VALID_WORKSPACE_ID,
   }),
 }));
 
@@ -48,7 +52,7 @@ describe('Content API - GET /api/content', () => {
 
     const { GET } = await import('@/app/api/content/route');
 
-    const req = new NextRequest('http://localhost:3008/api/content?workspace=test-workspace', {
+    const req = new NextRequest(`http://localhost:3008/api/content?workspace=${VALID_WORKSPACE_ID}`, {
       method: 'GET',
     });
 
@@ -65,21 +69,21 @@ describe('Content API - GET /api/content', () => {
     vi.mocked(workspaceValidation.validateUserAndWorkspace).mockResolvedValue({
       userId: TEST_USER.id,
       orgId: TEST_WORKSPACE.org_id,
-      workspaceId: TEST_WORKSPACE.id,
+      workspaceId: VALID_WORKSPACE_ID,
     });
 
     const mockContent = [
       {
         id: 'content-1',
-        workspace_id: TEST_WORKSPACE.id,
-        contact_id: 'contact-1',
+        workspace_id: VALID_WORKSPACE_ID,
+        contact_id: VALID_CONTACT_ID,
         title: 'Test Email Subject',
         generated_text: 'Test email body content',
         content_type: 'followup',
         status: 'draft',
         created_at: new Date().toISOString(),
         contacts: {
-          id: 'contact-1',
+          id: VALID_CONTACT_ID,
           name: 'Test Contact',
           email: 'test@example.com',
           company: 'Test Co',
@@ -87,18 +91,27 @@ describe('Content API - GET /api/content', () => {
       },
     ];
 
-    // Mock Supabase to return test content
-    const mockSupabase = mockSupabaseClient({
-      generated_content: mockContent,
-    });
+    // Create a custom mock that supports generated_content table
+    const { createMockQueryBuilder } = await import('../../helpers/db');
+    const mockSupabase = {
+      from: vi.fn((table: string) => {
+        if (table === 'generated_content') {
+          return createMockQueryBuilder(mockContent);
+        }
+        return createMockQueryBuilder([]);
+      }),
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: TEST_USER }, error: null }),
+      },
+    };
 
     const supabaseModule = await import('@/lib/supabase');
-    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase);
+    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase as any);
 
     const { GET } = await import('@/app/api/content/route');
 
     const req = createAuthenticatedRequest({
-      url: `http://localhost:3008/api/content?workspace=${TEST_WORKSPACE.id}`,
+      url: `http://localhost:3008/api/content?workspace=${VALID_WORKSPACE_ID}`,
     });
 
     const response = await GET(req);
@@ -114,13 +127,13 @@ describe('Content API - GET /api/content', () => {
     vi.mocked(workspaceValidation.validateUserAndWorkspace).mockResolvedValue({
       userId: TEST_USER.id,
       orgId: TEST_WORKSPACE.org_id,
-      workspaceId: TEST_WORKSPACE.id,
+      workspaceId: VALID_WORKSPACE_ID,
     });
 
     const { GET } = await import('@/app/api/content/route');
 
     const req = createAuthenticatedRequest({
-      url: `http://localhost:3008/api/content?workspace=${TEST_WORKSPACE.id}`,
+      url: `http://localhost:3008/api/content?workspace=${VALID_WORKSPACE_ID}`,
     });
 
     const response = await GET(req);
@@ -160,11 +173,11 @@ describe('Content API - POST /api/content', () => {
     const req = new NextRequest('http://localhost:3008/api/content', {
       method: 'POST',
       body: JSON.stringify({
-        workspaceId: 'test-workspace',
-        contactId: 'test-contact',
-        title: 'Test',
+        workspaceId: VALID_WORKSPACE_ID,
+        contactId: VALID_CONTACT_ID,
+        title: 'Test Title',
         contentType: 'followup',
-        generatedText: 'Test content',
+        generatedText: 'Test content that is long enough to pass validation checks',
         aiModel: 'claude-sonnet-4-5',
       }),
     });
@@ -180,34 +193,46 @@ describe('Content API - POST /api/content', () => {
     vi.mocked(workspaceValidation.validateUserAndWorkspace).mockResolvedValue({
       userId: TEST_USER.id,
       orgId: TEST_WORKSPACE.org_id,
-      workspaceId: TEST_WORKSPACE.id,
+      workspaceId: VALID_WORKSPACE_ID,
     });
 
-    // Mock Supabase to return contact exists
-    const mockSupabase = mockSupabaseClient({
-      contacts: [{ id: 'contact-123' }],
-      generated_content: [{
-        id: 'new-content-1',
-        workspace_id: TEST_WORKSPACE.id,
-        contact_id: 'contact-123',
-        title: 'New Email Subject',
-        content_type: 'followup',
-        generated_text: 'New email body content',
-        status: 'draft',
-      }],
-    });
+    // Create a custom mock that supports contacts (for lookup) and generated_content (for insert)
+    const { createMockQueryBuilder } = await import('../../helpers/db');
+    const newContentRecord = {
+      id: 'new-content-1',
+      workspace_id: VALID_WORKSPACE_ID,
+      contact_id: VALID_CONTACT_ID,
+      title: 'New Email Subject',
+      content_type: 'followup',
+      generated_text: 'New email body content that is long enough',
+      status: 'draft',
+    };
+    const mockSupabase = {
+      from: vi.fn((table: string) => {
+        if (table === 'contacts') {
+          return createMockQueryBuilder([{ id: VALID_CONTACT_ID }]);
+        }
+        if (table === 'generated_content') {
+          return createMockQueryBuilder([newContentRecord]);
+        }
+        return createMockQueryBuilder([]);
+      }),
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: TEST_USER }, error: null }),
+      },
+    };
 
     const supabaseModule = await import('@/lib/supabase');
-    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase);
+    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase as any);
 
     const { POST } = await import('@/app/api/content/route');
 
     const newContent = {
-      workspaceId: TEST_WORKSPACE.id,
-      contactId: 'contact-123',
+      workspaceId: VALID_WORKSPACE_ID,
+      contactId: VALID_CONTACT_ID,
       title: 'New Email Subject',
       contentType: 'followup',
-      generatedText: 'New email body content',
+      generatedText: 'New email body content that is long enough',
       aiModel: 'claude-sonnet-4-5',
       status: 'draft',
     };
@@ -305,20 +330,27 @@ describe('Content API - Error Handling', () => {
     vi.mocked(workspaceValidation.validateUserAndWorkspace).mockResolvedValue({
       userId: TEST_USER.id,
       orgId: TEST_WORKSPACE.org_id,
-      workspaceId: TEST_WORKSPACE.id,
+      workspaceId: VALID_WORKSPACE_ID,
     });
 
-    const mockSupabase = mockSupabaseClient({
-      error: new Error('Database connection failed'),
-    });
+    // Create mock that returns error for generated_content table
+    const { createMockQueryBuilder } = await import('../../helpers/db');
+    const mockSupabase = {
+      from: vi.fn((table: string) => {
+        return createMockQueryBuilder([], { message: 'Database connection failed' });
+      }),
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: TEST_USER }, error: null }),
+      },
+    };
 
     const supabaseModule = await import('@/lib/supabase');
-    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase);
+    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase as any);
 
     const { GET } = await import('@/app/api/content/route');
 
     const req = createAuthenticatedRequest({
-      url: `http://localhost:3008/api/content?workspace=${TEST_WORKSPACE.id}`,
+      url: `http://localhost:3008/api/content?workspace=${VALID_WORKSPACE_ID}`,
     });
 
     const response = await GET(req);

@@ -6,25 +6,61 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock Supabase
+// Create chainable Supabase mock with chainProxy pattern.
+// The root mock must NOT have .then (otherwise await getSupabaseServer()
+// treats it as thenable and unwraps it). Chain methods return chainProxy
+// which HAS .then for terminal query resolution.
 const { mockSupabase } = vi.hoisted(() => {
+  const queryResults: any[] = [];
+
   const mock: any = {
-    from: vi.fn(),
-    select: vi.fn(),
-    insert: vi.fn(),
-    update: vi.fn(),
-    eq: vi.fn(),
-    gte: vi.fn(),
-    single: vi.fn(),
-    order: vi.fn(),
+    _queryResults: queryResults,
+    _setResults: (results: any[]) => {
+      queryResults.length = 0;
+      queryResults.push(...results);
+    },
   };
-  mock.from.mockReturnValue(mock);
-  mock.select.mockReturnValue(mock);
-  mock.insert.mockReturnValue(mock);
-  mock.update.mockReturnValue(mock);
-  mock.eq.mockReturnValue(mock);
-  mock.gte.mockReturnValue(mock);
-  mock.order.mockReturnValue(mock);
+
+  const chainProxy: any = {};
+
+  const chainMethods = [
+    "from", "select", "insert", "update", "delete", "upsert",
+    "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+    "is", "in", "order", "limit", "range", "match", "not",
+    "or", "filter", "contains", "containedBy", "textSearch", "overlaps",
+  ];
+  chainMethods.forEach((m) => {
+    const fn = vi.fn().mockReturnValue(chainProxy);
+    mock[m] = fn;
+    chainProxy[m] = fn;
+  });
+
+  const singleFn = vi.fn().mockImplementation(() => {
+    const result = queryResults.shift() || { data: null, error: null };
+    return Promise.resolve(result);
+  });
+  const maybeSingleFn = vi.fn().mockImplementation(() => {
+    const result = queryResults.shift() || { data: null, error: null };
+    return Promise.resolve(result);
+  });
+  const rpcFn = vi.fn().mockImplementation(() => {
+    const result = queryResults.shift() || { data: null, error: null };
+    return Promise.resolve(result);
+  });
+
+  mock.single = singleFn;
+  mock.maybeSingle = maybeSingleFn;
+  mock.rpc = rpcFn;
+  chainProxy.single = singleFn;
+  chainProxy.maybeSingle = maybeSingleFn;
+  chainProxy.rpc = rpcFn;
+
+  // .then ONLY on chainProxy for terminal query resolution
+  chainProxy.then = (resolve: any) => {
+    const result = queryResults.shift() || { data: [], error: null };
+    return resolve(result);
+  };
+
   return { mockSupabase: mock };
 });
 
@@ -32,311 +68,289 @@ vi.mock("@/lib/supabase", () => ({
   getSupabaseServer: vi.fn().mockResolvedValue(mockSupabase),
 }));
 
+// Mock TrustModeService
+vi.mock("@/lib/trust/trustModeService", () => ({
+  TrustModeService: vi.fn().mockImplementation(() => ({
+    getStatus: vi.fn(),
+  })),
+}));
+
 // Import after mocking
 import { ExecutionEngine } from "../autonomy/executionEngine";
 
 describe("ExecutionEngine", () => {
   let engine: ExecutionEngine;
+  let mockTrustService: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    engine = new ExecutionEngine();
+    // Clear result queue
+    mockSupabase._setResults([]);
 
-    // Reset mock chain
-    mockSupabase.from.mockReturnThis();
-    mockSupabase.select.mockReturnThis();
-    mockSupabase.insert.mockReturnThis();
-    mockSupabase.update.mockReturnThis();
-    mockSupabase.eq.mockReturnThis();
-    mockSupabase.gte.mockReturnThis();
-    mockSupabase.order.mockReturnThis();
+    engine = new ExecutionEngine();
+    // Access the internal trust service mock
+    mockTrustService = (engine as any).trustService;
   });
 
   describe("executeProposal", () => {
     it("should execute an approved proposal successfully", async () => {
-      // Mock proposal lookup
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: {
-            id: "proposal-uuid",
-            client_id: "client-uuid",
-            organization_id: "org-uuid",
-            status: "APPROVED",
-            domain: "SEO",
-            change_type: "meta_update",
-            proposed_diff: { title: "New Title" },
-            risk_level: "LOW",
-          },
-          error: null,
-        })
-        // Mock trusted mode check
-        .mockResolvedValueOnce({
-          data: {
-            status: "ACTIVE",
-            backup_snapshot_url: "s3://backup",
-          },
-          error: null,
-        })
-        // Mock execution count
-        .mockResolvedValueOnce({
-          data: null,
-          error: null,
-          count: 5,
-        })
-        // Mock execution insert
-        .mockResolvedValueOnce({
-          data: {
-            id: "exec-uuid",
-            proposal_id: "proposal-uuid",
-            rollback_token_id: "token-uuid",
-          },
-          error: null,
-        });
+      // Mock trust service
+      mockTrustService.getStatus.mockResolvedValue({
+        trusted_mode_status: "ACTIVE",
+      });
+
+      // Mock: checkDailyLimit -> scopes query (single), count query (then)
+      // Mock: checkExecutionWindow -> scopes query (single)
+      // Mock: update proposal status (then)
+      // Mock: insert execution (single)
+      // Mock: update proposal to EXECUTED (then)
+      // Mock: insert audit log (then)
+      mockSupabase._setResults([
+        // checkDailyLimit: scopes single
+        { data: { max_daily_actions: 50 }, error: null },
+        // checkDailyLimit: count query (then)
+        { data: null, error: null, count: 5 },
+        // checkExecutionWindow: scopes single
+        { data: { execution_window_start: "00:00", execution_window_end: "23:59" }, error: null },
+        // update proposal status to EXECUTING (then)
+        { data: null, error: null },
+        // insert execution record (single)
+        { data: { id: "exec-uuid", rollback_token_id: "token-uuid" }, error: null },
+        // update proposal to EXECUTED (then)
+        { data: null, error: null },
+        // insert audit log (then)
+        { data: null, error: null },
+      ]);
 
       const result = await engine.executeProposal({
-        proposal_id: "proposal-uuid",
-        executed_by: "user-uuid",
+        proposal: {
+          id: "proposal-uuid",
+          client_id: "client-uuid",
+          organization_id: "org-uuid",
+          status: "APPROVED",
+          domain_scope: "SEO",
+          change_type: "title_tag",
+          proposed_diff: { new_title: "New Title" },
+          risk_level: "LOW",
+          title: "Update title tag",
+        } as any,
+        executor_type: "SYSTEM",
+        executor_id: "user-uuid",
       });
 
       expect(result.success).toBe(true);
-      expect(result.rollback_token_id).toBeDefined();
+      expect(result.execution_id).toBe("exec-uuid");
     });
 
     it("should reject non-APPROVED proposals", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: {
-          id: "proposal-uuid",
-          status: "PENDING",
-        },
-        error: null,
-      });
-
-      const result = await engine.executeProposal({
-        proposal_id: "proposal-uuid",
-        executed_by: "user-uuid",
-      });
-
-      expect(result.success).toBe(false);
-      expect(result.error).toContain("not in APPROVED status");
+      await expect(
+        engine.executeProposal({
+          proposal: {
+            id: "proposal-uuid",
+            status: "PENDING",
+          } as any,
+          executor_type: "SYSTEM",
+        })
+      ).rejects.toThrow("Cannot execute proposal in status: PENDING");
     });
 
     it("should reject when trusted mode is not ACTIVE", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: {
+      mockTrustService.getStatus.mockResolvedValue({
+        trusted_mode_status: "SUSPENDED",
+      });
+
+      await expect(
+        engine.executeProposal({
+          proposal: {
             id: "proposal-uuid",
             client_id: "client-uuid",
             status: "APPROVED",
-          },
-          error: null,
+          } as any,
+          executor_type: "SYSTEM",
         })
-        .mockResolvedValueOnce({
-          data: { status: "SUSPENDED" },
-          error: null,
-        });
-
-      const result = await engine.executeProposal({
-        proposal_id: "proposal-uuid",
-        executed_by: "user-uuid",
-      });
-
-      expect(result.success).toBe(false);
-      expect(result.error).toContain("Trusted mode is not ACTIVE");
+      ).rejects.toThrow("Trusted Mode is not active");
     });
 
     it("should enforce daily execution limit", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: {
+      mockTrustService.getStatus.mockResolvedValue({
+        trusted_mode_status: "ACTIVE",
+      });
+
+      // checkDailyLimit: scopes returns low limit, count exceeds it
+      mockSupabase._setResults([
+        { data: { max_daily_actions: 10 }, error: null },
+        { data: null, error: null, count: 100 },
+      ]);
+
+      await expect(
+        engine.executeProposal({
+          proposal: {
             id: "proposal-uuid",
             client_id: "client-uuid",
             status: "APPROVED",
-          },
-          error: null,
+          } as any,
+          executor_type: "SYSTEM",
         })
-        .mockResolvedValueOnce({
-          data: { status: "ACTIVE" },
-          error: null,
-        });
-
-      // Mock count returning over limit
-      mockSupabase.gte = vi.fn().mockReturnThis();
-      mockSupabase.single.mockResolvedValueOnce({
-        data: null,
-        error: null,
-        count: 100, // Over default limit
-      });
-
-      const result = await engine.executeProposal({
-        proposal_id: "proposal-uuid",
-        executed_by: "user-uuid",
-      });
-
-      expect(result.success).toBe(false);
-      expect(result.error).toContain("Daily execution limit");
-    });
-
-    it("should return proposal not found error", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: null,
-        error: { message: "Not found" },
-      });
-
-      const result = await engine.executeProposal({
-        proposal_id: "not-found",
-        executed_by: "user-uuid",
-      });
-
-      expect(result.success).toBe(false);
-      expect(result.error).toBe("Proposal not found");
+      ).rejects.toThrow("Daily execution limit reached");
     });
 
     it("should calculate correct rollback deadline for LOW risk", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: {
-            id: "proposal-uuid",
-            client_id: "client-uuid",
-            organization_id: "org-uuid",
-            status: "APPROVED",
-            risk_level: "LOW",
-          },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: { status: "ACTIVE" },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: null,
-          error: null,
-          count: 0,
-        })
-        .mockResolvedValueOnce({
-          data: {
-            id: "exec-uuid",
-            rollback_available_until: expect.any(String),
-          },
-          error: null,
-        });
+      mockTrustService.getStatus.mockResolvedValue({
+        trusted_mode_status: "ACTIVE",
+      });
+
+      mockSupabase._setResults([
+        { data: { max_daily_actions: 50 }, error: null },
+        { data: null, error: null, count: 0 },
+        { data: { execution_window_start: "00:00", execution_window_end: "23:59" }, error: null },
+        { data: null, error: null },
+        { data: { id: "exec-uuid", rollback_available_until: "2025-01-04" }, error: null },
+        { data: null, error: null },
+        { data: null, error: null },
+      ]);
 
       const result = await engine.executeProposal({
-        proposal_id: "proposal-uuid",
-        executed_by: "user-uuid",
+        proposal: {
+          id: "proposal-uuid",
+          client_id: "client-uuid",
+          organization_id: "org-uuid",
+          status: "APPROVED",
+          risk_level: "LOW",
+          domain_scope: "SEO",
+          change_type: "meta_description",
+          proposed_diff: {},
+          title: "Update meta",
+        } as any,
+        executor_type: "SYSTEM",
       });
 
       expect(result.success).toBe(true);
-      // LOW risk = 72 hours rollback window
     });
   });
 
   describe("processApprovedProposals", () => {
     it("should process all approved proposals for a client", async () => {
-      mockSupabase.order = vi.fn().mockResolvedValueOnce({
-        data: [
-          { id: "p1", status: "APPROVED" },
-          { id: "p2", status: "APPROVED" },
-        ],
-        error: null,
+      // First query returns approved proposals list (then terminal)
+      mockSupabase._setResults([
+        // proposals list query
+        {
+          data: [
+            {
+              id: "p1",
+              client_id: "client-uuid",
+              organization_id: "org-uuid",
+              status: "APPROVED",
+              risk_level: "LOW",
+              domain_scope: "SEO",
+              change_type: "title_tag",
+              proposed_diff: {},
+              title: "Change 1",
+            },
+          ],
+          error: null,
+        },
+      ]);
+
+      // Mock trust service for each executeProposal call
+      mockTrustService.getStatus.mockResolvedValue({
+        trusted_mode_status: "ACTIVE",
       });
 
-      // Mock each execution
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: { id: "p1", client_id: "c1", status: "APPROVED", risk_level: "LOW" },
-          error: null,
-        })
-        .mockResolvedValueOnce({ data: { status: "ACTIVE" }, error: null })
-        .mockResolvedValueOnce({ data: null, error: null, count: 0 })
-        .mockResolvedValueOnce({ data: { id: "e1" }, error: null })
-        .mockResolvedValueOnce({
-          data: { id: "p2", client_id: "c1", status: "APPROVED", risk_level: "LOW" },
-          error: null,
-        })
-        .mockResolvedValueOnce({ data: { status: "ACTIVE" }, error: null })
-        .mockResolvedValueOnce({ data: null, error: null, count: 1 })
-        .mockResolvedValueOnce({ data: { id: "e2" }, error: null });
+      // Supply results for the sub-calls in executeProposal:
+      // checkDailyLimit: single + then
+      // checkExecutionWindow: single
+      // update proposal: then
+      // insert execution: single
+      // update proposal: then
+      // audit log: then
+      mockSupabase._queryResults.push(
+        { data: { max_daily_actions: 50 }, error: null },
+        { data: null, error: null, count: 0 },
+        { data: { execution_window_start: "00:00", execution_window_end: "23:59" }, error: null },
+        { data: null, error: null },
+        { data: { id: "exec-uuid" }, error: null },
+        { data: null, error: null },
+        { data: null, error: null },
+      );
 
       const results = await engine.processApprovedProposals("client-uuid");
-
-      expect(results).toHaveLength(2);
+      expect(Array.isArray(results)).toBe(true);
+      expect(results.length).toBe(1);
+      expect(results[0].success).toBe(true);
     });
 
     it("should return empty array when no approved proposals", async () => {
-      mockSupabase.order = vi.fn().mockResolvedValueOnce({
-        data: [],
-        error: null,
-      });
+      mockSupabase._setResults([
+        { data: [], error: null },
+      ]);
 
       const results = await engine.processApprovedProposals("client-uuid");
-
       expect(results).toHaveLength(0);
     });
   });
 
   describe("getExecutionHistory", () => {
     it("should return execution history with limit", async () => {
-      mockSupabase.order = vi.fn().mockReturnThis();
-      mockSupabase.order.mockResolvedValueOnce({
-        data: [
-          { id: "e1", executed_at: "2025-01-01" },
-          { id: "e2", executed_at: "2025-01-02" },
-        ],
-        error: null,
-      });
+      mockSupabase._setResults([
+        {
+          data: [
+            { id: "e1", executed_at: "2025-01-01" },
+            { id: "e2", executed_at: "2025-01-02" },
+          ],
+          error: null,
+        },
+      ]);
 
       const history = await engine.getExecutionHistory("client-uuid", 10);
-
       expect(history).toHaveLength(2);
     });
 
     it("should return empty array on error", async () => {
-      mockSupabase.order = vi.fn().mockReturnThis();
-      mockSupabase.order.mockResolvedValueOnce({
-        data: null,
-        error: { message: "Error" },
-      });
+      mockSupabase._setResults([
+        { data: null, error: { message: "Error" } },
+      ]);
 
       const history = await engine.getExecutionHistory("client-uuid");
-
       expect(history).toHaveLength(0);
     });
   });
 
   describe("snapshot handling", () => {
     it("should create before and after snapshots", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: {
-            id: "proposal-uuid",
-            client_id: "client-uuid",
-            organization_id: "org-uuid",
-            status: "APPROVED",
-            domain: "SEO",
-            risk_level: "LOW",
-          },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: {
-            status: "ACTIVE",
-            backup_snapshot_url: "s3://backups/client-uuid",
-          },
-          error: null,
-        })
-        .mockResolvedValueOnce({ data: null, error: null, count: 0 })
-        .mockResolvedValueOnce({
+      mockTrustService.getStatus.mockResolvedValue({
+        trusted_mode_status: "ACTIVE",
+      });
+
+      mockSupabase._setResults([
+        { data: { max_daily_actions: 50 }, error: null },
+        { data: null, error: null, count: 0 },
+        { data: { execution_window_start: "00:00", execution_window_end: "23:59" }, error: null },
+        { data: null, error: null },
+        {
           data: {
             id: "exec-uuid",
-            before_snapshot_path: expect.stringContaining("snapshots/"),
-            after_snapshot_path: expect.stringContaining("snapshots/"),
+            before_snapshot_path: "snapshots/before",
+            after_snapshot_path: "snapshots/after",
           },
           error: null,
-        });
+        },
+        { data: null, error: null },
+        { data: null, error: null },
+      ]);
 
       const result = await engine.executeProposal({
-        proposal_id: "proposal-uuid",
-        executed_by: "user-uuid",
+        proposal: {
+          id: "proposal-uuid",
+          client_id: "client-uuid",
+          organization_id: "org-uuid",
+          status: "APPROVED",
+          domain_scope: "SEO",
+          change_type: "title_tag",
+          proposed_diff: {},
+          risk_level: "LOW",
+          title: "SEO update",
+        } as any,
+        executor_type: "SYSTEM",
+        executor_id: "user-uuid",
       });
 
       expect(result.success).toBe(true);
@@ -345,31 +359,34 @@ describe("ExecutionEngine", () => {
 
   describe("execution window", () => {
     it("should check execution is within allowed time window", async () => {
-      // This is a placeholder test - in production, execution windows
-      // would be enforced based on autonomy scope configuration
-      mockSupabase.single
-        .mockResolvedValueOnce({
-          data: {
-            id: "proposal-uuid",
-            client_id: "client-uuid",
-            status: "APPROVED",
-            risk_level: "LOW",
-          },
-          error: null,
-        })
-        .mockResolvedValueOnce({
-          data: { status: "ACTIVE" },
-          error: null,
-        })
-        .mockResolvedValueOnce({ data: null, error: null, count: 0 })
-        .mockResolvedValueOnce({
-          data: { id: "exec-uuid" },
-          error: null,
-        });
+      mockTrustService.getStatus.mockResolvedValue({
+        trusted_mode_status: "ACTIVE",
+      });
+
+      mockSupabase._setResults([
+        { data: { max_daily_actions: 50 }, error: null },
+        { data: null, error: null, count: 0 },
+        { data: { execution_window_start: "00:00", execution_window_end: "23:59" }, error: null },
+        { data: null, error: null },
+        { data: { id: "exec-uuid" }, error: null },
+        { data: null, error: null },
+        { data: null, error: null },
+      ]);
 
       const result = await engine.executeProposal({
-        proposal_id: "proposal-uuid",
-        executed_by: "user-uuid",
+        proposal: {
+          id: "proposal-uuid",
+          client_id: "client-uuid",
+          organization_id: "org-uuid",
+          status: "APPROVED",
+          risk_level: "LOW",
+          domain_scope: "SEO",
+          change_type: "canonical_fix",
+          proposed_diff: {},
+          title: "Fix canonical",
+        } as any,
+        executor_type: "SYSTEM",
+        executor_id: "user-uuid",
       });
 
       expect(result.success).toBe(true);

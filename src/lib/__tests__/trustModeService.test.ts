@@ -6,32 +6,66 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock Supabase
-const { mockSupabase } = vi.hoisted(() => {
-  const mock: any = {
-    from: vi.fn(),
-    select: vi.fn(),
-    insert: vi.fn(),
-    update: vi.fn(),
-    eq: vi.fn(),
-    gte: vi.fn(),
-    order: vi.fn(),
-    limit: vi.fn(),
-    single: vi.fn(),
+// Mock Supabase with sequential query results pattern
+const { mockSupabase, setQueryResults } = vi.hoisted(() => {
+  let queryResults: any[] = [];
+  let queryIndex = 0;
+
+  const createQueryChain = () => {
+    const chain: any = {};
+    const methods = [
+      "select", "insert", "update", "delete", "upsert",
+      "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+      "is", "in", "or", "not", "order", "limit", "range",
+      "match", "filter", "contains", "containedBy", "textSearch",
+    ];
+    methods.forEach((m) => {
+      chain[m] = vi.fn().mockReturnValue(chain);
+    });
+    chain.single = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.maybeSingle = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.then = vi.fn().mockImplementation((resolve: any, reject?: any) => {
+      const result = queryResults[queryIndex] || { data: [], error: null };
+      queryIndex++;
+      return Promise.resolve(result).then(resolve, reject);
+    });
+    return chain;
   };
-  mock.from.mockReturnValue(mock);
-  mock.select.mockReturnValue(mock);
-  mock.insert.mockReturnValue(mock);
-  mock.update.mockReturnValue(mock);
-  mock.eq.mockReturnValue(mock);
-  mock.gte.mockReturnValue(mock);
-  mock.order.mockReturnValue(mock);
-  mock.limit.mockReturnValue(mock);
-  return { mockSupabase: mock };
+
+  const queryChain = createQueryChain();
+  const mock: any = { from: vi.fn().mockReturnValue(queryChain) };
+
+  // Expose chain methods on root EXCLUDING 'then'
+  const chainMethods = [
+    "select", "insert", "update", "delete", "upsert",
+    "eq", "neq", "gt", "gte", "lt", "lte", "like", "ilike",
+    "is", "in", "or", "not", "order", "limit", "range",
+    "match", "filter", "contains", "containedBy", "textSearch",
+    "single", "maybeSingle",
+  ];
+  chainMethods.forEach((m) => {
+    mock[m] = queryChain[m];
+  });
+
+  return {
+    mockSupabase: mock,
+    setQueryResults: (results: any[]) => {
+      queryResults = results;
+      queryIndex = 0;
+    },
+  };
 });
 
 vi.mock("@/lib/supabase", () => ({
-  getSupabaseServer: vi.fn().mockResolvedValue(mockSupabase),
+  getSupabaseServer: vi.fn(() => Promise.resolve(mockSupabase)),
 }));
 
 // Import after mocking
@@ -43,23 +77,16 @@ describe("TrustModeService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     service = new TrustModeService();
-
-    // Reset mock chain
-    mockSupabase.from.mockReturnThis();
-    mockSupabase.select.mockReturnThis();
-    mockSupabase.insert.mockReturnThis();
-    mockSupabase.update.mockReturnThis();
-    mockSupabase.eq.mockReturnThis();
-    mockSupabase.gte.mockReturnThis();
-    mockSupabase.order.mockReturnThis();
-    mockSupabase.limit.mockReturnThis();
+    setQueryResults([]);
   });
 
   describe("initializeTrustedMode", () => {
     it("should create a new trusted mode request", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({ data: null, error: null }) // Check existing
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Check existing -> null (no existing request)
+        { data: null, error: null },
+        // 2. Insert new request -> .single()
+        {
           data: {
             id: "request-uuid",
             client_id: "client-uuid",
@@ -68,7 +95,10 @@ describe("TrustModeService", () => {
             restore_email: "admin@test.com",
           },
           error: null,
-        }); // Insert
+        },
+        // 3. logAuditEvent -> insert thenable
+        { data: null, error: null },
+      ]);
 
       const result = await service.initializeTrustedMode(
         "client-uuid",
@@ -82,14 +112,17 @@ describe("TrustModeService", () => {
     });
 
     it("should return existing request if already initiated", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: {
-          id: "existing-uuid",
-          client_id: "client-uuid",
-          status: "PENDING_OWNERSHIP",
+      setQueryResults([
+        // 1. Check existing -> found with PENDING_OWNERSHIP (not revoked/rejected)
+        {
+          data: {
+            id: "existing-uuid",
+            client_id: "client-uuid",
+            status: "PENDING_OWNERSHIP",
+          },
+          error: null,
         },
-        error: null,
-      });
+      ]);
 
       const result = await service.initializeTrustedMode(
         "client-uuid",
@@ -103,22 +136,25 @@ describe("TrustModeService", () => {
     });
 
     it("should restart if previously rejected", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Check existing -> found with REJECTED status
+        {
           data: {
             id: "old-uuid",
             client_id: "client-uuid",
             status: "REJECTED",
           },
           error: null,
-        }) // Check existing
-        .mockResolvedValueOnce({
+        },
+        // 2. Update (restart) -> .single()
+        {
           data: {
             id: "old-uuid",
             status: "PENDING_IDENTITY",
           },
           error: null,
-        }); // Update
+        },
+      ]);
 
       const result = await service.initializeTrustedMode(
         "client-uuid",
@@ -133,22 +169,27 @@ describe("TrustModeService", () => {
 
   describe("verifyIdentity", () => {
     it("should advance to PENDING_OWNERSHIP on successful verification", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch request -> .single()
+        {
           data: {
             client_id: "client-uuid",
             organization_id: "org-uuid",
             status: "PENDING_IDENTITY",
           },
           error: null,
-        }) // Fetch request
-        .mockResolvedValueOnce({
+        },
+        // 2. Update -> .single()
+        {
           data: {
             status: "PENDING_OWNERSHIP",
             identity_verification_result: { verified: true },
           },
           error: null,
-        }); // Update
+        },
+        // 3. logAuditEvent -> insert thenable
+        { data: null, error: null },
+      ]);
 
       const result = await service.verifyIdentity("client-uuid", {
         verified: true,
@@ -161,19 +202,24 @@ describe("TrustModeService", () => {
     });
 
     it("should reject if verification fails", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch request -> .single()
+        {
           data: {
             client_id: "client-uuid",
             organization_id: "org-uuid",
             status: "PENDING_IDENTITY",
           },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Update -> .single()
+        {
           data: { status: "REJECTED" },
           error: null,
-        });
+        },
+        // 3. logAuditEvent -> insert thenable
+        { data: null, error: null },
+      ]);
 
       const result = await service.verifyIdentity("client-uuid", {
         verified: false,
@@ -185,13 +231,16 @@ describe("TrustModeService", () => {
     });
 
     it("should throw error if status is not PENDING_IDENTITY", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: {
-          client_id: "client-uuid",
-          status: "ACTIVE",
+      setQueryResults([
+        // 1. Fetch request -> .single()
+        {
+          data: {
+            client_id: "client-uuid",
+            status: "ACTIVE",
+          },
+          error: null,
         },
-        error: null,
-      });
+      ]);
 
       await expect(
         service.verifyIdentity("client-uuid", {
@@ -204,19 +253,24 @@ describe("TrustModeService", () => {
 
   describe("verifyOwnership", () => {
     it("should advance to PENDING_SIGNATURE on successful verification", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch request -> .single()
+        {
           data: {
             client_id: "client-uuid",
             organization_id: "org-uuid",
             status: "PENDING_OWNERSHIP",
           },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Update -> .single()
+        {
           data: { status: "PENDING_SIGNATURE" },
           error: null,
-        });
+        },
+        // 3. logAuditEvent -> insert thenable
+        { data: null, error: null },
+      ]);
 
       const result = await service.verifyOwnership("client-uuid", {
         verified: true,
@@ -229,19 +283,24 @@ describe("TrustModeService", () => {
     });
 
     it("should support DNS verification method", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch request -> .single()
+        {
           data: {
             client_id: "client-uuid",
             organization_id: "org-uuid",
             status: "PENDING_OWNERSHIP",
           },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Update -> .single()
+        {
           data: { status: "PENDING_SIGNATURE" },
           error: null,
-        });
+        },
+        // 3. logAuditEvent -> insert thenable
+        { data: null, error: null },
+      ]);
 
       const result = await service.verifyOwnership("client-uuid", {
         verified: true,
@@ -256,24 +315,31 @@ describe("TrustModeService", () => {
 
   describe("recordSignature", () => {
     it("should activate Trusted Mode after signature", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch request -> .single()
+        {
           data: {
             client_id: "client-uuid",
             organization_id: "org-uuid",
             status: "PENDING_SIGNATURE",
           },
           error: null,
-        }) // Fetch request
-        .mockResolvedValueOnce({
+        },
+        // 2. Update request -> .single()
+        {
           data: { status: "ACTIVE" },
           error: null,
-        }) // Update request
-        .mockResolvedValueOnce({ data: null, error: null }) // Check existing scopes
-        .mockResolvedValueOnce({
+        },
+        // 3. createDefaultScopes: check existing -> .single()
+        { data: null, error: null },
+        // 4. createDefaultScopes: insert -> .single()
+        {
           data: { client_id: "client-uuid" },
           error: null,
-        }); // Create scopes
+        },
+        // 5. logAuditEvent -> insert thenable
+        { data: null, error: null },
+      ]);
 
       const result = await service.recordSignature("client-uuid", {
         document_id: "doc-123",
@@ -286,27 +352,34 @@ describe("TrustModeService", () => {
     });
 
     it("should create default autonomy scopes", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch request -> .single()
+        {
           data: {
             client_id: "client-uuid",
             organization_id: "org-uuid",
             status: "PENDING_SIGNATURE",
           },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Update request -> .single()
+        {
           data: { status: "ACTIVE" },
           error: null,
-        })
-        .mockResolvedValueOnce({ data: null, error: null })
-        .mockResolvedValueOnce({
+        },
+        // 3. createDefaultScopes: check existing -> .single()
+        { data: null, error: null },
+        // 4. createDefaultScopes: insert -> .single()
+        {
           data: {
             client_id: "client-uuid",
             seo_scope_json: { enabled: false },
           },
           error: null,
-        });
+        },
+        // 5. logAuditEvent -> insert thenable
+        { data: null, error: null },
+      ]);
 
       await service.recordSignature("client-uuid", {
         document_id: "doc-123",
@@ -320,8 +393,9 @@ describe("TrustModeService", () => {
 
   describe("configureScopes", () => {
     it("should update SEO scope configuration", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch existing scopes -> .single()
+        {
           data: {
             client_id: "client-uuid",
             seo_scope_json: { enabled: false },
@@ -330,8 +404,9 @@ describe("TrustModeService", () => {
             cro_scope_json: {},
           },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Update scopes -> .single()
+        {
           data: {
             seo_scope_json: {
               enabled: true,
@@ -339,7 +414,8 @@ describe("TrustModeService", () => {
             },
           },
           error: null,
-        });
+        },
+      ]);
 
       const result = await service.configureScopes("client-uuid", {
         seo_scope: {
@@ -352,8 +428,9 @@ describe("TrustModeService", () => {
     });
 
     it("should update multiple domains at once", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch existing scopes -> .single()
+        {
           data: {
             client_id: "client-uuid",
             seo_scope_json: {},
@@ -362,14 +439,16 @@ describe("TrustModeService", () => {
             cro_scope_json: {},
           },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Update scopes -> .single()
+        {
           data: {
             seo_scope_json: { enabled: true },
             content_scope_json: { enabled: true },
           },
           error: null,
-        });
+        },
+      ]);
 
       const result = await service.configureScopes("client-uuid", {
         seo_scope: { enabled: true },
@@ -383,9 +462,9 @@ describe("TrustModeService", () => {
 
   describe("getStatus", () => {
     it("should return complete trust status", async () => {
-      // Mock all the queries
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Get trusted_mode_requests -> .single()
+        {
           data: {
             client_id: "client-uuid",
             status: "ACTIVE",
@@ -394,8 +473,9 @@ describe("TrustModeService", () => {
             signed_at: "2025-01-20T00:00:00Z",
           },
           error: null,
-        }) // Request
-        .mockResolvedValueOnce({
+        },
+        // 2. Get autonomy_scopes -> .single()
+        {
           data: {
             seo_scope_json: { enabled: true },
             content_scope_json: { enabled: false },
@@ -404,41 +484,17 @@ describe("TrustModeService", () => {
             max_risk_level_allowed: "MEDIUM",
           },
           error: null,
-        }) // Scopes
-        .mockResolvedValueOnce({
+        },
+        // 3. Get pending proposals count -> thenable (count query)
+        { count: 5, error: null },
+        // 4. Get today's executions count -> thenable (count query)
+        { count: 3, error: null },
+        // 5. Get last execution -> .single()
+        {
           data: { executed_at: "2025-01-20T10:00:00Z" },
           error: null,
-        }); // Last execution
-
-      // Mock count queries
-      mockSupabase.from = vi.fn().mockImplementation((table: string) => {
-        if (table === "autonomy_proposals") {
-          return {
-            select: vi.fn().mockReturnValue({
-              eq: vi.fn().mockReturnValue({
-                eq: vi.fn().mockResolvedValue({ count: 5 }),
-              }),
-            }),
-          };
-        }
-        if (table === "autonomy_executions") {
-          return {
-            select: vi.fn().mockReturnValue({
-              eq: vi.fn().mockReturnValue({
-                gte: vi.fn().mockResolvedValue({ count: 3 }),
-                order: vi.fn().mockReturnValue({
-                  limit: vi.fn().mockReturnThis(),
-                  single: vi.fn().mockResolvedValue({
-                    data: { executed_at: "2025-01-20T10:00:00Z" },
-                    error: null,
-                  }),
-                }),
-              }),
-            }),
-          };
-        }
-        return mockSupabase;
-      });
+        },
+      ]);
 
       const status = await service.getStatus("client-uuid");
 
@@ -449,10 +505,18 @@ describe("TrustModeService", () => {
     });
 
     it("should return default status if no request exists", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({ data: null, error: null })
-        .mockResolvedValueOnce({ data: null, error: null })
-        .mockResolvedValueOnce({ data: null, error: null });
+      setQueryResults([
+        // 1. Get trusted_mode_requests -> .single() (not found)
+        { data: null, error: null },
+        // 2. Get autonomy_scopes -> .single() (not found)
+        { data: null, error: null },
+        // 3. Get pending proposals count -> thenable
+        { count: 0, error: null },
+        // 4. Get today's executions count -> thenable
+        { count: 0, error: null },
+        // 5. Get last execution -> .single()
+        { data: null, error: null },
+      ]);
 
       const status = await service.getStatus("client-uuid");
 
@@ -463,19 +527,24 @@ describe("TrustModeService", () => {
 
   describe("revokeTrustedMode", () => {
     it("should set status to REVOKED", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Fetch request -> .single()
+        {
           data: {
             client_id: "client-uuid",
             organization_id: "org-uuid",
             status: "ACTIVE",
           },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Update -> .single()
+        {
           data: { status: "REVOKED" },
           error: null,
-        });
+        },
+        // 3. logAuditEvent -> insert thenable
+        { data: null, error: null },
+      ]);
 
       const result = await service.revokeTrustedMode(
         "client-uuid",
@@ -489,12 +558,14 @@ describe("TrustModeService", () => {
 
   describe("isChangeAllowed", () => {
     it("should allow change within scope", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Check trusted mode status -> .single()
+        {
           data: { status: "ACTIVE" },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Get scopes -> .single()
+        {
           data: {
             seo_scope_json: {
               enabled: true,
@@ -504,7 +575,8 @@ describe("TrustModeService", () => {
             max_risk_level_allowed: "MEDIUM",
           },
           error: null,
-        });
+        },
+      ]);
 
       const result = await service.isChangeAllowed(
         "client-uuid",
@@ -517,10 +589,13 @@ describe("TrustModeService", () => {
     });
 
     it("should reject if Trusted Mode not active", async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { status: "PENDING_SIGNATURE" },
-        error: null,
-      });
+      setQueryResults([
+        // 1. Check trusted mode status -> .single()
+        {
+          data: { status: "PENDING_SIGNATURE" },
+          error: null,
+        },
+      ]);
 
       const result = await service.isChangeAllowed(
         "client-uuid",
@@ -534,18 +609,21 @@ describe("TrustModeService", () => {
     });
 
     it("should reject if risk level exceeds maximum", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Check trusted mode status -> .single()
+        {
           data: { status: "ACTIVE" },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Get scopes -> .single()
+        {
           data: {
             seo_scope_json: { enabled: true },
             max_risk_level_allowed: "LOW",
           },
           error: null,
-        });
+        },
+      ]);
 
       const result = await service.isChangeAllowed(
         "client-uuid",
@@ -559,12 +637,14 @@ describe("TrustModeService", () => {
     });
 
     it("should reject forbidden change types", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Check trusted mode status -> .single()
+        {
           data: { status: "ACTIVE" },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Get scopes -> .single()
+        {
           data: {
             seo_scope_json: {
               enabled: true,
@@ -573,7 +653,8 @@ describe("TrustModeService", () => {
             max_risk_level_allowed: "HIGH",
           },
           error: null,
-        });
+        },
+      ]);
 
       const result = await service.isChangeAllowed(
         "client-uuid",
@@ -587,18 +668,21 @@ describe("TrustModeService", () => {
     });
 
     it("should reject if domain scope not enabled", async () => {
-      mockSupabase.single
-        .mockResolvedValueOnce({
+      setQueryResults([
+        // 1. Check trusted mode status -> .single()
+        {
           data: { status: "ACTIVE" },
           error: null,
-        })
-        .mockResolvedValueOnce({
+        },
+        // 2. Get scopes -> .single()
+        {
           data: {
             content_scope_json: { enabled: false },
             max_risk_level_allowed: "MEDIUM",
           },
           error: null,
-        });
+        },
+      ]);
 
       const result = await service.isChangeAllowed(
         "client-uuid",

@@ -274,9 +274,15 @@ export class RollbackEngine {
       if (key === "old_value" && "new_value" in originalDiff) {
         reverseDiff.old_value = originalDiff.new_value;
         reverseDiff.new_value = originalDiff.old_value;
+      } else if (key === "new_value" && "old_value" in originalDiff) {
+        // Already handled by old_value branch above, skip
+        continue;
       } else if (key === "new_title" && "old_title" in originalDiff) {
         reverseDiff.new_title = originalDiff.old_title;
         reverseDiff.old_title = originalDiff.new_title;
+      } else if (key === "old_title" && "new_title" in originalDiff) {
+        // Already handled by new_title branch above, skip
+        continue;
       } else if (key === "action") {
         reverseDiff.action = `undo_${originalDiff[key]}`;
       } else {

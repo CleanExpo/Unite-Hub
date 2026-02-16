@@ -209,8 +209,13 @@ describe('Tenant Provisioner - Docker Compose Generation', () => {
 });
 
 describe('Tenant Provisioner - Provisioning', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+    // Restore fs mocks that may have been overridden by previous tests
+    const fs = await import('fs/promises');
+    vi.mocked(fs.readFile).mockResolvedValue('version: 3.8\nservices:\n  tenant_${TENANT_ID}:\n    environment:\n      TENANT_ID: ${TENANT_ID}' as any);
+    vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+    vi.mocked(fs.mkdir).mockResolvedValue(undefined);
   });
 
   it('should provision tenant successfully', async () => {

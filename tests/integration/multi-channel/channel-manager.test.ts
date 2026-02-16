@@ -29,7 +29,7 @@ describe('ChannelManager Integration Tests', () => {
       });
 
       expect(result.success).toBeDefined();
-      expect(result.channel).toBe('email');
+      expect(result.type).toBe('email');
     });
 
     it('should execute SMS channel with phone validation', async () => {
@@ -46,7 +46,7 @@ describe('ChannelManager Integration Tests', () => {
       });
 
       expect(result.success).toBeDefined();
-      expect(result.channel).toBe('sms');
+      expect(result.type).toBe('sms');
     });
 
     it('should handle template variable replacement', async () => {
@@ -136,14 +136,15 @@ describe('ChannelManager Integration Tests', () => {
 
   describe('Error Handling', () => {
     it('should handle invalid channel type', async () => {
-      await expect(
-        executeChannel({
-          type: 'invalid' as ChannelType,
-          config: {},
-          contact: {},
-          metadata: {},
-        })
-      ).rejects.toThrow();
+      const result = await executeChannel({
+        type: 'invalid' as ChannelType,
+        config: {},
+        contact: {},
+        metadata: {},
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Unsupported channel type');
     });
 
     it('should handle missing contact data', async () => {

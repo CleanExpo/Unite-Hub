@@ -100,7 +100,7 @@ describe('ATOClient', () => {
   });
 
   describe('Environment factory', () => {
-    it('should create client from environment variables', () => {
+    it('should create client from environment variables', async () => {
       process.env.ATO_CLIENT_ID = 'env-client-id';
       process.env.ATO_CLIENT_SECRET = 'env-client-secret';
       process.env.ATO_AUTH_URL = 'https://auth.ato.gov.au/oauth2/authorize';
@@ -109,7 +109,8 @@ describe('ATOClient', () => {
       process.env.ATO_SCOPE = 'https://ato.gov.au/api/v1';
       process.env.ATO_SANDBOX_MODE = 'true';
 
-      const { createATOClient } = require('@/lib/integrations/ato/ato-client');
+      vi.resetModules();
+      const { createATOClient } = await import('@/lib/integrations/ato/ato-client');
       const client = createATOClient();
       expect(client).toBeDefined();
     });

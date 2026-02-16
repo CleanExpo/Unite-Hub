@@ -12,80 +12,29 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Mock Supabase
-const mockSupabase = {
-  auth: {
-    getUser: vi.fn(() => ({
-      data: { user: { id: 'user-123' } },
-      error: null,
-    })),
-  },
-  from: vi.fn((table: string) => ({
-    select: vi.fn(() => ({
-      eq: vi.fn(() => ({
-        single: vi.fn(() => {
-          if (table === 'workspace_members') {
-            return { data: { role: 'owner' }, error: null };
-          }
-          if (table === 'stp_employees') {
-            return {
-              data: {
-                id: 'emp-123',
-                workspace_id: 'ws-456',
-                employee_id: 'EMP001',
-                first_name: 'John',
-                last_name: 'Smith',
-                employment_type: 'full_time',
-                employment_start_date: '2024-01-01',
-                tax_free_threshold: true,
-                hecs_help_debt: false,
-                student_loan_debt: false,
-                tax_scale: 'regular',
-                is_active: true,
-              },
-              error: null,
-            };
-          }
-          return { data: null, error: { code: 'PGRST116' } };
-        }),
-      })),
-      order: vi.fn(() => ({
-        data: [],
-        error: null,
-      })),
-      in: vi.fn(() => ({
-        data: null,
-        error: null,
-      })),
-    })),
-    insert: vi.fn(() => ({
-      select: vi.fn(() => ({
-        single: vi.fn(() => ({
-          data: { id: 'new-id-123' },
-          error: null,
-        })),
-      })),
-    })),
-    update: vi.fn(() => ({
-      eq: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          select: vi.fn(() => ({
-            single: vi.fn(() => ({
-              data: { id: 'updated-id', status: 'finalized' },
-              error: null,
-            })),
-          })),
-        })),
-      })),
-    })),
-    upsert: vi.fn(() => ({
-      select: vi.fn(() => ({
-        single: vi.fn(() => ({
-          data: { id: 'ytd-123' },
-          error: null,
-        })),
-      })),
-    })),
+// Create a fully chainable mock Supabase client
+const mockSupabase: any = {};
+
+const chainMethods = [
+  'from', 'select', 'insert', 'update', 'delete', 'upsert',
+  'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike',
+  'is', 'in', 'not', 'or', 'filter', 'match',
+  'order', 'limit', 'range',
+];
+
+chainMethods.forEach((method) => {
+  mockSupabase[method] = vi.fn().mockReturnValue(mockSupabase);
+});
+
+// Terminal method - default returns success with new-id-123
+mockSupabase.single = vi.fn().mockResolvedValue({ data: { id: 'new-id-123' }, error: null });
+mockSupabase.maybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
+
+// Auth mock
+mockSupabase.auth = {
+  getUser: vi.fn(() => ({
+    data: { user: { id: 'user-123' } },
+    error: null,
   })),
 };
 
@@ -96,6 +45,11 @@ vi.mock('@/lib/supabase/server', () => ({
 describe('STP Compliance Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Re-establish chain mocks after clearing
+    chainMethods.forEach((method) => {
+      mockSupabase[method].mockReturnValue(mockSupabase);
+    });
+    mockSupabase.single.mockResolvedValue({ data: { id: 'new-id-123' }, error: null });
   });
 
   // ============================================================================
@@ -157,6 +111,12 @@ describe('STP Compliance Integration', () => {
 
     it('should get employee by ID', async () => {
       const { getEmployee } = await import('@/lib/integrations/ato/stpComplianceService');
+
+      // getEmployee chain: .from().select().eq().eq().single()
+      mockSupabase.single.mockResolvedValueOnce({
+        data: { id: 'emp-123', employee_id: 'EMP001', first_name: 'John', last_name: 'Smith' },
+        error: null,
+      });
 
       const employee = await getEmployee('ws-456', 'emp-123');
 
@@ -226,6 +186,12 @@ describe('STP Compliance Integration', () => {
 
     it('should finalize pay run', async () => {
       const { finalizePayRun } = await import('@/lib/integrations/ato/stpComplianceService');
+
+      // finalizePayRun chain: .from().update().eq().eq().eq().select().single()
+      mockSupabase.single.mockResolvedValueOnce({
+        data: { id: 'payrun-123', status: 'finalized' },
+        error: null,
+      });
 
       const result = await finalizePayRun('ws-456', 'payrun-123');
 
@@ -327,6 +293,12 @@ describe('STP Compliance Integration', () => {
         net_pay: 83828,
         status: 'finalized' as const,
       };
+
+      // updateYTDSummary calls getYTDSummary internally (1st .single() call)
+      // then does .upsert().select().single() (2nd .single() call)
+      mockSupabase.single
+        .mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } }) // getYTDSummary returns null (not found)
+        .mockResolvedValueOnce({ data: { id: 'ytd-123' }, error: null }); // upsert result
 
       const ytd = await updateYTDSummary('ws-456', 'emp-123', payRun);
 

@@ -5,7 +5,8 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createAuthenticatedRequest } from '../../helpers/api';
-import { createMockWorkspace, createMockContact, createMockCampaign } from '../../helpers/db';
+import { createMockContact, createMockCampaign } from '../../helpers/db';
+import { createMockWorkspace } from '../../helpers/auth';
 import { workspaceIsolation } from '../../fixtures/index';
 
 describe('Workspace Isolation - Contacts API', () => {

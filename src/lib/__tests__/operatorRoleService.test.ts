@@ -400,14 +400,25 @@ describe("OperatorRoleService", () => {
 
   describe("getApproversForRisk", () => {
     it("should return operators who can approve LOW risk", async () => {
+      // The query chain: from -> select -> eq(org_id) -> eq(is_active) -> contains -> eq(can_approve_low)
+      // That's 3 eq calls; the 3rd must resolve (be awaitable)
+      mockSupabase.from.mockReturnThis();
       mockSupabase.select.mockReturnThis();
-      mockSupabase.eq.mockReturnThis();
-      mockSupabase.contains.mockResolvedValueOnce({
-        data: [
-          { user_id: "op-1", role: "OWNER" },
-          { user_id: "op-2", role: "ANALYST" },
-        ],
-        error: null,
+      mockSupabase.contains.mockReturnThis();
+      let eqCallCount = 0;
+      mockSupabase.eq.mockImplementation(() => {
+        eqCallCount++;
+        // The 3rd eq call is the final one (can_approve_low = true)
+        if (eqCallCount >= 3) {
+          return Promise.resolve({
+            data: [
+              { user_id: "op-1", role: "OWNER" },
+              { user_id: "op-2", role: "ANALYST" },
+            ],
+            error: null,
+          });
+        }
+        return mockSupabase;
       });
 
       const approvers = await service.getApproversForRisk("org-uuid", "LOW", "SEO");
@@ -416,11 +427,19 @@ describe("OperatorRoleService", () => {
     });
 
     it("should filter by HIGH risk permission", async () => {
+      mockSupabase.from.mockReturnThis();
       mockSupabase.select.mockReturnThis();
-      mockSupabase.eq.mockReturnThis();
-      mockSupabase.contains.mockResolvedValueOnce({
-        data: [{ user_id: "op-1", role: "OWNER" }],
-        error: null,
+      mockSupabase.contains.mockReturnThis();
+      let eqCallCount = 0;
+      mockSupabase.eq.mockImplementation(() => {
+        eqCallCount++;
+        if (eqCallCount >= 3) {
+          return Promise.resolve({
+            data: [{ user_id: "op-1", role: "OWNER" }],
+            error: null,
+          });
+        }
+        return mockSupabase;
       });
 
       const approvers = await service.getApproversForRisk("org-uuid", "HIGH", "SEO");

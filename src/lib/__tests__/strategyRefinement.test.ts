@@ -5,28 +5,77 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// Create chainable mock with vi.hoisted
+const { mockSupabaseInstance, mockGetSupabaseServer, resetMockChain } = vi.hoisted(() => {
+  const queryResults: any[] = [];
+
+  // The query builder is a separate thenable object returned by chain methods
+  // The supabase client itself must NOT be thenable (no .then) or await will consume it
+  const createQueryBuilder = (): any => {
+    const builder: any = {};
+    const chainMethods = ['from', 'select', 'insert', 'update', 'delete', 'upsert', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike', 'is', 'in', 'order', 'limit', 'range', 'match', 'not', 'or', 'filter', 'contains', 'containedBy', 'textSearch', 'overlaps'];
+    chainMethods.forEach(m => { builder[m] = vi.fn().mockReturnValue(builder); });
+    builder.single = vi.fn().mockImplementation(() => {
+      const result = queryResults.shift() || { data: null, error: null };
+      return Promise.resolve(result);
+    });
+    builder.maybeSingle = vi.fn().mockImplementation(() => {
+      const result = queryResults.shift() || { data: null, error: null };
+      return Promise.resolve(result);
+    });
+    builder.then = (resolve: any, reject?: any) => {
+      const result = queryResults.shift() || { data: [], error: null };
+      return Promise.resolve(resolve(result));
+    };
+    return builder;
+  };
+
+  const queryBuilder = createQueryBuilder();
+
+  // The supabase client - NO .then property here to avoid thenable issues with await
+  const mock: any = {
+    _setResults: (results: any[]) => { queryResults.length = 0; queryResults.push(...results); },
+    from: vi.fn().mockReturnValue(queryBuilder),
+    rpc: vi.fn().mockReturnValue(queryBuilder),
+    auth: { getUser: vi.fn(), getSession: vi.fn() },
+  };
+
+  // Also expose query builder methods on mock for direct access in tests
+  Object.keys(queryBuilder).forEach(k => {
+    if (k !== 'then') mock[k] = queryBuilder[k];
+  });
+
+  const mockGSS = vi.fn().mockResolvedValue(mock);
+  const resetFn = () => {
+    queryResults.length = 0;
+    const chainMethods = ['from', 'select', 'insert', 'update', 'delete', 'upsert', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike', 'is', 'in', 'order', 'limit', 'range', 'match', 'not', 'or', 'filter', 'contains', 'containedBy', 'textSearch', 'overlaps'];
+    chainMethods.forEach(m => { queryBuilder[m].mockReturnValue(queryBuilder); });
+    mock.from.mockReturnValue(queryBuilder);
+    queryBuilder.single.mockImplementation(() => {
+      const result = queryResults.shift() || { data: null, error: null };
+      return Promise.resolve(result);
+    });
+    queryBuilder.maybeSingle.mockImplementation(() => {
+      const result = queryResults.shift() || { data: null, error: null };
+      return Promise.resolve(result);
+    });
+    mockGSS.mockResolvedValue(mock);
+  };
+  return {
+    mockSupabaseInstance: mock,
+    mockGetSupabaseServer: mockGSS,
+    resetMockChain: resetFn,
+  };
+});
+
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({
-  getSupabaseServer: vi.fn(),
+  getSupabaseServer: mockGetSupabaseServer,
   getSupabaseAdmin: vi.fn(),
   getSupabaseServerWithAuth: vi.fn(),
-  supabase: {
-    auth: {
-      getUser: vi.fn(),
-      getSession: vi.fn(),
-    },
-    from: vi.fn(),
-  },
-  supabaseBrowser: {
-    auth: {
-      getUser: vi.fn(),
-      getSession: vi.fn(),
-    },
-    from: vi.fn(),
-  },
-  supabaseAdmin: {
-    from: vi.fn(),
-  },
+  supabase: { auth: { getUser: vi.fn(), getSession: vi.fn() }, from: vi.fn() },
+  supabaseBrowser: { auth: { getUser: vi.fn(), getSession: vi.fn() }, from: vi.fn() },
+  supabaseAdmin: { from: vi.fn() },
 }));
 
 // Import after mocking
@@ -52,25 +101,10 @@ import {
 
 describe('StrategyRefinementService', () => {
   let service: StrategyRefinementService;
-  let mockSupabase: any;
 
   beforeEach(() => {
+    resetMockChain();
     service = new StrategyRefinementService();
-    mockSupabase = {
-      from: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      update: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      is: vi.fn().mockReturnThis(),
-      gte: vi.fn().mockReturnThis(),
-      single: vi.fn(),
-      order: vi.fn().mockReturnThis(),
-      limit: vi.fn().mockReturnThis(),
-    };
-
-    const { getSupabaseServer } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
   });
 
   describe('startRefinementCycle', () => {
@@ -83,8 +117,12 @@ describe('StrategyRefinementService', () => {
         status: 'IN_PROGRESS',
       };
 
-      mockSupabase.single.mockResolvedValueOnce({ data: null, error: null });
-      mockSupabase.single.mockResolvedValueOnce({ data: mockCycle, error: null });
+      // Query 1: get last cycle number (.single())
+      // Query 2: insert new cycle (.select().single())
+      mockSupabaseInstance._setResults([
+        { data: null, error: null },
+        { data: mockCycle, error: null },
+      ]);
 
       const result = await service.startRefinementCycle('org-123', 'MANUAL');
 
@@ -93,14 +131,12 @@ describe('StrategyRefinementService', () => {
     });
 
     it('should increment cycle number', async () => {
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { cycle_number: 5 },
-        error: null,
-      });
-      mockSupabase.single.mockResolvedValueOnce({
-        data: { id: 'cycle-456', cycle_number: 6 },
-        error: null,
-      });
+      // Query 1: get last cycle (has cycle_number 5)
+      // Query 2: insert new cycle (returns cycle_number 6)
+      mockSupabaseInstance._setResults([
+        { data: { cycle_number: 5 }, error: null },
+        { data: { id: 'cycle-456', cycle_number: 6 }, error: null },
+      ]);
 
       const result = await service.startRefinementCycle('org-123', 'SCHEDULED');
 
@@ -182,23 +218,10 @@ describe('StrategyRefinementService', () => {
 
 describe('CrossDomainCoordinatorService', () => {
   let service: CrossDomainCoordinatorService;
-  let mockSupabase: any;
 
   beforeEach(() => {
+    resetMockChain();
     service = new CrossDomainCoordinatorService();
-    mockSupabase = {
-      from: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      update: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn(),
-      order: vi.fn().mockReturnThis(),
-      limit: vi.fn().mockReturnThis(),
-    };
-
-    const { getSupabaseServer } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
   });
 
   describe('getDomainDependencies', () => {
@@ -280,24 +303,10 @@ describe('CrossDomainCoordinatorService', () => {
 
 describe('ReinforcementAdjustmentEngine', () => {
   let engine: ReinforcementAdjustmentEngine;
-  let mockSupabase: any;
 
   beforeEach(() => {
+    resetMockChain();
     engine = new ReinforcementAdjustmentEngine();
-    mockSupabase = {
-      from: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      update: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      is: vi.fn().mockReturnThis(),
-      single: vi.fn(),
-      order: vi.fn().mockReturnThis(),
-      limit: vi.fn().mockReturnThis(),
-    };
-
-    const { getSupabaseServer } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
   });
 
   describe('generateExecutionSignals', () => {

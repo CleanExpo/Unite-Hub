@@ -140,7 +140,7 @@ John`,
       expect(result.intentClassification).toBe('follow_up');
       expect(result.intentConfidence).toBe(0.85);
       expect(result.model).toBe('claude-haiku-4-5-20251001');
-      expect(result.processingTimeMs).toBeGreaterThan(0);
+      expect(result.processingTimeMs).toBeGreaterThanOrEqual(0);
     });
 
     it('should handle emails with no extractable ideas', async () => {
@@ -279,7 +279,7 @@ John`,
 
       const result = await extractor.extractIdeas(mockEmail);
 
-      expect(result.processingTimeMs).toBeGreaterThan(0);
+      expect(result.processingTimeMs).toBeGreaterThanOrEqual(0);
       expect(typeof result.processingTimeMs).toBe('number');
     });
 

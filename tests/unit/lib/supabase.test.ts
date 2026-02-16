@@ -9,6 +9,23 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key';
 
+const mockBrowserClient = {
+  auth: {
+    getUser: vi.fn(),
+    getSession: vi.fn(),
+    signOut: vi.fn(),
+  },
+  from: vi.fn(),
+};
+
+const mockServerClient = {
+  auth: {
+    getUser: vi.fn(),
+    getSession: vi.fn(),
+  },
+  from: vi.fn(),
+};
+
 // Mock @supabase/supabase-js
 vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => ({
@@ -21,20 +38,15 @@ vi.mock('@supabase/supabase-js', () => ({
   })),
 }));
 
-// Mock @supabase/ssr
+// Mock @supabase/ssr (source uses createBrowserClient and createServerClient from here)
 vi.mock('@supabase/ssr', () => ({
-  createServerClient: vi.fn(() => ({
-    auth: {
-      getUser: vi.fn(),
-      getSession: vi.fn(),
-    },
-    from: vi.fn(),
-  })),
+  createBrowserClient: vi.fn(() => mockBrowserClient),
+  createServerClient: vi.fn(() => mockServerClient),
 }));
 
 // Mock next/headers
 vi.mock('next/headers', () => ({
-  cookies: vi.fn(() => ({
+  cookies: vi.fn(async () => ({
     get: vi.fn((name: string) => ({ value: 'mock-cookie-value' })),
     set: vi.fn(),
   })),
@@ -50,53 +62,41 @@ describe('Supabase Client', () => {
 
   describe('Browser Client', () => {
     it('should create browser client with correct config', async () => {
-      // Reset modules to ensure fresh import
       vi.resetModules();
-      
+
       const { supabase } = await import('@/lib/supabase');
-      const { createClient } = await import('@supabase/supabase-js');
+      const { createBrowserClient } = await import('@supabase/ssr');
 
       // Access any property to trigger lazy initialization
       supabase.auth;
 
-      expect(createClient).toHaveBeenCalledWith(
+      expect(createBrowserClient).toHaveBeenCalledWith(
         'https://test.supabase.co',
-        'test-anon-key',
-        expect.objectContaining({
-          auth: expect.objectContaining({
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true,
-            flowType: 'pkce',
-          }),
-        })
+        'test-anon-key'
       );
     });
 
     it('should use lazy initialization for browser client', async () => {
-      // Reset modules to get a fresh instance
       vi.resetModules();
-      
-      const { createClient } = await import('@supabase/supabase-js');
-      vi.clearAllMocks();
-      
+
+      const { createBrowserClient } = await import('@supabase/ssr');
+      vi.mocked(createBrowserClient).mockClear();
+
       const { supabase } = await import('@/lib/supabase');
 
       // Access property to trigger initialization
       supabase.auth;
 
-      expect(createClient).toHaveBeenCalled();
+      expect(createBrowserClient).toHaveBeenCalled();
     });
 
     it('should throw error if environment variables missing', async () => {
-      // Temporarily remove env vars
       const originalUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const originalKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
       delete process.env.NEXT_PUBLIC_SUPABASE_URL;
       delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-      // Clear module cache to reload with missing env vars
       vi.resetModules();
 
       const { supabase } = await import('@/lib/supabase');
@@ -113,6 +113,8 @@ describe('Supabase Client', () => {
 
   describe('Server Client', () => {
     it('should create server client with cookie handling', async () => {
+      vi.resetModules();
+
       const { getSupabaseServer } = await import('@/lib/supabase');
       const { createServerClient } = await import('@supabase/ssr');
 
@@ -132,6 +134,8 @@ describe('Supabase Client', () => {
     });
 
     it('should handle cookie operations gracefully', async () => {
+      vi.resetModules();
+
       const { getSupabaseServer } = await import('@/lib/supabase');
 
       const supabase = await getSupabaseServer();
@@ -169,9 +173,8 @@ describe('Supabase Client', () => {
 
   describe('Browser vs Server Usage', () => {
     it('should use supabase for client-side operations', async () => {
-      // Reset modules to ensure env vars are properly loaded
       vi.resetModules();
-      
+
       const { supabase } = await import('@/lib/supabase');
 
       expect(supabase).toBeDefined();
@@ -179,6 +182,8 @@ describe('Supabase Client', () => {
     });
 
     it('should use getSupabaseServer for server-side operations', async () => {
+      vi.resetModules();
+
       const { getSupabaseServer } = await import('@/lib/supabase');
 
       const serverClient = await getSupabaseServer();
@@ -188,9 +193,8 @@ describe('Supabase Client', () => {
     });
 
     it('should have separate instances for browser and server', async () => {
-      // Reset modules to ensure env vars are properly loaded
       vi.resetModules();
-      
+
       const { supabase, getSupabaseServer } = await import('@/lib/supabase');
 
       const serverClient = await getSupabaseServer();

@@ -4,36 +4,75 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+// Mock Supabase with sequential query results pattern
+const { mockSupabase, setQueryResults } = vi.hoisted(() => {
+  let queryResults: any[] = [];
+  let queryIndex = 0;
+
+  const createQueryChain = () => {
+    const chain: any = {};
+    const methods = [
+      'select', 'insert', 'update', 'delete', 'upsert',
+      'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike',
+      'is', 'in', 'or', 'not', 'order', 'limit', 'range',
+      'match', 'filter', 'contains', 'containedBy', 'textSearch',
+    ];
+    methods.forEach((m) => {
+      chain[m] = vi.fn().mockReturnValue(chain);
+    });
+    chain.single = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.maybeSingle = vi.fn().mockImplementation(() => {
+      const result = queryResults[queryIndex] || { data: null, error: null };
+      queryIndex++;
+      return Promise.resolve(result);
+    });
+    chain.then = vi.fn().mockImplementation((resolve: any, reject?: any) => {
+      const result = queryResults[queryIndex] || { data: [], error: null };
+      queryIndex++;
+      return Promise.resolve(result).then(resolve, reject);
+    });
+    return chain;
+  };
+
+  const queryChain = createQueryChain();
+  const mock: any = { from: vi.fn().mockReturnValue(queryChain) };
+
+  // Expose chain methods on root EXCLUDING 'then'
+  const chainMethods = [
+    'select', 'insert', 'update', 'delete', 'upsert',
+    'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike',
+    'is', 'in', 'or', 'not', 'order', 'limit', 'range',
+    'match', 'filter', 'contains', 'containedBy', 'textSearch',
+    'single', 'maybeSingle',
+  ];
+  chainMethods.forEach((m) => {
+    mock[m] = queryChain[m];
+  });
+
+  return {
+    mockSupabase: mock,
+    setQueryResults: (results: any[]) => {
+      queryResults = results;
+      queryIndex = 0;
+    },
+  };
+});
+
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => Promise.resolve(mockSupabase)),
+}));
+
 import {
   validateXeroSyncPayload,
   prepareXeroLineItems,
   syncToXero,
   getXeroSyncStatus,
 } from '../timetracking/xeroSyncAdapter';
-
-// Mock Supabase
-vi.mock('@/lib/supabase', () => ({
-  getSupabaseServer: vi.fn(() => ({
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        in: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            eq: vi.fn(() => ({ data: [], error: null })),
-          })),
-        })),
-        eq: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            eq: vi.fn(() => ({ data: [], error: null })),
-          })),
-        })),
-      })),
-      update: vi.fn(() => ({
-        in: vi.fn(() => ({ error: null })),
-      })),
-      insert: vi.fn(() => ({ error: null })),
-    })),
-  })),
-}));
 
 describe('Xero Sync - Payload Validation', () => {
   it('should validate correct payload', () => {
@@ -146,8 +185,12 @@ describe('Xero Sync - Payload Validation', () => {
 });
 
 describe('Xero Sync - Line Items Preparation', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    setQueryResults([]);
+  });
+
   it('should prepare line items from time entries', async () => {
-    // Mock Supabase response with entries
     const mockEntries = [
       {
         id: '550e8400-e29b-41d4-a716-446655440001',
@@ -173,18 +216,10 @@ describe('Xero Sync - Line Items Preparation', () => {
       },
     ];
 
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          in: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              eq: vi.fn(() => ({ data: mockEntries, error: null })),
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    // prepareXeroLineItems: .from().select().in().eq().eq().eq() -> thenable
+    setQueryResults([
+      { data: mockEntries, error: null },
+    ]);
 
     const result = await prepareXeroLineItems(
       ['550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440002'],
@@ -204,18 +239,10 @@ describe('Xero Sync - Line Items Preparation', () => {
   });
 
   it('should handle no approved entries found', async () => {
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          in: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              eq: vi.fn(() => ({ data: [], error: null })),
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    // prepareXeroLineItems: returns empty array
+    setQueryResults([
+      { data: [], error: null },
+    ]);
 
     const result = await prepareXeroLineItems(
       ['550e8400-e29b-41d4-a716-446655440001'],
@@ -227,18 +254,10 @@ describe('Xero Sync - Line Items Preparation', () => {
   });
 
   it('should handle database errors', async () => {
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          in: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              eq: vi.fn(() => ({ data: null, error: { message: 'Database error' } })),
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    // prepareXeroLineItems: returns error
+    setQueryResults([
+      { data: null, error: { message: 'Database error' } },
+    ]);
 
     const result = await prepareXeroLineItems(
       ['550e8400-e29b-41d4-a716-446655440001'],
@@ -253,6 +272,7 @@ describe('Xero Sync - Line Items Preparation', () => {
 describe('Xero Sync - Sync Operation (Stub)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    setQueryResults([]);
   });
 
   it('should simulate successful sync', async () => {
@@ -270,28 +290,12 @@ describe('Xero Sync - Sync Operation (Stub)', () => {
       },
     ];
 
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn((table) => {
-        if (table === 'time_entries') {
-          return {
-            select: vi.fn(() => ({
-              in: vi.fn(() => ({
-                eq: vi.fn(() => ({
-                  eq: vi.fn(() => ({ data: mockEntries, error: null })),
-                })),
-              })),
-            })),
-            update: vi.fn(() => ({
-              in: vi.fn(() => ({ error: null })),
-            })),
-          };
-        }
-        return {
-          insert: vi.fn(() => ({ error: null })),
-        };
-      }),
-    } as any);
+    setQueryResults([
+      // 1. prepareXeroLineItems: .from().select().in().eq().eq().eq() -> thenable
+      { data: mockEntries, error: null },
+      // 2. syncToXero: .from().update().in() -> thenable (mark as synced)
+      { error: null },
+    ]);
 
     const result = await syncToXero({
       entryIds: ['550e8400-e29b-41d4-a716-446655440001'],
@@ -341,28 +345,12 @@ describe('Xero Sync - Sync Operation (Stub)', () => {
       },
     ];
 
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn((table) => {
-        if (table === 'time_entries') {
-          return {
-            select: vi.fn(() => ({
-              in: vi.fn(() => ({
-                eq: vi.fn(() => ({
-                  eq: vi.fn(() => ({ data: mockEntries, error: null })),
-                })),
-              })),
-            })),
-            update: vi.fn(() => ({
-              in: vi.fn(() => ({ error: null })),
-            })),
-          };
-        }
-        return {
-          insert: vi.fn(() => ({ error: null })),
-        };
-      }),
-    } as any);
+    setQueryResults([
+      // 1. prepareXeroLineItems: fetch entries -> thenable
+      { data: mockEntries, error: null },
+      // 2. syncToXero: update entries -> thenable
+      { error: null },
+    ]);
 
     const result = await syncToXero({
       entryIds: [
@@ -379,6 +367,11 @@ describe('Xero Sync - Sync Operation (Stub)', () => {
 });
 
 describe('Xero Sync - Status Checking', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    setQueryResults([]);
+  });
+
   it('should get sync status for entries', async () => {
     const mockEntries = [
       {
@@ -395,16 +388,10 @@ describe('Xero Sync - Status Checking', () => {
       },
     ];
 
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          in: vi.fn(() => ({
-            eq: vi.fn(() => ({ data: mockEntries, error: null })),
-          })),
-        })),
-      })),
-    } as any);
+    // getXeroSyncStatus: .from().select().in().eq() -> thenable
+    setQueryResults([
+      { data: mockEntries, error: null },
+    ]);
 
     const result = await getXeroSyncStatus(
       ['550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440002'],
@@ -426,16 +413,10 @@ describe('Xero Sync - Status Checking', () => {
   });
 
   it('should handle database errors when fetching status', async () => {
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          in: vi.fn(() => ({
-            eq: vi.fn(() => ({ data: null, error: { message: 'Database error' } })),
-          })),
-        })),
-      })),
-    } as any);
+    // getXeroSyncStatus: returns error
+    setQueryResults([
+      { data: null, error: { message: 'Database error' } },
+    ]);
 
     const result = await getXeroSyncStatus(
       ['550e8400-e29b-41d4-a716-446655440001'],
@@ -448,6 +429,11 @@ describe('Xero Sync - Status Checking', () => {
 });
 
 describe('Xero Sync - Edge Cases', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    setQueryResults([]);
+  });
+
   it('should handle entries without hourly rate', async () => {
     const mockEntries = [
       {
@@ -462,18 +448,9 @@ describe('Xero Sync - Edge Cases', () => {
       },
     ];
 
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          in: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              eq: vi.fn(() => ({ data: mockEntries, error: null })),
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    setQueryResults([
+      { data: mockEntries, error: null },
+    ]);
 
     const result = await prepareXeroLineItems(
       ['550e8400-e29b-41d4-a716-446655440001'],
@@ -485,20 +462,10 @@ describe('Xero Sync - Edge Cases', () => {
   });
 
   it('should only sync approved entries', async () => {
-    const mockEntries = []; // No approved entries
-
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          in: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              eq: vi.fn(() => ({ data: mockEntries, error: null })),
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    // No approved entries returned
+    setQueryResults([
+      { data: [], error: null },
+    ]);
 
     const result = await prepareXeroLineItems(
       ['550e8400-e29b-41d4-a716-446655440001'],
@@ -510,20 +477,10 @@ describe('Xero Sync - Edge Cases', () => {
   });
 
   it('should not sync already synced entries', async () => {
-    const mockEntries = []; // All entries already synced
-
-    const { getSupabaseServer } = await import('@/lib/supabase');
-    vi.mocked(getSupabaseServer).mockResolvedValue({
-      from: vi.fn(() => ({
-        select: vi.fn(() => ({
-          in: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              eq: vi.fn(() => ({ data: mockEntries, error: null })),
-            })),
-          })),
-        })),
-      })),
-    } as any);
+    // All entries already synced - empty result
+    setQueryResults([
+      { data: [], error: null },
+    ]);
 
     const result = await prepareXeroLineItems(
       ['550e8400-e29b-41d4-a716-446655440001'],

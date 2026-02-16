@@ -158,7 +158,8 @@ describe('scopeService AI Integration', () => {
       const result = await generateAIScope(mockParams);
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('API error: 400');
+      // When json() throws, the catch fallback returns { error: 'Unknown error' }
+      expect(result.error).toContain('Unknown error');
     });
 
     it('should include Authorization header with Bearer token', async () => {

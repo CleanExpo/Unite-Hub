@@ -15,82 +15,91 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createATOClient } from '@/lib/integrations/ato/ato-client';
 import type { BASData } from '@/lib/integrations/ato/ato-client';
 
-// Mock Supabase
-vi.mock('@/lib/supabase/server', () => ({
-  createClient: vi.fn(() => ({
-    from: vi.fn((table: string) => {
-      const mockData: any = {
-        ato_credentials: {
-          workspace_id: 'workspace-1',
-          access_token: 'mock-token',
-          expires_at: new Date(Date.now() + 3600000).toISOString(),
-          is_active: true,
-          sandbox_mode: true,
-        },
-        abn_lookups: {
-          abn: '51824753556',
-          entity_name: 'TEST PTY LTD',
-          status: 'active',
-          gst_registered: true,
-          last_verified_at: new Date().toISOString(),
-        },
-        bas_lodgements: [
-          {
-            id: 'bas-1',
-            workspace_id: 'workspace-1',
-            abn: '51824753556',
-            period_year: 2026,
-            period_quarter: 1,
-            status: 'submitted',
-            lodged_at: new Date().toISOString(),
-          },
-        ],
-        tax_obligations: [
-          {
-            workspace_id: 'workspace-1',
-            abn: '51824753556',
-            obligation_type: 'BAS',
-            due_date: '2026-04-28',
-            status: 'due',
-          },
-        ],
-      };
+// Mock Supabase - use a shared mock instance so spies persist
+const mockFromTracker = vi.fn();
+const mockSupabaseInstance = {
+  from: mockFromTracker,
+  auth: {
+    getUser: vi.fn(() => ({
+      data: { user: { id: 'user-1' } },
+      error: null,
+    })),
+  },
+};
 
-      return {
-        select: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            single: vi.fn(() => ({
-              data: mockData[table] || null,
-              error: null,
-            })),
-            order: vi.fn(() => ({
-              data: Array.isArray(mockData[table])
-                ? mockData[table]
-                : [mockData[table]],
-              error: null,
-            })),
-          })),
-          order: vi.fn(() => ({
-            data: Array.isArray(mockData[table])
-              ? mockData[table]
-              : [mockData[table]],
-            error: null,
-          })),
+// Default mock data for supabase tables
+const defaultMockData: any = {
+  ato_credentials: {
+    workspace_id: 'workspace-1',
+    access_token: 'mock-token',
+    expires_at: new Date(Date.now() + 3600000).toISOString(),
+    is_active: true,
+    sandbox_mode: true,
+  },
+  abn_lookups: {
+    abn: '51824753556',
+    entity_name: 'TEST PTY LTD',
+    status: 'active',
+    gst_registered: true,
+    last_verified_at: new Date().toISOString(),
+  },
+  bas_lodgements: [
+    {
+      id: 'bas-1',
+      workspace_id: 'workspace-1',
+      abn: '51824753556',
+      period_year: 2026,
+      period_quarter: 1,
+      status: 'submitted',
+      lodged_at: new Date().toISOString(),
+    },
+  ],
+  tax_obligations: [
+    {
+      workspace_id: 'workspace-1',
+      abn: '51824753556',
+      obligation_type: 'BAS',
+      due_date: '2026-04-28',
+      status: 'due',
+    },
+  ],
+};
+
+function setupDefaultMockFrom() {
+  mockFromTracker.mockImplementation((table: string) => ({
+    select: vi.fn(() => ({
+      eq: vi.fn(() => ({
+        single: vi.fn(() => ({
+          data: defaultMockData[table] || null,
+          error: null,
         })),
-        insert: vi.fn(() => ({ data: null, error: null })),
-        update: vi.fn(() => ({
-          eq: vi.fn(() => ({ data: null, error: null })),
+        order: vi.fn(() => ({
+          data: Array.isArray(defaultMockData[table])
+            ? defaultMockData[table]
+            : [defaultMockData[table]],
+          error: null,
         })),
-        upsert: vi.fn(() => ({ data: null, error: null })),
-      };
-    }),
-    auth: {
-      getUser: vi.fn(() => ({
-        data: { user: { id: 'user-1' } },
+      })),
+      order: vi.fn(() => ({
+        data: Array.isArray(defaultMockData[table])
+          ? defaultMockData[table]
+          : [defaultMockData[table]],
         error: null,
       })),
-    },
-  })),
+    })),
+    insert: vi.fn(() => ({ data: null, error: null })),
+    update: vi.fn(() => ({
+      eq: vi.fn(() => ({ data: null, error: null })),
+    })),
+    upsert: vi.fn(() => ({ data: null, error: null })),
+  }));
+}
+
+// Set default implementation
+setupDefaultMockFrom();
+
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn(() => mockSupabaseInstance),
 }));
 
 // Mock fetch for ATO API calls
@@ -163,6 +172,8 @@ global.fetch = vi.fn((url) => {
 describe('ATO Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Restore default mock data after clearAllMocks
+    setupDefaultMockFrom();
     process.env.ATO_CLIENT_ID = 'test-client-id';
     process.env.ATO_CLIENT_SECRET = 'test-client-secret';
     process.env.ATO_API_URL = 'https://sandbox.api.ato.gov.au/v1';
@@ -171,6 +182,28 @@ describe('ATO Integration', () => {
 
   describe('OAuth2 M2M Authentication Flow', () => {
     it('should fetch access token using client credentials', async () => {
+      // Override mock to return expired credentials so client must fetch new token
+      mockFromTracker.mockImplementation((table: string) => ({
+        select: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            single: vi.fn(() => ({
+              data: table === 'ato_credentials' ? {
+                workspace_id: 'workspace-1',
+                access_token: null,
+                expires_at: null,
+                is_active: true,
+                sandbox_mode: true,
+              } : null,
+              error: null,
+            })),
+          })),
+        })),
+        insert: vi.fn(() => ({ data: null, error: null })),
+        update: vi.fn(() => ({
+          eq: vi.fn(() => ({ data: null, error: null })),
+        })),
+      }));
+
       const client = createATOClient();
       await client.initialize('workspace-1');
 
@@ -180,13 +213,39 @@ describe('ATO Integration', () => {
     });
 
     it('should include required OAuth2 parameters', async () => {
+      // Override mock to return expired credentials so client must fetch new token
+      mockFromTracker.mockImplementation((table: string) => ({
+        select: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            single: vi.fn(() => ({
+              data: table === 'ato_credentials' ? {
+                workspace_id: 'workspace-1',
+                access_token: null,
+                expires_at: null,
+                is_active: true,
+                sandbox_mode: true,
+              } : null,
+              error: null,
+            })),
+          })),
+        })),
+        insert: vi.fn(() => ({ data: null, error: null })),
+        update: vi.fn(() => ({
+          eq: vi.fn(() => ({ data: null, error: null })),
+        })),
+      }));
+
       const client = createATOClient();
       await client.initialize('workspace-1');
 
       await client.getAccessToken();
 
-      const fetchCall = (fetch as any).mock.calls[0];
-      const [url, options] = fetchCall;
+      // Find the token endpoint call (skip any other fetch calls)
+      const tokenCall = (fetch as any).mock.calls.find(
+        (call: any[]) => call[0]?.toString().includes('/oauth2/token')
+      );
+      expect(tokenCall).toBeDefined();
+      const [url, options] = tokenCall;
 
       expect(options.method).toBe('POST');
       expect(options.headers['Content-Type']).toBe(
@@ -235,10 +294,8 @@ describe('ATO Integration', () => {
 
       await client.validateABN('51824753556');
 
-      // Verify cache write happened
-      const { createClient } = await import('@/lib/supabase/server');
-      const supabase = await createClient();
-      expect(supabase.from).toHaveBeenCalledWith('abn_lookups');
+      // Verify cache write happened via shared mock tracker
+      expect(mockFromTracker).toHaveBeenCalledWith('abn_lookups');
     });
   });
 
@@ -297,9 +354,7 @@ describe('ATO Integration', () => {
 
       await client.lodgeBAS(basData);
 
-      const { createClient } = await import('@/lib/supabase/server');
-      const supabase = await createClient();
-      expect(supabase.from).toHaveBeenCalledWith('bas_lodgements');
+      expect(mockFromTracker).toHaveBeenCalledWith('bas_lodgements');
     });
   });
 
@@ -323,9 +378,7 @@ describe('ATO Integration', () => {
 
       await client.getTaxObligations('51824753556');
 
-      const { createClient } = await import('@/lib/supabase/server');
-      const supabase = await createClient();
-      expect(supabase.from).toHaveBeenCalledWith('tax_obligations');
+      expect(mockFromTracker).toHaveBeenCalledWith('tax_obligations');
     });
   });
 
@@ -349,9 +402,7 @@ describe('ATO Integration', () => {
 
       await client.disconnect();
 
-      const { createClient } = await import('@/lib/supabase/server');
-      const supabase = await createClient();
-      expect(supabase.from).toHaveBeenCalledWith('ato_credentials');
+      expect(mockFromTracker).toHaveBeenCalledWith('ato_credentials');
     });
   });
 
@@ -372,12 +423,35 @@ describe('ATO Integration', () => {
     });
 
     it('should handle network errors', async () => {
-      (global.fetch as any).mockImplementationOnce(() =>
-        Promise.reject(new Error('Network error'))
-      );
+      // Override the mock to return expired credentials so it needs to fetch a new token
+      mockFromTracker.mockImplementation((table: string) => ({
+        select: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            single: vi.fn(() => ({
+              data: table === 'ato_credentials' ? {
+                workspace_id: 'workspace-1',
+                access_token: null,
+                expires_at: null,
+                is_active: false,
+                sandbox_mode: true,
+              } : null,
+              error: null,
+            })),
+          })),
+        })),
+        insert: vi.fn(() => ({ data: null, error: null })),
+        update: vi.fn(() => ({
+          eq: vi.fn(() => ({ data: null, error: null })),
+        })),
+      }));
 
       const client = createATOClient();
       await client.initialize('workspace-1');
+
+      // Now mock fetch to fail on the token request
+      (global.fetch as any).mockImplementationOnce(() =>
+        Promise.reject(new Error('Network error'))
+      );
 
       await expect(client.getAccessToken()).rejects.toThrow('Network error');
     });

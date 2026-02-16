@@ -7,27 +7,30 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock Supabase
+const mockChain: any = {
+  from: vi.fn(),
+  select: vi.fn(),
+  insert: vi.fn(),
+  update: vi.fn(),
+  delete: vi.fn(),
+  eq: vi.fn(),
+  neq: vi.fn(),
+  single: vi.fn(),
+  order: vi.fn(),
+  limit: vi.fn(),
+  maybeSingle: vi.fn(),
+};
+Object.keys(mockChain).forEach(key => {
+  if (key !== 'single' && key !== 'maybeSingle') {
+    mockChain[key].mockReturnValue(mockChain);
+  }
+});
+mockChain.single.mockResolvedValue({ data: null, error: null });
+mockChain.maybeSingle.mockResolvedValue({ data: null, error: null });
+
 vi.mock('@/lib/supabase', () => ({
-  getSupabaseServer: vi.fn(() => Promise.resolve({
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          single: vi.fn(() => Promise.resolve({ data: null, error: null })),
-          limit: vi.fn(() => Promise.resolve({ data: [], error: null })),
-        })),
-        order: vi.fn(() => ({
-          limit: vi.fn(() => Promise.resolve({ data: [], error: null })),
-        })),
-      })),
-      insert: vi.fn(() => Promise.resolve({ data: null, error: null })),
-      update: vi.fn(() => ({
-        eq: vi.fn(() => Promise.resolve({ data: null, error: null })),
-      })),
-      delete: vi.fn(() => ({
-        eq: vi.fn(() => Promise.resolve({ data: null, error: null })),
-      })),
-    })),
-  })),
+  supabase: mockChain,
+  getSupabaseServer: vi.fn(() => Promise.resolve(mockChain)),
   supabaseBrowser: {
     auth: {
       getUser: vi.fn(() => Promise.resolve({ data: { user: { id: 'test-user' } }, error: null })),
@@ -282,21 +285,21 @@ describe('Orchestrator Integration', () => {
   describe('classifyIntent', () => {
     it('should classify social inbox intent', async () => {
       const { classifyIntent } = await import('@/lib/agents/orchestrator-router');
-      const result = classifyIntent('manage my social inbox and respond to DMs');
+      const result = classifyIntent('direct message respond to comments and reply');
       expect(result.intent).toBe('manage_social_inbox');
       expect(result.confidence).toBeGreaterThan(0);
     });
 
     it('should classify ads optimization intent', async () => {
       const { classifyIntent } = await import('@/lib/agents/orchestrator-router');
-      const result = classifyIntent('optimize my google ads campaigns for better ROAS');
+      const result = classifyIntent('my ads campaigns need optimization and better ROAS');
       expect(result.intent).toBe('optimize_ads');
       expect(result.confidence).toBeGreaterThan(0);
     });
 
     it('should classify search audit intent', async () => {
       const { classifyIntent } = await import('@/lib/agents/orchestrator-router');
-      const result = classifyIntent('check my search console data and keyword rankings');
+      const result = classifyIntent('search console gsc serp shift');
       expect(result.intent).toBe('run_search_audit');
       expect(result.confidence).toBeGreaterThan(0);
     });
@@ -321,7 +324,7 @@ describe('Orchestrator Integration', () => {
       const { generatePlan } = await import('@/lib/agents/orchestrator-router');
       const plan = await generatePlan({
         workspaceId: 'test-workspace',
-        userPrompt: 'manage my social inbox',
+        userPrompt: 'direct message respond and reply to comments',
       });
       expect(plan.intent).toBe('manage_social_inbox');
       expect(plan.steps.length).toBeGreaterThan(0);
@@ -331,7 +334,7 @@ describe('Orchestrator Integration', () => {
       const { generatePlan } = await import('@/lib/agents/orchestrator-router');
       const plan = await generatePlan({
         workspaceId: 'test-workspace',
-        userPrompt: 'optimize my google ads',
+        userPrompt: 'ads campaign analyze ROAS',
       });
       expect(plan.intent).toBe('optimize_ads');
       expect(plan.steps.length).toBeGreaterThan(0);

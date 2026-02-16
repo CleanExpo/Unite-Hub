@@ -448,6 +448,11 @@ export class DeltaEngine {
       return healthScoreDelta.trend === "UP" ? "IMPROVING" : "DECLINING";
     }
 
+    // Handle zero-to-positive health score change (clear improvement even if percentage_change is 0)
+    if (healthScoreDelta.previous_value === 0 && healthScoreDelta.current_value > 0) {
+      return "IMPROVING";
+    }
+
     // Secondary signal: majority of metrics
     const upCount = metricDeltas.filter(m => m.trend === "UP" && m.significance !== "LOW").length;
     const downCount = metricDeltas.filter(m => m.trend === "DOWN" && m.significance !== "LOW").length;

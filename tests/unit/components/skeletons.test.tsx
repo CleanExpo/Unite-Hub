@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * Unit Tests for Skeleton Components
  * Tests loading state displays
@@ -26,8 +27,8 @@ describe('ContentCardSkeleton', () => {
   it('should have card wrapper', () => {
     const { container } = render(<ContentCardSkeleton />);
 
-    // Should have card structure
-    const card = container.querySelector('[class*="bg-muted"]');
+    // Should have card structure - select the top-level card div
+    const card = container.querySelector('.bg-muted');
     expect(card).toBeInTheDocument();
   });
 });
@@ -36,14 +37,15 @@ describe('ContentListSkeleton', () => {
   it('should render default number of skeletons (6)', () => {
     const { container } = render(<ContentListSkeleton />);
 
-    const cards = container.querySelectorAll('[class*="bg-muted"]');
+    // Select only direct children of the grid (each is a card)
+    const cards = container.querySelectorAll('.grid > [class*="bg-muted"]');
     expect(cards.length).toBe(6);
   });
 
   it('should render custom number of skeletons', () => {
     const { container } = render(<ContentListSkeleton count={3} />);
 
-    const cards = container.querySelectorAll('[class*="bg-muted"]');
+    const cards = container.querySelectorAll('.grid > [class*="bg-muted"]');
     expect(cards.length).toBe(3);
   });
 
@@ -57,14 +59,14 @@ describe('ContentListSkeleton', () => {
   it('should handle zero count', () => {
     const { container } = render(<ContentListSkeleton count={0} />);
 
-    const cards = container.querySelectorAll('[class*="bg-muted"]');
+    const cards = container.querySelectorAll('.grid > [class*="bg-muted"]');
     expect(cards.length).toBe(0);
   });
 
   it('should handle large count', () => {
     const { container } = render(<ContentListSkeleton count={20} />);
 
-    const cards = container.querySelectorAll('[class*="bg-muted"]');
+    const cards = container.querySelectorAll('.grid > [class*="bg-muted"]');
     expect(cards.length).toBe(20);
   });
 });
@@ -81,7 +83,7 @@ describe('StatsCardSkeleton', () => {
   it('should have card wrapper', () => {
     const { container } = render(<StatsCardSkeleton />);
 
-    const card = container.querySelector('[class*="bg-muted"]');
+    const card = container.querySelector('.bg-muted');
     expect(card).toBeInTheDocument();
   });
 
@@ -98,14 +100,14 @@ describe('StatsGridSkeleton', () => {
   it('should render default number of stat cards (4)', () => {
     const { container } = render(<StatsGridSkeleton />);
 
-    const cards = container.querySelectorAll('[class*="bg-muted"]');
+    const cards = container.querySelectorAll('.grid > [class*="bg-muted"]');
     expect(cards.length).toBe(4);
   });
 
   it('should render custom number of stat cards', () => {
     const { container } = render(<StatsGridSkeleton count={6} />);
 
-    const cards = container.querySelectorAll('[class*="bg-muted"]');
+    const cards = container.querySelectorAll('.grid > [class*="bg-muted"]');
     expect(cards.length).toBe(6);
   });
 
@@ -119,7 +121,7 @@ describe('StatsGridSkeleton', () => {
   it('should handle zero count', () => {
     const { container } = render(<StatsGridSkeleton count={0} />);
 
-    const cards = container.querySelectorAll('[class*="bg-muted"]');
+    const cards = container.querySelectorAll('.grid > [class*="bg-muted"]');
     expect(cards.length).toBe(0);
   });
 

@@ -250,16 +250,18 @@ describe('Framework Template Library', () => {
       expect(rating.rating).not.toBe(oldRating);
     });
 
-    it('should validate rating range (1-5)', async () => {
+    it('should validate rating range (1-5, integers only)', async () => {
       const validRatings = [1, 2, 3, 4, 5];
       const invalidRatings = [0, 6, -1, 1.5];
 
+      const isValidRating = (r: number) => Number.isInteger(r) && r >= 1 && r <= 5;
+
       validRatings.forEach((r) => {
-        expect(r >= 1 && r <= 5).toBe(true);
+        expect(isValidRating(r)).toBe(true);
       });
 
       invalidRatings.forEach((r) => {
-        expect(r >= 1 && r <= 5).toBe(false);
+        expect(isValidRating(r)).toBe(false);
       });
     });
 
