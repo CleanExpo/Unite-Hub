@@ -41,7 +41,7 @@ function getDefaultDashboard(role: UserRole): string {
     case 'STAFF': return '/staff/dashboard';
     case 'ADMIN': return '/founder'; // Admin gets founder access
     case 'CLIENT':
-    default: return '/client';
+    default: return '/dashboard/overview';
   }
 }
 
@@ -259,14 +259,14 @@ export async function middleware(req: NextRequest) {
         if (pathname.startsWith('/founder') || pathname.startsWith('/staff') ||
             pathname.startsWith('/crm') || pathname === '/auth/await-approval') {
           const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/client';
+          redirectUrl.pathname = '/dashboard/overview';
           return NextResponse.redirect(redirectUrl);
         }
 
-        // Redirect from marketing to client dashboard
+        // Redirect from marketing to dashboard
         if (isMarketingPath) {
           const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/client';
+          redirectUrl.pathname = '/dashboard/overview';
           return NextResponse.redirect(redirectUrl);
         }
       }

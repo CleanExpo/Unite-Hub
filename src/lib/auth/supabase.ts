@@ -251,37 +251,52 @@ export async function clientLogout() {
 }
 
 /**
- * Get current client session (with client_users table verification)
+ * Get current client session (with optional client_users table verification)
+ *
+ * Uses SSR server client to read session from cookies (required for Server Components).
+ * Google OAuth users may not have a client_users record - falls back to user metadata.
  */
 export async function getClientSession() {
-  const { data, error } = await supabaseStaff.auth.getSession();
+  try {
+    // Use SSR server client to read session from cookies
+    const { getSupabaseServer } = await import('@/lib/supabase');
+    const supabase = await getSupabaseServer();
 
-  if (error || !data.session) {
+    // Use getUser() for secure JWT validation (not just cookie reading)
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      return null;
+    }
+
+    // Try to get client data (optional - Google OAuth users won't have client_users record)
+    const { data: clientData } = await supabase
+      .from('client_users')
+      .select('id, name, email, subscription_tier, active')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    // If managed client exists and is inactive, block access
+    if (clientData && !clientData.active) {
+      console.warn('Inactive client attempted access:', clientData.email);
+      return null;
+    }
+
+    // Return session with client data (from client_users or fallback to user metadata)
+    return {
+      user,
+      client: clientData || {
+        id: user.id,
+        name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+        email: user.email || '',
+        subscription_tier: 'starter',
+        active: true,
+      },
+    };
+  } catch (error) {
+    console.error('getClientSession error:', error);
     return null;
   }
-
-  // Verify user exists in client_users table
-  const { data: clientData, error: clientError } = await supabaseStaff
-    .from('client_users')
-    .select('id, name, email, subscription_tier, active')
-    .eq('id', data.session.user.id)
-    .single();
-
-  if (clientError || !clientData) {
-    console.error('Client not found in client_users table:', clientError);
-    return null;
-  }
-
-  // Check if client is active
-  if (!clientData.active) {
-    console.warn('Inactive client attempted access:', clientData.email);
-    return null;
-  }
-
-  return {
-    ...data.session,
-    client: clientData,
-  };
 }
 
 /**

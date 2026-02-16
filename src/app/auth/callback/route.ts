@@ -121,7 +121,15 @@ export async function GET(request: NextRequest) {
       } else if (role === 'STAFF') {
         redirectPath = '/staff/dashboard';
       } else if (role === 'CLIENT') {
-        redirectPath = '/client';
+        // Check if user is a managed client (has client_users record)
+        // Managed clients go to /client portal; Google OAuth users go to main dashboard
+        const { data: clientUser } = await supabase
+          .from('client_users')
+          .select('id')
+          .eq('id', data.user!.id)
+          .maybeSingle();
+
+        redirectPath = clientUser ? '/client' : '/dashboard/overview';
       }
     }
   } catch (roleError) {
