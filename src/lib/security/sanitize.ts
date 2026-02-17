@@ -82,7 +82,7 @@ export function sanitizeUrl(url: string, allowedProtocols: string[] = ['http', '
  */
 export function sanitizeFilename(filename: string): string {
   // Remove path traversal attempts
-  let sanitized = filename.replace(/\.\./g, '').replace(/[\/\]/g, '');
+  let sanitized = filename.replace(/\.\./g, '').replace(/[\/\\]/g, '');
 
   // Remove null bytes
   sanitized = sanitized.replace(/\0/g, '');
