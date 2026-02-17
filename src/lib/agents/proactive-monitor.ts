@@ -10,6 +10,8 @@
 
 import { AGENT_CARDS } from '@/lib/agents/unified-registry';
 import type { UnifiedAgentId } from '@/lib/agents/unified-registry';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -427,8 +429,7 @@ export class ProactiveMonitor {
     const nextId = () => `dep_${Date.now()}_${idCounter++}`;
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const pkg = require('../../../../package.json');
+      const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf-8'));
       const deps = { ...pkg.dependencies, ...pkg.devDependencies };
 
       // Critical packages to monitor

@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
     // Get base path for this client
     const basePath =
       process.env.DOCKER_CLIENT_DATA_PATH || "/app/clients";
-    const folderPath = path.join(basePath, clientId, folderType);
+    const folderPath = [basePath, clientId, folderType].join(path.sep);
 
     // Check if folder already exists
     try {

@@ -345,8 +345,8 @@ export class ClientDataManager {
       ];
 
       for (const category of categories) {
-        const folderPath = path.join(basePath, category);
-        const archivePath = path.join(folderPath, "archive");
+        const folderPath = [basePath, category].join(path.sep);
+        const archivePath = [folderPath, "archive"].join(path.sep);
 
         // Create archive folder if it doesn't exist
         await fs.mkdir(archivePath, { recursive: true });
@@ -356,7 +356,7 @@ export class ClientDataManager {
           const files = await fs.readdir(folderPath);
 
           for (const file of files) {
-            const filePath = path.join(folderPath, file);
+            const filePath = [folderPath, file].join(path.sep);
             const stat = await fs.stat(filePath);
 
             // Skip if not a file or if in archive folder
