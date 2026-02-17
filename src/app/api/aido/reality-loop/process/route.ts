@@ -76,8 +76,8 @@ export async function POST(req: NextRequest) {
             { classification: classification.type, priority: classification.priority, signals: classification.signals }
           );
           return { id: event.id, status: 'success', classification };
-        } catch (err: unknown) {
-          return { id: event.id, status: 'failed', error: err.message };
+        } catch (err) {
+          return { id: event.id, status: 'failed', error: err instanceof Error ? err.message : 'Unknown error' };
         }
       })
     );
@@ -93,10 +93,10 @@ export async function POST(req: NextRequest) {
       message: `Processed ${successful} events successfully${failed > 0 ? `, ${failed} failed` : ''}`
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Process reality events error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

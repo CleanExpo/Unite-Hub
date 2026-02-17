@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { validateUserAuth } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { getCache, CacheKeys, CacheTTL } from "@/lib/cache";
 
 // GET /api/contacts/[id] - Get contact details
 export async function GET(
@@ -20,6 +21,14 @@ export async function GET(
     // Validate user authentication
     const user = await validateUserAuth(request);
 
+    // Check cache first
+    const cache = getCache();
+    const cacheKey = CacheKeys.contact(id);
+    const cached = await cache.get<{ contact: any }>(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached);
+    }
+
     // Get authenticated supabase client
     const supabase = await getSupabaseServer();
 
@@ -37,6 +46,9 @@ export async function GET(
         { status: 404 }
       );
     }
+
+    // Cache the result (MEDIUM TTL — 300s)
+    await cache.set(cacheKey, { contact }, CacheTTL.MEDIUM);
 
     return NextResponse.json({ contact });
   } catch (error) {

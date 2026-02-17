@@ -3,7 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase";
 import { anthropic } from "@/lib/anthropic/client";
 import { ANTHROPIC_MODELS } from "@/lib/anthropic/models";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
-import { withRateLimit, aiRateLimit } from "@/lib/security/rate-limiter";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/media/analyze
@@ -16,8 +16,8 @@ import { withRateLimit, aiRateLimit } from "@/lib/security/rate-limiter";
  */
 export async function POST(req: NextRequest) {
   try {
-    // Rate limit check (AI endpoint — 30 req/min)
-    const rateLimited = withRateLimit(req, aiRateLimit);
+    // Rate limit check (AI endpoint — 10 req/min)
+    const rateLimited = await aiAgentRateLimit(req);
     if (rateLimited) return rateLimited;
     // ========================================================================
     // 1. AUTHENTICATION

@@ -1,4 +1,7 @@
 /**
+ * @deprecated Use `@/lib/rate-limit` instead. This file is superseded by the
+ * consolidated Redis-backed rate limiter (UNI-204). Will be removed in a future release.
+ *
  * Tier-Based Rate Limiting
  * Enterprise-grade rate limiting with plan-based quotas
  */

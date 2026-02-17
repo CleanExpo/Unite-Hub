@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getHotLeads } from "@/lib/agents/contact-intelligence";
 import { validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { getCache, CacheKeys, CacheTTL } from "@/lib/cache";
 
 export async function GET(request: NextRequest) {
   try {
@@ -25,14 +26,27 @@ export async function GET(request: NextRequest) {
     // Validate user authentication and workspace access
     await validateUserAndWorkspace(request, workspaceId);
 
+    // Check cache first
+    const cache = getCache();
+    const cacheKey = `${CacheKeys.hotLeads(workspaceId)}:limit:${limit}`;
+    const cached = await cache.get<{ success: boolean; count: number; leads: any[] }>(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached);
+    }
+
     // Get hot leads (composite score >= 70)
     const hotLeads = await getHotLeads(workspaceId, limit);
 
-    return NextResponse.json({
+    const responsePayload = {
       success: true,
       count: hotLeads.length,
       leads: hotLeads,
-    });
+    };
+
+    // Cache the result (MEDIUM TTL — 300s)
+    await cache.set(cacheKey, responsePayload, CacheTTL.MEDIUM);
+
+    return NextResponse.json(responsePayload);
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {

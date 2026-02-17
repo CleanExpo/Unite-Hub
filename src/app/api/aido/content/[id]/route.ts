@@ -37,10 +37,10 @@ export async function GET(
       asset
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Get content asset error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }
@@ -93,10 +93,10 @@ export async function PATCH(
       message: updates.status === 'published' ? 'Content published successfully' : 'Content updated successfully'
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Update content asset error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

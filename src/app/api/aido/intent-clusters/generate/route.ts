@@ -77,18 +77,18 @@ export async function POST(req: NextRequest) {
       message: 'Intent cluster generated successfully'
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Generate intent cluster error:', error);
 
     // Handle specific error types
-    if (error.message.includes('PERPLEXITY_API_KEY')) {
+    if (error instanceof Error && error.message.includes('PERPLEXITY_API_KEY')) {
       return NextResponse.json(
         { error: 'Perplexity API not configured. Contact support.' },
         { status: 503 }
       );
     }
 
-    if (error.message.includes('ANTHROPIC_API_KEY')) {
+    if (error instanceof Error && error.message.includes('ANTHROPIC_API_KEY')) {
       return NextResponse.json(
         { error: 'Anthropic API not configured. Contact support.' },
         { status: 503 }
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

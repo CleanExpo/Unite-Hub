@@ -1,4 +1,7 @@
 /**
+ * @deprecated Use `@/lib/rate-limit` instead. This file is superseded by the
+ * consolidated Redis-backed rate limiter (UNI-204). Will be removed in a future release.
+ *
  * Rate Limit Middleware
  *
  * Applies rate limiting to API routes with database integration.

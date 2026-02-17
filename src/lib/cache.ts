@@ -160,6 +160,11 @@ export const CacheKeys = {
   mindmap: (mindmapId: string) => `mindmap:${mindmapId}`,
   mindmapNodes: (mindmapId: string) => `mindmap:nodes:${mindmapId}`,
   projectMindmap: (projectId: string) => `project:mindmap:${projectId}`,
+
+  // Analytics & Monitoring
+  analyticsOverview: (workspaceId: string, dateRange: string) =>
+    `analytics:overview:${workspaceId}:${dateRange}`,
+  monitoringDashboard: () => `monitoring:dashboard`,
 };
 
 /**

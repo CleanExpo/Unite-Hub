@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit } from "@/middleware/rateLimiter";
+import { publicRateLimit } from "@/lib/rate-limit";
 import { createApiLogger } from "@/lib/logger";
 import { getRedisClient } from "@/lib/redis";
 import { getSupabaseServer } from "@/lib/supabase";
@@ -145,10 +145,8 @@ function determineOverallStatus(
 export async function GET(request: NextRequest) {
   try {
     // Skip rate limiting to avoid any Sentry instrumentation issues
-    // const rateLimitResult = await rateLimit(request, { tier: 'public' });
-    // if (!rateLimitResult.success) {
-    //   return rateLimitResult.response;
-    // }
+    // const rateLimited = await publicRateLimit(request);
+    // if (rateLimited) return rateLimited;
 
     // Run health checks in parallel
     const [redisCheck, dbCheck, cacheMetrics] = await Promise.all([

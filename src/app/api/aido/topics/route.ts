@@ -69,10 +69,10 @@ export async function POST(req: NextRequest) {
       topic
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Create topic error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }
@@ -110,10 +110,10 @@ export async function GET(req: NextRequest) {
       count: topics.length
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Get topics error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

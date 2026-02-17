@@ -24,14 +24,11 @@ export async function GET(req: NextRequest) {
 
     const clientId = req.nextUrl.searchParams.get('clientId');
     const status = req.nextUrl.searchParams.get('status');
-    const minAISourceScore = req.nextUrl.searchParams.get('minAISourceScore');
 
-    const assets = await getContentAssets(
-      workspaceId,
-      clientId || undefined,
-      status || undefined,
-      minAISourceScore ? parseFloat(minAISourceScore) : undefined
-    );
+    const assets = await getContentAssets(workspaceId, {
+      clientId: clientId || undefined,
+      status: status || undefined,
+    });
 
     // Calculate aggregate statistics
     const stats = {
@@ -42,20 +39,20 @@ export async function GET(req: NextRequest) {
         published: assets.filter(a => a.status === 'published').length
       },
       averageScores: {
-        authority: (assets.reduce((sum, a) => sum + a.authorityScore, 0) / assets.length || 0).toFixed(2),
-        evergreen: (assets.reduce((sum, a) => sum + a.evergreenScore, 0) / assets.length || 0).toFixed(2),
-        aiSource: (assets.reduce((sum, a) => sum + a.aiSourceScore, 0) / assets.length || 0).toFixed(2)
+        authority: (assets.reduce((sum, a) => sum + a.authority_score, 0) / assets.length || 0).toFixed(2),
+        evergreen: (assets.reduce((sum, a) => sum + a.evergreen_score, 0) / assets.length || 0).toFixed(2),
+        aiSource: (assets.reduce((sum, a) => sum + a.ai_source_score, 0) / assets.length || 0).toFixed(2)
       },
       algorithmicImmunity: {
         count: assets.filter(a =>
-          a.authorityScore >= 0.8 &&
-          a.evergreenScore >= 0.7 &&
-          a.aiSourceScore >= 0.8
+          a.authority_score >= 0.8 &&
+          a.evergreen_score >= 0.7 &&
+          a.ai_source_score >= 0.8
         ).length,
         percentage: ((assets.filter(a =>
-          a.authorityScore >= 0.8 &&
-          a.evergreenScore >= 0.7 &&
-          a.aiSourceScore >= 0.8
+          a.authority_score >= 0.8 &&
+          a.evergreen_score >= 0.7 &&
+          a.ai_source_score >= 0.8
         ).length / assets.length) * 100 || 0).toFixed(1)
       }
     };
@@ -67,10 +64,10 @@ export async function GET(req: NextRequest) {
       count: assets.length
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Get content assets error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

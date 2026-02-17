@@ -37,10 +37,10 @@ export async function GET(req: NextRequest) {
       count: clusters.length
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Get intent clusters error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }
@@ -81,10 +81,10 @@ export async function PATCH(req: NextRequest) {
       intentCluster: updated
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Update intent cluster error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

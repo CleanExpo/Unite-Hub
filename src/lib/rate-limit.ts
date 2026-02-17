@@ -1,221 +1,219 @@
 /**
- * Rate Limiting Utility for Next.js API Routes
- * In-memory rate limiter with configurable windows and limits
+ * Consolidated Rate Limiting — Redis-backed with in-memory fallback
+ *
+ * Uses rate-limiter-flexible for production-grade rate limiting.
+ * Redis backend in production, RateLimiterMemory fallback in development.
+ *
+ * Tier configuration:
+ *   public:        20 req/min   (unauthenticated endpoints)
+ *   free:          60 req/min   (authenticated default — apiRateLimit)
+ *   ai_endpoint:   10 req/min   (aiAgentRateLimit)
+ *   auth_endpoint: 10 req/min   (strictRateLimit)
+ *   webhook:     1000 req/min
+ *   email:         50 req/hour
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  RateLimiterRedis,
+  RateLimiterMemory,
+  RateLimiterRes,
+} from 'rate-limiter-flexible';
+import { getRedisClient } from './redis';
+
+// ---------------------------------------------------------------------------
+// Tier Configuration
+// ---------------------------------------------------------------------------
+
+export const RATE_LIMIT_TIERS = {
+  public: { points: 20, duration: 60, keyPrefix: 'rl:public' },
+  free: { points: 60, duration: 60, keyPrefix: 'rl:free' },
+  ai_endpoint: { points: 10, duration: 60, keyPrefix: 'rl:ai' },
+  auth_endpoint: { points: 10, duration: 60, keyPrefix: 'rl:auth' },
+  webhook: { points: 1000, duration: 60, keyPrefix: 'rl:webhook' },
+  email: { points: 50, duration: 3600, keyPrefix: 'rl:email' },
+} as const;
+
+export type RateLimitTierName = keyof typeof RATE_LIMIT_TIERS;
+
+// ---------------------------------------------------------------------------
+// Limiter Initialization (lazy singleton)
+// ---------------------------------------------------------------------------
+
+type LimiterMap = Record<RateLimitTierName, RateLimiterRedis | RateLimiterMemory>;
+
+let limiters: LimiterMap | null = null;
+
+function buildMemoryLimiters(): LimiterMap {
+  return Object.fromEntries(
+    Object.entries(RATE_LIMIT_TIERS).map(([name, { keyPrefix: _kp, ...rest }]) => [
+      name,
+      new RateLimiterMemory(rest),
+    ])
+  ) as unknown as LimiterMap;
+}
+
+function getLimiters(): LimiterMap {
+  if (limiters) return limiters;
+
+  const hasRedis = !!(process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL);
+
+  try {
+    if (hasRedis) {
+      const redis = getRedisClient();
+      limiters = Object.fromEntries(
+        Object.entries(RATE_LIMIT_TIERS).map(([name, config]) => [
+          name,
+          new RateLimiterRedis({ storeClient: redis, ...config }),
+        ])
+      ) as unknown as LimiterMap;
+    } else {
+      console.warn('⚠️  No Redis URL — rate limiting uses in-memory fallback');
+      limiters = buildMemoryLimiters();
+    }
+  } catch (err) {
+    console.error('❌ Rate limiter init failed, falling back to memory:', err);
+    limiters = buildMemoryLimiters();
+  }
+
+  return limiters;
+}
+
+// ---------------------------------------------------------------------------
+// IP Extraction
+// ---------------------------------------------------------------------------
+
+function getClientIp(req: NextRequest): string {
+  return (
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    req.headers.get('x-real-ip') ||
+    req.headers.get('cf-connecting-ip') ||
+    'unknown'
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Core: consume a rate-limit point and return 429 or null
+// ---------------------------------------------------------------------------
+
+async function consumeRateLimit(
+  req: NextRequest,
+  tierName: RateLimitTierName,
+  keyOverride?: string,
+  message = 'Too many requests, please try again later',
+): Promise<NextResponse | null> {
+  const tier = RATE_LIMIT_TIERS[tierName];
+  const limiter = getLimiters()[tierName];
+  const key = keyOverride || getClientIp(req);
+
+  try {
+    await limiter.consume(key);
+    return null; // Allowed
+  } catch (rlError: unknown) {
+    // rate-limiter-flexible throws a RateLimiterRes on rejection
+    const msBeforeNext =
+      rlError instanceof RateLimiterRes
+        ? rlError.msBeforeNext
+        : (rlError as any)?.msBeforeNext ?? 60_000;
+    const retryAfter = Math.ceil(msBeforeNext / 1000);
+
+    return NextResponse.json(
+      { error: message, retryAfter },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(retryAfter),
+          'X-RateLimit-Limit': String(tier.points),
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': new Date(
+            Date.now() + msBeforeNext
+          ).toISOString(),
+        },
+      },
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Public API — all 6 exports preserved
+// ---------------------------------------------------------------------------
 
 interface RateLimitConfig {
-  /**
-   * Time window in milliseconds
-   * @default 60000 (1 minute)
-   */
   windowMs?: number;
-
-  /**
-   * Maximum number of requests per window
-   * @default 60
-   */
   max?: number;
-
-  /**
-   * Message to return when rate limit is exceeded
-   * @default "Too many requests, please try again later"
-   */
   message?: string;
-
-  /**
-   * HTTP status code to return when rate limit is exceeded
-   * @default 429
-   */
   statusCode?: number;
-
-  /**
-   * Custom key generator function
-   * @default Uses IP address
-   */
   keyGenerator?: (req: NextRequest) => string;
 }
 
-interface RateLimitStore {
-  [key: string]: {
-    count: number;
-    resetTime: number;
-  };
-}
-
-// In-memory store for rate limit data
-const store: RateLimitStore = {};
-
-// Cleanup old entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  Object.keys(store).forEach((key) => {
-    if (store[key].resetTime < now) {
-      delete store[key];
-    }
-  });
-}, 5 * 60 * 1000);
-
 /**
- * Default key generator - uses IP address or a fallback identifier
- */
-function defaultKeyGenerator(req: NextRequest): string {
-  // Try to get real IP from various headers (for proxies/load balancers)
-  const forwarded = req.headers.get('x-forwarded-for');
-  const realIp = req.headers.get('x-real-ip');
-  const cfConnectingIp = req.headers.get('cf-connecting-ip'); // Cloudflare
-
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
-  }
-  if (realIp) {
-    return realIp;
-  }
-  if (cfConnectingIp) {
-    return cfConnectingIp;
-  }
-
-  // Fallback to a combination of headers if no IP available
-  const userAgent = req.headers.get('user-agent') || 'unknown';
-  return `fallback-${userAgent.substring(0, 50)}`;
-}
-
-/**
- * Rate limiter middleware for Next.js API routes
- *
- * @example
- * // In your API route:
- * import { rateLimit } from '@/lib/rate-limit';
- *
- * export async function POST(req: NextRequest) {
- *   const rateLimitResult = await rateLimit(req);
- *   if (rateLimitResult) {
- *     return rateLimitResult; // Returns 429 response
- *   }
- *
- *   // Continue with your endpoint logic
- *   return NextResponse.json({ success: true });
- * }
+ * Generic rate limiter (free tier — 60 req/min).
+ * Accepts an optional config for backwards compatibility.
  */
 export async function rateLimit(
   req: NextRequest,
-  config: RateLimitConfig = {}
+  config: RateLimitConfig = {},
 ): Promise<NextResponse | null> {
-  const {
-    windowMs = 60000, // 1 minute
-    max = 60,
-    message = 'Too many requests, please try again later',
-    statusCode = 429,
-    keyGenerator = defaultKeyGenerator,
-  } = config;
-
-  const key = keyGenerator(req);
-  const now = Date.now();
-
-  // Initialize or get existing entry
-  if (!store[key] || store[key].resetTime < now) {
-    store[key] = {
-      count: 1,
-      resetTime: now + windowMs,
-    };
-    return null; // Allow request
-  }
-
-  // Increment counter
-  store[key].count += 1;
-
-  // Check if limit exceeded
-  if (store[key].count > max) {
-    const retryAfter = Math.ceil((store[key].resetTime - now) / 1000);
-
-    return NextResponse.json(
-      {
-        error: message,
-        retryAfter: retryAfter,
-      },
-      {
-        status: statusCode,
-        headers: {
-          'Retry-After': retryAfter.toString(),
-          'X-RateLimit-Limit': max.toString(),
-          'X-RateLimit-Remaining': '0',
-          'X-RateLimit-Reset': store[key].resetTime.toString(),
-        },
-      }
-    );
-  }
-
-  // Request allowed - could optionally add rate limit headers to response
-  return null;
+  const key = config.keyGenerator ? config.keyGenerator(req) : undefined;
+  return consumeRateLimit(req, 'free', key, config.message);
 }
 
 /**
- * Strict rate limiter for sensitive endpoints (auth, password reset, etc.)
- * 10 requests per 15 minutes
- */
-export async function strictRateLimit(
-  req: NextRequest
-): Promise<NextResponse | null> {
-  return rateLimit(req, {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10,
-    message: 'Too many attempts, please try again later',
-  });
-}
-
-/**
- * Standard rate limiter for API endpoints
- * 100 requests per 15 minutes
+ * Standard API rate limiter — 60 req/min (free tier)
  */
 export async function apiRateLimit(
-  req: NextRequest
+  req: NextRequest,
 ): Promise<NextResponse | null> {
-  return rateLimit(req, {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100,
-    message: 'Too many requests, please slow down',
-  });
+  return consumeRateLimit(
+    req,
+    'free',
+    undefined,
+    'Too many requests, please slow down',
+  );
 }
 
 /**
- * Lenient rate limiter for public endpoints
- * 300 requests per 15 minutes
+ * Strict rate limiter for auth endpoints — 10 req/min
+ */
+export async function strictRateLimit(
+  req: NextRequest,
+): Promise<NextResponse | null> {
+  return consumeRateLimit(
+    req,
+    'auth_endpoint',
+    undefined,
+    'Too many attempts, please try again later',
+  );
+}
+
+/**
+ * Public endpoint rate limiter — 20 req/min
  */
 export async function publicRateLimit(
-  req: NextRequest
+  req: NextRequest,
 ): Promise<NextResponse | null> {
-  return rateLimit(req, {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 300,
-    message: 'Too many requests, please try again later',
-  });
+  return consumeRateLimit(req, 'public');
 }
 
 /**
- * AI agent rate limiter (higher cost operations)
- * 100 requests per 15 minutes
+ * AI agent rate limiter — 10 req/min
  */
 export async function aiAgentRateLimit(
-  req: NextRequest
+  req: NextRequest,
 ): Promise<NextResponse | null> {
-  return rateLimit(req, {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100,
-    message: 'Too many AI requests, please wait before trying again',
-  });
+  return consumeRateLimit(
+    req,
+    'ai_endpoint',
+    undefined,
+    'Too many AI requests, please wait before trying again',
+  );
 }
 
 /**
- * Custom rate limiter by user ID
- * Useful for authenticated endpoints where you want per-user limits
+ * Per-user rate limiter factory — 60 req/min scoped to userId
  */
 export function createUserRateLimit(userId: string) {
   return async (req: NextRequest): Promise<NextResponse | null> => {
-    return rateLimit(req, {
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100,
-      keyGenerator: () => `user:${userId}`,
-    });
+    return consumeRateLimit(req, 'free', `user:${userId}`);
   };
 }

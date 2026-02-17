@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from "@/lib/supabase";
 import { validateUserAuth } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { invalidateContactCaches } from "@/lib/api/cache-invalidation";
 
 /**
  * DELETE contact endpoint
@@ -67,6 +68,9 @@ export async function DELETE(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Invalidate contact caches
+    await invalidateContactCaches(user.orgId, contactId);
 
     // Log to audit trail
     await supabase.from('auditLogs').insert({

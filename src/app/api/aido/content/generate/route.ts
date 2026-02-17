@@ -119,11 +119,11 @@ export async function POST(req: NextRequest) {
       message: 'Content generated successfully. Review and publish when ready.'
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Generate content error:', error);
 
     // Handle specific validation errors
-    if (error.message.includes('validation failed')) {
+    if (error instanceof Error && error.message.includes('validation failed')) {
       return NextResponse.json(
         {
           error: 'Content validation failed',
@@ -135,7 +135,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Handle API configuration errors
-    if (error.message.includes('ANTHROPIC_API_KEY')) {
+    if (error instanceof Error && error.message.includes('ANTHROPIC_API_KEY')) {
       return NextResponse.json(
         { error: 'Anthropic API not configured. Contact support.' },
         { status: 503 }
@@ -143,7 +143,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

@@ -60,10 +60,10 @@ export async function GET(req: NextRequest) {
       count: events.length
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Get reality events error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

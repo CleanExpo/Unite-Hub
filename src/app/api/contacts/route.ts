@@ -12,6 +12,8 @@ import {
   parseSorting,
 } from "@/lib/api-helpers";
 import { sanitizeObject } from "@/lib/sanitize";
+import { getCache, CacheKeys, CacheTTL } from "@/lib/cache";
+import { invalidateContactCaches } from "@/lib/api/cache-invalidation";
 
 /**
  * GET /api/contacts
@@ -64,6 +66,22 @@ export async function GET(req: NextRequest) {
     };
     const filters = parseQueryFilters(req.nextUrl.searchParams, filterConfig);
 
+    // Build a cache key incorporating all query parameters
+    const queryHash = [
+      `p${page}`,
+      `s${pageSize}`,
+      `${sortBy}:${sortOrder}`,
+      ...Object.entries(filters).map(([k, v]) => `${k}=${v}`),
+    ].join('|');
+    const cacheKey = `${CacheKeys.contactsByWorkspace(workspaceId, page)}:${queryHash}`;
+
+    // Check cache first
+    const cache = getCache();
+    const cached = await cache.get<{ data: any; meta: any }>(cacheKey);
+    if (cached) {
+      return successResponse(cached.data, cached.meta, undefined, 200);
+    }
+
     // Get authenticated supabase client
     const supabase = await getSupabaseServer();
 
@@ -96,6 +114,10 @@ export async function GET(req: NextRequest) {
       page,
       pageSize
     );
+
+    // Store in cache (SHORT TTL — 60s)
+    const responsePayload = { data: { contacts: contacts || [] }, meta };
+    await cache.set(cacheKey, responsePayload, CacheTTL.SHORT);
 
     return successResponse(
       { contacts: contacts || [] },
@@ -199,6 +221,9 @@ export async function POST(req: NextRequest) {
       console.error("Error creating contact:", error);
       return errorResponse("Failed to create contact", 500, error.message);
     }
+
+    // Invalidate contact list caches for this workspace
+    await invalidateContactCaches(workspaceId);
 
     return successResponse({ contact }, undefined, "Contact created successfully", 201);
   } catch (error) {

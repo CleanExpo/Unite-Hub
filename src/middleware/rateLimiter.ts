@@ -1,3 +1,7 @@
+/**
+ * @deprecated Use `@/lib/rate-limit` instead. This file is superseded by the
+ * consolidated Redis-backed rate limiter (UNI-204). Will be removed in a future release.
+ */
 import { NextRequest, NextResponse } from 'next/server';
 import { RateLimiterRedis, RateLimiterMemory, RateLimiterRes } from 'rate-limiter-flexible';
 import { getRedisClient } from '@/lib/redis';

@@ -81,10 +81,10 @@ export async function POST(req: NextRequest) {
       message: 'Event ingested successfully. Processing will complete within 1-2 minutes.'
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Ingest reality event error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

@@ -1,20 +1,22 @@
 /**
  * Unit Tests for Rate Limiting
- * Tests the in-memory rate limiter for API endpoints
+ * Tests the consolidated Redis-backed rate limiter (with in-memory fallback)
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import {
+  rateLimit,
   apiRateLimit,
   strictRateLimit,
   publicRateLimit,
   aiAgentRateLimit,
+  createUserRateLimit,
+  RATE_LIMIT_TIERS,
 } from '@/lib/rate-limit';
 
 describe('Rate Limiting', () => {
   beforeEach(() => {
-    // Clear rate limit store between tests
     vi.clearAllMocks();
   });
 
@@ -25,20 +27,20 @@ describe('Rate Limiting', () => {
       expect(result).toBeNull(); // null means allowed
     });
 
-    it('should block requests over limit (100 per 15 min)', async () => {
+    it('should block requests over limit (60 per minute)', async () => {
       const req = new NextRequest('http://localhost:3008/api/test', {
         headers: {
-          'x-forwarded-for': '192.168.1.100',
+          'x-forwarded-for': '10.0.0.100',
         },
       });
 
-      // Exhaust rate limit (100 requests allowed)
-      for (let i = 0; i < 100; i++) {
+      // Exhaust rate limit (60 requests allowed)
+      for (let i = 0; i < RATE_LIMIT_TIERS.free.points; i++) {
         const result = await apiRateLimit(req);
         expect(result).toBeNull();
       }
 
-      // 101st request should be blocked
+      // Next request should be blocked
       const result = await apiRateLimit(req);
       expect(result).not.toBeNull();
       expect(result?.status).toBe(429);
@@ -47,12 +49,12 @@ describe('Rate Limiting', () => {
     it('should include rate limit headers in 429 response', async () => {
       const req = new NextRequest('http://localhost:3008/api/test', {
         headers: {
-          'x-forwarded-for': '192.168.1.101',
+          'x-forwarded-for': '10.0.0.101',
         },
       });
 
       // Exhaust limit
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < RATE_LIMIT_TIERS.free.points; i++) {
         await apiRateLimit(req);
       }
 
@@ -64,31 +66,26 @@ describe('Rate Limiting', () => {
       const rateLimitRemaining = result?.headers.get('X-RateLimit-Remaining');
 
       expect(retryAfter).toBeTruthy();
-      expect(rateLimitLimit).toBe('100');
+      expect(rateLimitLimit).toBe(String(RATE_LIMIT_TIERS.free.points));
       expect(rateLimitRemaining).toBe('0');
-    });
-
-    it('should reset after time window expires', async () => {
-      // This test would require mocking time, skipping for now
-      // In real tests, you'd use vi.useFakeTimers()
     });
   });
 
   describe('strictRateLimit', () => {
-    it('should enforce stricter limits (10 per 15 min)', async () => {
+    it('should enforce stricter limits (10 per minute)', async () => {
       const req = new NextRequest('http://localhost:3008/api/auth/login', {
         headers: {
-          'x-forwarded-for': '192.168.1.102',
+          'x-forwarded-for': '10.0.0.102',
         },
       });
 
       // Exhaust strict limit (10 requests allowed)
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < RATE_LIMIT_TIERS.auth_endpoint.points; i++) {
         const result = await strictRateLimit(req);
         expect(result).toBeNull();
       }
 
-      // 11th request should be blocked
+      // Next request should be blocked
       const result = await strictRateLimit(req);
       expect(result).not.toBeNull();
       expect(result?.status).toBe(429);
@@ -97,12 +94,12 @@ describe('Rate Limiting', () => {
     it('should return appropriate error message', async () => {
       const req = new NextRequest('http://localhost:3008/api/auth/login', {
         headers: {
-          'x-forwarded-for': '192.168.1.103',
+          'x-forwarded-for': '10.0.0.103',
         },
       });
 
       // Exhaust limit
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < RATE_LIMIT_TIERS.auth_endpoint.points; i++) {
         await strictRateLimit(req);
       }
 
@@ -115,36 +112,52 @@ describe('Rate Limiting', () => {
   });
 
   describe('publicRateLimit', () => {
-    it('should allow more requests (300 per 15 min)', async () => {
+    it('should allow requests under the public limit (20 per minute)', async () => {
       const req = new NextRequest('http://localhost:3008/api/public/health', {
         headers: {
-          'x-forwarded-for': '192.168.1.104',
+          'x-forwarded-for': '10.0.0.104',
         },
       });
 
-      // Make 100 requests - should all be allowed
-      for (let i = 0; i < 100; i++) {
+      // Make requests up to limit — should all be allowed
+      for (let i = 0; i < RATE_LIMIT_TIERS.public.points; i++) {
         const result = await publicRateLimit(req);
         expect(result).toBeNull();
       }
     });
-  });
 
-  describe('aiAgentRateLimit', () => {
-    it('should enforce AI-specific limits (100 per 15 min)', async () => {
-      const req = new NextRequest('http://localhost:3008/api/agents/contact-intelligence', {
+    it('should block requests over the public limit', async () => {
+      const req = new NextRequest('http://localhost:3008/api/public/health', {
         headers: {
-          'x-forwarded-for': '192.168.1.105',
+          'x-forwarded-for': '10.0.0.114',
         },
       });
 
-      // Exhaust AI limit (100 requests allowed)
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < RATE_LIMIT_TIERS.public.points; i++) {
+        await publicRateLimit(req);
+      }
+
+      const result = await publicRateLimit(req);
+      expect(result).not.toBeNull();
+      expect(result?.status).toBe(429);
+    });
+  });
+
+  describe('aiAgentRateLimit', () => {
+    it('should enforce AI-specific limits (10 per minute)', async () => {
+      const req = new NextRequest('http://localhost:3008/api/agents/contact-intelligence', {
+        headers: {
+          'x-forwarded-for': '10.0.0.105',
+        },
+      });
+
+      // Exhaust AI limit (10 requests allowed)
+      for (let i = 0; i < RATE_LIMIT_TIERS.ai_endpoint.points; i++) {
         const result = await aiAgentRateLimit(req);
         expect(result).toBeNull();
       }
 
-      // 101st request should be blocked
+      // Next request should be blocked
       const result = await aiAgentRateLimit(req);
       expect(result).not.toBeNull();
       expect(result?.status).toBe(429);
@@ -154,22 +167,44 @@ describe('Rate Limiting', () => {
     });
   });
 
+  describe('createUserRateLimit', () => {
+    it('should scope rate limits to a specific user', async () => {
+      const limiterA = createUserRateLimit('user-aaa');
+      const limiterB = createUserRateLimit('user-bbb');
+      const req = new NextRequest('http://localhost:3008/api/test');
+
+      // Exhaust user A
+      for (let i = 0; i < RATE_LIMIT_TIERS.free.points; i++) {
+        const result = await limiterA(req);
+        expect(result).toBeNull();
+      }
+
+      // User A is now blocked
+      const blockedA = await limiterA(req);
+      expect(blockedA?.status).toBe(429);
+
+      // User B should still be allowed
+      const allowedB = await limiterB(req);
+      expect(allowedB).toBeNull();
+    });
+  });
+
   describe('IP extraction', () => {
     it('should use x-forwarded-for header', async () => {
       const req1 = new NextRequest('http://localhost:3008/api/test', {
         headers: {
-          'x-forwarded-for': '192.168.1.200',
+          'x-forwarded-for': '10.0.0.200',
         },
       });
 
       const req2 = new NextRequest('http://localhost:3008/api/test', {
         headers: {
-          'x-forwarded-for': '192.168.1.201',
+          'x-forwarded-for': '10.0.0.201',
         },
       });
 
       // Each IP should have its own rate limit
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < RATE_LIMIT_TIERS.free.points; i++) {
         await apiRateLimit(req1);
       }
 
@@ -185,7 +220,7 @@ describe('Rate Limiting', () => {
     it('should use x-real-ip header if x-forwarded-for not present', async () => {
       const req = new NextRequest('http://localhost:3008/api/test', {
         headers: {
-          'x-real-ip': '192.168.1.210',
+          'x-real-ip': '10.0.0.210',
         },
       });
 
@@ -196,7 +231,7 @@ describe('Rate Limiting', () => {
     it('should use cf-connecting-ip for Cloudflare requests', async () => {
       const req = new NextRequest('http://localhost:3008/api/test', {
         headers: {
-          'cf-connecting-ip': '192.168.1.220',
+          'cf-connecting-ip': '10.0.0.220',
         },
       });
 
@@ -209,12 +244,12 @@ describe('Rate Limiting', () => {
     it('should return JSON error response', async () => {
       const req = new NextRequest('http://localhost:3008/api/test', {
         headers: {
-          'x-forwarded-for': '192.168.1.250',
+          'x-forwarded-for': '10.0.0.250',
         },
       });
 
       // Exhaust limit
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < RATE_LIMIT_TIERS.free.points; i++) {
         await apiRateLimit(req);
       }
 
@@ -225,6 +260,18 @@ describe('Rate Limiting', () => {
       expect(json).toHaveProperty('error');
       expect(json).toHaveProperty('retryAfter');
       expect(typeof json.retryAfter).toBe('number');
+    });
+  });
+
+  describe('Tier configuration', () => {
+    it('should export correct tier limits', () => {
+      expect(RATE_LIMIT_TIERS.public.points).toBe(20);
+      expect(RATE_LIMIT_TIERS.free.points).toBe(60);
+      expect(RATE_LIMIT_TIERS.ai_endpoint.points).toBe(10);
+      expect(RATE_LIMIT_TIERS.auth_endpoint.points).toBe(10);
+      expect(RATE_LIMIT_TIERS.webhook.points).toBe(1000);
+      expect(RATE_LIMIT_TIERS.email.points).toBe(50);
+      expect(RATE_LIMIT_TIERS.email.duration).toBe(3600);
     });
   });
 });

@@ -113,10 +113,10 @@ export async function POST(req: NextRequest) {
       message: 'SERP monitoring active. Check back in 6 hours for next update.'
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Monitor SERP error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }
@@ -138,10 +138,10 @@ export async function GET(req: NextRequest) {
       message: 'Cron job executed successfully'
     });
 
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Cron monitoring error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

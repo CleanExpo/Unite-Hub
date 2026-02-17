@@ -3,6 +3,8 @@ import { analyzeContactIntelligence } from "@/lib/agents/contact-intelligence";
 import { getSupabaseServer } from "@/lib/supabase";
 import { validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { getCache, CacheKeys, CacheTTL } from "@/lib/cache";
+import { invalidateContactCaches } from "@/lib/api/cache-invalidation";
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,13 +44,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check cache for existing analysis
+    const cache = getCache();
+    const cacheKey = CacheKeys.aiAnalysis(contactId);
+    const cached = await cache.get<{ success: boolean; analysis: any }>(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached);
+    }
+
     // Run intelligence analysis with workspace context
     const analysis = await analyzeContactIntelligence(contactId, workspaceId);
 
-    return NextResponse.json({
-      success: true,
-      analysis,
-    });
+    // Cache the analysis result (LONG TTL — 900s)
+    const responsePayload = { success: true, analysis };
+    await cache.set(cacheKey, responsePayload, CacheTTL.LONG);
+
+    // Invalidate stale contact data (score may have changed)
+    await invalidateContactCaches(workspaceId, contactId);
+
+    return NextResponse.json(responsePayload);
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
