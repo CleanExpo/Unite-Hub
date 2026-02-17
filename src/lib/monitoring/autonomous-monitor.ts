@@ -7,7 +7,7 @@
 
 import * as Sentry from '@sentry/nextjs';
 import { getSupabaseServer, supabaseAdmin } from '@/lib/supabase';
-import { sendEmail } from '@/lib/email/email-service';
+// import { sendEmail } from '@/lib/email/email-service'; // Disabled: alert emails temporarily off
 import { log } from '@/lib/logger';
 
 /**
@@ -260,55 +260,10 @@ async function sendCriticalErrorAlert(params: {
   message: string;
   route?: string;
 }): Promise<void> {
-  try {
-    const alertEmails = process.env.ALERT_EMAILS?.split(',') || [];
-
-    if (alertEmails.length === 0) {
-      log.warn('No ALERT_EMAILS configured - skipping error alert');
-      return;
-    }
-
-    const subject = `🚨 ${params.priority} Error: ${params.message.substring(0, 50)}`;
-    const html = `
-      <h1 style="color: #dc2626;">Critical Error Detected</h1>
-      <p><strong>Priority:</strong> ${params.priority}</p>
-      <p><strong>Severity:</strong> ${params.severity}</p>
-      <p><strong>Route:</strong> ${params.route || 'N/A'}</p>
-      <p><strong>Time:</strong> ${new Date().toISOString()}</p>
-      <hr>
-      <h2>Error Message:</h2>
-      <p>${params.message}</p>
-      <hr>
-      <p><small>Error ID: ${params.errorId}</small></p>
-      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/monitoring/errors/${params.errorId}">View Error Details</a></p>
-    `;
-
-    for (const email of alertEmails) {
-      await sendEmail({
-        to: email.trim(),
-        subject,
-        html,
-        text: `${params.priority} Error: ${params.message}`,
-      });
-
-      // Log the alert
-      await supabaseAdmin.from('alert_notifications').insert({
-        alert_type: AlertType.ERROR,
-        severity: params.priority === ErrorPriority.P0_CRITICAL ? 'CRITICAL' : 'HIGH',
-        title: subject,
-        message: params.message,
-        sent_to: [email.trim()],
-        send_method: 'EMAIL',
-        sent: true,
-        sent_at: new Date().toISOString(),
-        related_error_id: params.errorId,
-      });
-    }
-
-    log.info('Critical error alert sent', { errorId: params.errorId, recipients: alertEmails.length });
-  } catch (error) {
-    console.error('[autonomous-monitor] Failed to send critical error alert:', error);
-  }
+  // DISABLED: Alert emails are disabled until monitoring is properly audited.
+  // Errors are still logged to database and Sentry. Re-enable by removing this guard.
+  console.info('[autonomous-monitor] Alert email suppressed (disabled):', params.priority, params.message.substring(0, 80));
+  return;
 }
 
 /**
@@ -320,62 +275,10 @@ async function sendHealthAlert(params: {
   criticalIssues: string[];
   warnings: string[];
 }): Promise<void> {
-  try {
-    const alertEmails = process.env.ALERT_EMAILS?.split(',') || [];
-
-    if (alertEmails.length === 0) {
-      log.warn('No ALERT_EMAILS configured - skipping health alert');
-      return;
-    }
-
-    const subject = `${params.status === 'critical' ? '🚨' : '⚠️'} System Health: ${params.status.toUpperCase()}`;
-    const html = `
-      <h1 style="color: ${params.status === 'critical' ? '#dc2626' : '#f59e0b'};">System Health Alert</h1>
-      <p><strong>Status:</strong> ${params.status.toUpperCase()}</p>
-      <p><strong>Time:</strong> ${new Date().toISOString()}</p>
-      <hr>
-      ${params.criticalIssues.length > 0 ? `
-        <h2>Critical Issues:</h2>
-        <ul>
-          ${params.criticalIssues.map(issue => `<li style="color: #dc2626;">${issue}</li>`).join('')}
-        </ul>
-      ` : ''}
-      ${params.warnings.length > 0 ? `
-        <h2>Warnings:</h2>
-        <ul>
-          ${params.warnings.map(warning => `<li style="color: #f59e0b;">${warning}</li>`).join('')}
-        </ul>
-      ` : ''}
-      <hr>
-      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/monitoring/health/${params.healthCheckId}">View Health Report</a></p>
-    `;
-
-    for (const email of alertEmails) {
-      await sendEmail({
-        to: email.trim(),
-        subject,
-        html,
-        text: `System health is ${params.status}. Critical issues: ${params.criticalIssues.length}, Warnings: ${params.warnings.length}`,
-      });
-
-      // Log the alert
-      await supabaseAdmin.from('alert_notifications').insert({
-        alert_type: AlertType.HEALTH,
-        severity: params.status === 'critical' ? 'CRITICAL' : 'MEDIUM',
-        title: subject,
-        message: `Critical issues: ${params.criticalIssues.length}, Warnings: ${params.warnings.length}`,
-        sent_to: [email.trim()],
-        send_method: 'EMAIL',
-        sent: true,
-        sent_at: new Date().toISOString(),
-        related_health_check_id: params.healthCheckId,
-      });
-    }
-
-    log.info('Health alert sent', { healthCheckId: params.healthCheckId, recipients: alertEmails.length });
-  } catch (error) {
-    console.error('[autonomous-monitor] Failed to send health alert:', error);
-  }
+  // DISABLED: Health alert emails are disabled until monitoring is properly audited.
+  // Health checks are still logged to database. Re-enable by removing this guard.
+  console.info('[autonomous-monitor] Health alert email suppressed (disabled):', params.status, params.criticalIssues);
+  return;
 }
 
 /**
