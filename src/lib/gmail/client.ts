@@ -114,5 +114,16 @@ export class GmailClient {
   }
 }
 
-// Export singleton instance
-export const gmailClient = new GmailClient();
+// Lazy singleton — avoids evaluating env vars at module scope (breaks in CI)
+let _gmailClient: GmailClient | null = null;
+export function getGmailClient(): GmailClient {
+  if (!_gmailClient) {
+    _gmailClient = new GmailClient();
+  }
+  return _gmailClient;
+}
+export const gmailClient = new Proxy({} as GmailClient, {
+  get(_target, prop) {
+    return (getGmailClient() as any)[prop];
+  },
+});

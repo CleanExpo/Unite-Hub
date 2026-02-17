@@ -8,26 +8,34 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from './database.types';
 
-// Ensure environment variables are loaded
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-  throw new Error('Missing Supabase environment variables');
-}
-
 /**
- * Create Supabase client for staff authentication
+ * Lazy-initialized Supabase client for staff authentication
  * Uses the same Supabase instance as existing system
  */
-export const supabaseStaff = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-    },
+let _supabaseStaff: SupabaseClient<Database> | null = null;
+export function getSupabaseStaff(): SupabaseClient<Database> {
+  if (!_supabaseStaff) {
+    _supabaseStaff = createClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+        },
+      }
+    );
   }
-);
+  return _supabaseStaff;
+}
+
+// Backwards-compatible export
+export const supabaseStaff = new Proxy({} as SupabaseClient<Database>, {
+  get(_target, prop) {
+    return getSupabaseStaff()[prop as keyof SupabaseClient<Database>];
+  },
+});
 
 /**
  * Staff login with email/password

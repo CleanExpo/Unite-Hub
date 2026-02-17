@@ -5,10 +5,16 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
+    );
+  }
+  return _supabase;
+}
 
 export interface RegionalRegulation {
   id: string;
@@ -40,7 +46,7 @@ export class GRHEngine {
    * Get regulations for a specific region
    */
   async getRegionalRegulations(tenantId: string, region: string): Promise<RegionalRegulation[]> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('grh_regional_regulations')
       .select('*')
       .eq('tenant_id', tenantId)
@@ -117,7 +123,7 @@ export class GRHEngine {
     requirements: Record<string, any>,
     effectiveDate: string
   ): Promise<RegionalRegulation | null> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('grh_regional_regulations')
       .insert({
         tenant_id: tenantId,
@@ -165,7 +171,7 @@ export class GRHEngine {
     }
 
     // Store mapping
-    await supabase
+    await getSupabase()
       .from('grh_policy_mappings')
       .upsert({
         tenant_id: tenantId,
@@ -188,7 +194,7 @@ export class GRHEngine {
    * Get all regions with active regulations
    */
   async getActiveRegions(tenantId: string): Promise<string[]> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('grh_regional_regulations')
       .select('region')
       .eq('tenant_id', tenantId)

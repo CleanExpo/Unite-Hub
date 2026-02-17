@@ -46,8 +46,8 @@ export async function getSupabaseServer() {
     const cookieStore = await cookies();
 
     return createSSRServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
       {
         cookies: {
           get(name: string) {
@@ -77,8 +77,8 @@ export async function getSupabaseServer() {
     // Return a client without cookie-based auth (will work for unauthenticated operations)
     console.warn('getSupabaseServer: cookies() not available, using anonymous client');
     return createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
       {
         auth: {
           persistSession: false,

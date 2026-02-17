@@ -5,10 +5,16 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-
-const supabase = createClient(supabaseUrl, supabaseKey)
+let _supabase: ReturnType<typeof createClient> | null = null
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
+    )
+  }
+  return _supabase
+}
 
 const ATTACHMENTS_BUCKET = 'attachments'
 
@@ -23,10 +29,10 @@ export interface UploadedAttachment {
  * Ensure attachments bucket exists
  */
 async function ensureBucketExists() {
-  const { data: buckets } = await supabase.storage.listBuckets()
+  const { data: buckets } = await getSupabase().storage.listBuckets()
 
   if (!buckets?.find(b => b.name === ATTACHMENTS_BUCKET)) {
-    const { error } = await supabase.storage.createBucket(ATTACHMENTS_BUCKET, {
+    const { error } = await getSupabase().storage.createBucket(ATTACHMENTS_BUCKET, {
       public: false, // Secure, signed URLs required
       fileSizeLimit: 52428800, // 50MB limit
       allowedMimeTypes: [
@@ -67,7 +73,7 @@ export async function uploadAttachment(
     const filePath = `${clientId}/${timestamp}-${sanitizedFileName}`
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
+    const { data, error } = await getSupabase().storage
       .from(ATTACHMENTS_BUCKET)
       .upload(filePath, buffer, {
         contentType: mimeType,
@@ -80,7 +86,7 @@ export async function uploadAttachment(
     }
 
     // Get public URL (will require signed URL for access)
-    const { data: urlData } = supabase.storage
+    const { data: urlData } = getSupabase().storage
       .from(ATTACHMENTS_BUCKET)
       .getPublicUrl(filePath)
 
@@ -141,7 +147,7 @@ export async function deleteAttachment(fileUrl: string): Promise<void> {
 
     const filePath = urlParts[1]
 
-    const { error } = await supabase.storage
+    const { error } = await getSupabase().storage
       .from(ATTACHMENTS_BUCKET)
       .remove([filePath])
 
@@ -173,7 +179,7 @@ export async function getAttachmentDownloadUrl(
     const filePath = urlParts[1]
 
     // Generate signed URL for secure download
-    const { data, error } = await supabase.storage
+    const { data, error } = await getSupabase().storage
       .from(ATTACHMENTS_BUCKET)
       .createSignedUrl(filePath, expiresIn)
 
@@ -197,7 +203,7 @@ export async function getAttachmentDownloadUrl(
  */
 export async function listClientAttachments(clientId: string): Promise<Array<{ name: string; size: number; createdAt: string }>> {
   try {
-    const { data, error } = await supabase.storage
+    const { data, error } = await getSupabase().storage
       .from(ATTACHMENTS_BUCKET)
       .list(clientId, {
         limit: 100,

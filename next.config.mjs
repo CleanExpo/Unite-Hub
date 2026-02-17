@@ -11,7 +11,7 @@ const nextConfig = {
   transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
 
   // Next.js 16: Move serverComponentsExternalPackages to top level
-  serverExternalPackages: ['zustand'],
+  serverExternalPackages: ['zustand', '@clerk/nextjs'],
 
   experimental: {
     // Enable optimized compilation
@@ -46,29 +46,16 @@ const nextConfig = {
   // Note: swcMinify is deprecated in Next.js 16 (always enabled by default)
   // Removed: swcMinify: true
 
-  // Note: webpack config may not work with Turbopack
-  // Keeping for backwards compatibility but may be ignored
+  // Note: webpack config may not work with Turbopack (used in dev).
+  // Only light-touch client-side optimization — Next.js handles
+  // server-side code splitting internally (do NOT override it).
   webpack: (config, { isServer }) => {
-    // Optimize bundle size
-    config.optimization = {
-      ...config.optimization,
-      moduleIds: 'deterministic',
-      runtimeChunk: 'single',
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module) {
-              const packageName = module.context.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-              )?.[1];
-              return `vendor.${packageName?.replace('@', '')}`;
-            },
-          },
-        },
-      },
-    };
+    if (!isServer) {
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+      };
+    }
     return config;
   },
 
@@ -196,42 +183,26 @@ const nextConfig = {
   ],
 };
 
-// Wrap with Sentry configuration for error tracking and source maps
-export default withSentryConfig(
-  nextConfig,
-  {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
+// Sentry build options for source map uploading
+const sentryBuildOptions = {
+  silent: true,
+  org: process.env.SENTRY_ORG || 'unite-hub',
+  project: process.env.SENTRY_PROJECT || 'unite-hub-web',
+};
 
-    // Suppresses source map uploading logs during build
-    silent: true,
+// Sentry runtime options
+const sentryOptions = {
+  widenClientFileUpload: true,
+  transpileClientSDK: true,
+  tunnelRoute: "/monitoring",
+  hideSourceMaps: true,
+  disableLogger: true,
+  automaticVercelMonitors: true,
+};
 
-    org: process.env.SENTRY_ORG || 'unite-hub',
-    project: process.env.SENTRY_PROJECT || 'unite-hub-web',
-  },
-  {
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    widenClientFileUpload: true,
-
-    // Transpiles SDK to be compatible with IE11 (increases bundle size)
-    transpileClientSDK: true,
-
-    // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-    tunnelRoute: "/monitoring",
-
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
-
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-
-    // Enables automatic instrumentation of Vercel Cron Monitors.
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: true,
-  }
-);
+// Only wrap with Sentry webpack plugin when SENTRY_AUTH_TOKEN is available.
+// This prevents the Sentry webpack plugin from interfering with Turbopack builds.
+// On Vercel, SENTRY_AUTH_TOKEN is set as an env var so production builds get Sentry source maps.
+export default process.env.SENTRY_AUTH_TOKEN
+  ? withSentryConfig(nextConfig, sentryBuildOptions, sentryOptions)
+  : nextConfig;

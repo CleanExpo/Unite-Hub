@@ -18,10 +18,16 @@ import { aglbasEngine } from './AGLBASEngine';
 import { tcpqelEngine } from './TCPQELEngine';
 import { ucscelEngine } from './UCSCELEngine';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
+    );
+  }
+  return _supabase;
+}
 
 // Engine Manifest - All registered MAOS engines
 export const ENGINE_MANIFEST = {
@@ -303,7 +309,7 @@ export class MAOSOrchestrator {
    * Log execution to database
    */
   private async logExecution(tenantId: string, engine: string, action: string, startTime: number): Promise<void> {
-    await supabase
+    await getSupabase()
       .from('maos_execution_logs')
       .insert({
         tenant_id: tenantId,

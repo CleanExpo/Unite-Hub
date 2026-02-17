@@ -5,10 +5,16 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
+    );
+  }
+  return _supabase;
+}
 
 export interface GovernancePolicy {
   id: string;
@@ -42,7 +48,7 @@ export class EGCBIEngine {
    */
   async checkCompliance(tenantId: string, domain: string): Promise<ComplianceCheck> {
     // Get governance policies for this domain
-    const { data: policies } = await supabase
+    const { data: policies } = await getSupabase()
       .from('egcbi_governance_policies')
       .select('*')
       .eq('tenant_id', tenantId)
@@ -59,7 +65,7 @@ export class EGCBIEngine {
     }
 
     // Get compliance checks
-    const { data: checks } = await supabase
+    const { data: checks } = await getSupabase()
       .from('egcbi_compliance_checks')
       .select('*')
       .eq('tenant_id', tenantId)
@@ -90,7 +96,7 @@ export class EGCBIEngine {
    * Get governance policies for a tenant
    */
   async getPolicies(tenantId: string, policyType?: string): Promise<GovernancePolicy[]> {
-    let query = supabase
+    let query = getSupabase()
       .from('egcbi_governance_policies')
       .select('*')
       .eq('tenant_id', tenantId);
@@ -118,7 +124,7 @@ export class EGCBIEngine {
     policyType: string,
     requirements: Record<string, any>
   ): Promise<GovernancePolicy | null> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('egcbi_governance_policies')
       .insert({
         tenant_id: tenantId,
@@ -164,7 +170,7 @@ export class EGCBIEngine {
     metrics.draft_policies = policies.filter(p => p.status === 'draft').length;
 
     // Store report
-    const { data } = await supabase
+    const { data } = await getSupabase()
       .from('egcbi_board_reports')
       .insert({
         tenant_id: tenantId,
@@ -214,7 +220,7 @@ export class EGCBIEngine {
     }
 
     // Store audit result
-    await supabase
+    await getSupabase()
       .from('egcbi_compliance_checks')
       .insert({
         tenant_id: tenantId,

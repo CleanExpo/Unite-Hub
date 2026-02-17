@@ -6,10 +6,16 @@
 import { createClient } from "@supabase/supabase-js";
 import { sendEmail } from "@/lib/email/email-service";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
+    );
+  }
+  return _supabase;
+}
 
 export interface BudgetStatus {
   period: "daily" | "monthly";
@@ -54,7 +60,7 @@ export interface CostBreakdown {
  */
 export async function logAIUsage(log: UsageLog): Promise<string | null> {
   try {
-    const { data, error } = await supabase.rpc("log_ai_usage", {
+    const { data, error } = await getSupabase().rpc("log_ai_usage", {
       p_workspace_id: log.workspace_id,
       p_user_id: log.user_id || null,
       p_provider: log.provider,
@@ -88,7 +94,7 @@ export async function checkBudget(
   period: "daily" | "monthly" = "daily"
 ): Promise<BudgetStatus | null> {
   try {
-    const { data, error } = await supabase.rpc("check_ai_budget", {
+    const { data, error } = await getSupabase().rpc("check_ai_budget", {
       p_workspace_id: workspaceId,
       p_period: period,
     });
@@ -169,7 +175,7 @@ export async function getCostBreakdown(
   endDate?: Date
 ): Promise<CostBreakdown[]> {
   try {
-    const { data, error } = await supabase.rpc("get_ai_cost_breakdown", {
+    const { data, error } = await getSupabase().rpc("get_ai_cost_breakdown", {
       p_workspace_id: workspaceId,
       p_start_date: startDate?.toISOString().split("T")[0] || null,
       p_end_date: endDate?.toISOString().split("T")[0] || null,
@@ -198,7 +204,7 @@ export async function getDailySummary(
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from("ai_daily_summary")
       .select("*")
       .eq("workspace_id", workspaceId)
@@ -222,7 +228,7 @@ export async function getDailySummary(
  */
 export async function getBudgetLimits(workspaceId: string) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from("ai_budget_limits")
       .select("*")
       .eq("workspace_id", workspaceId)
@@ -262,7 +268,7 @@ export async function updateBudgetLimits(
   }
 ) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from("ai_budget_limits")
       .upsert(
         {

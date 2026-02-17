@@ -33,7 +33,7 @@
     "agent:email": "node scripts/run-email-agent.mjs",
     "dev": "next dev -p 3008",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=16384 next build",
-    "vercel-build": "next build",
+    "vercel-build": "cross-env NODE_OPTIONS=--max-old-space-size=16384 next build",
     "start": "next start",
     "email-agent": "node scripts/run-email-agent.mjs",
     "content-agent": "node scripts/run-content-agent.mjs",
