@@ -29,42 +29,44 @@ function mapSeverity(level: string): ErrorSeverity {
 
 /**
  * Infer priority from message content
+ *
+ * IMPORTANT: Only explicit meta.priority can trigger P0/P1 (which send email alerts).
+ * Keyword-based inference caps at P2_MEDIUM to prevent every log.error("failed...")
+ * across the codebase from sending alert emails via logError() → sendCriticalErrorAlert().
  */
 function inferPriority(message: string, meta: any): ErrorPriority {
+  // Only explicit metadata can trigger P0/P1 (email-alerting priorities)
+  if (meta?.priority === 'P0' || meta?.severity === 'FATAL') {
+    return ErrorPriority.P0_CRITICAL;
+  }
+  if (meta?.priority === 'P1') {
+    return ErrorPriority.P1_HIGH;
+  }
+  if (meta?.priority === 'P2') {
+    return ErrorPriority.P2_MEDIUM;
+  }
+
+  // Keyword-based inference (capped at P2 — no email alerts)
   const msgLower = message.toLowerCase();
 
-  // P0: Critical keywords
   if (
     msgLower.includes('fatal') ||
     msgLower.includes('crash') ||
-    msgLower.includes('down') ||
-    msgLower.includes('security') ||
     msgLower.includes('breach') ||
-    meta?.priority === 'P0' ||
-    meta?.severity === 'FATAL'
-  ) {
-    return ErrorPriority.P0_CRITICAL;
-  }
-
-  // P1: High priority keywords
-  if (
     msgLower.includes('failed') ||
     msgLower.includes('broken') ||
     msgLower.includes('timeout') ||
-    msgLower.includes('unavailable') ||
-    meta?.priority === 'P1'
+    msgLower.includes('unavailable')
   ) {
-    return ErrorPriority.P1_HIGH;
+    return ErrorPriority.P2_MEDIUM;
   }
 
-  // P2: Medium priority
   if (
     msgLower.includes('slow') ||
     msgLower.includes('degraded') ||
-    msgLower.includes('retry') ||
-    meta?.priority === 'P2'
+    msgLower.includes('retry')
   ) {
-    return ErrorPriority.P2_MEDIUM;
+    return ErrorPriority.P3_LOW;
   }
 
   // Default to P3
