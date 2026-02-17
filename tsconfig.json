@@ -46,6 +46,19 @@
   "exclude": [
     "node_modules",
     "_disabled",
-    "tests"
+    "tests",
+    "NodeJS-Starter-V1",
+    "convex.bak",
+    "examples",
+    "scripts",
+    "logs",
+    "modules",
+    "lib",
+    "next",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ]
 }

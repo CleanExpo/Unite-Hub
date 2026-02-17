@@ -10,12 +10,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Wrench, Calendar, Star, MessageSquare } from 'lucide-react';
-import { trackIndustryVariant, trackCTAClick, useScrollDepthTracking } from '@/lib/analytics/landingEvents';
+import { trackIndustryVariant, trackCTAClick, setupScrollDepthTracking } from '@/lib/analytics/landingEvents';
 
 export default function LandingTradesPage() {
   useEffect(() => {
     trackIndustryVariant('trades');
-    useScrollDepthTracking();
+    setupScrollDepthTracking();
   }, []);
 
   return (

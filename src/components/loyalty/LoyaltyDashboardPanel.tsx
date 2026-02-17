@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Award, TrendingUp, Users, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Award, Gift, TrendingUp, Users, AlertTriangle, ArrowRight } from 'lucide-react';
 
 interface LoyaltyStats {
   currentBalance: string;

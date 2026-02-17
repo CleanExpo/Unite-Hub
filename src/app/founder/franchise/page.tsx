@@ -232,7 +232,7 @@ export default function FranchiseDashboardPage() {
           <CardContent>
             <HierarchyTree
               root={tree}
-              children={children}
+              children={children} // eslint-disable-line react/no-children-prop
               onSelect={handleSelectChild}
             />
           </CardContent>

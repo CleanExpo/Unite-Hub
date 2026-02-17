@@ -17,11 +17,13 @@ export function lazyLoad<T extends ComponentType<any>>(
 ) {
   const LazyComponent = lazy(importFunc);
 
-  return (props: React.ComponentProps<T>) => (
+  const WrappedComponent = (props: React.ComponentProps<T>) => (
     <Suspense fallback={fallback || <LoadingFallback />}>
       <LazyComponent {...props} />
     </Suspense>
   );
+  WrappedComponent.displayName = `LazyLoad(${importFunc.name || 'Component'})`;
+  return WrappedComponent;
 }
 
 /**

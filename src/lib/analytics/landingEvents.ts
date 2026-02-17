@@ -82,8 +82,8 @@ async function sendToAnalytics(payload: EventPayload): Promise<void> {
   }
 }
 
-// Scroll depth tracking hook
-export function useScrollDepthTracking(): void {
+// Scroll depth tracking setup (call inside useEffect)
+export function setupScrollDepthTracking(): void {
   if (typeof window === 'undefined') return;
 
   const tracked = {
