@@ -2,7 +2,7 @@
 
 /**
  * Per-business drill-down page — /staff/dashboard/[business]
- * UNI-889 / UNI-1079
+ * UNI-889 / UNI-1079 / UNI-1078
  *
  * Shows full CRM view for a single business: KPIs, Linear issues,
  * and placeholder sections for Contacts, Projects, Tasks, Revenue.
@@ -11,6 +11,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { BusinessKpiData } from "@/components/dashboard/BusinessKpiCard";
+import type { LinearIssueCounts } from "@/app/api/staff/linear-issues/[business]/route";
 import {
   ArrowLeft,
   TrendingUp,
@@ -76,6 +77,7 @@ export default function BusinessDrillDownPage() {
   const { business } = useParams<{ business: string }>();
 
   const [data, setData] = useState<BusinessKpiData | null>(null);
+  const [linearCounts, setLinearCounts] = useState<LinearIssueCounts | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -83,10 +85,16 @@ export default function BusinessDrillDownPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/staff/kpi-summary/${business}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      setData(json.business);
+      const [kpiRes, linearRes] = await Promise.all([
+        fetch(`/api/staff/kpi-summary/${business}`),
+        fetch(`/api/staff/linear-issues/${business}`),
+      ]);
+      if (!kpiRes.ok) throw new Error(`HTTP ${kpiRes.status}`);
+      const kpiJson = await kpiRes.json();
+      setData(kpiJson.business);
+      if (linearRes.ok) {
+        setLinearCounts(await linearRes.json());
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load business data");
     } finally {
@@ -239,8 +247,50 @@ export default function BusinessDrillDownPage() {
               <AlertCircle className="w-4 h-4 text-amber-400" />
               <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Linear Issues</p>
             </div>
-            <span className="text-2xl font-bold text-white">--</span>
-            <p className="text-[10px] text-zinc-600 mt-1">Connect Linear to enable</p>
+            {linearCounts ? (
+              <>
+                <div className="flex items-baseline gap-2">
+                  {linearCounts.linearUrl ? (
+                    <a
+                      href={linearCounts.linearUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-2xl font-bold text-white hover:text-amber-300 transition-colors"
+                    >
+                      {linearCounts.open}
+                    </a>
+                  ) : (
+                    <span className="text-2xl font-bold text-white">{linearCounts.open}</span>
+                  )}
+                  {linearCounts.urgent > 0 && (
+                    <span className="text-[10px] font-medium text-red-400 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded-full">
+                      {linearCounts.urgent} urgent
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="text-[10px] text-zinc-500">
+                    {linearCounts.inProgress} in progress
+                    {linearCounts.source === "stub" && " · est."}
+                  </p>
+                  {linearCounts.linearUrl && (
+                    <a
+                      href={linearCounts.linearUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors underline underline-offset-2"
+                    >
+                      View
+                    </a>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="text-2xl font-bold text-white">--</span>
+                <p className="text-[10px] text-zinc-600 mt-1">Loading…</p>
+              </>
+            )}
           </div>
         </div>
 
