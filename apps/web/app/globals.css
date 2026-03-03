@@ -1,0 +1,797 @@
+@import "tailwindcss";
+
+/* ============================================
+   DESIGN SYSTEM TOKENS
+   ============================================ */
+
+@layer base {
+  :root {
+    /* ----------------------------------------
+       BRAND COLORS - Primary Scale
+       ---------------------------------------- */
+    --brand-primary: 221.2 83.2% 53.3%;
+    --brand-primary-50: 214 100% 97%;
+    --brand-primary-100: 214 95% 93%;
+    --brand-primary-200: 213 97% 87%;
+    --brand-primary-300: 212 96% 78%;
+    --brand-primary-400: 213 94% 68%;
+    --brand-primary-500: 217 91% 60%;
+    --brand-primary-600: 221 83% 53%;
+    --brand-primary-700: 224 76% 48%;
+    --brand-primary-800: 226 71% 40%;
+    --brand-primary-900: 224 64% 33%;
+    --brand-primary-950: 226 57% 21%;
+
+    /* ----------------------------------------
+       BRAND COLORS - Secondary Scale
+       ---------------------------------------- */
+    --brand-secondary: 262 83% 58%;
+    --brand-secondary-50: 270 100% 98%;
+    --brand-secondary-100: 269 100% 95%;
+    --brand-secondary-200: 269 100% 92%;
+    --brand-secondary-300: 269 97% 85%;
+    --brand-secondary-400: 270 95% 75%;
+    --brand-secondary-500: 271 91% 65%;
+    --brand-secondary-600: 262 83% 58%;
+    --brand-secondary-700: 263 70% 50%;
+    --brand-secondary-800: 263 69% 42%;
+    --brand-secondary-900: 264 67% 35%;
+    --brand-secondary-950: 265 61% 22%;
+
+    /* ----------------------------------------
+       BRAND COLORS - Accent Scale
+       ---------------------------------------- */
+    --brand-accent: 173 80% 40%;
+    --brand-accent-50: 166 76% 97%;
+    --brand-accent-100: 167 85% 89%;
+    --brand-accent-200: 168 84% 78%;
+    --brand-accent-300: 171 77% 64%;
+    --brand-accent-400: 172 66% 50%;
+    --brand-accent-500: 173 80% 40%;
+    --brand-accent-600: 175 84% 32%;
+    --brand-accent-700: 175 88% 26%;
+    --brand-accent-800: 176 86% 22%;
+    --brand-accent-900: 176 90% 18%;
+    --brand-accent-950: 179 94% 10%;
+
+    /* ----------------------------------------
+       SEMANTIC COLORS
+       ---------------------------------------- */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --success-muted: 142 76% 96%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    --warning-muted: 38 92% 95%;
+
+    --error: 0 84% 60%;
+    --error-foreground: 0 0% 100%;
+    --error-muted: 0 84% 96%;
+
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    --info-muted: 199 89% 96%;
+
+    /* ----------------------------------------
+       SURFACE COLORS
+       ---------------------------------------- */
+    --surface-elevated: 0 0% 100%;
+    --surface-recessed: 220 14% 96%;
+    --surface-overlay: 0 0% 100%;
+    --surface-glass: 0 0% 100% / 0.8;
+
+    /* ----------------------------------------
+       SHADCN BASE TOKENS (Enhanced)
+       ---------------------------------------- */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 173 80% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 221.2 83.2% 53.3%;
+
+    /* Chart Colors */
+    --chart-1: 221 83% 53%;
+    --chart-2: 173 80% 40%;
+    --chart-3: 262 83% 58%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 142 76% 36%;
+
+    /* ----------------------------------------
+       SHADOWS
+       ---------------------------------------- */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-glow: 0 0 20px -5px hsl(var(--brand-primary) / 0.4);
+    --shadow-glow-accent: 0 0 20px -5px hsl(var(--brand-accent) / 0.4);
+
+    /* ----------------------------------------
+       ANIMATION TIMING
+       ---------------------------------------- */
+    --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    --duration-fast: 150ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+
+    /* ----------------------------------------
+       GRADIENTS
+       ---------------------------------------- */
+    --gradient-brand: linear-gradient(135deg, hsl(var(--brand-primary)) 0%, hsl(var(--brand-secondary)) 100%);
+    --gradient-brand-subtle: linear-gradient(135deg, hsl(var(--brand-primary-100)) 0%, hsl(var(--brand-secondary-100)) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(var(--brand-accent)) 0%, hsl(var(--brand-primary)) 100%);
+    --gradient-glass: linear-gradient(135deg, rgb(255 255 255 / 0.1) 0%, rgb(255 255 255 / 0.05) 100%);
+
+    /* ----------------------------------------
+       RADIUS
+       ---------------------------------------- */
+    --radius: 0.625rem;
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+    --radius-full: 9999px;
+  }
+
+  /* ----------------------------------------
+     DARK MODE
+     ---------------------------------------- */
+  .dark {
+    /* Brand Colors remain similar but adjusted for dark */
+    --brand-primary: 217 91% 60%;
+    --brand-secondary: 270 95% 75%;
+    --brand-accent: 172 66% 50%;
+
+    /* Semantic Colors - Dark Mode */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 0%;
+    --success-muted: 142 76% 15%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    --warning-muted: 38 92% 15%;
+
+    --error: 0 72% 51%;
+    --error-foreground: 0 0% 100%;
+    --error-muted: 0 72% 15%;
+
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 0%;
+    --info-muted: 199 89% 15%;
+
+    /* Surface Colors - Dark Mode */
+    --surface-elevated: 222 47% 11%;
+    --surface-recessed: 223 47% 8%;
+    --surface-overlay: 222 47% 15%;
+    --surface-glass: 222 47% 11% / 0.8;
+
+    /* Base Tokens - Dark Mode */
+    --background: 222 47% 5%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 5%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 172 66% 50%;
+    --accent-foreground: 222 47% 5%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+
+    /* Chart Colors - Dark Mode */
+    --chart-1: 217 91% 60%;
+    --chart-2: 172 66% 50%;
+    --chart-3: 270 95% 75%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 142 71% 45%;
+
+    /* Shadows - Dark Mode */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+    --shadow-glow: 0 0 30px -5px hsl(var(--brand-primary) / 0.3);
+    --shadow-glow-accent: 0 0 30px -5px hsl(var(--brand-accent) / 0.3);
+
+    /* Gradients - Dark Mode */
+    --gradient-brand: linear-gradient(135deg, hsl(var(--brand-primary)) 0%, hsl(var(--brand-secondary)) 100%);
+    --gradient-brand-subtle: linear-gradient(135deg, hsl(var(--brand-primary) / 0.2) 0%, hsl(var(--brand-secondary) / 0.2) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(var(--brand-accent)) 0%, hsl(var(--brand-primary)) 100%);
+    --gradient-glass: linear-gradient(135deg, rgb(255 255 255 / 0.05) 0%, rgb(255 255 255 / 0.02) 100%);
+  }
+}
+
+/* ============================================
+   TAILWIND V4 THEME EXTENSION
+   ============================================ */
+
+@theme inline {
+  /* Brand Colors */
+  --color-brand-primary: hsl(var(--brand-primary));
+  --color-brand-secondary: hsl(var(--brand-secondary));
+  --color-brand-accent: hsl(var(--brand-accent));
+
+  /* Semantic Colors */
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-error: hsl(var(--error));
+  --color-info: hsl(var(--info));
+
+  /* Surface Colors */
+  --color-surface-elevated: hsl(var(--surface-elevated));
+  --color-surface-recessed: hsl(var(--surface-recessed));
+  --color-surface-overlay: hsl(var(--surface-overlay));
+
+  /* Animation */
+  --animate-fade-in: fade-in var(--duration-normal) var(--ease-smooth);
+  --animate-slide-up: slide-up var(--duration-normal) var(--ease-out-expo);
+  --animate-slide-down: slide-down var(--duration-normal) var(--ease-out-expo);
+  --animate-scale-in: scale-in var(--duration-fast) var(--ease-spring);
+  --animate-spin-slow: spin 3s linear infinite;
+  --animate-pulse-soft: pulse-soft 2s var(--ease-smooth) infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+}
+
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   ELITE STATUS COMMAND CENTRE ANIMATIONS
+   ============================================ */
+
+/* Status Glow Pulse - Breathing glow effect */
+@keyframes status-glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px hsl(var(--status-glow) / 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px hsl(var(--status-glow) / 0.6));
+  }
+}
+
+/* Ring Progress - SVG stroke animation */
+@keyframes ring-progress {
+  from {
+    stroke-dashoffset: var(--ring-circumference, 283);
+  }
+  to {
+    stroke-dashoffset: var(--ring-offset, 0);
+  }
+}
+
+/* Orb Rotate - Outer ring rotation */
+@keyframes orb-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Orb Inner Pulse - Core orb breathing */
+@keyframes orb-inner-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* Thinking Wave - AI thinking dots */
+@keyframes thinking-wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Notification Enter - Slide in from left */
+@keyframes notification-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Success Ripple - Completion celebration */
+@keyframes success-ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Pulse Ring - Heartbeat concentric rings */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Pulse Ring Urgent - Faster heartbeat */
+@keyframes pulse-ring-urgent {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Card Highlight - Gradient sweep */
+@keyframes card-highlight {
+  0% {
+    background-position: 200% 50%;
+  }
+  100% {
+    background-position: -200% 50%;
+  }
+}
+
+/* Status Badge Pulse - Badge glow */
+@keyframes badge-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(var(--status-glow) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px hsl(var(--status-glow) / 0);
+  }
+}
+
+/* Timeline Entry - Step animation */
+@keyframes timeline-entry {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Metric Count Up - Number animation helper */
+@keyframes metric-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Connection Pulse - Live indicator */
+@keyframes connection-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Improved focus styles */
+  :focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(var(--background));
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: hsl(var(--brand-primary) / 0.2);
+    color: hsl(var(--foreground));
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+@layer utilities {
+  /* Gradient Text */
+  .text-gradient {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Gradient Background */
+  .bg-gradient-brand {
+    background: var(--gradient-brand);
+  }
+
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+
+  .bg-gradient-subtle {
+    background: var(--gradient-brand-subtle);
+  }
+
+  /* Glass Effect */
+  .glass {
+    background: var(--surface-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Glow Effects */
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glow-accent {
+    box-shadow: var(--shadow-glow-accent);
+  }
+
+  /* Interactive Card */
+  .card-interactive {
+    transition: transform var(--duration-normal) var(--ease-smooth),
+                box-shadow var(--duration-normal) var(--ease-smooth);
+  }
+
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Shimmer Effect for Loading */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--muted-foreground) / 0.1) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* ============================================
+     ELITE STATUS COMMAND CENTRE UTILITIES
+     ============================================ */
+
+  /* Status Glow Animation */
+  .animate-status-glow {
+    animation: status-glow-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-status-glow-fast {
+    animation: status-glow-pulse 1s ease-in-out infinite;
+  }
+
+  /* Ring Progress Animation */
+  .animate-ring-progress {
+    animation: ring-progress 1s ease-out forwards;
+  }
+
+  /* Orb Animations */
+  .animate-orb-rotate {
+    animation: orb-rotate 3s linear infinite;
+  }
+
+  .animate-orb-pulse {
+    animation: orb-inner-pulse 2s ease-in-out infinite;
+  }
+
+  /* Thinking Wave Animation */
+  .animate-thinking-wave {
+    animation: thinking-wave 1.2s ease-in-out infinite;
+  }
+
+  .animate-thinking-wave-delay-1 {
+    animation: thinking-wave 1.2s ease-in-out infinite;
+    animation-delay: 0.1s;
+  }
+
+  .animate-thinking-wave-delay-2 {
+    animation: thinking-wave 1.2s ease-in-out infinite;
+    animation-delay: 0.2s;
+  }
+
+  /* Notification Entry Animation */
+  .animate-notification-enter {
+    animation: notification-enter 0.3s ease-out forwards;
+  }
+
+  /* Success Ripple Animation */
+  .animate-success-ripple {
+    animation: success-ripple 0.6s ease-out forwards;
+  }
+
+  /* Pulse Ring Animations */
+  .animate-pulse-ring {
+    animation: pulse-ring 1.5s ease-out infinite;
+  }
+
+  .animate-pulse-ring-active {
+    animation: pulse-ring 1.2s ease-out infinite;
+  }
+
+  .animate-pulse-ring-urgent {
+    animation: pulse-ring-urgent 0.8s ease-out infinite;
+  }
+
+  /* Card Highlight Animation */
+  .animate-card-highlight {
+    background-size: 400% 100%;
+    animation: card-highlight 3s ease infinite;
+  }
+
+  /* Badge Pulse Animation */
+  .animate-badge-pulse {
+    animation: badge-pulse 2s ease-in-out infinite;
+  }
+
+  /* Timeline Entry Animation */
+  .animate-timeline-entry {
+    animation: timeline-entry 0.3s ease-out forwards;
+  }
+
+  /* Metric Pop Animation */
+  .animate-metric-pop {
+    animation: metric-pop 0.3s ease-out;
+  }
+
+  /* Connection Pulse Animation */
+  .animate-connection-pulse {
+    animation: connection-pulse 2s ease-in-out infinite;
+  }
+
+  /* Status Colour Variables Container */
+  .status-vars {
+    --status-primary: 220 14% 46%;
+    --status-glow: 220 14% 46%;
+    --status-bg: 220 14% 20%;
+  }
+
+  .status-vars-pending {
+    --status-primary: 220 14% 46%;
+    --status-glow: 220 14% 46%;
+    --status-bg: 220 14% 20%;
+  }
+
+  .status-vars-in-progress {
+    --status-primary: 217 91% 60%;
+    --status-glow: 217 91% 60%;
+    --status-bg: 217 91% 60%;
+  }
+
+  .status-vars-awaiting-verification {
+    --status-primary: 38 92% 50%;
+    --status-glow: 38 92% 50%;
+    --status-bg: 38 92% 50%;
+  }
+
+  .status-vars-verification-in-progress {
+    --status-primary: 38 92% 50%;
+    --status-glow: 38 92% 50%;
+    --status-bg: 38 92% 50%;
+  }
+
+  .status-vars-verification-passed {
+    --status-primary: 142 76% 36%;
+    --status-glow: 142 76% 36%;
+    --status-bg: 142 76% 36%;
+  }
+
+  .status-vars-verification-failed {
+    --status-primary: 0 84% 60%;
+    --status-glow: 0 84% 60%;
+    --status-bg: 0 84% 60%;
+  }
+
+  .status-vars-completed {
+    --status-primary: 142 76% 36%;
+    --status-glow: 142 76% 36%;
+    --status-bg: 142 76% 36%;
+  }
+
+  .status-vars-failed {
+    --status-primary: 0 84% 60%;
+    --status-glow: 0 84% 60%;
+    --status-bg: 0 84% 60%;
+  }
+
+  .status-vars-blocked {
+    --status-primary: 25 95% 53%;
+    --status-glow: 25 95% 53%;
+    --status-bg: 25 95% 53%;
+  }
+
+  .status-vars-escalated {
+    --status-primary: 262 83% 58%;
+    --status-glow: 262 83% 58%;
+    --status-bg: 262 83% 58%;
+  }
+
+  /* Command Centre Surface */
+  .command-centre-surface {
+    background: linear-gradient(
+      180deg,
+      hsl(222 47% 8%) 0%,
+      hsl(222 47% 6%) 100%
+    );
+  }
+
+  .command-centre-surface-light {
+    background: linear-gradient(
+      180deg,
+      hsl(220 14% 96%) 0%,
+      hsl(220 14% 94%) 100%
+    );
+  }
+
+  /* Noise Texture Overlay */
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+}

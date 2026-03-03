@@ -1,0 +1,173 @@
+name: Agent PR Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  # Only run for agent-generated PRs
+  detect-agent-pr:
+    runs-on: ubuntu-latest
+    outputs:
+      is_agent_pr: ${{ steps.check.outputs.is_agent }}
+    steps:
+      - name: Check if agent PR
+        id: check
+        run: |
+          if [[ "${{ github.head_ref }}" == feature/agent-* ]]; then
+            echo "is_agent=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_agent=false" >> $GITHUB_OUTPUT
+          fi
+
+  validate-agent-metadata:
+    needs: detect-agent-pr
+    if: needs.detect-agent-pr.outputs.is_agent_pr == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Agent Metadata in PR Description
+        run: |
+          # Get PR description
+          PR_BODY=$(gh pr view ${{ github.event.pull_request.number }} --json body -q '.body')
+
+          # Check for required metadata
+          if ! echo "$PR_BODY" | grep -q "Agent ID:"; then
+            echo "::error::Missing Agent ID in PR description"
+            exit 1
+          fi
+
+          if ! echo "$PR_BODY" | grep -q "Task ID:"; then
+            echo "::error::Missing Task ID in PR description"
+            exit 1
+          fi
+
+          if ! echo "$PR_BODY" | grep -q "Verifier ID:"; then
+            echo "::error::Missing Verifier ID in PR description"
+            exit 1
+          fi
+
+          if ! echo "$PR_BODY" | grep -q "Agentic Layer"; then
+            echo "::error::Missing agentic layer attribution"
+            exit 1
+          fi
+
+          echo "✅ Agent metadata verified"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  run-quality-checks:
+    needs: detect-agent-pr
+    if: needs.detect-agent-pr.outputs.is_agent_pr == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Type Check
+        id: type-check
+        run: |
+          pnpm turbo run type-check
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: Lint
+        id: lint
+        run: |
+          pnpm turbo run lint
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: Unit Tests
+        id: test
+        run: |
+          pnpm turbo run test
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: Build
+        id: build
+        run: |
+          pnpm turbo run build
+          echo "status=$?" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Report Results
+        if: always()
+        run: |
+          TYPE_CHECK="${{ steps.type-check.outputs.status }}"
+          LINT="${{ steps.lint.outputs.status }}"
+          TEST="${{ steps.test.outputs.status }}"
+          BUILD="${{ steps.build.outputs.status }}"
+
+          echo "### Quality Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Type Check: $([ "$TYPE_CHECK" == "0" ] && echo "✅ Passed" || echo "❌ Failed")" >> $GITHUB_STEP_SUMMARY
+          echo "- Lint: $([ "$LINT" == "0" ] && echo "✅ Passed" || echo "❌ Failed")" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests: $([ "$TEST" == "0" ] && echo "✅ Passed" || echo "❌ Failed")" >> $GITHUB_STEP_SUMMARY
+          echo "- Build: $([ "$BUILD" == "0" ] && echo "✅ Passed" || echo "❌ Failed")" >> $GITHUB_STEP_SUMMARY
+
+  security-scan:
+    needs: detect-agent-pr
+    if: needs.detect-agent-pr.outputs.is_agent_pr == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan for Secrets
+        run: |
+          # Check for common secret patterns
+          if grep -r "ANTHROPIC_API_KEY\s*=\s*['\"]" --include="*.py" --include="*.ts" --include="*.js" .; then
+            echo "::error::Hardcoded API key detected"
+            exit 1
+          fi
+
+          if grep -r "password\s*=\s*['\"]" --include="*.py" --include="*.ts" .; then
+            echo "::error::Hardcoded password detected"
+            exit 1
+          fi
+
+          echo "✅ No secrets detected"
+
+      - name: Check for Debug Code
+        run: |
+          # Check for debug statements
+          if grep -r "console\.log" --include="*.ts" --include="*.tsx" apps/web/components apps/web/lib apps/web/app; then
+            echo "::warning::console.log statements found - should be removed"
+          fi
+
+          if grep -r "print(" --include="*.py" apps/backend/src | grep -v "# debug"; then
+            echo "::warning::print() statements found - should use logger"
+          fi
+
+          echo "Debug code check complete"
+
+  update-pr-status:
+    needs: [validate-agent-metadata, run-quality-checks, security-scan]
+    if: needs.detect-agent-pr.outputs.is_agent_pr == 'true' && always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comment on PR
+        run: |
+          if [ "${{ needs.run-quality-checks.result }}" == "success" ] && \
+             [ "${{ needs.security-scan.result }}" == "success" ] && \
+             [ "${{ needs.validate-agent-metadata.result }}" == "success" ]; then
+            gh pr comment ${{ github.event.pull_request.number }} --body "✅ All agent PR checks passed! Ready for human review."
+          else
+            gh pr comment ${{ github.event.pull_request.number }} --body "❌ Some agent PR checks failed. Please review the workflow results."
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

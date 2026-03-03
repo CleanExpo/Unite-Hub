@@ -183,3 +183,18 @@ add-to-vercel.ps1
 .claude/mcp_servers/*/dist/
 .claude/mcp_servers/*/.env
 .claude/mcp_servers/*/package-lock.json
+
+# Claude upgrade artifacts
+.claude/.structure-before-upgrade.txt
+.claude/CLAUDE.md.backup
+.claude/backups/
+
+# Multiple lockfile artifacts (keep only pnpm-lock.yaml for monorepo)
+package-lock.json
+yarn.lock
+
+# Tests starter artifacts
+tests-starter/
+
+# Nul file (Windows artifact)
+nul

@@ -1,77 +1,123 @@
+---
+name: backend-specialist
+type: agent
+role: Backend Engineer
+priority: 2
+version: 1.0.0
+toolshed: backend
+context_scope:
+  - apps/backend/src/
+  - apps/backend/tests/
+token_budget: 60000
+skills_required:
+  - api-contract
+  - error-taxonomy
+  - structured-logging
+---
+
 # Backend Specialist Agent
 
-**Role**: API/Database Specialist
-**Version**: 1.0.0
-**Status**: 🆕 New Agent
+## Context Scope (Minions Scoping Protocol)
 
----
+**PERMITTED reads**: `apps/backend/src/**`, `apps/backend/tests/**`, `apps/backend/alembic/**`.
+**NEVER reads**: `apps/web/`, `scripts/` (except `scripts/init-db.sql` for schema reference).
+**Hard rule**: Backend never imports frontend types or components.
 
-## Overview
+## Core Patterns
 
-Handles all backend work including API routes, database operations, and server-side logic.
+### FastAPI Endpoint Pattern
 
-## Responsibilities
+```python
+# apps/backend/src/api/{feature}.py
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+from ..auth.jwt import get_current_user
+from ..db.models import User
 
-1. **API Development**
-   - Next.js API routes (104 endpoints)
-   - Request/response handling
-   - Error handling
+router = APIRouter(prefix="/api/{feature}", tags=["{feature}"])
 
-2. **Database Operations**
-   - Supabase queries
-   - Schema migrations
-   - RLS policies
+class {Feature}Request(BaseModel):
+    # Pydantic v2: use field_validator, not validator
+    field: str
 
-3. **Authentication**
-   - PKCE OAuth flow
-   - JWT validation
-   - Session management
+class {Feature}Response(BaseModel):
+    id: str
+    field: str
 
-4. **Integration**
-   - Third-party APIs
-   - Webhooks
-   - Background jobs
-
-## Tech Stack
-
-- Next.js API Routes
-- Supabase PostgreSQL
-- NextAuth.js
-- TypeScript
-
-## File Locations
-
-- API Routes: `src/app/api/`
-- Database Client: `src/lib/supabase/`
-- Migrations: `supabase/migrations/`
-
-## Critical Patterns
-
-### Always Filter by Workspace
-
-```typescript
-const { data } = await supabase
-  .from("contacts")
-  .select("*")
-  .eq("workspace_id", workspaceId); // ✅ REQUIRED
+@router.post("/", response_model={Feature}Response, status_code=status.HTTP_201_CREATED)
+async def create_{feature}(
+    request: {Feature}Request,
+    current_user: User = Depends(get_current_user)
+) -> {Feature}Response:
+    """Create a new {feature}. Requires authentication."""
+    try:
+        # Implementation
+        pass
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        # Log with structured logging, raise 500
+        raise HTTPException(status_code=500, detail="Internal server error")
 ```
 
-### Server-Side Auth
+### LangGraph Agent Graph Pattern
 
-```typescript
-import { createClient } from "@/lib/supabase/server";
+```python
+# apps/backend/src/agents/{agent_name}.py
+from langgraph.graph import StateGraph, END
+from typing import TypedDict
 
-const supabase = await createClient();
-const { data: { user } } = await supabase.auth.getUser();
+class AgentState(TypedDict):
+    messages: list
+    current_step: str
+    result: str | None
+
+def build_{agent}_graph() -> StateGraph:
+    workflow = StateGraph(AgentState)
+    workflow.add_node("analyse", analyse_node)
+    workflow.add_node("execute", execute_node)
+    workflow.add_node("verify", verify_node)
+    workflow.set_entry_point("analyse")
+    workflow.add_edge("analyse", "execute")
+    workflow.add_conditional_edges("execute", should_verify, {"yes": "verify", "no": END})
+    workflow.add_edge("verify", END)
+    return workflow.compile()
 ```
 
-## Related Documentation
+### Structured Error Response
 
-- **Architecture**: `architecture/database.md`, `architecture/authentication.md`
-- **Rules**: `rules/backend/api-routes.md`, `rules/database/migrations.md`
-- **Commands**: `commands/database.md`
+```python
+from fastapi.responses import JSONResponse
 
----
+def error_response(code: str, message: str, status_code: int = 400) -> JSONResponse:
+    return JSONResponse(
+        status_code=status_code,
+        content={"error": {"code": code, "message": message}}
+    )
+```
 
-**Status**: 🆕 Ready for use
-**Last Updated**: 2026-01-15
+## Bounded Execution
+
+| Situation                  | Action                                            |
+| -------------------------- | ------------------------------------------------- |
+| FastAPI route passes tests | Proceed to verification                           |
+| Pydantic validation error  | Fix model definition once, escalate if persists   |
+| Database connection error  | Check Docker is running, escalate if Docker issue |
+| LangGraph graph error      | Fix graph definition once, escalate if complex    |
+| Auth/RBAC changes needed   | ESCALATE to security-auditor immediately          |
+
+## Verification Gates
+
+```bash
+cd apps/backend && uv run pytest tests/ -v
+pnpm turbo run type-check --filter=backend  # if applicable
+uv run ruff check src/
+uv run ruff format src/ --check
+```
+
+## Never
+
+- Import from `apps/web/`
+- Auto-fix security boundary changes (auth, CORS, JWT) — always escalate
+- Use `print()` for logging (use `logging.getLogger(__name__)`)
+- Bypass `get_current_user` dependency on protected routes

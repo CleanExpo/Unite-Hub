@@ -1,0 +1,22 @@
+{
+  "$schema": "./notebooks.schema.json",
+  "project": "NodeJS-Starter-V1",
+  "notebooks": {
+    "project_sot": {
+      "id": "8ce0853c-3019-4be2-ae90-180b827c569b",
+      "name": "NodeJS-Starter-V1 — Source of Truth"
+    },
+    "debug_kb": {
+      "id": "66a993a1-9136-435d-adb2-2066323fff1d",
+      "name": "NodeJS-Starter-V1 — Debug KB"
+    },
+    "security_handbook": {
+      "id": "ef90984c-4d24-48af-a34d-2b9e343f0c50",
+      "name": "NodeJS-Starter-V1 — Security Handbook"
+    },
+    "repo_onboarding": {
+      "id": "525c9edd-f5aa-45f4-b6c3-65f1b156ff71",
+      "name": "NodeJS-Starter-V1 — Repo Atlas"
+    }
+  }
+}

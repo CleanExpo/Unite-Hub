@@ -1,0 +1,103 @@
+{
+  "version": "1.0.0",
+  "description": "Curated skill subsets per domain. Each toolshed loads max 5-6 skills to eliminate decision paralysis.",
+  "toolsheds": {
+    "frontend": {
+      "agent": "frontend-specialist",
+      "token_budget": 60000,
+      "skills": [
+        "scientific-luxury",
+        "xaem-theme-ui",
+        "react-best-practices",
+        "error-boundary",
+        "i18n-patterns"
+      ],
+      "context_scope": ["apps/web/"],
+      "description": "React 19, Next.js 15 App Router, Tailwind v4, Framer Motion, Scientific Luxury design system"
+    },
+    "backend": {
+      "agent": "backend-specialist",
+      "token_budget": 60000,
+      "skills": [
+        "api-contract",
+        "api-client",
+        "error-taxonomy",
+        "retry-strategy",
+        "structured-logging",
+        "resilience-patterns"
+      ],
+      "context_scope": ["apps/backend/src/", "apps/backend/tests/"],
+      "description": "FastAPI, LangGraph, SQLAlchemy 2.0, Pydantic v2, async Python"
+    },
+    "database": {
+      "agent": "database-specialist",
+      "token_budget": 40000,
+      "skills": ["vector-search", "data-validation", "data-transform", "audit-trail"],
+      "context_scope": [
+        "apps/backend/src/db/",
+        "apps/backend/src/state/",
+        "scripts/init-db.sql",
+        "apps/backend/alembic/"
+      ],
+      "description": "PostgreSQL, SQLAlchemy 2.0 mapped_column, Alembic migrations, pgvector"
+    },
+    "security": {
+      "agent": "security-auditor",
+      "token_budget": 50000,
+      "skills": [
+        "input-sanitisation",
+        "oauth-flow",
+        "rbac-patterns",
+        "csrf-protection",
+        "secret-management"
+      ],
+      "context_scope": [
+        "apps/backend/src/auth/",
+        "apps/backend/src/api/",
+        "apps/web/middleware.ts",
+        "apps/web/lib/api/"
+      ],
+      "description": "JWT auth, OWASP Top 10, Australian Privacy Act 1988, RBAC"
+    },
+    "infra": {
+      "agent": "deploy-guardian",
+      "token_budget": 50000,
+      "skills": [
+        "docker-patterns",
+        "ci-cd-patterns",
+        "infrastructure-as-code",
+        "health-check",
+        "graceful-shutdown"
+      ],
+      "context_scope": ["docker-compose.yml", ".github/workflows/", "scripts/"],
+      "description": "Docker Compose, GitHub Actions CI/CD, health checks, deployment"
+    },
+    "debug": {
+      "agent": "bug-hunter",
+      "token_budget": 40000,
+      "skills": [
+        "error-taxonomy",
+        "structured-logging",
+        "tracing-patterns",
+        "metrics-collector",
+        "resilience-patterns"
+      ],
+      "context_scope": ["failing-file-only", "direct-imports-one-level"],
+      "description": "Error taxonomy, stack trace analysis, minimal context debugging"
+    },
+    "test": {
+      "agent": "test-engineer",
+      "token_budget": 50000,
+      "skills": ["playwright-browser"],
+      "context_scope": ["test-files", "source-file-under-test"],
+      "description": "Vitest, pytest, Playwright E2E, Scientific Luxury visual assertions"
+    },
+    "general": {
+      "agent": "orchestrator",
+      "token_budget": 80000,
+      "skills": ["council-of-logic", "execution-guardian", "system-supervisor"],
+      "context_scope": ["task-specific"],
+      "description": "Cross-domain coordination, refactoring, architectural tasks"
+    }
+  }
+}

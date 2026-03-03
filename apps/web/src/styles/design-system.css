@@ -1,0 +1,324 @@
+/**
+ * Unite-Group Design System
+ * 2025-2026 Aesthetic
+ *
+ * Enforces:
+ * - Bento grids
+ * - Glassmorphism
+ * - Soft colored shadows (NEVER pure black)
+ * - Primary color: #0D9488 (teal)
+ * - Micro-interactions
+ *
+ * NO Lucide icons - AI-generated custom only
+ */
+
+/* Glassmorphism Card */
+.glass-card {
+  /* Background with transparency */
+  background: rgba(255, 255, 255, 0.7);
+
+  /* Backdrop blur for glassmorphism effect */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* Border for glass edge */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  /* Border radius */
+  border-radius: 12px;
+
+  /* Padding */
+  padding: 1.5rem;
+
+  /* Soft colored shadow (NEVER pure black) */
+  box-shadow: 0 4px 6px rgba(13, 148, 136, 0.1);
+
+  /* Smooth transitions for micro-interactions */
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  /* Enhance shadow on hover */
+  box-shadow: 0 10px 15px rgba(13, 148, 136, 0.15);
+
+  /* Slight border color shift */
+  border-color: rgba(13, 148, 136, 0.3);
+}
+
+/* Dark mode glassmorphism (if needed) */
+@media (prefers-color-scheme: dark) {
+  .glass-card {
+    background: rgba(17, 24, 39, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Bento Grid Layout */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 2rem;
+  }
+}
+
+/* Bento Grid Items with varying sizes */
+.bento-item-small {
+  grid-column: span 1;
+}
+
+.bento-item-medium {
+  grid-column: span 1;
+}
+
+@media (min-width: 768px) {
+  .bento-item-medium {
+    grid-column: span 2;
+  }
+}
+
+.bento-item-large {
+  grid-column: span 1;
+}
+
+@media (min-width: 768px) {
+  .bento-item-large {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento-item-large {
+    grid-column: span 3;
+  }
+}
+
+/* Primary Button (2025-2026 style) */
+.btn-primary {
+  /* Background */
+  background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+
+  /* Text */
+  color: white;
+  font-weight: 500;
+
+  /* Spacing */
+  padding: 0.75rem 1.5rem;
+
+  /* Border radius */
+  border-radius: 8px;
+
+  /* Border */
+  border: none;
+
+  /* Shadow (soft colored) */
+  box-shadow: 0 2px 4px rgba(13, 148, 136, 0.2);
+
+  /* Cursor */
+  cursor: pointer;
+
+  /* Transition */
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover {
+  /* Darken background */
+  background: linear-gradient(135deg, #0F766E 0%, #115E59 100%);
+
+  /* Enhance shadow */
+  box-shadow: 0 4px 8px rgba(13, 148, 136, 0.3);
+
+  /* Slight scale */
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  /* Press down */
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(13, 148, 136, 0.2);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: white;
+  color: #4B5563;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Soft colored shadow */
+  box-shadow: 0 1px 2px rgba(13, 148, 136, 0.05);
+}
+
+.btn-secondary:hover {
+  background: #F9FAFB;
+  border-color: #D1D5DB;
+  box-shadow: 0 2px 4px rgba(13, 148, 136, 0.1);
+}
+
+/* Hover Scale Micro-interaction */
+.hover-scale {
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Loading Skeleton (Glassmorphism) */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(13, 148, 136, 0.05) 0%,
+    rgba(13, 148, 136, 0.1) 50%,
+    rgba(13, 148, 136, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Badge (Status indicators) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.badge-success {
+  background: #F0FDF4;
+  color: #166534;
+  border-color: #86EFAC;
+}
+
+.badge-warning {
+  background: #FFFBEB;
+  color: #92400E;
+  border-color: #FCD34D;
+}
+
+.badge-error {
+  background: #FEF2F2;
+  color: #991B1B;
+  border-color: #FCA5A5;
+}
+
+.badge-info {
+  background: #EFF6FF;
+  color: #1E40AF;
+  border-color: #93C5FD;
+}
+
+.badge-primary {
+  background: #F0FDFA;
+  color: #0F766E;
+  border-color: #99F6E4;
+}
+
+/* Tooltip (2025-2026 style) */
+.tooltip {
+  position: absolute;
+  background: rgba(17, 24, 39, 0.9);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 50;
+
+  /* Soft colored shadow */
+  box-shadow: 0 4px 6px rgba(13, 148, 136, 0.2);
+}
+
+/* Input (Glassmorphism style) */
+.input-glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Soft colored shadow */
+  box-shadow: 0 1px 2px rgba(13, 148, 136, 0.05);
+}
+
+.input-glass:focus {
+  outline: none;
+  border-color: #0D9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+/* Card Grid (Alternative to Bento) */
+.card-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+/* Pulse Animation (for live updates) */
+.pulse-primary {
+  animation: pulse-primary 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-primary {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Gradient Text (Primary colors) */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Divider with gradient */
+.divider-gradient {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(13, 148, 136, 0) 0%,
+    rgba(13, 148, 136, 0.2) 50%,
+    rgba(13, 148, 136, 0) 100%
+  );
+}
