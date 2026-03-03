@@ -118,13 +118,16 @@ function ChatTab({ session }: { session: { access_token?: string } | null }) {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/ai/chat", {
+      const allMessages = [...messages, userMsg];
+      const history = allMessages.slice(-10).map(m => ({ role: m.role, content: m.content }));
+
+      const res = await fetch("/api/founder-os/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
         },
-        body: JSON.stringify({ message: text, context: "founder_os", systemContext: "You are Bron, the AI command officer for Phill's personal OS. Be concise, action-oriented, and direct. Format responses for mobile reading." }),
+        body: JSON.stringify({ message: text, history }),
       });
       const data = await res.json();
       setMessages(prev => [...prev, {
@@ -395,6 +398,9 @@ function CalendarTab() {
   );
 }
 
+const KANBAN_CACHE_MS = 30_000;
+let kanbanCache: { items: KanbanItem[]; fetchedAt: number } | null = null;
+
 function KanbanTab() {
   const columns: { id: KanbanItem["column"]; label: string; icon: React.ComponentType<{ className?: string }>; color: string }[] = [
     { id: "hot",      label: "HOT",      icon: Flame,      color: "text-red-400 border-red-500/30 bg-red-500/5" },
@@ -402,20 +408,45 @@ function KanbanTab() {
     { id: "pipeline", label: "PIPELINE", icon: ArrowRight, color: "text-blue-400 border-blue-500/30 bg-blue-500/5" },
   ];
 
-  const items: KanbanItem[] = [
-    { id: "1", title: "Fix unitehub.ai DNS error", column: "hot", business: "UH", priority: 1 },
-    { id: "2", title: "Build KPI cards /staff/dashboard", column: "hot", business: "UH", priority: 1 },
-    { id: "3", title: "Phill OS /founder/os live", column: "today", business: "UH", priority: 1 },
-    { id: "4", title: "Activate SEO Intelligence API", column: "today", business: "UH", priority: 1 },
-    { id: "5", title: "Revenue activation sprint", column: "today", business: "ALL", priority: 1 },
-    { id: "6", title: "Per-business drill-down pages", column: "pipeline", business: "UH", priority: 2 },
-    { id: "7", title: "Phill OS chat + speech", column: "pipeline", business: "UH", priority: 2 },
-    { id: "8", title: "SEO competitor gap analysis", column: "pipeline", business: "UH", priority: 2 },
-  ];
-
+  const [items, setItems] = useState<KanbanItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeCol, setActiveCol] = useState<KanbanItem["column"]>("hot");
 
+  const fetchKanban = useCallback(async () => {
+    if (kanbanCache && Date.now() - kanbanCache.fetchedAt < KANBAN_CACHE_MS) {
+      setItems(kanbanCache.items);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/founder-os/linear-kanban");
+      if (res.ok) {
+        const data = await res.json();
+        const fetched: KanbanItem[] = data.items ?? [];
+        kanbanCache = { items: fetched, fetchedAt: Date.now() };
+        setItems(fetched);
+      }
+    } catch {
+      // fall through — keep existing items
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchKanban(); }, [fetchKanban]);
+
   const colItems = items.filter(i => i.column === activeCol);
+
+  if (loading && items.length === 0) {
+    return (
+      <div className="p-4 space-y-3">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="h-14 rounded-xl bg-zinc-800/50 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
