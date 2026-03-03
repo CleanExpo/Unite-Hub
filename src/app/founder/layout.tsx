@@ -11,11 +11,15 @@ import {
   Lightbulb,
   Building2,
   ChevronRight,
+  Database,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const founderNavItems = [
   { label: "Dashboard", href: "/founder/dashboard", icon: LayoutDashboard },
+  { label: "Workspace", href: "/founder/workspace", icon: Database },
+  { label: "Phill OS", href: "/founder/os", icon: Zap },
   { label: "Agents", href: "/founder/agents", icon: Bot },
   { label: "AI Phill", href: "/founder/ai-phill", icon: Brain },
   { label: "Businesses", href: "/founder/businesses", icon: Building2 },
@@ -80,8 +84,12 @@ export default function FounderLayout({
         <Breadcrumbs />
       </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      {/* Main Content — workspace uses full bleed */}
+      <main className={cn(
+        pathname.startsWith("/founder/workspace")
+          ? "h-[calc(100vh-57px)]"
+          : "max-w-7xl mx-auto px-4 sm:px-6 py-6"
+      )}>
         {children}
       </main>
     </div>
