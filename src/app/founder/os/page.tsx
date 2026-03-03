@@ -13,6 +13,7 @@ import {
   Zap, Activity,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { PhillOSPwaInstaller } from "@/components/PhillOSPwaInstaller";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -608,6 +609,8 @@ export default function PhillOSPage() {
       className="flex flex-col bg-[#0d0d0d] text-white"
       style={{ height: "100dvh", maxWidth: 480, margin: "0 auto", position: "relative" }}
     >
+      <PhillOSPwaInstaller />
+
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-4 pb-2 border-b border-zinc-800 flex-shrink-0">
         <div className="flex items-center gap-2">
