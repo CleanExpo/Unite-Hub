@@ -1,0 +1,132 @@
+import { NextResponse } from "next/server";
+import type { BusinessKpiData } from "@/components/dashboard/BusinessKpiCard";
+
+/**
+ * GET /api/staff/kpi-summary/[business]
+ * Returns KPI data for a single Unite Group business by ID.
+ */
+
+const VALID_IDS = new Set([
+  "disaster-recovery",
+  "restore-assist",
+  "ato",
+  "synthex",
+  "ccw-erp",
+  "unite-hub",
+]);
+
+// Reuses the same placeholder data from the parent kpi-summary route.
+function getBusinesses(): BusinessKpiData[] {
+  const makeSpark = (base: number, trend: "up" | "down" | "flat"): number[] =>
+    Array.from({ length: 30 }, (_, i) => {
+      const noise = (Math.random() - 0.5) * base * 0.08;
+      const drift =
+        trend === "up" ? i * base * 0.01 : trend === "down" ? -i * base * 0.008 : 0;
+      return Math.max(0, Math.round(base + drift + noise));
+    });
+
+  return [
+    {
+      id: "disaster-recovery",
+      name: "Disaster Recovery",
+      code: "DR",
+      emoji: "\u{1F3D7}\uFE0F",
+      url: "https://disasterrecovery.com.au",
+      status: "healthy",
+      mrr: 4800,
+      mrrChange: 12,
+      activeUsers: 143,
+      topMetric: { label: "Claims Lodged (30d)", value: 28 },
+      sparkline: makeSpark(4800, "up"),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "restore-assist",
+      name: "RestoreAssist",
+      code: "RA",
+      emoji: "\u{1F527}",
+      url: "https://restoreassist.com.au",
+      status: "warning",
+      mrr: 1200,
+      mrrChange: 0,
+      activeUsers: 34,
+      topMetric: { label: "Reports Generated (30d)", value: 7 },
+      sparkline: makeSpark(1200, "flat"),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "ato",
+      name: "ATO Compliance",
+      code: "ATO",
+      emoji: "\u{1F4CA}",
+      url: "https://atocompliance.com.au",
+      status: "building",
+      mrr: 0,
+      mrrChange: 0,
+      activeUsers: 12,
+      topMetric: { label: "Audits Run (30d)", value: 3 },
+      sparkline: makeSpark(0, "flat"),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "synthex",
+      name: "Synthex",
+      code: "SX",
+      emoji: "\u{1F4E2}",
+      url: "https://synthex.com.au",
+      status: "healthy",
+      mrr: 2300,
+      mrrChange: 8,
+      activeUsers: 89,
+      topMetric: { label: "Posts Published (30d)", value: 214 },
+      sparkline: makeSpark(2300, "up"),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "ccw-erp",
+      name: "CCW-ERP/CRM",
+      code: "CCW",
+      emoji: "\u{1F3EA}",
+      url: undefined,
+      status: "critical",
+      mrr: 900,
+      mrrChange: -15,
+      activeUsers: 8,
+      topMetric: { label: "Orders (30d)", value: 11 },
+      sparkline: makeSpark(900, "down"),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "unite-hub",
+      name: "Unite-Hub",
+      code: "UH",
+      emoji: "\u{1F310}",
+      url: "https://unitehub.ai",
+      status: "warning",
+      mrr: 3100,
+      mrrChange: 5,
+      activeUsers: 267,
+      topMetric: { label: "MAU", value: 267 },
+      sparkline: makeSpark(3100, "up"),
+      updatedAt: new Date().toISOString(),
+    },
+  ];
+}
+
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ business: string }> }
+) {
+  const { business } = await params;
+
+  if (!VALID_IDS.has(business)) {
+    return NextResponse.json({ error: "Business not found" }, { status: 404 });
+  }
+
+  const biz = getBusinesses().find((b) => b.id === business);
+  if (!biz) {
+    return NextResponse.json({ error: "Business not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ business: biz, generatedAt: new Date().toISOString() });
+}
