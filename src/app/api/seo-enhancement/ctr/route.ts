@@ -1,155 +1,138 @@
 /**
- * CTR Optimization API Route
- * POST - Create test, start test, analyze benchmark
- * GET - Get tests or benchmarks
+ * CTR Optimization API Route (Stub)
+ * GET /api/seo-enhancement/ctr?url=https://example.com&keyword=seo+tools
+ * POST - Create A/B test or analyze benchmark (returns stub data)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer, supabaseBrowser } from '@/lib/supabase';
-import { ctrOptimizationService } from '@/lib/seoEnhancement';
 
-export async function POST(req: NextRequest) {
+interface CTRAnalysisResult {
+  id: string;
+  url: string;
+  keyword: string;
+  current_title: string;
+  current_meta: string;
+  current_position: number;
+  current_ctr: number;
+  expected_ctr: number;
+  ctr_gap: number;
+  opportunity_level: 'high' | 'medium' | 'low';
+  impressions: number;
+  clicks: number;
+  title_suggestions: {
+    variant: string;
+    predicted_ctr_lift: number;
+    reasoning: string;
+  }[];
+  meta_suggestions: {
+    variant: string;
+    predicted_ctr_lift: number;
+    reasoning: string;
+  }[];
+  active_tests: {
+    id: string;
+    status: string;
+    variant_a_title: string;
+    variant_b_title: string;
+    variant_a_ctr: number;
+    variant_b_ctr: number;
+    winner: string | null;
+    confidence: number;
+  }[];
+  created_at: string;
+}
+
+function generateStubCTR(url: string, keyword: string): CTRAnalysisResult {
+  return {
+    id: 'ctr_' + Date.now().toString(36),
+    url,
+    keyword,
+    current_title: `${keyword} - Complete Guide | ${new URL(url).hostname}`,
+    current_meta: `Learn everything about ${keyword}. Expert tips, strategies, and best practices for 2026.`,
+    current_position: 4.2,
+    current_ctr: 5.8,
+    expected_ctr: 8.1,
+    ctr_gap: 2.3,
+    opportunity_level: 'high',
+    impressions: 12400,
+    clicks: 719,
+    title_suggestions: [
+      {
+        variant: `${keyword}: 10 Proven Strategies That Work in 2026`,
+        predicted_ctr_lift: 2.1,
+        reasoning: 'Number-driven titles with year perform 22% better in this niche.',
+      },
+      {
+        variant: `The Ultimate ${keyword} Guide (Updated March 2026)`,
+        predicted_ctr_lift: 1.8,
+        reasoning: 'Freshness signals combined with "ultimate" modifier boost CTR.',
+      },
+      {
+        variant: `${keyword} Made Simple: Expert Tips & Examples`,
+        predicted_ctr_lift: 1.4,
+        reasoning: 'Simplicity framing appeals to informational intent searchers.',
+      },
+    ],
+    meta_suggestions: [
+      {
+        variant: `Discover ${keyword} strategies used by top brands. Step-by-step guide with real examples and actionable tips.`,
+        predicted_ctr_lift: 1.6,
+        reasoning: 'Social proof ("top brands") and specificity increase click motivation.',
+      },
+      {
+        variant: `Stop guessing at ${keyword}. Our data-driven approach has helped 500+ businesses improve results. Free guide inside.`,
+        predicted_ctr_lift: 1.9,
+        reasoning: 'Pain-point opener with quantified results drives engagement.',
+      },
+    ],
+    active_tests: [
+      {
+        id: 'test_001',
+        status: 'running',
+        variant_a_title: `${keyword} - Complete Guide | Site`,
+        variant_b_title: `${keyword}: 10 Proven Strategies That Work in 2026`,
+        variant_a_ctr: 5.8,
+        variant_b_ctr: 7.2,
+        winner: null,
+        confidence: 78.5,
+      },
+    ],
+    created_at: new Date().toISOString(),
+  };
+}
+
+export async function GET(req: NextRequest) {
   try {
-    // Auth check
-    const authHeader = req.headers.get('authorization');
-    const token = authHeader?.replace('Bearer ', '');
+    const { searchParams } = new URL(req.url);
+    const url = searchParams.get('url');
+    const keyword = searchParams.get('keyword');
 
-    let userId: string;
-    if (token) {
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-      userId = data.user.id;
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-      userId = data.user.id;
-    }
-
-    const body = await req.json();
-    const { action, workspaceId } = body;
-
-    if (!workspaceId) {
+    if (!url) {
       return NextResponse.json(
-        { error: 'workspaceId is required' },
+        { error: 'url query parameter is required. Usage: /api/seo-enhancement/ctr?url=https://example.com&keyword=seo+tools' },
         { status: 400 }
       );
     }
 
-    // Create A/B test
-    if (action === 'createTest') {
-      const { url, keyword, variantATitle, variantAMeta, variantBTitle, variantBMeta } = body;
-
-      if (!url || !keyword || !variantATitle || !variantAMeta || !variantBTitle || !variantBMeta) {
-        return NextResponse.json(
-          { error: 'Missing required fields for test creation' },
-          { status: 400 }
-        );
-      }
-
-      const test = await ctrOptimizationService.createTest({
-        workspaceId,
-        url,
-        keyword,
-        variantATitle,
-        variantAMeta,
-        variantBTitle,
-        variantBMeta,
-      });
-
-      return NextResponse.json({ test });
-    }
-
-    // Start test
-    if (action === 'startTest') {
-      const { testId } = body;
-      if (!testId) {
-        return NextResponse.json({ error: 'testId is required' }, { status: 400 });
-      }
-
-      const test = await ctrOptimizationService.startTest(testId);
-      return NextResponse.json({ test });
-    }
-
-    // Complete test
-    if (action === 'completeTest') {
-      const { testId } = body;
-      if (!testId) {
-        return NextResponse.json({ error: 'testId is required' }, { status: 400 });
-      }
-
-      const test = await ctrOptimizationService.completeTest(testId);
-      return NextResponse.json({ test });
-    }
-
-    // Analyze CTR benchmark
-    if (action === 'analyzeBenchmark') {
-      const { url, keyword, currentData } = body;
-
-      if (!url || !keyword || !currentData) {
-        return NextResponse.json(
-          { error: 'url, keyword, and currentData are required' },
-          { status: 400 }
-        );
-      }
-
-      const benchmark = await ctrOptimizationService.analyzeCTRBenchmark(
-        workspaceId,
-        url,
-        keyword,
-        currentData
+    try {
+      new URL(url);
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid URL format. Provide a full URL including protocol.' },
+        { status: 400 }
       );
-
-      return NextResponse.json({ benchmark });
     }
 
-    // Generate title variants
-    if (action === 'generateTitles') {
-      const { keyword, currentTitle, context } = body;
+    const result = generateStubCTR(url, keyword || 'digital marketing');
 
-      if (!keyword || !currentTitle) {
-        return NextResponse.json(
-          { error: 'keyword and currentTitle are required' },
-          { status: 400 }
-        );
-      }
-
-      const variants = await ctrOptimizationService.generateTitleVariants(
-        keyword,
-        currentTitle,
-        context
-      );
-
-      return NextResponse.json({ variants });
-    }
-
-    // Generate meta variants
-    if (action === 'generateMetas') {
-      const { keyword, currentMeta, context } = body;
-
-      if (!keyword || !currentMeta) {
-        return NextResponse.json(
-          { error: 'keyword and currentMeta are required' },
-          { status: 400 }
-        );
-      }
-
-      const variants = await ctrOptimizationService.generateMetaVariants(
-        keyword,
-        currentMeta,
-        context
-      );
-
-      return NextResponse.json({ variants });
-    }
-
-    return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+    return NextResponse.json({
+      success: true,
+      data: result,
+      _stub: true,
+      _message: 'This is placeholder data. Connect Google Search Console and DataForSEO for live CTR analysis.',
+    });
   } catch (error) {
-    console.error('[API] CTR POST error:', error);
+    console.error('[API] CTR GET error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
@@ -157,60 +140,28 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    // Auth check
-    const authHeader = req.headers.get('authorization');
-    const token = authHeader?.replace('Bearer ', '');
+    const body = await req.json();
+    const { url, keyword, action } = body;
 
-    let userId: string;
-    if (token) {
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-      userId = data.user.id;
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-      userId = data.user.id;
-    }
-
-    const { searchParams } = new URL(req.url);
-    const workspaceId = searchParams.get('workspaceId');
-    const type = searchParams.get('type') || 'tests';
-    const status = searchParams.get('status');
-    const opportunityLevel = searchParams.get('opportunityLevel');
-    const url = searchParams.get('url');
-    const limit = parseInt(searchParams.get('limit') || '20');
-
-    if (!workspaceId) {
+    if (!url) {
       return NextResponse.json(
-        { error: 'workspaceId is required' },
+        { error: 'url is required in request body' },
         { status: 400 }
       );
     }
 
-    if (type === 'benchmarks') {
-      const benchmarks = await ctrOptimizationService.getCTRBenchmarks(workspaceId, {
-        opportunityLevel: opportunityLevel || undefined,
-        limit,
-      });
-      return NextResponse.json({ benchmarks });
-    }
+    const result = generateStubCTR(url, keyword || 'digital marketing');
 
-    const tests = await ctrOptimizationService.getTests(workspaceId, {
-      status: status || undefined,
-      url: url || undefined,
-      limit,
+    return NextResponse.json({
+      success: true,
+      data: { action: action || 'analyzeBenchmark', result },
+      _stub: true,
+      _message: 'CTR analysis created (stub). Connect GSC and DataForSEO for live data.',
     });
-
-    return NextResponse.json({ tests });
   } catch (error) {
-    console.error('[API] CTR GET error:', error);
+    console.error('[API] CTR POST error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
