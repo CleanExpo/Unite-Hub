@@ -10,7 +10,7 @@ import {
   Send, Bot, User, Mic, MicOff, RefreshCw, Building2,
   TrendingUp, TrendingDown, AlertCircle, CheckCircle2,
   Clock, Flame, ArrowRight, Video, X, ChevronRight,
-  Zap, Activity,
+  Zap, Activity, History, Search, Tag, BookmarkPlus,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PhillOSPwaInstaller } from "@/components/PhillOSPwaInstaller";
@@ -52,6 +52,42 @@ interface CalendarEvent {
   business?: string;
 }
 
+interface SavedConversation {
+  id: string;
+  messages: Message[];
+  tags: string[];
+  savedAt: string;
+  preview: string;
+}
+
+// ─── Conversation storage helpers ─────────────────────────────────────────────
+
+const STORAGE_KEY = "phill-os-conversations";
+const QUICK_TAGS = ["DR", "RA", "SX", "ATO", "UH", "CCW", "urgent", "decision", "follow-up", "info"];
+
+function loadConversations(): SavedConversation[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveConversation(msgs: Message[], tags: string[]): SavedConversation {
+  const conv: SavedConversation = {
+    id: Date.now().toString(),
+    messages: msgs,
+    tags,
+    savedAt: new Date().toISOString(),
+    preview: msgs.find(m => m.role === "user")?.content.slice(0, 80) ?? "New conversation",
+  };
+  const existing = loadConversations();
+  // Keep last 50 conversations
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([conv, ...existing].slice(0, 50)));
+  return conv;
+}
+
 // ─── Tab Config ───────────────────────────────────────────────────────────────
 
 const TABS: { id: TabId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -65,22 +101,35 @@ const TABS: { id: TabId; label: string; icon: React.ComponentType<{ className?: 
 // ─── Sub-Components ───────────────────────────────────────────────────────────
 
 function ChatTab({ session }: { session: { access_token?: string } | null }) {
-  const [messages, setMessages] = useState<Message[]>([{
+  const WELCOME: Message = {
     id: "welcome",
     role: "assistant",
     content: "Bron here — your AI command officer. What's the priority right now?",
     timestamp: new Date(),
-  }]);
+  };
+
+  const [messages, setMessages] = useState<Message[]>([WELCOME]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [listening, setListening] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [historySearch, setHistorySearch] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [savePickerOpen, setSavePickerOpen] = useState(false);
+  const [pendingTags, setPendingTags] = useState<string[]>([]);
+  const [conversations, setConversations] = useState<SavedConversation[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
 
+  // Load history on mount
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    setConversations(loadConversations());
+  }, []);
+
+  useEffect(() => {
+    if (!showHistory) messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, showHistory]);
 
   const toggleSpeech = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -148,8 +197,175 @@ function ChatTab({ session }: { session: { access_token?: string } | null }) {
     }
   };
 
+  const handleSaveConversation = () => {
+    const realMsgs = messages.filter(m => m.id !== "welcome");
+    if (realMsgs.length === 0) return;
+    saveConversation(realMsgs, pendingTags);
+    const updated = loadConversations();
+    setConversations(updated);
+    setSavePickerOpen(false);
+    setPendingTags([]);
+    setMessages([WELCOME]);
+  };
+
+  const restoreConversation = (conv: SavedConversation) => {
+    // Deserialise timestamps (they're strings in localStorage)
+    const restored = conv.messages.map(m => ({ ...m, timestamp: new Date(m.timestamp) }));
+    setMessages([WELCOME, ...restored]);
+    setShowHistory(false);
+  };
+
+  const filteredConversations = conversations.filter(c => {
+    const matchSearch = !historySearch || c.preview.toLowerCase().includes(historySearch.toLowerCase());
+    const matchTags = selectedTags.length === 0 || selectedTags.every(t => c.tags.includes(t));
+    return matchSearch && matchTags;
+  });
+
+  // ─── History panel ──────────────────────────────────────────────────────────
+  if (showHistory) {
+    return (
+      <div className="flex flex-col h-full">
+        {/* Header */}
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-zinc-800">
+          <button onClick={() => setShowHistory(false)} className="text-zinc-400 hover:text-white">
+            <X className="w-4 h-4" />
+          </button>
+          <h3 className="text-sm font-semibold text-white">Conversation History</h3>
+          <span className="text-xs text-zinc-500 ml-auto">{conversations.length} saved</span>
+        </div>
+
+        {/* Search + tag filter */}
+        <div className="px-3 py-2 space-y-2 border-b border-zinc-800">
+          <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-700 rounded-lg px-3 h-8">
+            <Search className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
+            <input
+              value={historySearch}
+              onChange={e => setHistorySearch(e.target.value)}
+              placeholder="Search conversations..."
+              className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-600 outline-none"
+            />
+          </div>
+          <div className="flex gap-1.5 flex-wrap">
+            {["urgent", "decision", "DR", "UH", "SX"].map(tag => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTags(prev =>
+                  prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+                )}
+                className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
+                  selectedTags.includes(tag)
+                    ? "bg-cyan-600 border-cyan-500 text-white"
+                    : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:text-white"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Conversation list */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          {filteredConversations.length === 0 && (
+            <p className="text-center text-zinc-600 text-sm py-8">No conversations found</p>
+          )}
+          {filteredConversations.map(conv => (
+            <button
+              key={conv.id}
+              onClick={() => restoreConversation(conv)}
+              className="w-full text-left p-3 rounded-xl bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600 transition-colors"
+            >
+              <p className="text-sm text-white font-medium truncate">{conv.preview}</p>
+              <div className="flex items-center gap-2 mt-1.5">
+                <span className="text-[10px] text-zinc-500">
+                  {new Date(conv.savedAt).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}
+                </span>
+                <span className="text-[10px] text-zinc-600">·</span>
+                <span className="text-[10px] text-zinc-500">{conv.messages.length} messages</span>
+                <div className="flex gap-1 ml-auto">
+                  {conv.tags.map(tag => (
+                    <span key={tag} className="text-[9px] bg-zinc-700 text-zinc-300 px-1.5 py-0.5 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Save picker overlay ─────────────────────────────────────────────────────
+  const hasMeaningfulMessages = messages.filter(m => m.id !== "welcome").length > 0;
+
   return (
     <div className="flex flex-col h-full">
+      {/* Chat header bar */}
+      <div className="flex items-center gap-2 px-3 py-2 border-b border-zinc-800/50">
+        <span className="text-[10px] text-zinc-600 flex-1">
+          {messages.filter(m => m.id !== "welcome").length} messages
+        </span>
+        {hasMeaningfulMessages && (
+          <button
+            onClick={() => { setPendingTags([]); setSavePickerOpen(v => !v); }}
+            className="flex items-center gap-1 text-[10px] text-zinc-500 hover:text-cyan-400 transition-colors px-2 py-1 rounded-lg hover:bg-zinc-800"
+          >
+            <BookmarkPlus className="w-3.5 h-3.5" />
+            Save
+          </button>
+        )}
+        <button
+          onClick={() => { setShowHistory(true); setHistorySearch(""); setSelectedTags([]); }}
+          className="flex items-center gap-1 text-[10px] text-zinc-500 hover:text-cyan-400 transition-colors px-2 py-1 rounded-lg hover:bg-zinc-800"
+        >
+          <History className="w-3.5 h-3.5" />
+          History
+        </button>
+      </div>
+
+      {/* Save tag picker */}
+      {savePickerOpen && (
+        <div className="px-3 py-2.5 border-b border-zinc-800 bg-zinc-900/80">
+          <div className="flex items-center gap-2 mb-2">
+            <Tag className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="text-xs text-zinc-300 font-medium">Tag this conversation</span>
+          </div>
+          <div className="flex gap-1.5 flex-wrap mb-2.5">
+            {QUICK_TAGS.map(tag => (
+              <button
+                key={tag}
+                onClick={() => setPendingTags(prev =>
+                  prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+                )}
+                className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
+                  pendingTags.includes(tag)
+                    ? "bg-cyan-600 border-cyan-500 text-white"
+                    : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:text-white"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={handleSaveConversation}
+              className="flex-1 text-xs bg-cyan-600 hover:bg-cyan-500 text-white py-1.5 rounded-lg transition-colors"
+            >
+              Save &amp; New Chat
+            </button>
+            <button
+              onClick={() => setSavePickerOpen(false)}
+              className="text-xs text-zinc-500 hover:text-white px-3 py-1.5 rounded-lg border border-zinc-700 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map(msg => (
           <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
