@@ -27,38 +27,56 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Unite-Hub | Business Hub - AI-Powered Business Management",
-    template: "%s | Unite-Hub"
+    default: 'Unite-Hub — AI-Powered CRM for Australian SMEs',
+    template: '%s | Unite-Hub',
   },
-  description: "Unite-Hub is your AI-powered Business Hub. Manage contacts, deals, campaigns, and operations across all your businesses from one intelligent dashboard.",
-  keywords: ["business hub", "CRM", "AI business management", "contact management", "deal pipeline", "business operations"],
-  authors: [{ name: "Unite-Hub" }],
-  creator: "Unite-Hub",
-  publisher: "Unite-Hub",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com'),
+  description: 'Unite-Hub is an AI-powered CRM built for Australian SMEs. Manage contacts, deals, campaigns and analytics across all your businesses in one hub.',
+  keywords: [
+    'CRM Australia',
+    'AI CRM',
+    'small business CRM',
+    'Australian SME software',
+    'business management platform',
+    'deal pipeline',
+    'contact management',
+    'email automation',
+    'campaign management',
+    'AI business intelligence',
+    'multi-business CRM',
+    'sales automation Australia',
+  ],
+  authors: [{ name: 'Unite-Hub' }],
+  creator: 'Unite-Hub',
+  publisher: 'Unite-Hub',
+  metadataBase: new URL('https://unitehub.ai'),
+  alternates: {
+    canonical: 'https://unitehub.ai',
+    languages: {
+      'en-AU': 'https://unitehub.ai',
+    },
+  },
   openGraph: {
-    title: "Unite-Hub | Your AI-Powered Business Hub",
-    description: "Manage contacts, deals, campaigns, and operations across all your businesses from one intelligent dashboard.",
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com',
+    type: 'website',
+    title: 'Unite-Hub — AI-Powered CRM for Australian SMEs',
+    description: 'Manage contacts, deals, campaigns and analytics across all your businesses from one intelligent dashboard. Built for Australian SMEs.',
+    url: 'https://unitehub.ai',
     siteName: 'Unite-Hub',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Unite-Hub - AI-Powered Business Hub',
-      }
+        alt: 'Unite-Hub — AI-Powered CRM for Australian SMEs',
+      },
     ],
-    locale: 'en_US',
-    type: 'website',
+    locale: 'en_AU',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Unite-Hub | AI-Powered Business Hub',
-    description: 'Manage your businesses from one intelligent dashboard',
-    images: ['/og-image.png'],
-    creator: '@unitehub',
     site: '@unitehub',
+    title: 'Unite-Hub — AI-Powered CRM for Australian SMEs',
+    description: 'AI-powered CRM built for Australian SMEs. Manage contacts, deals, campaigns and analytics in one hub.',
+    images: ['/og-image.png'],
   },
   icons: {
     icon: [
