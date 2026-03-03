@@ -198,3 +198,8 @@ tests-starter/
 
 # Nul file (Windows artifact)
 nul
+
+# Build artifacts (generated, not committed)
+packages/shared/dist/
+apps/web/.next/
+apps/backend/.venv/
