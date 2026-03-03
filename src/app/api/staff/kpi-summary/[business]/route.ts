@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import type { BusinessKpiData } from "@/components/dashboard/BusinessKpiCard";
+import { getStripeKeyForBusiness, fetchStripeMrr } from "@/lib/stripe-mrr";
 
 /**
  * GET /api/staff/kpi-summary/[business]
  * Returns KPI data for a single Unite Group business by ID.
+ * UNI-873: Uses live Stripe MRR when STRIPE_KEY_<BUSINESS> env var is set.
  */
 
 const VALID_IDS = new Set([
@@ -126,6 +128,27 @@ export async function GET(
   const biz = getBusinesses().find((b) => b.id === business);
   if (!biz) {
     return NextResponse.json({ error: "Business not found" }, { status: 404 });
+  }
+
+  // UNI-873: Overlay live Stripe MRR if a restricted key is configured
+  const stripeKey = getStripeKeyForBusiness(business);
+  if (stripeKey) {
+    const liveRevenue = await fetchStripeMrr(stripeKey);
+    if (liveRevenue) {
+      return NextResponse.json({
+        business: {
+          ...biz,
+          mrr: liveRevenue.mrr,
+          mrrChange: liveRevenue.mrrChange,
+          sparkline: liveRevenue.sparkline,
+          topMetric: biz.id === "unite-hub"
+            ? { label: "Active Subscriptions", value: liveRevenue.activeSubscriptions }
+            : biz.topMetric,
+          _stripeConnected: true,
+        },
+        generatedAt: new Date().toISOString(),
+      });
+    }
   }
 
   return NextResponse.json({ business: biz, generatedAt: new Date().toISOString() });

@@ -77,6 +77,7 @@ export default function BusinessDrillDownPage() {
   const { business } = useParams<{ business: string }>();
 
   const [data, setData] = useState<BusinessKpiData | null>(null);
+  const [stripeConnected, setStripeConnected] = useState(false);
   const [linearCounts, setLinearCounts] = useState<LinearIssueCounts | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,6 +93,7 @@ export default function BusinessDrillDownPage() {
       if (!kpiRes.ok) throw new Error(`HTTP ${kpiRes.status}`);
       const kpiJson = await kpiRes.json();
       setData(kpiJson.business);
+      setStripeConnected(!!kpiJson.business?._stripeConnected);
       if (linearRes.ok) {
         setLinearCounts(await linearRes.json());
       }
@@ -208,6 +210,11 @@ export default function BusinessDrillDownPage() {
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-4 h-4 text-cyan-400" />
               <p className="text-[10px] text-zinc-500 uppercase tracking-wider">MRR</p>
+              {stripeConnected && (
+                <span className="ml-auto text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded-full">
+                  Live
+                </span>
+              )}
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-white">
@@ -326,11 +333,19 @@ export default function BusinessDrillDownPage() {
           <PlaceholderSection
             title="Revenue"
             icon={DollarSign}
-            items={[
-              "No Stripe key connected",
-              "Add restricted key to enable live MRR",
-              "Invoice history will appear here",
-            ]}
+            items={
+              stripeConnected
+                ? [
+                    "Stripe connected — live MRR active",
+                    "Subscription counts updated in real-time",
+                    "Invoice history sync coming soon",
+                  ]
+                : [
+                    `Set STRIPE_KEY_${business.replace(/-/g, "_").toUpperCase()} in .env`,
+                    "Use a restricted key: subscriptions + invoices read",
+                    "MRR card will show live Stripe data",
+                  ]
+            }
           />
         </div>
 
