@@ -5,6 +5,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BlockEditor } from '@/components/nexus/BlockEditor';
 import { NexusSidebar } from '@/components/nexus/NexusSidebar';
+import { BronPanel } from '@/components/nexus/BronPanel';
+import { Brain } from 'lucide-react';
 import type { JSONContent } from '@tiptap/react';
 
 interface NexusPage {
@@ -57,6 +59,7 @@ export default function PageEditorPage() {
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [showProperties, setShowProperties] = useState(false);
+  const [showBron, setShowBron] = useState(false);
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -249,6 +252,14 @@ export default function PageEditorPage() {
           </button>
 
           <button
+            onClick={() => setShowBron(!showBron)}
+            className={`rounded-sm p-1.5 transition-colors ${showBron ? 'bg-[#00F5FF]/10 text-[#00F5FF]' : 'text-[#666] hover:text-[#00F5FF]'}`}
+            title="Bron AI"
+          >
+            <Brain size={16} />
+          </button>
+
+          <button
             onClick={() => setShowProperties(!showProperties)}
             className={`rounded-sm px-2 py-1 text-xs font-mono transition-colors ${showProperties ? 'bg-[#00F5FF]/10 text-[#00F5FF]' : 'text-[#666] hover:text-white'}`}
           >
@@ -433,6 +444,14 @@ export default function PageEditorPage() {
         </AnimatePresence>
       </div>
       </div>
+
+      {/* Bron AI sidebar */}
+      <BronPanel
+        open={showBron}
+        onClose={() => setShowBron(false)}
+        pageTitle={page.title}
+        pageBody={page.body ? JSON.stringify(page.body).slice(0, 500) : undefined}
+      />
     </div>
   );
 }
