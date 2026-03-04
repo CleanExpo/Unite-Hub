@@ -1139,6 +1139,140 @@ function MediaCapturePanel() {
   );
 }
 
+function DriveSyncPanel() {
+  const [driveStatus, setDriveStatus] = useState<{ connected: boolean; googleEmail?: string; connectedAt?: string } | null>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<{ success?: boolean; fileUrl?: string; error?: string; connectUrl?: string } | null>(null);
+
+  useEffect(() => {
+    async function checkDrive() {
+      try {
+        const res = await fetch("/api/founder/documents/drive/status");
+        if (res.ok) {
+          setDriveStatus(await res.json());
+        } else {
+          setDriveStatus({ connected: false });
+        }
+      } catch {
+        setDriveStatus({ connected: false });
+      }
+    }
+    checkDrive();
+  }, []);
+
+  const syncToDrive = async () => {
+    if (syncing) return;
+    setSyncing(true);
+    setSyncResult(null);
+    try {
+      const res = await fetch("/api/founder/os/drive-sync", { method: "POST" });
+      const data = await res.json();
+      setSyncResult(data);
+    } catch {
+      setSyncResult({ error: "Network error — try again" });
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const lastSync = driveStatus?.connectedAt
+    ? new Date(driveStatus.connectedAt).toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+    : null;
+
+  return (
+    <div className="rounded-sm border border-zinc-800 bg-zinc-900/50 p-3 space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <CloudUpload className="w-4 h-4 text-emerald-400" />
+          <h3 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Drive Backup</h3>
+        </div>
+        {driveStatus === null ? (
+          <div className="w-2 h-2 rounded-full bg-zinc-600 animate-pulse" />
+        ) : driveStatus.connected ? (
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span className="text-[10px] text-zinc-500">{driveStatus.googleEmail}</span>
+          </div>
+        ) : (
+          <div className="w-2 h-2 rounded-full bg-red-500" title="Not connected" />
+        )}
+      </div>
+
+      {lastSync && (
+        <p className="text-[10px] text-zinc-600">Last sync: {lastSync} AEST</p>
+      )}
+
+      {driveStatus?.connected ? (
+        <motion.button
+          onClick={syncToDrive}
+          disabled={syncing}
+          whileTap={{ scale: 0.97 }}
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-sm text-xs font-medium bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-40 transition-colors"
+        >
+          {syncing ? (
+            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <CloudUpload className="w-3.5 h-3.5" />
+          )}
+          {syncing ? "Syncing…" : "Backup to Drive"}
+        </motion.button>
+      ) : driveStatus !== null ? (
+        <Link
+          href="/api/founder/documents/drive/connect"
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-sm text-xs font-medium bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-600 transition-colors"
+        >
+          <CloudUpload className="w-3.5 h-3.5" />
+          Connect Google Drive
+        </Link>
+      ) : null}
+
+      {/* Sync result */}
+      <AnimatePresence>
+        {syncResult && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            {syncResult.success ? (
+              <div className="flex items-center gap-2 p-2 rounded-sm bg-emerald-500/10 border border-emerald-500/30">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] text-emerald-400">Synced to Google Drive</p>
+                  {syncResult.fileUrl && (
+                    <a
+                      href={syncResult.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-emerald-500/70 hover:text-emerald-400 underline underline-offset-2 truncate block"
+                    >
+                      Open in Drive
+                    </a>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 p-2 rounded-sm bg-red-500/10 border border-red-500/30">
+                <AlertCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
+                <p className="text-[10px] text-red-400">{syncResult.error}</p>
+                {syncResult.connectUrl && (
+                  <Link
+                    href={syncResult.connectUrl}
+                    className="text-[10px] text-cyan-400 hover:text-cyan-300 underline underline-offset-2 flex-shrink-0"
+                  >
+                    Connect
+                  </Link>
+                )}
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function CaptureTab() {
   const [captureMode, setCaptureMode] = useState<"text" | "media">("text");
   const [text, setText] = useState("");
@@ -1430,10 +1564,20 @@ function CaptureTab() {
             </div>
           )}
 
+          {/* Drive sync panel */}
+          <DriveSyncPanel />
+
           <p className="text-[10px] text-zinc-600 text-center mt-auto pb-1">
             Captures append to today&apos;s daily note in your Obsidian vault via Google Drive
           </p>
         </>
+      )}
+
+      {/* Show Drive sync in media mode too */}
+      {captureMode === "media" && (
+        <div className="px-4 pb-3">
+          <DriveSyncPanel />
+        </div>
       )}
     </div>
   );
