@@ -13,8 +13,8 @@ class OpenRouterClient:
     """Client for OpenRouter API (OpenAI-compatible)."""
 
     # Available models via OpenRouter
-    CLAUDE_OPUS = "anthropic/claude-opus-4-5"
-    CLAUDE_SONNET = "anthropic/claude-sonnet-4-5"
+    CLAUDE_OPUS = "anthropic/claude-opus-4-6"
+    CLAUDE_SONNET = "anthropic/claude-sonnet-4-6"
     GEMINI_PRO = "google/gemini-2.0-flash-exp"
 
     def __init__(self, model: str | None = None) -> None:

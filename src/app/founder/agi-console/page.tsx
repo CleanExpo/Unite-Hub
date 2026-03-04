@@ -76,7 +76,7 @@ export default function AGIConsolePage() {
           trend: 'stable',
         },
         {
-          model: 'claude-sonnet-4-5',
+          model: 'claude-sonnet-4-6',
           capability: 'general-purpose',
           selectionRate: 55,
           avgLatency: 1200,

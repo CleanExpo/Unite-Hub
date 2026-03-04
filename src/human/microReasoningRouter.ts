@@ -19,7 +19,7 @@ import type { CompressedContextPacket } from './contextCompressionEngine';
 
 export type ReasoningEngine = 'local_intent' | 'local_task' | 'cloud_standard' | 'cloud_extended' | 'advisor_network' | 'blocked';
 
-export type CloudModel = 'claude-haiku-4-5' | 'claude-sonnet-4-5' | 'claude-opus-4-1';
+export type CloudModel = 'claude-haiku-4-5-20251001' | 'claude-sonnet-4-6' | 'claude-opus-4-6';
 
 export interface RoutingDecision {
   // Decision Metadata
@@ -120,7 +120,7 @@ export function selectCloudModel(
   // Haiku: Simple, fast, cheap ($0.80/$2.40 per MTok)
   if (complexity === 'simple') {
     return {
-      model: 'claude-haiku-4-5',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 256,
       use_extended_thinking: false,
     };
@@ -129,7 +129,7 @@ export function selectCloudModel(
   // Sonnet: Standard reasoning, good balance ($3/$15 per MTok)
   if (complexity === 'moderate') {
     return {
-      model: 'claude-sonnet-4-5',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1024,
       use_extended_thinking: false,
     };
@@ -142,7 +142,7 @@ export function selectCloudModel(
     const useExtendedThinking = strategicDomains.includes(domain);
 
     return {
-      model: 'claude-opus-4-1',
+      model: 'claude-opus-4-6',
       max_tokens: useExtendedThinking ? 16000 : 4096, // Larger context for thinking
       use_extended_thinking: useExtendedThinking,
     };
@@ -150,7 +150,7 @@ export function selectCloudModel(
 
   // Fallback
   return {
-    model: 'claude-sonnet-4-5',
+    model: 'claude-sonnet-4-6',
     max_tokens: 1024,
     use_extended_thinking: false,
   };
@@ -161,15 +161,15 @@ export function selectCloudModel(
 // ============================================================================
 
 const MODEL_INPUT_COSTS: Record<CloudModel, number> = {
-  'claude-haiku-4-5': 0.80 / 1_000_000, // $0.80 per MTok
-  'claude-sonnet-4-5': 3 / 1_000_000, // $3 per MTok
-  'claude-opus-4-1': 15 / 1_000_000, // $15 per MTok
+  'claude-haiku-4-5-20251001': 0.80 / 1_000_000, // $0.80 per MTok
+  'claude-sonnet-4-6': 3 / 1_000_000, // $3 per MTok
+  'claude-opus-4-6': 15 / 1_000_000, // $15 per MTok
 };
 
 const MODEL_OUTPUT_COSTS: Record<CloudModel, number> = {
-  'claude-haiku-4-5': 2.4 / 1_000_000, // $2.40 per MTok
-  'claude-sonnet-4-5': 15 / 1_000_000, // $15 per MTok
-  'claude-opus-4-1': 45 / 1_000_000, // $45 per MTok
+  'claude-haiku-4-5-20251001': 2.4 / 1_000_000, // $2.40 per MTok
+  'claude-sonnet-4-6': 15 / 1_000_000, // $15 per MTok
+  'claude-opus-4-6': 45 / 1_000_000, // $45 per MTok
 };
 
 const THINKING_TOKEN_COST_MULTIPLIER = 7.5; // Thinking tokens cost 7.5x more

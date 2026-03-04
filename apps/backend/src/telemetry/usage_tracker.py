@@ -12,15 +12,15 @@ logger = get_logger(__name__)
 # Model pricing (updated as of December 2024)
 MODEL_PRICING = {
     # Anthropic models
-    "claude-opus-4-5-20251101": {
+    "claude-opus-4-6": {
         "input": Decimal("0.000015"),  # $15 per million tokens
         "output": Decimal("0.000075"),  # $75 per million tokens
     },
-    "claude-sonnet-4-5-20250929": {
+    "claude-sonnet-4-6": {
         "input": Decimal("0.000003"),  # $3 per million tokens
         "output": Decimal("0.000015"),  # $15 per million tokens
     },
-    "claude-3-5-sonnet-20241022": {
+    "claude-sonnet-4-6": {
         "input": Decimal("0.000003"),  # $3 per million tokens
         "output": Decimal("0.000015"),  # $15 per million tokens
     },

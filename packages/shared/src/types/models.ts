@@ -12,16 +12,16 @@ export interface ModelConfig {
 // Model identifiers
 export const MODELS = {
   anthropic: {
-    opus: 'claude-opus-4-5-20251101',
-    sonnet: 'claude-sonnet-4-5-20250929',
+    opus: 'claude-opus-4-6',
+    sonnet: 'claude-sonnet-4-6',
     haiku: 'claude-haiku-4-5-20251001',
   },
   google: {
     pro: 'gemini-2.0-flash-exp',
   },
   openrouter: {
-    opus: 'anthropic/claude-opus-4-5',
-    sonnet: 'anthropic/claude-sonnet-4-5',
+    opus: 'anthropic/claude-opus-4-6',
+    sonnet: 'anthropic/claude-sonnet-4-6',
     pro: 'google/gemini-2.0-flash-exp',
   },
 } as const;

@@ -376,12 +376,12 @@ export class CostTracker {
     // Pricing per million tokens (update as APIs change)
     const pricing: Record<string, { prompt: number; completion: number }> = {
       // Anthropic
-      'claude-opus-4': { prompt: 15, completion: 75 },
-      'claude-sonnet-4-5': { prompt: 3, completion: 15 },
-      'claude-haiku-4-5': { prompt: 0.80, completion: 4 },
+      'claude-opus-4-6': { prompt: 15, completion: 75 },
+      'claude-sonnet-4-6': { prompt: 3, completion: 15 },
+      'claude-haiku-4-5-20251001': { prompt: 0.80, completion: 4 },
 
       // OpenRouter (averaged - actual may vary)
-      'openrouter-claude-sonnet-4-5': { prompt: 3, completion: 15 },
+      'openrouter-claude-sonnet-4-6': { prompt: 3, completion: 15 },
       'openrouter-gpt-4-turbo': { prompt: 10, completion: 30 },
       'openrouter-llama-3-70b': { prompt: 0.5, completion: 0.5 },
 

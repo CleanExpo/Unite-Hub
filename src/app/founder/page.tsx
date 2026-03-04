@@ -21,9 +21,11 @@ import {
   Sparkles,
   Activity,
   BarChart3,
-  Brain
+  Brain,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';
 import { getFounderDashboardSummary } from '@/lib/founder/oversightService';
 
@@ -37,9 +39,26 @@ interface BusinessSummary {
 }
 
 export default function FounderOSDashboard() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [businesses, setBusinesses] = useState<BusinessSummary[]>([]);
   const [dashboardData, setDashboardData] = useState<any>(null);
+
+  const handleNewNexusPage = async () => {
+    try {
+      const res = await fetch('/api/nexus/pages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: 'Untitled' }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        router.push(`/founder/page/${data.page.id}`);
+      }
+    } catch {
+      // Silent fail
+    }
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -299,6 +318,17 @@ export default function FounderOSDashboard() {
               </p>
             </Card>
           </Link>
+
+          <Card
+            onClick={handleNewNexusPage}
+            className="bg-gradient-to-br from-cyan-600/20 to-blue-600/20 border-cyan-500/30 p-6 hover:from-cyan-600/30 hover:to-blue-600/30 transition-all cursor-pointer"
+          >
+            <FileText className="w-8 h-8 text-cyan-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-100">NEXUS Page</h3>
+            <p className="text-sm text-gray-400 mt-1">
+              Create a new Notion-style page
+            </p>
+          </Card>
         </div>
       </Section>
 

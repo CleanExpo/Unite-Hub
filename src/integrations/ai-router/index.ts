@@ -426,9 +426,9 @@ export class AIRouter {
    */
   private mapToOpenRouterModel(model: AIModel): string {
     const mapping: Record<string, string> = {
-      'claude-sonnet-4.5': 'anthropic/claude-sonnet-4-5',
-      'claude-opus-4.5': 'anthropic/claude-opus-4-5',
-      'claude-haiku-4.5': 'anthropic/claude-haiku-4-5',
+      'claude-sonnet-4.5': 'anthropic/claude-sonnet-4-6',
+      'claude-opus-4.5': 'anthropic/claude-opus-4-6',
+      'claude-haiku-4.5': 'anthropic/claude-haiku-4-5-20251001',
       'gpt-4-turbo': 'openai/gpt-4-turbo',
       'gpt-4-vision': 'openai/gpt-4-vision-preview',
       'gpt-3.5-turbo': 'openai/gpt-3.5-turbo',

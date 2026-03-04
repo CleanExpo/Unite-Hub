@@ -14,9 +14,9 @@ import { Switch } from '@/components/ui/switch';
 import type { NodeConfigProps } from '../node-config-panel';
 
 const LLM_MODELS = [
-  { value: 'claude-3-opus', label: 'Claude 3 Opus', provider: 'Anthropic' },
-  { value: 'claude-3-sonnet', label: 'Claude 3 Sonnet', provider: 'Anthropic' },
-  { value: 'claude-3-haiku', label: 'Claude 3 Haiku', provider: 'Anthropic' },
+  { value: 'claude-opus-4-6', label: 'Claude Opus 4.6', provider: 'Anthropic' },
+  { value: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', provider: 'Anthropic' },
+  { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', provider: 'Anthropic' },
   { value: 'gpt-4-turbo', label: 'GPT-4 Turbo', provider: 'OpenAI' },
   { value: 'gpt-4o', label: 'GPT-4o', provider: 'OpenAI' },
   { value: 'llama3.1:8b', label: 'Llama 3.1 8B', provider: 'Ollama' },
@@ -37,7 +37,7 @@ export function LLMNodeConfig({ config, onChange }: NodeConfigProps) {
       <div>
         <Label className="text-[10px] tracking-[0.2em] text-white/40 uppercase">Model</Label>
         <select
-          value={(config.model as string) || 'claude-3-sonnet'}
+          value={(config.model as string) || 'claude-sonnet-4-6'}
           onChange={(e) => handleChange('model', e.target.value)}
           className="mt-2 w-full rounded-sm border-[0.5px] border-white/[0.06] bg-[#050505] px-3 py-2 text-sm text-white/90"
         >

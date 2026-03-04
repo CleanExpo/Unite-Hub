@@ -346,7 +346,7 @@ describe("Orchestrator Routing Integration", () => {
       const routing = {
         request_id: "req-2",
         target_agent: "ai-phill",
-        model: "claude-opus-4-5",
+        model: "claude-opus-4-6",
         thinking_budget: 10000,
         use_extended_thinking: true,
       };

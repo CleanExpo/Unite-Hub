@@ -202,7 +202,7 @@ Generate specific code changes, file edits, and implementation steps.`;
       (message.usage.output_tokens / 1_000_000) * MODELS.claude.costPerMToken.output;
 
     return {
-      model: "claude-sonnet-4-5",
+      model: "claude-sonnet-4-6",
       response,
       contextUsed: message.usage.input_tokens,
       costEstimate,

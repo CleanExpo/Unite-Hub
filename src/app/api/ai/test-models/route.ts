@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
 
     results.tests.claude_3_5_sonnet = {
       status: 'success',
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-sonnet-4-6',
       response: {
         headline: claudeResult.headline,
         subheadline: claudeResult.subheadline,
@@ -200,7 +200,7 @@ export async function POST(req: NextRequest) {
           sectionName: 'test',
         });
         result = {
-          model: 'claude-3-5-sonnet',
+          model: 'claude-sonnet-4-6',
           response: claudeResponse,
           provider: 'Anthropic Direct',
         };

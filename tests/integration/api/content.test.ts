@@ -178,7 +178,7 @@ describe('Content API - POST /api/content', () => {
         title: 'Test Title',
         contentType: 'followup',
         generatedText: 'Test content that is long enough to pass validation checks',
-        aiModel: 'claude-sonnet-4-5',
+        aiModel: 'claude-sonnet-4-6',
       }),
     });
 
@@ -233,7 +233,7 @@ describe('Content API - POST /api/content', () => {
       title: 'New Email Subject',
       contentType: 'followup',
       generatedText: 'New email body content that is long enough',
-      aiModel: 'claude-sonnet-4-5',
+      aiModel: 'claude-sonnet-4-6',
       status: 'draft',
     };
 

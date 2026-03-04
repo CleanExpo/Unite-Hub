@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     return Response.json({
       success: true,
       copy,
-      model: 'claude-3-5-sonnet',
+      model: 'claude-sonnet-4-6',
       timestamp: new Date().toISOString(),
     });
 
