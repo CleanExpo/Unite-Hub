@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { UniteHubStructuredData } from "@/components/StructuredData";
+import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 
 // Force all pages to be dynamically rendered at request time
 // This is required because many pages use getSupabaseServer() which calls cookies()
@@ -120,6 +121,7 @@ export default function RootLayout({
         <UniteHubStructuredData />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <AnalyticsScripts />
         <Providers>
           {children}
         </Providers>
