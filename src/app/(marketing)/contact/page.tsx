@@ -198,19 +198,19 @@ export default function ContactPage() {
                   For general inquiries
                 </p>
                 <a
-                  href="mailto:hello@unite-hub.com"
+                  href="mailto:hello@unite-group.in"
                   className="text-primary hover:underline font-medium"
                 >
-                  hello@unite-hub.com
+                  hello@unite-group.in
                 </a>
                 <p className="text-sm text-muted-foreground mt-4 mb-3">
                   For support
                 </p>
                 <a
-                  href="mailto:support@unite-hub.com"
+                  href="mailto:support@unite-group.in"
                   className="text-primary hover:underline font-medium"
                 >
-                  support@unite-hub.com
+                  support@unite-group.in
                 </a>
               </CardContent>
             </Card>
@@ -283,10 +283,10 @@ export default function ContactPage() {
                   Interested in Unite-Hub for your team?
                 </p>
                 <a
-                  href="mailto:sales@unite-hub.com"
+                  href="mailto:sales@unite-group.in"
                   className="text-primary hover:underline font-medium text-sm"
                 >
-                  sales@unite-hub.com
+                  sales@unite-group.in
                 </a>
               </CardContent>
             </Card>
@@ -300,10 +300,10 @@ export default function ContactPage() {
                   Looking to partner with us?
                 </p>
                 <a
-                  href="mailto:partnerships@unite-hub.com"
+                  href="mailto:partnerships@unite-group.in"
                   className="text-primary hover:underline font-medium text-sm"
                 >
-                  partnerships@unite-hub.com
+                  partnerships@unite-group.in
                 </a>
               </CardContent>
             </Card>
@@ -317,10 +317,10 @@ export default function ContactPage() {
                   Media inquiries and press releases
                 </p>
                 <a
-                  href="mailto:press@unite-hub.com"
+                  href="mailto:press@unite-group.in"
                   className="text-primary hover:underline font-medium text-sm"
                 >
-                  press@unite-hub.com
+                  press@unite-group.in
                 </a>
               </CardContent>
             </Card>

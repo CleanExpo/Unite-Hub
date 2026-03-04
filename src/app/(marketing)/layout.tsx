@@ -1,6 +1,4 @@
 import { Footer } from '@/components/marketing/Footer';
-import { CookieConsent } from '@/components/CookieConsent';
-
 export default function MarketingLayout({
   children,
 }: {
@@ -10,7 +8,6 @@ export default function MarketingLayout({
     <>
       {children}
       <Footer />
-      <CookieConsent />
     </>
   );
 }

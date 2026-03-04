@@ -362,8 +362,8 @@ export default function SubjectAccessRequestPage() {
               Read our Privacy Policy
             </Link>{' '}
             or contact us at{' '}
-            <a href="mailto:privacy@unite-hub.com.au" className="text-primary hover:underline">
-              privacy@unite-hub.com.au
+            <a href="mailto:privacy@unite-group.in" className="text-primary hover:underline">
+              privacy@unite-group.in
             </a>
           </p>
         </div>

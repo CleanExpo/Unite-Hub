@@ -247,7 +247,7 @@ export default function TermsPage() {
           </p>
           <div className="bg-muted p-6 rounded-lg mt-4">
             <p className="mb-2">
-              <strong>Email:</strong> <a href="mailto:legal@unite-hub.com" className="text-primary hover:underline">legal@unite-hub.com</a>
+              <strong>Email:</strong> <a href="mailto:legal@unite-group.in" className="text-primary hover:underline">legal@unite-group.in</a>
             </p>
             <p>
               <strong>Mailing Address:</strong><br />

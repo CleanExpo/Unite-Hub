@@ -85,19 +85,19 @@ export class ApiError extends Error {
 // Common error types
 export const ErrorTypes = {
   // 4xx Client Errors
-  BAD_REQUEST: 'https://unite-hub.com/errors/bad-request',
-  UNAUTHORIZED: 'https://unite-hub.com/errors/unauthorized',
-  FORBIDDEN: 'https://unite-hub.com/errors/forbidden',
-  NOT_FOUND: 'https://unite-hub.com/errors/not-found',
-  CONFLICT: 'https://unite-hub.com/errors/conflict',
-  VALIDATION_ERROR: 'https://unite-hub.com/errors/validation',
-  RATE_LIMIT: 'https://unite-hub.com/errors/rate-limit',
+  BAD_REQUEST: 'https://unite-group.in/errors/bad-request',
+  UNAUTHORIZED: 'https://unite-group.in/errors/unauthorized',
+  FORBIDDEN: 'https://unite-group.in/errors/forbidden',
+  NOT_FOUND: 'https://unite-group.in/errors/not-found',
+  CONFLICT: 'https://unite-group.in/errors/conflict',
+  VALIDATION_ERROR: 'https://unite-group.in/errors/validation',
+  RATE_LIMIT: 'https://unite-group.in/errors/rate-limit',
 
   // 5xx Server Errors
-  INTERNAL_ERROR: 'https://unite-hub.com/errors/internal',
-  SERVICE_UNAVAILABLE: 'https://unite-hub.com/errors/service-unavailable',
-  DATABASE_ERROR: 'https://unite-hub.com/errors/database',
-  EXTERNAL_API_ERROR: 'https://unite-hub.com/errors/external-api',
+  INTERNAL_ERROR: 'https://unite-group.in/errors/internal',
+  SERVICE_UNAVAILABLE: 'https://unite-group.in/errors/service-unavailable',
+  DATABASE_ERROR: 'https://unite-group.in/errors/database',
+  EXTERNAL_API_ERROR: 'https://unite-group.in/errors/external-api',
 };
 
 // Error factory functions with priority and severity

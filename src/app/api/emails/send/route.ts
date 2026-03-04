@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
       .insert({
         workspace_id: workspaceId,
         contact_id: contactId,
-        from: "noreply@unite-hub.com", // TODO: Get from user's email integration
+        from: "noreply@unite-group.in", // TODO: Get from user's email integration
         to,
         subject,
         body,

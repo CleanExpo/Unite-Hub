@@ -116,7 +116,7 @@ class ApiDocRegistry {
         description: 'AI-powered CRM and marketing automation platform',
         contact: {
           name: 'API Support',
-          url: 'https://unite-hub.com/support',
+          url: 'https://unite-group.in/support',
         },
       },
       servers: [
@@ -125,11 +125,11 @@ class ApiDocRegistry {
           description: 'Development',
         },
         {
-          url: 'https://staging.unite-hub.com',
+          url: 'https://staging.unite-group.in',
           description: 'Staging',
         },
         {
-          url: 'https://unite-hub.com',
+          url: 'https://unite-group.in',
           description: 'Production',
         },
       ],

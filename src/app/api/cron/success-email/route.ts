@@ -109,7 +109,7 @@ export async function GET(req: NextRequest) {
               title: i.title,
               message: i.message,
             })),
-            dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com'}/client/dashboard/success`,
+            dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in'}/client/dashboard/success`,
           });
 
           // Send email

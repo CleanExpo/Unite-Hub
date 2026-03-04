@@ -397,7 +397,7 @@ export default function DashboardLayout({
                       </DropdownMenuItem>
                     </PermissionGate>
                     <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
-                      <Link href="https://docs.unite-hub.com" target="_blank" rel="noopener noreferrer" className="w-full">
+                      <Link href="https://docs.unite-group.in" target="_blank" rel="noopener noreferrer" className="w-full">
                         Help
                       </Link>
                     </DropdownMenuItem>

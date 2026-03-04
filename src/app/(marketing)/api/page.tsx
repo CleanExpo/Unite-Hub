@@ -130,7 +130,7 @@ export default function APIPage() {
               </CardHeader>
               <CardContent>
                 <div className="bg-slate-950 text-slate-50 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                  <pre>{`curl -X POST https://api.unite-hub.com/v1/contacts \\
+                  <pre>{`curl -X POST https://api.unite-group.in/v1/contacts \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{

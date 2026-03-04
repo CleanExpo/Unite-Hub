@@ -109,3 +109,34 @@ async function networkFirst(request) {
     return cached || new Response("Offline", { status: 503, statusText: "Offline" });
   }
 }
+
+// ─── Push Notifications ───────────────────────────────────────────────────────
+
+self.addEventListener('push', function(event) {
+  var data = {};
+  try { data = event.data ? event.data.json() : {}; } catch(e) {}
+  var title = data.title || 'Phill OS';
+  var options = {
+    body: data.body || '',
+    icon: '/android-chrome-192x192.png',
+    badge: '/android-chrome-192x192.png',
+    data: { url: data.url || '/founder/os' },
+    requireInteraction: false,
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  var url = (event.notification.data && event.notification.data.url) || '/founder/os';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+      for (var i = 0; i < clientList.length; i++) {
+        if (clientList[i].url === url && 'focus' in clientList[i]) {
+          return clientList[i].focus();
+        }
+      }
+      if (clients.openWindow) return clients.openWindow(url);
+    })
+  );
+});

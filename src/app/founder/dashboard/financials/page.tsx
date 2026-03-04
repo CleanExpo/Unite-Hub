@@ -22,9 +22,9 @@ import {
   BarChart3,
   PieChart,
   Calendar,
-  FileText,
   Wallet,
   Receipt,
+  Building2,
 } from "lucide-react";
 
 type Period = "quarterly" | "annual";
@@ -43,10 +43,18 @@ interface HealthScore {
   factors: { name: string; score: number; weight: number }[];
 }
 
+interface BusinessFinancials {
+  income: number;
+  expenses: number;
+  netFlow: number;
+}
+
 export default function FounderFinancialsPage() {
   const [period, setPeriod] = useState<Period>("quarterly");
   const [summary, setSummary] = useState<FinancialSummary | null>(null);
   const [healthScore, setHealthScore] = useState<HealthScore | null>(null);
+  const [byBusiness, setByBusiness] = useState<Record<string, BusinessFinancials>>({});
+  const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
 
@@ -62,6 +70,8 @@ export default function FounderFinancialsPage() {
         const data = await response.json();
         setSummary(data.summary);
         setHealthScore(data.healthScore);
+        setByBusiness(data.byBusiness || {});
+        setNotice(data.notice || null);
       }
     } catch (err) {
       console.error("Failed to fetch financial data:", err);
@@ -91,6 +101,8 @@ export default function FounderFinancialsPage() {
     }).format(amount);
   };
 
+  const businessEntries = Object.entries(byBusiness);
+
   return (
     <PageContainer>
       <ChatbotSafeZone>
@@ -103,7 +115,7 @@ export default function FounderFinancialsPage() {
               type="button"
               onClick={syncXero}
               disabled={syncing}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#050505] bg-[#00F5FF] rounded-sm hover:bg-[#00F5FF]/80 disabled:opacity-50 transition-colors"
             >
               {syncing ? (
                 <>
@@ -122,7 +134,7 @@ export default function FounderFinancialsPage() {
 
         {/* Period Selector */}
         <Section className="mt-6">
-          <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg w-fit">
+          <div className="flex gap-2 p-1 bg-[#0a0a0a] border border-white/10 rounded-sm w-fit">
             <PeriodButton
               active={period === "quarterly"}
               onClick={() => setPeriod("quarterly")}
@@ -139,11 +151,20 @@ export default function FounderFinancialsPage() {
         {loading ? (
           <Section className="mt-6">
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-[#00F5FF] animate-spin" />
             </div>
           </Section>
         ) : (
           <>
+            {/* Notice Banner */}
+            {notice && (
+              <Section className="mt-4">
+                <div className="p-3 bg-[#00F5FF]/5 border border-[#00F5FF]/20 rounded-sm">
+                  <p className="text-xs text-[#00F5FF]/80">{notice}</p>
+                </div>
+              </Section>
+            )}
+
             {/* Key Metrics */}
             <Section className="mt-6">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -179,34 +200,82 @@ export default function FounderFinancialsPage() {
               <Section className="mt-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <BarChart3 className="w-5 h-5" />
+                    <CardTitle className="flex items-center gap-2 text-white">
+                      <BarChart3 className="w-5 h-5 text-[#00F5FF]" />
                       Financial Health Score
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-6">
-                      <div className="flex items-center justify-center w-24 h-24 rounded-full border-4 border-teal-500">
-                        <span className="text-3xl font-bold text-teal-600">
+                      <div className="flex items-center justify-center w-24 h-24 rounded-sm border-2 border-[#00F5FF]">
+                        <span className="text-3xl font-bold text-[#00F5FF]">
                           {healthScore.score}
                         </span>
                       </div>
                       <div className="flex-1 space-y-2">
                         {healthScore.factors.map((factor) => (
                           <div key={factor.name} className="flex items-center gap-2">
-                            <span className="text-sm text-gray-600 dark:text-gray-400 w-40">
+                            <span className="text-sm text-white/60 w-40">
                               {factor.name}
                             </span>
-                            <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div className="flex-1 h-2 bg-white/10 rounded-sm overflow-hidden">
                               <div
-                                className="h-full bg-teal-500 rounded-full"
+                                className="h-full bg-[#00F5FF] rounded-sm"
                                 style={{ width: `${factor.score}%` }}
                               />
                             </div>
-                            <span className="text-sm font-medium w-8">{factor.score}</span>
+                            <span className="text-sm font-medium text-white w-8">{factor.score}</span>
                           </div>
                         ))}
                       </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Section>
+            )}
+
+            {/* Per-Business Breakdown */}
+            {businessEntries.length > 0 && (
+              <Section className="mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-white">
+                      <Building2 className="w-5 h-5 text-[#00F5FF]" />
+                      Business Breakdown
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-white/10">
+                            <th className="text-left py-2 pr-4 text-white/40 font-medium">Business</th>
+                            <th className="text-right py-2 pr-4 text-white/40 font-medium">Income</th>
+                            <th className="text-right py-2 pr-4 text-white/40 font-medium">Expenses</th>
+                            <th className="text-right py-2 text-white/40 font-medium">Net Flow</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {businessEntries
+                            .sort(([, a], [, b]) => b.netFlow - a.netFlow)
+                            .map(([biz, data]) => (
+                              <tr key={biz} className="border-b border-white/5 hover:bg-white/5">
+                                <td className="py-2 pr-4 text-white font-medium capitalize">
+                                  {biz.replace(/-/g, " ")}
+                                </td>
+                                <td className="py-2 pr-4 text-right text-[#00FF88]">
+                                  {formatCurrency(data.income)}
+                                </td>
+                                <td className="py-2 pr-4 text-right text-red-400">
+                                  {formatCurrency(data.expenses)}
+                                </td>
+                                <td className={`py-2 text-right font-semibold ${data.netFlow >= 0 ? "text-[#00FF88]" : "text-red-400"}`}>
+                                  {formatCurrency(data.netFlow)}
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
                     </div>
                   </CardContent>
                 </Card>
@@ -218,8 +287,8 @@ export default function FounderFinancialsPage() {
               <Section className="mt-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <PieChart className="w-5 h-5" />
+                    <CardTitle className="flex items-center gap-2 text-white">
+                      <PieChart className="w-5 h-5 text-[#00F5FF]" />
                       Expense Breakdown by Category
                     </CardTitle>
                   </CardHeader>
@@ -234,19 +303,19 @@ export default function FounderFinancialsPage() {
                             : 0;
                           return (
                             <div key={category} className="flex items-center gap-3">
-                              <span className="text-sm text-gray-600 dark:text-gray-400 w-40 truncate">
+                              <span className="text-sm text-white/60 w-40 truncate">
                                 {category}
                               </span>
-                              <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                              <div className="flex-1 h-2 bg-white/10 rounded-sm overflow-hidden">
                                 <div
-                                  className="h-full bg-blue-500 rounded-full"
+                                  className="h-full bg-[#00F5FF]/60 rounded-sm"
                                   style={{ width: `${percentage}%` }}
                                 />
                               </div>
-                              <span className="text-sm font-medium w-20 text-right">
+                              <span className="text-sm font-medium text-white w-20 text-right">
                                 {formatCurrency(amount)}
                               </span>
-                              <span className="text-xs text-gray-500 w-10 text-right">
+                              <span className="text-xs text-white/40 w-10 text-right">
                                 {percentage}%
                               </span>
                             </div>
@@ -260,14 +329,14 @@ export default function FounderFinancialsPage() {
 
             {/* Data Sources Notice */}
             <Section className="mt-8">
-              <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+              <div className="p-4 bg-amber-900/20 rounded-sm border border-amber-800/40">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                    <p className="text-sm font-medium text-amber-300">
                       Founder-Only Access
                     </p>
-                    <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                    <p className="text-xs text-amber-400/70 mt-1">
                       This dashboard is restricted to founder access only. All data is
                       sourced from Xero API, bank feeds, and email receipts. No synthetic
                       or estimated data is displayed. Forecasts are based on historical
@@ -295,10 +364,10 @@ function PeriodButton({ active, onClick, label }: PeriodButtonProps) {
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+      className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-sm transition-colors ${
         active
-          ? "bg-white dark:bg-gray-700 text-teal-600 dark:text-teal-400 shadow-sm"
-          : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          ? "bg-[#00F5FF]/20 text-[#00F5FF]"
+          : "text-white/40 hover:text-white"
       }`}
     >
       <Calendar className="w-4 h-4" />
@@ -316,22 +385,22 @@ interface MetricCardProps {
 
 function MetricCard({ icon: Icon, label, value, color }: MetricCardProps) {
   const colorClasses = {
-    green: "text-green-600 bg-green-100 dark:bg-green-900/30",
-    red: "text-red-600 bg-red-100 dark:bg-red-900/30",
-    blue: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
-    amber: "text-amber-600 bg-amber-100 dark:bg-amber-900/30",
+    green: "text-[#00FF88] bg-[#00FF88]/10",
+    red: "text-red-400 bg-red-400/10",
+    blue: "text-[#00F5FF] bg-[#00F5FF]/10",
+    amber: "text-amber-400 bg-amber-400/10",
   };
 
   return (
     <Card>
       <CardContent className="pt-4">
         <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-lg ${colorClasses[color]}`}>
+          <div className={`p-2 rounded-sm ${colorClasses[color]}`}>
             <Icon className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-            <p className="text-xl font-semibold text-gray-900 dark:text-white">
+            <p className="text-sm text-white/40">{label}</p>
+            <p className="text-xl font-semibold text-white">
               {value}
             </p>
           </div>

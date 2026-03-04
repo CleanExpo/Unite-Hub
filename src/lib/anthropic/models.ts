@@ -4,18 +4,18 @@
  * Centralized list of valid Anthropic model names.
  * Use these constants to prevent typos and ensure correct model references.
  * 
- * Last updated: 2025-11-25
+ * Last updated: 2026-03-04
  * @see https://docs.anthropic.com/en/docs/models-overview
  */
 
 export const ANTHROPIC_MODELS = {
   // Claude Opus 4 (Most capable, extended thinking)
-  OPUS_4_5: 'claude-opus-4-5-20251101',
-  OPUS_4: 'claude-opus-4-5-20251101',
-  
+  OPUS_4_5: 'claude-opus-4-6',
+  OPUS_4: 'claude-opus-4-6',
+
   // Claude Sonnet 4 (Balanced capability/cost)
-  SONNET_4_5: 'claude-sonnet-4-5-20250929',
-  SONNET_4: 'claude-sonnet-4-5-20250929',
+  SONNET_4_5: 'claude-sonnet-4-6',
+  SONNET_4: 'claude-sonnet-4-6',
   
   // Claude Sonnet 3.5 (Previous generation)
   SONNET_3_5_V2: 'claude-3-5-sonnet-20241022',

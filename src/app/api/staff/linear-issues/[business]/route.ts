@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
  * GET /api/staff/linear-issues/[business]
  * UNI-1078: Return Linear issue counts for a given business.
  *
- * For "unite-hub" — queries the real Unite-Hub Linear project.
+ * For "unite-group" — queries the real Unite-Group Linear project.
  * For other businesses — returns stub data until they have Linear projects.
  */
 
@@ -13,12 +13,12 @@ const UNITE_HUB_PROJECT_ID = "b62d9b14-9d9c-46c7-a3f4-05fbd49550ff";
 
 // Linear project URLs per business (configure when each business has a Linear project)
 const LINEAR_PROJECT_URLS: Record<string, string | undefined> = {
-  "unite-hub": `https://linear.app/unite-hub/project/unite-hub-af6312a91054/issues`,
+  "unite-group": `https://linear.app/unite-hub/project/unite-hub-af6312a91054/issues`,
   "disaster-recovery": undefined,
   "restore-assist": undefined,
   ato: undefined,
-  synthex: undefined,
-  "ccw-erp": undefined,
+  nrpg: undefined,
+  carsi: undefined,
 };
 
 // Stub counts for businesses without a Linear project yet
@@ -26,8 +26,8 @@ const STUB_COUNTS: Record<string, { open: number; urgent: number; inProgress: nu
   "disaster-recovery": { open: 4, urgent: 1, inProgress: 2 },
   "restore-assist":    { open: 2, urgent: 0, inProgress: 1 },
   ato:                 { open: 6, urgent: 2, inProgress: 0 },
-  synthex:             { open: 3, urgent: 0, inProgress: 1 },
-  "ccw-erp":           { open: 8, urgent: 3, inProgress: 1 },
+  nrpg:                { open: 0, urgent: 0, inProgress: 0 },
+  carsi:               { open: 0, urgent: 0, inProgress: 0 },
 };
 
 export interface LinearIssueCounts {
@@ -46,8 +46,8 @@ export async function GET(
 
   const linearUrl = LINEAR_PROJECT_URLS[business] ?? null;
 
-  // For non-unite-hub businesses, return stub data (they don't have Linear projects yet)
-  if (business !== "unite-hub") {
+  // For non-unite-group businesses, return stub data (they don't have Linear projects yet)
+  if (business !== "unite-group") {
     const stub = STUB_COUNTS[business];
     if (!stub) {
       return NextResponse.json({ error: "Business not found" }, { status: 404 });
@@ -55,7 +55,7 @@ export async function GET(
     return NextResponse.json({ ...stub, linearUrl, source: "stub" } satisfies LinearIssueCounts);
   }
 
-  // For unite-hub: query Linear API for real counts
+  // For unite-group: query Linear API for real counts
   const apiKey = process.env.LINEAR_API_KEY;
   if (!apiKey) {
     // No API key configured — return graceful fallback

@@ -197,7 +197,7 @@ export class ReleaseBuilder {
         description: 'Application URL for NextAuth',
         required: true,
         default: environment === 'production' ? 'https://your-domain.com' : 'http://localhost:3008',
-        example: 'https://unite-hub.com',
+        example: 'https://unite-group.in',
       },
       {
         key: 'NEXTAUTH_SECRET',

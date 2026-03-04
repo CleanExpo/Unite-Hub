@@ -98,7 +98,7 @@ class Settings(BaseSettings):
     ref_tools_api_key: str = Field(default="")
 
     # Model defaults
-    default_model: str = Field(default="claude-sonnet-4-5-20250929")
+    default_model: str = Field(default="claude-sonnet-4-6")
     max_tokens: int = Field(default=4096)
     temperature: float = Field(default=0.7)
 

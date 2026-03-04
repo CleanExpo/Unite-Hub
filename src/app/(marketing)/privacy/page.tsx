@@ -136,7 +136,7 @@ export default function PrivacyPage() {
           </ul>
           <p className="mt-4">
             To exercise these rights, submit a <Link href="/subject-access-request" className="text-primary hover:underline">Subject Access Request</Link> or contact us at{' '}
-            <a href="mailto:privacy@unite-hub.com.au" className="text-primary hover:underline">privacy@unite-hub.com.au</a>
+            <a href="mailto:privacy@unite-group.in" className="text-primary hover:underline">privacy@unite-group.in</a>
           </p>
         </section>
 
@@ -178,7 +178,7 @@ export default function PrivacyPage() {
           <ul>
             <li>Clicking "Unsubscribe" in any marketing email</li>
             <li>Adjusting preferences in your account settings</li>
-            <li>Contacting us at <a href="mailto:privacy@unite-hub.com.au" className="text-primary hover:underline">privacy@unite-hub.com.au</a></li>
+            <li>Contacting us at <a href="mailto:privacy@unite-group.in" className="text-primary hover:underline">privacy@unite-group.in</a></li>
           </ul>
           <p className="mt-4">
             Note: You will still receive transactional emails (receipts, password resets, service updates) even if you opt-out of marketing.
@@ -189,7 +189,7 @@ export default function PrivacyPage() {
           <h2 className="text-2xl font-semibold mb-4">Children's Privacy</h2>
           <p>
             Our services are not intended for individuals under 18 years of age. We do not knowingly collect personal information from children. If you believe we have collected information from a child, please contact us immediately at{' '}
-            <a href="mailto:privacy@unite-hub.com.au" className="text-primary hover:underline">privacy@unite-hub.com.au</a> and we will delete it promptly.
+            <a href="mailto:privacy@unite-group.in" className="text-primary hover:underline">privacy@unite-group.in</a> and we will delete it promptly.
           </p>
         </section>
 
@@ -214,7 +214,7 @@ export default function PrivacyPage() {
             If you have a complaint about our handling of your personal information:
           </p>
           <ol>
-            <li><strong>Contact Us:</strong> Email <a href="mailto:privacy@unite-hub.com.au" className="text-primary hover:underline">privacy@unite-hub.com.au</a> with details of your complaint</li>
+            <li><strong>Contact Us:</strong> Email <a href="mailto:privacy@unite-group.in" className="text-primary hover:underline">privacy@unite-group.in</a> with details of your complaint</li>
             <li><strong>Investigation:</strong> We will investigate and respond within 30 days</li>
             <li><strong>OAIC:</strong> If unsatisfied with our response, you may lodge a complaint with the Office of the Australian Information Commissioner at <a href="https://www.oaic.gov.au" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">www.oaic.gov.au</a></li>
           </ol>
@@ -230,10 +230,10 @@ export default function PrivacyPage() {
               <strong>Privacy Officer:</strong> Unite-Hub Privacy Team
             </p>
             <p className="mb-2">
-              <strong>Email:</strong> <a href="mailto:privacy@unite-hub.com.au" className="text-primary hover:underline">privacy@unite-hub.com.au</a>
+              <strong>Email:</strong> <a href="mailto:privacy@unite-group.in" className="text-primary hover:underline">privacy@unite-group.in</a>
             </p>
             <p className="mb-2">
-              <strong>Data Protection Officer:</strong> <a href="mailto:dpo@unite-hub.com.au" className="text-primary hover:underline">dpo@unite-hub.com.au</a>
+              <strong>Data Protection Officer:</strong> <a href="mailto:dpo@unite-group.in" className="text-primary hover:underline">dpo@unite-group.in</a>
             </p>
             <p className="mb-2">
               <strong>Subject Access Requests:</strong> <Link href="/subject-access-request" className="text-primary hover:underline">Submit SAR Online</Link>

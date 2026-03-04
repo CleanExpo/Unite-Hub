@@ -203,3 +203,5 @@ nul
 packages/shared/dist/
 apps/web/.next/
 apps/backend/.venv/
+
+.vercel

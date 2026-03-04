@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const { data: existingOrg } = await supabase
       .from("organizations")
       .select("id, name")
-      .eq("email", "demo@unite-hub.com")
+      .eq("email", "demo@unite-group.in")
       .single();
 
     let orgId: string;
@@ -38,9 +38,9 @@ export async function POST(request: NextRequest) {
         .from("organizations")
         .insert({
           name: "Demo Organization",
-          email: "demo@unite-hub.com",
+          email: "demo@unite-group.in",
           phone: "+1-555-DEMO-123",
-          website: "https://demo.unite-hub.com",
+          website: "https://demo.unite-group.in",
           team_size: "1-10",
           industry: "Technology",
           plan: "professional",
@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
           subject_line: "Welcome to {{company_name}}!",
           email_body: "Hi {{first_name}},\n\nWelcome! We're excited to help you grow your business...",
           email_body_html: "<p>Hi {{first_name}},</p><p>Welcome! We're excited to help you grow your business...</p>",
-          cta: { text: "Get Started", url: "https://demo.unite-hub.com/start", type: "button" },
+          cta: { text: "Get Started", url: "https://demo.unite-group.in/start", type: "button" },
           ai_generated: true,
         },
         {
@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
           day_delay: 2,
           subject_line: "Here's how {{company_name}} can help",
           email_body: "Hi {{first_name}},\n\nLet me show you our key features...",
-          cta: { text: "Watch Demo", url: "https://demo.unite-hub.com/demo", type: "button" },
+          cta: { text: "Watch Demo", url: "https://demo.unite-group.in/demo", type: "button" },
           ai_generated: true,
         },
         {
@@ -217,7 +217,7 @@ export async function POST(request: NextRequest) {
           day_delay: 5,
           subject_line: "How {{similar_company}} achieved 300% growth",
           email_body: "Hi {{first_name}},\n\nThought you'd find this interesting...",
-          cta: { text: "Read Case Study", url: "https://demo.unite-hub.com/case-study", type: "button" },
+          cta: { text: "Read Case Study", url: "https://demo.unite-group.in/case-study", type: "button" },
           ai_generated: true,
         },
         {
@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
           day_delay: 7,
           subject_line: "Save 10+ hours per week with automation",
           email_body: "Hi {{first_name}},\n\nLet's talk about your time savings...",
-          cta: { text: "Schedule Call", url: "https://demo.unite-hub.com/book", type: "button" },
+          cta: { text: "Schedule Call", url: "https://demo.unite-group.in/book", type: "button" },
           ai_generated: true,
         },
         {
@@ -237,7 +237,7 @@ export async function POST(request: NextRequest) {
           day_delay: 14,
           subject_line: "Last chance: 20% off for early adopters",
           email_body: "Hi {{first_name}},\n\nDon't miss this opportunity...",
-          cta: { text: "Claim Offer", url: "https://demo.unite-hub.com/offer", type: "button" },
+          cta: { text: "Claim Offer", url: "https://demo.unite-group.in/offer", type: "button" },
           ai_generated: true,
         },
       ];
@@ -263,7 +263,7 @@ export async function POST(request: NextRequest) {
           workspace_id: workspaceId,
           contact_id: contacts[0].id,
           from: contacts[0].email,
-          to: "demo@unite-hub.com",
+          to: "demo@unite-group.in",
           subject: "Interested in your CRM platform",
           body: "Hi, I came across your platform and I'm interested in learning more about how it can help our sales team...",
           ai_summary: "Lead expressing interest in CRM capabilities for sales team. High buying intent detected.",
@@ -278,7 +278,7 @@ export async function POST(request: NextRequest) {
           workspace_id: workspaceId,
           contact_id: contacts[1].id,
           from: contacts[1].email,
-          to: "demo@unite-hub.com",
+          to: "demo@unite-group.in",
           subject: "Question about pricing",
           body: "Hello, can you send me information about your pricing plans? We're a team of 15...",
           ai_summary: "Pricing inquiry for 15-person team. Ready to evaluate options.",
@@ -352,7 +352,7 @@ export async function GET(request: NextRequest) {
     const { data: demoOrg } = await supabase
       .from("organizations")
       .select("id, name")
-      .eq("email", "demo@unite-hub.com")
+      .eq("email", "demo@unite-group.in")
       .single();
 
     if (!demoOrg) {
@@ -441,7 +441,7 @@ export async function DELETE(request: NextRequest) {
     const { error: deleteError } = await supabase
       .from("organizations")
       .delete()
-      .eq("email", "demo@unite-hub.com");
+      .eq("email", "demo@unite-group.in");
 
     if (deleteError) {
       console.error("Failed to delete demo organization:", deleteError);

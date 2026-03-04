@@ -8,7 +8,7 @@ The v1 API provides versioned, stable endpoints for Unite-Hub's core resources. 
 
 ```
 http://localhost:3008/api/v1
-https://app.unite-hub.com/api/v1
+https://app.unite-group.in/api/v1
 ```
 
 ## Authentication
@@ -17,7 +17,7 @@ All endpoints (except `/health`) require authentication via Bearer token:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  https://app.unite-hub.com/api/v1/contacts
+  https://app.unite-group.in/api/v1/contacts
 ```
 
 Get your token from:
@@ -355,14 +355,14 @@ We'll provide:
 
 ## Support
 
-- **Documentation**: https://docs.unite-hub.com/api/v1
-- **Changelog**: https://docs.unite-hub.com/api/changelog
+- **Documentation**: https://docs.unite-group.in/api/v1
+- **Changelog**: https://docs.unite-group.in/api/changelog
 - **Issues**: https://github.com/unite-hub/unite-hub/issues
-- **Email**: api-support@unite-hub.com
+- **Email**: api-support@unite-group.in
 
 ## Status Page
 
-Check API status: https://status.unite-hub.com
+Check API status: https://status.unite-group.in
 
 ## License
 

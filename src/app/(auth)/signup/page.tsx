@@ -154,7 +154,7 @@ export default function SignupPage() {
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <a href="https://help.unite-hub.com" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">Help</a>
+            <a href="https://help.unite-group.in" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">Help</a>
           </div>
         </div>
       </div>

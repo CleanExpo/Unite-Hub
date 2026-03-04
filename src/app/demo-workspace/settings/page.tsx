@@ -70,7 +70,7 @@ export default function SettingsPage() {
                     <div>
                       <Label className="text-gray-400 text-sm">Email</Label>
                       <Input
-                        defaultValue="demo@unite-hub.com"
+                        defaultValue="demo@unite-group.in"
                         className="mt-1 bg-[#071318] border-cyan-900/30 text-white"
                       />
                     </div>

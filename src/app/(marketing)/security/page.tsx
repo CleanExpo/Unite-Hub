@@ -240,8 +240,8 @@ export default function SecurityPage() {
                 <h3 className="font-semibold text-amber-900 dark:text-amber-100 mb-2">Report a Security Issue</h3>
                 <p className="text-amber-800 dark:text-amber-200">
                   If you discover a security vulnerability, please report it responsibly to:{' '}
-                  <a href="mailto:security@unite-hub.com" className="font-semibold underline">
-                    security@unite-hub.com
+                  <a href="mailto:security@unite-group.in" className="font-semibold underline">
+                    security@unite-group.in
                   </a>
                 </p>
                 <p className="text-amber-800 dark:text-amber-200 mt-2 text-sm">
@@ -259,7 +259,7 @@ export default function SecurityPage() {
               about security incidents, maintenance windows, and system updates.
             </p>
             <a
-              href="https://status.unite-hub.com"
+              href="https://status.unite-group.in"
               className="inline-block mt-3 text-blue-600 dark:text-blue-400 hover:underline font-medium"
             >
               Visit Status Page →
@@ -273,7 +273,7 @@ export default function SecurityPage() {
           </p>
           <p className="mt-2">
             Questions about our security practices?{' '}
-            <a href="mailto:security@unite-hub.com" className="text-primary hover:underline">
+            <a href="mailto:security@unite-group.in" className="text-primary hover:underline">
               Contact our security team
             </a>
           </p>

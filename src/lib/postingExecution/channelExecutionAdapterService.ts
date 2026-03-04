@@ -512,7 +512,7 @@ function createDemoResponse(
   return {
     success: true,
     postId: demoId,
-    url: `https://demo.unite-hub.com/posts/${demoId}`,
+    url: `https://demo.unite-group.in/posts/${demoId}`,
     platformResponse: {
       demo: true,
       channel,

@@ -35,9 +35,9 @@ logger = get_logger(__name__)
 class ClaudeModels:
     """Claude model identifiers - updated January 2025."""
 
-    # Claude 4.5 Family (Latest)
-    OPUS_4_5 = "claude-opus-4-5-20251101"
-    SONNET_4_5 = "claude-sonnet-4-5-20250929"
+    # Claude 4.6 Family (Latest)
+    OPUS_4_5 = "claude-opus-4-6"
+    SONNET_4_5 = "claude-sonnet-4-6"
     HAIKU_4_5 = "claude-haiku-4-5-20251001"
 
     # Claude 4 Family

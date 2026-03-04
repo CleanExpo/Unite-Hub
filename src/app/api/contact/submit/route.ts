@@ -86,8 +86,8 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await resendClient.emails.send({
-      from: 'Unite-Hub Contact Form <noreply@unite-hub.com>',
-      to: [process.env.CONTACT_EMAIL || 'hello@unite-hub.com'],
+      from: 'Unite-Hub Contact Form <noreply@unite-group.in>',
+      to: [process.env.CONTACT_EMAIL || 'hello@unite-group.in'],
       replyTo: email,
       subject: `Contact Form: ${subject}`,
       html: `

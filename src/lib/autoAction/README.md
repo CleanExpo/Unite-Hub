@@ -60,7 +60,7 @@ QWEN_VL_API_KEY=your-api-key
 # Sandbox Settings
 AUTO_ACTION_MAX_STEPS=50
 AUTO_ACTION_RATE_LIMIT=30
-AUTO_ACTION_ALLOWED_ORIGINS=localhost,synthex.social,unite-hub.com
+AUTO_ACTION_ALLOWED_ORIGINS=localhost,synthex.social,unite-group.in
 ```
 
 ### 2. Basic Usage

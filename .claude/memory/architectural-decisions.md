@@ -31,3 +31,6 @@
 **Decision**: All queries must scope by workspace_id
 - RLS enforced at database level
 - Application layer must also filter
+
+## ADR-006: Founder Credential Vault (04/03/2026)
+**Decision**: pgsodium vault.secrets for encrypted credential storage | REASON: Native Supabase encryption, zero plaintext exposure in metadata table, SECURITY DEFINER RPCs enforce server-side access control | ALTERNATIVES REJECTED: Client-side AES encryption (key management problem), plain Supabase columns (no encryption at rest at row level)

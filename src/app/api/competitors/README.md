@@ -138,7 +138,7 @@ Content-Type: application/json
 
 ### Add a Competitor
 ```bash
-curl -X POST https://unite-hub.com/api/competitors \
+curl -X POST https://unite-group.in/api/competitors \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
@@ -154,7 +154,7 @@ curl -X POST https://unite-hub.com/api/competitors \
 
 ### Run Analysis
 ```bash
-curl -X POST https://unite-hub.com/api/competitors/analyze \
+curl -X POST https://unite-group.in/api/competitors/analyze \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
@@ -164,7 +164,7 @@ curl -X POST https://unite-hub.com/api/competitors/analyze \
 
 ### Get Latest Analysis
 ```bash
-curl -X GET "https://unite-hub.com/api/competitors/analysis/latest?clientId=client_123" \
+curl -X GET "https://unite-group.in/api/competitors/analysis/latest?clientId=client_123" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 

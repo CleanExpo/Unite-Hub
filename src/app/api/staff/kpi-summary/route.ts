@@ -11,9 +11,8 @@ import { getStripeKeyForBusiness, fetchStripeMrr } from "@/lib/stripe-mrr";
  *   STRIPE_KEY_DISASTER_RECOVERY=rk_live_xxx
  *   STRIPE_KEY_RESTORE_ASSIST=rk_live_xxx
  *   STRIPE_KEY_ATO=rk_live_xxx
- *   STRIPE_KEY_SYNTHEX=rk_live_xxx
- *   STRIPE_KEY_CCW_ERP=rk_live_xxx
- *   STRIPE_KEY_UNITE_HUB=rk_live_xxx
+ *   STRIPE_KEY_NRPG=rk_live_xxx
+ *   STRIPE_KEY_UNITE_GROUP=rk_live_xxx
  * Use Stripe restricted keys with read-only access to subscriptions + invoices.
  */
 export async function GET() {
@@ -70,45 +69,45 @@ export async function GET() {
       updatedAt: new Date().toISOString(),
     },
     {
-      id: "synthex",
-      name: "Synthex",
-      code: "SX",
-      emoji: "📢",
-      url: "https://synthex.com.au",
-      status: "healthy",
-      mrr: 2300,
-      mrrChange: 8,
-      activeUsers: 89,
-      topMetric: { label: "Posts Published (30d)", value: 214 },
-      sparkline: makeSpark(2300, "up"),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: "ccw-erp",
-      name: "CCW-ERP/CRM",
-      code: "CCW",
-      emoji: "🏪",
-      url: undefined,
-      status: "critical",
-      mrr: 900,
-      mrrChange: -15,
-      activeUsers: 8,
-      topMetric: { label: "Orders (30d)", value: 11 },
-      sparkline: makeSpark(900, "down"),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: "unite-hub",
-      name: "Unite-Hub",
-      code: "UH",
+      id: "unite-group",
+      name: "Unite-Group",
+      code: "UG",
       emoji: "🌐",
-      url: "https://unite-hub.com",
+      url: "https://unite-group.in",
       status: "warning",
       mrr: 3100,
       mrrChange: 5,
       activeUsers: 267,
       topMetric: { label: "MAU", value: 267 },
       sparkline: makeSpark(3100, "up"),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "nrpg",
+      name: "NRPG",
+      code: "NR",
+      emoji: "🏚️",
+      url: undefined,
+      status: "building",
+      mrr: 0,
+      mrrChange: 0,
+      activeUsers: 5,
+      topMetric: { label: "Properties (30d)", value: 12 },
+      sparkline: makeSpark(0, "flat"),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "carsi",
+      name: "CARSI",
+      code: "CA",
+      emoji: "📦",
+      url: undefined,
+      status: "building",
+      mrr: 0,
+      mrrChange: 0,
+      activeUsers: 0,
+      topMetric: { label: "Bookings (30d)", value: 0 },
+      sparkline: makeSpark(0, "flat"),
       updatedAt: new Date().toISOString(),
     },
   ];

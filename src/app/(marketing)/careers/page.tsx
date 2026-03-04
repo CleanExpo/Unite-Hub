@@ -204,7 +204,7 @@ export default function CareersPage() {
                       <CardDescription>{job.description}</CardDescription>
                     </div>
                     <Button asChild>
-                      <a href={`mailto:careers@unite-hub.com?subject=Application for ${job.title}`}>
+                      <a href={`mailto:careers@unite-group.in?subject=Application for ${job.title}`}>
                         Apply Now
                       </a>
                     </Button>
@@ -289,7 +289,7 @@ export default function CareersPage() {
             role you'd love to create at Unite-Hub.
           </p>
           <Button asChild>
-            <a href="mailto:careers@unite-hub.com?subject=General Application">
+            <a href="mailto:careers@unite-group.in?subject=General Application">
               Send General Application
             </a>
           </Button>

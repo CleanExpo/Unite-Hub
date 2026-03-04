@@ -242,7 +242,7 @@ export default function AboutPage() {
               Contact Us
             </a>
             <a
-              href="mailto:hello@unite-hub.com"
+              href="mailto:hello@unite-group.in"
               className="inline-flex items-center justify-center rounded-md border border-input bg-background px-6 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
             >
               Email Us

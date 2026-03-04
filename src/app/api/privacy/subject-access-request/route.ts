@@ -102,18 +102,18 @@ async function sendSARConfirmationEmail(
         <ul style="padding-left: 20px;">
           <li><strong>Standard Requests:</strong> 30 days from verification</li>
           <li><strong>Complex Requests:</strong> Up to 60 days (we will notify you)</li>
-          <li><strong>Urgent Requests:</strong> Contact privacy@unite-hub.com.au</li>
+          <li><strong>Urgent Requests:</strong> Contact privacy@unite-group.in</li>
         </ul>
 
         <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
-          <p style="margin: 0;"><strong>Important:</strong> If you did not submit this request, please contact us immediately at <a href="mailto:privacy@unite-hub.com.au" style="color: #0066cc;">privacy@unite-hub.com.au</a></p>
+          <p style="margin: 0;"><strong>Important:</strong> If you did not submit this request, please contact us immediately at <a href="mailto:privacy@unite-group.in" style="color: #0066cc;">privacy@unite-group.in</a></p>
         </div>
 
         <h2 style="color: #333; font-size: 18px;">Check Request Status</h2>
 
         <p>You can check the status of your request at any time:</p>
         <p style="text-align: center; margin: 20px 0;">
-          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com.au'}/subject-access-request?id=${requestId}"
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in'}/subject-access-request?id=${requestId}"
              style="background-color: #0066cc; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
             Check Status
           </a>
@@ -123,7 +123,7 @@ async function sendSARConfirmationEmail(
 
         <p>If you have questions about your request:</p>
         <ul style="padding-left: 20px;">
-          <li><strong>Email:</strong> <a href="mailto:privacy@unite-hub.com.au" style="color: #0066cc;">privacy@unite-hub.com.au</a></li>
+          <li><strong>Email:</strong> <a href="mailto:privacy@unite-group.in" style="color: #0066cc;">privacy@unite-group.in</a></li>
           <li><strong>Phone:</strong> [Your Phone Number]</li>
           <li><strong>Mail:</strong> Unite-Hub Privacy Team, Level 1, 123 Business Street, Brisbane QLD 4000</li>
         </ul>
@@ -158,15 +158,15 @@ What Happens Next?
 Request Processing Timeline:
 - Standard Requests: 30 days from verification
 - Complex Requests: Up to 60 days (we will notify you)
-- Urgent Requests: Contact privacy@unite-hub.com.au
+- Urgent Requests: Contact privacy@unite-group.in
 
-IMPORTANT: If you did not submit this request, please contact us immediately at privacy@unite-hub.com.au
+IMPORTANT: If you did not submit this request, please contact us immediately at privacy@unite-group.in
 
 Check Request Status:
-${process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com.au'}/subject-access-request?id=${requestId}
+${process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in'}/subject-access-request?id=${requestId}
 
 Contact Information:
-- Email: privacy@unite-hub.com.au
+- Email: privacy@unite-group.in
 - Phone: [Your Phone Number]
 - Mail: Unite-Hub Privacy Team, Level 1, 123 Business Street, Brisbane QLD 4000
 
@@ -179,7 +179,7 @@ We are committed to protecting your privacy in accordance with the Australian Pr
     subject: `Subject Access Request Confirmation - ${requestId}`,
     html: htmlContent,
     text: textContent,
-    from: 'privacy@unite-hub.com.au',
+    from: 'privacy@unite-group.in',
   });
 }
 
@@ -258,7 +258,7 @@ export async function POST(req: NextRequest) {
           .from('organizations')
           .insert({
             name: 'SAR Requests (System)',
-            email: 'privacy@unite-hub.com.au',
+            email: 'privacy@unite-group.in',
             plan: 'enterprise',
             status: 'active',
           })

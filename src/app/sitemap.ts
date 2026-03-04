@@ -13,7 +13,7 @@ import { MetadataRoute } from 'next';
 import { getAllRegions } from '@/lib/seo/regionCopy';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in';
 
   // Static pages - Business Hub showcase
   const staticPages: MetadataRoute.Sitemap = [

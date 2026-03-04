@@ -10,10 +10,12 @@ import {
   Send, Bot, User, Mic, MicOff, RefreshCw, Building2,
   TrendingUp, TrendingDown, AlertCircle, CheckCircle2,
   Clock, Flame, ArrowRight, Video, X, ChevronRight,
-  Zap, Activity, History, Search, Tag, BookmarkPlus,
+  Zap, Activity, History, Search, Tag, BookmarkPlus, ExternalLink,
 } from "lucide-react";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { PhillOSPwaInstaller } from "@/components/PhillOSPwaInstaller";
+import { PushNotificationToggle } from "@/components/founder/PushNotificationToggle";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -44,13 +46,6 @@ interface KanbanItem {
   priority?: number;
 }
 
-interface CalendarEvent {
-  id: string;
-  title: string;
-  date: string;
-  type: "deadline" | "meeting" | "task";
-  business?: string;
-}
 
 interface SavedConversation {
   id: string;
@@ -63,7 +58,7 @@ interface SavedConversation {
 // ─── Conversation storage helpers ─────────────────────────────────────────────
 
 const STORAGE_KEY = "phill-os-conversations";
-const QUICK_TAGS = ["DR", "RA", "SX", "ATO", "UH", "CCW", "urgent", "decision", "follow-up", "info"];
+const QUICK_TAGS = ["DR", "RA", "NRPG", "ATO", "UG", "urgent", "decision", "follow-up", "info"];
 
 function loadConversations(): SavedConversation[] {
   if (typeof window === "undefined") return [];
@@ -246,7 +241,7 @@ function ChatTab({ session }: { session: { access_token?: string } | null }) {
             />
           </div>
           <div className="flex gap-1.5 flex-wrap">
-            {["urgent", "decision", "DR", "UH", "SX"].map(tag => (
+            {["urgent", "decision", "DR", "UG", "NRPG"].map(tag => (
               <button
                 key={tag}
                 onClick={() => setSelectedTags(prev =>
@@ -485,19 +480,22 @@ function DashboardTab() {
   const displayBusinesses: Business[] = businesses.length > 0 ? businesses : [
     { id: "dr", display_name: "Disaster Recovery", code: "DR", status: "active", trend: "up" },
     { id: "ra", display_name: "RestoreAssist", code: "RA", status: "warning", trend: "flat" },
-    { id: "sx", display_name: "Synthex", code: "SX", status: "active", trend: "up" },
-    { id: "ato", display_name: "ATO", code: "ATO", status: "active", trend: "up" },
-    { id: "uh", display_name: "Unite-Hub", code: "UH", status: "warning", trend: "up" },
     { id: "nrpg", display_name: "NRPG", code: "NRPG", status: "critical", trend: "down" },
+    { id: "ato", display_name: "ATO", code: "ATO", status: "active", trend: "up" },
+    { id: "ug", display_name: "Unite-Group", code: "UG", status: "warning", trend: "up" },
+    { id: "carsi", display_name: "CARSI", code: "CARSI", status: "active", trend: "up" },
   ];
 
   return (
     <div className="p-4 space-y-3 overflow-y-auto">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">Business Status</h2>
-        <button onClick={fetch6Businesses} className="text-zinc-500 hover:text-white transition-colors">
-          <RefreshCw className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <PushNotificationToggle />
+          <button onClick={fetch6Businesses} className="text-zinc-500 hover:text-white transition-colors">
+            <RefreshCw className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {displayBusinesses.map(biz => (
@@ -536,77 +534,199 @@ function DashboardTab() {
           </div>
         ))}
       </div>
+
+      {/* Quick Links */}
+      <div className="pt-1 space-y-2">
+        <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Quick Links</p>
+        <Link
+          href="/founder/openclaw"
+          className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl bg-zinc-800/60 border border-zinc-700/50 hover:border-cyan-700/50 hover:bg-zinc-800 transition-colors group"
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-cyan-900/40 border border-cyan-700/30 flex items-center justify-center flex-shrink-0">
+              <Zap className="w-3.5 h-3.5 text-cyan-400" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-white leading-tight">OpenClaw</p>
+              <p className="text-[10px] text-zinc-500 leading-tight">AI Automation Panel</p>
+            </div>
+          </div>
+          <ExternalLink className="w-3.5 h-3.5 text-zinc-600 group-hover:text-cyan-400 transition-colors" />
+        </Link>
+      </div>
     </div>
   );
 }
 
+// ─── Live calendar event shape from API ───────────────────────────────────────
+
+interface LiveCalendarEvent {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  allDay: boolean;
+  location: string | null;
+  description: string | null;
+  colour: string;
+}
+
 function CalendarTab() {
   const today = new Date();
-  const events: CalendarEvent[] = [
-    { id: "1", title: "Synthex pricing review", date: today.toISOString(), type: "meeting", business: "SX" },
-    { id: "2", title: "RestoreAssist go-live deadline", date: new Date(today.getTime() + 86400000 * 2).toISOString(), type: "deadline", business: "RA" },
-    { id: "3", title: "Linear sprint review", date: new Date(today.getTime() + 86400000 * 3).toISOString(), type: "task" },
-    { id: "4", title: "Phill OS mobile launch", date: new Date(today.getTime() + 86400000 * 5).toISOString(), type: "deadline", business: "UH" },
-  ];
+  const [liveEvents, setLiveEvents] = useState<LiveCalendarEvent[]>([]);
+  const [calLoading, setCalLoading] = useState(true);
+  const [connected, setConnected] = useState(true);
 
-  const typeColor = (type: string) => {
-    if (type === "deadline") return "bg-red-500/20 text-red-300 border-red-500/30";
-    if (type === "meeting") return "bg-blue-500/20 text-blue-300 border-blue-500/30";
-    return "bg-zinc-700/50 text-zinc-300 border-zinc-600/30";
+  useEffect(() => {
+    const fetchWeekEvents = async () => {
+      setCalLoading(true);
+      try {
+        const start = new Date(today);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        const params = new URLSearchParams({
+          start: start.toISOString(),
+          end: end.toISOString(),
+          maxResults: "20",
+        });
+        const res = await fetch(`/api/founder/calendar?${params}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setConnected(data.connected ?? false);
+        setLiveEvents(data.events ?? []);
+      } catch {
+        setConnected(false);
+        setLiveEvents([]);
+      } finally {
+        setCalLoading(false);
+      }
+    };
+
+    fetchWeekEvents();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const dayLabel = (iso: string): string => {
+    try {
+      const d = new Date(iso);
+      const todayDate = new Date(today);
+      todayDate.setHours(0, 0, 0, 0);
+      const eventDate = new Date(d);
+      eventDate.setHours(0, 0, 0, 0);
+      const diff = Math.round((eventDate.getTime() - todayDate.getTime()) / 86400000);
+      if (diff === 0) return "Today";
+      if (diff === 1) return "Tomorrow";
+      return d.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" });
+    } catch {
+      return "";
+    }
   };
 
-  const typeIcon = (type: string) => {
-    if (type === "deadline") return <AlertCircle className="w-3.5 h-3.5" />;
-    if (type === "meeting") return <Building2 className="w-3.5 h-3.5" />;
-    return <CheckCircle2 className="w-3.5 h-3.5" />;
+  const timeLabel = (iso: string, allDay: boolean): string => {
+    if (allDay) return "All day";
+    try {
+      return new Date(iso).toLocaleTimeString("en-AU", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Australia/Sydney",
+      });
+    } catch {
+      return "";
+    }
   };
 
-  const daysFromNow = (dateStr: string) => {
-    const diff = Math.round((new Date(dateStr).getTime() - today.getTime()) / 86400000);
-    if (diff === 0) return "Today";
-    if (diff === 1) return "Tomorrow";
-    return `In ${diff} days`;
-  };
+  // Group events by day label
+  const grouped: Record<string, LiveCalendarEvent[]> = {};
+  for (const ev of liveEvents) {
+    const label = dayLabel(ev.start);
+    if (!grouped[label]) grouped[label] = [];
+    grouped[label].push(ev);
+  }
+
+  if (calLoading) {
+    return (
+      <div className="p-4 space-y-3 overflow-y-auto">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">Upcoming</h2>
+        </div>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-14 rounded-xl bg-zinc-800/50 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+
+  if (!connected) {
+    return (
+      <div className="p-4 flex flex-col items-center justify-center gap-3 text-center" style={{ minHeight: 200 }}>
+        <AlertCircle className="w-8 h-8 text-amber-400" />
+        <p className="text-sm text-zinc-300 font-medium">Google Calendar not connected</p>
+        <p className="text-xs text-zinc-500">
+          Connect via{" "}
+          <a href="/settings/integrations" className="text-cyan-400 underline underline-offset-2">
+            Integrations
+          </a>
+          {" "}to see your upcoming events.
+        </p>
+      </div>
+    );
+  }
+
+  if (liveEvents.length === 0) {
+    return (
+      <div className="p-4 flex flex-col items-center justify-center gap-3 text-center" style={{ minHeight: 200 }}>
+        <Calendar className="w-8 h-8 text-zinc-600" />
+        <p className="text-sm text-zinc-400">No events this week</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4 space-y-3 overflow-y-auto">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">Upcoming</h2>
+    <div className="p-4 space-y-4 overflow-y-auto">
+      <div className="flex items-center justify-between mb-1">
+        <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">This Week</h2>
         <span className="text-xs text-zinc-500">
           {today.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" })}
         </span>
       </div>
 
-      {/* Today strip */}
-      <div className="bg-cyan-900/20 border border-cyan-700/30 rounded-xl p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <Zap className="w-4 h-4 text-cyan-400" />
-          <span className="text-xs font-semibold text-cyan-300 uppercase tracking-wider">Today</span>
-        </div>
-        {events.filter(e => daysFromNow(e.date) === "Today").length === 0
-          ? <p className="text-xs text-zinc-500">No events today</p>
-          : events.filter(e => daysFromNow(e.date) === "Today").map(e => (
-            <div key={e.id} className="flex items-center gap-2">
-              <span className="text-sm text-white">{e.title}</span>
-            </div>
-          ))
-        }
-      </div>
+      {Object.entries(grouped).map(([day, dayEvents]) => (
+        <div key={day}>
+          <div className="flex items-center gap-2 mb-2">
+            {day === "Today" && <Zap className="w-3.5 h-3.5 text-cyan-400" />}
+            <span className={`text-[10px] font-semibold uppercase tracking-widest ${
+              day === "Today" ? "text-cyan-400" : "text-zinc-500"
+            }`}>
+              {day}
+            </span>
+            <div className="flex-1 h-px bg-zinc-800" />
+          </div>
 
-      {events.map(event => (
-        <div key={event.id} className={`flex items-start gap-3 p-3 rounded-xl border ${typeColor(event.type)}`}>
-          <div className="mt-0.5 flex-shrink-0">{typeIcon(event.type)}</div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white">{event.title}</p>
-            <div className="flex items-center gap-2 mt-1">
-              <Clock className="w-3 h-3" />
-              <span className="text-xs">{daysFromNow(event.date)}</span>
-              {event.business && (
-                <span className="text-xs px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 ml-auto">
-                  {event.business}
-                </span>
-              )}
-            </div>
+          <div className="space-y-2">
+            {dayEvents.map((event) => (
+              <div
+                key={event.id}
+                className="flex items-start gap-3 p-3 rounded-xl bg-zinc-900/60 border border-zinc-800/80"
+                style={{ borderLeftColor: event.colour, borderLeftWidth: 3 }}
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">{event.title}</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <Clock className="w-3 h-3 text-zinc-600" />
+                    <span className="text-xs text-zinc-500">
+                      {timeLabel(event.start, event.allDay)}
+                    </span>
+                    {event.location && (
+                      <>
+                        <span className="text-zinc-700">·</span>
+                        <span className="text-xs text-zinc-600 truncate">{event.location}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       ))}

@@ -66,7 +66,7 @@ export class OpenRouterClient {
     this.defaultHeaders = {
       'Authorization': `Bearer ${this.apiKey}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com',
+      'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in',
       'X-Title': 'Unite-Hub CRM',
     };
   }

@@ -9,9 +9,8 @@
  *   STRIPE_KEY_DISASTER_RECOVERY
  *   STRIPE_KEY_RESTORE_ASSIST
  *   STRIPE_KEY_ATO
- *   STRIPE_KEY_SYNTHEX
- *   STRIPE_KEY_CCW_ERP
- *   STRIPE_KEY_UNITE_HUB
+ *   STRIPE_KEY_NRPG
+ *   STRIPE_KEY_UNITE_GROUP
  */
 
 import Stripe from "stripe";
@@ -30,9 +29,8 @@ const STRIPE_KEY_ENV_MAP: Record<string, string> = {
   "disaster-recovery": "STRIPE_KEY_DISASTER_RECOVERY",
   "restore-assist": "STRIPE_KEY_RESTORE_ASSIST",
   ato: "STRIPE_KEY_ATO",
-  synthex: "STRIPE_KEY_SYNTHEX",
-  "ccw-erp": "STRIPE_KEY_CCW_ERP",
-  "unite-hub": "STRIPE_KEY_UNITE_HUB",
+  nrpg: "STRIPE_KEY_NRPG",
+  "unite-group": "STRIPE_KEY_UNITE_GROUP",
 };
 
 export function getStripeKeyForBusiness(businessId: string): string | undefined {

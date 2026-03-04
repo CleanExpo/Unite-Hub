@@ -22,7 +22,7 @@ export default function SupportPage() {
       icon: Mail,
       title: 'Email Support',
       description: 'Send us an email and we will respond within 24 hours',
-      href: 'mailto:support@unite-hub.com',
+      href: 'mailto:support@unite-group.in',
       action: 'Send Email',
       color: 'text-green-600',
     },

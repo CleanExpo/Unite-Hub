@@ -91,8 +91,8 @@ export default function PaymentCancelledPage() {
           {/* Help Text */}
           <p className="text-xs text-center text-gray-500 mt-6">
             Need help? Contact us at{' '}
-            <a href="mailto:support@unite-hub.com" className="text-blue-400 hover:underline">
-              support@unite-hub.com
+            <a href="mailto:support@unite-group.in" className="text-blue-400 hover:underline">
+              support@unite-group.in
             </a>
           </p>
         </CardContent>
