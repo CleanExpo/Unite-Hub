@@ -60,6 +60,35 @@ const CATEGORIES: { id: VaultCategory | "all"; label: string; icon: string }[] =
   { id: "other", label: "Other", icon: "📎" },
 ];
 
+// ─── Password Generation & Strength ─────────────────────────────────────────
+
+function generatePassword(length = 20): string {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+  return Array.from(array, (b) => chars[b % chars.length]).join("");
+}
+
+function getPasswordStrength(password: string): {
+  level: "weak" | "fair" | "strong";
+  colour: string;
+  width: string;
+} {
+  if (!password || password.length < 8) {
+    return { level: "weak", colour: "#FF4444", width: "33%" };
+  }
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasDigit = /[0-9]/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
+  const mixed = [hasUpper, hasLower, hasDigit, hasSpecial].filter(Boolean).length;
+
+  if (password.length > 12 && mixed >= 3) {
+    return { level: "strong", colour: "#00FF88", width: "100%" };
+  }
+  return { level: "fair", colour: "#FFB800", width: "66%" };
+}
+
 const BLANK_FORM: FormState = {
   business_id: "unite-group",
   category: "login",
@@ -920,14 +949,46 @@ export default function FounderVaultPage() {
                     )}
                     {!editingItem && <span className="text-[#FF4444] ml-1">*</span>}
                   </label>
-                  <input
-                    type="password"
-                    value={form.secret}
-                    onChange={(e) => setForm((f) => ({ ...f, secret: e.target.value }))}
-                    placeholder={editingItem ? "••••••••" : "Password, token, or key…"}
-                    className="w-full bg-[#050505] border border-white/15 text-white text-sm font-mono rounded-sm px-3 py-2 focus:outline-none focus:border-[#00F5FF]/50 placeholder:text-white/20"
-                    autoComplete="new-password"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="password"
+                      value={form.secret}
+                      onChange={(e) => setForm((f) => ({ ...f, secret: e.target.value }))}
+                      placeholder={editingItem ? "••••••••" : "Password, token, or key…"}
+                      className="flex-1 bg-[#050505] border border-white/15 text-white text-sm font-mono rounded-sm px-3 py-2 focus:outline-none focus:border-[#00F5FF]/50 placeholder:text-white/20"
+                      autoComplete="new-password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm((f) => ({ ...f, secret: generatePassword() }))}
+                      className="px-3 py-2 bg-[#00F5FF]/10 border border-[#00F5FF]/30 text-[#00F5FF] text-xs font-mono rounded-sm hover:bg-[#00F5FF]/20 transition-colors whitespace-nowrap"
+                    >
+                      Generate
+                    </button>
+                  </div>
+                  {/* Password Strength Meter */}
+                  {form.secret && (() => {
+                    const strength = getPasswordStrength(form.secret);
+                    return (
+                      <div className="mt-2">
+                        <div className="w-full h-1 bg-white/10 rounded-sm overflow-hidden">
+                          <motion.div
+                            className="h-full rounded-sm"
+                            style={{ backgroundColor: strength.colour, width: strength.width }}
+                            initial={{ width: 0 }}
+                            animate={{ width: strength.width }}
+                            transition={{ duration: 0.2 }}
+                          />
+                        </div>
+                        <span
+                          className="text-xs font-mono mt-1 block"
+                          style={{ color: strength.colour }}
+                        >
+                          {strength.level}
+                        </span>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* Agent Accessible */}

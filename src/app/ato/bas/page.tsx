@@ -404,6 +404,11 @@ export default function BASPage() {
             </div>
           )}
         </div>
+
+        {/* Nexus Branding */}
+        <div className="text-xs text-[#444] text-center py-2">
+          Part of <span className="text-[#00F5FF]">Unite-Group Nexus</span>
+        </div>
       </div>
     </div>
   );
