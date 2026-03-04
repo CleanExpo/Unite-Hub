@@ -11,7 +11,7 @@ import {
   TrendingUp, TrendingDown, AlertCircle, CheckCircle2,
   Clock, Flame, ArrowRight, Video, X, ChevronRight,
   Zap, Activity, History, Search, Tag, BookmarkPlus, ExternalLink,
-  BookOpen,
+  BookOpen, Upload, Image,
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -847,7 +847,236 @@ const BUSINESS_OPTIONS = [
 
 const CAPTURE_TAGS = ["meeting", "idea", "task", "followup", "insight"] as const;
 
+function MediaCapturePanel() {
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [caption, setCaption] = useState("");
+  const [business, setBusiness] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Cleanup stream on unmount
+  useEffect(() => {
+    return () => {
+      stream?.getTracks().forEach(t => t.stop());
+    };
+  }, [stream]);
+
+  const startCamera = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+      setStream(mediaStream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+      }
+    } catch {
+      // Camera access denied or unavailable
+    }
+  };
+
+  const stopCamera = () => {
+    stream?.getTracks().forEach(t => t.stop());
+    setStream(null);
+    if (videoRef.current) videoRef.current.srcObject = null;
+  };
+
+  const captureFrame = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+    setPreview(dataUrl);
+    stopCamera();
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const saveMedia = async () => {
+    if (!preview || uploading) return;
+    setUploading(true);
+    try {
+      const res = await fetch("/api/founder/os/media", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dataUrl: preview,
+          caption: caption || undefined,
+          business: business || undefined,
+          mimeType: preview.match(/^data:([^;]+)/)?.[1] || "image/jpeg",
+        }),
+      });
+      if (res.ok) {
+        setSaved(true);
+        setTimeout(() => {
+          setSaved(false);
+          setPreview(null);
+          setCaption("");
+          setBusiness("");
+        }, 2000);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      {/* Camera viewfinder or preview */}
+      {stream && !preview && (
+        <div className="relative rounded-sm overflow-hidden border border-zinc-700 bg-black">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="w-full"
+            style={{ maxHeight: 192 }}
+          />
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+            <button
+              onClick={captureFrame}
+              className="w-12 h-12 rounded-full bg-white/90 border-4 border-cyan-400 flex items-center justify-center"
+            >
+              <Camera className="w-5 h-5 text-black" />
+            </button>
+            <button
+              onClick={stopCamera}
+              className="w-10 h-10 rounded-full bg-zinc-800/80 flex items-center justify-center"
+            >
+              <X className="w-4 h-4 text-zinc-400" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {preview && (
+        <div className="relative rounded-sm overflow-hidden border border-zinc-700">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={preview} alt="Captured" className="w-full" style={{ maxHeight: 192, objectFit: "cover" }} />
+          <button
+            onClick={() => setPreview(null)}
+            className="absolute top-2 right-2 w-6 h-6 rounded-sm bg-black/60 flex items-center justify-center"
+          >
+            <X className="w-3 h-3 text-white" />
+          </button>
+        </div>
+      )}
+
+      {/* Action buttons */}
+      {!stream && !preview && (
+        <div className="flex gap-2">
+          <button
+            onClick={startCamera}
+            className="flex-1 flex items-center justify-center gap-2 py-3 bg-zinc-900 border border-zinc-700 rounded-sm text-sm text-zinc-300 hover:border-cyan-700 transition-colors"
+          >
+            <Video className="w-4 h-4 text-cyan-400" />
+            Take Photo
+          </button>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="flex-1 flex items-center justify-center gap-2 py-3 bg-zinc-900 border border-zinc-700 rounded-sm text-sm text-zinc-300 hover:border-cyan-700 transition-colors"
+          >
+            <Upload className="w-4 h-4 text-violet-400" />
+            Upload File
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*"
+            className="hidden"
+            onChange={handleFileUpload}
+          />
+        </div>
+      )}
+
+      {/* Hidden canvas for frame capture */}
+      <canvas ref={canvasRef} className="hidden" />
+
+      {/* Caption */}
+      {preview && (
+        <>
+          <textarea
+            value={caption}
+            onChange={e => setCaption(e.target.value)}
+            placeholder="Add a caption (optional)..."
+            rows={2}
+            className="w-full bg-zinc-900 border border-zinc-700 focus:border-[#00F5FF] rounded-sm text-sm text-white placeholder:text-zinc-600 p-3 resize-none outline-none transition-colors"
+          />
+
+          {/* Business selector */}
+          <div>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1.5">Business</p>
+            <div className="flex flex-wrap gap-1.5">
+              {BUSINESS_OPTIONS.map(biz => (
+                <button
+                  key={biz}
+                  onClick={() => setBusiness(prev => prev === biz ? "" : biz)}
+                  className={`px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider rounded-sm border transition-colors ${
+                    business === biz
+                      ? "bg-[#00F5FF]/10 border-[#00F5FF]/50 text-[#00F5FF]"
+                      : "bg-zinc-900 border-zinc-700 text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  {biz}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Save button */}
+          <AnimatePresence mode="wait">
+            {saved ? (
+              <motion.div
+                key="saved"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="w-full py-3 rounded-sm bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center gap-2 text-emerald-400 text-sm font-medium"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                Saved to vault
+              </motion.div>
+            ) : (
+              <Button
+                onClick={saveMedia}
+                disabled={uploading}
+                className="w-full bg-[#00F5FF]/10 hover:bg-[#00F5FF]/20 text-[#00F5FF] border border-[#00F5FF]/40 rounded-sm font-medium disabled:opacity-40"
+              >
+                {uploading ? (
+                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Image className="w-4 h-4 mr-2" />
+                )}
+                {uploading ? "Uploading..." : "Save Media"}
+              </Button>
+            )}
+          </AnimatePresence>
+        </>
+      )}
+    </div>
+  );
+}
+
 function CaptureTab() {
+  const [captureMode, setCaptureMode] = useState<"text" | "media">("text");
   const [text, setText] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [business, setBusiness] = useState<string>("");
@@ -952,33 +1181,58 @@ function CaptureTab() {
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-violet-400" />
           <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">
-            Obsidian Capture
+            {captureMode === "text" ? "Obsidian Capture" : "Media Capture"}
           </h2>
         </div>
-        {/* Vault status indicator */}
-        <div className="flex items-center gap-1.5">
-          {vaultConnected === null ? (
-            <div className="w-2 h-2 rounded-full bg-zinc-600 animate-pulse" />
-          ) : vaultConnected ? (
-            <div className="w-2 h-2 rounded-full bg-violet-500" title="Vault connected" />
-          ) : (
-            <div className="w-2 h-2 rounded-full bg-red-500" title="Vault disconnected" />
+        {/* Mode toggle + Vault status */}
+        <div className="flex items-center gap-2">
+          <div className="flex rounded-sm border border-zinc-700 overflow-hidden">
+            <button
+              onClick={() => setCaptureMode("text")}
+              className={`px-2 py-1 text-[10px] font-medium transition-colors ${
+                captureMode === "text"
+                  ? "bg-violet-500/20 text-violet-300"
+                  : "text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              Text
+            </button>
+            <button
+              onClick={() => setCaptureMode("media")}
+              className={`px-2 py-1 text-[10px] font-medium transition-colors ${
+                captureMode === "media"
+                  ? "bg-cyan-500/20 text-cyan-300"
+                  : "text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              Media
+            </button>
+          </div>
+          {captureMode === "text" && (
+            <div className="flex items-center gap-1.5">
+              {vaultConnected === null ? (
+                <div className="w-2 h-2 rounded-full bg-zinc-600 animate-pulse" />
+              ) : vaultConnected ? (
+                <div className="w-2 h-2 rounded-full bg-violet-500" title="Vault connected" />
+              ) : (
+                <div className="w-2 h-2 rounded-full bg-red-500" title="Vault disconnected" />
+              )}
+            </div>
           )}
-          <span className="text-[10px] text-zinc-500">
-            {vaultConnected === null ? "Checking…" : vaultConnected ? "Connected" : "Disconnected"}
-          </span>
         </div>
       </div>
 
-      {/* Loading state */}
-      {vaultConnected === null && (
+      {/* Media capture mode */}
+      {captureMode === "media" && <MediaCapturePanel />}
+
+      {/* Text capture mode */}
+      {captureMode === "text" && vaultConnected === null && (
         <div className="flex-1 flex items-center justify-center">
           <div className="w-6 h-6 border-2 border-violet-500/40 border-t-violet-500 rounded-full animate-spin" />
         </div>
       )}
 
-      {/* Vault not connected */}
-      {vaultConnected === false && (
+      {captureMode === "text" && vaultConnected === false && (
         <div className="flex flex-col items-center gap-3 p-5 rounded-sm bg-zinc-900 border border-zinc-800 text-center">
           <BookOpen className="w-8 h-8 text-zinc-600" />
           <p className="text-sm text-zinc-400">Obsidian vault not connected</p>
@@ -994,8 +1248,7 @@ function CaptureTab() {
         </div>
       )}
 
-      {/* Main capture UI */}
-      {vaultConnected === true && (
+      {captureMode === "text" && vaultConnected === true && (
         <>
           {/* Textarea + voice button */}
           <div className="relative">

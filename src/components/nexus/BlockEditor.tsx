@@ -284,6 +284,30 @@ const slashCommandItems = createSuggestionItems([
     },
   },
   {
+    title: 'Diagram',
+    description: 'Insert Excalidraw diagram',
+    icon: <span className="text-sm text-[#00F5FF]">&#9998;</span>,
+    searchTerms: ['diagram', 'draw', 'excalidraw', 'sketch', 'whiteboard'],
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).run();
+      // Insert a linked diagram block — opens the standalone diagram page
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              marks: [{ type: 'link', attrs: { href: '/founder/diagram', target: '_blank' } }],
+              text: '📐 Open Diagram Editor',
+            },
+          ],
+        })
+        .run();
+    },
+  },
+  {
     title: 'Heading 1',
     description: 'Large section heading',
     icon: <span className="text-sm font-bold">H1</span>,
