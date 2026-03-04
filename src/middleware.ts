@@ -20,6 +20,9 @@ import type { NextRequest } from "next/server";
 import type { UserRole } from "./lib/auth/userTypes";
 import { validateCsrf } from "./lib/csrf";
 
+// ─── Private CRM: single authorised owner ────────────────────────────────────
+const ALLOWED_EMAIL = "phill.mcgurk@gmail.com";
+
 /**
  * Normalize legacy role names to new UserRole enum
  */
@@ -175,6 +178,16 @@ export async function middleware(req: NextRequest) {
   const isAuthenticated = !!user && !userError;
   const pathname = req.nextUrl.pathname;
 
+  // ─── Owner-only allowlist ─────────────────────────────────────────────────
+  // If someone has a valid Supabase session but isn't the owner, boot them.
+  if (isAuthenticated && user.email !== ALLOWED_EMAIL) {
+    await supabase.auth.signOut();
+    const redirectUrl = req.nextUrl.clone();
+    redirectUrl.pathname = "/auth/signin";
+    redirectUrl.searchParams.set("error", "access_denied");
+    return NextResponse.redirect(redirectUrl);
+  }
+
   // Redirect /register to /login (no public signups — invite-only)
   if (pathname === '/register' || pathname.startsWith('/register/')) {
     const redirectUrl = req.nextUrl.clone();
@@ -225,7 +238,10 @@ export async function middleware(req: NextRequest) {
         .eq('id', user.id)
         .maybeSingle(); // Use maybeSingle to gracefully handle missing profiles
 
-      const userRole = normalizeRole(profile?.role); // Defaults to 'CLIENT' if no profile
+      // Owner always gets FOUNDER regardless of DB state
+      const userRole: UserRole = user.email === ALLOWED_EMAIL
+        ? 'FOUNDER'
+        : normalizeRole(profile?.role);
 
       // FOUNDER/ADMIN: Bypass marketing pages, go to founder dashboard
       if (userRole === 'FOUNDER' || userRole === 'ADMIN') {

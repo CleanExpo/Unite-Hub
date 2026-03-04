@@ -35,6 +35,10 @@ providers.push(
 //   );
 // }
 
+// ─── Access control ───────────────────────────────────────────────────────────
+// This is a private CRM. Only the owner's Google account may authenticate.
+const ALLOWED_EMAIL = "phill.mcgurk@gmail.com";
+
 export const authOptions: NextAuthOptions = {
   providers,
   pages: {
@@ -42,9 +46,14 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/error",
   },
   callbacks: {
+    async signIn({ user }) {
+      // Hard block — reject any Google account that isn't the owner
+      return user.email === ALLOWED_EMAIL;
+    },
     async session({ session, user }) {
       if (session?.user && user) {
         (session.user as any).id = user.id;
+        (session.user as any).role = "FOUNDER";
       }
       return session;
     },
