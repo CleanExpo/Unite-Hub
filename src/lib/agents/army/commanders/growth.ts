@@ -1,11 +1,12 @@
 /**
  * Commander Growth — Senior Growth PM configuration
  *
- * Orchestrates 10 growth-focused skill agents covering content production,
- * SEO, social media, email campaigns, and paid acquisition for the Australian
- * market across the Unite-Group business portfolio.
+ * Orchestrates 10 growth-focused skill agents covering SEO monitoring,
+ * content ideation, social posting, backlink acquisition, email nurture,
+ * GSC analysis, competitor content tracking, paid ads, CRO, and reporting
+ * for the Australian market across the Unite-Group business portfolio.
  *
- * UNI-1446: Commander Growth deploy
+ * UNI-1447: Commander Growth deploy
  */
 
 export const COMMANDER_GROWTH = {
@@ -13,7 +14,7 @@ export const COMMANDER_GROWTH = {
   name: 'Commander Growth',
   model: 'claude-sonnet-4-6',
   role: 'Senior Growth PM',
-  briefTime: '08:00', // AEST daily
+  briefTime: '07:30', // AEST daily
   colour: '#00F5FF',
 
   orchestrator: {
@@ -24,92 +25,92 @@ export const COMMANDER_GROWTH = {
 
   skills: [
     {
-      id: 'growth-content-drafter',
-      name: 'Content Drafter',
+      id: 'growth-seo-monitor',
+      name: 'SEO Monitor',
       model: 'claude-haiku-4-5-20251001',
       schedule: 'daily',
-      description: 'Draft blog posts, case studies, and LinkedIn articles for NRPG/DR/Unite-Group brands',
-      outputTable: 'army_content_queue',
-      urgent: false,
-    },
-    {
-      id: 'growth-seo-tracker',
-      name: 'SEO Tracker',
-      model: 'claude-haiku-4-5-20251001',
-      schedule: 'daily',
-      description: 'Monitor keyword rankings, identify quick-win optimisation opportunities',
+      description: 'Track keyword rankings across all 5 sites, flag position drops > 5',
       outputTable: 'army_opportunities',
       urgent: false,
     },
     {
-      id: 'growth-social-watcher',
-      name: 'Social Watcher',
-      model: 'claude-haiku-4-5-20251001',
-      schedule: 'hourly',
-      description: 'Monitor social channels for engagement opportunities, trending topics in AU market',
-      outputTable: 'army_opportunities',
-      urgent: true,
-    },
-    {
-      id: 'growth-email-campaign',
-      name: 'Email Campaign Builder',
+      id: 'growth-content-ideas',
+      name: 'Content Ideas',
       model: 'claude-haiku-4-5-20251001',
       schedule: 'weekly',
-      description: 'Draft and schedule email nurture sequences for leads in CRM',
+      description: 'Generate 10 content ideas per site based on keyword gaps and competitor content',
       outputTable: 'army_content_queue',
       urgent: false,
     },
     {
-      id: 'growth-ad-copy',
-      name: 'Ad Copy Writer',
-      model: 'claude-haiku-4-5-20251001',
-      schedule: 'weekly',
-      description: 'Generate Google Ads and Meta ad copy variants for A/B testing',
-      outputTable: 'army_content_queue',
-      urgent: false,
-    },
-    {
-      id: 'growth-conversion-analyst',
-      name: 'Conversion Analyst',
+      id: 'growth-social-post',
+      name: 'Social Poster',
       model: 'claude-haiku-4-5-20251001',
       schedule: 'daily',
-      description: 'Analyse landing page performance, recommend CRO improvements',
-      outputTable: 'army_opportunities',
-      urgent: false,
-    },
-    {
-      id: 'growth-referral-hunter',
-      name: 'Referral Hunter',
-      model: 'claude-haiku-4-5-20251001',
-      schedule: 'weekly',
-      description: 'Identify happy customers and partners for referral programme outreach',
-      outputTable: 'army_leads',
-      urgent: false,
-    },
-    {
-      id: 'growth-webinar-planner',
-      name: 'Webinar Planner',
-      model: 'claude-haiku-4-5-20251001',
-      schedule: 'weekly',
-      description: 'Plan monthly webinar topics, draft invitations, prepare run sheets',
+      description: 'Draft LinkedIn + Twitter posts for each business from recent news/updates',
       outputTable: 'army_content_queue',
       urgent: false,
     },
     {
-      id: 'growth-partner-scout',
-      name: 'Partner Scout',
+      id: 'growth-backlink-finder',
+      name: 'Backlink Finder',
       model: 'claude-haiku-4-5-20251001',
       schedule: 'weekly',
-      description: 'Identify strategic partnership opportunities in AU tech and HR sectors',
-      outputTable: 'army_leads',
+      description: 'Find link building opportunities — directories, industry publications, partners',
+      outputTable: 'army_opportunities',
       urgent: false,
     },
     {
-      id: 'growth-reporter',
+      id: 'growth-email-nurture',
+      name: 'Email Nurture',
+      model: 'claude-haiku-4-5-20251001',
+      schedule: 'weekly',
+      description: 'Draft email nurture sequences for new leads based on industry/source',
+      outputTable: 'army_content_queue',
+      urgent: false,
+    },
+    {
+      id: 'growth-gsc-analyser',
+      name: 'GSC Analyser',
+      model: 'claude-haiku-4-5-20251001',
+      schedule: 'weekly',
+      description: 'Analyse Search Console data for CTR improvement opportunities',
+      outputTable: 'army_opportunities',
+      urgent: false,
+    },
+    {
+      id: 'growth-competitor-content',
+      name: 'Competitor Content',
+      model: 'claude-haiku-4-5-20251001',
+      schedule: 'weekly',
+      description: 'Monitor competitor blog/social content, identify gaps to fill',
+      outputTable: 'army_competitor_updates',
+      urgent: false,
+    },
+    {
+      id: 'growth-google-ads',
+      name: 'Google Ads Monitor',
+      model: 'claude-haiku-4-5-20251001',
+      schedule: 'daily',
+      description: 'Monitor ad performance, flag underperforming campaigns, suggest bid adjustments',
+      outputTable: 'army_opportunities',
+      urgent: false,
+    },
+    {
+      id: 'growth-conversion-rate',
+      name: 'CRO Analyser',
+      model: 'claude-haiku-4-5-20251001',
+      schedule: 'weekly',
+      description: 'Analyse Clarity heatmaps + session recordings, flag rage-click pages',
+      outputTable: 'army_opportunities',
+      urgent: false,
+    },
+    {
+      id: 'growth-weekly-brief',
       name: 'Growth Reporter',
       model: 'claude-haiku-4-5-20251001',
       schedule: 'daily',
-      description: 'Compile daily growth metrics: traffic, leads, social reach, conversion rates',
+      description: 'Compile weekly growth metrics — traffic, rankings, content performance',
       outputTable: 'army_opportunities',
       urgent: false,
     },
