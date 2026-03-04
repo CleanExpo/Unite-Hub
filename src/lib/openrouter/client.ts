@@ -8,7 +8,7 @@ import { OpenRouter } from '@openrouter/sdk';
 export const openRouterClient = new OpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY || '',
   defaultHeaders: {
-    'HTTP-Referer': process.env.NEXT_PUBLIC_URL || 'https://unite-hub-git-main-unite-group.vercel.app',
+    'HTTP-Referer': process.env.NEXT_PUBLIC_URL || 'https://unite-group.in',
     'X-Title': 'Unite-Group CRM',
   },
 });

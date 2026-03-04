@@ -97,7 +97,7 @@ export class OpenRouterClient {
         headers: {
           "Authorization": `Bearer ${this.apiKey}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "https://unite-hub.vercel.app",
+          "HTTP-Referer": "https://unite-group.in",
           "X-Title": "Unite-Group",
         },
         body: JSON.stringify(request),
@@ -238,7 +238,7 @@ Provide a comprehensive analysis in this format:
         headers: {
           "Authorization": `Bearer ${this.apiKey}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "https://unite-hub.vercel.app",
+          "HTTP-Referer": "https://unite-group.in",
           "X-Title": "Unite-Group",
         },
         body: JSON.stringify(request),

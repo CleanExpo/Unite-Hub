@@ -108,7 +108,7 @@ DTSTART:${startDt}
 DTEND:${endDt}
 SUMMARY:Meeting with ${participant}
 DESCRIPTION:Proposed meeting time
-ORGANIZER:noreply@unite-hub.local
+ORGANIZER:noreply@unite-group.local
 ATTENDEE:${participantEmail}
 STATUS:TENTATIVE
 SEQUENCE:0

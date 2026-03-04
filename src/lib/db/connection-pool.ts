@@ -142,7 +142,7 @@ class ConnectionPool {
           },
           global: {
             headers: {
-              'x-client-info': 'unite-hub-pool-service',
+              'x-client-info': 'unite-group-pool-service',
             },
           },
         }
@@ -159,7 +159,7 @@ class ConnectionPool {
           },
           global: {
             headers: {
-              'x-client-info': 'unite-hub-pool-anon',
+              'x-client-info': 'unite-group-pool-anon',
             },
           },
         }

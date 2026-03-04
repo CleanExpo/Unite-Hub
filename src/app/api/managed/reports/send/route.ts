@@ -252,7 +252,7 @@ function buildReportHTML(report: any, project: any): string {
       }
 
       <div style="text-align: center;">
-        <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://unite-hub.app'}/founder/synthex/projects" class="cta-button">
+        <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://unite-group.in'}/founder/synthex/projects" class="cta-button">
           View Full Report
         </a>
       </div>
@@ -309,7 +309,7 @@ function buildReportText(report: any, project: any): string {
     });
   }
 
-  text += `View full report: ${process.env.NEXT_PUBLIC_SITE_URL || 'https://unite-hub.app'}/founder/synthex/projects\n`;
+  text += `View full report: ${process.env.NEXT_PUBLIC_SITE_URL || 'https://unite-group.in'}/founder/synthex/projects\n`;
 
   return text;
 }

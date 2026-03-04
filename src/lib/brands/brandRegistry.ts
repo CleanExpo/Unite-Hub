@@ -20,7 +20,7 @@
 export const brandRegistry = [
   {
     id: 'unite_hub',
-    slug: 'unite-hub',
+    slug: 'unite-group',
     name: 'Unite-Group',
     domain: 'https://unite-group.in',
     category: 'Business Hub',
