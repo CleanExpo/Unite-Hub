@@ -40,6 +40,10 @@
     {
       "path": "/api/cron/linear-guardian",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/founder/analytics/weekly-report",
+      "schedule": "0 22 * * 0"
     }
   ]
 }
