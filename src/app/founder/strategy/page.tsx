@@ -32,7 +32,9 @@ import {
   CheckCircle2,
   Clock,
   Target,
+  Brain,
 } from 'lucide-react';
+import { DeepThinkTab } from '@/components/strategy/DeepThinkTab';
 
 export default function StrategyPage() {
   const [workspaceId, setWorkspaceId] = useState<string | null>(null);
@@ -568,11 +570,15 @@ export default function StrategyPage() {
 
       {/* Tabs Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-5 lg:w-auto">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="hierarchy">Hierarchy</TabsTrigger>
           <TabsTrigger value="validation">Validation</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
+          <TabsTrigger value="deep-think" className="flex items-center gap-1.5">
+            <Brain className="w-3.5 h-3.5 text-[#00F5FF]" />
+            Deep Think
+          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -632,6 +638,11 @@ export default function StrategyPage() {
             patterns={[]}
             isLoading={isLoadingHistory}
           />
+        </TabsContent>
+
+        {/* Deep Think Tab */}
+        <TabsContent value="deep-think" className="space-y-6">
+          <DeepThinkTab />
         </TabsContent>
       </Tabs>
     </div>

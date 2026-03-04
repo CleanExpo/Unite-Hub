@@ -14,6 +14,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SearchDialog } from "@/components/nexus/SearchDialog";
 
 const founderNavItems = [
   { label: "Dashboard", href: "/founder/dashboard", icon: LayoutDashboard },
@@ -86,6 +87,9 @@ export default function FounderLayout({
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
         {children}
       </main>
+
+      {/* Global Search (Cmd+K / Ctrl+K) */}
+      <SearchDialog />
     </div>
   );
 }
