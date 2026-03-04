@@ -11,16 +11,20 @@ import {
   Lightbulb,
   Building2,
   ChevronRight,
+  Database,
+  Zap,
+  Link2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const founderNavItems = [
   { label: "Dashboard", href: "/founder/dashboard", icon: LayoutDashboard },
+  { label: "Workspace", href: "/founder/workspace", icon: Database },
+  { label: "Connections", href: "/founder/connections", icon: Link2 },
+  { label: "Phill OS", href: "/founder/os", icon: Zap },
   { label: "Agents", href: "/founder/agents", icon: Bot },
-  { label: "AI Phill", href: "/founder/ai-phill", icon: Brain },
   { label: "Businesses", href: "/founder/businesses", icon: Building2 },
   { label: "Analytics", href: "/founder/analytics", icon: LineChart },
-  { label: "Insights", href: "/founder/insights", icon: Lightbulb },
 ];
 
 export default function FounderLayout({
@@ -81,7 +85,11 @@ export default function FounderLayout({
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <main className={cn(
+        pathname.startsWith("/founder/workspace")
+          ? "h-[calc(100vh-57px)]"
+          : "max-w-7xl mx-auto px-4 sm:px-6 py-6"
+      )}>
         {children}
       </main>
     </div>
