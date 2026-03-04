@@ -205,3 +205,23 @@ apps/web/.next/
 apps/backend/.venv/
 
 .vercel
+
+# Diagnostic SQL scripts (root-level)
+CHECK_*.sql
+TEST_*.sql
+DEBUG_*.sql
+FIX_*.sql
+VERIFY_*.sql
+COMPLETE_*.sql
+CREATE_MISSING_*.sql
+FULL_SCHEMA_DUMP.sql
+SETUP_SUPABASE.sql
+supabase-schema.sql
+apply-migrations*.sql
+apply-all-migrations.sql
+fix-*.sql
+check-*.sql
+create-missing-*.sql
+verify-*.sql
+MIGRATION_*_DIAGNOSTICS.sql
+EXECUTE_MIGRATIONS_NOW.sql
