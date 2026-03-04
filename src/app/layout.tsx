@@ -27,17 +27,17 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Unite-Hub — Command Centre',
+    default: 'Unite-Hub — Unite-Group Nexus',
     template: '%s | Unite-Hub',
   },
-  description: 'Unite-Hub is a personal command centre for managing multiple businesses. CRM, ERP, AI agents, and project management in one hub.',
+  description: 'Unite-Hub is the umbrella platform for Unite-Group. CRM, ERP, AI agents, and project management connecting Synthex, DR/NRPG, RestoreAssist, CCW, and ATO AI.',
   keywords: [
-    'business command centre',
-    'multi-business management',
+    'Unite-Group',
+    'business management',
     'CRM',
-    'founder tools',
-    'AI business intelligence',
-    'project management',
+    'ERP',
+    'AI agents',
+    'multi-business platform',
   ],
   authors: [{ name: 'Unite-Hub' }],
   creator: 'Unite-Hub',
