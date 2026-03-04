@@ -31,7 +31,7 @@
     "verify": "bash scripts/verify.sh",
     "verify:windows": "powershell -ExecutionPolicy Bypass -File scripts/verify.ps1",
     "deps:check": "bash scripts/dependency-checks.sh",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "email-agent": "node scripts/run-email-agent.mjs",
     "content-agent": "node scripts/run-content-agent.mjs",
     "orchestrator": "node scripts/run-orchestrator.mjs",
