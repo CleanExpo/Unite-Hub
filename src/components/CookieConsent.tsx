@@ -13,7 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Cookie, X, Settings, Check } from "lucide-react";
 import Link from "next/link";
 
-const COOKIE_CONSENT_KEY = "unite-hub-cookie-consent";
+const COOKIE_CONSENT_KEY = "unite-group-cookie-consent";
 const CONSENT_VERSION = "1.0"; // Increment when privacy policy changes
 
 export type ConsentPreferences = {

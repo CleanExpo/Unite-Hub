@@ -114,7 +114,7 @@ export async function testCustomerCreation(): Promise<{
   error?: string;
 }> {
   try {
-    const testEmail = `test-${Date.now()}@unite-hub.test`;
+    const testEmail = `test-${Date.now()}@unite-group.test`;
     const customer = await getOrCreateCustomer({
       email: testEmail,
       name: "Test User",

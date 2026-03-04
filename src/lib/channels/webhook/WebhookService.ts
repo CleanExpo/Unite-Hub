@@ -68,7 +68,7 @@ const defaultConfig = {
   timeout: 30000, // 30 seconds
   maxRetries: 3,
   retryDelayMs: 1000,
-  webhookSecret: process.env.WEBHOOK_SECRET || 'unite-hub-webhook-secret',
+  webhookSecret: process.env.WEBHOOK_SECRET || 'unite-group-webhook-secret',
 };
 
 // ============================================================================

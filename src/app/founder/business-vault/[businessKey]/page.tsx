@@ -40,12 +40,21 @@ async function BusinessDetailContent({ businessKey }: { businessKey: string }) {
             <p className="text-sm text-muted-foreground font-mono">{business.business_key}</p>
           </div>
         </div>
-        <Link
-          href={`/founder/business-vault/${businessKey}/edit`}
-          className="px-4 py-2 rounded-lg border hover:bg-muted transition-colors"
-        >
-          Edit Business
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/founder/business-vault/${businessKey}/channels`}
+            className="px-4 py-2 rounded-lg border hover:bg-muted transition-colors flex items-center gap-2"
+          >
+            <Layers className="h-4 w-4" />
+            Channels
+          </Link>
+          <Link
+            href={`/founder/business-vault/${businessKey}/edit`}
+            className="px-4 py-2 rounded-lg border hover:bg-muted transition-colors"
+          >
+            Edit Business
+          </Link>
+        </div>
       </div>
 
       {/* Business Info */}
