@@ -182,6 +182,10 @@ export default function FounderVaultPage() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
+  // Seed state
+  const [seedLoading, setSeedLoading] = useState(false);
+  const [seedMessage, setSeedMessage] = useState<string | null>(null);
+
   // Reveal state
   const [reveal, setReveal] = useState<RevealState | null>(null);
   const [revealing, setRevealing] = useState<string | null>(null); // itemId currently being revealed
@@ -587,12 +591,20 @@ export default function FounderVaultPage() {
           <p className="text-white/40 text-sm font-mono mt-1">
             AES-256-GCM encrypted — secrets never leave the vault unprotected
           </p>
-          <a
-            href="/founder/vault/import"
-            className="inline-block mt-2 text-xs font-mono text-[#00F5FF]/60 hover:text-[#00F5FF] transition-colors"
-          >
-            Import from CSV &rarr;
-          </a>
+          <div className="flex gap-4 mt-2">
+            <a
+              href="/founder/vault/import"
+              className="text-xs font-mono text-[#00F5FF]/60 hover:text-[#00F5FF] transition-colors"
+            >
+              Import from CSV &rarr;
+            </a>
+            <a
+              href="/founder/vault/businesses"
+              className="text-xs font-mono text-[#00F5FF]/60 hover:text-[#00F5FF] transition-colors"
+            >
+              View by Business &rarr;
+            </a>
+          </div>
         </div>
 
         {/* Search + View Toggle */}
@@ -660,12 +672,37 @@ export default function FounderVaultPage() {
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-4">
             <span className="text-5xl">🔐</span>
             <p className="text-white/40 font-mono text-sm">No credentials found</p>
-            <button
-              onClick={openAddModal}
-              className="px-4 py-2 bg-[#00F5FF]/10 border border-[#00F5FF]/40 text-[#00F5FF] rounded-sm text-sm font-mono hover:bg-[#00F5FF]/20 transition-colors"
-            >
-              Add first credential
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={openAddModal}
+                className="px-4 py-2 bg-[#00F5FF]/10 border border-[#00F5FF]/40 text-[#00F5FF] rounded-sm text-sm font-mono hover:bg-[#00F5FF]/20 transition-colors"
+              >
+                Add first credential
+              </button>
+              <button
+                onClick={async () => {
+                  setSeedLoading(true);
+                  setSeedMessage(null);
+                  try {
+                    const res = await fetch("/api/founder/vault/seed-businesses", { method: "POST" });
+                    const data = await res.json();
+                    setSeedMessage(data.message ?? data.error ?? "Done");
+                    if (data.success) await fetchItems();
+                  } catch {
+                    setSeedMessage("Seed failed");
+                  } finally {
+                    setSeedLoading(false);
+                  }
+                }}
+                disabled={seedLoading}
+                className="px-4 py-2 border border-white/20 text-white/60 rounded-sm text-sm font-mono hover:text-white hover:border-white/40 disabled:opacity-50 transition-colors"
+              >
+                {seedLoading ? "Seeding..." : "Seed Business Vault"}
+              </button>
+            </div>
+            {seedMessage && (
+              <p className="text-xs font-mono text-[#00FF88] mt-2">{seedMessage}</p>
+            )}
           </div>
         )}
 
