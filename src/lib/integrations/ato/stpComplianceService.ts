@@ -118,6 +118,7 @@ export interface STPSubmission {
  * Superannuation Guarantee Rate
  * 11.5% from July 1, 2024 (FY 2024-25)
  */
+/* TODO: verify legislation reference — SG rate 11.5% for FY2024-25, confirm current FY rate (scheduled 12% from 1 July 2025) */
 export const SUPER_GUARANTEE_RATE = 0.115;
 
 /**
@@ -126,6 +127,7 @@ export const SUPER_GUARANTEE_RATE = 0.115;
  *
  * Source: ATO Tax Withholding Tables
  */
+/* TODO: verify legislation reference — PAYG weekly tax scale brackets and rates for FY2024-25 against ATO NAT 1004 */
 export const PAYG_TAX_SCALE_WEEKLY = [
   { min: 0, max: 359, baseAmount: 0, rate: 0 },
   { min: 359, max: 438, baseAmount: 0, rate: 0.19 },
@@ -141,6 +143,7 @@ export const PAYG_TAX_SCALE_WEEKLY = [
 /**
  * No tax-free threshold scale (higher withholding)
  */
+/* TODO: verify legislation reference — PAYG no-TFT weekly tax scale brackets and rates for FY2024-25 against ATO NAT 1004 */
 export const PAYG_TAX_SCALE_WEEKLY_NO_TFT = [
   { min: 0, max: 88, baseAmount: 0, rate: 0.19 },
   { min: 88, max: 371, baseAmount: 16.72, rate: 0.29 },
@@ -232,6 +235,7 @@ export function calculatePAYGWithholding(
   let taxWithheld = bracket.baseAmount + (weeklyGrossPay - bracket.min) * bracket.rate;
 
   // Add HECS/HELP levy if applicable (2% of gross)
+  /* TODO: verify legislation reference — HECS/HELP repayment is income-based (not flat 2%), verify against ATO Schedule 8 */
   if (hasHECSDebt) {
     taxWithheld += weeklyGrossPay * 0.02;
   }

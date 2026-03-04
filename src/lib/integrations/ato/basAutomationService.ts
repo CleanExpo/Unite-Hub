@@ -161,6 +161,7 @@ export async function aggregateTransactionsForPeriod(
   }
 
   // Calculate GST (amounts are in cents, GST is 10%)
+  /* TODO: verify legislation reference — GST rate 10% per A New Tax System (Goods and Services Tax) Act 1999 s 9-70 */
   const gstOnSales = Math.round(totalSales * 0.1); // G1
   const gstOnPurchases = Math.round(totalPurchases * 0.1); // G11
   const netGst = gstOnSales - gstOnPurchases; // 1A

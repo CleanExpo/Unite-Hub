@@ -766,7 +766,7 @@ export default function STPDashboard() {
                       type="text"
                       name="payer_abn"
                       required
-                      placeholder="51 824 753 556"
+                      placeholder="XX XXX XXX XXX [SAMPLE DATA]"
                       className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-100"
                     />
                   </div>
@@ -776,7 +776,7 @@ export default function STPDashboard() {
                       type="text"
                       name="payer_name"
                       required
-                      placeholder="Your Company Name"
+                      placeholder="Your Company Name [SAMPLE DATA]"
                       className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-100"
                     />
                   </div>

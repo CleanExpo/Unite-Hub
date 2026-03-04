@@ -119,7 +119,7 @@ export default function VerifyPage() {
               type="text"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="51 824 753 556 (ABN) or 123 456 782 (TFN)"
+              placeholder="XX XXX XXX XXX (ABN) or XXX XXX XXX (TFN) [SAMPLE DATA]"
               className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-lg"
               onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
             />

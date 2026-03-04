@@ -237,7 +237,7 @@ export default function BASPage() {
                 type="text"
                 value={abn}
                 onChange={(e) => setAbn(e.target.value)}
-                placeholder="51 824 753 556"
+                placeholder="XX XXX XXX XXX [SAMPLE DATA]"
                 className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100"
               />
             </div>
@@ -248,7 +248,7 @@ export default function BASPage() {
                 type="text"
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
-                placeholder="ACME PTY LTD"
+                placeholder="Your Business Name [SAMPLE DATA]"
                 className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100"
               />
             </div>
