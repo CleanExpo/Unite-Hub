@@ -104,8 +104,10 @@ CREATE POLICY nexus_pages_owner_delete ON nexus_pages FOR DELETE USING (owner_id
 -- Service role bypass
 CREATE POLICY nexus_pages_service ON nexus_pages FOR ALL USING (auth.role() = 'service_role');
 
--- Databases: owner can CRUD
-CREATE POLICY nexus_databases_owner_select ON nexus_databases FOR SELECT USING (owner_id = auth.uid());
+-- Databases: owner can CRUD (system seed rows use sentinel '00000000-...' and are visible to all auth users)
+CREATE POLICY nexus_databases_owner_select ON nexus_databases FOR SELECT USING (
+  owner_id = auth.uid() OR owner_id = '00000000-0000-0000-0000-000000000000'::uuid
+);
 CREATE POLICY nexus_databases_owner_insert ON nexus_databases FOR INSERT WITH CHECK (owner_id = auth.uid());
 CREATE POLICY nexus_databases_owner_update ON nexus_databases FOR UPDATE USING (owner_id = auth.uid());
 CREATE POLICY nexus_databases_owner_delete ON nexus_databases FOR DELETE USING (owner_id = auth.uid());
@@ -118,14 +120,6 @@ CREATE POLICY nexus_rows_owner_update ON nexus_rows FOR UPDATE USING (owner_id =
 CREATE POLICY nexus_rows_owner_delete ON nexus_rows FOR DELETE USING (owner_id = auth.uid());
 CREATE POLICY nexus_rows_service ON nexus_rows FOR ALL USING (auth.role() = 'service_role');
 
--- ─── Seed default databases ─────────────────────────────────────────────────
--- owner_id uses a placeholder; the API sets the real owner on first access
-INSERT INTO nexus_databases (name, icon, description, columns, default_view) VALUES
-  ('Businesses', '🏢', 'Track all Unite-Group businesses', '[{"id":"name","name":"Name","type":"text"},{"id":"status","name":"Status","type":"select","options":["Active","Onboarding","Paused"]},{"id":"revenue","name":"Revenue","type":"number"},{"id":"notes","name":"Notes","type":"text"}]', 'table'),
-  ('Active Projects', '🚀', 'Current projects across businesses', '[{"id":"name","name":"Project","type":"text"},{"id":"business","name":"Business","type":"select","options":["DR","RestoreAssist","ATO","NRPG","Unite-Group"]},{"id":"status","name":"Status","type":"select","options":["Planning","In Progress","Review","Done"]},{"id":"due","name":"Due Date","type":"date"},{"id":"owner","name":"Owner","type":"text"}]', 'board'),
-  ('Today''s Tasks', '✅', 'Daily task tracker', '[{"id":"task","name":"Task","type":"text"},{"id":"priority","name":"Priority","type":"select","options":["P0","P1","P2","P3"]},{"id":"done","name":"Done","type":"checkbox"},{"id":"business","name":"Business","type":"select","options":["DR","RestoreAssist","ATO","NRPG","Unite-Group","CARSI"]}]', 'table'),
-  ('Revenue Tracker', '💰', 'Monthly revenue across businesses', '[{"id":"month","name":"Month","type":"text"},{"id":"business","name":"Business","type":"text"},{"id":"mrr","name":"MRR","type":"number"},{"id":"arr","name":"ARR","type":"number"},{"id":"notes","name":"Notes","type":"text"}]', 'table'),
-  ('Content Pipeline', '📝', 'Content creation pipeline', '[{"id":"title","name":"Title","type":"text"},{"id":"type","name":"Type","type":"select","options":["Blog","Social","Email","Video","Guide"]},{"id":"status","name":"Status","type":"select","options":["Idea","Drafting","Review","Published"]},{"id":"business","name":"Business","type":"text"},{"id":"due","name":"Due Date","type":"date"}]', 'board'),
-  ('Network', '🤝', 'Key contacts and relationships', '[{"id":"name","name":"Name","type":"text"},{"id":"company","name":"Company","type":"text"},{"id":"role","name":"Role","type":"text"},{"id":"relationship","name":"Relationship","type":"select","options":["Client","Partner","Investor","Advisor","Prospect"]},{"id":"lastContact","name":"Last Contact","type":"date"}]', 'table'),
-  ('Ideas Bank', '💡', 'Capture ideas for later', '[{"id":"idea","name":"Idea","type":"text"},{"id":"category","name":"Category","type":"select","options":["Product","Marketing","Operations","Tech","Growth"]},{"id":"impact","name":"Impact","type":"select","options":["High","Medium","Low"]},{"id":"effort","name":"Effort","type":"select","options":["Small","Medium","Large"]},{"id":"notes","name":"Notes","type":"text"}]', 'table')
-ON CONFLICT DO NOTHING;
+-- ─── Default databases ───────────────────────────────────────────────────────
+-- Default databases are created by the API (/api/nexus/databases/seed) on first
+-- user login — they require a real auth.uid() and cannot be seeded here.
