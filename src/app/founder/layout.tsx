@@ -10,6 +10,7 @@ import {
   Bot,
   Lightbulb,
   Building2,
+  CheckSquare,
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ const founderNavItems = [
   { label: "Businesses", href: "/founder/businesses", icon: Building2 },
   { label: "Analytics", href: "/founder/analytics", icon: LineChart },
   { label: "Insights", href: "/founder/insights", icon: Lightbulb },
+  { label: "Approvals", href: "/founder/approvals", icon: CheckSquare },
 ];
 
 export default function FounderLayout({
