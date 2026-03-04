@@ -349,5 +349,5 @@ export function generateUpgradeMessage(reason: string, urgency: 'low' | 'medium'
     },
   };
 
-  return messages[reason]?.[urgency] || 'Upgrade to unlock full Unite-Hub capabilities.';
+  return messages[reason]?.[urgency] || 'Upgrade to unlock full Unite-Group capabilities.';
 }

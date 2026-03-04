@@ -57,7 +57,7 @@ async function handleIssueEvent(
   // - Update local database with issue changes
   // - Send notifications to relevant users
   // - Trigger automations based on state changes
-  // - Sync with Unite-Hub tasks
+  // - Sync with Unite-Group tasks
 
   switch (action) {
     case 'create':

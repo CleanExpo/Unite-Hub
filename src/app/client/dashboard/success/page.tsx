@@ -183,7 +183,7 @@ export default function ClientSuccessPage() {
             <h1 className="text-2xl font-bold">Your Success Dashboard</h1>
           </div>
           <p className="text-muted-foreground">
-            Track your progress and see how you're doing with Unite-Hub
+            Track your progress and see how you're doing with Unite-Group
           </p>
         </div>
       </Section>

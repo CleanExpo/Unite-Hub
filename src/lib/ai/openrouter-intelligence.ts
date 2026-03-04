@@ -408,7 +408,7 @@ ${this.getPlatformGuidelines(params.platform, 'image')}`;
         'Authorization': `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'https://unite-group.in',
-        'X-Title': 'Unite-Hub Marketing Intelligence'
+        'X-Title': 'Unite-Group Marketing Intelligence'
       },
       body: JSON.stringify({
         model,

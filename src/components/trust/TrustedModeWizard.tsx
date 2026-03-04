@@ -435,7 +435,7 @@ export function TrustedModeWizard({
               <CardContent className="pt-4 max-h-64 overflow-y-auto text-sm">
                 <h4 className="font-medium mb-2">Trusted Mode Agreement</h4>
                 <p className="mb-4">
-                  By enabling Trusted Mode, you authorize Unite-Hub to make
+                  By enabling Trusted Mode, you authorize Unite-Group to make
                   autonomous changes to your website's SEO, content, advertising,
                   and conversion optimization within the configured scope limits.
                 </p>

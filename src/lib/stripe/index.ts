@@ -1,7 +1,7 @@
 /**
  * Stripe Integration - Main Export
  *
- * Complete Stripe subscription system for Unite-Hub CRM
+ * Complete Stripe subscription system for Unite-Group CRM
  */
 
 // Client functions

@@ -79,7 +79,7 @@ export default async function ClientLayout({ children }: ClientLayoutProps) {
             {/* Logo */}
             <div className="flex items-center">
               <h1 className="text-xl font-bold text-gray-100">
-                Unite-Hub
+                Unite-Group
               </h1>
             </div>
 
@@ -147,7 +147,7 @@ export default async function ClientLayout({ children }: ClientLayoutProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-400">
-              © {new Date().getFullYear()} Unite-Hub. All rights reserved.
+              © {new Date().getFullYear()} Unite-Group. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link

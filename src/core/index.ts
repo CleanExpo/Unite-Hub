@@ -1,7 +1,7 @@
 /**
  * Core Module
  *
- * Foundation layer for Unite-Hub/Synthex providing:
+ * Foundation layer for Unite-Group/Synthex providing:
  * - Centralized authentication (ADR-001)
  * - Automatic workspace scoping (ADR-002)
  * - Connection pooling (ADR-003)

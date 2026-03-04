@@ -320,7 +320,7 @@ NOTHING escapes unless PERFECT.
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'https://unite-group.in',
-        'X-Title': 'Unite-Hub AI Scope Engine',
+        'X-Title': 'Unite-Group AI Scope Engine',
       },
       body: JSON.stringify({
         model,

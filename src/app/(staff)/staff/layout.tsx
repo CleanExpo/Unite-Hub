@@ -75,7 +75,7 @@ export default async function StaffLayout({ children }: StaffLayoutProps) {
         {/* Logo/Brand */}
         <div className="p-6 border-b border-gray-800">
           <h1 className="text-xl font-bold text-gray-100">
-            Unite-Hub
+            Unite-Group
           </h1>
           <p className="text-sm text-gray-400 mt-1">
             Staff Portal

@@ -1,7 +1,7 @@
 /**
  * Self-Healing Mode Module
  *
- * Human-Governed self-healing for Unite-Hub production issues.
+ * Human-Governed self-healing for Unite-Group production issues.
  * AI proposes patches; Founder approves before any changes to MAIN.
  */
 

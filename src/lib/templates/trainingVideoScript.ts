@@ -126,7 +126,7 @@ function extractNarration(scenes: VideoScene[]): string {
 // Pre-built video script templates
 export const videoScriptTemplates = {
   welcomeVideo: {
-    title: 'Welcome to Unite-Hub',
+    title: 'Welcome to Unite-Group',
     duration: 120,
     style: 'friendly' as const,
     visualStyle: 'mixed' as const,
@@ -135,8 +135,8 @@ export const videoScriptTemplates = {
         sceneNumber: 1,
         duration: 20,
         visualDescription: 'Logo animation followed by dashboard overview',
-        narration: 'Welcome to Unite-Hub - your AI-powered marketing platform. In the next two minutes, I\'ll show you the key areas you\'ll be using every day.',
-        onScreenText: 'Welcome to Unite-Hub',
+        narration: 'Welcome to Unite-Group - your AI-powered marketing platform. In the next two minutes, I\'ll show you the key areas you\'ll be using every day.',
+        onScreenText: 'Welcome to Unite-Group',
         transition: 'fade',
       },
       {

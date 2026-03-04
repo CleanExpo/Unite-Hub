@@ -124,7 +124,7 @@ export default function ClientTrainingPage() {
       <div>
         <h1 className="text-3xl font-bold">Training Hub</h1>
         <p className="text-muted-foreground">
-          Quick lessons to help you get the most from Unite-Hub
+          Quick lessons to help you get the most from Unite-Group
         </p>
       </div>
 

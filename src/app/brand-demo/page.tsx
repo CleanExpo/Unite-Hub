@@ -12,7 +12,7 @@ export default function BrandDemoPage() {
         <div className="text-center mb-12">
           <Logo size="lg" className="mx-auto mb-6" />
           <h1 className="text-4xl font-bold mb-2">
-            <span className="text-unite-blue">Unite-Hub</span>{' '}
+            <span className="text-unite-blue">Unite-Group</span>{' '}
             <span className="text-unite-orange">Brand System</span>
           </h1>
           <p className="text-lg text-unite-navy">Component Showcase & Usage Examples</p>

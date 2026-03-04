@@ -12,7 +12,7 @@ export default function LinearDashboardPage() {
       <div>
         <h1 className="text-3xl font-bold">Linear Projects</h1>
         <p className="text-muted-foreground mt-2">
-          Manage your Linear.app projects and issues from Unite-Hub
+          Manage your Linear.app projects and issues from Unite-Group
         </p>
       </div>
 

@@ -129,7 +129,7 @@ export function OnboardingChecklist() {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <CardTitle className="text-lg">Get Started with Unite-Hub</CardTitle>
+                <CardTitle className="text-lg">Get Started with Unite-Group</CardTitle>
                 <Badge variant="secondary" className="text-xs">
                   {completedSteps}/{totalSteps}
                 </Badge>

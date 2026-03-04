@@ -2,7 +2,7 @@
  * Capabilities Config
  * Phase 36: MVP Client Truth Layer
  *
- * Transparent listing of what Unite-Hub can and cannot do
+ * Transparent listing of what Unite-Group can and cannot do
  */
 
 export interface Capability {

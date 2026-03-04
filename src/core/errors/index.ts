@@ -1,7 +1,7 @@
 /**
  * Core Errors Module
  *
- * Standardized error handling for Unite-Hub/Synthex.
+ * Standardized error handling for Unite-Group/Synthex.
  *
  * @module core/errors
  *

@@ -169,7 +169,7 @@ export default function DashboardLayout({
                   {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                 </button>
                 <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                  Unite-Hub
+                  Unite-Group
                 </Link>
                 <div className="hidden lg:flex gap-4">
                   <NavLink href="/dashboard/overview" isActive={isActive("/dashboard/overview")}>

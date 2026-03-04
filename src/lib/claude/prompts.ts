@@ -237,7 +237,7 @@ Return as JSON object with these sections.`;
 }
 
 // ============================================================================
-// Additional Prompts for Unite-Hub Features
+// Additional Prompts for Unite-Group Features
 // ============================================================================
 
 export const STRATEGY_SYSTEM_PROMPT = `You are a marketing strategist specializing in comprehensive business strategy development.

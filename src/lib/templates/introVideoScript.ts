@@ -18,13 +18,13 @@ export function generateIntroVideoScript(data: IntroScriptData): string {
 
 ### [OPENING - 0:00-0:10]
 
-Welcome to Unite-Hub! We're thrilled to have ${data.businessName} join our platform.
+Welcome to Unite-Group! We're thrilled to have ${data.businessName} join our platform.
 
 ### [VALUE PROPOSITION - 0:10-0:25]
 
 As a business in the ${data.businessIndustry} space, you know how important it is to stand out online. That's exactly what we're here to help you do.
 
-Unite-Hub combines AI-powered marketing automation with genuine human insight to help you:
+Unite-Group combines AI-powered marketing automation with genuine human insight to help you:
 - Create compelling content
 - Optimize your online presence
 - Connect with your ideal customers

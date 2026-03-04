@@ -124,7 +124,7 @@ export const lessonTemplates = {
   },
 
   aiBasics: {
-    title: 'How AI Works in Unite-Hub',
+    title: 'How AI Works in Unite-Group',
     targetAudience: 'business owners with no AI background',
     duration: 240,
     keyPoints: [

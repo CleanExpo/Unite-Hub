@@ -1,5 +1,5 @@
 /**
- * OpenRouter API Client for Unite-Hub
+ * OpenRouter API Client for Unite-Group
  *
  * Provides a unified interface for interacting with OpenRouter models
  * with automatic retries, error handling, and cost tracking.
@@ -67,7 +67,7 @@ export class OpenRouterClient {
       'Authorization': `Bearer ${this.apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in',
-      'X-Title': 'Unite-Hub CRM',
+      'X-Title': 'Unite-Group CRM',
     };
   }
 

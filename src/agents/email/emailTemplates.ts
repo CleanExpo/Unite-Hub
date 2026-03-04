@@ -75,14 +75,14 @@ Synthex Team`,
       subject: 'Streamline Your Operations – Let\'s Talk',
       body: `Hi ${name},
 
-Following up on my previous email about Unite-Hub\'s operations platform.
+Following up on my previous email about Unite-Group\'s operations platform.
 
 We help trade businesses automate daily tasks, manage contacts, and coordinate teams from one place—saving hours per week.
 
-I'd be happy to walk you through a quick demo of how other businesses are using Unite-Hub.
+I'd be happy to walk you through a quick demo of how other businesses are using Unite-Group.
 
 Best regards,
-Unite-Hub Team`,
+Unite-Group Team`,
       context: 'followup',
       brand: 'unite_hub',
     }),
@@ -162,7 +162,7 @@ Synthex`,
 
 I'm reaching out because we've built something specifically for trade business owners like you.
 
-Unite-Hub is an operations platform that:
+Unite-Group is an operations platform that:
 - Centralizes contact management, jobs, and invoicing
 - Automates routine admin tasks
 - Coordinates your team in real-time
@@ -173,7 +173,7 @@ Most of our customers save 8-10 hours per week on admin alone.
 If you'd like to see how it could help your business run smoother, I'd be happy to show you a quick demo.
 
 Best regards,
-Unite-Hub Team`,
+Unite-Group Team`,
       context: 'intro',
       brand: 'unite_hub',
     }),

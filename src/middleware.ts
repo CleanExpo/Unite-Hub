@@ -1,5 +1,5 @@
 /**
- * Unite-Hub Middleware - PKCE Flow
+ * Unite-Group Middleware - PKCE Flow
  *
  * This middleware handles:
  * 1. Session validation (PKCE sessions are in cookies, accessible server-side)

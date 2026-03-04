@@ -270,7 +270,7 @@ export function withWorkspaceAndRole(
 }
 
 /**
- * Unite-Hub staff middleware (convenience wrapper)
+ * Unite-Group staff middleware (convenience wrapper)
  *
  * For routes that should only be accessible by Unite staff.
  */

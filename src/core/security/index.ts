@@ -1,7 +1,7 @@
 /**
  * Core Security Module
  *
- * Rate limiting and audit logging for Unite-Hub/Synthex.
+ * Rate limiting and audit logging for Unite-Group/Synthex.
  *
  * @module core/security
  *

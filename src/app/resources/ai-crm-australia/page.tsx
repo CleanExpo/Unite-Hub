@@ -12,7 +12,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "The Complete Guide to AI-Powered CRM for Australian SMEs 2026 | Unite-Hub",
+  title: "The Complete Guide to AI-Powered CRM for Australian SMEs 2026 | Unite-Group",
   description:
     "A comprehensive guide to choosing and using AI-powered CRM software for Australian small businesses in 2026. Covers lead management, automation, multi-business dashboards, and AU-specific compliance.",
   keywords: [
@@ -56,12 +56,12 @@ function ArticleSchema() {
     "dateModified": new Date().toISOString().split("T")[0],
     "author": {
       "@type": "Organization",
-      "name": "Unite-Hub",
+      "name": "Unite-Group",
       "url": "https://unite-group.in",
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Unite-Hub",
+      "name": "Unite-Group",
       "url": "https://unite-group.in",
       "logo": {
         "@type": "ImageObject",
@@ -140,7 +140,7 @@ const TOC_ITEMS = [
   { id: "ai-agents",             label: "6. AI agent workforces" },
   { id: "comparison",            label: "7. AI CRM vs traditional CRM" },
   { id: "how-to-choose",         label: "8. How to choose the right platform" },
-  { id: "getting-started",       label: "9. Getting started with Unite-Hub" },
+  { id: "getting-started",       label: "9. Getting started with Unite-Group" },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -175,7 +175,7 @@ export default function AiCrmAustraliaGuide() {
               works, what to look for in the AU market, and how to get started today.
             </p>
             <div className="flex flex-wrap gap-4 text-sm text-zinc-500">
-              <span>By <span className="text-zinc-300">Unite-Hub Team</span></span>
+              <span>By <span className="text-zinc-300">Unite-Group Team</span></span>
               <span>·</span>
               <span>~18 min read</span>
               <span>·</span>
@@ -327,7 +327,7 @@ export default function AiCrmAustraliaGuide() {
             consolidate reporting.
           </P>
           <P>
-            Unite-Hub is designed specifically for this use case. A single dashboard shows
+            Unite-Group is designed specifically for this use case. A single dashboard shows
             real-time KPI cards for each business — MRR, active users, key performance metrics,
             and 30-day trend charts — all visible simultaneously. The cross-business view
             makes it possible to identify which business needs attention, where revenue is growing,
@@ -338,7 +338,7 @@ export default function AiCrmAustraliaGuide() {
               Unite Group — 6 businesses, one dashboard
             </h4>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              Disaster Recovery · RestoreAssist · ATO Compliance · Synthex · CCW-ERP · Unite-Hub —
+              Disaster Recovery · RestoreAssist · ATO Compliance · Synthex · CCW-ERP · Unite-Group —
               all monitored from <code className="text-cyan-400">/staff/dashboard</code> with live
               KPI cards and drill-down views per business.
             </p>
@@ -359,7 +359,7 @@ export default function AiCrmAustraliaGuide() {
             coordinates the entire operation.
           </P>
           <P>
-            Unite-Hub includes 23 purpose-built AI agents covering email processing, content
+            Unite-Group includes 23 purpose-built AI agents covering email processing, content
             generation, SEO optimisation, competitive intelligence, business performance
             reporting, and founder intelligence briefings. Each agent runs on demand or on
             schedule, reducing the manual workload for founders and staff significantly.
@@ -373,7 +373,7 @@ export default function AiCrmAustraliaGuide() {
                 <tr className="border-b border-zinc-700">
                   <th className="py-3 pr-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 w-1/3">Feature</th>
                   <th className="py-3 pr-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 w-1/3">Traditional CRM</th>
-                  <th className="py-3 text-xs font-semibold uppercase tracking-wider text-cyan-400 w-1/3">AI CRM (Unite-Hub)</th>
+                  <th className="py-3 text-xs font-semibold uppercase tracking-wider text-cyan-400 w-1/3">AI CRM (Unite-Group)</th>
                 </tr>
               </thead>
               <tbody>
@@ -415,9 +415,9 @@ export default function AiCrmAustraliaGuide() {
           </ol>
 
           {/* ── Section 9 ── */}
-          <SectionHeading id="getting-started">9. Getting started with Unite-Hub</SectionHeading>
+          <SectionHeading id="getting-started">9. Getting started with Unite-Group</SectionHeading>
           <P>
-            Unite-Hub is an AI-powered CRM and business management platform built specifically
+            Unite-Group is an AI-powered CRM and business management platform built specifically
             for Australian SMEs. It combines everything covered in this guide — contact management,
             deal pipeline, email automation, multi-business dashboards, and a 23-agent AI workforce —
             into a single platform.
@@ -442,7 +442,7 @@ export default function AiCrmAustraliaGuide() {
               Ready to build your AI CRM stack?
             </h2>
             <p className="text-zinc-300 mb-6 max-w-lg mx-auto">
-              Unite-Hub is built for Australian founders who manage multiple businesses and need
+              Unite-Group is built for Australian founders who manage multiple businesses and need
               a real AI workforce — not just a chatbot.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

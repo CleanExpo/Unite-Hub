@@ -3,7 +3,7 @@
  *
  * Central export point for feature integration infrastructure.
  * Use these components to ensure consistent client context handling
- * across all features in Unite-Hub.
+ * across all features in Unite-Group.
  *
  * @module features
  */

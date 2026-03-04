@@ -1,5 +1,5 @@
 /**
- * Custom Tracer for Unite-Hub Operations
+ * Custom Tracer for Unite-Group Operations
  * Trace AI operations, database queries, and API calls
  */
 

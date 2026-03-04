@@ -250,7 +250,7 @@ async function executeWebhookOnce(options: WebhookOptions): Promise<WebhookResul
 function buildHeaders(options: WebhookOptions): Record<string, string> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'User-Agent': 'Unite-Hub/1.0',
+    'User-Agent': 'Unite-Group/1.0',
     ...options.headers,
   };
 

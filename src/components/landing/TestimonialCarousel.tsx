@@ -39,7 +39,7 @@ export interface TestimonialCarouselProps {
  *   subtitle="Real results from real businesses"
  *   testimonials={[
  *     {
- *       quote: "Unite-Hub transformed how we handle leads. 10x productivity!",
+ *       quote: "Unite-Group transformed how we handle leads. 10x productivity!",
  *       author: "Sarah Chen",
  *       role: "Marketing Director",
  *       company: "TechCorp",

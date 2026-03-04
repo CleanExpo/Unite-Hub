@@ -18,7 +18,7 @@ export type UserRole = 'FOUNDER' | 'STAFF' | 'CLIENT' | 'ADMIN';
 
 /**
  * Project context for route separation
- * Unite-Hub: Staff CRM (FOUNDER, STAFF, ADMIN only)
+ * Unite-Group: Staff CRM (FOUNDER, STAFF, ADMIN only)
  * Synthex: Client marketing portal (CLIENT + tiers)
  */
 export type ProjectContext = 'unite-hub' | 'synthex' | 'shared';

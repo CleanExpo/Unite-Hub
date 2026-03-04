@@ -3,8 +3,8 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, Sparkles, Bug, Zap, Shield } from 'lucide-react';
 
 export const metadata = {
-  title: 'Changelog - Unite-Hub',
-  description: 'See what is new in Unite-Hub. Latest features, improvements, and bug fixes.',
+  title: 'Changelog - Unite-Group',
+  description: 'See what is new in Unite-Group. Latest features, improvements, and bug fixes.',
 };
 
 export default function ChangelogPage() {
@@ -66,7 +66,7 @@ export default function ChangelogPage() {
         {
           type: 'feature',
           title: 'Initial Release',
-          description: 'Unite-Hub MVP with core CRM and marketing automation features',
+          description: 'Unite-Group MVP with core CRM and marketing automation features',
           icon: Sparkles,
         },
         {

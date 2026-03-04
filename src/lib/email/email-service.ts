@@ -1,5 +1,5 @@
 /**
- * Unite-Hub Unified Email Service
+ * Unite-Group Unified Email Service
  *
  * Production-ready email service with multi-provider support and automatic fallback.
  * Supports SendGrid, Resend, and Gmail SMTP with intelligent routing.
@@ -307,7 +307,7 @@ async function sendViaSMTP(options: EmailOptions): Promise<EmailResult> {
  * ```typescript
  * const result = await sendEmail({
  *   to: 'user@example.com',
- *   subject: 'Welcome to Unite-Hub',
+ *   subject: 'Welcome to Unite-Group',
  *   html: '<h1>Welcome!</h1>',
  *   text: 'Welcome!',
  * });
@@ -390,12 +390,12 @@ export async function sendWelcomeEmail(
 ): Promise<EmailResult> {
   return sendEmail({
     to,
-    subject: 'Welcome to Unite-Hub! 🎉',
+    subject: 'Welcome to Unite-Group! 🎉',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #2563eb;">Welcome to Unite-Hub!</h1>
+        <h1 style="color: #2563eb;">Welcome to Unite-Group!</h1>
         <p>Hi ${userName},</p>
-        <p>Thank you for joining Unite-Hub. We're excited to have you on board!</p>
+        <p>Thank you for joining Unite-Group. We're excited to have you on board!</p>
         <p>Here's what you can do next:</p>
         <ul>
           <li>Complete your profile</li>
@@ -404,14 +404,14 @@ export async function sendWelcomeEmail(
           <li>Set up your email campaigns</li>
         </ul>
         <p>If you have any questions, feel free to reply to this email.</p>
-        <p>Best regards,<br/>The Unite-Hub Team</p>
+        <p>Best regards,<br/>The Unite-Group Team</p>
       </div>
     `,
-    text: `Welcome to Unite-Hub!
+    text: `Welcome to Unite-Group!
 
 Hi ${userName},
 
-Thank you for joining Unite-Hub. We're excited to have you on board!
+Thank you for joining Unite-Group. We're excited to have you on board!
 
 Here's what you can do next:
 - Complete your profile
@@ -422,7 +422,7 @@ Here's what you can do next:
 If you have any questions, feel free to reply to this email.
 
 Best regards,
-The Unite-Hub Team`,
+The Unite-Group Team`,
   });
 }
 
@@ -435,11 +435,11 @@ export async function sendPasswordResetEmail(
 ): Promise<EmailResult> {
   return sendEmail({
     to,
-    subject: 'Reset Your Unite-Hub Password',
+    subject: 'Reset Your Unite-Group Password',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #2563eb;">Password Reset Request</h1>
-        <p>You requested to reset your password for Unite-Hub.</p>
+        <p>You requested to reset your password for Unite-Group.</p>
         <p>Click the button below to reset your password:</p>
         <p style="text-align: center; margin: 30px 0;">
           <a href="${resetLink}" style="background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
@@ -448,12 +448,12 @@ export async function sendPasswordResetEmail(
         </p>
         <p>If you didn't request this, please ignore this email.</p>
         <p>This link will expire in 1 hour.</p>
-        <p>Best regards,<br/>The Unite-Hub Team</p>
+        <p>Best regards,<br/>The Unite-Group Team</p>
       </div>
     `,
     text: `Password Reset Request
 
-You requested to reset your password for Unite-Hub.
+You requested to reset your password for Unite-Group.
 
 Click this link to reset your password:
 ${resetLink}
@@ -462,7 +462,7 @@ If you didn't request this, please ignore this email.
 This link will expire in 1 hour.
 
 Best regards,
-The Unite-Hub Team`,
+The Unite-Group Team`,
   });
 }
 
@@ -481,7 +481,7 @@ export async function sendNotificationEmail(
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #2563eb;">${title}</h1>
         <p>${message}</p>
-        <p>Best regards,<br/>The Unite-Hub Team</p>
+        <p>Best regards,<br/>The Unite-Group Team</p>
       </div>
     `,
     text: `${title}
@@ -489,7 +489,7 @@ export async function sendNotificationEmail(
 ${message}
 
 Best regards,
-The Unite-Hub Team`,
+The Unite-Group Team`,
   });
 }
 
@@ -525,8 +525,8 @@ export function getProviderStatus() {
 export async function testProvider(provider: EmailProvider): Promise<boolean> {
   const testResult = await sendEmail({
     to: config.smtp.user || config.defaultFrom, // Send to self
-    subject: 'Unite-Hub Email Test',
-    text: 'This is a test email from Unite-Hub',
+    subject: 'Unite-Group Email Test',
+    text: 'This is a test email from Unite-Group',
     provider,
   });
 

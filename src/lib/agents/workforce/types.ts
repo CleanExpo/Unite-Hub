@@ -3,7 +3,7 @@
  *
  * Centralizes all types shared across workforce modules to prevent
  * circular imports. Maps Claude Code concepts (skills, hooks, workstreams,
- * memory scopes) to Unite-Hub's runtime.
+ * memory scopes) to Unite-Group's runtime.
  *
  * @module lib/agents/workforce/types
  */

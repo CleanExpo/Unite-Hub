@@ -5,7 +5,7 @@ import { getPlanTierFromPriceId } from "@/lib/stripe/client";
 import { publicRateLimit } from "@/lib/rate-limit";
 
 /**
- * Stripe Webhook Handler for Unite-Hub CRM
+ * Stripe Webhook Handler for Unite-Group CRM
  *
  * Processes all Stripe webhook events and syncs with Supabase database
  *

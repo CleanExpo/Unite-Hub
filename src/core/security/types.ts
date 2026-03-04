@@ -13,7 +13,7 @@ export type RateLimitTier =
   | 'public'      // 10/min - Health checks, public pages
   | 'webhook'     // 1000/min - External webhooks (Stripe, Gmail)
   | 'client'      // 50/min - Synthex client routes
-  | 'staff'       // 100/min - Unite-Hub staff routes
+  | 'staff'       // 100/min - Unite-Group staff routes
   | 'agent'       // 200/min - AI agent internal routes
   | 'admin';      // 500/min - Admin operations
 

@@ -2,7 +2,7 @@
 
 /**
  * Tier Context - Synthex Tier-Based Feature Access
- * Phase 4 of Unite-Hub Rebuild
+ * Phase 4 of Unite-Group Rebuild
  *
  * Provides tier information and feature access control for Synthex client portal.
  * Maps to synthex_tier_limits table structure from migration 401.

@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | Unite-Hub',
-  description: 'Terms and conditions for using Unite-Hub',
+  title: 'Terms of Service | Unite-Group',
+  description: 'Terms and conditions for using Unite-Group',
 };
 
 export default function TermsPage() {
@@ -17,11 +17,11 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
           <p>
-            By accessing and using Unite-Hub ("Service"), you accept and agree to be bound by these Terms of Service
+            By accessing and using Unite-Group ("Service"), you accept and agree to be bound by these Terms of Service
             ("Terms"). If you do not agree to these Terms, you may not use the Service.
           </p>
           <p>
-            These Terms constitute a legally binding agreement between you and Unite-Hub. By creating an account or
+            These Terms constitute a legally binding agreement between you and Unite-Group. By creating an account or
             using our Service, you represent that you have the authority to accept these Terms.
           </p>
         </section>
@@ -29,7 +29,7 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">2. Service Description</h2>
           <p>
-            Unite-Hub provides AI-powered marketing automation and customer relationship management (CRM) tools,
+            Unite-Group provides AI-powered marketing automation and customer relationship management (CRM) tools,
             including but not limited to:
           </p>
           <ul>
@@ -77,7 +77,7 @@ export default function TermsPage() {
             <li>Not attempt to gain unauthorized access to our systems</li>
             <li>Not abuse, harass, or harm other users</li>
             <li>Not scrape, crawl, or automate access to the Service without permission</li>
-            <li>Respect intellectual property rights of Unite-Hub and third parties</li>
+            <li>Respect intellectual property rights of Unite-Group and third parties</li>
             <li>Comply with anti-spam laws (CAN-SPAM, GDPR, CASL, etc.)</li>
           </ul>
         </section>
@@ -126,11 +126,11 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">7. Data Ownership and License</h2>
           <p>
-            <strong>Your Data:</strong> You retain all rights, title, and ownership of content you upload to Unite-Hub,
+            <strong>Your Data:</strong> You retain all rights, title, and ownership of content you upload to Unite-Group,
             including contacts, campaigns, media files, and generated content.
           </p>
           <p>
-            <strong>License to Us:</strong> You grant Unite-Hub a limited, non-exclusive license to use, store, and
+            <strong>License to Us:</strong> You grant Unite-Group a limited, non-exclusive license to use, store, and
             process your data solely to provide the Service and improve our AI models (with your consent).
           </p>
           <p>
@@ -143,7 +143,7 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">8. Third-Party Integrations</h2>
           <p>
-            Unite-Hub integrates with third-party services (e.g., Gmail, Google Drive, Stripe). Your use of these
+            Unite-Group integrates with third-party services (e.g., Gmail, Google Drive, Stripe). Your use of these
             integrations is subject to the third party's terms of service and privacy policies. We are not responsible
             for third-party service outages or changes.
           </p>
@@ -152,7 +152,7 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">9. Intellectual Property</h2>
           <p>
-            The Service, including its code, design, logos, and trademarks, is owned by Unite-Hub and protected by
+            The Service, including its code, design, logos, and trademarks, is owned by Unite-Group and protected by
             copyright, trademark, and other intellectual property laws. You may not copy, modify, distribute, or
             reverse-engineer any part of the Service without our written permission.
           </p>
@@ -169,7 +169,7 @@ export default function TermsPage() {
             secure. You use the Service at your own risk.
           </p>
           <p>
-            <strong>Limitation of Liability:</strong> To the maximum extent permitted by law, Unite-Hub shall not be
+            <strong>Limitation of Liability:</strong> To the maximum extent permitted by law, Unite-Group shall not be
             liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits,
             data, or business opportunities, arising from your use of the Service.
           </p>
@@ -182,7 +182,7 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">11. Indemnification</h2>
           <p>
-            You agree to indemnify and hold harmless Unite-Hub, its affiliates, and employees from any claims, damages,
+            You agree to indemnify and hold harmless Unite-Group, its affiliates, and employees from any claims, damages,
             losses, or expenses (including legal fees) arising from:
           </p>
           <ul>
@@ -236,7 +236,7 @@ export default function TermsPage() {
           </p>
           <p>
             <strong>Entire Agreement:</strong> These Terms, together with our Privacy Policy, constitute the entire
-            agreement between you and Unite-Hub.
+            agreement between you and Unite-Group.
           </p>
         </section>
 
@@ -251,7 +251,7 @@ export default function TermsPage() {
             </p>
             <p>
               <strong>Mailing Address:</strong><br />
-              Unite-Hub Legal Team<br />
+              Unite-Group Legal Team<br />
               [Your Business Address]<br />
               [City, State ZIP]
             </p>

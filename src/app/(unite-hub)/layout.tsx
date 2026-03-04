@@ -1,5 +1,5 @@
 /**
- * Unite-Hub Layout (Route Group)
+ * Unite-Group Layout (Route Group)
  *
  * Protected layout for staff CRM functionality with:
  * - Role-based access control (FOUNDER, STAFF, ADMIN only)
@@ -108,7 +108,7 @@ export default async function UniteHubLayout({ children }: UniteHubLayoutProps) 
   // Only allow FOUNDER, STAFF, ADMIN roles
   const allowedRoles = ['FOUNDER', 'STAFF', 'ADMIN'];
   if (!allowedRoles.includes(userRole)) {
-    // Not authorized for Unite-Hub staff area
+    // Not authorized for Unite-Group staff area
     redirect('/unauthorized');
   }
 
@@ -119,7 +119,7 @@ export default async function UniteHubLayout({ children }: UniteHubLayoutProps) 
         {/* Logo/Brand */}
         <div className="p-6 border-b border-gray-800">
           <h1 className="text-xl font-bold text-gray-100">
-            Unite-Hub
+            Unite-Group
           </h1>
           <p className="text-sm text-gray-400 mt-1">
             Staff CRM
@@ -174,7 +174,7 @@ export default async function UniteHubLayout({ children }: UniteHubLayoutProps) 
         <header className="bg-gray-900 border-b border-gray-800 px-8 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 text-sm text-gray-400">
-              <span>Unite-Hub</span>
+              <span>Unite-Group</span>
             </div>
 
             {/* Mobile menu button (future enhancement) */}

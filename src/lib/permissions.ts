@@ -1,7 +1,7 @@
 /**
  * Role-Based Access Control (RBAC) System
  *
- * This module defines the complete permission matrix for Unite-Hub.
+ * This module defines the complete permission matrix for Unite-Group.
  * Permissions are mapped to user roles (owner, admin, member, viewer).
  *
  * @module permissions

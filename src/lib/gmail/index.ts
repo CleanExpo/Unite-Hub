@@ -1,5 +1,5 @@
 /**
- * Gmail API Integration for Unite-Hub
+ * Gmail API Integration for Unite-Group
  *
  * Complete email ingestion system with OAuth, parsing, webhooks, and sending.
  *

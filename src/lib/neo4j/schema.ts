@@ -1,7 +1,7 @@
 /**
  * Neo4j Knowledge Graph Schema Definition
  *
- * Defines the graph schema for Unite-Hub's knowledge graph:
+ * Defines the graph schema for Unite-Group's knowledge graph:
  * - Node types (entities)
  * - Relationship types
  * - Properties

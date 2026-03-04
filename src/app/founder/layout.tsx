@@ -43,7 +43,7 @@ export default function FounderLayout({
               href="/dashboard/overview"
               className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
             >
-              Unite-Hub
+              Unite-Group
             </Link>
             <ChevronRight className="w-4 h-4 text-slate-600" />
             <span className="text-sm font-medium text-slate-300">Founder OS</span>

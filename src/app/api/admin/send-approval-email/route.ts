@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
 
     const emailResult = await sendEmail({
       to: phill.email,
-      subject: `[Unite-Hub] Device Approval Request from ${profile?.email}`,
+      subject: `[Unite-Group] Device Approval Request from ${profile?.email}`,
       html: `
         <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
           <div style="background-color: white; border-radius: 8px; padding: 30px; max-width: 600px; margin: 0 auto;">
@@ -114,12 +114,12 @@ export async function POST(req: NextRequest) {
             <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
 
             <p style="color: #999; font-size: 12px; margin: 0;">
-              This is an automated message from Unite-Hub. If you did not expect this request, please deny it. For security questions, contact your administrator.
+              This is an automated message from Unite-Group. If you did not expect this request, please deny it. For security questions, contact your administrator.
             </p>
           </div>
         </div>
       `,
-      text: `Device Approval Request\n\nUser ${profile?.email} is requesting access to the CRM system from a new device.\n\nDevice Details:\n- User Agent: ${userAgent}\n- IP Address: ${ipAddress}\n- Request Time: ${new Date().toLocaleString()}\n- Approval Expires: ${approval.expiresAt.toLocaleString()}\n\nAction Required: The link expires in 10 minutes.\n\nApprove: ${approveLink}\nDeny: ${denyLink}\n\nThis is an automated message from Unite-Hub.`,
+      text: `Device Approval Request\n\nUser ${profile?.email} is requesting access to the CRM system from a new device.\n\nDevice Details:\n- User Agent: ${userAgent}\n- IP Address: ${ipAddress}\n- Request Time: ${new Date().toLocaleString()}\n- Approval Expires: ${approval.expiresAt.toLocaleString()}\n\nAction Required: The link expires in 10 minutes.\n\nApprove: ${approveLink}\nDeny: ${denyLink}\n\nThis is an automated message from Unite-Group.`,
     });
 
     if (!emailResult.success) {

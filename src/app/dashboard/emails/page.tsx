@@ -227,7 +227,7 @@ export default function EmailsPage() {
             <div className="text-center py-8 text-slate-500">
               <Mail className="w-8 h-8 mx-auto mb-3 opacity-50" />
               <p className="text-sm">No Gmail accounts connected</p>
-              <p className="text-xs mt-1">Connect your Gmail to sync emails and send from Unite-Hub</p>
+              <p className="text-xs mt-1">Connect your Gmail to sync emails and send from Unite-Group</p>
             </div>
           ) : (
             <div className="space-y-3">

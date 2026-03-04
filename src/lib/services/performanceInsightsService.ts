@@ -151,7 +151,7 @@ export function normalizeMetrics(
   internal: InternalMetrics,
   external: ExternalMetrics
 ): NormalizedMetrics {
-  const dataSources: string[] = ["Unite-Hub Internal Database"];
+  const dataSources: string[] = ["Unite-Group Internal Database"];
 
   if (external.rankTracking) dataSources.push("DataForSEO Rank Tracking");
   if (external.backlinks) dataSources.push("DataForSEO Backlinks");

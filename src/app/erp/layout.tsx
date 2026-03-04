@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'ERP System | Unite-Hub',
+  title: 'ERP System | Unite-Group',
   description: 'Complete business management suite for inventory, sales, and operations',
 };
 

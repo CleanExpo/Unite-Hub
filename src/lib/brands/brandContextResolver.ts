@@ -1,7 +1,7 @@
 /**
  * Brand Context Resolver
  *
- * Resolves brand context for all Unite-Hub operations including:
+ * Resolves brand context for all Unite-Group operations including:
  * - Content generation (topic engine, content agents)
  * - Campaign planning (drip campaigns, email templates)
  * - Analytics (performance tracking, insights)

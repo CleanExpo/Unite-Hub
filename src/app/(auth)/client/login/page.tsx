@@ -46,7 +46,7 @@ export default function ClientLoginPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Client Portal</h1>
           <p className="text-gray-400 text-sm">
-            Sign in to access your Unite-Hub client dashboard
+            Sign in to access your Unite-Group client dashboard
           </p>
         </div>
 

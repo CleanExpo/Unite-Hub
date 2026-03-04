@@ -4,12 +4,12 @@
  * Implements PreToolUse/PostToolUse/PreExecution/PostExecution lifecycle hooks
  * for validation, auditing, and transformation of agent actions.
  *
- * Maps Claude Code's hook concept to Unite-Hub:
+ * Maps Claude Code's hook concept to Unite-Group:
  * - PreToolUse  → pre-tool-use phase
  * - PostToolUse → post-tool-use phase
  * - SubagentStart → pre-execution phase
  * - SubagentStop  → post-execution phase
- * + pre-handoff / post-handoff phases (Unite-Hub specific)
+ * + pre-handoff / post-handoff phases (Unite-Group specific)
  *
  * @module lib/agents/workforce/hooks
  */

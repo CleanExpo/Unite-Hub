@@ -48,7 +48,7 @@ export default function ConsolePage() {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">System Overview</h1>
-        <p className="text-gray-400">Unite-Hub Engine Status Dashboard</p>
+        <p className="text-gray-400">Unite-Group Engine Status Dashboard</p>
       </div>
 
       {/* Summary Cards */}

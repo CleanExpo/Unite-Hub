@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Build system prompt based on context
-    let systemPrompt = `You are NEXUS, an AI marketing assistant for Unite-Hub. You help clients review their generated marketing content, suggest improvements, and answer questions about their campaigns.
+    let systemPrompt = `You are NEXUS, an AI marketing assistant for Unite-Group. You help clients review their generated marketing content, suggest improvements, and answer questions about their campaigns.
 
 Your capabilities:
 - Review and provide feedback on marketing content

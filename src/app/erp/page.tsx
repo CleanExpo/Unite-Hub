@@ -176,7 +176,7 @@ export default function ERPHomePage() {
         <CardHeader>
           <CardTitle>System Overview</CardTitle>
           <CardDescription>
-            Unite-Hub ERP provides end-to-end business management with Australian tax compliance
+            Unite-Group ERP provides end-to-end business management with Australian tax compliance
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -301,7 +301,7 @@ export default function ERPHomePage() {
 
       {/* Footer Info */}
       <div className="border-t pt-6 text-center text-sm text-muted-foreground">
-        <p>Unite-Hub ERP v1.0 • Complete business management suite</p>
+        <p>Unite-Group ERP v1.0 • Complete business management suite</p>
         <p className="mt-1">6 integrated modules • Australian tax compliant • Multi-warehouse support</p>
       </div>
     </div>

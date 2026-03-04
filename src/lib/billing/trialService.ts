@@ -538,7 +538,7 @@ export interface OnboardingEmail {
 export const ONBOARDING_EMAILS: OnboardingEmail[] = [
   {
     day: 0,
-    subject: 'Welcome to Unite-Hub! Let\'s get started',
+    subject: 'Welcome to Unite-Group! Let\'s get started',
     template: 'onboarding_welcome',
     trigger: 'signup',
   },

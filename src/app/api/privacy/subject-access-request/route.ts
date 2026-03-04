@@ -125,11 +125,11 @@ async function sendSARConfirmationEmail(
         <ul style="padding-left: 20px;">
           <li><strong>Email:</strong> <a href="mailto:privacy@unite-group.in" style="color: #0066cc;">privacy@unite-group.in</a></li>
           <li><strong>Phone:</strong> [Your Phone Number]</li>
-          <li><strong>Mail:</strong> Unite-Hub Privacy Team, Level 1, 123 Business Street, Brisbane QLD 4000</li>
+          <li><strong>Mail:</strong> Unite-Group Privacy Team, Level 1, 123 Business Street, Brisbane QLD 4000</li>
         </ul>
 
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666;">
-          <p>This is an automated confirmation email from Unite-Hub Pty Ltd.</p>
+          <p>This is an automated confirmation email from Unite-Group Pty Ltd.</p>
           <p>We are committed to protecting your privacy in accordance with the Australian Privacy Principles (APPs) under the Privacy Act 1988 (Cth).</p>
         </div>
       </div>
@@ -168,9 +168,9 @@ ${process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in'}/subject-access-re
 Contact Information:
 - Email: privacy@unite-group.in
 - Phone: [Your Phone Number]
-- Mail: Unite-Hub Privacy Team, Level 1, 123 Business Street, Brisbane QLD 4000
+- Mail: Unite-Group Privacy Team, Level 1, 123 Business Street, Brisbane QLD 4000
 
-This is an automated confirmation email from Unite-Hub Pty Ltd.
+This is an automated confirmation email from Unite-Group Pty Ltd.
 We are committed to protecting your privacy in accordance with the Australian Privacy Principles (APPs) under the Privacy Act 1988 (Cth).
   `;
 

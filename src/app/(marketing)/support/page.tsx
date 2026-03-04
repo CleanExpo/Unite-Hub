@@ -4,8 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { MessageCircle, Mail, Book, Headphones, ArrowRight, Clock } from 'lucide-react';
 
 export const metadata = {
-  title: 'Support - Unite-Hub',
-  description: 'Get help with Unite-Hub. Access documentation, contact support, or explore our knowledge base.',
+  title: 'Support - Unite-Group',
+  description: 'Get help with Unite-Group. Access documentation, contact support, or explore our knowledge base.',
 };
 
 export default function SupportPage() {
@@ -46,12 +46,12 @@ export default function SupportPage() {
 
   const faqs = [
     {
-      question: 'How do I get started with Unite-Hub?',
+      question: 'How do I get started with Unite-Group?',
       answer: 'Sign up for a free trial, connect your email, and start automating your workflows. Check our Quick Start guide for step-by-step instructions.',
     },
     {
       question: 'What integrations are available?',
-      answer: 'Unite-Hub integrates with Gmail, Outlook, Google Calendar, Stripe, and more. Visit our integrations page for the complete list.',
+      answer: 'Unite-Group integrates with Gmail, Outlook, Google Calendar, Stripe, and more. Visit our integrations page for the complete list.',
     },
     {
       question: 'How does AI lead scoring work?',
@@ -73,7 +73,7 @@ export default function SupportPage() {
               How can we help?
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Get the support you need to succeed with Unite-Hub.
+              Get the support you need to succeed with Unite-Group.
               We're here to help every step of the way.
             </p>
           </div>

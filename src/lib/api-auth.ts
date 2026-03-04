@@ -2,7 +2,7 @@
  * Unified API Authentication Middleware
  *
  * This module provides consistent authentication and authorization
- * across all API routes in Unite-Hub.
+ * across all API routes in Unite-Group.
  *
  * Usage:
  * ```typescript

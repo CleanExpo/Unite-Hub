@@ -310,7 +310,7 @@ export class CredentialAlertService {
    * Send email alert
    */
   private async sendEmailAlert(alert: Alert, recipients: string[]): Promise<void> {
-    // TODO: Integrate with email service from Unite-Hub
+    // TODO: Integrate with email service from Unite-Group
     // For now, log the alert
     console.log(`Email alert to ${recipients.join(', ')}:`, alert.message);
   }

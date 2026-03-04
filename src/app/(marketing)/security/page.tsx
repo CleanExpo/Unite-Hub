@@ -3,7 +3,7 @@ import { Shield, Lock, Eye, AlertTriangle, CheckCircle, Database, Key, Bell, Fil
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: 'Security | Unite-Hub',
+  title: 'Security | Unite-Group',
   description: 'How we keep your data secure',
 };
 
@@ -13,7 +13,7 @@ export default function SecurityPage() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <Shield className="h-16 w-16 mx-auto mb-4 text-primary" />
-          <h1 className="text-4xl font-bold mb-4">Security at Unite-Hub</h1>
+          <h1 className="text-4xl font-bold mb-4">Security at Unite-Group</h1>
           <p className="text-xl text-muted-foreground">
             Your data security is our top priority
           </p>

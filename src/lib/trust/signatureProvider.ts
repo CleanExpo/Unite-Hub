@@ -116,7 +116,7 @@ class DocuSignProvider implements ISignatureProvider {
     //     'Content-Type': 'application/json',
     //   },
     //   body: JSON.stringify({
-    //     emailSubject: 'Unite-Hub Trusted Mode Agreement',
+    //     emailSubject: 'Unite-Group Trusted Mode Agreement',
     //     documents: [...],
     //     recipients: {
     //       signers: [{

@@ -272,7 +272,7 @@ export default function PerformancePage() {
           <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
             <p className="text-xs text-gray-500 dark:text-gray-400">
               <strong>Data Integrity:</strong> All metrics shown are based on real data from
-              Unite-Hub internal systems and DataForSEO API. No estimates, projections, or
+              Unite-Group internal systems and DataForSEO API. No estimates, projections, or
               synthetic performance data is included. Reports require approval before
               client-facing use.
             </p>

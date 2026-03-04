@@ -14,7 +14,7 @@ export default function SignInPage() {
           <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-2xl">
             <span className="text-white font-bold text-3xl">UH</span>
           </div>
-          <h1 className="text-4xl font-bold text-white">Welcome to Unite-Hub</h1>
+          <h1 className="text-4xl font-bold text-white">Welcome to Unite-Group</h1>
           <p className="text-blue-200 text-lg">AI-Powered Marketing Automation</p>
         </div>
 

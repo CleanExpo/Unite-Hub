@@ -4,8 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { BookOpen, Code, FileText, Zap, ArrowRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Documentation - Unite-Hub',
-  description: 'Learn how to use Unite-Hub to automate your marketing and CRM workflows with AI.',
+  title: 'Documentation - Unite-Group',
+  description: 'Learn how to use Unite-Group to automate your marketing and CRM workflows with AI.',
 };
 
 export default function DocsPage() {
@@ -13,7 +13,7 @@ export default function DocsPage() {
     {
       icon: Zap,
       title: 'Quick Start',
-      description: 'Get up and running with Unite-Hub in minutes',
+      description: 'Get up and running with Unite-Group in minutes',
       href: '/docs/quickstart',
       color: 'text-blue-600',
     },
@@ -50,7 +50,7 @@ export default function DocsPage() {
               Documentation
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Everything you need to know about building with Unite-Hub.
+              Everything you need to know about building with Unite-Group.
               From getting started to advanced integrations.
             </p>
             <div className="flex gap-4 justify-center">
@@ -105,7 +105,7 @@ export default function DocsPage() {
           <div className="max-w-2xl mx-auto text-center">
             <h3 className="text-xl font-semibold mb-4">Need Help Getting Started?</h3>
             <p className="text-muted-foreground mb-6">
-              Our team is here to help you get the most out of Unite-Hub.
+              Our team is here to help you get the most out of Unite-Group.
               Whether you need technical support or strategic guidance, we&apos;re ready to assist.
             </p>
             <div className="flex gap-4 justify-center">

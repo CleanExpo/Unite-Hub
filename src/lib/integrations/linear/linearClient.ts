@@ -7,7 +7,7 @@
  * - OAuth authentication
  * - Project/Issue CRUD operations
  * - Webhook event handling
- * - Real-time sync with Unite-Hub tasks
+ * - Real-time sync with Unite-Group tasks
  *
  * Environment Variables:
  * - LINEAR_API_KEY: Personal API key for server-side operations

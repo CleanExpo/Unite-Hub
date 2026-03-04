@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Features | Unite-Hub',
+  title: 'Features | Unite-Group',
   description: 'Discover powerful AI-driven features for marketing automation and CRM',
 };
 
@@ -22,7 +22,7 @@ export default function FeaturesPage() {
           <Badge className="mb-4">AI-Powered Automation</Badge>
           <h1 className="text-5xl font-bold mb-6">Everything You Need to Scale</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Unite-Hub combines cutting-edge AI with intuitive design to automate your marketing workflows,
+            Unite-Group combines cutting-edge AI with intuitive design to automate your marketing workflows,
             nurture leads, and build genuine customer relationships—all in one platform.
           </p>
         </div>

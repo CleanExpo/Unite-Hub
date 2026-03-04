@@ -43,7 +43,7 @@ export interface CTASectionProps {
  * // Button variant
  * <CTASection
  *   title="Ready to Transform Your Marketing?"
- *   subtitle="Join thousands of businesses already using Unite-Hub"
+ *   subtitle="Join thousands of businesses already using Unite-Group"
  *   variant="buttons"
  *   primaryCTA={{ text: 'Start Free Trial', href: '/signup' }}
  *   secondaryCTA={{ text: 'Contact Sales', href: '/contact' }}

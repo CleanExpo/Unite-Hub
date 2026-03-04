@@ -1,12 +1,12 @@
 /**
  * Obsidian Vault Service
  *
- * Bridges Unite-Hub ↔ Google Drive for Obsidian vault management.
+ * Bridges Unite-Group ↔ Google Drive for Obsidian vault management.
  * All vault files are stored in Google Drive; users sync locally
  * via Google Drive Desktop so Obsidian can open them.
  *
  * Architecture:
- *   Unite-Hub writes .md → Google Drive folder
+ *   Unite-Group writes .md → Google Drive folder
  *   Google Drive Desktop syncs → local filesystem
  *   Obsidian opens the local folder as a vault
  *

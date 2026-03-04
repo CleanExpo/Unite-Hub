@@ -371,7 +371,7 @@ export async function sendBudgetAlert(
         <p>${message.replace(/\n/g, '<br>')}</p>
         <hr style="margin: 20px 0;">
         <p style="color: #6b7280; font-size: 12px;">
-          This is an automated alert from Unite-Hub AI Cost Monitoring.
+          This is an automated alert from Unite-Group AI Cost Monitoring.
         </p>
       </div>`,
     });

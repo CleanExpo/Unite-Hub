@@ -1,7 +1,7 @@
 /**
  * Visual Transformation Service (Nano Banana 2)
  *
- * Generates and manages AI-generated visuals for Unite-Hub using Gemini 3.
+ * Generates and manages AI-generated visuals for Unite-Group using Gemini 3.
  * Per CLAUDE.md: Gemini 3 is designated for multimodal tasks including image generation.
  *
  * Primary: Google Gemini 3 Pro (Imagen)
@@ -74,7 +74,7 @@ export interface ThemeUpdatePlan {
   };
 }
 
-// Brand colors for Unite-Hub
+// Brand colors for Unite-Group
 const UNITE_HUB_THEME = {
   primary: "#B6F232", // Neon green
   secondary: "#1a1a1a",
@@ -103,11 +103,11 @@ export const PLACEHOLDER_MANIFEST: PlaceholderManifest = {
     {
       id: "logo-main",
       type: "logo",
-      name: "Unite-Hub Main Logo",
+      name: "Unite-Group Main Logo",
       description: "Primary brand logo for header and marketing",
       currentUrl: "https://unite-group.in/logos/unite-hub-logo.png",
       status: "placeholder",
-      prompt: "Modern SaaS company logo, 'Unite-Hub' text, neon green (#B6F232) accent, clean minimalist design, professional tech aesthetic",
+      prompt: "Modern SaaS company logo, 'Unite-Group' text, neon green (#B6F232) accent, clean minimalist design, professional tech aesthetic",
       style: "minimalist-tech",
       dimensions: { width: 512, height: 128 },
     },
@@ -151,7 +151,7 @@ export const PLACEHOLDER_MANIFEST: PlaceholderManifest = {
       description: "Social sharing preview image",
       currentUrl: "/og-image.png",
       status: "placeholder",
-      prompt: "Unite-Hub brand banner, 'AI-Powered CRM & Marketing' tagline, neon green accent, professional dark theme, suitable for social media preview",
+      prompt: "Unite-Group brand banner, 'AI-Powered CRM & Marketing' tagline, neon green accent, professional dark theme, suitable for social media preview",
       style: "social-banner",
       dimensions: { width: 1200, height: 630 },
     },

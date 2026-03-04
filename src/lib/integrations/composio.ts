@@ -44,7 +44,7 @@ function getUserId(): string {
 }
 
 /**
- * Composio client for Unite-Hub server-side operations.
+ * Composio client for Unite-Group server-side operations.
  *
  * Usage:
  *   import { composio } from '@/lib/integrations/composio';

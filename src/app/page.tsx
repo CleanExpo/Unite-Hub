@@ -37,7 +37,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Unite-Hub
+              Unite-Group
             </span>
           </Link>
 
@@ -221,9 +221,9 @@ export default function Home() {
       {/* About Section */}
       <section id="about" className="py-24 px-6">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">About Unite-Hub</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">About Unite-Group</h2>
           <p className="text-lg text-slate-300 leading-relaxed mb-8">
-            Unite-Hub is a personal AI-powered Business Hub built for founders who
+            Unite-Group is a personal AI-powered Business Hub built for founders who
             run multiple businesses. It combines CRM, email, campaigns, analytics,
             and AI agents into one system designed to give you complete control over
             your operations.
@@ -241,7 +241,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Unite-Hub
+              Unite-Group
             </span>
             <span className="text-sm text-slate-500">Business Hub</span>
           </div>
@@ -253,7 +253,7 @@ export default function Home() {
           </div>
 
           <div className="text-sm text-slate-500">
-            &copy; {new Date().getFullYear()} Unite-Hub. All rights reserved.
+            &copy; {new Date().getFullYear()} Unite-Group. All rights reserved.
           </div>
         </div>
       </footer>

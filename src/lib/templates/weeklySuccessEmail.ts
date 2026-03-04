@@ -128,7 +128,7 @@ export function generateWeeklySuccessEmail(data: WeeklyEmailData): {
                 You're receiving this because you opted in to weekly insights.
               </p>
               <p style="margin: 0; font-size: 12px; color: #9ca3af;">
-                Unite-Hub • Your Marketing Success Partner
+                Unite-Group • Your Marketing Success Partner
               </p>
             </td>
           </tr>
@@ -160,7 +160,7 @@ View your full dashboard: ${data.dashboardUrl}
 
 ---
 You're receiving this because you opted in to weekly insights.
-Unite-Hub • Your Marketing Success Partner
+Unite-Group • Your Marketing Success Partner
   `.trim();
 
   return { subject, html, text };

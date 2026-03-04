@@ -12,7 +12,7 @@ import { getLinkingRulesFrom } from '@/lib/brands/brandCrossLinkingRules';
 /**
  * Founder Dashboard: Brand Matrix
  *
- * Displays all brands under Unite-Hub Nexus with their:
+ * Displays all brands under Unite-Group Nexus with their:
  * - Registry (metadata)
  * - Positioning (mission, promise, audience, tone)
  * - Cross-linking rules (when and how brands interact)
@@ -28,7 +28,7 @@ export default function BrandMatrixPage() {
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">Brand Matrix</h1>
         <p className="text-gray-600">
-          Manage all brands under Unite-Hub Nexus. Define positioning, cross-linking rules, and ensure brand consistency.
+          Manage all brands under Unite-Group Nexus. Define positioning, cross-linking rules, and ensure brand consistency.
         </p>
       </div>
 

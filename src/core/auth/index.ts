@@ -1,7 +1,7 @@
 /**
  * Core Authentication Module
  *
- * Centralized authentication and authorization for Unite-Hub/Synthex.
+ * Centralized authentication and authorization for Unite-Group/Synthex.
  * This module implements ADR-001 (Centralized Auth Middleware).
  *
  * @module core/auth

@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 
 /**
- * Stripe Client for Unite-Hub CRM
+ * Stripe Client for Unite-Group CRM
  *
  * Handles all Stripe operations:
  * - Customer management

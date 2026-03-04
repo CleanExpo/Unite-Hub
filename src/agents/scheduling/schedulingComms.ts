@@ -93,12 +93,12 @@ export function buildCalendarInvite(options: CalendarInviteOptions): string {
   const endDate = new Date(new Date(proposedSlot.start).getTime() + duration * 60 * 1000);
   const endDt = formatICalDate(endDate);
 
-  const eventId = `${crypto.randomUUID()}@unite-hub.local`;
+  const eventId = `${crypto.randomUUID()}@unite-group.local`;
   const stamp = formatICalDate(new Date());
 
   return `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Unite-Hub//Meeting Scheduler//EN
+PRODID:-//Unite-Group//Meeting Scheduler//EN
 CALSCALE:GREGORIAN
 METHOD:REQUEST
 BEGIN:VEVENT
@@ -135,7 +135,7 @@ function formatICalDate(date: Date): string {
  */
 function getBrandName(brand: BrandId): string {
   const names: Record<BrandId, string> = {
-    unite_hub: 'Unite-Hub',
+    unite_hub: 'Unite-Group',
     disaster_recovery_au: 'Disaster Recovery Australia',
     carsi: 'CARSI',
     synthex: 'Synthex',

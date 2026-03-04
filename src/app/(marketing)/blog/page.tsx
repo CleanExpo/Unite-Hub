@@ -5,16 +5,16 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, ArrowRight, Newspaper } from 'lucide-react';
 
 export const metadata = {
-  title: 'Blog - Unite-Hub',
+  title: 'Blog - Unite-Group',
   description: 'Latest news, updates, and insights about AI-powered marketing automation.',
 };
 
 export default function BlogPage() {
   const featuredPost = {
-    title: 'Introducing Unite-Hub: AI-Powered Marketing Automation',
+    title: 'Introducing Unite-Group: AI-Powered Marketing Automation',
     excerpt: 'Discover how our AI-first approach is revolutionizing CRM and marketing automation for modern businesses.',
     date: '2025-01-15',
-    author: 'Unite-Hub Team',
+    author: 'Unite-Group Team',
     category: 'Product',
     image: '/blog/featured.jpg',
   };

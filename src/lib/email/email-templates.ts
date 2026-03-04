@@ -1,5 +1,5 @@
 /**
- * Unite-Hub Email Templates
+ * Unite-Group Email Templates
  *
  * Pre-built, production-ready email templates with variable substitution
  *
@@ -38,7 +38,7 @@ function wrapTemplate(content: string): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unite-Hub</title>
+  <title>Unite-Group</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: ${brandColors.background};">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -49,7 +49,7 @@ function wrapTemplate(content: string): string {
           <tr>
             <td style="padding: 30px 30px 20px 30px; text-align: center; border-bottom: 2px solid ${brandColors.primary};">
               <h1 style="margin: 0; color: ${brandColors.primary}; font-size: 28px; font-weight: bold;">
-                Unite-Hub
+                Unite-Group
               </h1>
             </td>
           </tr>
@@ -63,7 +63,7 @@ function wrapTemplate(content: string): string {
           <tr>
             <td style="padding: 20px 30px; text-align: center; border-top: 1px solid ${brandColors.border}; background-color: ${brandColors.background};">
               <p style="margin: 0 0 10px 0; font-size: 14px; color: ${brandColors.textLight};">
-                © ${new Date().getFullYear()} Unite-Hub. All rights reserved.
+                © ${new Date().getFullYear()} Unite-Group. All rights reserved.
               </p>
               <p style="margin: 0; font-size: 12px; color: ${brandColors.textLight};">
                 <a href="{{unsubscribeUrl}}" style="color: ${brandColors.textLight}; text-decoration: underline;">Unsubscribe</a> |
@@ -109,10 +109,10 @@ export const emailTemplates = {
    */
   welcome: {
     name: 'welcome',
-    subject: 'Welcome to Unite-Hub! 🎉',
+    subject: 'Welcome to Unite-Group! 🎉',
     html: wrapTemplate(`
       <h2 style="color: ${brandColors.text}; margin-top: 0;">Welcome, {{userName}}!</h2>
-      <p>We're thrilled to have you join Unite-Hub, your AI-powered marketing CRM platform.</p>
+      <p>We're thrilled to have you join Unite-Group, your AI-powered marketing CRM platform.</p>
 
       <div style="background-color: ${brandColors.background}; padding: 20px; border-radius: 6px; margin: 20px 0;">
         <h3 style="color: ${brandColors.primary}; margin-top: 0; font-size: 18px;">Get Started in 3 Steps:</h3>
@@ -132,7 +132,7 @@ export const emailTemplates = {
     `),
     text: `Welcome, {{userName}}!
 
-We're thrilled to have you join Unite-Hub, your AI-powered marketing CRM platform.
+We're thrilled to have you join Unite-Group, your AI-powered marketing CRM platform.
 
 Get Started in 3 Steps:
 
@@ -151,10 +151,10 @@ Need help getting started? Check out our documentation or reply to this email.`,
    */
   passwordReset: {
     name: 'passwordReset',
-    subject: 'Reset Your Unite-Hub Password',
+    subject: 'Reset Your Unite-Group Password',
     html: wrapTemplate(`
       <h2 style="color: ${brandColors.text}; margin-top: 0;">Password Reset Request</h2>
-      <p>We received a request to reset the password for your Unite-Hub account.</p>
+      <p>We received a request to reset the password for your Unite-Group account.</p>
 
       <p>Click the button below to create a new password:</p>
 
@@ -172,7 +172,7 @@ Need help getting started? Check out our documentation or reply to this email.`,
     `),
     text: `Password Reset Request
 
-We received a request to reset the password for your Unite-Hub account.
+We received a request to reset the password for your Unite-Group account.
 
 Click this link to create a new password:
 {{resetUrl}}
@@ -192,7 +192,7 @@ If you didn't request this password reset, please ignore this email and ensure y
     html: wrapTemplate(`
       <h2 style="color: ${brandColors.text}; margin-top: 0;">Verify Your Email</h2>
       <p>Hi {{userName}},</p>
-      <p>Please verify your email address to complete your Unite-Hub registration.</p>
+      <p>Please verify your email address to complete your Unite-Group registration.</p>
 
       ${createButton('Verify Email', '{{verifyUrl}}')}
 
@@ -201,20 +201,20 @@ If you didn't request this password reset, please ignore this email and ensure y
       </p>
 
       <p style="color: ${brandColors.textLight}; font-size: 14px;">
-        If you didn't create an account with Unite-Hub, please ignore this email.
+        If you didn't create an account with Unite-Group, please ignore this email.
       </p>
     `),
     text: `Verify Your Email
 
 Hi {{userName}},
 
-Please verify your email address to complete your Unite-Hub registration.
+Please verify your email address to complete your Unite-Group registration.
 
 Verify Email: {{verifyUrl}}
 
 This verification link will expire in {{expiryTime}} minutes.
 
-If you didn't create an account with Unite-Hub, please ignore this email.`,
+If you didn't create an account with Unite-Group, please ignore this email.`,
   } as EmailTemplate,
 
   /**
@@ -277,7 +277,7 @@ View Full Report: {{dashboardUrl}}`,
     subject: 'New Contact Added: {{contactName}}',
     html: wrapTemplate(`
       <h2 style="color: ${brandColors.text}; margin-top: 0;">New Contact Added</h2>
-      <p>A new contact has been added to your Unite-Hub account:</p>
+      <p>A new contact has been added to your Unite-Group account:</p>
 
       <div style="background-color: ${brandColors.background}; padding: 20px; border-radius: 6px; margin: 20px 0;">
         <table role="presentation" style="width: 100%;">
@@ -300,7 +300,7 @@ View Full Report: {{dashboardUrl}}`,
     `),
     text: `New Contact Added
 
-A new contact has been added to your Unite-Hub account:
+A new contact has been added to your Unite-Group account:
 
 Name: {{contactName}}
 Email: {{contactEmail}}
@@ -318,7 +318,7 @@ View Contact: {{viewUrl}}`,
     subject: 'Subscription Confirmed - {{planName}}',
     html: wrapTemplate(`
       <h2 style="color: ${brandColors.text}; margin-top: 0;">Subscription Confirmed!</h2>
-      <p>Thank you for subscribing to Unite-Hub. Your subscription is now active.</p>
+      <p>Thank you for subscribing to Unite-Group. Your subscription is now active.</p>
 
       <div style="background-color: ${brandColors.background}; padding: 20px; border-radius: 6px; margin: 20px 0;">
         <h3 style="color: ${brandColors.primary}; margin-top: 0; font-size: 18px;">Subscription Details</h3>
@@ -346,7 +346,7 @@ View Contact: {{viewUrl}}`,
     `),
     text: `Subscription Confirmed!
 
-Thank you for subscribing to Unite-Hub. Your subscription is now active.
+Thank you for subscribing to Unite-Group. Your subscription is now active.
 
 Subscription Details:
 Plan: {{planName}}
@@ -364,7 +364,7 @@ You can cancel or change your subscription at any time from your account setting
    */
   weeklyDigest: {
     name: 'weeklyDigest',
-    subject: 'Your Weekly Unite-Hub Summary',
+    subject: 'Your Weekly Unite-Group Summary',
     html: wrapTemplate(`
       <h2 style="color: ${brandColors.text}; margin-top: 0;">Weekly Summary</h2>
       <p>Hi {{userName}}, here's what happened this week ({{weekStart}} - {{weekEnd}}):</p>

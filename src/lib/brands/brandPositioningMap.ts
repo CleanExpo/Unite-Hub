@@ -63,7 +63,7 @@ export const brandPositioningMap: Record<BrandId, BrandPosition> = {
   },
   synthex: {
     brand: 'synthex',
-    mission: 'Done-for-you and done-with-you marketing using ethical, data-driven strategies powered by Unite-Hub.',
+    mission: 'Done-for-you and done-with-you marketing using ethical, data-driven strategies powered by Unite-Group.',
     promise: 'Get results-driven marketing without the agency overhead.',
     audience: ['Service businesses', 'Restoration companies', 'Contractors', 'Entrepreneurs'],
     tone: ['results-focused', 'transparent', 'energetic', 'collaborative'],

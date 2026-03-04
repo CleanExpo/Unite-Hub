@@ -1,7 +1,7 @@
 // app/api/media/transcribe/route.ts
 // Phase 2: Transcription Worker API
 // Processes audio/video files using OpenAI Whisper
-// UPDATED: 2025-01-17 - Fixed to match Unite-Hub patterns and media_files schema
+// UPDATED: 2025-01-17 - Fixed to match Unite-Group patterns and media_files schema
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer, getSupabaseAdmin } from '@/lib/supabase';

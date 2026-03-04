@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
         .insert({
           org_id: orgId,
           name: "Demo Workspace",
-          description: "Sample workspace for testing Unite-Hub features",
+          description: "Sample workspace for testing Unite-Group features",
         })
         .select()
         .single();

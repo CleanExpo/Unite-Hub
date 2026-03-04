@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Unite-Hub
+                Unite-Group
               </span>
               <span className="text-sm text-slate-400">AI-Powered CRM</span>
             </div>
@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
 
         {/* Footer */}
         <div className="relative z-10 flex items-center justify-between text-sm text-slate-400">
-          <span>© 2025 Unite-Hub</span>
+          <span>© 2025 Unite-Group</span>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
             <a href="#" className="hover:text-white transition-colors">Terms</a>
@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
               <Sparkles className="h-6 w-6 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Unite-Hub
+              Unite-Group
             </span>
           </div>
 

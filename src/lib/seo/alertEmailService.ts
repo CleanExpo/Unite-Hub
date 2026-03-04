@@ -215,7 +215,7 @@ export class AlertEmailService {
 
     <div style="padding: 16px 24px; background: #f9fafb; border-top: 1px solid #e5e7eb;">
       <p style="margin: 0; font-size: 12px; color: #9ca3af;">
-        This alert was generated automatically by Unite-Hub SEO Intelligence.
+        This alert was generated automatically by Unite-Group SEO Intelligence.
         <br>Detected at: ${new Date(anomaly.detected_at).toLocaleString()}
       </p>
     </div>
@@ -313,7 +313,7 @@ Detected at: ${new Date(anomaly.detected_at).toLocaleString()}
 
     <div style="padding: 16px 24px; background: #f9fafb; border-top: 1px solid #e5e7eb;">
       <p style="margin: 0; font-size: 12px; color: #9ca3af;">
-        This digest was generated automatically by Unite-Hub SEO Intelligence.
+        This digest was generated automatically by Unite-Group SEO Intelligence.
       </p>
     </div>
   </div>

@@ -1,6 +1,6 @@
 /**
  * Brand Registry
- * Central registry of all businesses managed by Unite-Hub
+ * Central registry of all businesses managed by Unite-Group
  *
  * This defines the businesses, their categories, and metadata used by:
  * - Founder OS Hub (task assignment per business)
@@ -21,7 +21,7 @@ export const brandRegistry = [
   {
     id: 'unite_hub',
     slug: 'unite-hub',
-    name: 'Unite-Hub',
+    name: 'Unite-Group',
     domain: 'https://unite-group.in',
     category: 'Business Hub',
     tagline: 'Your Business. One Hub.',
@@ -115,7 +115,7 @@ export function getActiveBrands() {
 }
 
 /**
- * Get managed businesses (excludes Unite-Hub itself)
+ * Get managed businesses (excludes Unite-Group itself)
  */
 export function getManagedBusinesses() {
   return brandRegistry.filter(b => b.status === 'active' && b.id !== 'unite_hub');

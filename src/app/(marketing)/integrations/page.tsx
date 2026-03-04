@@ -5,8 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Mail, Calendar, CreditCard, Code, Check, ArrowRight, Zap } from 'lucide-react';
 
 export const metadata = {
-  title: 'Integrations - Unite-Hub',
-  description: 'Connect Unite-Hub with your favorite tools and services. Gmail, Google Calendar, Stripe, and more.',
+  title: 'Integrations - Unite-Group',
+  description: 'Connect Unite-Group with your favorite tools and services. Gmail, Google Calendar, Stripe, and more.',
 };
 
 export default function IntegrationsPage() {
@@ -62,7 +62,7 @@ export default function IntegrationsPage() {
               Integrations
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Connect Unite-Hub with the tools you already use.
+              Connect Unite-Group with the tools you already use.
               Seamless integrations that just work.
             </p>
             <Button size="lg" asChild>

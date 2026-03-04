@@ -1,5 +1,5 @@
 /**
- * OpenRouter Model Configuration for Unite-Hub
+ * OpenRouter Model Configuration for Unite-Group
  *
  * Comprehensive model definitions with use cases, pricing, and capabilities.
  * Updated: 2025-11-18
@@ -33,7 +33,7 @@ export interface OpenRouterModel {
 
 /**
  * OpenRouter Model Catalog
- * All models available for Unite-Hub with detailed specifications
+ * All models available for Unite-Group with detailed specifications
  */
 export const OPENROUTER_MODELS: Record<string, OpenRouterModel> = {
   // ============================================================================

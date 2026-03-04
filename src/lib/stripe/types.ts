@@ -1,5 +1,5 @@
 /**
- * Stripe Integration Types for Unite-Hub CRM
+ * Stripe Integration Types for Unite-Group CRM
  */
 
 // Plan Tiers

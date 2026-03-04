@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export const metadata: Metadata = {
-  title: 'Careers | Unite-Hub',
-  description: 'Join the Unite-Hub team and help build the future of marketing automation',
+  title: 'Careers | Unite-Group',
+  description: 'Join the Unite-Group team and help build the future of marketing automation',
 };
 
 // Mock job listings (replace with real data from your database)
@@ -54,7 +54,7 @@ const jobs = [
     location: 'Remote (Worldwide)',
     type: 'Full-time',
     salary: '$80k - $120k',
-    description: 'Create compelling content that educates, inspires, and converts prospects into Unite-Hub advocates.',
+    description: 'Create compelling content that educates, inspires, and converts prospects into Unite-Group advocates.',
   },
 ];
 
@@ -73,7 +73,7 @@ export default function CareersPage() {
 
         {/* Why Join Section */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Unite-Hub?</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Why Unite-Group?</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
               <CardHeader>
@@ -286,7 +286,7 @@ export default function CareersPage() {
           <h3 className="text-2xl font-bold mb-3">Don't see a role that fits?</h3>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
             We're always on the lookout for exceptional talent. Send us your resume and tell us what
-            role you'd love to create at Unite-Hub.
+            role you'd love to create at Unite-Group.
           </p>
           <Button asChild>
             <a href="mailto:careers@unite-group.in?subject=General Application">

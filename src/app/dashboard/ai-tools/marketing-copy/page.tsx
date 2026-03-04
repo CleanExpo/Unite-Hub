@@ -93,7 +93,7 @@ export default function MarketingCopyPage() {
             <Input
               value={businessName}
               onChange={(e) => setBusinessName(e.target.value)}
-              placeholder="e.g., Unite-Hub"
+              placeholder="e.g., Unite-Group"
               className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
             />
           </div>

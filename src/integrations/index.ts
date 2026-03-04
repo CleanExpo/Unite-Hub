@@ -1,5 +1,5 @@
 /**
- * Unite-Hub External Integrations
+ * Unite-Group External Integrations
  * Phase 6 of Rebuild - Centralized integration exports
  *
  * @module integrations

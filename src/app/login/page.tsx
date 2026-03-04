@@ -95,7 +95,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <h2 className="text-white text-[28px] font-bold mb-2.5">Unite-Hub</h2>
+          <h2 className="text-white text-[28px] font-bold mb-2.5">Unite-Group</h2>
           <p className="text-[#a0aec0] mb-8 text-[15px]">Sign in to your Business Hub</p>
 
           {/* Error Message */}

@@ -1,6 +1,6 @@
 /**
  * Brand Cross-Linking Rules
- * Defines when and how to link between businesses managed by Unite-Hub
+ * Defines when and how to link between businesses managed by Unite-Group
  *
  * Used by:
  * - Content builder (determining cross-brand references)
@@ -51,14 +51,14 @@ export const brandCrossLinkingRules: CrossLinkRule[] = [
     from: 'synthex',
     to: 'unite_hub',
     context: 'Agency services → Platform technology',
-    rule: 'Synthex can mention Unite-Hub as the technology powering their campaigns.',
+    rule: 'Synthex can mention Unite-Group as the technology powering their campaigns.',
     frequency: 'common',
   },
   {
     from: 'unite_hub',
     to: 'synthex',
     context: 'Platform → Agency use case',
-    rule: 'Unite-Hub can reference Synthex as an agency powered by the platform.',
+    rule: 'Unite-Group can reference Synthex as an agency powered by the platform.',
     frequency: 'occasional',
   },
   {

@@ -5,8 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Code, Key, Zap, Shield, ArrowRight, Terminal } from 'lucide-react';
 
 export const metadata = {
-  title: 'API Reference - Unite-Hub',
-  description: 'Comprehensive API documentation for building integrations with Unite-Hub.',
+  title: 'API Reference - Unite-Group',
+  description: 'Comprehensive API documentation for building integrations with Unite-Group.',
 };
 
 export default function APIPage() {
@@ -77,7 +77,7 @@ export default function APIPage() {
               API Reference
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Build powerful integrations with Unite-Hub's RESTful API.
+              Build powerful integrations with Unite-Group's RESTful API.
               Access contacts, campaigns, and AI features programmatically.
             </p>
             <div className="flex gap-4 justify-center">
@@ -222,7 +222,7 @@ export default function APIPage() {
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4">Ready to build?</h2>
             <p className="text-muted-foreground mb-8">
-              Get your API key and start integrating Unite-Hub into your applications.
+              Get your API key and start integrating Unite-Group into your applications.
             </p>
             <Button size="lg" asChild>
               <Link href="/dashboard/settings/integrations">

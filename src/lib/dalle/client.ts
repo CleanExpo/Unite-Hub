@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 /**
- * DALL-E 3 Client for Unite-Hub
+ * DALL-E 3 Client for Unite-Group
  *
  * Manages OpenAI DALL-E API integration for generating
  * marketing images, social media visuals, and brand concepts.

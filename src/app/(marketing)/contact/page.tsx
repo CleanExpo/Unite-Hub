@@ -280,7 +280,7 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Interested in Unite-Hub for your team?
+                  Interested in Unite-Group for your team?
                 </p>
                 <a
                   href="mailto:sales@unite-group.in"

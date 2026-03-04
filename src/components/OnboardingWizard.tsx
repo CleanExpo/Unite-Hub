@@ -592,7 +592,7 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
               <div>
                 <h3 className="text-2xl font-bold">You're All Set!</h3>
                 <p className="text-muted-foreground">
-                  Welcome to Unite-Hub. Let's take a quick tour of your dashboard.
+                  Welcome to Unite-Group. Let's take a quick tour of your dashboard.
                 </p>
               </div>
             </div>
@@ -640,7 +640,7 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>
-              {currentStep === 1 && "Welcome to Unite-Hub"}
+              {currentStep === 1 && "Welcome to Unite-Group"}
               {currentStep === 2 && "Connect Your Email"}
               {currentStep === 3 && "Import Contacts"}
               {currentStep === 4 && "Create Your First Campaign"}

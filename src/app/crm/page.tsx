@@ -108,7 +108,7 @@ export default function CRMPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">
-            Unite-Hub CRM
+            Unite-Group CRM
           </h1>
           <p className="text-slate-400">
             Welcome, <strong>{profile?.email}</strong>

@@ -10,7 +10,7 @@ export interface WelcomePackData {
 }
 
 export function generateWelcomePackMarkdown(data: WelcomePackData): string {
-  return `# Welcome to Unite-Hub, ${data.businessName}!
+  return `# Welcome to Unite-Group, ${data.businessName}!
 
 We're excited to have you on board. This welcome pack contains everything you need to get started and see real results within your first week.
 

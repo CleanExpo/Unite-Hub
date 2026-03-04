@@ -3,7 +3,7 @@
 /**
  * Visual Experience Engine - Marketing Launch Page
  *
- * Showcases what Unite-Hub can do for client websites:
+ * Showcases what Unite-Group can do for client websites:
  * - Hero with ambient animation
  * - "What your site could look like" section
  * - "Choose your style" CTA to wizard
@@ -632,7 +632,7 @@ export default function VisualExperienceEnginePage() {
             <div className="p-2 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white font-semibold">Unite-Hub</span>
+            <span className="text-white font-semibold">Unite-Group</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
@@ -669,7 +669,7 @@ export default function VisualExperienceEnginePage() {
       {/* Footer */}
       <footer className="py-8 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 text-center text-white/40 text-sm">
-          <p>&copy; {new Date().getFullYear()} Unite-Hub. All animations designed with accessibility in mind.</p>
+          <p>&copy; {new Date().getFullYear()} Unite-Group. All animations designed with accessibility in mind.</p>
         </div>
       </footer>
     </div>

@@ -258,7 +258,7 @@ export function buildAlternateLinks(
  * @example
  * ```typescript
  * const orgSchema = buildStructuredData('Organization', {
- *   name: 'Unite-Hub',
+ *   name: 'Unite-Group',
  *   description: 'AI-Powered Business Hub',
  * });
  * ```

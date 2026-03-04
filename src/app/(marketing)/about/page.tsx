@@ -3,8 +3,8 @@ import { Target, Users, Zap, Shield, Globe, Heart } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: 'About Us | Unite-Hub',
-  description: 'Learn about Unite-Hub - AI-powered marketing automation and CRM for modern businesses',
+  title: 'About Us | Unite-Group',
+  description: 'Learn about Unite-Group - AI-powered marketing automation and CRM for modern businesses',
 };
 
 export default function AboutPage() {
@@ -13,7 +13,7 @@ export default function AboutPage() {
       <div className="max-w-6xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-6">About Unite-Hub</h1>
+          <h1 className="text-5xl font-bold mb-6">About Unite-Group</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             We're on a mission to make marketing automation accessible, intelligent, and effective for businesses of all sizes.
           </p>
@@ -32,7 +32,7 @@ export default function AboutPage() {
                   design to create tools that work for you, not against you.
                 </p>
                 <p className="text-lg text-muted-foreground">
-                  Founded in 2024, Unite-Hub emerged from the frustration of using complex, enterprise-grade
+                  Founded in 2024, Unite-Group emerged from the frustration of using complex, enterprise-grade
                   marketing tools that required entire teams to operate. We built something different—intuitive,
                   powerful, and accessible.
                 </p>
@@ -106,7 +106,7 @@ export default function AboutPage() {
               <CardContent>
                 <p className="text-muted-foreground">
                   Your success is our success. We provide responsive support, comprehensive documentation,
-                  and proactive guidance to help you get the most out of Unite-Hub.
+                  and proactive guidance to help you get the most out of Unite-Group.
                 </p>
               </CardContent>
             </Card>
@@ -119,7 +119,7 @@ export default function AboutPage() {
               <CardContent>
                 <p className="text-muted-foreground">
                   We ship new features weekly, gather user feedback obsessively, and iterate rapidly.
-                  Unite-Hub today is 10x better than Unite-Hub six months ago.
+                  Unite-Group today is 10x better than Unite-Group six months ago.
                 </p>
               </CardContent>
             </Card>
@@ -131,7 +131,7 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold mb-6">Our Story</h2>
           <div className="prose prose-lg dark:prose-invert max-w-none">
             <p className="text-lg text-muted-foreground mb-4">
-              Unite-Hub was born from a simple observation: most marketing automation tools are built for
+              Unite-Group was born from a simple observation: most marketing automation tools are built for
               Fortune 500 companies, not for the thousands of agencies, consultants, and growing businesses
               that need powerful automation without enterprise complexity.
             </p>
@@ -156,7 +156,7 @@ export default function AboutPage() {
               intelligent, and delightful to use.
             </p>
             <p className="text-lg text-muted-foreground">
-              Today, Unite-Hub is trusted by agencies, consultants, and growth teams across the globe. We're
+              Today, Unite-Group is trusted by agencies, consultants, and growth teams across the globe. We're
               still a small, focused team, but we're growing—and we'd love for you to join us on this journey.
             </p>
           </div>
@@ -232,7 +232,7 @@ export default function AboutPage() {
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">Want to Learn More?</h2>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Have questions about Unite-Hub? Want to discuss a partnership? We'd love to hear from you.
+            Have questions about Unite-Group? Want to discuss a partnership? We'd love to hear from you.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <a

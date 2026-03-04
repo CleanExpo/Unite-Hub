@@ -1,7 +1,7 @@
 /**
  * ML Observability Layer
  *
- * Proactive error detection and pattern analysis for Unite-Hub API routes.
+ * Proactive error detection and pattern analysis for Unite-Group API routes.
  * Uses statistical methods to detect anomalies and predict issues.
  */
 

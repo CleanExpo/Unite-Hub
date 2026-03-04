@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Unite-Hub',
+  title: 'Privacy Policy | Unite-Group',
   description: 'How we protect your data and respect your privacy under Australian Privacy Principles',
 };
 
@@ -18,11 +18,11 @@ export default function PrivacyPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">About This Policy</h2>
           <p>
-            Unite-Hub Pty Ltd (ABN TBA) ("we", "us", "our") is committed to protecting your privacy in accordance with the{' '}
+            Unite-Group Pty Ltd (ABN TBA) ("we", "us", "our") is committed to protecting your privacy in accordance with the{' '}
             <strong>Australian Privacy Principles (APPs)</strong> under the Privacy Act 1988 (Cth). This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information.
           </p>
           <p className="mt-4">
-            By using Unite-Hub, you consent to the collection and use of your information as described in this policy.
+            By using Unite-Group, you consent to the collection and use of your information as described in this policy.
           </p>
         </section>
 
@@ -61,7 +61,7 @@ export default function PrivacyPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">AI Processing and Third-Party Services</h2>
           <p>
-            Unite-Hub uses AI technology to provide intelligent features. We partner with the following services:
+            Unite-Group uses AI technology to provide intelligent features. We partner with the following services:
           </p>
           <ul>
             <li><strong>Anthropic Claude API:</strong> Email analysis, content generation, lead scoring, sentiment analysis</li>
@@ -227,7 +227,7 @@ export default function PrivacyPage() {
           </p>
           <div className="bg-muted p-6 rounded-lg mt-4">
             <p className="mb-2">
-              <strong>Privacy Officer:</strong> Unite-Hub Privacy Team
+              <strong>Privacy Officer:</strong> Unite-Group Privacy Team
             </p>
             <p className="mb-2">
               <strong>Email:</strong> <a href="mailto:privacy@unite-group.in" className="text-primary hover:underline">privacy@unite-group.in</a>
@@ -240,7 +240,7 @@ export default function PrivacyPage() {
             </p>
             <p className="mb-2">
               <strong>Business Address:</strong><br />
-              Unite-Hub Pty Ltd<br />
+              Unite-Group Pty Ltd<br />
               Level 1, 123 Business Street<br />
               Brisbane QLD 4000<br />
               Australia
@@ -257,7 +257,7 @@ export default function PrivacyPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Regulatory Information</h2>
           <p>
-            Unite-Hub complies with:
+            Unite-Group complies with:
           </p>
           <ul>
             <li><strong>Privacy Act 1988 (Cth)</strong> - Australian Privacy Principles (APPs)</li>

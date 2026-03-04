@@ -13,7 +13,7 @@ export interface EmailTemplateData {
 
 export const EMAIL_TEMPLATES = {
   welcome: (data: EmailTemplateData) => ({
-    subject: `Welcome to Unite-Hub, ${data.businessName}!`,
+    subject: `Welcome to Unite-Group, ${data.businessName}!`,
     html: `
 <!DOCTYPE html>
 <html>
@@ -29,7 +29,7 @@ export const EMAIL_TEMPLATES = {
 <body>
   <div class="container">
     <div class="header">
-      <h1>Welcome to Unite-Hub!</h1>
+      <h1>Welcome to Unite-Group!</h1>
     </div>
 
     <p>Hi ${data.clientName || 'there'},</p>
@@ -52,17 +52,17 @@ export const EMAIL_TEMPLATES = {
 
     <p>Have questions? Reply to this email or use the AI assistant in your dashboard.</p>
 
-    <p>Here's to your success!<br>The Unite-Hub Team</p>
+    <p>Here's to your success!<br>The Unite-Group Team</p>
 
     <div class="footer">
-      <p>Unite-Hub | AI-Powered Marketing Automation</p>
+      <p>Unite-Group | AI-Powered Marketing Automation</p>
     </div>
   </div>
 </body>
 </html>
     `,
     text: `
-Welcome to Unite-Hub!
+Welcome to Unite-Group!
 
 Hi ${data.clientName || 'there'},
 
@@ -81,7 +81,7 @@ Most clients complete their setup in under 30 minutes and see their first AI-gen
 Have questions? Reply to this email or use the AI assistant in your dashboard.
 
 Here's to your success!
-The Unite-Hub Team
+The Unite-Group Team
     `,
   }),
 
@@ -106,7 +106,7 @@ The Unite-Hub Team
 
     <p>Hi there,</p>
 
-    <p>It's been 24 hours since you joined Unite-Hub. Here's your progress:</p>
+    <p>It's been 24 hours since you joined Unite-Group. Here's your progress:</p>
 
     <div class="progress">
       <div class="progress-bar" style="width: ${data.tasksCompleted && data.totalTasks ? Math.round((data.tasksCompleted / data.totalTasks) * 100) : 0}%"></div>
@@ -125,10 +125,10 @@ The Unite-Hub Team
 
     <p>Tip: Use voice commands to speed things up. Say "What should I do next?" to your AI assistant.</p>
 
-    <p>Best,<br>The Unite-Hub Team</p>
+    <p>Best,<br>The Unite-Group Team</p>
 
     <div class="footer">
-      <p>Unite-Hub | AI-Powered Marketing Automation</p>
+      <p>Unite-Group | AI-Powered Marketing Automation</p>
     </div>
   </div>
 </body>
@@ -139,7 +139,7 @@ Day 1 Check-In
 
 Hi there,
 
-It's been 24 hours since you joined Unite-Hub. Here's your progress:
+It's been 24 hours since you joined Unite-Group. Here's your progress:
 
 ${data.tasksCompleted || 0} of ${data.totalTasks || 7} tasks completed
 
@@ -152,12 +152,12 @@ Continue setup: ${data.dashboardUrl}
 Tip: Use voice commands to speed things up. Say "What should I do next?" to your AI assistant.
 
 Best,
-The Unite-Hub Team
+The Unite-Group Team
     `,
   }),
 
   day7: (data: EmailTemplateData) => ({
-    subject: `Your first week with Unite-Hub`,
+    subject: `Your first week with Unite-Group`,
     html: `
 <!DOCTYPE html>
 <html>
@@ -175,7 +175,7 @@ The Unite-Hub Team
 
     <p>Hi there,</p>
 
-    <p>Congratulations on your first week with Unite-Hub! Here's what you've accomplished:</p>
+    <p>Congratulations on your first week with Unite-Group! Here's what you've accomplished:</p>
 
     <ul>
       <li>✅ Completed ${data.tasksCompleted || 0} onboarding tasks</li>
@@ -197,10 +197,10 @@ The Unite-Hub Team
 
     <p>Questions? Your AI assistant is always ready to help.</p>
 
-    <p>Cheers,<br>The Unite-Hub Team</p>
+    <p>Cheers,<br>The Unite-Group Team</p>
 
     <div class="footer">
-      <p>Unite-Hub | AI-Powered Marketing Automation</p>
+      <p>Unite-Group | AI-Powered Marketing Automation</p>
     </div>
   </div>
 </body>
@@ -211,7 +211,7 @@ One Week In!
 
 Hi there,
 
-Congratulations on your first week with Unite-Hub! Here's what you've accomplished:
+Congratulations on your first week with Unite-Group! Here's what you've accomplished:
 
 - Completed ${data.tasksCompleted || 0} onboarding tasks
 - Initial SEO analysis available
@@ -227,7 +227,7 @@ Go to Dashboard: ${data.dashboardUrl}
 Questions? Your AI assistant is always ready to help.
 
 Cheers,
-The Unite-Hub Team
+The Unite-Group Team
     `,
   }),
 };

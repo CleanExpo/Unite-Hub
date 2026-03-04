@@ -60,7 +60,7 @@ export function WorkspaceSidebar() {
             UH
           </div>
           <span className="bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
-            Unite-Hub
+            Unite-Group
           </span>
         </div>
 

@@ -4,7 +4,7 @@
  * Capabilities Ledger
  * Phase 36: MVP Client Truth Layer
  *
- * Transparent list of what Unite-Hub can and cannot do
+ * Transparent list of what Unite-Group can and cannot do
  */
 
 import { CheckCircle, Beaker, Clock, Shield } from "lucide-react";
@@ -27,7 +27,7 @@ export default function CapabilitiesPage() {
             </h1>
           </div>
           <p className="text-gray-500 dark:text-gray-400">
-            What Unite-Hub can currently do for you
+            What Unite-Group can currently do for you
           </p>
         </div>
 

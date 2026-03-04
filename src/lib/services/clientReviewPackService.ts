@@ -44,7 +44,7 @@ export async function createReviewPack(
       start_date: startDate.toISOString().split("T")[0],
       end_date: endDate.toISOString().split("T")[0],
       status: "draft",
-      data_sources: ["Unite-Hub Internal"],
+      data_sources: ["Unite-Group Internal"],
     })
     .select()
     .single();

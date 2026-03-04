@@ -97,7 +97,7 @@ export async function GET(req: NextRequest) {
       const uptimeStart = Date.now();
       const response = await fetch(`${siteUrl}/api/health`, {
         method: 'GET',
-        headers: { 'User-Agent': 'Unite-Hub-Health-Check' },
+        headers: { 'User-Agent': 'Unite-Group-Health-Check' },
         signal: AbortSignal.timeout(10000),
       });
       const responseTime = Date.now() - uptimeStart;

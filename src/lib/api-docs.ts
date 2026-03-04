@@ -111,7 +111,7 @@ class ApiDocRegistry {
     return {
       openapi: '3.0.0',
       info: {
-        title: 'Unite-Hub API',
+        title: 'Unite-Group API',
         version: '1.0.0',
         description: 'AI-powered CRM and marketing automation platform',
         contact: {

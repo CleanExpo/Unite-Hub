@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await resendClient.emails.send({
-      from: 'Unite-Hub Contact Form <noreply@unite-group.in>',
+      from: 'Unite-Group Contact Form <noreply@unite-group.in>',
       to: [process.env.CONTACT_EMAIL || 'hello@unite-group.in'],
       replyTo: email,
       subject: `Contact Form: ${subject}`,
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
             </div>
 
             <div class="footer">
-              <p>This message was sent via the Unite-Hub contact form.</p>
+              <p>This message was sent via the Unite-Group contact form.</p>
               <p>You can reply directly to this email to reach ${email}</p>
             </div>
           </div>
@@ -158,7 +158,7 @@ Message:
 ${message}
 
 ---
-This message was sent via the Unite-Hub contact form.
+This message was sent via the Unite-Group contact form.
 You can reply directly to this email to reach ${email}
       `,
     });

@@ -185,7 +185,7 @@ export const demoWorkspaces = [
 // Demo Settings
 export const demoSettings = {
   organization: {
-    name: "Unite-Hub Demo Organization",
+    name: "Unite-Group Demo Organization",
     email: "contact@unite-hub-demo.com",
     website: "https://unite-hub-demo.com",
     timezone: "America/New_York",
