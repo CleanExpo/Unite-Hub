@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     }
 
     let query = supabaseAdmin
-      .from('leads')
+      .from('army_leads')
       .select('id, source_agent, company, contact_name, contact_email, industry, score, status, notes, metadata, created_at')
       .eq('workspace_id', workspaceId)
       .order('score', { ascending: false })
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await supabaseAdmin
-      .from('leads')
+      .from('army_leads')
       .insert({
         workspace_id:  workspaceId || null,
         source_agent:  sourceAgent,
@@ -121,7 +121,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     const { data, error } = await supabaseAdmin
-      .from('leads')
+      .from('army_leads')
       .update(update)
       .eq('id', id)
       .select('id, status, notes')

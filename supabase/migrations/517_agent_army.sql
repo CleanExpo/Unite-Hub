@@ -1,10 +1,12 @@
 -- Migration 517: Agent Army foundation tables
--- Covers UNI-1443: agent_runs, opportunities, competitor_updates, content_queue, leads
+-- Covers UNI-1443: army_runs, army_opportunities, army_competitor_updates, army_content_queue, army_leads
+-- NOTE: Prefixed with army_ to avoid collision with existing agent_runs, opportunities, leads,
+--       content_queue, competitor_updates tables from migrations 103/108/222/293/303.
 
 -- =============================================================================
--- agent_runs: track every agent execution
+-- army_runs: track every Agent Army execution
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS agent_runs (
+CREATE TABLE IF NOT EXISTS army_runs (
   id           uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid,
   agent_id     text        NOT NULL,
@@ -19,20 +21,20 @@ CREATE TABLE IF NOT EXISTS agent_runs (
   created_at   timestamptz DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_agent_runs_workspace    ON agent_runs(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_agent_runs_created_at   ON agent_runs(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_agent_runs_commander    ON agent_runs(commander);
-CREATE INDEX IF NOT EXISTS idx_agent_runs_status       ON agent_runs(status);
+CREATE INDEX IF NOT EXISTS idx_army_runs_workspace    ON army_runs(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_army_runs_created_at   ON army_runs(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_army_runs_commander    ON army_runs(commander);
+CREATE INDEX IF NOT EXISTS idx_army_runs_status       ON army_runs(status);
 
-ALTER TABLE agent_runs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE army_runs ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY agent_runs_service ON agent_runs
+CREATE POLICY army_runs_service ON army_runs
   FOR ALL TO service_role USING (true) WITH CHECK (true);
 
 -- =============================================================================
--- opportunities: agent-discovered revenue/growth opportunities
+-- army_opportunities: agent-discovered revenue/growth opportunities
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS opportunities (
+CREATE TABLE IF NOT EXISTS army_opportunities (
   id                uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id      uuid,
   source_agent      text        NOT NULL,
@@ -46,20 +48,20 @@ CREATE TABLE IF NOT EXISTS opportunities (
   created_at        timestamptz DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_opportunities_workspace   ON opportunities(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_opportunities_created_at  ON opportunities(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_opportunities_status      ON opportunities(status);
-CREATE INDEX IF NOT EXISTS idx_opportunities_priority    ON opportunities(priority);
+CREATE INDEX IF NOT EXISTS idx_army_opportunities_workspace   ON army_opportunities(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_army_opportunities_created_at  ON army_opportunities(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_army_opportunities_status      ON army_opportunities(status);
+CREATE INDEX IF NOT EXISTS idx_army_opportunities_priority    ON army_opportunities(priority);
 
-ALTER TABLE opportunities ENABLE ROW LEVEL SECURITY;
+ALTER TABLE army_opportunities ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY opportunities_service ON opportunities
+CREATE POLICY army_opportunities_service ON army_opportunities
   FOR ALL TO service_role USING (true) WITH CHECK (true);
 
 -- =============================================================================
--- competitor_updates: intel from competitive monitoring agents
+-- army_competitor_updates: intel from competitive monitoring agents
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS competitor_updates (
+CREATE TABLE IF NOT EXISTS army_competitor_updates (
   id           uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid,
   competitor   text        NOT NULL,
@@ -69,19 +71,19 @@ CREATE TABLE IF NOT EXISTS competitor_updates (
   detected_at  timestamptz DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_competitor_updates_workspace   ON competitor_updates(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_competitor_updates_detected_at ON competitor_updates(detected_at DESC);
-CREATE INDEX IF NOT EXISTS idx_competitor_updates_competitor  ON competitor_updates(competitor);
+CREATE INDEX IF NOT EXISTS idx_army_competitor_updates_workspace   ON army_competitor_updates(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_army_competitor_updates_detected_at ON army_competitor_updates(detected_at DESC);
+CREATE INDEX IF NOT EXISTS idx_army_competitor_updates_competitor  ON army_competitor_updates(competitor);
 
-ALTER TABLE competitor_updates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE army_competitor_updates ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY competitor_updates_service ON competitor_updates
+CREATE POLICY army_competitor_updates_service ON army_competitor_updates
   FOR ALL TO service_role USING (true) WITH CHECK (true);
 
 -- =============================================================================
--- content_queue: content drafted by agents, pending review/publish
+-- army_content_queue: content drafted by agents, pending review/publish
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS content_queue (
+CREATE TABLE IF NOT EXISTS army_content_queue (
   id             uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id   uuid,
   platform       text        NOT NULL,
@@ -93,20 +95,20 @@ CREATE TABLE IF NOT EXISTS content_queue (
   created_at     timestamptz DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_content_queue_workspace   ON content_queue(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_content_queue_created_at  ON content_queue(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_content_queue_status      ON content_queue(status);
-CREATE INDEX IF NOT EXISTS idx_content_queue_platform    ON content_queue(platform);
+CREATE INDEX IF NOT EXISTS idx_army_content_queue_workspace   ON army_content_queue(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_army_content_queue_created_at  ON army_content_queue(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_army_content_queue_status      ON army_content_queue(status);
+CREATE INDEX IF NOT EXISTS idx_army_content_queue_platform    ON army_content_queue(platform);
 
-ALTER TABLE content_queue ENABLE ROW LEVEL SECURITY;
+ALTER TABLE army_content_queue ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY content_queue_service ON content_queue
+CREATE POLICY army_content_queue_service ON army_content_queue
   FOR ALL TO service_role USING (true) WITH CHECK (true);
 
 -- =============================================================================
--- leads: agent-sourced leads
+-- army_leads: agent-sourced leads
 -- =============================================================================
-CREATE TABLE IF NOT EXISTS leads (
+CREATE TABLE IF NOT EXISTS army_leads (
   id            uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id  uuid,
   source_agent  text        NOT NULL,
@@ -121,12 +123,12 @@ CREATE TABLE IF NOT EXISTS leads (
   created_at    timestamptz DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_leads_workspace   ON leads(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_leads_created_at  ON leads(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_leads_status      ON leads(status);
-CREATE INDEX IF NOT EXISTS idx_leads_industry    ON leads(industry);
+CREATE INDEX IF NOT EXISTS idx_army_leads_workspace   ON army_leads(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_army_leads_created_at  ON army_leads(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_army_leads_status      ON army_leads(status);
+CREATE INDEX IF NOT EXISTS idx_army_leads_industry    ON army_leads(industry);
 
-ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE army_leads ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY leads_service ON leads
+CREATE POLICY army_leads_service ON army_leads
   FOR ALL TO service_role USING (true) WITH CHECK (true);

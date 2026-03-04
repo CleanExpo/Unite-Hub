@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     }));
 
     const { error: insertError } = await supabaseAdmin
-      .from('agent_runs')
+      .from('army_runs')
       .insert(insertRows);
 
     if (insertError) {

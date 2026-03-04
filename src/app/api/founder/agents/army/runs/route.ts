@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await supabaseAdmin
-      .from('agent_runs')
+      .from('army_runs')
       .insert({
         workspace_id: workspaceId || null,
         agent_id: agentId,
@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
     }
 
     let query = supabaseAdmin
-      .from('agent_runs')
+      .from('army_runs')
       .select('id, agent_id, commander, task, status, cost_tokens, cost_usd, started_at, completed_at, created_at')
       .eq('workspace_id', workspaceId)
       .order('created_at', { ascending: false })
@@ -80,7 +80,7 @@ export async function GET(req: NextRequest) {
     todayStart.setHours(0, 0, 0, 0);
 
     const { data: costData } = await supabaseAdmin
-      .from('agent_runs')
+      .from('army_runs')
       .select('cost_usd, created_at')
       .eq('workspace_id', workspaceId)
       .eq('status', 'completed');

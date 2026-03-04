@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     }
 
     let query = supabaseAdmin
-      .from('content_queue')
+      .from('army_content_queue')
       .select('id, platform, draft_content, status, scheduled_for, published_at, source_agent, created_at')
       .eq('workspace_id', workspaceId)
       .order('created_at', { ascending: false })
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await supabaseAdmin
-      .from('content_queue')
+      .from('army_content_queue')
       .insert({
         workspace_id:  workspaceId || null,
         platform,
@@ -106,7 +106,7 @@ export async function PATCH(req: NextRequest) {
     if (status === 'published') update.published_at = new Date().toISOString();
 
     const { data, error } = await supabaseAdmin
-      .from('content_queue')
+      .from('army_content_queue')
       .update(update)
       .eq('id', id)
       .select('id, status, scheduled_for, published_at')
