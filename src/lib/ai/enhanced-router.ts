@@ -30,7 +30,7 @@ const openrouter = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.OPENROUTER_API_KEY,
   defaultHeaders: {
-    "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://unite-hub.com.au",
+    "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://unite-hub.com",
     "X-Title": "Unite-Hub AI",
   }
 });

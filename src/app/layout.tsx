@@ -48,18 +48,18 @@ export const metadata: Metadata = {
   authors: [{ name: 'Unite-Hub' }],
   creator: 'Unite-Hub',
   publisher: 'Unite-Hub',
-  metadataBase: new URL('https://unitehub.ai'),
+  metadataBase: new URL('https://unite-hub.com'),
   alternates: {
-    canonical: 'https://unitehub.ai',
+    canonical: 'https://unite-hub.com',
     languages: {
-      'en-AU': 'https://unitehub.ai',
+      'en-AU': 'https://unite-hub.com',
     },
   },
   openGraph: {
     type: 'website',
     title: 'Unite-Hub — AI-Powered CRM for Australian SMEs',
     description: 'Manage contacts, deals, campaigns and analytics across all your businesses from one intelligent dashboard. Built for Australian SMEs.',
-    url: 'https://unitehub.ai',
+    url: 'https://unite-hub.com',
     siteName: 'Unite-Hub',
     images: [
       {

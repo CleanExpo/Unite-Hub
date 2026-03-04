@@ -103,7 +103,7 @@ function getBusinesses(): BusinessKpiData[] {
       name: "Unite-Hub",
       code: "UH",
       emoji: "\u{1F310}",
-      url: "https://unitehub.ai",
+      url: "https://unite-hub.com",
       status: "warning",
       mrr: 3100,
       mrrChange: 5,

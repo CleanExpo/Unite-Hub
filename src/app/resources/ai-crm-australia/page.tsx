@@ -28,17 +28,17 @@ export const metadata: Metadata = {
     "Australian SME software",
   ],
   alternates: {
-    canonical: "https://unitehub.ai/resources/ai-crm-australia",
+    canonical: "https://unite-hub.com/resources/ai-crm-australia",
   },
   openGraph: {
     title: "The Complete Guide to AI-Powered CRM for Australian SMEs 2026",
     description:
       "Everything Australian small business owners need to know about AI CRM: what it is, how it works, and how to choose the right platform for the AU market.",
-    url: "https://unitehub.ai/resources/ai-crm-australia",
+    url: "https://unite-hub.com/resources/ai-crm-australia",
     type: "article",
     publishedTime: "2026-03-04",
     modifiedTime: new Date().toISOString(),
-    authors: ["https://unitehub.ai/about"],
+    authors: ["https://unite-hub.com/about"],
     locale: "en_AU",
   },
 };
@@ -49,7 +49,7 @@ function ArticleSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "@id": "https://unitehub.ai/resources/ai-crm-australia",
+    "@id": "https://unite-hub.com/resources/ai-crm-australia",
     "headline": "The Complete Guide to AI-Powered CRM for Australian Small Businesses 2026",
     "description": "A comprehensive guide to choosing and using AI-powered CRM software for Australian small businesses in 2026.",
     "datePublished": "2026-03-04",
@@ -57,20 +57,20 @@ function ArticleSchema() {
     "author": {
       "@type": "Organization",
       "name": "Unite-Hub",
-      "url": "https://unitehub.ai",
+      "url": "https://unite-hub.com",
     },
     "publisher": {
       "@type": "Organization",
       "name": "Unite-Hub",
-      "url": "https://unitehub.ai",
+      "url": "https://unite-hub.com",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://unitehub.ai/logos/unite-hub-logo.png",
+        "url": "https://unite-hub.com/logos/unite-hub-logo.png",
       },
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://unitehub.ai/resources/ai-crm-australia",
+      "@id": "https://unite-hub.com/resources/ai-crm-australia",
     },
     "about": {
       "@type": "Thing",

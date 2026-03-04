@@ -8,7 +8,7 @@
  * dangerouslySetInnerHTML is safe for this use case.
  */
 
-const BASE_URL = "https://unitehub.ai";
+const BASE_URL = "https://unite-hub.com";
 
 export function UniteHubStructuredData() {
   const schema = {
@@ -34,7 +34,7 @@ export function UniteHubStructuredData() {
         },
         "contactPoint": {
           "@type": "ContactPoint",
-          "email": "support@unitehub.ai",
+          "email": "support@unite-hub.com",
           "contactType": "Customer Support",
           "areaServed": "AU",
           "availableLanguage": "English",
@@ -112,7 +112,7 @@ export function UniteHubStructuredData() {
             "name": "What is Unite-Hub?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Unite-Hub is an AI-powered CRM and business management platform built for Australian SMEs. It combines contact management, deal pipeline, email campaign automation, multi-business analytics, and a workforce of 23 AI agents — all accessible from a single dashboard at unitehub.ai.",
+              "text": "Unite-Hub is an AI-powered CRM and business management platform built for Australian SMEs. It combines contact management, deal pipeline, email campaign automation, multi-business analytics, and a workforce of 23 AI agents — all accessible from a single dashboard at unite-hub.com.",
             },
           },
           {
@@ -184,7 +184,7 @@ export function UniteHubStructuredData() {
             "name": "How do I get started with Unite-Hub?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Visit unitehub.ai to sign up for a free trial. Unite-Hub supports Google OAuth for quick onboarding. Once logged in, you can connect your Supabase database, link your Linear project for task management, and configure your 23 AI agents. The setup wizard guides you through connecting your existing business tools — Stripe, Gmail, Google Search Console, and Linear.",
+              "text": "Visit unite-hub.com to sign up for a free trial. Unite-Hub supports Google OAuth for quick onboarding. Once logged in, you can connect your Supabase database, link your Linear project for task management, and configure your 23 AI agents. The setup wizard guides you through connecting your existing business tools — Stripe, Gmail, Google Search Console, and Linear.",
             },
           },
         ],

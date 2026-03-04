@@ -102,7 +102,7 @@ export async function GET() {
       name: "Unite-Hub",
       code: "UH",
       emoji: "🌐",
-      url: "https://unitehub.ai",
+      url: "https://unite-hub.com",
       status: "warning",
       mrr: 3100,
       mrrChange: 5,
