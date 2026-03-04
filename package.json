@@ -1,5 +1,5 @@
 {
-  "name": "unite-hub",
+  "name": "unite-group",
   "version": "1.0.0",
   "private": true,
   "description": "Unite Hub â€” AI-Powered CRM & Marketing Automation. Next.js 16 + FastAPI/LangGraph + Supabase PostgreSQL.",
