@@ -8,6 +8,10 @@ const nextConfig = {
     // Temporarily ignore TypeScript errors during build (legacy Convex code)
     ignoreBuildErrors: true,
   },
+  eslint: {
+    // Ignore ESLint errors during production build — lint in CI separately
+    ignoreDuringBuilds: true,
+  },
   transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
 
   // Next.js 16: Move serverComponentsExternalPackages to top level
