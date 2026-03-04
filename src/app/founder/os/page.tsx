@@ -11,7 +11,7 @@ import {
   TrendingUp, TrendingDown, AlertCircle, CheckCircle2,
   Clock, Flame, ArrowRight, Video, X, ChevronRight,
   Zap, Activity, History, Search, Tag, BookmarkPlus, ExternalLink,
-  BookOpen, Upload, Image,
+  BookOpen, Upload, Image, Download, CloudUpload, FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -749,6 +749,9 @@ function KanbanTab() {
   const [items, setItems] = useState<KanbanItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCol, setActiveCol] = useState<KanbanItem["column"]>("hot");
+  const [exporting, setExporting] = useState(false);
+  const [exported, setExported] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
   const fetchKanban = useCallback(async () => {
     if (kanbanCache && Date.now() - kanbanCache.fetchedAt < KANBAN_CACHE_MS) {
@@ -773,6 +776,32 @@ function KanbanTab() {
   }, []);
 
   useEffect(() => { fetchKanban(); }, [fetchKanban]);
+
+  const exportToMarkdown = async () => {
+    if (exporting || items.length === 0) return;
+    setExporting(true);
+    try {
+      const res = await fetch("/api/founder/os/kanban-export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items }),
+      });
+      if (res.ok) {
+        setExported(true);
+        setTimeout(() => setExported(false), 2000);
+        // Fetch download URL
+        const dlRes = await fetch("/api/founder/os/kanban-export");
+        if (dlRes.ok) {
+          const dlData = await dlRes.json();
+          setDownloadUrl(dlData.url ?? null);
+        }
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const colItems = items.filter(i => i.column === activeCol);
 
@@ -818,7 +847,7 @@ function KanbanTab() {
           </div>
         )}
         {colItems.map(item => (
-          <div key={item.id} className="flex items-center gap-3 p-3 rounded-xl bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600/50 transition-colors">
+          <div key={item.id} className="flex items-center gap-3 p-3 rounded-sm bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600/50 transition-colors">
             <div className={`w-1.5 h-8 rounded-full flex-shrink-0 ${
               item.priority === 1 ? "bg-red-500" : item.priority === 2 ? "bg-amber-500" : "bg-zinc-600"
             }`} />
@@ -831,6 +860,41 @@ function KanbanTab() {
             <ChevronRight className="w-4 h-4 text-zinc-600 flex-shrink-0" />
           </div>
         ))}
+      </div>
+
+      {/* Export actions */}
+      <div className="flex-shrink-0 p-3 border-t border-zinc-800 space-y-2">
+        <motion.button
+          onClick={exportToMarkdown}
+          disabled={exporting || items.length === 0}
+          whileTap={{ scale: 0.97 }}
+          className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-sm text-xs font-medium uppercase tracking-wider transition-colors ${
+            exported
+              ? "bg-[#00FF88]/10 border border-[#00FF88]/40 text-[#00FF88]"
+              : "bg-[#00F5FF]/10 border border-[#00F5FF]/40 text-[#00F5FF] hover:bg-[#00F5FF]/20 disabled:opacity-40"
+          }`}
+        >
+          {exporting ? (
+            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+          ) : exported ? (
+            <CheckCircle2 className="w-3.5 h-3.5" />
+          ) : (
+            <FileText className="w-3.5 h-3.5" />
+          )}
+          {exporting ? "Exporting…" : exported ? "Exported!" : "Sync to KANBAN.md"}
+        </motion.button>
+
+        {downloadUrl && (
+          <a
+            href={downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 py-2 rounded-sm text-xs font-medium text-zinc-400 hover:text-white bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600/50 transition-colors"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Download KANBAN.md
+          </a>
+        )}
       </div>
     </div>
   );
