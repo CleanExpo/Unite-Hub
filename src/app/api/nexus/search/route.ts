@@ -1,9 +1,10 @@
 /**
  * GET /api/nexus/search?q=term&limit=10
- * Semantic search across NEXUS pages and databases using PostgreSQL full-text search.
+ * Hybrid search across NEXUS pages and databases using keyword (ilike) + pgvector semantic similarity.
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
+import { searchNexusPages } from '@/lib/embeddings';
 
 interface PageResult {
   id: string;
@@ -96,6 +97,27 @@ export async function GET(req: NextRequest) {
       updated_at: p.updated_at,
       snippet: extractSnippet(p.body),
     }));
+
+    // Semantic search via pgvector — merge with keyword results
+    try {
+      const semanticResults = await searchNexusPages(q, user.id, limit, 0.65);
+      const existingIds = new Set(pageResults.map((p) => p.id));
+      for (const sr of semanticResults) {
+        if (!existingIds.has(sr.id)) {
+          pageResults.push({
+            id: sr.id,
+            title: sr.title || 'Untitled',
+            icon: sr.icon,
+            page_type: sr.page_type,
+            updated_at: sr.updated_at,
+            snippet: `Semantic match (${(sr.similarity * 100).toFixed(0)}%)`,
+          });
+          existingIds.add(sr.id);
+        }
+      }
+    } catch {
+      // Semantic search is optional — keyword results still returned
+    }
 
     // Search databases — name and description
     const { data: databases, error: dbError } = await supabase
