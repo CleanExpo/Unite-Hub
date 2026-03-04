@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I claim the R&D Tax Incentive in Australia for 2025-26?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To claim Australia's R&D Tax Incentive for 2025-26: 1) Register your R&D activities with AusIndustry before 10 months after your income year ends, 2) Ensure minimum $20,000 in eligible R&D expenditure, 3) Lodge your tax return with the R&D Tax Incentive schedule (Schedule 8). Eligible companies with turnover under $20M can claim a 43.5% refundable tax offset."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Division 7A and how does it affect my small business?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Division 7A of the Income Tax Assessment Act 1936 (ITAA 1936) prevents private companies from making tax-free payments to shareholders or associates. Loans, payments, or debt forgiveness from a private company to shareholders can be deemed dividends — fully taxable and non-deductible. ATO Tax Optimizer automatically scans your Xero data for Division 7A exposure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much can my business recover through unclaimed deductions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Australian SMEs typically recover $200,000–$500,000 in missed tax benefits through forensic Xero analysis. Common missed deductions include R&D activities not registered with AusIndustry, FBT-exempt benefits misclassified as income, carry-forward tax losses under Subdivision 36-A ITAA 1997, and Division 7A issues that can be restructured."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Xero connect to the ATO Tax Optimizer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ATO Tax Optimizer uses Xero's official OAuth 2.0 API for read-only access. The connection takes under 60 seconds: authorise access in Xero, and the platform pulls your chart of accounts, transactions, payroll data, and GST history. No data is stored permanently — analysis runs on-demand and reports are exported as PDF or Excel."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between FBT and income tax in Australia?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fringe Benefits Tax (FBT) is paid by employers on non-cash benefits provided to employees (cars, laptops, entertainment). FBT operates on a separate 1 April–31 March year at a flat rate of 47%. Income tax is paid on cash income. Many businesses over-pay FBT by not claiming employee contributions or exemptions (e.g., portable electronic devices, work-related items)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is ATO Tax Optimizer read-only access to my Xero data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. ATO Tax Optimizer uses read-only OAuth 2.0 scope. The platform cannot create, edit, or delete any Xero records. Access can be revoked at any time from your Xero connected apps settings."
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Run a Forensic Tax Audit with ATO Tax Optimizer",
+  "description": "Step-by-step guide to connecting Xero and running an AI-powered Australian tax analysis to recover missed deductions and R&D tax incentives.",
+  "totalTime": "PT30M",
+  "supply": [{ "@type": "HowToSupply", "name": "Xero account with financial data" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Create your free account",
+      "text": "Sign up at ato-ai.app — free trial includes one full analysis run."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Connect Xero via OAuth 2.0",
+      "text": "Click 'Connect Xero' and authorise read-only access. Takes under 60 seconds. No Xero data is modified."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Select your financial year",
+      "text": "Choose 2023-24 or 2024-25. ATO Tax Optimizer pulls all relevant transactions for the period."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Choose analysis modules",
+      "text": "Select from R&D Tax Incentive, Division 7A compliance, FBT optimisation, and unclaimed deductions modules."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "Review AI findings",
+      "text": "The platform generates findings in 5-10 minutes. Each finding includes the relevant tax legislation (ITAA 1997, ITAA 1936, FBTAA 1986) and estimated recovery amount."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 6,
+      "name": "Export your report",
+      "text": "Download PDF or Excel report pre-formatted for your accountant or tax agent. Reports include legislative references and recommended actions."
+    }
+  ]
+}
