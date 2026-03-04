@@ -53,52 +53,53 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Marketing pages
   const marketingPages: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/security`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
+    { url: `${baseUrl}/about`,                    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/contact`,                  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/pricing`,                  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/features`,                 lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/integrations`,             lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/docs`,                     lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
+    { url: `${baseUrl}/support`,                  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/careers`,                  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/changelog`,                lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.6 },
+    { url: `${baseUrl}/privacy`,                  lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.4 },
+    { url: `${baseUrl}/terms`,                    lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.4 },
+    { url: `${baseUrl}/security`,                 lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.4 },
+    { url: `${baseUrl}/subject-access-request`,   lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
   ];
 
-  // Blog pages (if they exist)
+  // High-value SEO / resource pages
+  const resourcePages: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/resources/ato-tax-guide`,    lastModified: new Date(), changeFrequency: 'weekly', priority: 0.95 },
+    { url: `${baseUrl}/resources/ai-crm-australia`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9  },
+    { url: `${baseUrl}/xero-integration`,           lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+  ];
+
+  // ATO public pages
+  const atoPages: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/ato/bas`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/ato/stp`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/ato/verify`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+  ];
+
+  // Landing pages
+  const landingPages: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/landing-local-services`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/landing-restoration`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/landing-trades`,          lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+  ];
+
+  // Blog
   const blogPages: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
+    { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
   ];
 
-  // Combine all pages
   return [
     ...staticPages,
-    ...regionPages, // Region pages get high priority
+    ...resourcePages,  // Resource/SEO pages — near-top priority
+    ...regionPages,    // Region pages — high local SEO priority
+    ...atoPages,
+    ...landingPages,
     ...marketingPages,
     ...blogPages,
   ];
