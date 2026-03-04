@@ -3,7 +3,9 @@
  * PATCH /api/nexus/databases/:id — update database config
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase';
+import { getSupabaseServer, supabaseAdmin } from '@/lib/supabase';
+
+const SYSTEM_OWNER = '00000000-0000-0000-0000-000000000000';
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -16,21 +18,42 @@ export async function GET(_req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
     }
 
-    const { data: database, error } = await supabase
+    // Try user-owned first
+    let { data: database } = await supabase
       .from('nexus_databases')
       .select('*')
       .eq('id', id)
       .eq('owner_id', user.id)
       .single();
 
-    if (error || !database) {
+    // If not found, check if it's a system seed database and clone it
+    if (!database) {
+      const { data: seedDb } = await supabaseAdmin
+        .from('nexus_databases')
+        .select('*')
+        .eq('id', id)
+        .eq('owner_id', SYSTEM_OWNER)
+        .single();
+
+      if (seedDb) {
+        const { id: _seedId, created_at: _c, updated_at: _u, ...clone } = seedDb;
+        const { data: cloned } = await supabaseAdmin
+          .from('nexus_databases')
+          .insert({ ...clone, owner_id: user.id })
+          .select()
+          .single();
+        database = cloned;
+      }
+    }
+
+    if (!database) {
       return NextResponse.json({ error: 'Database not found' }, { status: 404 });
     }
 
     const { data: rows } = await supabase
       .from('nexus_rows')
       .select('*')
-      .eq('database_id', id)
+      .eq('database_id', database.id)
       .eq('owner_id', user.id)
       .is('archived_at', null)
       .order('sort_order', { ascending: true });

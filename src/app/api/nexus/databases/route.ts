@@ -3,7 +3,9 @@
  * POST /api/nexus/databases — create a database
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase';
+import { getSupabaseServer, supabaseAdmin } from '@/lib/supabase';
+
+const SYSTEM_OWNER = '00000000-0000-0000-0000-000000000000';
 
 export async function GET(_req: NextRequest) {
   try {
@@ -13,7 +15,8 @@ export async function GET(_req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
     }
 
-    const { data, error } = await supabase
+    // Fetch user-owned databases
+    const { data: userDbs, error } = await supabase
       .from('nexus_databases')
       .select('*')
       .eq('owner_id', user.id)
@@ -21,7 +24,22 @@ export async function GET(_req: NextRequest) {
 
     if (error) throw error;
 
-    return NextResponse.json({ databases: data ?? [] });
+    // Also fetch system seed databases that user hasn't cloned yet
+    const userDbNames = new Set((userDbs ?? []).map(d => d.name));
+    const { data: seedDbs } = await supabaseAdmin
+      .from('nexus_databases')
+      .select('*')
+      .eq('owner_id', SYSTEM_OWNER);
+
+    // Include seed databases that aren't yet cloned (by name match)
+    const combined = [...(userDbs ?? [])];
+    for (const seed of (seedDbs ?? [])) {
+      if (!userDbNames.has(seed.name)) {
+        combined.push(seed);
+      }
+    }
+
+    return NextResponse.json({ databases: combined });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Internal server error';
     console.error('[GET /api/nexus/databases]', message);
