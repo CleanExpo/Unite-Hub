@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { business_id, category, label, url, notes, secret } = body;
+    const { business_id, category, label, url, notes, secret, agent_accessible } = body;
 
     // Validate required fields
     if (!business_id || !category || !label || !secret) {
@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
       url: url ?? undefined,
       notes: notes ?? undefined,
       secret,
+      agentAccessible: agent_accessible ?? false,
     });
 
     return NextResponse.json({ success: true, item }, { status: 201 });

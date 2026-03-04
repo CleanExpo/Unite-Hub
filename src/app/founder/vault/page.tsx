@@ -15,6 +15,8 @@ interface VaultItem {
   label: string;
   url: string | null;
   notes: string | null;
+  agent_accessible: boolean;
+  tags: string[];
   last_accessed_at: string | null;
   created_at: string;
   updated_at: string;
@@ -34,6 +36,7 @@ interface FormState {
   url: string;
   notes: string;
   secret: string;
+  agent_accessible: boolean;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -64,6 +67,7 @@ const BLANK_FORM: FormState = {
   url: "",
   notes: "",
   secret: "",
+  agent_accessible: false,
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -125,6 +129,18 @@ export default function FounderVaultPage() {
   // Filter state
   const [activeBusiness, setActiveBusiness] = useState<string>("all");
   const [activeCategory, setActiveCategory] = useState<VaultCategory | "all">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  // Master password lock
+  const [vaultLocked, setVaultLocked] = useState(true);
+  const [hasPassword, setHasPassword] = useState<boolean | null>(null);
+  const [lockPassword, setLockPassword] = useState("");
+  const [lockError, setLockError] = useState<string | null>(null);
+  const [lockSubmitting, setLockSubmitting] = useState(false);
+  const [lockAttempts, setLockAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState(0);
+  const lastActivityRef = useRef(Date.now());
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -141,6 +157,101 @@ export default function FounderVaultPage() {
   const [reveal, setReveal] = useState<RevealState | null>(null);
   const [revealing, setRevealing] = useState<string | null>(null); // itemId currently being revealed
   const revealTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // ─── Master password check ───────────────────────────────────────────────
+
+  useEffect(() => {
+    // Check localStorage for unlock state
+    const unlockedUntil = Number(localStorage.getItem("vault_unlocked_until") || "0");
+    if (unlockedUntil > Date.now()) {
+      setVaultLocked(false);
+    }
+
+    // Check lockout
+    const storedLockout = Number(localStorage.getItem("vault_lockout_until") || "0");
+    if (storedLockout > Date.now()) {
+      setLockoutUntil(storedLockout);
+    }
+    const storedAttempts = Number(localStorage.getItem("vault_lock_attempts") || "0");
+    setLockAttempts(storedAttempts);
+
+    // Check if master password exists
+    fetch("/api/founder/vault/verify-master")
+      .then((r) => r.json())
+      .then((d) => setHasPassword(d.hasPassword ?? false))
+      .catch(() => setHasPassword(false));
+  }, []);
+
+  // Auto-lock after 5 min idle
+  useEffect(() => {
+    if (vaultLocked) return;
+
+    const resetActivity = () => { lastActivityRef.current = Date.now(); };
+    window.addEventListener("mousemove", resetActivity);
+    window.addEventListener("keydown", resetActivity);
+
+    const idleCheck = setInterval(() => {
+      if (Date.now() - lastActivityRef.current > 5 * 60 * 1000) {
+        setVaultLocked(true);
+        localStorage.removeItem("vault_unlocked_until");
+        clearReveal();
+      }
+    }, 10_000);
+
+    return () => {
+      window.removeEventListener("mousemove", resetActivity);
+      window.removeEventListener("keydown", resetActivity);
+      clearInterval(idleCheck);
+    };
+  }, [vaultLocked]);
+
+  const handleUnlock = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (lockoutUntil > Date.now()) {
+      setLockError(`Locked out. Try again in ${Math.ceil((lockoutUntil - Date.now()) / 60000)}m`);
+      return;
+    }
+
+    setLockSubmitting(true);
+    setLockError(null);
+
+    try {
+      const action = hasPassword ? "verify" : "setup";
+      const res = await fetch("/api/founder/vault/verify-master", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: lockPassword, action }),
+      });
+      const data = await res.json();
+
+      if (data.valid) {
+        setVaultLocked(false);
+        setHasPassword(true);
+        setLockAttempts(0);
+        localStorage.setItem("vault_unlocked_until", String(Date.now() + 5 * 60 * 1000));
+        localStorage.setItem("vault_lock_attempts", "0");
+        localStorage.removeItem("vault_lockout_until");
+        setLockPassword("");
+      } else {
+        const newAttempts = lockAttempts + 1;
+        setLockAttempts(newAttempts);
+        localStorage.setItem("vault_lock_attempts", String(newAttempts));
+
+        if (newAttempts >= 3) {
+          const lockout = Date.now() + 15 * 60 * 1000;
+          setLockoutUntil(lockout);
+          localStorage.setItem("vault_lockout_until", String(lockout));
+          setLockError("Too many attempts. Locked for 15 minutes.");
+        } else {
+          setLockError(`Invalid password (${3 - newAttempts} attempts remaining)`);
+        }
+      }
+    } catch {
+      setLockError("Failed to verify password");
+    } finally {
+      setLockSubmitting(false);
+    }
+  };
 
   // ─── Data fetching ────────────────────────────────────────────────────────
 
@@ -256,10 +367,26 @@ export default function FounderVaultPage() {
       url: item.url ?? "",
       notes: item.notes ?? "",
       secret: "", // never pre-fill secret
+      agent_accessible: item.agent_accessible ?? false,
     });
     setFormError(null);
     setModalOpen(true);
   };
+
+  // ─── Filtered + searched items ──────────────────────────────────────────
+
+  const filteredItems = items.filter((item) => {
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      if (
+        !item.label.toLowerCase().includes(q) &&
+        !item.business_id.toLowerCase().includes(q) &&
+        !(item.notes ?? "").toLowerCase().includes(q) &&
+        !(item.url ?? "").toLowerCase().includes(q)
+      ) return false;
+    }
+    return true;
+  });
 
   const closeModal = () => {
     setModalOpen(false);
@@ -281,12 +408,13 @@ export default function FounderVaultPage() {
     try {
       if (editingItem) {
         // PUT — update existing
-        const body: Record<string, string | null> = {
+        const body: Record<string, any> = {
           label: form.label,
           url: form.url || null,
           notes: form.notes || null,
           category: form.category,
           business_id: form.business_id,
+          agent_accessible: form.agent_accessible,
         };
         if (form.secret.trim()) body.secret = form.secret;
 
@@ -309,6 +437,7 @@ export default function FounderVaultPage() {
             url: form.url || null,
             notes: form.notes || null,
             secret: form.secret,
+            agent_accessible: form.agent_accessible,
           }),
         });
         const data = await res.json();
@@ -345,6 +474,55 @@ export default function FounderVaultPage() {
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
+  // ─── Lock screen ──────────────────────────────────────────────────────────
+
+  if (vaultLocked && hasPassword !== null) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-sm p-8 bg-[#0A0A0A] border border-[#00F5FF]/20 rounded-sm"
+        >
+          <div className="text-center mb-6">
+            <div className="text-4xl mb-3">&#128274;</div>
+            <h2 className="text-lg font-mono font-bold text-[#00F5FF]">
+              {hasPassword ? "Vault Locked" : "Set Master Password"}
+            </h2>
+            <p className="text-xs font-mono text-white/40 mt-1">
+              {hasPassword
+                ? "Enter your master password to access credentials"
+                : "Create a master password to protect your vault"}
+            </p>
+          </div>
+
+          <form onSubmit={handleUnlock} className="space-y-4">
+            <input
+              type="password"
+              value={lockPassword}
+              onChange={(e) => setLockPassword(e.target.value)}
+              placeholder={hasPassword ? "Master password" : "Choose a password (4+ chars)"}
+              autoFocus
+              className="w-full bg-[#050505] border border-white/15 text-white text-sm font-mono rounded-sm px-3 py-2.5 focus:outline-none focus:border-[#00F5FF]/50 placeholder:text-white/20"
+            />
+
+            {lockError && (
+              <p className="text-[#FF4444] text-xs font-mono">{lockError}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={lockSubmitting || lockoutUntil > Date.now()}
+              className="w-full py-2.5 bg-[#00F5FF]/10 border border-[#00F5FF]/40 text-[#00F5FF] font-mono text-sm rounded-sm hover:bg-[#00F5FF]/20 disabled:opacity-50 transition-colors"
+            >
+              {lockSubmitting ? "Verifying..." : hasPassword ? "Unlock" : "Set Password"}
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#050505] text-white flex">
 
@@ -378,8 +556,39 @@ export default function FounderVaultPage() {
             Credential Vault
           </h1>
           <p className="text-white/40 text-sm font-mono mt-1">
-            Encrypted with pgsodium — secrets never leave the vault unprotected
+            AES-256-GCM encrypted — secrets never leave the vault unprotected
           </p>
+          <a
+            href="/founder/vault/import"
+            className="inline-block mt-2 text-xs font-mono text-[#00F5FF]/60 hover:text-[#00F5FF] transition-colors"
+          >
+            Import from CSV &rarr;
+          </a>
+        </div>
+
+        {/* Search + View Toggle */}
+        <div className="flex items-center gap-3 mb-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search credentials..."
+            className="flex-1 bg-[#050505] border border-white/15 text-white text-sm font-mono rounded-sm px-3 py-2 focus:outline-none focus:border-[#00F5FF]/50 placeholder:text-white/20"
+          />
+          <div className="flex gap-0.5 border border-white/10 rounded-sm p-0.5">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`px-2 py-1 rounded-sm text-xs font-mono ${viewMode === "grid" ? "bg-[#00F5FF]/10 text-[#00F5FF]" : "text-white/40"}`}
+            >
+              Grid
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`px-2 py-1 rounded-sm text-xs font-mono ${viewMode === "list" ? "bg-[#00F5FF]/10 text-[#00F5FF]" : "text-white/40"}`}
+            >
+              List
+            </button>
+          </div>
         </div>
 
         {/* Category Tabs */}
@@ -418,7 +627,7 @@ export default function FounderVaultPage() {
         )}
 
         {/* Empty State */}
-        {!loading && items.length === 0 && (
+        {!loading && filteredItems.length === 0 && (
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-4">
             <span className="text-5xl">🔐</span>
             <p className="text-white/40 font-mono text-sm">No credentials found</p>
@@ -431,10 +640,10 @@ export default function FounderVaultPage() {
           </div>
         )}
 
-        {/* Card Grid */}
-        {!loading && items.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {items.map((item, i) => (
+        {/* Card Grid / List */}
+        {!loading && filteredItems.length > 0 && (
+          <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" : "flex flex-col gap-2"}>
+            {filteredItems.map((item, i) => (
               <motion.div
                 key={item.id}
                 custom={i}
@@ -487,6 +696,11 @@ export default function FounderVaultPage() {
                   <span className="px-2 py-0.5 rounded-sm text-xs font-mono bg-white/5 text-white/50 border border-white/10">
                     {item.category}
                   </span>
+                  {item.agent_accessible && (
+                    <span className="px-2 py-0.5 rounded-sm text-xs font-mono bg-[#A78BFA]/10 text-[#A78BFA] border border-[#A78BFA]/20">
+                      Agent
+                    </span>
+                  )}
                 </div>
 
                 {/* Notes preview */}
@@ -714,6 +928,28 @@ export default function FounderVaultPage() {
                     className="w-full bg-[#050505] border border-white/15 text-white text-sm font-mono rounded-sm px-3 py-2 focus:outline-none focus:border-[#00F5FF]/50 placeholder:text-white/20"
                     autoComplete="new-password"
                   />
+                </div>
+
+                {/* Agent Accessible */}
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, agent_accessible: !f.agent_accessible }))}
+                    className={[
+                      "w-10 h-5 rounded-sm relative transition-colors",
+                      form.agent_accessible ? "bg-[#A78BFA]/40" : "bg-white/10",
+                    ].join(" ")}
+                  >
+                    <span
+                      className={[
+                        "block w-4 h-4 rounded-sm absolute top-0.5 transition-all",
+                        form.agent_accessible ? "left-5 bg-[#A78BFA]" : "left-0.5 bg-white/30",
+                      ].join(" ")}
+                    />
+                  </button>
+                  <label className="text-xs font-mono text-white/50">
+                    Agent accessible — allow Bron to read this credential
+                  </label>
                 </div>
 
                 {/* Notes */}

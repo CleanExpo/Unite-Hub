@@ -64,7 +64,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     }
 
     const body = await req.json();
-    const { label, url, notes, category, business_id, secret } = body;
+    const { label, url, notes, category, business_id, secret, agent_accessible } = body;
 
     const validCategories: VaultCategory[] = ['login', 'api-key', 'banking', 'licence', 'other'];
     if (category && !validCategories.includes(category)) {
@@ -81,6 +81,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       category,
       businessId: business_id,
       secret,
+      agentAccessible: agent_accessible,
     });
 
     return NextResponse.json({ success: true, item: updatedItem });

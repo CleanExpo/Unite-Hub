@@ -90,6 +90,7 @@ export interface CreateVaultItemParams {
   url?: string;
   notes?: string;
   secret: string;
+  agentAccessible?: boolean;
 }
 
 export interface UpdateVaultItemParams {
@@ -99,6 +100,7 @@ export interface UpdateVaultItemParams {
   category?: VaultCategory;
   businessId?: string;
   secret?: string;
+  agentAccessible?: boolean;
 }
 
 // ─── Audit Helper ─────────────────────────────────────────────────────────────
@@ -140,8 +142,9 @@ export async function createVaultItem(
       url: params.url ?? null,
       notes: params.notes ?? null,
       secret_encrypted: secretEncrypted,
+      agent_accessible: params.agentAccessible ?? false,
     })
-    .select('id, owner_id, business_id, category, label, url, notes, last_accessed_at, created_at, updated_at')
+    .select('id, owner_id, business_id, category, label, url, notes, agent_accessible, tags, last_accessed_at, created_at, updated_at')
     .single();
 
   if (insertError || !item) {
@@ -164,7 +167,7 @@ export async function listVaultItems(
 
   let query = supabase
     .from('founder_vault_items')
-    .select('id, owner_id, business_id, category, label, url, notes, last_accessed_at, created_at, updated_at')
+    .select('id, owner_id, business_id, category, label, url, notes, agent_accessible, tags, last_accessed_at, created_at, updated_at')
     .eq('owner_id', ownerId)
     .order('created_at', { ascending: false });
 
@@ -243,13 +246,14 @@ export async function updateVaultItem(
   if (updates.category !== undefined) metaUpdate.category = updates.category;
   if (updates.businessId !== undefined) metaUpdate.business_id = updates.businessId;
   if (updates.secret !== undefined) metaUpdate.secret_encrypted = encryptSecret(updates.secret);
+  if (updates.agentAccessible !== undefined) metaUpdate.agent_accessible = updates.agentAccessible;
 
   const { data, error: updateError } = await supabase
     .from('founder_vault_items')
     .update(metaUpdate)
     .eq('id', itemId)
     .eq('owner_id', ownerId)
-    .select('id, owner_id, business_id, category, label, url, notes, last_accessed_at, created_at, updated_at')
+    .select('id, owner_id, business_id, category, label, url, notes, agent_accessible, tags, last_accessed_at, created_at, updated_at')
     .single();
 
   if (updateError || !data) {
