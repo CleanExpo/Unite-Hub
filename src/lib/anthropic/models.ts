@@ -9,25 +9,66 @@
  */
 
 export const ANTHROPIC_MODELS = {
-  // Claude Opus 4 (Most capable, extended thinking)
+  // ─── LATEST (Default for Nexus 2.0) ────────────────────────────────
+  // These are the standard models for all Unite-Hub AI features.
+  
+  // Claude Opus 4 — Deep thinking, complex reasoning, strategic analysis
+  // Use for: Extended thinking, business strategy, complex code generation
+  OPUS: 'claude-opus-4-6-20250514',
+  OPUS_4: 'claude-opus-4-6-20250514',
+  
+  // Claude Sonnet 4 — Balanced capability and speed
+  // Use for: Content generation, chat, analysis, most AI features
+  SONNET: 'claude-sonnet-4-5-20250514',
+  SONNET_4: 'claude-sonnet-4-5-20250514',
+  
+  // Claude Haiku 4 — Fast, cost-effective
+  // Use for: Autocomplete, quick suggestions, classification, summarization
+  HAIKU: 'claude-haiku-4-5-20250514',
+  HAIKU_4: 'claude-haiku-4-5-20250514',
+
+  // ─── PREVIOUS GENERATION (kept for backwards compatibility) ────────
   OPUS_4_5: 'claude-opus-4-5-20251101',
-  OPUS_4: 'claude-opus-4-5-20251101',
-  
-  // Claude Sonnet 4 (Balanced capability/cost)
   SONNET_4_5: 'claude-sonnet-4-5-20250929',
-  SONNET_4: 'claude-sonnet-4-5-20250929',
-  
-  // Claude Sonnet 3.5 (Previous generation)
   SONNET_3_5_V2: 'claude-3-5-sonnet-20241022',
   SONNET_3_5_V1: 'claude-3-5-sonnet-20240620',
-  
-  // Claude Haiku 3/4 (Fast, cost-effective)
   HAIKU_4_5: 'claude-haiku-4-5-20251001',
   HAIKU_3_5: 'claude-3-5-haiku-20241022',
   HAIKU_3: 'claude-3-haiku-20240307',
-  
-  // Claude Opus 3 (Previous generation)
   OPUS_3: 'claude-3-opus-20240229',
+} as const;
+
+/**
+ * Model routing for Nexus 2.0 features
+ * 
+ * Maps feature → model. Optimises for cost/quality trade-off.
+ */
+export const NEXUS_AI_ROUTING = {
+  // Block editor AI
+  'editor.autocomplete': ANTHROPIC_MODELS.HAIKU,      // Fast, cheap — inline completions
+  'editor.expand': ANTHROPIC_MODELS.SONNET,            // Good quality writing
+  'editor.rewrite': ANTHROPIC_MODELS.SONNET,           // Rewriting/improving text
+  'editor.summarize': ANTHROPIC_MODELS.HAIKU,          // Quick summaries
+  'editor.translate': ANTHROPIC_MODELS.HAIKU,          // Translation
+  
+  // Database AI
+  'database.autofill': ANTHROPIC_MODELS.HAIKU,         // Fill empty cells
+  'database.analyze': ANTHROPIC_MODELS.SONNET,         // Analyze trends
+  'database.formula': ANTHROPIC_MODELS.SONNET,         // Generate formulas
+  
+  // Chat / Assistant
+  'chat.general': ANTHROPIC_MODELS.SONNET,             // General chat
+  'chat.strategy': ANTHROPIC_MODELS.OPUS,              // Business strategy
+  'chat.code': ANTHROPIC_MODELS.OPUS,                  // Code generation
+  
+  // Search & Navigation
+  'search.semantic': ANTHROPIC_MODELS.HAIKU,           // Search queries
+  'search.answer': ANTHROPIC_MODELS.SONNET,            // Answer questions
+  
+  // Business Intelligence
+  'intel.report': ANTHROPIC_MODELS.OPUS,               // Generate reports
+  'intel.forecast': ANTHROPIC_MODELS.SONNET,           // Revenue forecasting
+  'intel.insight': ANTHROPIC_MODELS.SONNET,            // Business insights
 } as const;
 
 export type AnthropicModelName = typeof ANTHROPIC_MODELS[keyof typeof ANTHROPIC_MODELS];
