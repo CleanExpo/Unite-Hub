@@ -8,7 +8,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { createHmac } from 'crypto';
 
 interface MetafieldInput {
   namespace: string;
