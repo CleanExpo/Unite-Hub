@@ -23,7 +23,9 @@ import {
   User,
   Clock,
   MessageCircle,
-  BarChart3
+  BarChart3,
+  BookOpen,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -68,6 +70,8 @@ export default function ContactDetailPage() {
   const [emails, setEmails] = useState<Email[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+  const [obsidianSyncing, setObsidianSyncing] = useState(false);
+  const [obsidianSyncResult, setObsidianSyncResult] = useState<{ path?: string; error?: string } | null>(null);
 
   useEffect(() => {
     async function fetchContactData() {
@@ -139,6 +143,27 @@ export default function ContactDetailPage() {
     } catch (error) {
       console.error("Error deleting contact:", error);
       alert("Failed to delete contact");
+    }
+  };
+
+  const handleObsidianSync = async () => {
+    if (!contactId) return;
+    setObsidianSyncing(true);
+    setObsidianSyncResult(null);
+    try {
+      const res = await fetch(`/api/founder/obsidian/contacts/${contactId}/sync`, {
+        method: "POST",
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setObsidianSyncResult({ error: json.error ?? "Sync failed" });
+      } else {
+        setObsidianSyncResult({ path: json.path });
+      }
+    } catch (err) {
+      setObsidianSyncResult({ error: "Network error — sync failed" });
+    } finally {
+      setObsidianSyncing(false);
     }
   };
 
@@ -233,7 +258,7 @@ export default function ContactDetailPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 gap-2">
               <Send className="w-4 h-4" />
               Send Email
@@ -241,6 +266,29 @@ export default function ContactDetailPage() {
             <Button variant="outline" className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-700/50 gap-2">
               <Edit className="w-4 h-4" />
               Edit
+            </Button>
+            {/* Obsidian — open existing note directly in the app */}
+            <a
+              href={`obsidian://open?vault=Unite-Group+Vault&file=Contacts%2F${encodeURIComponent(contact.name)}`}
+              title="Open in Obsidian"
+            >
+              <Button
+                variant="outline"
+                className="bg-purple-500/10 border-purple-500/30 hover:bg-purple-500/20 text-purple-400 gap-2"
+              >
+                <BookOpen className="w-4 h-4" />
+                Open in Obsidian
+              </Button>
+            </a>
+            {/* Obsidian — write/update the note in Google Drive */}
+            <Button
+              variant="outline"
+              className="bg-cyan-500/10 border-cyan-500/30 hover:bg-cyan-500/20 text-cyan-400 gap-2"
+              onClick={handleObsidianSync}
+              disabled={obsidianSyncing}
+            >
+              <RefreshCw className={`w-4 h-4 ${obsidianSyncing ? "animate-spin" : ""}`} />
+              {obsidianSyncing ? "Syncing…" : "Sync to Obsidian"}
             </Button>
             <Button
               variant="outline"
@@ -251,6 +299,14 @@ export default function ContactDetailPage() {
               Delete
             </Button>
           </div>
+          {/* Obsidian sync feedback */}
+          {obsidianSyncResult && (
+            <p className={`text-sm mt-2 ${obsidianSyncResult.error ? "text-red-400" : "text-cyan-400"}`}>
+              {obsidianSyncResult.error
+                ? `Sync error: ${obsidianSyncResult.error}`
+                : `Synced to vault: ${obsidianSyncResult.path}`}
+            </p>
+          )}
         </div>
 
         {/* AI Score Card */}

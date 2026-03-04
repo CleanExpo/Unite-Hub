@@ -14,6 +14,7 @@ import {
   Calendar,
   Key,
   Loader2,
+  BookOpen,
 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -37,6 +38,12 @@ interface XeroLicenceInfo {
 interface XeroLicenceStatus {
   carsi: XeroLicenceInfo;
   dr_nrpg: XeroLicenceInfo;
+}
+
+interface ObsidianStatus {
+  connected: boolean;
+  enabled: boolean;
+  vaultName: string;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -241,14 +248,18 @@ export default function IntegrationHubPage() {
   const [xeroLicences, setXeroLicences] = useState<XeroLicenceStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [obsidianStatus, setObsidianStatus] = useState<ObsidianStatus | null>(null);
+  const [obsidianLoading, setObsidianLoading] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
+    setObsidianLoading(true);
     setError('');
     try {
-      const [statusRes, licenceRes] = await Promise.all([
+      const [statusRes, licenceRes, obsidianRes] = await Promise.all([
         fetch('/api/founder/integrations/status'),
         fetch('/api/founder/xero/status'),
+        fetch('/api/founder/obsidian/status'),
       ]);
 
       if (statusRes.ok) {
@@ -262,10 +273,16 @@ export default function IntegrationHubPage() {
         const data = (await licenceRes.json()) as XeroLicenceStatus;
         setXeroLicences(data);
       }
+
+      if (obsidianRes.ok) {
+        const data = (await obsidianRes.json()) as ObsidianStatus;
+        setObsidianStatus(data);
+      }
     } catch {
       setError('Network error loading integration data.');
     } finally {
       setLoading(false);
+      setObsidianLoading(false);
     }
   };
 
@@ -273,6 +290,38 @@ export default function IntegrationHubPage() {
     void loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleObsidianSetup = async () => {
+    setObsidianLoading(true);
+    try {
+      const res = await fetch('/api/founder/obsidian/setup', { method: 'POST' });
+      if (res.ok) {
+        const obsidianRes = await fetch('/api/founder/obsidian/status');
+        if (obsidianRes.ok) {
+          const data = (await obsidianRes.json()) as ObsidianStatus;
+          setObsidianStatus(data);
+        }
+      } else {
+        const data = (await res.json()) as { error?: string };
+        setError(data.error ?? 'Failed to set up Obsidian vault.');
+      }
+    } catch {
+      setError('Network error setting up Obsidian vault.');
+    } finally {
+      setObsidianLoading(false);
+    }
+  };
+
+  const handleSyncAllContacts = async () => {
+    setObsidianLoading(true);
+    try {
+      await fetch('/api/founder/obsidian/contacts/sync-all', { method: 'POST' });
+    } catch {
+      // non-fatal — sync runs in background
+    } finally {
+      setObsidianLoading(false);
+    }
+  };
 
   const carsiStatus = xeroLicences?.carsi.status ?? 'disconnected';
   const drStatus = xeroLicences?.dr_nrpg.status ?? 'disconnected';
@@ -466,6 +515,76 @@ export default function IntegrationHubPage() {
               icon={Calendar}
               label="Calendar"
             />
+          </div>
+        </section>
+
+        {/* ── Obsidian Vault ───────────────────────────────────────────────────── */}
+        <section>
+          <p className="text-xs text-[#555] uppercase tracking-widest mb-3">
+            Obsidian Vault
+          </p>
+          <div className="border border-[#7C3AED]/20 bg-[#080808] rounded-sm p-5">
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="inline-block w-2 h-2 rounded-full shrink-0 bg-[#7C3AED]" />
+                <span className="text-sm font-bold text-[#ccc] font-mono">Obsidian Vault</span>
+                {obsidianLoading ? (
+                  <Loader2 size={12} className="animate-spin text-[#555]" />
+                ) : obsidianStatus?.connected ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] border border-[#00FF88]/30 bg-[#00FF88]/10 text-[#00FF88] rounded-sm">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#00FF88] shadow-[0_0_4px_currentColor]" />
+                    Vault Connected
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] border border-[#FF4444]/30 bg-[#FF4444]/10 text-[#FF4444] rounded-sm">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FF4444]" />
+                    Not Connected
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap shrink-0">
+                {!obsidianLoading && !obsidianStatus?.connected && (
+                  <button
+                    onClick={() => void handleObsidianSetup()}
+                    disabled={obsidianLoading}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs border border-[#7C3AED]/40 text-[#a78bfa] rounded-sm hover:bg-[#7C3AED]/10 transition-colors disabled:opacity-40"
+                  >
+                    <BookOpen size={11} />
+                    Set Up Vault
+                  </button>
+                )}
+                {!obsidianLoading && obsidianStatus?.connected && (
+                  <>
+                    <button
+                      onClick={() => void handleSyncAllContacts()}
+                      disabled={obsidianLoading}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs border border-[#00F5FF]/40 text-[#00F5FF] rounded-sm hover:bg-[#00F5FF]/10 transition-colors disabled:opacity-40"
+                    >
+                      <RefreshCw size={11} />
+                      Sync All Contacts
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {obsidianStatus?.connected && (
+              <div className="mt-4 pt-4 border-t border-[#7C3AED]/10 space-y-1.5">
+                <p className="text-xs text-[#555]">
+                  Vault: <span className="text-[#aaa] font-mono">{obsidianStatus.vaultName}</span>
+                </p>
+                <p className="text-xs text-[#444] italic">
+                  Requires Google Drive connection
+                </p>
+              </div>
+            )}
+
+            {!obsidianStatus?.connected && !obsidianLoading && (
+              <p className="mt-3 text-xs text-[#444] italic">
+                Requires Google Drive connection
+              </p>
+            )}
           </div>
         </section>
 

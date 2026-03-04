@@ -11,8 +11,10 @@ import {
   TrendingUp, TrendingDown, AlertCircle, CheckCircle2,
   Clock, Flame, ArrowRight, Video, X, ChevronRight,
   Zap, Activity, History, Search, Tag, BookmarkPlus, ExternalLink,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { PhillOSPwaInstaller } from "@/components/PhillOSPwaInstaller";
 import { PushNotificationToggle } from "@/components/founder/PushNotificationToggle";
@@ -834,133 +836,288 @@ function KanbanTab() {
   );
 }
 
-function CaptureTab() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [streaming, setStreaming] = useState(false);
-  const [captured, setCaptured] = useState<string | null>(null);
-  const [note, setNote] = useState("");
-  const [error, setError] = useState<string | null>(null);
+const BUSINESS_OPTIONS = [
+  "disaster-recovery",
+  "restore-assist",
+  "nrpg",
+  "ato",
+  "unite-group",
+  "carsi",
+] as const;
 
-  const startCamera = async () => {
+const CAPTURE_TAGS = ["meeting", "idea", "task", "followup", "insight"] as const;
+
+function CaptureTab() {
+  const [text, setText] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [business, setBusiness] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [recentCaptures, setRecentCaptures] = useState<string[]>([]);
+  const [vaultConnected, setVaultConnected] = useState<boolean | null>(null);
+  const [listening, setListening] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const recognitionRef = useRef<any>(null);
+
+  // Check vault status on mount
+  useEffect(() => {
+    async function checkStatus() {
+      try {
+        const res = await fetch("/api/founder/obsidian/status");
+        if (res.ok) {
+          const data = await res.json();
+          setVaultConnected(!!data.connected);
+        } else {
+          setVaultConnected(false);
+        }
+      } catch {
+        setVaultConnected(false);
+      }
+    }
+    checkStatus();
+  }, []);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag],
+    );
+  };
+
+  const toggleBusiness = (biz: string) => {
+    setBusiness(prev => (prev === biz ? "" : biz));
+  };
+
+  const toggleSpeech = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) return;
+
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+
+    const recognition = new SR();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-AU";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (e: any) => {
+      setText(prev => prev ? `${prev} ${e.results[0][0].transcript}` : e.results[0][0].transcript);
+      setListening(false);
+    };
+    recognition.onerror = () => setListening(false);
+    recognition.onend = () => setListening(false);
+    recognitionRef.current = recognition;
+    recognition.start();
+    setListening(true);
+  };
+
+  const pushToObsidian = async () => {
+    if (!text.trim() || loading) return;
+    setLoading(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-        setStreaming(true);
-        setError(null);
+      const res = await fetch("/api/founder/obsidian/daily-note/capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: text.trim(),
+          tags: selectedTags,
+          business: business || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setRecentCaptures(data.captures ?? []);
+        setText("");
+        setSelectedTags([]);
+        setBusiness("");
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 1500);
+      } else if (data.error?.includes("not connected")) {
+        setVaultConnected(false);
       }
     } catch {
-      setError("Camera access denied or not available.");
+      // silently fail — user can retry
+    } finally {
+      setLoading(false);
     }
   };
-
-  const stopCamera = () => {
-    if (videoRef.current?.srcObject) {
-      (videoRef.current.srcObject as MediaStream).getTracks().forEach(t => t.stop());
-      videoRef.current.srcObject = null;
-    }
-    setStreaming(false);
-  };
-
-  const capture = () => {
-    if (!videoRef.current) return;
-    const canvas = document.createElement("canvas");
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    canvas.getContext("2d")?.drawImage(videoRef.current, 0, 0);
-    setCaptured(canvas.toDataURL("image/jpeg", 0.85));
-    stopCamera();
-  };
-
-  const reset = () => {
-    setCaptured(null);
-    setNote("");
-  };
-
-  useEffect(() => () => { stopCamera(); }, []);
 
   return (
     <div className="flex flex-col h-full p-4 gap-3 overflow-y-auto">
-      <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">Visual Capture</h2>
-
-      {error && (
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-red-900/20 border border-red-500/30 text-red-300 text-sm">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
-          {error}
+      {/* Header */}
+      <div className="flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-violet-400" />
+          <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">
+            Obsidian Capture
+          </h2>
         </div>
-      )}
-
-      {!captured ? (
-        <div className="rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 aspect-video flex items-center justify-center relative">
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            muted
-            playsInline
-            style={{ display: streaming ? "block" : "none" }}
-          />
-          {!streaming && (
-            <div className="text-center">
-              <Video className="w-10 h-10 text-zinc-600 mx-auto mb-2" />
-              <p className="text-xs text-zinc-500">No camera active</p>
-            </div>
+        {/* Vault status indicator */}
+        <div className="flex items-center gap-1.5">
+          {vaultConnected === null ? (
+            <div className="w-2 h-2 rounded-full bg-zinc-600 animate-pulse" />
+          ) : vaultConnected ? (
+            <div className="w-2 h-2 rounded-full bg-violet-500" title="Vault connected" />
+          ) : (
+            <div className="w-2 h-2 rounded-full bg-red-500" title="Vault disconnected" />
           )}
+          <span className="text-[10px] text-zinc-500">
+            {vaultConnected === null ? "Checking…" : vaultConnected ? "Connected" : "Disconnected"}
+          </span>
         </div>
-      ) : (
-        <div className="relative rounded-xl overflow-hidden border border-cyan-700/30">
-          <img src={captured} alt="Captured" className="w-full rounded-xl" />
-          <button onClick={reset} className="absolute top-2 right-2 w-7 h-7 bg-zinc-900/80 rounded-full flex items-center justify-center text-white hover:bg-zinc-800">
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
-
-      <div className="flex gap-2">
-        {!streaming && !captured && (
-          <Button onClick={startCamera} className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700">
-            <Video className="w-4 h-4 mr-2" />
-            Start Camera
-          </Button>
-        )}
-        {streaming && (
-          <>
-            <Button onClick={capture} className="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white">
-              <Camera className="w-4 h-4 mr-2" />
-              Capture
-            </Button>
-            <Button onClick={stopCamera} variant="outline" className="border-zinc-700 text-zinc-400 hover:text-white">
-              <X className="w-4 h-4" />
-            </Button>
-          </>
-        )}
       </div>
 
-      {captured && (
-        <div className="space-y-2">
-          <Input
-            value={note}
-            onChange={e => setNote(e.target.value)}
-            placeholder="Add a note or instruction..."
-            className="bg-zinc-900 border-zinc-700 text-white placeholder:text-zinc-500 text-sm"
-          />
-          <Button
-            className="w-full bg-cyan-600 hover:bg-cyan-500 text-white"
-            disabled={!note.trim()}
-            onClick={() => {
-              // TODO: send to AI or save to vault via API
-              reset();
-            }}
-          >
-            <Send className="w-4 h-4 mr-2" />
-            Send to Bron / Save
-          </Button>
+      {/* Loading state */}
+      {vaultConnected === null && (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-violet-500/40 border-t-violet-500 rounded-full animate-spin" />
         </div>
       )}
 
-      <p className="text-xs text-zinc-600 text-center mt-auto">
-        Captures are processed locally and sent to your AI command officer
-      </p>
+      {/* Vault not connected */}
+      {vaultConnected === false && (
+        <div className="flex flex-col items-center gap-3 p-5 rounded-sm bg-zinc-900 border border-zinc-800 text-center">
+          <BookOpen className="w-8 h-8 text-zinc-600" />
+          <p className="text-sm text-zinc-400">Obsidian vault not connected</p>
+          <p className="text-xs text-zinc-600">
+            Set up your vault in Integrations to start capturing notes directly to Obsidian.
+          </p>
+          <Link
+            href="/founder/integrations"
+            className="text-xs font-medium text-cyan-400 hover:text-cyan-300 underline underline-offset-2"
+          >
+            Go to Integrations →
+          </Link>
+        </div>
+      )}
+
+      {/* Main capture UI */}
+      {vaultConnected === true && (
+        <>
+          {/* Textarea + voice button */}
+          <div className="relative">
+            <textarea
+              value={text}
+              onChange={e => setText(e.target.value)}
+              placeholder="What's on your mind? Capture a thought, decision, or follow-up…"
+              rows={4}
+              className="w-full bg-zinc-900 border border-zinc-700 focus:border-[#00F5FF] rounded-sm text-sm text-white placeholder:text-zinc-600 p-3 pr-10 resize-none outline-none transition-colors"
+              onKeyDown={e => {
+                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) pushToObsidian();
+              }}
+            />
+            <button
+              onClick={toggleSpeech}
+              title={listening ? "Stop listening" : "Voice input"}
+              className={`absolute bottom-3 right-3 w-7 h-7 rounded-sm flex items-center justify-center transition-colors ${
+                listening
+                  ? "bg-red-500/20 text-red-400 border border-red-500/40"
+                  : "bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-700"
+              }`}
+            >
+              {listening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+            </button>
+          </div>
+
+          {/* Business selector */}
+          <div>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1.5">Business</p>
+            <div className="flex flex-wrap gap-1.5">
+              {BUSINESS_OPTIONS.map(biz => (
+                <button
+                  key={biz}
+                  onClick={() => toggleBusiness(biz)}
+                  className={`px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider rounded-sm border transition-colors ${
+                    business === biz
+                      ? "bg-[#00F5FF]/10 border-[#00F5FF]/50 text-[#00F5FF]"
+                      : "bg-zinc-900 border-zinc-700 text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  {biz}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tag pills */}
+          <div>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1.5">Tags</p>
+            <div className="flex flex-wrap gap-1.5">
+              {CAPTURE_TAGS.map(tag => (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider rounded-sm border transition-colors ${
+                    selectedTags.includes(tag)
+                      ? "bg-violet-500/15 border-violet-500/50 text-violet-300"
+                      : "bg-zinc-900 border-zinc-700 text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  #{tag}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Submit button */}
+          <AnimatePresence mode="wait">
+            {success ? (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="w-full py-3 rounded-sm bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center gap-2 text-emerald-400 text-sm font-medium"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                Captured!
+              </motion.div>
+            ) : (
+              <motion.div key="button" initial={{ opacity: 1 }} animate={{ opacity: 1 }}>
+                <Button
+                  onClick={pushToObsidian}
+                  disabled={!text.trim() || loading}
+                  className="w-full bg-[#00F5FF]/10 hover:bg-[#00F5FF]/20 text-[#00F5FF] border border-[#00F5FF]/40 rounded-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4 mr-2" />
+                  )}
+                  {loading ? "Pushing…" : "Push to Obsidian"}
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Recent captures */}
+          {recentCaptures.length > 0 && (
+            <div>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1.5">
+                Recent captures (today)
+              </p>
+              <div className="flex flex-col gap-1.5">
+                {recentCaptures.map((cap, i) => (
+                  <div
+                    key={i}
+                    className="px-3 py-2 rounded-sm bg-zinc-900 border border-zinc-800 text-xs text-zinc-400 leading-snug"
+                  >
+                    {cap}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <p className="text-[10px] text-zinc-600 text-center mt-auto pb-1">
+            Captures append to today&apos;s daily note in your Obsidian vault via Google Drive
+          </p>
+        </>
+      )}
     </div>
   );
 }
