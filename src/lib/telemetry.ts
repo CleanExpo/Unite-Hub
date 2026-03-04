@@ -23,7 +23,7 @@ export function initTelemetry() {
 
   sdk = new NodeSDK({
     resource: new Resource({
-      [SemanticResourceAttributes.SERVICE_NAME]: 'unite-hub',
+      [SemanticResourceAttributes.SERVICE_NAME]: 'unite-group',
       [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
     }),
     metricReader: prometheusExporter,

@@ -34,7 +34,7 @@ export const datadogConfig = {
   applicationId: process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID || "",
   clientToken: process.env.NEXT_PUBLIC_DATADOG_CLIENT_TOKEN || "",
   site: "datadoghq.com",
-  service: "unite-hub",
+  service: "unite-group",
   env: process.env.NODE_ENV || "development",
   version: process.env.VERCEL_GIT_COMMIT_SHA || "local",
   sessionSampleRate: 100,

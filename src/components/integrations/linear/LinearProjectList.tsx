@@ -103,7 +103,7 @@ export function LinearProjectList() {
           <p className="text-sm mt-2">
             Visit{' '}
             <a
-              href="https://linear.app/unite-hub/projects"
+              href="https://linear.app/unite-group/projects"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"

@@ -100,7 +100,7 @@ class APMClient {
     return {
       enabled,
       provider,
-      serviceName: process.env.APM_SERVICE_NAME || 'unite-hub',
+      serviceName: process.env.APM_SERVICE_NAME || 'unite-group',
       environment: (process.env.NODE_ENV as any) || 'development',
       sampleRate: parseFloat(process.env.APM_SAMPLE_RATE || '1.0'),
       flushInterval: parseInt(process.env.APM_FLUSH_INTERVAL || '10000'),

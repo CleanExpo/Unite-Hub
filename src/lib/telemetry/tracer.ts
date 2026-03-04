@@ -5,7 +5,7 @@
 
 import { trace, context, SpanStatusCode } from '@opentelemetry/api';
 
-const tracer = trace.getTracer('unite-hub', '1.0.0');
+const tracer = trace.getTracer('unite-group', '1.0.0');
 
 export interface TraceOptions {
   attributes?: Record<string, string | number | boolean>;

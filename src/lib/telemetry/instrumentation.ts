@@ -12,7 +12,7 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 const {
   NODE_ENV = 'development',
   OTEL_EXPORTER_OTLP_ENDPOINT,
-  OTEL_SERVICE_NAME = 'unite-hub',
+  OTEL_SERVICE_NAME = 'unite-group',
   OTEL_SERVICE_VERSION = '1.0.0',
   ENABLE_TELEMETRY = 'true',
 } = process.env;

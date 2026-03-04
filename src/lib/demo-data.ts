@@ -14,7 +14,7 @@
  */
 const DEMO_MODE_ENABLED = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
-export const DEMO_ORG_ID = "demo-unite-hub-org-123" as any;
+export const DEMO_ORG_ID = "demo-unite-group-org-123" as any;
 
 // Team Members
 export const demoTeamMembers = [
