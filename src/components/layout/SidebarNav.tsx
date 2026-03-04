@@ -33,6 +33,7 @@ import {
   Calendar,
   Bot,
   Network,
+  PenSquare,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -59,6 +60,7 @@ const navItems: NavItem[] = [
   { title: 'AI Tools', href: '/dashboard/ai-tools/marketing-copy', icon: Brain },
   { title: 'Agents', href: '/founder/agents', icon: Bot },
   { title: 'Graph', href: '/founder/graph', icon: Network },
+  { title: 'Diagram', href: '/founder/diagram', icon: PenSquare },
   { title: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 
