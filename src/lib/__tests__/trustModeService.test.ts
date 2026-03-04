@@ -306,7 +306,7 @@ describe("TrustModeService", () => {
         verified: true,
         method: "DNS_TXT",
         domain: "example.com",
-        dns_record: "unite-hub-verify=abc123",
+        dns_record: "unite-group-verify=abc123",
       });
 
       expect(result.status).toBe("PENDING_SIGNATURE");

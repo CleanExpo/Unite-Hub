@@ -1,0 +1,17 @@
+{
+  "name": "@unite-group/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript client SDK for the Unite-Group CRM API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["unite-group", "crm", "sdk", "api-client"],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

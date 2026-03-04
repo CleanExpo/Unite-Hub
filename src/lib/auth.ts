@@ -30,7 +30,7 @@ providers.push(
 //           pass: process.env.EMAIL_SERVER_PASSWORD,
 //         },
 //       },
-//       from: process.env.EMAIL_FROM || "noreply@unite-hub.io",
+//       from: process.env.EMAIL_FROM || "noreply@unite-group.in",
 //     })
 //   );
 // }

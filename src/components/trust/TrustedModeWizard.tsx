@@ -382,7 +382,7 @@ export function TrustedModeWizard({
                   Add this TXT record to your DNS:
                 </p>
                 <code className="block p-2 bg-muted rounded text-sm">
-                  unite-hub-verify={clientId.substring(0, 8)}
+                  unite-group-verify={clientId.substring(0, 8)}
                 </code>
                 <Input
                   placeholder="Enter the TXT record value"

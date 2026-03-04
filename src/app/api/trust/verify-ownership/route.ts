@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
       case "DNS_TXT":
         // In production, would perform DNS lookup
         // For now, check if verification_code matches expected pattern
-        const expectedCode = `unite-hub-verify=${client_id.substring(0, 8)}`;
+        const expectedCode = `unite-group-verify=${client_id.substring(0, 8)}`;
         verificationResult = {
           verified: verification_code === expectedCode,
           method: "DNS_TXT",
