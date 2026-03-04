@@ -32,6 +32,10 @@
     {
       "path": "/api/cron/document-expiry",
       "schedule": "0 21 * * *"
+    },
+    {
+      "path": "/api/cron/strategic-review",
+      "schedule": "0 */3 * * *"
     }
   ]
 }
