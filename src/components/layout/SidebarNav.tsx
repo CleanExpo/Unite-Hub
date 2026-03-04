@@ -87,12 +87,12 @@ export function SidebarNav({ collapsed = false, onToggleCollapse, className }: S
             <Link
               href="/dashboard"
               className="flex items-center gap-2 transition-opacity duration-200 hover:opacity-80"
-              aria-label="Unite-Hub Home"
+              aria-label="Unite-Group Home"
             >
               <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
                 <span className="text-primary-foreground font-bold text-sm">U</span>
               </div>
-              <span className="font-semibold text-lg tracking-tight">Unite-Hub</span>
+              <span className="font-semibold text-lg tracking-tight">Unite-Group</span>
             </Link>
           )}
           {collapsed && (
@@ -101,13 +101,13 @@ export function SidebarNav({ collapsed = false, onToggleCollapse, className }: S
                 <Link
                   href="/dashboard"
                   className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center mx-auto shadow-sm transition-transform duration-200 hover:scale-105"
-                  aria-label="Unite-Hub Home"
+                  aria-label="Unite-Group Home"
                 >
                   <span className="text-primary-foreground font-bold text-sm">U</span>
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">
-                <p>Unite-Hub</p>
+                <p>Unite-Group</p>
               </TooltipContent>
             </Tooltip>
           )}

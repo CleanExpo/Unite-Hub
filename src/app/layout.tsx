@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { UniteHubStructuredData } from "@/components/StructuredData";
-import { CookieConsent } from "@/components/CookieConsent";
 
 // Force all pages to be dynamically rendered at request time
 // This is required because many pages use getSupabaseServer() which calls cookies()
@@ -27,10 +26,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Unite-Hub — AI-Powered CRM for Australian SMEs',
-    template: '%s | Unite-Hub',
+    default: 'Unite-Group — AI-Powered CRM for Australian SMEs',
+    template: '%s | Unite-Group',
   },
-  description: 'Unite-Hub is an AI-powered CRM built for Australian SMEs. Manage contacts, deals, campaigns and analytics across all your businesses in one hub.',
+  description: 'Unite-Group is an AI-powered CRM built for Australian SMEs. Manage contacts, deals, campaigns and analytics across all your businesses in one hub.',
   keywords: [
     'CRM Australia',
     'AI CRM',
@@ -45,22 +44,22 @@ export const metadata: Metadata = {
     'multi-business CRM',
     'sales automation Australia',
   ],
-  authors: [{ name: 'Unite-Hub' }],
-  creator: 'Unite-Hub',
-  publisher: 'Unite-Hub',
-  metadataBase: new URL('https://unite-hub.com'),
+  authors: [{ name: 'Unite-Group' }],
+  creator: 'Unite-Group',
+  publisher: 'Unite-Group',
+  metadataBase: new URL('https://unite-group.in'),
   alternates: {
-    canonical: 'https://unite-hub.com',
+    canonical: 'https://unite-group.in',
     languages: {
-      'en-AU': 'https://unite-hub.com',
+      'en-AU': 'https://unite-group.in',
     },
   },
   openGraph: {
     type: 'website',
-    title: 'Unite-Hub — AI-Powered CRM for Australian SMEs',
+    title: 'Unite-Group — AI-Powered CRM for Australian SMEs',
     description: 'Manage contacts, deals, campaigns and analytics across all your businesses from one intelligent dashboard. Built for Australian SMEs.',
-    url: 'https://unite-hub.com',
-    siteName: 'Unite-Hub',
+    url: 'https://unite-group.in',
+    siteName: 'Unite-Group',
     images: [
       {
         url: '/og-image.png',
@@ -73,8 +72,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@unitehub',
-    title: 'Unite-Hub — AI-Powered CRM for Australian SMEs',
+    site: '@unitegroup',
+    title: 'Unite-Group — AI-Powered CRM for Australian SMEs',
     description: 'AI-powered CRM built for Australian SMEs. Manage contacts, deals, campaigns and analytics in one hub.',
     images: ['/og-image.png'],
   },
@@ -123,7 +122,6 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           {children}
-          <CookieConsent />
         </Providers>
       </body>
     </html>

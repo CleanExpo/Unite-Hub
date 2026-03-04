@@ -10,14 +10,14 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <h3 className="font-bold text-xl mb-4">Unite-Hub</h3>
+            <h3 className="font-bold text-xl mb-4">Unite-Group</h3>
             <p className="text-sm text-muted-foreground mb-4">
               AI-powered marketing automation and CRM for modern businesses.
               Build better relationships, automate workflows, and grow faster.
             </p>
             <div className="flex gap-4">
               <a
-                href="https://twitter.com/unitehub"
+                href="https://twitter.com/unitegroup"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors"
@@ -26,7 +26,7 @@ export function Footer() {
                 <Twitter className="h-5 w-5" />
               </a>
               <a
-                href="https://github.com/unitehub"
+                href="https://github.com/unitegroup"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors"
@@ -35,7 +35,7 @@ export function Footer() {
                 <Github className="h-5 w-5" />
               </a>
               <a
-                href="https://linkedin.com/company/unitehub"
+                href="https://linkedin.com/company/unitegroup"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors"
@@ -44,7 +44,7 @@ export function Footer() {
                 <Linkedin className="h-5 w-5" />
               </a>
               <a
-                href="mailto:hello@unite-hub.com"
+                href="mailto:hello@unite-group.in"
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Email"
               >
@@ -111,7 +111,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://status.unite-hub.com"
+                  href="https://status.unite-group.in"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"
@@ -162,7 +162,7 @@ export function Footer() {
 
         <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            &copy; {currentYear} Unite-Hub. All rights reserved.
+            &copy; {currentYear} Unite-Group. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <Link href="/privacy" className="hover:text-foreground transition-colors">

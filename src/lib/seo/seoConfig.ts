@@ -1,7 +1,7 @@
 /**
  * SEO Configuration Registry
  *
- * Central configuration for all SEO-related metadata across the Unite-Hub platform.
+ * Central configuration for all SEO-related metadata across the Unite-Group platform.
  * This file serves as the single source of truth for:
  * - Site-wide metadata
  * - Page-specific SEO configurations
@@ -16,17 +16,17 @@ export const seoConfig = {
    * Site-wide configuration
    */
   site: {
-    name: 'Unite-Hub',
+    name: 'Unite-Group',
     tagline: 'AI-Powered Business Hub',
-    description: 'Unite-Hub is an AI-powered Business Hub for managing multiple businesses from one intelligent dashboard. CRM, email, campaigns, analytics, and AI agents — all in one place.',
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com',
+    description: 'Unite-Group is an AI-powered Business Hub for managing multiple businesses from one intelligent dashboard. CRM, email, campaigns, analytics, and AI agents — all in one place.',
+    url: process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in',
     image: '/og-image.png',
     logo: '/logo.png',
     twitter: '@unitehub',
     locale: 'en_US',
     contact: {
-      email: 'hello@unite-hub.com',
-      support: 'support@unite-hub.com',
+      email: 'hello@unite-group.in',
+      support: 'support@unite-group.in',
     },
   },
 
@@ -34,9 +34,9 @@ export const seoConfig = {
    * Business information for structured data
    */
   business: {
-    legalName: 'Unite-Hub',
+    legalName: 'Unite-Group',
     foundingDate: '2024',
-    founder: 'Unite-Hub',
+    founder: 'Unite-Group',
     description: 'AI-powered Business Hub for founders managing multiple businesses',
     industry: 'Business Management',
     category: 'Business Technology',
@@ -77,8 +77,8 @@ export const seoConfig = {
    */
   pages: {
     home: {
-      title: 'Unite-Hub | AI-Powered Business Hub',
-      titleTemplate: 'Unite-Hub | Your Business. One Hub.',
+      title: 'Unite-Group | AI-Powered Business Hub',
+      titleTemplate: 'Unite-Group | Your Business. One Hub.',
       description: 'Manage contacts, deals, campaigns, and operations across all your businesses from one intelligent dashboard. Powered by AI that works for you.',
       keywords: [
         'AI business hub',
@@ -93,7 +93,7 @@ export const seoConfig = {
     },
 
     dashboard: {
-      title: 'Dashboard - Unite-Hub Business Hub',
+      title: 'Dashboard - Unite-Group Business Hub',
       description: 'Your AI-powered business command center. Manage contacts, deals, campaigns, and analytics from one unified dashboard.',
       keywords: [
         'business dashboard',
@@ -108,8 +108,8 @@ export const seoConfig = {
     },
 
     blog: {
-      title: 'Business Insights - Unite-Hub',
-      description: 'Business insights, AI automation strategies, and management tips from the Unite-Hub team.',
+      title: 'Business Insights - Unite-Group',
+      description: 'Business insights, AI automation strategies, and management tips from the Unite-Group team.',
       keywords: [
         'business insights',
         'AI automation',
@@ -122,10 +122,10 @@ export const seoConfig = {
     },
 
     contact: {
-      title: 'Contact Unite-Hub',
-      description: 'Get in touch with Unite-Hub for support, inquiries, or partnership opportunities.',
+      title: 'Contact Unite-Group',
+      description: 'Get in touch with Unite-Group for support, inquiries, or partnership opportunities.',
       keywords: [
-        'contact Unite-Hub',
+        'contact Unite-Group',
         'business hub support',
       ],
       og: {
@@ -176,12 +176,12 @@ export const seoConfig = {
    */
   commonFAQs: [
     {
-      question: 'What is Unite-Hub?',
-      answer: 'Unite-Hub is an AI-powered Business Hub for founders managing multiple businesses. It combines CRM, email, campaigns, analytics, and AI agents into one system.',
+      question: 'What is Unite-Group?',
+      answer: 'Unite-Group is an AI-powered Business Hub for founders managing multiple businesses. It combines CRM, email, campaigns, analytics, and AI agents into one system.',
     },
     {
-      question: 'Is Unite-Hub available to the public?',
-      answer: 'Unite-Hub is a private business tool. Client access is by invitation only through the Client Portal.',
+      question: 'Is Unite-Group available to the public?',
+      answer: 'Unite-Group is a private business tool. Client access is by invitation only through the Client Portal.',
     },
   ],
 

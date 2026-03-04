@@ -36,7 +36,7 @@ export function Logo({
     <div className={cn('flex items-center gap-3', className)}>
       <Image
         src={logoSrc}
-        alt={`Unite-Hub ${variant === 'default' ? '' : variant} Logo`}
+        alt={`Unite-Group ${variant === 'default' ? '' : variant} Logo`}
         width={dimensions.width}
         height={dimensions.height}
         priority
@@ -80,7 +80,7 @@ export function MembershipBadge({ tier, size = 'md', className }: MembershipBadg
     <div className={cn('inline-flex items-center', className)}>
       <Image
         src={LOGO_PATHS[variant]}
-        alt={`Unite-Hub ${tier} Member`}
+        alt={`Unite-Group ${tier} Member`}
         width={dimensions.width}
         height={dimensions.height}
         className="object-contain"

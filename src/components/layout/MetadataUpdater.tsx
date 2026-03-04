@@ -45,7 +45,7 @@ interface MetadataUpdaterProps {
 }
 
 export function MetadataUpdater({
-  baseTitle = 'Unite-Hub',
+  baseTitle = 'Unite-Group',
   separator = ' | ',
 }: MetadataUpdaterProps) {
   const pathname = usePathname();
