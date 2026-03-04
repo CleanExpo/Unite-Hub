@@ -1,28 +1,18 @@
 # Current State
-> Updated by PreCompact hook and agents after key decisions.
+> Updated by PreCompact hook. Session: ecdea945
 
 ## Active Task
-<!-- Agent: update this field when starting a task -->
-Founder Credential Vault — COMPLETED (04/03/2026)
+Compaction triggered — context was saved at 04/03/2026 21:59 AEST.
+Re-read CONSTITUTION.md if rules feel unclear after compaction.
 
 ## Recent Architectural Choices
-<!-- Agent: append brief notes on significant decisions made this session -->
-- Used pgsodium `vault.secrets` via SECURITY DEFINER RPCs (create/get/update/delete_vault_secret)
-- Metadata stored in `founder_vault_items`, secrets never touch metadata table
-- Dual-layer ownership check: RLS policy + explicit `owner_id` filter in service layer
-- Reveal endpoint returns 30-second unix expiry; UI auto-masks via interval countdown
-- Admin client (`supabaseAdmin`) used for audit log inserts to avoid RLS blocking audit writes
-- Framer Motion for modal + card entry + reveal panel animations (no CSS transitions)
+See architectural-decisions.md for logged decisions.
 
 ## In-Progress Work
-<!-- Agent: list files being modified and why -->
-None — all files committed
+Check recent git status: `git status` and `git log --oneline -5`
 
 ## Next Steps
-<!-- Agent: list what remains after this session -->
-- Apply migration 500_founder_vault.sql to Supabase (requires dashboard or CLI)
-- Set SUPABASE_SERVICE_ROLE_KEY env var if not already present
-- Mark Linear task #4 (Founder Credential Vault) as Done — Linear MCP was unauthenticated this session
+Re-read .claude/memory/CONSTITUTION.md to restore rule context.
 
 ## Last Updated
-04/03/2026
+04/03/2026 21:59 AEST (PreCompact hook)
