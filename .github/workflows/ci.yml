@@ -146,7 +146,7 @@ jobs:
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     environment:
       name: staging
-      url: https://staging.unite-hub.com
+      url: https://staging.unite-group.in
     steps:
       - uses: actions/checkout@v4
 
@@ -165,7 +165,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: production
-      url: https://unite-hub.com
+      url: https://unite-group.in
     steps:
       - uses: actions/checkout@v4
 

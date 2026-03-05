@@ -68,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \".claude/hooks/scripts/pre-bash-validate.py\"",
+            "command": "python \"D:\\Unite-Group CRM\\.claude\\hooks\\scripts\\pre-bash-validate.py\"",
             "timeout": 10
           }
         ]
@@ -78,7 +78,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \".claude/hooks/scripts/iteration-counter.py\"",
+            "command": "python \"D:\\Unite-Group CRM\\.claude\\hooks\\scripts\\iteration-counter.py\"",
             "timeout": 5
           }
         ]
