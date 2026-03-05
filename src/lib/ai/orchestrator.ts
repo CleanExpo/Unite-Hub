@@ -14,8 +14,16 @@ import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { extractCacheStats, logCacheStats } from '@/lib/anthropic/features/prompt-cache';
 import { supabaseStaff } from '../auth/supabase';
 
-// Initialize AI clients
-const gemini = new GoogleGenAI(process.env.GOOGLE_AI_API_KEY || '');
+// Initialize AI clients (lazy — Gemini throws at construction if key is empty)
+let _gemini: GoogleGenAI | null = null;
+function getGeminiClient(): GoogleGenAI {
+  if (!_gemini) {
+    const key = process.env.GOOGLE_AI_API_KEY;
+    if (!key) throw new Error('GOOGLE_AI_API_KEY is not set');
+    _gemini = new GoogleGenAI(key);
+  }
+  return _gemini;
+}
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
   defaultHeaders: {
@@ -224,7 +232,7 @@ ${JSON.stringify(payload.interpretation, null, 2)}`,
  * Process email intelligence using Gemini 3
  */
 async function processEmailIntelligence(payload: { emailId: string; body: string }) {
-  const model = gemini.getGenerativeModel({ model: 'gemini-3-pro' });
+  const model = getGeminiClient().getGenerativeModel({ model: 'gemini-3-pro' });
 
   const result = await model.generateContent({
     contents: [
@@ -274,7 +282,7 @@ async function generateContent(payload: { contentType: string; context: string }
  * Analyze intelligence patterns using Gemini 3
  */
 async function analyzeIntelligence(payload: { dataPoints: any[] }) {
-  const model = gemini.getGenerativeModel({ model: 'gemini-3-pro' });
+  const model = getGeminiClient().getGenerativeModel({ model: 'gemini-3-pro' });
 
   const result = await model.generateContent({
     contents: [
