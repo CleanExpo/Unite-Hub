@@ -1,24 +1,18 @@
 # Current State
-> Updated: 05/03/2026 AEST
+> Updated by PreCompact hook. Session: 6bd7dea2
 
 ## Active Task
-None — session complete.
+Compaction triggered — context was saved at 05/03/2026 18:04 AEST.
+Re-read CONSTITUTION.md if rules feel unclear after compaction.
 
-## Completed This Session
-- Fixed OpenTelemetry `Resource` import breaking Vercel build (`instrumentation.ts`)
-- Fixed GoogleGenAI eager construction crash — lazy init pattern (`orchestrator.ts`)
-- Removed unitehub.ai rogue domain from Vercel
-- Deleted zombie `unite-hub` Vercel project (pre-rebrand duplicate)
-- Fixed GitHub Actions stale URLs in `nightly-healthcheck.yml` and `ci.yml`
-- Fixed `.claude/settings.json` hook absolute paths (CWD bug)
-- Rewrote `src/app/page.tsx` with full Scientific Luxury design system
+## Recent Architectural Choices
+See architectural-decisions.md for logged decisions.
 
 ## In-Progress Work
-None.
+Check recent git status: `git status` and `git log --oneline -5`
 
 ## Next Steps
-- Monitor Vercel deploy of homepage redesign (commit 69780887)
-- Consider auditing other public-facing pages for old marketing remnants
+Re-read .claude/memory/CONSTITUTION.md to restore rule context.
 
 ## Last Updated
-05/03/2026 AEST (manual)
+05/03/2026 18:04 AEST (PreCompact hook)
