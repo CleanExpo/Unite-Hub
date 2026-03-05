@@ -1,10 +1,12 @@
 /**
- * Competitor Gap Analysis API Route (Stub)
+ * Competitor Gap Analysis API Route
  * GET /api/seo-enhancement/competitors?url=https://example.com&competitor=https://rival.com
- * POST - Run competitor analysis (returns stub data)
+ * POST - Run AI-powered competitor gap analysis via competitorGapService
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseServer } from '@/lib/supabase';
+import { competitorGapService } from '@/lib/seoEnhancement/competitorGapService';
 
 interface CompetitorAnalysisResult {
   id: string;
@@ -172,26 +174,64 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth check
+    const supabase = await getSupabaseServer();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
-    const { url, clientDomain, action } = body;
+    const { workspaceId, clientDomain, competitors, action } = body as {
+      workspaceId: string;
+      clientDomain: string;
+      competitors?: string[];
+      action?: string;
+    };
 
-    const targetUrl = url || (clientDomain ? `https://${clientDomain}` : null);
-
-    if (!targetUrl) {
+    if (!workspaceId || !clientDomain) {
       return NextResponse.json(
-        { error: 'url or clientDomain is required in request body' },
+        { error: 'workspaceId and clientDomain are required' },
         { status: 400 }
       );
     }
 
-    const result = generateStubCompetitors(targetUrl);
+    try {
+      // Add competitors if requested
+      if (action === 'addCompetitor' && competitors?.length) {
+        for (const domain of competitors) {
+          await competitorGapService.addCompetitor(workspaceId, clientDomain, domain);
+        }
+      }
 
-    return NextResponse.json({
-      success: true,
-      data: { action: action || 'analyzeAll', result },
-      _stub: true,
-      _message: 'Competitor analysis created (stub). Connect DataForSEO for live data.',
-    });
+      // Run AI-powered content gap analysis (always works — uses Claude)
+      const contentGap = await competitorGapService.analyzeContentGap(workspaceId, clientDomain);
+
+      // Attempt keyword gap analysis (gracefully degrades without DataForSEO)
+      let keywordGap = null;
+      try {
+        keywordGap = await competitorGapService.analyzeKeywordGap(workspaceId, clientDomain);
+      } catch (kwErr) {
+        console.warn('[API] Keyword gap analysis degraded (no DataForSEO):', kwErr instanceof Error ? kwErr.message : kwErr);
+      }
+
+      return NextResponse.json({
+        success: true,
+        data: { contentGap, keywordGap },
+        isAiAnalysis: true,
+      });
+    } catch (serviceError) {
+      // Fall back to stub data if service fails entirely
+      console.error('[API] Competitor service error, falling back to stub:', serviceError);
+      const stubUrl = `https://${clientDomain}`;
+      const stubResult = generateStubCompetitors(stubUrl);
+
+      return NextResponse.json({
+        success: true,
+        data: stubResult,
+        isStub: true,
+      });
+    }
   } catch (error) {
     console.error('[API] Competitors POST error:', error);
     return NextResponse.json(

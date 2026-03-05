@@ -2,6 +2,11 @@
  * CSRF Protection Utility
  * Validates Origin header matches Host for state-changing HTTP methods.
  * Applied in middleware for all /api/ routes (except webhooks).
+ *
+ * FIX (UNI-838): Added integration callback paths to exempt list and
+ * allowed known deployment origins (NEXT_PUBLIC_URL, VERCEL_URL) so
+ * POST requests on Vercel don't get rejected when Origin differs from
+ * the Host header (e.g. custom domain vs .vercel.app).
  */
 
 import type { NextRequest } from 'next/server';
@@ -13,7 +18,40 @@ const EXEMPT_PATHS = [
   '/api/auth/callback',
   '/api/cron/',
   '/api/public/',
+  '/api/integrations/gmail/callback',
+  '/api/integrations/xero/callback',
+  '/api/integrations/outlook/callback',
+  '/api/integrations/ato/callback',
+  '/api/seo/gsc/callback',
+  '/api/seo/brave/callback',
 ];
+
+/**
+ * Build the set of allowed origin hostnames from environment variables.
+ * Cached at module level so it's computed once per cold start.
+ */
+function getAllowedOrigins(): Set<string> {
+  const origins = new Set<string>();
+
+  const envUrls = [
+    process.env.NEXT_PUBLIC_URL,
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  ];
+
+  for (const raw of envUrls) {
+    if (!raw) continue;
+    try {
+      origins.add(new URL(raw).host);
+    } catch {
+      // skip malformed env values
+    }
+  }
+
+  return origins;
+}
+
+const allowedOrigins = getAllowedOrigins();
 
 export function validateCsrf(req: NextRequest): { valid: boolean; reason?: string } {
   // Only check mutating methods
@@ -21,7 +59,7 @@ export function validateCsrf(req: NextRequest): { valid: boolean; reason?: strin
     return { valid: true };
   }
 
-  // Skip exempt paths (webhooks, auth callbacks, cron, public)
+  // Skip exempt paths (webhooks, auth callbacks, cron, public, OAuth callbacks)
   const pathname = req.nextUrl.pathname;
   if (EXEMPT_PATHS.some(p => pathname.startsWith(p))) {
     return { valid: true };
@@ -41,7 +79,13 @@ export function validateCsrf(req: NextRequest): { valid: boolean; reason?: strin
     const originUrl = new URL(origin);
     const originHost = originUrl.host; // includes port
 
+    // Direct match: origin host === request host
     if (originHost === host) {
+      return { valid: true };
+    }
+
+    // Allow known deployment origins (custom domain vs .vercel.app mismatch)
+    if (allowedOrigins.has(originHost)) {
       return { valid: true };
     }
 
