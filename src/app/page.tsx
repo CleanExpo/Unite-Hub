@@ -4,26 +4,103 @@ import { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BarChart3,
-  Bot,
-  Briefcase,
-  Globe,
-  Layers,
-  Mail,
-  Megaphone,
-  Shield,
-  Sparkles,
-  Users,
-  Zap,
-} from "lucide-react";
+import { motion } from "framer-motion";
+
+const EASE_OUT_EXPO = [0.19, 1, 0.22, 1] as const;
+
+const SYSTEM_MODULES = [
+  {
+    title: "CRM & Contact Intelligence",
+    description:
+      "Track every contact, conversation, and opportunity. AI-powered lead scoring identifies your hottest prospects in real-time.",
+    colour: "#00F5FF",
+    tag: "Core",
+  },
+  {
+    title: "Deal Pipeline",
+    description:
+      "Visual kanban pipeline to manage deals from lead to close. Track value, probability, and stage progression.",
+    colour: "#00F5FF",
+    tag: "Revenue",
+  },
+  {
+    title: "Email Intelligence",
+    description:
+      "Gmail integration with AI-powered email processing, automated follow-ups, and engagement tracking.",
+    colour: "#00FF88",
+    tag: "Comms",
+  },
+  {
+    title: "Campaign Automation",
+    description:
+      "Drip campaigns, email sequences, and A/B testing. Set it up once and let AI handle the rest.",
+    colour: "#FFB800",
+    tag: "Marketing",
+  },
+  {
+    title: "SEO & Content Engine",
+    description:
+      "AI-driven SEO audits, keyword research, and content optimisation. Dominate search without an agency.",
+    colour: "#00F5FF",
+    tag: "Growth",
+  },
+  {
+    title: "Analytics & Insights",
+    description:
+      "Real-time dashboards, predictive analytics, and AI-generated business insights across all ventures.",
+    colour: "#00FF88",
+    tag: "Intelligence",
+  },
+];
+
+const CAPABILITIES = [
+  {
+    title: "AI Agent System",
+    description:
+      "Autonomous agents that plan, execute, and learn. From email processing to content generation, your AI workforce handles the repetitive work.",
+    colour: "#00F5FF",
+    stat: "23 Agents",
+  },
+  {
+    title: "Multi-Business Management",
+    description:
+      "Run multiple businesses from one dashboard. Each with its own contacts, deals, campaigns, and analytics. Switch between them instantly.",
+    colour: "#00FF88",
+    stat: "Unlimited",
+  },
+  {
+    title: "Cognitive Twin",
+    description:
+      "An AI model of your decision patterns and business knowledge. Get advice based on your own expertise and historical decisions.",
+    colour: "#FF00FF",
+    stat: "Extended Thinking",
+  },
+  {
+    title: "Client Portal",
+    description:
+      "Clients get their own branded portal to track project progress, submit requests, and communicate — without accessing your internal tools.",
+    colour: "#FFB800",
+    stat: "White-Label",
+  },
+];
+
+const METRICS = [
+  { label: "Intelligence", value: "AI-First" },
+  { label: "Businesses", value: "Multi-Biz" },
+  { label: "Automation", value: "24/7" },
+  { label: "Security", value: "Enterprise" },
+];
+
+const STATUS_READOUTS = [
+  { label: "AI Agents", value: "Online", colour: "#00FF88" },
+  { label: "Email Intel", value: "Active", colour: "#00F5FF" },
+  { label: "Analytics", value: "Live", colour: "#00F5FF" },
+];
 
 export default function Home() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  // If logged in, redirect to appropriate dashboard
   useEffect(() => {
     if (!loading && user) {
       router.push("/dashboard/overview");
@@ -31,42 +108,47 @@ export default function Home() {
   }, [user, loading, router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       {/* Navigation */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Unite-Group
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-[0.5px] border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-3">
+            <motion.div
+              className="h-2 w-2 rounded-full bg-[#00F5FF]"
+              animate={{ opacity: [1, 0.4, 1], scale: [1, 1.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <span className="text-base font-light tracking-[0.15em] text-white/90 uppercase">
+              Unite<span className="text-[#00F5FF]">Group</span>
             </span>
           </Link>
 
-          <nav className="hidden md:flex gap-8 items-center">
-            <a href="#services" className="text-sm text-slate-300 hover:text-white transition-colors">
-              Services
-            </a>
-            <a href="#capabilities" className="text-sm text-slate-300 hover:text-white transition-colors">
-              Capabilities
-            </a>
-            <a href="#about" className="text-sm text-slate-300 hover:text-white transition-colors">
-              About
-            </a>
+          <nav className="hidden md:flex gap-10 items-center">
+            {["System", "Capabilities", "Access"].map((item) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className="text-[11px] uppercase tracking-[0.2em] text-white/40 hover:text-white/80 transition-colors duration-300"
+              >
+                {item}
+              </a>
+            ))}
           </nav>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
             {loading ? (
-              <div className="h-10 w-20 bg-slate-700 rounded animate-pulse" />
+              <div className="h-9 w-24 border-[0.5px] border-white/[0.06] bg-white/[0.02] animate-pulse rounded-sm" />
             ) : (
               <>
                 <Link
                   href="/login"
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium border border-slate-600 text-slate-300 hover:text-white hover:border-slate-400 transition-all"
+                  className="px-5 py-2 text-[11px] uppercase tracking-[0.15em] border-[0.5px] border-white/10 text-white/60 hover:text-white/90 hover:border-white/20 rounded-sm transition-colors duration-300"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/login"
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white transition-all"
+                  className="px-5 py-2 text-[11px] uppercase tracking-[0.15em] bg-[#00F5FF]/10 border-[0.5px] border-[#00F5FF]/30 text-[#00F5FF] hover:bg-[#00F5FF]/20 rounded-sm transition-colors duration-300"
                 >
                   Client Portal
                 </Link>
@@ -76,211 +158,414 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-8">
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            <span className="text-sm text-blue-300">AI-Powered Business Hub</span>
-          </div>
-
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Your Business.{" "}
-            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              One Hub.
-            </span>
-          </h1>
-
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed">
-            Manage contacts, deals, campaigns, and operations across all your
-            businesses from one intelligent dashboard. Powered by AI that works
-            for you.
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-lg transition-all shadow-lg shadow-blue-600/25"
+      {/* Hero — asymmetric 60/40 split */}
+      <section className="pt-40 pb-32 px-8">
+        <div className="max-w-7xl mx-auto flex gap-16 items-start">
+          {/* Copy block */}
+          <div className="flex-[3]">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: EASE_OUT_EXPO }}
             >
-              Open Dashboard
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <a
-              href="#services"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg border border-slate-600 text-slate-300 hover:text-white hover:border-slate-400 font-semibold text-lg transition-all"
+              <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-6">
+                AI-Powered Business Hub
+              </p>
+              <h1 className="text-6xl md:text-8xl font-extralight tracking-tight text-white/90 leading-[0.95] mb-8">
+                Your Business.
+                <br />
+                <span className="text-[#00F5FF]">One Hub.</span>
+              </h1>
+              <p className="text-base text-white/50 max-w-xl leading-relaxed mb-12 font-light">
+                Manage contacts, deals, campaigns, and operations across all your
+                businesses from one intelligent command centre. Powered by AI
+                that works for you.
+              </p>
+              <div className="flex gap-6 items-center">
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-3 px-8 py-3.5 bg-[#00F5FF]/10 border-[0.5px] border-[#00F5FF]/40 text-[#00F5FF] text-[11px] uppercase tracking-[0.2em] hover:bg-[#00F5FF]/20 rounded-sm transition-colors duration-300"
+                >
+                  Open Dashboard
+                  <span className="text-[#00F5FF]/60">→</span>
+                </Link>
+                <a
+                  href="#system"
+                  className="text-[11px] uppercase tracking-[0.2em] text-white/30 hover:text-white/60 transition-colors duration-300"
+                >
+                  View System
+                </a>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Breathing orb + status readouts */}
+          <motion.div
+            className="flex-[2] flex flex-col items-center gap-8 pt-4"
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.35, ease: EASE_OUT_EXPO }}
+          >
+            {/* Central orb */}
+            <div
+              className="h-48 w-48 flex items-center justify-center rounded-full border-[0.5px]"
+              style={{
+                borderColor: "rgba(0, 245, 255, 0.15)",
+                backgroundColor: "rgba(0, 245, 255, 0.02)",
+                boxShadow: "0 0 80px rgba(0, 245, 255, 0.12)",
+              }}
             >
-              Our Services
-            </a>
+              <div
+                className="h-16 w-16 flex items-center justify-center rounded-full border-[0.5px]"
+                style={{
+                  borderColor: "rgba(0, 245, 255, 0.3)",
+                  backgroundColor: "rgba(0, 245, 255, 0.06)",
+                }}
+              >
+                <motion.div
+                  className="h-6 w-6 rounded-full bg-[#00F5FF]"
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [1, 0.6, 1],
+                    boxShadow: [
+                      "0 0 0px rgba(0,245,255,0)",
+                      "0 0 28px rgba(0,245,255,0.5)",
+                      "0 0 0px rgba(0,245,255,0)",
+                    ],
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </div>
+            </div>
+
+            {/* Status readouts */}
+            <div className="w-full space-y-2">
+              {STATUS_READOUTS.map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-center justify-between px-4 py-3 border-[0.5px] border-white/[0.06] bg-white/[0.01]"
+                >
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-white/30">
+                    {item.label}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <motion.div
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: item.colour }}
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <span
+                      className="font-mono text-[11px]"
+                      style={{ color: item.colour }}
+                    >
+                      {item.value}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Data Strip — metrics */}
+      <section className="border-y border-[0.5px] border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="flex divide-x divide-white/[0.06]">
+            {METRICS.map((metric, index) => (
+              <motion.div
+                key={metric.label}
+                className="flex-1 px-8 py-10 flex flex-col gap-2"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.1 + index * 0.08,
+                  ease: EASE_OUT_EXPO,
+                }}
+              >
+                <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">
+                  {metric.label}
+                </span>
+                <span className="font-mono text-xl text-[#00F5FF] font-medium tabular-nums">
+                  {metric.value}
+                </span>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Banner */}
-      <section className="border-y border-slate-700/50 bg-slate-900/50">
-        <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-3xl font-bold text-blue-400">AI-First</div>
-            <div className="text-sm text-slate-400 mt-1">Intelligence Built In</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-cyan-400">Multi-Biz</div>
-            <div className="text-sm text-slate-400 mt-1">All Businesses, One View</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-blue-400">24/7</div>
-            <div className="text-sm text-slate-400 mt-1">Always-On Automation</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-cyan-400">Secure</div>
-            <div className="text-sm text-slate-400 mt-1">Enterprise-Grade Security</div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section id="services" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">What We Do</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Full-service business management powered by AI. From first contact to closed deal.
+      {/* System — timeline layout */}
+      <section id="system" className="py-32 px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className="mb-20"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: EASE_OUT_EXPO }}
+          >
+            <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-4">
+              System Architecture
             </p>
-          </div>
+            <h2 className="text-4xl font-extralight tracking-tight text-white/90">
+              What We Do
+            </h2>
+          </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <ServiceCard
-              icon={<Users className="w-6 h-6" />}
-              title="CRM & Contact Management"
-              description="Track every contact, conversation, and opportunity. AI-powered lead scoring identifies your hottest prospects."
-            />
-            <ServiceCard
-              icon={<Briefcase className="w-6 h-6" />}
-              title="Deal Pipeline"
-              description="Visual kanban pipeline to manage deals from lead to close. Track value, probability, and stage progression."
-            />
-            <ServiceCard
-              icon={<Mail className="w-6 h-6" />}
-              title="Email Intelligence"
-              description="Gmail integration with AI-powered email processing, automated follow-ups, and engagement tracking."
-            />
-            <ServiceCard
-              icon={<Megaphone className="w-6 h-6" />}
-              title="Campaign Automation"
-              description="Drip campaigns, email sequences, and A/B testing. Set it up once and let AI handle the rest."
-            />
-            <ServiceCard
-              icon={<Globe className="w-6 h-6" />}
-              title="SEO & Marketing"
-              description="AI-driven SEO audits, keyword research, and content optimization. Dominate search without an agency."
-            />
-            <ServiceCard
-              icon={<BarChart3 className="w-6 h-6" />}
-              title="Analytics & Insights"
-              description="Real-time dashboards, predictive analytics, and AI-generated business insights across all your ventures."
-            />
+          <div className="relative pl-10">
+            {/* Vertical spine */}
+            <div className="absolute top-0 bottom-0 left-[9px] w-px bg-gradient-to-b from-[#00F5FF]/20 via-[#00F5FF]/08 to-transparent" />
+
+            <div className="space-y-8">
+              {SYSTEM_MODULES.map((mod, index) => (
+                <motion.div
+                  key={mod.title}
+                  className="relative flex gap-8 items-start"
+                  initial={{ opacity: 0, x: -16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.6,
+                    delay: index * 0.07,
+                    ease: EASE_OUT_EXPO,
+                  }}
+                >
+                  {/* Timeline node */}
+                  <div
+                    className="absolute left-[-5px] top-4 h-3 w-3 rounded-full flex-shrink-0"
+                    style={{
+                      backgroundColor: mod.colour,
+                      boxShadow: `0 0 10px ${mod.colour}50`,
+                    }}
+                  />
+
+                  {/* Content */}
+                  <div className="flex-1 border-[0.5px] border-white/[0.06] bg-white/[0.01] p-6 hover:bg-white/[0.02] hover:border-white/10 transition-colors duration-300">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-sm font-light text-white/90">
+                        {mod.title}
+                      </h3>
+                      <span
+                        className="text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 border-[0.5px] ml-4 flex-shrink-0"
+                        style={{
+                          color: mod.colour,
+                          borderColor: `${mod.colour}40`,
+                        }}
+                      >
+                        {mod.tag}
+                      </span>
+                    </div>
+                    <p className="text-[12px] text-white/40 leading-relaxed">
+                      {mod.description}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Capabilities Section */}
-      <section id="capabilities" className="py-24 px-6 bg-slate-900/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Built for Founders</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              This isn&apos;t a generic SaaS tool. It&apos;s a personal command center built
-              to run your businesses.
+      {/* Capabilities */}
+      <section
+        id="capabilities"
+        className="py-32 px-8 border-t border-[0.5px] border-white/[0.06]"
+      >
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className="mb-20"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: EASE_OUT_EXPO }}
+          >
+            <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-4">
+              Founder-Grade Capabilities
             </p>
-          </div>
+            <h2 className="text-4xl font-extralight tracking-tight text-white/90">
+              Built for Founders
+            </h2>
+          </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <CapabilityCard
-              icon={<Bot className="w-8 h-8 text-blue-400" />}
-              title="AI Agent System"
-              description="Autonomous agents that plan, execute, and learn. From email processing to content generation, your AI workforce handles the repetitive work."
-            />
-            <CapabilityCard
-              icon={<Layers className="w-8 h-8 text-cyan-400" />}
-              title="Multi-Business Management"
-              description="Run multiple businesses from one dashboard. Each with its own contacts, deals, campaigns, and analytics. Switch between them instantly."
-            />
-            <CapabilityCard
-              icon={<Zap className="w-8 h-8 text-yellow-400" />}
-              title="Cognitive Twin"
-              description="An AI model of your decision patterns and business knowledge. Get advice based on your own expertise and historical decisions."
-            />
-            <CapabilityCard
-              icon={<Shield className="w-8 h-8 text-green-400" />}
-              title="Client Portal"
-              description="Clients get their own branded portal to track project progress, submit requests, and communicate — without accessing your internal tools."
-            />
+          <div className="space-y-4">
+            {CAPABILITIES.map((cap, index) => (
+              <motion.div
+                key={cap.title}
+                className="flex border-[0.5px] border-white/[0.06] hover:border-white/10 transition-colors duration-300"
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.09,
+                  ease: EASE_OUT_EXPO,
+                }}
+              >
+                {/* Colour accent strip */}
+                <div
+                  className="w-[2px] flex-shrink-0"
+                  style={{ backgroundColor: `${cap.colour}30` }}
+                />
+
+                <div className="flex-1 flex items-center gap-8 px-8 py-6">
+                  {/* Breathing orb */}
+                  <div
+                    className="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full border-[0.5px]"
+                    style={{
+                      borderColor: `${cap.colour}30`,
+                      backgroundColor: `${cap.colour}06`,
+                    }}
+                  >
+                    <motion.div
+                      className="h-3 w-3 rounded-full"
+                      style={{ backgroundColor: cap.colour }}
+                      animate={{ scale: [1, 1.4, 1], opacity: [1, 0.5, 1] }}
+                      transition={{
+                        duration: 2.5 + index * 0.4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  </div>
+
+                  <div className="flex-1">
+                    <h3 className="text-sm font-light text-white/90 mb-1.5">
+                      {cap.title}
+                    </h3>
+                    <p className="text-[12px] text-white/40 leading-relaxed">
+                      {cap.description}
+                    </p>
+                  </div>
+
+                  {/* Stat */}
+                  <div className="flex-shrink-0 text-right">
+                    <span
+                      className="font-mono text-[11px] uppercase tracking-[0.1em]"
+                      style={{ color: cap.colour }}
+                    >
+                      {cap.stat}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-24 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">About Unite-Group</h2>
-          <p className="text-lg text-slate-300 leading-relaxed mb-8">
-            Unite-Group is a personal AI-powered Business Hub built for founders who
-            run multiple businesses. It combines CRM, email, campaigns, analytics,
-            and AI agents into one system designed to give you complete control over
-            your operations.
-          </p>
-          <p className="text-slate-400 leading-relaxed">
-            No subscriptions for sale. No public signups. This is a private business
-            tool. If you&apos;re a client, use the Client Portal to access your project
-            dashboard.
-          </p>
+      {/* Access — asymmetric 60/40 */}
+      <section
+        id="access"
+        className="py-32 px-8 border-t border-[0.5px] border-white/[0.06]"
+      >
+        <div className="max-w-7xl mx-auto flex gap-16 items-start">
+          {/* About copy */}
+          <div className="flex-[3]">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: EASE_OUT_EXPO }}
+            >
+              <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-6">
+                About Unite-Group
+              </p>
+              <h2 className="text-4xl font-extralight tracking-tight text-white/90 mb-6">
+                Private. Precise.
+                <br />
+                <span className="text-[#00F5FF]">Powerful.</span>
+              </h2>
+              <p className="text-sm text-white/50 leading-relaxed mb-4 max-w-lg font-light">
+                Unite-Group is a personal AI-powered Business Hub built for
+                founders who run multiple businesses. It combines CRM, email,
+                campaigns, analytics, and AI agents into one system designed to
+                give you complete control.
+              </p>
+              <p className="text-[12px] text-white/30 leading-relaxed max-w-lg">
+                No public subscriptions. No generic SaaS. This is a private
+                command centre. If you&apos;re a client, use the Client Portal
+                to access your project dashboard.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Portal access panel */}
+          <motion.div
+            className="flex-[2]"
+            initial={{ opacity: 0, x: 16 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2, ease: EASE_OUT_EXPO }}
+          >
+            <div className="border-[0.5px] border-white/[0.06] p-8">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 mb-6">
+                Portal Access
+              </p>
+              <div className="space-y-3 mb-8">
+                {[
+                  { label: "Staff Dashboard", href: "/login", colour: "#00F5FF" },
+                  { label: "Client Portal", href: "/login", colour: "#00FF88" },
+                ].map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="flex items-center justify-between p-4 border-[0.5px] border-white/[0.06] hover:border-white/10 hover:bg-white/[0.02] transition-colors duration-300 group"
+                  >
+                    <span className="text-[11px] uppercase tracking-[0.15em] text-white/60 group-hover:text-white/90 transition-colors duration-300">
+                      {link.label}
+                    </span>
+                    <span style={{ color: link.colour }}>→</span>
+                  </Link>
+                ))}
+              </div>
+              <p className="text-[10px] text-white/20 leading-relaxed">
+                Authorised access only. Contact the administrator for
+                credentials.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-700/50 py-12 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Unite-Group
+      <footer className="border-t border-[0.5px] border-white/[0.06] py-10 px-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-3">
+            <motion.div
+              className="h-1.5 w-1.5 rounded-full bg-[#00F5FF]"
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <span className="text-[11px] uppercase tracking-[0.2em] text-white/40">
+              Unite<span className="text-[#00F5FF]/80">Group</span>
             </span>
-            <span className="text-sm text-slate-500">Business Hub</span>
+            <span className="text-[10px] text-white/20">Business Hub</span>
           </div>
 
-          <div className="flex gap-6 text-sm text-slate-400">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <Link href="/support" className="hover:text-white transition-colors">Support</Link>
+          <div className="flex gap-8">
+            {[
+              { label: "Privacy", href: "/privacy" },
+              { label: "Terms", href: "/terms" },
+              { label: "Support", href: "/support" },
+            ].map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-[10px] uppercase tracking-[0.2em] text-white/20 hover:text-white/50 transition-colors duration-300"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
-          <div className="text-sm text-slate-500">
-            &copy; {new Date().getFullYear()} Unite-Group. All rights reserved.
+          <div className="font-mono text-[10px] text-white/20">
+            © {new Date().getFullYear()} Unite-Group
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function ServiceCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="group p-6 rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/60 hover:border-slate-600 transition-all">
-      <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 mb-4 group-hover:bg-blue-500/20 transition-colors">
-        {icon}
-      </div>
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
-    </div>
-  );
-}
-
-function CapabilityCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="flex gap-5 p-6 rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/60 hover:border-slate-600 transition-all">
-      <div className="flex-shrink-0 mt-1">{icon}</div>
-      <div>
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
-      </div>
     </div>
   );
 }
