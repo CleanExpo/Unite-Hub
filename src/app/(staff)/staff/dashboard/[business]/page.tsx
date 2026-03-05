@@ -50,7 +50,7 @@ function PlaceholderSection({
   items: string[];
 }) {
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-sm p-5">
       <div className="flex items-center gap-2 mb-4">
         <Icon className="w-4 h-4 text-zinc-500" />
         <h3 className="text-sm font-semibold text-white">{title}</h3>
@@ -59,13 +59,100 @@ function PlaceholderSection({
         {items.map((item) => (
           <li
             key={item}
-            className="flex items-center gap-2 text-sm text-zinc-500 py-2 px-3 rounded-lg bg-zinc-800/50 border border-zinc-800"
+            className="flex items-center gap-2 text-sm text-zinc-500 py-2 px-3 rounded-sm bg-zinc-800/50 border border-zinc-800"
           >
             <span className="w-2 h-2 rounded-full bg-zinc-700 flex-shrink-0" />
             {item}
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+// ─── Linear Tasks section (replaces Tasks placeholder) ───────────────────────
+
+function LinearTasksSection({
+  linearCounts,
+}: {
+  linearCounts: LinearIssueCounts | null;
+}) {
+  if (!linearCounts) {
+    return (
+      <div className="bg-zinc-900 border border-zinc-800 rounded-sm p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <CheckSquare className="w-4 h-4 text-zinc-500" />
+          <h3 className="text-sm font-semibold text-white">Tasks</h3>
+        </div>
+        <div className="flex items-center justify-center py-6">
+          <RefreshCw className="w-4 h-4 animate-spin text-zinc-600" />
+          <span className="ml-2 text-sm text-zinc-600">Loading tasks…</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-zinc-900 border border-zinc-800 rounded-sm p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <CheckSquare className="w-4 h-4 text-cyan-400" />
+        <h3 className="text-sm font-semibold text-white">Tasks</h3>
+        {linearCounts.source === "stub" && (
+          <span className="text-[10px] text-zinc-600 ml-auto">est.</span>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        {/* Open issues count */}
+        <div className="flex items-center justify-between py-2 px-3 rounded-sm bg-zinc-800/50 border border-zinc-800">
+          <span className="text-sm text-zinc-400">Open Issues</span>
+          {linearCounts.linearUrl ? (
+            <a
+              href={linearCounts.linearUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+            >
+              {linearCounts.open}
+            </a>
+          ) : (
+            <span className="text-sm font-bold text-cyan-400">
+              {linearCounts.open}
+            </span>
+          )}
+        </div>
+
+        {/* In Progress badge */}
+        <div className="flex items-center justify-between py-2 px-3 rounded-sm bg-zinc-800/50 border border-zinc-800">
+          <span className="text-sm text-zinc-400">In Progress</span>
+          <span className="text-xs font-medium text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-sm">
+            {linearCounts.inProgress}
+          </span>
+        </div>
+
+        {/* Urgent badge (only if > 0) */}
+        {linearCounts.urgent > 0 && (
+          <div className="flex items-center justify-between py-2 px-3 rounded-sm bg-zinc-800/50 border border-zinc-800">
+            <span className="text-sm text-zinc-400">Urgent</span>
+            <span className="text-xs font-medium text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-sm">
+              {linearCounts.urgent}
+            </span>
+          </div>
+        )}
+
+        {/* Open in Linear link */}
+        {linearCounts.linearUrl && (
+          <a
+            href={linearCounts.linearUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors py-2 px-3 rounded-sm border border-zinc-800 hover:bg-zinc-800"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            Open in Linear
+          </a>
+        )}
+      </div>
     </div>
   );
 }
@@ -321,15 +408,7 @@ export default function BusinessDrillDownPage() {
               "Track deliverables & milestones",
             ]}
           />
-          <PlaceholderSection
-            title="Tasks"
-            icon={CheckSquare}
-            items={[
-              "No open tasks",
-              "Assign from Linear or create ad-hoc",
-              "Auto-sync with sprint boards",
-            ]}
-          />
+          <LinearTasksSection linearCounts={linearCounts} />
           <PlaceholderSection
             title="Revenue"
             icon={DollarSign}
