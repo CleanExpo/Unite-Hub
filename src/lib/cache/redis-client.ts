@@ -31,29 +31,34 @@ class CacheManager {
 
   constructor() {
     this.circuitBreaker = createRedisCircuitBreaker();
-    // Initialize Redis connection
-    const host = process.env.REDIS_HOST || 'localhost';
+
+    // Prefer REDIS_URL (Upstash / cloud Redis) then fall back to host+port
+    const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL;
+    const host = process.env.REDIS_HOST;
     const port = parseInt(process.env.REDIS_PORT || '6379');
     const password = process.env.REDIS_PASSWORD;
 
-    this.redis = new Redis({
-      host,
-      port,
-      password,
-      db: 0,
-      retryStrategy: (times) => {
-        const delay = Math.min(times * 50, 2000);
-        return delay;
+    const baseOptions = {
+      lazyConnect: true, // Don't attempt connection until first command
+      enableOfflineQueue: false, // Drop commands when disconnected instead of queuing
+      retryStrategy: (times: number) => {
+        // Stop retrying after 3 attempts to prevent log spam in serverless
+        if (times > 3) return null;
+        return Math.min(times * 100, 2000);
       },
-      reconnectOnError: (err) => {
-        const targetError = 'READONLY';
-        if (err.message.includes(targetError)) {
-          // Only reconnect when the error contains "READONLY"
-          return true;
-        }
-        return false;
+      reconnectOnError: (err: Error) => {
+        return err.message.includes('READONLY');
       },
-    });
+    };
+
+    if (redisUrl) {
+      this.redis = new Redis(redisUrl, baseOptions);
+    } else if (host) {
+      this.redis = new Redis({ host, port, password, db: 0, ...baseOptions });
+    } else {
+      // No Redis configured — connect to localhost but suppress retry noise
+      this.redis = new Redis({ host: 'localhost', port: 6379, db: 0, ...baseOptions });
+    }
 
     this.redis.on('error', (err) => {
       console.error('[Redis] Connection error:', err);
