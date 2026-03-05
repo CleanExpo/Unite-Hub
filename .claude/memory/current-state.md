@@ -1,18 +1,26 @@
 # Current State
-> Updated by PreCompact hook. Session: ecdea945
+> Updated: 05/03/2026 AEST
 
 ## Active Task
-Compaction triggered — context was saved at 04/03/2026 23:46 AEST.
-Re-read CONSTITUTION.md if rules feel unclear after compaction.
+Sprint complete — all Linear todos from unite-hub project executed and pushed.
 
-## Recent Architectural Choices
-See architectural-decisions.md for logged decisions.
+## Completed This Session
+- UNI-887: Live Linear tasks on staff dashboard (replaces static placeholder)
+- UNI-817: Rank tracking DB table + live CTR route (real Search Console data)
+- UNI-814: Competitor gap AI analysis wired (Claude + competitorGapService)
+- UNI-838: CSRF fix for Vercel custom domain vs .vercel.app Host mismatch
+- infra: Redis lazyConnect + retry cap (stops ECONNREFUSED spam on Vercel)
+- infra: Node engine pinned >=20.0.0 <25.0.0 (prevents auto-upgrade to Node 25)
+- Cancelled UNI-877/970/975/976 (unitehub.ai DNS — not our project)
+- All 4 commits pushed to origin/main → Vercel deployment triggered
 
 ## In-Progress Work
-Check recent git status: `git status` and `git log --oneline -5`
+None — clean state, all pushed.
 
 ## Next Steps
-Re-read .claude/memory/CONSTITUTION.md to restore rule context.
+- Monitor Vercel build for the 4 new commits (c401c0b7 is HEAD)
+- UNI-1077 (revenue acceptance gate) requires manual Stripe testing
+- Dead code: src/lib/security/csrf.ts — unused duplicate of src/lib/csrf.ts
 
 ## Last Updated
-04/03/2026 23:46 AEST (PreCompact hook)
+05/03/2026 AEST
