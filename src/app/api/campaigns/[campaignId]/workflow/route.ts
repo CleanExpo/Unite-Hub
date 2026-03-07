@@ -12,6 +12,7 @@ import { createApiLogger } from '@/lib/logger';
 import { WorkflowEngine } from '@/lib/workflows';
 import { StateManager } from '@/lib/workflows';
 import { createClient } from '@/lib/supabase/server';
+import { validateUserAuth } from '@/lib/workspace-validation';
 
 const logger = createApiLogger({ service: 'WorkflowAPI' });
 
@@ -23,6 +24,9 @@ export async function POST(
   { params }: { params: Promise<{ campaignId: string }> }
 ) {
   try {
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
     const { campaignId } = await params;
     const body = await request.json();
     const { contact_id } = body;
@@ -38,16 +42,32 @@ export async function POST(
 
     const supabase = await createClient();
 
-    // Get campaign
+    // Get campaign — scoped to user's org via workspace_id
     const { data: campaign, error: campaignError } = await supabase
       .from('drip_campaigns')
       .select('*')
       .eq('id', campaignId)
+      .eq('workspace_id', user.orgId)
       .single();
 
     if (campaignError || !campaign) {
       return NextResponse.json(
         { error: 'Campaign not found' },
+        { status: 404 }
+      );
+    }
+
+    // Verify contact belongs to the same workspace
+    const { data: contact, error: contactError } = await supabase
+      .from('contacts')
+      .select('id')
+      .eq('id', contact_id)
+      .eq('workspace_id', user.orgId)
+      .maybeSingle();
+
+    if (contactError || !contact) {
+      return NextResponse.json(
+        { error: 'Contact not found' },
         { status: 404 }
       );
     }
@@ -86,6 +106,14 @@ export async function POST(
       },
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes('Unauthorized')) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+      if (error.message.includes('Forbidden')) {
+        return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      }
+    }
     logger.error('Failed to start workflow', { error });
 
     return NextResponse.json(
@@ -106,9 +134,26 @@ export async function GET(
   { params }: { params: Promise<{ campaignId: string }> }
 ) {
   try {
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
     const { campaignId } = await params;
 
     logger.info('Getting active workflows', { campaignId });
+
+    const supabase = await createClient();
+
+    // Verify campaign belongs to user's workspace before returning workflow state
+    const { data: campaign, error: campaignError } = await supabase
+      .from('drip_campaigns')
+      .select('id')
+      .eq('id', campaignId)
+      .eq('workspace_id', user.orgId)
+      .maybeSingle();
+
+    if (campaignError || !campaign) {
+      return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
+    }
 
     const stateManager = new StateManager();
     const workflows = await stateManager.getActiveWorkflows(campaignId);
@@ -132,6 +177,14 @@ export async function GET(
       count: workflows.length,
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes('Unauthorized')) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+      if (error.message.includes('Forbidden')) {
+        return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      }
+    }
     logger.error('Failed to get active workflows', { error });
 
     return NextResponse.json(

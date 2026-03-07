@@ -32,7 +32,13 @@ class Settings(BaseSettings):
 
     # API
     backend_api_key: str = Field(default="")
-    cors_origins: list[str] = Field(default=["http://localhost:3000"])
+    # CORS_ORIGINS accepts a JSON array or comma-separated string via env var.
+    # Example: CORS_ORIGINS='["https://your-app.vercel.app","http://localhost:3000"]'
+    # Pydantic-settings parses JSON arrays automatically for list[str] fields.
+    cors_origins: list[str] = Field(
+        default=["http://localhost:3000", "http://localhost:3008"],
+        description="Allowed CORS origins. Set CORS_ORIGINS env var in production.",
+    )
 
     # Database (PostgreSQL)
     database_url: str = Field(

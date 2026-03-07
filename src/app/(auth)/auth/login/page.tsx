@@ -30,7 +30,7 @@ export default function StaffLoginPage() {
     }
 
     // Success - redirect to staff dashboard
-    router.push('/next/app/staff/dashboard');
+    router.push('/staff/dashboard');
   }
 
   return (

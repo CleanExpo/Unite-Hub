@@ -349,7 +349,7 @@ async def execute_prd_generation(
             await publisher.fail_run(
                 run_id,
                 error=result.get("error", "Unknown error"),
-                details={"prd_id": prd_id}
+                metadata={"prd_id": prd_id}
             )
 
             logger.error(
@@ -370,5 +370,5 @@ async def execute_prd_generation(
         await publisher.fail_run(
             run_id,
             error=str(e),
-            details={"prd_id": prd_id}
+            metadata={"prd_id": prd_id}
         )

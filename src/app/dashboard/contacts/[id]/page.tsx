@@ -35,7 +35,7 @@ interface Contact {
   name: string;
   email: string;
   company?: string;
-  title?: string;
+  job_title?: string;
   phone?: string;
   website?: string;
   location?: string;
@@ -251,9 +251,9 @@ export default function ContactDetailPage() {
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">{contact.name}</h1>
               <div className="flex items-center gap-3">
-                {contact.title && contact.company && (
+                {contact.job_title && contact.company && (
                   <p className="text-white/40">
-                    {contact.title} at {contact.company}
+                    {contact.job_title} at {contact.company}
                   </p>
                 )}
                 <span className={`inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono font-semibold border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
@@ -406,12 +406,12 @@ export default function ContactDetailPage() {
                       </div>
                     </div>
                   )}
-                  {contact.title && (
+                  {contact.job_title && (
                     <div className="flex items-start gap-3">
                       <Briefcase className="w-5 h-5 text-[#00F5FF] mt-0.5" />
                       <div>
                         <p className="text-sm text-white/40 font-mono">Job Title</p>
-                        <p className="text-white">{contact.title}</p>
+                        <p className="text-white">{contact.job_title}</p>
                       </div>
                     </div>
                   )}

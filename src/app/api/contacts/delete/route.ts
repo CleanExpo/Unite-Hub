@@ -73,7 +73,7 @@ export async function DELETE(req: NextRequest) {
     await invalidateContactCaches(user.orgId, contactId);
 
     // Log to audit trail
-    await supabase.from('auditLogs').insert({
+    await supabase.from('audit_logs').insert({
       org_id: user.orgId,
       action: 'contact_deleted',
       resource: 'contact',

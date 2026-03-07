@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     }
     console.error("Error processing emails:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to process emails" },
+      { error: error instanceof Error ? error.message : "Failed to process emails" },
       { status: 500 }
     );
   }

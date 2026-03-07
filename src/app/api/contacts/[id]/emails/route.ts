@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 // GET /api/contacts/[id]/emails - List all emails for a contact
 export async function GET(
@@ -9,20 +9,45 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     // Validate user authentication
     const user = await validateUserAuth(request);
 
     const { id } = await params;
 
-    const emails = await db.clientEmails.getByContact(id);
+    const supabase = await getSupabaseServer();
 
-    return NextResponse.json({ emails });
+    // Verify contact belongs to user's workspace before returning its emails
+    const { data: contact, error: contactError } = await supabase
+      .from("contacts")
+      .select("id")
+      .eq("id", id)
+      .eq("workspace_id", user.orgId)
+      .maybeSingle();
+
+    if (contactError || !contact) {
+      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+    }
+
+    const { data: emails, error } = await supabase
+      .from("client_emails")
+      .select("*")
+      .eq("contact_id", id)
+      .eq("is_active", true)
+      .order("is_primary", { ascending: false })
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching emails:", error);
+      return NextResponse.json({ error: "Failed to fetch emails" }, { status: 500 });
+    }
+
+    return NextResponse.json({ emails: emails || [] });
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
@@ -53,7 +78,7 @@ export async function POST(
     }
 
     // Validate user authentication
-    await validateUserAuth(request);
+    const user = await validateUserAuth(request);
 
     const { id } = await params;
     const body = await request.json();
@@ -67,27 +92,55 @@ export async function POST(
       );
     }
 
-    // Check if email already exists for this contact
-    const existingEmails = await db.clientEmails.getByContact(id);
-    const duplicate = existingEmails.find((e) => e.email === email);
+    const supabase = await getSupabaseServer();
 
-    if (duplicate) {
+    // Verify contact belongs to user's workspace
+    const { data: contact, error: contactError } = await supabase
+      .from("contacts")
+      .select("id")
+      .eq("id", id)
+      .eq("workspace_id", user.orgId)
+      .maybeSingle();
+
+    if (contactError || !contact) {
+      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+    }
+
+    // Check if email already exists for this contact
+    const { data: existing } = await supabase
+      .from("client_emails")
+      .select("id")
+      .eq("contact_id", id)
+      .eq("email", email)
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (existing) {
       return NextResponse.json(
         { error: "This email already exists for this contact" },
         { status: 400 }
       );
     }
 
-    const newEmail = await db.clientEmails.create({
-      contact_id: id,
-      email,
-      email_type,
-      label: label || null,
-      is_primary: is_primary || false,
-      is_verified: false,
-      is_active: true,
-      bounce_count: 0,
-    });
+    const { data: newEmail, error } = await supabase
+      .from("client_emails")
+      .insert({
+        contact_id: id,
+        email,
+        email_type,
+        label: label || null,
+        is_primary: is_primary || false,
+        is_verified: false,
+        is_active: true,
+        bounce_count: 0,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating email:", error);
+      return NextResponse.json({ error: "Failed to create email" }, { status: 500 });
+    }
 
     return NextResponse.json({ email: newEmail }, { status: 201 });
   } catch (error: unknown) {

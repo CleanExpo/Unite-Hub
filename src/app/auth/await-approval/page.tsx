@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { AlertCircle, Clock, Mail, ArrowRight } from "lucide-react";
 
 export default function AwaitApprovalPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [approval, setApproval] = useState<any>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [approval, setApproval] = useState<{
+    id: string;
+    requested_at: string;
+    expires_at: string;
+    approved: boolean;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutes in seconds
@@ -18,15 +21,16 @@ export default function AwaitApprovalPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Get current user
-        const { data: { user } } = await supabase.auth.getSession();
+        // getSession returns { session }, NOT { user } — this was the previous bug
+        const { data: { session } } = await supabase.auth.getSession();
 
-        if (!user) {
+        if (!session) {
           router.push("/login");
           return;
         }
 
-        setUser(user);
+        const user = session.user;
+        setUserEmail(user.email ?? null);
 
         // Get user profile
         const { data: profile } = await supabase
@@ -37,7 +41,7 @@ export default function AwaitApprovalPage() {
 
         // If not admin, redirect to dashboard
         if (profile?.role !== "admin") {
-          router.push("/synthex/dashboard");
+          router.push("/dashboard/overview");
           return;
         }
 
@@ -60,7 +64,7 @@ export default function AwaitApprovalPage() {
           const remaining = Math.max(0, Math.floor((expiresAt - now) / 1000));
           setTimeRemaining(remaining);
         } else {
-          // No pending approval, might be on a trusted device or already approved
+          // No pending approval — redirect to CRM
           router.push("/crm");
         }
 
@@ -95,37 +99,33 @@ export default function AwaitApprovalPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-slate-800 border-slate-700">
-          <div className="p-8 text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-700 mb-4">
-              <Clock className="w-6 h-6 text-blue-400 animate-spin" />
-            </div>
-            <p className="text-slate-300">Loading approval status...</p>
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white/[0.02] border border-white/[0.06] rounded-sm p-8 text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 mb-4">
+            <Clock className="w-6 h-6 text-[#00F5FF] animate-spin" />
           </div>
-        </Card>
+          <p className="text-white/50 font-mono text-sm">Loading approval status...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-slate-800 border-red-600">
-          <div className="p-8">
-            <div className="flex items-center mb-4">
-              <AlertCircle className="w-6 h-6 text-red-500 mr-3" />
-              <h1 className="text-lg font-semibold text-red-500">Error</h1>
-            </div>
-            <p className="text-slate-300 mb-6">{error}</p>
-            <Button
-              onClick={() => router.push("/login")}
-              className="w-full bg-blue-600 hover:bg-blue-700"
-            >
-              Return to Login
-            </Button>
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white/[0.02] border border-[#FF4444]/30 rounded-sm p-8">
+          <div className="flex items-center mb-4">
+            <AlertCircle className="w-6 h-6 text-[#FF4444] mr-3" />
+            <h1 className="text-lg font-mono font-semibold text-[#FF4444]">Error</h1>
           </div>
-        </Card>
+          <p className="text-white/50 font-mono text-sm mb-6">{error}</p>
+          <button
+            onClick={() => router.push("/login")}
+            className="w-full bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-5 py-2.5 hover:bg-[#00F5FF]/90 transition-colors"
+          >
+            Return to Login
+          </button>
+        </div>
       </div>
     );
   }
@@ -135,118 +135,115 @@ export default function AwaitApprovalPage() {
   const isExpiringSoon = timeRemaining < 60;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-slate-800 border-slate-700 shadow-2xl">
-        <div className="p-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
-              <Mail className="w-8 h-8 text-blue-400" />
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">
-              Awaiting Approval
-            </h1>
-            <p className="text-slate-400">
-              Your new device needs to be approved
-            </p>
+    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white/[0.02] border border-white/[0.06] rounded-sm p-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 mb-4">
+            <Mail className="w-8 h-8 text-[#00F5FF]" />
           </div>
-
-          {/* Message */}
-          <div className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 mb-6">
-            <p className="text-slate-300 text-sm">
-              An approval request has been sent to <strong>Phill</strong>. Click
-              the link in the email to approve access from your current device.
-            </p>
-          </div>
-
-          {/* Timer */}
-          <div className="mb-6">
-            <div className="text-center mb-2">
-              <p className="text-slate-400 text-sm">Approval expires in:</p>
-            </div>
-            <div
-              className={`text-center text-4xl font-bold font-mono ${
-                isExpiringSoon ? "text-red-400" : "text-blue-400"
-              }`}
-            >
-              {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
-            </div>
-            {isExpiringSoon && (
-              <p className="text-red-400 text-xs text-center mt-2">
-                Expiring soon! Check your email urgently.
-              </p>
-            )}
-          </div>
-
-          {/* What to do */}
-          <div className="bg-slate-700/30 border border-slate-600 rounded-lg p-4 mb-6">
-            <h3 className="text-white font-semibold text-sm mb-3">
-              What to do next:
-            </h3>
-            <ol className="space-y-2 text-sm text-slate-300">
-              <li className="flex items-start">
-                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold mr-2 flex-shrink-0">
-                  1
-                </span>
-                <span>Check your email inbox (and spam folder)</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold mr-2 flex-shrink-0">
-                  2
-                </span>
-                <span>Click the "Approve Device" link in the email from Phill</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold mr-2 flex-shrink-0">
-                  3
-                </span>
-                <span>You'll be automatically redirected to the CRM</span>
-              </li>
-            </ol>
-          </div>
-
-          {/* Device info */}
-          <div className="text-xs text-slate-500 bg-slate-700/20 p-3 rounded mb-6 border border-slate-600/50">
-            <p className="mb-1">
-              <strong>User:</strong> {user?.email}
-            </p>
-            <p>
-              <strong>Status:</strong> Awaiting{" "}
-              <span className="text-blue-400">Phill's approval</span>
-            </p>
-          </div>
-
-          {/* Action buttons */}
-          <div className="space-y-3">
-            <Button
-              onClick={() => window.location.href = "https://mail.google.com"}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              <Mail className="w-4 h-4 mr-2" />
-              Open Gmail
-            </Button>
-            <Button
-              onClick={() => window.location.reload()}
-              variant="outline"
-              className="w-full border-slate-600 hover:bg-slate-700"
-            >
-              <ArrowRight className="w-4 h-4 mr-2" />
-              Refresh Status
-            </Button>
-          </div>
-
-          {/* Help text */}
-          <p className="text-xs text-slate-500 text-center mt-6 border-t border-slate-700 pt-6">
-            Having issues?{" "}
-            <a
-              href="mailto:phill.mcgurk@gmail.com"
-              className="text-blue-400 hover:text-blue-300"
-            >
-              Contact Phill
-            </a>
+          <h1 className="text-2xl font-mono font-bold text-white/90 mb-2">
+            Awaiting Approval
+          </h1>
+          <p className="text-white/40 font-mono text-sm">
+            Your new device needs to be approved
           </p>
         </div>
-      </Card>
+
+        {/* Message */}
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 mb-6">
+          <p className="text-white/50 font-mono text-sm">
+            An approval request has been sent to <strong className="text-white/80">Phill</strong>. Click
+            the link in the email to approve access from your current device.
+          </p>
+        </div>
+
+        {/* Timer */}
+        <div className="mb-6">
+          <div className="text-center mb-2">
+            <p className="text-white/30 font-mono text-sm">Approval expires in:</p>
+          </div>
+          <div
+            className={`text-center text-4xl font-bold font-mono ${
+              isExpiringSoon ? "text-[#FF4444]" : "text-[#00F5FF]"
+            }`}
+          >
+            {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+          </div>
+          {isExpiringSoon && (
+            <p className="text-[#FF4444] text-xs text-center mt-2 font-mono">
+              Expiring soon! Check your email urgently.
+            </p>
+          )}
+        </div>
+
+        {/* What to do */}
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 mb-6">
+          <h3 className="text-white/70 font-mono font-semibold text-sm mb-3">
+            What to do next:
+          </h3>
+          <ol className="space-y-2 text-sm text-white/50 font-mono">
+            <li className="flex items-start">
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 text-[#00F5FF] text-xs font-semibold mr-2 flex-shrink-0">
+                1
+              </span>
+              <span>Check your email inbox (and spam folder)</span>
+            </li>
+            <li className="flex items-start">
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 text-[#00F5FF] text-xs font-semibold mr-2 flex-shrink-0">
+                2
+              </span>
+              <span>Click the &quot;Approve Device&quot; link in the email from Phill</span>
+            </li>
+            <li className="flex items-start">
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 text-[#00F5FF] text-xs font-semibold mr-2 flex-shrink-0">
+                3
+              </span>
+              <span>You&apos;ll be automatically redirected to the CRM</span>
+            </li>
+          </ol>
+        </div>
+
+        {/* Device info */}
+        <div className="text-xs text-white/30 font-mono bg-white/[0.02] p-3 rounded-sm mb-6 border border-white/[0.04]">
+          <p className="mb-1">
+            <strong className="text-white/50">User:</strong> {userEmail}
+          </p>
+          <p>
+            <strong className="text-white/50">Status:</strong> Awaiting{" "}
+            <span className="text-[#00F5FF]">Phill&apos;s approval</span>
+          </p>
+        </div>
+
+        {/* Action buttons */}
+        <div className="space-y-3">
+          <button
+            onClick={() => { window.location.href = "https://mail.google.com"; }}
+            className="w-full bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-5 py-2.5 hover:bg-[#00F5FF]/90 transition-colors flex items-center justify-center gap-2"
+          >
+            <Mail className="w-4 h-4" />
+            Open Gmail
+          </button>
+          <button
+            onClick={() => window.location.reload()}
+            className="w-full bg-white/[0.04] border border-white/[0.06] text-white/50 font-mono text-sm rounded-sm px-5 py-2.5 hover:bg-white/[0.06] hover:text-white/70 transition-colors flex items-center justify-center gap-2"
+          >
+            <ArrowRight className="w-4 h-4" />
+            Refresh Status
+          </button>
+        </div>
+
+        {/* Help text */}
+        <p className="text-xs text-white/30 font-mono text-center mt-6 pt-6 border-t border-white/[0.06]">
+          Having issues?{" "}
+          <a
+            href="mailto:phill.mcgurk@gmail.com"
+            className="text-[#00F5FF] hover:text-[#00F5FF]/80 transition-colors"
+          >
+            Contact Phill
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
