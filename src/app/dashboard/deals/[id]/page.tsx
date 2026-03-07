@@ -2,9 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -31,6 +28,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { DealActivityTimeline } from "@/components/deals/DealActivityTimeline";
 import type { Deal } from "@/components/deals/DealCard";
 
@@ -203,10 +201,10 @@ export default function DealDetailPage() {
     return (
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-slate-800 rounded w-48" />
+          <div className="h-8 bg-white/[0.02] rounded-sm w-48" />
           <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-2 h-64 bg-slate-800 rounded" />
-            <div className="h-64 bg-slate-800 rounded" />
+            <div className="col-span-2 h-64 bg-white/[0.02] rounded-sm" />
+            <div className="h-64 bg-white/[0.02] rounded-sm" />
           </div>
         </div>
       </div>
@@ -219,10 +217,10 @@ export default function DealDetailPage() {
         <div className="text-center py-20">
           <h2 className="text-xl font-bold text-white mb-2">{error || "Deal not found"}</h2>
           <Link href="/dashboard/deals">
-            <Button variant="outline" className="border-slate-700 text-slate-300 hover:text-white">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+            <button className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 inline-flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
               Back to Pipeline
-            </Button>
+            </button>
           </Link>
         </div>
       </div>
@@ -232,40 +230,44 @@ export default function DealDetailPage() {
   const currentStage = stages.find((s) => s.id === deal.stage_id);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+      className="max-w-5xl mx-auto px-4 sm:px-6 py-6"
+    >
       {/* Back button & header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Link href="/dashboard/deals">
-            <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
+            <button className="bg-transparent border-0 text-white/40 hover:text-white p-2 rounded-sm transition-colors">
               <ArrowLeft className="w-5 h-5" />
-            </Button>
+            </button>
           </Link>
           <div>
             {isEditing ? (
               <Input
                 value={editForm.title}
                 onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                className="bg-slate-800 border-slate-700 text-white text-xl font-bold h-10"
+                className="bg-white/[0.02] border border-white/[0.06] text-white text-xl font-bold h-10 rounded-sm"
               />
             ) : (
               <h1 className="text-2xl font-bold text-white">{deal.title}</h1>
             )}
             <div className="flex items-center gap-2 mt-1">
-              <Badge
-                variant="outline"
-                className={`text-xs ${
+              <span
+                className={`text-xs font-mono px-2 py-0.5 rounded-sm border ${
                   deal.status === "won"
-                    ? "text-emerald-400 border-emerald-500/30"
+                    ? "text-[#00FF88] border-[#00FF88]/30 bg-[#00FF88]/10"
                     : deal.status === "lost"
-                    ? "text-red-400 border-red-500/30"
-                    : "text-blue-400 border-blue-500/30"
+                    ? "text-[#FF4444] border-[#FF4444]/30 bg-[#FF4444]/10"
+                    : "text-[#00F5FF] border-[#00F5FF]/30 bg-[#00F5FF]/10"
                 }`}
               >
                 {deal.status.toUpperCase()}
-              </Badge>
+              </span>
               {deal.source && (
-                <span className="text-xs text-slate-500">via {deal.source}</span>
+                <span className="text-xs text-white/40">via {deal.source}</span>
               )}
             </div>
           </div>
@@ -273,40 +275,37 @@ export default function DealDetailPage() {
         <div className="flex items-center gap-2">
           {isEditing ? (
             <>
-              <Button
-                variant="ghost"
-                className="text-slate-400 hover:text-white"
+              <button
+                className="bg-transparent border-0 text-white/40 hover:text-white font-mono text-sm px-3 py-1.5 rounded-sm transition-colors inline-flex items-center gap-1"
                 onClick={() => setIsEditing(false)}
               >
-                <X className="w-4 h-4 mr-1" />
+                <X className="w-4 h-4" />
                 Cancel
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={handleSave}
                 disabled={saving}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 inline-flex items-center gap-1 disabled:opacity-50"
               >
-                <Save className="w-4 h-4 mr-1" />
+                <Save className="w-4 h-4" />
                 {saving ? "Saving..." : "Save"}
-              </Button>
+              </button>
             </>
           ) : (
             <>
-              <Button
-                variant="ghost"
-                className="text-slate-400 hover:text-white"
+              <button
+                className="bg-transparent border-0 text-white/40 hover:text-white font-mono text-sm px-3 py-1.5 rounded-sm transition-colors inline-flex items-center gap-1"
                 onClick={handleEdit}
               >
-                <Edit className="w-4 h-4 mr-1" />
+                <Edit className="w-4 h-4" />
                 Edit
-              </Button>
-              <Button
-                variant="ghost"
-                className="text-red-400 hover:text-red-300"
+              </button>
+              <button
+                className="bg-transparent border-0 text-[#FF4444] hover:text-[#FF4444]/70 p-2 rounded-sm transition-colors"
                 onClick={handleDelete}
               >
                 <Trash2 className="w-4 h-4" />
-              </Button>
+              </button>
             </>
           )}
         </div>
@@ -331,7 +330,7 @@ export default function DealDetailPage() {
                   } ${
                     isCurrentOrPast
                       ? "text-white"
-                      : "text-slate-500 bg-slate-800/30"
+                      : "text-white/40 bg-white/[0.02]"
                   }`}
                   style={{
                     backgroundColor: isCurrentOrPast
@@ -353,177 +352,173 @@ export default function DealDetailPage() {
         {/* Left: Deal details */}
         <div className="lg:col-span-2 space-y-6">
           <Tabs defaultValue="activity">
-            <TabsList className="bg-slate-800 border-slate-700">
-              <TabsTrigger value="activity" className="data-[state=active]:bg-slate-700 text-slate-300">Activity</TabsTrigger>
-              <TabsTrigger value="details" className="data-[state=active]:bg-slate-700 text-slate-300">Details</TabsTrigger>
-              <TabsTrigger value="notes" className="data-[state=active]:bg-slate-700 text-slate-300">Notes</TabsTrigger>
+            <TabsList className="bg-white/[0.02] border border-white/[0.06]">
+              <TabsTrigger value="activity" className="data-[state=active]:bg-white/[0.06] text-white/70">Activity</TabsTrigger>
+              <TabsTrigger value="details" className="data-[state=active]:bg-white/[0.06] text-white/70">Details</TabsTrigger>
+              <TabsTrigger value="notes" className="data-[state=active]:bg-white/[0.06] text-white/70">Notes</TabsTrigger>
             </TabsList>
 
             <TabsContent value="activity" className="mt-4">
               {/* Add activity form */}
-              <Card className="bg-slate-800/50 border-slate-700 mb-4">
-                <CardContent className="p-4">
-                  <div className="flex gap-2 mb-2">
-                    <Select value={newActivityType} onValueChange={setNewActivityType}>
-                      <SelectTrigger className="w-32 bg-slate-800 border-slate-700 text-white text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
-                        {["note", "call", "meeting", "email", "task"].map((type) => (
-                          <SelectItem key={type} value={type} className="text-white hover:bg-slate-700">
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      placeholder="Activity title..."
-                      value={newActivityTitle}
-                      onChange={(e) => setNewActivityTitle(e.target.value)}
-                      className="flex-1 bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 text-sm"
-                      onKeyDown={(e) => e.key === "Enter" && handleAddActivity()}
-                    />
-                    <Button
-                      onClick={handleAddActivity}
-                      disabled={addingActivity || !newActivityTitle.trim()}
-                      size="sm"
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  <Textarea
-                    placeholder="Description (optional)..."
-                    value={newActivityDescription}
-                    onChange={(e) => setNewActivityDescription(e.target.value)}
-                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 text-sm min-h-[40px]"
-                    rows={1}
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 mb-4">
+                <div className="flex gap-2 mb-2">
+                  <Select value={newActivityType} onValueChange={setNewActivityType}>
+                    <SelectTrigger className="w-32 bg-white/[0.02] border border-white/[0.06] text-white text-sm rounded-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#050505] border border-white/[0.06] rounded-sm">
+                      {["note", "call", "meeting", "email", "task"].map((type) => (
+                        <SelectItem key={type} value={type} className="text-white hover:bg-white/[0.06]">
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    placeholder="Activity title..."
+                    value={newActivityTitle}
+                    onChange={(e) => setNewActivityTitle(e.target.value)}
+                    className="flex-1 bg-white/[0.02] border border-white/[0.06] text-white placeholder:text-white/40 text-sm rounded-sm"
+                    onKeyDown={(e) => e.key === "Enter" && handleAddActivity()}
                   />
-                </CardContent>
-              </Card>
+                  <button
+                    onClick={handleAddActivity}
+                    disabled={addingActivity || !newActivityTitle.trim()}
+                    className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-3 py-1.5 disabled:opacity-50 inline-flex items-center"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                <Textarea
+                  placeholder="Description (optional)..."
+                  value={newActivityDescription}
+                  onChange={(e) => setNewActivityDescription(e.target.value)}
+                  className="bg-white/[0.02] border border-white/[0.06] text-white placeholder:text-white/40 text-sm min-h-[40px] rounded-sm"
+                  rows={1}
+                />
+              </div>
 
               <DealActivityTimeline activities={activities} />
             </TabsContent>
 
             <TabsContent value="details" className="mt-4">
-              <Card className="bg-slate-800/50 border-slate-700">
-                <CardContent className="p-4 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs text-slate-500 mb-1 block">Value</label>
-                      {isEditing ? (
-                        <Input
-                          type="number"
-                          value={editForm.value}
-                          onChange={(e) => setEditForm({ ...editForm, value: e.target.value })}
-                          className="bg-slate-800 border-slate-700 text-white"
-                        />
-                      ) : (
-                        <div className="text-lg font-bold text-emerald-400">
-                          {formatCurrency(deal.value, deal.currency)}
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-xs text-slate-500 mb-1 block">Probability</label>
-                      {isEditing ? (
-                        <Input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={editForm.probability}
-                          onChange={(e) => setEditForm({ ...editForm, probability: e.target.value })}
-                          className="bg-slate-800 border-slate-700 text-white"
-                        />
-                      ) : (
-                        <div className="text-lg font-bold text-white">{deal.probability}%</div>
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-xs text-slate-500 mb-1 block">Expected Close</label>
-                      {isEditing ? (
-                        <Input
-                          type="date"
-                          value={editForm.expected_close_date}
-                          onChange={(e) => setEditForm({ ...editForm, expected_close_date: e.target.value })}
-                          className="bg-slate-800 border-slate-700 text-white"
-                        />
-                      ) : (
-                        <div className="text-sm text-slate-300">
-                          {deal.expected_close_date
-                            ? new Date(deal.expected_close_date).toLocaleDateString("en-AU", {
-                                day: "numeric",
-                                month: "long",
-                                year: "numeric",
-                              })
-                            : "Not set"}
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-xs text-slate-500 mb-1 block">Source</label>
-                      {isEditing ? (
-                        <Input
-                          value={editForm.source}
-                          onChange={(e) => setEditForm({ ...editForm, source: e.target.value })}
-                          className="bg-slate-800 border-slate-700 text-white"
-                        />
-                      ) : (
-                        <div className="text-sm text-slate-300">
-                          {deal.source || "Not specified"}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Created</label>
-                    <div className="text-sm text-slate-400">
-                      {new Date(deal.created_at).toLocaleDateString("en-AU", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                    <label className="text-xs text-white/40 mb-1 block">Value</label>
+                    {isEditing ? (
+                      <Input
+                        type="number"
+                        value={editForm.value}
+                        onChange={(e) => setEditForm({ ...editForm, value: e.target.value })}
+                        className="bg-white/[0.02] border border-white/[0.06] text-white rounded-sm"
+                      />
+                    ) : (
+                      <div className="text-lg font-bold text-[#00FF88]">
+                        {formatCurrency(deal.value, deal.currency)}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <label className="text-xs text-white/40 mb-1 block">Probability</label>
+                    {isEditing ? (
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={editForm.probability}
+                        onChange={(e) => setEditForm({ ...editForm, probability: e.target.value })}
+                        className="bg-white/[0.02] border border-white/[0.06] text-white rounded-sm"
+                      />
+                    ) : (
+                      <div className="text-lg font-bold text-white">{deal.probability}%</div>
+                    )}
+                  </div>
+                  <div>
+                    <label className="text-xs text-white/40 mb-1 block">Expected Close</label>
+                    {isEditing ? (
+                      <Input
+                        type="date"
+                        value={editForm.expected_close_date}
+                        onChange={(e) => setEditForm({ ...editForm, expected_close_date: e.target.value })}
+                        className="bg-white/[0.02] border border-white/[0.06] text-white rounded-sm"
+                      />
+                    ) : (
+                      <div className="text-sm text-white/70">
+                        {deal.expected_close_date
+                          ? new Date(deal.expected_close_date).toLocaleDateString("en-AU", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            })
+                          : "Not set"}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <label className="text-xs text-white/40 mb-1 block">Source</label>
+                    {isEditing ? (
+                      <Input
+                        value={editForm.source}
+                        onChange={(e) => setEditForm({ ...editForm, source: e.target.value })}
+                        className="bg-white/[0.02] border border-white/[0.06] text-white rounded-sm"
+                      />
+                    ) : (
+                      <div className="text-sm text-white/70">
+                        {deal.source || "Not specified"}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs text-white/40 mb-1 block">Created</label>
+                  <div className="text-sm text-white/50">
+                    {new Date(deal.created_at).toLocaleDateString("en-AU", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </div>
+
+                {deal.tags && deal.tags.length > 0 && (
+                  <div>
+                    <label className="text-xs text-white/40 mb-1 block">Tags</label>
+                    <div className="flex gap-1 flex-wrap">
+                      {deal.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="bg-white/[0.06] text-white/70 text-xs font-mono px-2 py-0.5 rounded-sm border border-white/[0.06]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </div>
-
-                  {deal.tags && deal.tags.length > 0 && (
-                    <div>
-                      <label className="text-xs text-slate-500 mb-1 block">Tags</label>
-                      <div className="flex gap-1 flex-wrap">
-                        {deal.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary" className="bg-slate-700 text-slate-300 text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                )}
+              </div>
             </TabsContent>
 
             <TabsContent value="notes" className="mt-4">
-              <Card className="bg-slate-800/50 border-slate-700">
-                <CardContent className="p-4">
-                  {isEditing ? (
-                    <Textarea
-                      value={editForm.notes}
-                      onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
-                      className="bg-slate-800 border-slate-700 text-white min-h-[200px]"
-                      placeholder="Add notes about this deal..."
-                    />
-                  ) : (
-                    <div className="text-sm text-slate-300 whitespace-pre-wrap min-h-[100px]">
-                      {deal.notes || (
-                        <span className="text-slate-500 italic">No notes yet. Click Edit to add notes.</span>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                {isEditing ? (
+                  <Textarea
+                    value={editForm.notes}
+                    onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
+                    className="bg-white/[0.02] border border-white/[0.06] text-white min-h-[200px] rounded-sm"
+                    placeholder="Add notes about this deal..."
+                  />
+                ) : (
+                  <div className="text-sm text-white/70 whitespace-pre-wrap min-h-[100px]">
+                    {deal.notes || (
+                      <span className="text-white/40 italic">No notes yet. Click Edit to add notes.</span>
+                    )}
+                  </div>
+                )}
+              </div>
             </TabsContent>
           </Tabs>
         </div>
@@ -531,95 +526,87 @@ export default function DealDetailPage() {
         {/* Right sidebar: Contact info */}
         <div className="space-y-4">
           {/* Contact Card */}
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-400 flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Contact
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              {deal.contacts ? (
-                <div className="space-y-2">
-                  <Link
-                    href={`/dashboard/contacts/${deal.contacts.id}`}
-                    className="text-white font-medium hover:text-blue-400 flex items-center gap-1"
-                  >
-                    {deal.contacts.name}
-                    <ExternalLink className="w-3 h-3" />
-                  </Link>
-                  {deal.contacts.company && (
-                    <div className="flex items-center gap-2 text-sm text-slate-400">
-                      <Building2 className="w-3.5 h-3.5" />
-                      {deal.contacts.company}
-                    </div>
-                  )}
-                  {deal.contacts.email && (
-                    <div className="flex items-center gap-2 text-sm text-slate-400">
-                      <Mail className="w-3.5 h-3.5" />
-                      {deal.contacts.email}
-                    </div>
-                  )}
-                  {(deal.contacts as any).phone && (
-                    <div className="flex items-center gap-2 text-sm text-slate-400">
-                      <Phone className="w-3.5 h-3.5" />
-                      {(deal.contacts as any).phone}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-sm text-slate-500 italic">No contact linked</div>
-              )}
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <div className="text-sm text-white/40 flex items-center gap-2 mb-3">
+              <User className="w-4 h-4" />
+              Contact
+            </div>
+            {deal.contacts ? (
+              <div className="space-y-2">
+                <Link
+                  href={`/dashboard/contacts/${deal.contacts.id}`}
+                  className="text-white font-medium hover:text-[#00F5FF] flex items-center gap-1 transition-colors"
+                >
+                  {deal.contacts.name}
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+                {deal.contacts.company && (
+                  <div className="flex items-center gap-2 text-sm text-white/50">
+                    <Building2 className="w-3.5 h-3.5" />
+                    {deal.contacts.company}
+                  </div>
+                )}
+                {deal.contacts.email && (
+                  <div className="flex items-center gap-2 text-sm text-white/50">
+                    <Mail className="w-3.5 h-3.5" />
+                    {deal.contacts.email}
+                  </div>
+                )}
+                {(deal.contacts as any).phone && (
+                  <div className="flex items-center gap-2 text-sm text-white/50">
+                    <Phone className="w-3.5 h-3.5" />
+                    {(deal.contacts as any).phone}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-sm text-white/40 italic">No contact linked</div>
+            )}
+          </div>
 
           {/* Quick Stats */}
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-400 flex items-center gap-2">
-                <DollarSign className="w-4 h-4" />
-                Deal Summary
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0 space-y-3">
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Value</span>
-                <span className="text-sm font-semibold text-emerald-400">
-                  {formatCurrency(deal.value, deal.currency)}
-                </span>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 space-y-3">
+            <div className="text-sm text-white/40 flex items-center gap-2 mb-1">
+              <DollarSign className="w-4 h-4" />
+              Deal Summary
+            </div>
+            <div className="flex justify-between">
+              <span className="text-xs text-white/40">Value</span>
+              <span className="text-sm font-semibold text-[#00FF88]">
+                {formatCurrency(deal.value, deal.currency)}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-xs text-white/40">Weighted Value</span>
+              <span className="text-sm text-white/70">
+                {formatCurrency(deal.value * (deal.probability / 100), deal.currency)}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-xs text-white/40">Stage</span>
+              <div className="flex items-center gap-1.5">
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: currentStage?.color || "#3B82F6" }}
+                />
+                <span className="text-sm text-white/70">{currentStage?.name}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Weighted Value</span>
-                <span className="text-sm text-slate-300">
-                  {formatCurrency(deal.value * (deal.probability / 100), deal.currency)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Stage</span>
-                <div className="flex items-center gap-1.5">
-                  <div
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: currentStage?.color || "#3B82F6" }}
-                  />
-                  <span className="text-sm text-slate-300">{currentStage?.name}</span>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Days Open</span>
-                <span className="text-sm text-slate-300">
-                  {Math.floor(
-                    (new Date().getTime() - new Date(deal.created_at).getTime()) / 86400000
-                  )}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Activities</span>
-                <span className="text-sm text-slate-300">{activities.length}</span>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-xs text-white/40">Days Open</span>
+              <span className="text-sm text-white/70">
+                {Math.floor(
+                  (new Date().getTime() - new Date(deal.created_at).getTime()) / 86400000
+                )}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-xs text-white/40">Activities</span>
+              <span className="text-sm text-white/70">{activities.length}</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
