@@ -3,11 +3,8 @@
 import React, { useState } from "react";
 import { TeamCapacity } from "@/components/dashboard/TeamCapacity";
 import { StatsCard } from "@/components/dashboard/StatsCard";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Mail, Phone, Calendar, BarChart3, Users, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { Plus, Mail, Phone, Calendar, BarChart3, Users, AlertCircle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { useWorkspace } from "@/hooks/useWorkspace";
@@ -69,18 +66,18 @@ export default function TeamPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Team Management
           </h1>
-          <p className="text-slate-400">Manage your team members and their capacity</p>
+          <p className="text-white/50">Manage your team members and their capacity</p>
         </div>
-        <Button
+        <button
           onClick={() => setIsAddModalOpen(true)}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2"
+          className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
           Add Team Member
-        </Button>
+        </button>
       </div>
 
       {/* Loading State */}
@@ -142,18 +139,18 @@ export default function TeamPage() {
 
           {/* Team Members Grid */}
           <div>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-6">
+            <h2 className="text-2xl font-bold text-white mb-6">
               Team Directory
             </h2>
             {teamMembers.length > 0 ? (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {teamMembers.map((member) => (
-                <Card key={member.id} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/50 transition-all group">
-                  <CardHeader className="border-b border-slate-700/50">
+                <div key={member.id} className="bg-white/[0.02] border border-white/[0.06] rounded-sm hover:border-white/[0.12] transition-all group">
+                  <div className="border-b border-white/[0.06] p-6">
                     <div className="flex items-start gap-4">
                       <Avatar className="h-16 w-16">
                         {member.avatar && <AvatarImage src={member.avatar} alt={member.name} />}
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-lg font-bold">
+                        <AvatarFallback className="bg-[#00F5FF]/10 text-[#00F5FF] text-lg font-bold">
                           {member.initials}
                         </AvatarFallback>
                       </Avatar>
@@ -161,54 +158,53 @@ export default function TeamPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
-                            <CardTitle className="text-lg mb-1 text-white group-hover:text-blue-400 transition-colors">
+                            <h3 className="text-lg font-semibold mb-1 text-white group-hover:text-[#00F5FF] transition-colors">
                               {member.name}
-                            </CardTitle>
-                            <p className="text-sm text-slate-400">{member.role}</p>
+                            </h3>
+                            <p className="text-sm text-white/50">{member.role}</p>
                           </div>
-                          <Badge
-                            variant="outline"
+                          <span
                             className={cn(
-                              "text-xs",
-                              member.status === "available" && "bg-green-100 text-green-700 border-green-200",
-                              member.status === "near-capacity" && "bg-yellow-100 text-yellow-700 border-yellow-200",
-                              member.status === "over-capacity" && "bg-red-100 text-red-700 border-red-200"
+                              "text-xs px-2 py-0.5 rounded-sm border font-mono",
+                              member.status === "available" && "bg-[#00FF88]/10 text-[#00FF88] border-[#00FF88]/20",
+                              member.status === "near-capacity" && "bg-[#FFB800]/10 text-[#FFB800] border-[#FFB800]/20",
+                              member.status === "over-capacity" && "bg-[#FF4444]/10 text-[#FF4444] border-[#FF4444]/20"
                             )}
                           >
                             {member.status === "available" && "Available"}
                             {member.status === "near-capacity" && "Near Capacity"}
                             {member.status === "over-capacity" && "Over Capacity"}
-                          </Badge>
+                          </span>
                         </div>
                       </div>
                     </div>
-                  </CardHeader>
+                  </div>
 
-                  <CardContent className="pt-6">
+                  <div className="p-6">
                     {/* Contact Info */}
                     <div className="space-y-3 mb-6">
                       <div className="flex items-center gap-3 text-sm">
-                        <Mail className="h-4 w-4 text-blue-400" />
-                        <span className="text-slate-300">{member.email}</span>
+                        <Mail className="h-4 w-4 text-[#00F5FF]" />
+                        <span className="text-white/70">{member.email}</span>
                       </div>
                       <div className="flex items-center gap-3 text-sm">
-                        <Phone className="h-4 w-4 text-purple-400" />
-                        <span className="text-slate-300">{member.phone}</span>
+                        <Phone className="h-4 w-4 text-[#FF00FF]" />
+                        <span className="text-white/70">{member.phone}</span>
                       </div>
                       <div className="flex items-center gap-3 text-sm">
-                        <Calendar className="h-4 w-4 text-cyan-400" />
-                        <span className="text-slate-300">Joined {member.joinDate}</span>
+                        <Calendar className="h-4 w-4 text-[#00F5FF]" />
+                        <span className="text-white/70">Joined {member.joinDate}</span>
                       </div>
                     </div>
 
                     {/* Skills */}
                     <div className="mb-6">
-                      <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Skills</p>
+                      <p className="text-xs font-semibold text-white/40 uppercase mb-2">Skills</p>
                       <div className="flex flex-wrap gap-2">
-                        {member.skills.map((skill, i) => (
-                          <Badge key={i} variant="secondary" className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs">
+                        {member.skills.map((skill: string, i: number) => (
+                          <span key={i} className="bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/20 text-xs px-2 py-0.5 rounded-sm font-mono">
                             {skill}
-                          </Badge>
+                          </span>
                         ))}
                       </div>
                     </div>
@@ -216,18 +212,18 @@ export default function TeamPage() {
                     {/* Capacity */}
                     <div className="mb-4">
                       <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="text-slate-400">Weekly Capacity</span>
+                        <span className="text-white/40">Weekly Capacity</span>
                         <span className="font-semibold text-white">
                           {member.hoursAllocated}h / {member.hoursAvailable}h
                         </span>
                       </div>
-                      <div className="h-2 bg-slate-900/50 rounded-full overflow-hidden">
+                      <div className="h-2 bg-[#050505] rounded-sm overflow-hidden">
                         <div
                           className={cn(
-                            "h-full rounded-full transition-all",
-                            member.status === "available" && "bg-green-500",
-                            member.status === "near-capacity" && "bg-yellow-500",
-                            member.status === "over-capacity" && "bg-red-500"
+                            "h-full rounded-sm transition-all",
+                            member.status === "available" && "bg-[#00FF88]",
+                            member.status === "near-capacity" && "bg-[#FFB800]",
+                            member.status === "over-capacity" && "bg-[#FF4444]"
                           )}
                           style={{ width: `${Math.min(member.capacity, 100)}%` }}
                         />
@@ -235,23 +231,23 @@ export default function TeamPage() {
                     </div>
 
                     {/* Projects */}
-                    <div className="pt-4 border-t border-slate-700/50">
-                      <p className="text-sm text-slate-400">
+                    <div className="pt-4 border-t border-white/[0.06]">
+                      <p className="text-sm text-white/40">
                         Currently assigned to <span className="font-semibold text-white">{member.currentProjects}</span> {member.currentProjects === 1 ? "project" : "projects"}
                       </p>
                     </div>
 
                     {/* Actions */}
                     <div className="flex gap-2 mt-4">
-                      <Button size="sm" variant="outline" className="flex-1 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50">
+                      <button className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex-1">
                         View Projects
-                      </Button>
-                      <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 flex-1">
+                      </button>
+                      <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex-1">
                         Assign Work
-                      </Button>
+                      </button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
               </div>
             ) : (

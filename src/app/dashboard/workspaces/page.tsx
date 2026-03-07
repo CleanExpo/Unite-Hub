@@ -1,9 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -85,7 +82,7 @@ export default function WorkspacesPage() {
       setWorkspaces(enriched);
     } catch (err: unknown) {
       console.error("Failed to fetch workspaces:", err);
-      setError(err.message || "Failed to load workspaces");
+      setError((err as any).message || "Failed to load workspaces");
     } finally {
       setLoading(false);
     }
@@ -121,29 +118,25 @@ export default function WorkspacesPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
-            <Card key={i} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-6 w-40" />
-                    <Skeleton className="h-4 w-48" />
-                  </div>
-                  <Skeleton className="h-6 w-16" />
+            <div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-6 w-40" />
+                  <Skeleton className="h-4 w-48" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-3 gap-4">
-                    {[1, 2, 3].map((j) => (
-                      <div key={j} className="space-y-2">
-                        <Skeleton className="h-3 w-16" />
-                        <Skeleton className="h-8 w-12" />
-                      </div>
-                    ))}
-                  </div>
+                <Skeleton className="h-6 w-16" />
+              </div>
+              <div className="space-y-6">
+                <div className="grid grid-cols-3 gap-4">
+                  {[1, 2, 3].map((j) => (
+                    <div key={j} className="space-y-2">
+                      <Skeleton className="h-3 w-16" />
+                      <Skeleton className="h-8 w-12" />
+                    </div>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -172,45 +165,48 @@ export default function WorkspacesPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Workspaces
           </h1>
-          <p className="text-slate-400">Manage all your client accounts</p>
+          <p className="text-white/50">Manage all your client accounts</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={fetchWorkspaces} className="text-slate-400 hover:text-white">
+          <button
+            onClick={fetchWorkspaces}
+            className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5"
+          >
             <RefreshCw className="w-4 h-4" />
-          </Button>
+          </button>
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
+              <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 New Workspace
-              </Button>
+              </button>
             </DialogTrigger>
-            <DialogContent className="bg-slate-800/95 backdrop-blur-sm border-slate-700/50">
+            <DialogContent className="bg-[#050505] border border-white/[0.06] rounded-sm">
               <DialogHeader>
                 <DialogTitle className="text-white">Create New Workspace</DialogTitle>
-                <DialogDescription className="text-slate-400">Add a new client workspace</DialogDescription>
+                <DialogDescription className="text-white/50">Add a new client workspace</DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <Label className="text-slate-300 mb-2 block">Workspace Name</Label>
+                  <Label className="text-white/70 mb-2 block">Workspace Name</Label>
                   <Input
                     placeholder="Client name or project"
-                    className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+                    className="bg-[#050505] border border-white/[0.06] text-white placeholder:text-white/30 rounded-sm"
                   />
                 </div>
                 <div>
-                  <Label className="text-slate-300 mb-2 block">Description</Label>
+                  <Label className="text-white/70 mb-2 block">Description</Label>
                   <Input
                     placeholder="What is this workspace for?"
-                    className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+                    className="bg-[#050505] border border-white/[0.06] text-white placeholder:text-white/30 rounded-sm"
                   />
                 </div>
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50">
+                <button className="w-full bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2">
                   Create Workspace
-                </Button>
+                </button>
               </div>
             </DialogContent>
           </Dialog>
@@ -220,81 +216,71 @@ export default function WorkspacesPage() {
       {/* Workspaces Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {workspaces.map((workspace) => (
-          <Card key={workspace.id} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:border-blue-600/50 transition-all group">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-white group-hover:text-blue-400 transition-colors">{workspace.name}</CardTitle>
-                  <CardDescription className="text-slate-400">{workspace.description}</CardDescription>
-                </div>
-                <Badge className="bg-green-500/20 text-green-400 border border-green-500/30">{workspace.status}</Badge>
+          <div key={workspace.id} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 hover:border-[#00F5FF]/30 transition-all group">
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex-1">
+                <h3 className="text-white font-semibold group-hover:text-[#00F5FF] transition-colors">{workspace.name}</h3>
+                <p className="text-white/50 text-sm mt-1">{workspace.description}</p>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <p className="text-xs text-slate-400 mb-1">Contacts</p>
-                    <p className="text-2xl font-bold text-white">{workspace.contacts}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-400 mb-1">Campaigns</p>
-                    <p className="text-2xl font-bold text-white">{workspace.campaigns}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-400 mb-1">Members</p>
-                    <p className="text-2xl font-bold text-white">{workspace.members}</p>
-                  </div>
+              <span className="bg-[#00FF88]/10 text-[#00FF88] border border-[#00FF88]/20 text-xs px-2 py-0.5 rounded-sm font-mono">{workspace.status}</span>
+            </div>
+            <div className="space-y-6">
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <p className="text-xs text-white/40 mb-1">Contacts</p>
+                  <p className="text-2xl font-bold text-white">{workspace.contacts}</p>
                 </div>
+                <div>
+                  <p className="text-xs text-white/40 mb-1">Campaigns</p>
+                  <p className="text-2xl font-bold text-white">{workspace.campaigns}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-white/40 mb-1">Members</p>
+                  <p className="text-2xl font-bold text-white">{workspace.members}</p>
+                </div>
+              </div>
 
-                <div className="flex gap-2">
-                  <Button size="sm" className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
-                    <BarChart3 className="w-4 h-4" />
-                    Open
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50 gap-2"
-                  >
-                    <Settings className="w-4 h-4" />
-                  </Button>
-                </div>
+              <div className="flex gap-2">
+                <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex-1 flex items-center justify-center gap-2">
+                  <BarChart3 className="w-4 h-4" />
+                  Open
+                </button>
+                <button className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex items-center gap-2">
+                  <Settings className="w-4 h-4" />
+                </button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Usage Stats */}
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-        <CardHeader>
-          <CardTitle className="text-white text-xl">Account Usage</CardTitle>
-          <CardDescription className="text-slate-400">Current plan: Professional</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <p className="text-slate-400 text-sm mb-2">Workspaces Used</p>
-              <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                {workspaces.length}
-              </div>
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm mb-2">Total Contacts</p>
-              <div className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                {workspaces.reduce((sum, ws) => sum + ws.contacts, 0)}
-              </div>
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm mb-2">Total Campaigns</p>
-              <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {workspaces.reduce((sum, ws) => sum + ws.campaigns, 0)}
-              </div>
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+        <div className="mb-4">
+          <h3 className="text-white text-xl font-semibold">Account Usage</h3>
+          <p className="text-white/50 text-sm mt-1">Current plan: Professional</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <p className="text-white/40 text-sm mb-2">Workspaces Used</p>
+            <div className="text-3xl font-bold text-[#00F5FF]">
+              {workspaces.length}
             </div>
           </div>
-        </CardContent>
-      </Card>
+          <div>
+            <p className="text-white/40 text-sm mb-2">Total Contacts</p>
+            <div className="text-3xl font-bold text-[#00FF88]">
+              {workspaces.reduce((sum, ws) => sum + ws.contacts, 0)}
+            </div>
+          </div>
+          <div>
+            <p className="text-white/40 text-sm mb-2">Total Campaigns</p>
+            <div className="text-3xl font-bold text-[#FF00FF]">
+              {workspaces.reduce((sum, ws) => sum + ws.campaigns, 0)}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

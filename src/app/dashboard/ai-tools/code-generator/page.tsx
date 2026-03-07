@@ -52,7 +52,7 @@ export default function CodeGeneratorPage() {
       const data = await response.json();
       setGeneratedCode(data.code || "");
     } catch (err: unknown) {
-      setError(err.message || "Failed to generate code");
+      setError((err as Error).message || "Failed to generate code");
     } finally {
       setLoading(false);
     }
@@ -70,38 +70,38 @@ export default function CodeGeneratorPage() {
 
       {/* Header */}
       <div className="flex items-center gap-4">
-        <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-sm shadow-lg">
-          <Code2 className="h-8 w-8 text-white" />
+        <div className="p-3 bg-[#FF00FF]/10 border border-[#FF00FF]/20 rounded-sm">
+          <Code2 className="h-8 w-8 text-[#FF00FF]" />
         </div>
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold font-mono text-white/90">
             AI Code Generator
           </h1>
-          <p className="text-slate-400 mt-1">Generate production-ready code with AI</p>
+          <p className="text-white/40 mt-1">Generate production-ready code with AI</p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Input Section */}
-        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 p-6 space-y-4">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-mono font-medium text-white/50 mb-2">
               What do you want to build? *
             </label>
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Example: Create a TypeScript function to validate email addresses with regex"
-              className="min-h-[200px] resize-none bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+              className="min-h-[200px] resize-none bg-[#050505] border-white/[0.06] text-white/90 placeholder:text-white/20"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">AI Model</label>
+            <label className="block text-sm font-mono font-medium text-white/50 mb-2">AI Model</label>
             <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700/50 text-white rounded-sm focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-[#050505] border border-white/[0.06] text-white/90 rounded-sm focus:ring-2 focus:ring-[#00F5FF]/50 font-mono text-sm"
             >
               <option value="gpt-4o-mini">GPT-4o Mini (Fast & Cheap)</option>
               <option value="gpt-4o">GPT-4o (Best Quality)</option>
@@ -109,10 +109,10 @@ export default function CodeGeneratorPage() {
             </select>
           </div>
 
-          <Button
+          <button
             onClick={handleGenerate}
             disabled={loading || !prompt.trim()}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50"
+            className="w-full bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 disabled:opacity-40 flex items-center justify-center gap-2"
           >
             {loading ? (
               <>
@@ -125,29 +125,27 @@ export default function CodeGeneratorPage() {
                 Generate Code
               </>
             )}
-          </Button>
+          </button>
 
           {error && (
-            <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-sm text-red-400 text-sm">
+            <div className="p-3 bg-[#FF4444]/10 border border-[#FF4444]/30 rounded-sm text-[#FF4444] text-sm font-mono">
               {error}
             </div>
           )}
-        </Card>
+        </div>
 
         {/* Output Section */}
-        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 p-6 space-y-4">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium text-slate-300">Generated Code</label>
+            <label className="block text-sm font-mono font-medium text-white/50">Generated Code</label>
             {generatedCode && (
-              <Button
+              <button
                 onClick={handleCopy}
-                variant="ghost"
-                size="sm"
-                className="gap-2 text-slate-400 hover:text-white"
+                className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex items-center gap-2 hover:border-white/[0.12] transition-colors"
               >
                 {copied ? (
                   <>
-                    <Check className="h-4 w-4 text-green-400" />
+                    <Check className="h-4 w-4 text-[#00FF88]" />
                     Copied!
                   </>
                 ) : (
@@ -156,27 +154,27 @@ export default function CodeGeneratorPage() {
                     Copy
                   </>
                 )}
-              </Button>
+              </button>
             )}
           </div>
 
           <div className="relative">
-            <pre className="bg-slate-900 text-slate-100 p-4 rounded-sm overflow-x-auto min-h-[200px] max-h-[500px] overflow-y-auto border border-slate-700/50">
+            <pre className="bg-[#050505] text-white/70 p-4 rounded-sm overflow-x-auto min-h-[200px] max-h-[500px] overflow-y-auto border border-white/[0.06] font-mono text-sm">
               <code>{generatedCode || "Your generated code will appear here..."}</code>
             </pre>
           </div>
 
           {generatedCode && (
-            <div className="text-xs text-slate-500">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-white/20">
               Generated with {model} • {generatedCode.length} characters
             </div>
           )}
-        </Card>
+        </div>
       </div>
 
       {/* Examples */}
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 p-6">
-        <h3 className="font-semibold text-white mb-3">Try these examples:</h3>
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
+        <h3 className="font-mono font-semibold text-white/90 mb-3">Try these examples:</h3>
         <div className="grid md:grid-cols-3 gap-3">
           {[
             "Create a React component for a login form with validation",
@@ -186,13 +184,13 @@ export default function CodeGeneratorPage() {
             <button
               key={i}
               onClick={() => setPrompt(example)}
-              className="p-3 text-left text-sm bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-sm hover:border-slate-600/50 transition-all text-slate-300 hover:text-white"
+              className="p-3 text-left text-sm bg-[#050505] border border-white/[0.06] rounded-sm hover:border-white/[0.12] transition-colors text-white/50 hover:text-white/90 font-mono"
             >
               {example}
             </button>
           ))}
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

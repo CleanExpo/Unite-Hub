@@ -10,7 +10,7 @@ export default function TemplatesPage() {
     <FeaturePageWrapper
       featureName="Social Copy Templates"
       description="250+ pre-written templates across all platforms"
-      icon={<MessageSquare className="h-20 w-20 text-slate-600" />}
+      icon={<MessageSquare className="h-20 w-20 text-white/20" />}
     >
       {(clientId) => (
         <div className="container mx-auto px-4 py-8">

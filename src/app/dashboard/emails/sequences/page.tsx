@@ -105,7 +105,7 @@ export default function SequencesPage() {
     <FeaturePageWrapper
       featureName="Email Sequences"
       description="Pre-built email sequences for cold outreach, nurture, and onboarding"
-      icon={<Mail className="h-20 w-20 text-slate-600" />}
+      icon={<Mail className="h-20 w-20 text-white/20" />}
     >
       {(clientId) => <EmailSequenceFeature clientId={clientId} />}
     </FeaturePageWrapper>
@@ -216,8 +216,8 @@ function EmailSequenceFeature({ clientId }: { clientId: string }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Email Sequences</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold font-mono text-white/90">Email Sequences</h1>
+          <p className="text-white/40">
             Create and manage automated email sequences
           </p>
         </div>
@@ -225,10 +225,10 @@ function EmailSequenceFeature({ clientId }: { clientId: string }) {
         <div className="flex items-center gap-2">
           <Dialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline">
-                <Library className="h-4 w-4 mr-2" />
+              <button className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex items-center gap-2">
+                <Library className="h-4 w-4" />
                 Templates
-              </Button>
+              </button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
@@ -240,26 +240,22 @@ function EmailSequenceFeature({ clientId }: { clientId: string }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 {TEMPLATES.map((template) => (
-                  <Card
+                  <div
                     key={template.id}
-                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 cursor-pointer hover:border-white/[0.10] transition-colors"
                     onClick={() => handleUseTemplate(template.id)}
                   >
-                    <CardHeader>
-                      <CardTitle className="text-lg">{template.name}</CardTitle>
-                      <CardDescription>{template.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">
-                          {template.steps} steps
-                        </span>
-                        <span className="font-medium text-green-600">
-                          {template.conversionRate} conversion
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    <h3 className="text-lg font-semibold font-mono text-white/90">{template.name}</h3>
+                    <p className="text-sm text-white/40 mt-1">{template.description}</p>
+                    <div className="flex items-center justify-between text-sm mt-3">
+                      <span className="text-white/30">
+                        {template.steps} steps
+                      </span>
+                      <span className="font-mono font-medium text-[#00FF88]">
+                        {template.conversionRate} conversion
+                      </span>
+                    </div>
+                  </div>
                 ))}
               </div>
             </DialogContent>
@@ -267,10 +263,10 @@ function EmailSequenceFeature({ clientId }: { clientId: string }) {
 
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
+              <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2">
+                <Plus className="h-4 w-4" />
                 Create Sequence
-              </Button>
+              </button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -345,14 +341,14 @@ function EmailSequenceFeature({ clientId }: { clientId: string }) {
                   />
                 </div>
 
-                <Button
-                  className="w-full"
+                <button
+                  className="w-full bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center justify-center gap-2 disabled:opacity-40"
                   onClick={handleCreateSequence}
                   disabled={!formData.name || !formData.goal}
                 >
-                  <Sparkles className="h-4 w-4 mr-2" />
+                  <Sparkles className="h-4 w-4" />
                   Generate with AI
-                </Button>
+                </button>
               </div>
             </DialogContent>
           </Dialog>
@@ -419,16 +415,19 @@ function EmailSequenceFeature({ clientId }: { clientId: string }) {
               isEditing={true}
             />
           ) : (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-16">
-                <p className="text-muted-foreground mb-4">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <div className="flex flex-col items-center justify-center py-16">
+                <p className="text-white/40 mb-4">
                   Select a sequence to edit
                 </p>
-                <Button onClick={() => setActiveTab("sequences")}>
+                <button
+                  className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2"
+                  onClick={() => setActiveTab("sequences")}
+                >
                   View Sequences
-                </Button>
-              </CardContent>
-            </Card>
+                </button>
+              </div>
+            </div>
           )}
         </TabsContent>
 
@@ -468,17 +467,20 @@ function EmailSequenceFeature({ clientId }: { clientId: string }) {
               ]}
             />
           ) : (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-16">
-                <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
-                <p className="text-muted-foreground mb-4">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <div className="flex flex-col items-center justify-center py-16">
+                <BarChart3 className="h-12 w-12 text-white/20 mb-4" />
+                <p className="text-white/40 mb-4">
                   Select a sequence to view analytics
                 </p>
-                <Button onClick={() => setActiveTab("sequences")}>
+                <button
+                  className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2"
+                  onClick={() => setActiveTab("sequences")}
+                >
                   View Sequences
-                </Button>
-              </CardContent>
-            </Card>
+                </button>
+              </div>
+            </div>
           )}
         </TabsContent>
       </Tabs>

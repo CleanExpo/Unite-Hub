@@ -59,46 +59,21 @@ export default function SmartBriefPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
-      {/* Background gradient */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse at 20% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(8, 145, 178, 0.08) 0%, transparent 60%),
-            linear-gradient(180deg, #0a1f2e 0%, #071318 100%)
-          `,
-        }}
-      />
-
-      {/* Grid pattern overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(6, 182, 212, 0.5) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(6, 182, 212, 0.5) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-        }}
-      />
-
+    <div className="min-h-screen bg-[#050505] relative overflow-hidden">
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-sm shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-white/[0.02] rounded-sm shadow-2xl flex overflow-hidden border border-white/[0.06]">
           {/* Left Sidebar */}
           {/* Main Content */}
           <main className="flex-1 p-6 overflow-y-auto">
             {/* Header */}
             <header className="flex justify-between items-center mb-8">
               <div>
-                <h1 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-cyan-400" />
+                <h1 className="text-xl font-bold font-mono text-white/90 mb-1 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-[#00F5FF]" />
                   Smart Brief
                 </h1>
-                <p className="text-sm text-gray-400">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">
                   Create AI-powered campaign briefs for content generation
                 </p>
               </div>
@@ -108,7 +83,7 @@ export default function SmartBriefPage() {
             <div className="max-w-3xl">
               {/* Brief Name */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-mono font-medium text-white/50 mb-2">
                   Brief Name
                 </label>
                 <input
@@ -116,7 +91,7 @@ export default function SmartBriefPage() {
                   value={briefName}
                   onChange={(e) => setBriefName(e.target.value)}
                   placeholder="e.g., Summer 2025 Campaign Brief"
-                  className="w-full bg-[#0d2137]/60 border border-cyan-900/30 rounded-sm px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full bg-[#050505] border border-white/[0.06] rounded-sm px-4 py-3 text-white/90 placeholder-white/20 focus:outline-none focus:border-[#00F5FF]/50 transition-colors font-mono text-sm"
                 />
               </div>
 
@@ -125,10 +100,10 @@ export default function SmartBriefPage() {
                 {sections.map((section) => (
                   <div
                     key={section.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-sm p-4"
+                    className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4"
                   >
-                    <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                      <span className="text-cyan-400">{section.icon}</span>
+                    <label className="flex items-center gap-2 text-sm font-mono font-medium text-white/50 mb-2">
+                      <span className="text-[#00F5FF]">{section.icon}</span>
                       {section.title}
                     </label>
                     <textarea
@@ -136,7 +111,7 @@ export default function SmartBriefPage() {
                       onChange={(e) => handleSectionChange(section.id, e.target.value)}
                       placeholder={section.placeholder}
                       rows={3}
-                      className="w-full bg-[#071318]/60 border border-cyan-900/20 rounded-sm px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors resize-none"
+                      className="w-full bg-[#050505] border border-white/[0.06] rounded-sm px-4 py-3 text-white/90 placeholder-white/20 focus:outline-none focus:border-[#00F5FF]/50 transition-colors resize-none font-mono text-sm"
                     />
                   </div>
                 ))}
@@ -147,7 +122,7 @@ export default function SmartBriefPage() {
                 <button
                   type="button"
                   onClick={handleGenerateBrief}
-                  className="flex items-center gap-2 bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-400 hover:to-green-400 text-black font-semibold px-6 py-3 rounded-sm transition-all shadow-lg shadow-lime-500/20"
+                  className="flex items-center gap-2 bg-[#00FF88] text-[#050505] font-mono font-bold px-6 py-3 rounded-sm hover:bg-[#00FF88]/90 transition-colors"
                 >
                   <Sparkles className="w-4 h-4" />
                   Generate AI Brief

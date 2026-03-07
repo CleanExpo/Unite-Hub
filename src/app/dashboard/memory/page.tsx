@@ -10,7 +10,6 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Brain, BarChart3, AlertTriangle } from 'lucide-react';
@@ -71,9 +70,9 @@ export default function MemoryDashboard() {
   if (!session || !currentOrganization || !workspaceId || !accessToken) {
     return (
       <div className="p-6">
-        <Alert className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/30">
-          <AlertTriangle className="h-4 w-4 text-yellow-600" />
-          <AlertDescription className="text-yellow-800 dark:text-yellow-200">
+        <Alert className="border-[#FFB800]/20 bg-[#FFB800]/10">
+          <AlertTriangle className="h-4 w-4 text-[#FFB800]" />
+          <AlertDescription className="text-[#FFB800]">
             Please log in to access the memory dashboard.
           </AlertDescription>
         </Alert>
@@ -85,11 +84,11 @@ export default function MemoryDashboard() {
     <div className="space-y-6 p-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-          <Brain className="w-8 h-8 text-blue-600" />
+        <h1 className="text-3xl font-bold text-white/90 flex items-center gap-2">
+          <Brain className="w-8 h-8 text-[#00F5FF]" />
           Living Intelligence Dashboard
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
+        <p className="text-white/50 mt-1">
           Explore and manage the unified memory system across all agents and operations.
         </p>
       </div>
@@ -97,75 +96,55 @@ export default function MemoryDashboard() {
       {/* Metrics Overview */}
       {!metricsLoading && metrics && (
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Memories</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600">
-                {metrics.totalMemories}
-              </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                Stored in system
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/70 mb-2">Total Memories</p>
+            <div className="text-3xl font-bold text-[#00F5FF]">
+              {metrics.totalMemories}
+            </div>
+            <p className="text-xs text-white/40 mt-1">
+              Stored in system
+            </p>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Avg Importance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-amber-600">
-                {metrics.averageImportance.toFixed(0)}
-              </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                Out of 100
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/70 mb-2">Avg Importance</p>
+            <div className="text-3xl font-bold text-[#FFB800]">
+              {metrics.averageImportance.toFixed(0)}
+            </div>
+            <p className="text-xs text-white/40 mt-1">
+              Out of 100
+            </p>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Avg Confidence</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">
-                {metrics.averageConfidence.toFixed(0)}
-              </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                Out of 100
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/70 mb-2">Avg Confidence</p>
+            <div className="text-3xl font-bold text-[#00FF88]">
+              {metrics.averageConfidence.toFixed(0)}
+            </div>
+            <p className="text-xs text-white/40 mt-1">
+              Out of 100
+            </p>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Unresolved Signals</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600">
-                {metrics.unresignedSignals}
-              </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                Requiring attention
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/70 mb-2">Unresolved Signals</p>
+            <div className="text-3xl font-bold text-[#FF4444]">
+              {metrics.unresignedSignals}
+            </div>
+            <p className="text-xs text-white/40 mt-1">
+              Requiring attention
+            </p>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Memory Types</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-600">
-                {Object.keys(metrics.memoryTypeDistribution).length}
-              </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                Categories in use
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/70 mb-2">Memory Types</p>
+            <div className="text-3xl font-bold text-[#FF00FF]">
+              {Object.keys(metrics.memoryTypeDistribution).length}
+            </div>
+            <p className="text-xs text-white/40 mt-1">
+              Categories in use
+            </p>
+          </div>
         </div>
       )}
 
@@ -187,44 +166,38 @@ export default function MemoryDashboard() {
 
         {/* Graph Tab */}
         <TabsContent value="graph" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Relationship Graph Viewer</CardTitle>
-              <CardDescription>
-                Explore memory relationships. Start by entering a memory ID.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                To view relationships, first search for a memory in the Explorer tab and note its ID.
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <h3 className="text-lg font-bold text-white/90 mb-1">Relationship Graph Viewer</h3>
+            <p className="text-sm text-white/40 mb-4">
+              Explore memory relationships. Start by entering a memory ID.
+            </p>
+            <p className="text-sm text-white/50 mb-4">
+              To view relationships, first search for a memory in the Explorer tab and note its ID.
+            </p>
+            <div className="p-6 bg-white/[0.02] rounded-sm border border-dashed border-white/[0.06] text-center">
+              <Brain className="w-8 h-8 text-white/30 mx-auto mb-2" />
+              <p className="text-sm text-white/40">
+                Select a memory from the Explorer to view its relationships
               </p>
-              <div className="p-6 bg-gray-50 dark:bg-gray-900 rounded border border-dashed border-gray-300 dark:border-gray-700 text-center">
-                <Brain className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Select a memory from the Explorer to view its relationships
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Insights Tab */}
         <TabsContent value="insights" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5" />
-                Memory System Insights
-              </CardTitle>
-              <CardDescription>
-                Analysis and trends in your memory system
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <h3 className="text-lg font-bold text-white/90 mb-1 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              Memory System Insights
+            </h3>
+            <p className="text-sm text-white/40 mb-4">
+              Analysis and trends in your memory system
+            </p>
+            <div className="space-y-4">
               {/* Memory Type Distribution */}
               {metrics && Object.keys(metrics.memoryTypeDistribution).length > 0 && (
                 <div>
-                  <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100 mb-3">
+                  <h3 className="font-semibold text-sm text-white/90 mb-3">
                     Memory Type Distribution
                   </h3>
                   <div className="space-y-2">
@@ -236,14 +209,14 @@ export default function MemoryDashboard() {
                         return (
                           <div key={type}>
                             <div className="flex justify-between text-sm mb-1">
-                              <span className="text-gray-700 dark:text-gray-300">{type}</span>
-                              <span className="text-gray-600 dark:text-gray-400">
+                              <span className="text-white/70">{type}</span>
+                              <span className="text-white/50">
                                 {count} ({percentage}%)
                               </span>
                             </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div className="w-full bg-white/[0.06] rounded-sm h-2">
                               <div
-                                className="bg-blue-600 h-2 rounded-full"
+                                className="bg-[#00F5FF] h-2 rounded-sm"
                                 style={{ width: `${percentage}%` }}
                               />
                             </div>
@@ -255,21 +228,21 @@ export default function MemoryDashboard() {
               )}
 
               {/* System Status */}
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100 mb-3">
+              <div className="border-t border-white/[0.06] pt-4">
+                <h3 className="font-semibold text-sm text-white/90 mb-3">
                   System Status
                 </h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400">Status</p>
-                    <p className="font-medium text-green-600 flex items-center gap-1">
-                      <span className="w-2 h-2 bg-green-600 rounded-full" />
+                    <p className="text-white/50">Status</p>
+                    <p className="font-medium text-[#00FF88] flex items-center gap-1">
+                      <span className="w-2 h-2 bg-[#00FF88] rounded-sm" />
                       Operational
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400">Workspace</p>
-                    <p className="font-medium text-gray-900 dark:text-gray-100 font-mono text-xs">
+                    <p className="text-white/50">Workspace</p>
+                    <p className="font-medium text-white/90 font-mono text-xs">
                       {workspaceId.substring(0, 12)}...
                     </p>
                   </div>
@@ -277,8 +250,8 @@ export default function MemoryDashboard() {
               </div>
 
               {/* Quick Stats */}
-              <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/30">
-                <AlertDescription className="text-blue-800 dark:text-blue-200 text-sm">
+              <Alert className="border-[#00F5FF]/20 bg-[#00F5FF]/10">
+                <AlertDescription className="text-[#00F5FF] text-sm">
                   <strong>Quick Stats:</strong> Your memory system is{' '}
                   {metrics && metrics.totalMemories > 100 ? 'actively' : 'being'} used.
                   {metrics && metrics.unresignedSignals > 0 && (
@@ -286,17 +259,15 @@ export default function MemoryDashboard() {
                   )}
                 </AlertDescription>
               </Alert>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
 
       {/* Info Card */}
-      <Card className="border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/30">
-        <CardHeader>
-          <CardTitle className="text-base">About the Living Intelligence System</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm text-blue-900 dark:text-blue-100">
+      <div className="bg-[#00F5FF]/10 border border-[#00F5FF]/20 rounded-sm p-4">
+        <h3 className="text-base font-bold text-white/90 mb-3">About the Living Intelligence System</h3>
+        <div className="space-y-2 text-sm text-white/70">
           <p>
             The Living Intelligence Foundation is a unified memory architecture that serves as the
             persistent intelligence substrate for all agents and systems. It provides:
@@ -320,8 +291,8 @@ export default function MemoryDashboard() {
               <strong>Audit Trail:</strong> Complete history of all memory operations
             </li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

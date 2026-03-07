@@ -81,35 +81,10 @@ export default function VaultPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
-      {/* Background gradient */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse at 20% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(8, 145, 178, 0.08) 0%, transparent 60%),
-            linear-gradient(180deg, #0a1f2e 0%, #071318 100%)
-          `,
-        }}
-      />
-
-      {/* Grid pattern overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(6, 182, 212, 0.5) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(6, 182, 212, 0.5) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-        }}
-      />
-
+    <div className="min-h-screen bg-[#050505] relative overflow-hidden">
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-sm shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-white/[0.02] rounded-sm shadow-2xl flex overflow-hidden border border-white/[0.06]">
           {/* Left Sidebar */}
           {/* Main Content */}
           <main className="flex-1 p-6 overflow-y-auto">
@@ -117,10 +92,10 @@ export default function VaultPage() {
             <header className="flex justify-between items-center mb-8">
               <div>
                 <h1 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
-                  <Archive className="w-5 h-5 text-cyan-400" />
+                  <Archive className="w-5 h-5 text-[#00F5FF]" />
                   Content Vault
                 </h1>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-white/40">
                   Browse and reuse previously deployed content
                 </p>
               </div>
@@ -132,8 +107,8 @@ export default function VaultPage() {
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-sm transition-colors ${
                     viewMode === "grid"
-                      ? "bg-cyan-500/20 text-cyan-400"
-                      : "text-gray-400 hover:text-white"
+                      ? "bg-[#00F5FF]/10 text-[#00F5FF]"
+                      : "text-white/40 hover:text-white"
                   }`}
                 >
                   <Grid className="w-4 h-4" />
@@ -143,8 +118,8 @@ export default function VaultPage() {
                   onClick={() => setViewMode("list")}
                   className={`p-2 rounded-sm transition-colors ${
                     viewMode === "list"
-                      ? "bg-cyan-500/20 text-cyan-400"
-                      : "text-gray-400 hover:text-white"
+                      ? "bg-[#00F5FF]/10 text-[#00F5FF]"
+                      : "text-white/40 hover:text-white"
                   }`}
                 >
                   <List className="w-4 h-4" />
@@ -155,19 +130,19 @@ export default function VaultPage() {
             {/* Search and Filters */}
             <div className="flex gap-4 mb-6">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search vault..."
-                  className="w-full bg-[#0d2137]/60 border border-cyan-900/30 rounded-sm pl-10 pr-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full bg-white/[0.02] border border-white/[0.06] rounded-sm pl-10 pr-4 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-[#00F5FF]/50 transition-colors"
                 />
               </div>
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="bg-[#0d2137]/60 border border-cyan-900/30 rounded-sm px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
+                className="bg-white/[0.02] border border-white/[0.06] rounded-sm px-4 py-2.5 text-white focus:outline-none focus:border-[#00F5FF]/50 transition-colors"
               >
                 <option value="all">All Types</option>
                 <option value="video">Videos</option>
@@ -179,7 +154,7 @@ export default function VaultPage() {
 
             {/* Content Grid/List */}
             {filteredItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+              <div className="flex flex-col items-center justify-center h-64 text-white/40">
                 <Archive className="w-12 h-12 mb-4 opacity-50" />
                 <p className="text-lg">No items found</p>
                 <p className="text-sm">Try adjusting your search or filters</p>
@@ -189,7 +164,7 @@ export default function VaultPage() {
                 {filteredItems.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-sm overflow-hidden hover:border-cyan-500/30 transition-colors cursor-pointer group"
+                    className="bg-white/[0.02] border border-white/[0.06] rounded-sm overflow-hidden hover:border-[#00F5FF]/30 transition-colors cursor-pointer group"
                   >
                     <div className="aspect-square relative overflow-hidden">
                       <img
@@ -197,13 +172,13 @@ export default function VaultPage() {
                         alt={item.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full p-1.5">
+                      <div className="absolute top-2 right-2 bg-black/60 rounded-sm p-1.5">
                         {getTypeIcon(item.type)}
                       </div>
                     </div>
                     <div className="p-3">
                       <h3 className="text-sm font-medium text-white truncate">{item.title}</h3>
-                      <p className="text-xs text-gray-400 mt-1">{item.platform}</p>
+                      <p className="text-xs text-white/40 mt-1">{item.platform}</p>
                     </div>
                   </div>
                 ))}
@@ -213,7 +188,7 @@ export default function VaultPage() {
                 {filteredItems.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-sm p-4 flex items-center gap-4 hover:border-cyan-500/30 transition-colors cursor-pointer"
+                    className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 flex items-center gap-4 hover:border-[#00F5FF]/30 transition-colors cursor-pointer"
                   >
                     <div className="w-16 h-16 rounded-sm overflow-hidden flex-shrink-0">
                       <img
@@ -224,11 +199,11 @@ export default function VaultPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-white font-medium truncate">{item.title}</h3>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-white/40">
                         {item.platform} • Deployed {new Date(item.deployedAt || item.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="flex items-center gap-1.5 text-gray-400">
+                    <div className="flex items-center gap-1.5 text-white/40">
                       {getTypeIcon(item.type)}
                       <span className="text-sm capitalize">{item.type}</span>
                     </div>

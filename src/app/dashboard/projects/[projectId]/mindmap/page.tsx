@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import MindmapCanvas from "@/components/mindmap/MindmapCanvasDynamic";
 import AISuggestionPanel from "@/components/mindmap/panels/AISuggestionPanel";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -125,53 +124,50 @@ export default function MindmapPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center h-screen bg-[#050505]">
+        <Loader2 className="w-8 h-8 animate-spin text-[#00F5FF]" />
       </div>
     );
   }
 
   if (!mindmapData) {
     return (
-      <div className="p-6 text-center">
-        <p className="text-gray-600">Mindmap not found</p>
-        <Button
-          variant="outline"
+      <div className="p-6 text-center bg-[#050505] min-h-screen">
+        <p className="text-white/50">Mindmap not found</p>
+        <button
           onClick={() => router.back()}
-          className="mt-4"
+          className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 mt-4"
         >
           Go Back
-        </Button>
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-[#050505]">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
+          <button
             onClick={() => router.back()}
+            className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm p-2"
           >
             <ArrowLeft className="w-5 h-5" />
-          </Button>
+          </button>
           <div>
-            <h1 className="text-2xl font-bold">Project Mindmap</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <h1 className="text-2xl font-bold text-white">Project Mindmap</h1>
+            <p className="text-sm text-white/50">
               Version {mindmapData.mindmap.version} • {mindmapData.nodes.length}{" "}
               nodes
             </p>
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
+        <button
           onClick={fetchMindmap}
           disabled={refreshing}
+          className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex items-center gap-2 disabled:opacity-50"
         >
           {refreshing ? (
             <Loader2 className="w-4 h-4 mr-1 animate-spin" />
@@ -179,7 +175,7 @@ export default function MindmapPage() {
             <RefreshCw className="w-4 h-4 mr-1" />
           )}
           Refresh
-        </Button>
+        </button>
       </div>
 
       {/* Main Content */}

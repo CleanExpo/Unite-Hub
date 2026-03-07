@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { ModernSidebar } from "@/components/layout/ModernSidebar";
 import { ProjectCard, ProjectCardGrid } from "@/components/dashboard/ProjectCard";
 import { StatsCard } from "@/components/dashboard/StatsCard";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, Search, FolderOpen, TrendingUp, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
@@ -86,31 +85,31 @@ export default function ProjectsPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Projects
           </h1>
-          <p className="text-slate-400">Manage and track your client projects</p>
+          <p className="text-white/50">Manage and track your client projects</p>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="relative w-80">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/50" />
             <Input
               type="text"
               placeholder="Search projects..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+              className="pl-10 bg-white/[0.02] border border-white/[0.06] text-white placeholder:text-white/40"
             />
           </div>
 
-          <Button
+          <button
             onClick={() => router.push("/dashboard/projects/new")}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2"
+            className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
             New Project
-          </Button>
+          </button>
         </div>
       </div>
       {/* Loading State */}
@@ -135,48 +134,48 @@ export default function ProjectsPage() {
         <>
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-white/[0.02] rounded-sm border border-white/[0.06] p-6 group">
               <div className="flex items-center gap-3 mb-3">
-                <FolderOpen className="h-8 w-8 text-blue-400 group-hover:scale-110 transition-transform" />
-                <h3 className="text-slate-400 text-sm font-medium">Total Projects</h3>
+                <FolderOpen className="h-8 w-8 text-[#00F5FF]" />
+                <h3 className="text-white/50 text-sm font-medium">Total Projects</h3>
               </div>
-              <p className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              <p className="text-3xl font-bold text-[#00F5FF]">
                 {totalProjects}
               </p>
-              <p className="text-slate-500 text-xs mt-2">+3 this month</p>
+              <p className="text-white/40 text-xs mt-2">+3 this month</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-white/[0.02] rounded-sm border border-white/[0.06] p-6 group">
               <div className="flex items-center gap-3 mb-3">
-                <TrendingUp className="h-8 w-8 text-green-400 group-hover:scale-110 transition-transform" />
-                <h3 className="text-slate-400 text-sm font-medium">Active Projects</h3>
+                <TrendingUp className="h-8 w-8 text-[#00FF88]" />
+                <h3 className="text-white/50 text-sm font-medium">Active Projects</h3>
               </div>
-              <p className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+              <p className="text-3xl font-bold text-[#00FF88]">
                 {activeProjects}
               </p>
-              <p className="text-slate-500 text-xs mt-2">{totalProjects > 0 ? Math.round((activeProjects / totalProjects) * 100) : 0}% of total</p>
+              <p className="text-white/40 text-xs mt-2">{totalProjects > 0 ? Math.round((activeProjects / totalProjects) * 100) : 0}% of total</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-white/[0.02] rounded-sm border border-white/[0.06] p-6 group">
               <div className="flex items-center gap-3 mb-3">
-                <AlertCircle className="h-8 w-8 text-orange-400 group-hover:scale-110 transition-transform" />
-                <h3 className="text-slate-400 text-sm font-medium">At Risk</h3>
+                <AlertCircle className="h-8 w-8 text-[#FFB800]" />
+                <h3 className="text-white/50 text-sm font-medium">At Risk</h3>
               </div>
-              <p className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
+              <p className="text-3xl font-bold text-[#FFB800]">
                 {atRiskProjects}
               </p>
-              <p className="text-slate-500 text-xs mt-2">Need attention</p>
+              <p className="text-white/40 text-xs mt-2">Need attention</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-white/[0.02] rounded-sm border border-white/[0.06] p-6 group">
               <div className="flex items-center gap-3 mb-3">
-                <CheckCircle className="h-8 w-8 text-purple-400 group-hover:scale-110 transition-transform" />
-                <h3 className="text-slate-400 text-sm font-medium">Completed</h3>
+                <CheckCircle className="h-8 w-8 text-[#FF00FF]" />
+                <h3 className="text-white/50 text-sm font-medium">Completed</h3>
               </div>
-              <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <p className="text-3xl font-bold text-[#FF00FF]">
                 {completedProjects}
               </p>
-              <p className="text-slate-500 text-xs mt-2">+2 this week</p>
+              <p className="text-white/40 text-xs mt-2">+2 this week</p>
             </div>
           </div>
 

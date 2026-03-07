@@ -56,53 +56,28 @@ export default function ReviewQueuePage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "approved":
-        return <CheckCircle className="w-4 h-4 text-emerald-400" />;
+        return <CheckCircle className="w-4 h-4 text-[#00FF88]" />;
       case "rejected":
-        return <XCircle className="w-4 h-4 text-red-400" />;
+        return <XCircle className="w-4 h-4 text-[#FF4444]" />;
       default:
-        return <Clock className="w-4 h-4 text-yellow-400" />;
+        return <Clock className="w-4 h-4 text-[#FFB800]" />;
     }
   };
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      pending: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-      approved: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-      rejected: "bg-red-500/20 text-red-400 border-red-500/30",
+      pending: "bg-[#FFB800]/10 text-[#FFB800] border-[#FFB800]/30",
+      approved: "bg-[#00FF88]/10 text-[#00FF88] border-[#00FF88]/30",
+      rejected: "bg-[#FF4444]/10 text-[#FF4444] border-[#FF4444]/30",
     };
     return styles[status as keyof typeof styles] || styles.pending;
   };
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
-      {/* Background gradient */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse at 20% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(8, 145, 178, 0.08) 0%, transparent 60%),
-            linear-gradient(180deg, #0a1f2e 0%, #071318 100%)
-          `,
-        }}
-      />
-
-      {/* Grid pattern overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(6, 182, 212, 0.5) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(6, 182, 212, 0.5) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-        }}
-      />
-
+    <div className="min-h-screen bg-[#050505] relative overflow-hidden">
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-sm shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-white/[0.02] rounded-sm shadow-2xl flex overflow-hidden border border-white/[0.06]">
           {/* Left Sidebar */}
           {/* Main Content */}
           <main className="flex-1 p-6 overflow-y-auto">
@@ -110,10 +85,10 @@ export default function ReviewQueuePage() {
             <header className="flex justify-between items-center mb-8">
               <div>
                 <h1 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
-                  <ListFilter className="w-5 h-5 text-cyan-400" />
+                  <ListFilter className="w-5 h-5 text-[#00F5FF]" />
                   Review Queue
                 </h1>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-white/50">
                   View and manage all content in the approval pipeline
                 </p>
               </div>
@@ -127,8 +102,8 @@ export default function ReviewQueuePage() {
                     onClick={() => setFilter(f)}
                     className={`px-3 py-1.5 rounded-sm text-sm font-medium transition-colors ${
                       filter === f
-                        ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                        : "text-gray-400 hover:text-white hover:bg-[#0d2137]/60"
+                        ? "bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/30"
+                        : "text-white/50 hover:text-white hover:bg-white/[0.04]"
                     }`}
                   >
                     {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -140,10 +115,10 @@ export default function ReviewQueuePage() {
             {/* Queue List */}
             {loading ? (
               <div className="flex justify-center items-center h-64">
-                <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-[#00F5FF] border-t-transparent rounded-sm animate-spin" />
               </div>
             ) : filteredItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+              <div className="flex flex-col items-center justify-center h-64 text-white/50">
                 <ListFilter className="w-12 h-12 mb-4 opacity-50" />
                 <p className="text-lg">No items in queue</p>
                 <p className="text-sm">Content will appear here when generated</p>
@@ -153,11 +128,11 @@ export default function ReviewQueuePage() {
                 {filteredItems.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-sm p-4 flex items-center gap-4 hover:bg-[#0d2137]/60 transition-colors"
+                    className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 flex items-center gap-4 hover:bg-white/[0.04] transition-colors"
                   >
                     {/* Thumbnail */}
                     {item.thumbnailUrl && (
-                      <div className="w-16 h-16 rounded-sm overflow-hidden bg-[#071318] flex-shrink-0">
+                      <div className="w-16 h-16 rounded-sm overflow-hidden bg-[#050505] flex-shrink-0">
                         <img
                           src={item.thumbnailUrl}
                           alt={item.title}
@@ -169,13 +144,13 @@ export default function ReviewQueuePage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <h3 className="text-white font-medium truncate">{item.title}</h3>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-white/50">
                         {item.type} • {item.platform || "Multi-platform"}
                       </p>
                     </div>
 
                     {/* Status */}
-                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${getStatusBadge(item.status)}`}>
+                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium border ${getStatusBadge(item.status)}`}>
                       {getStatusIcon(item.status)}
                       {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                     </div>
@@ -183,7 +158,7 @@ export default function ReviewQueuePage() {
                     {/* Actions */}
                     <button
                       type="button"
-                      className="text-gray-400 hover:text-cyan-400 transition-colors p-2"
+                      className="text-white/50 hover:text-[#00F5FF] transition-colors p-2"
                       title="View details"
                     >
                       <RotateCcw className="w-4 h-4" />

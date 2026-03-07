@@ -52,7 +52,7 @@ export default function ContentCalendarPage() {
     <FeaturePageWrapper
       featureName="Content Calendar"
       description="AI-powered 30-day content calendar with strategic recommendations"
-      icon={<CalendarIcon className="h-20 w-20 text-slate-600" />}
+      icon={<CalendarIcon className="h-20 w-20 text-white/20" />}
     >
       {(clientId) => <ContentCalendarFeature clientId={clientId} />}
     </FeaturePageWrapper>
@@ -208,7 +208,7 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
       }
     } catch (error: unknown) {
       console.error("Error generating calendar:", error);
-      setError(error.message || "Failed to generate calendar. Please try again.");
+      setError((error as Error).message || "Failed to generate calendar. Please try again.");
     } finally {
       setIsGenerating(false);
     }
@@ -340,10 +340,10 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold font-mono text-white/90 mb-2">
             Content Calendar
           </h1>
-          <p className="text-slate-400">
+          <p className="text-white/40">
             AI-powered 30-day content calendar with strategic recommendations
           </p>
         </div>
@@ -351,10 +351,10 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-sm font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-sm font-mono font-semibold transition-colors ${
               showFilters
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50"
-                : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50"
+                ? "bg-[#00F5FF] text-[#050505]"
+                : "bg-white/[0.04] border border-white/[0.06] text-white/50 hover:border-white/[0.12]"
             }`}
           >
             <Filter className="h-4 w-4" />
@@ -364,7 +364,7 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
           <button
             onClick={handleGenerateCalendar}
             disabled={isGenerating}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-sm hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/50 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 bg-[#00F5FF] text-[#050505] font-mono font-semibold rounded-sm hover:bg-[#00F5FF]/90 transition-colors disabled:opacity-40"
           >
             <Sparkles className="h-4 w-4" />
             {isGenerating ? "Generating..." : "Generate Calendar"}
@@ -389,10 +389,10 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
       <div className="flex items-center gap-2">
         <button
           onClick={() => setViewMode("calendar")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-sm font-semibold transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-sm font-mono font-semibold transition-colors ${
             viewMode === "calendar"
-              ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-              : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50"
+              ? "bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/30"
+              : "bg-white/[0.04] border border-white/[0.06] text-white/50 hover:border-white/[0.12]"
           }`}
         >
           <Grid3x3 className="h-4 w-4" />
@@ -400,10 +400,10 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
         </button>
         <button
           onClick={() => setViewMode("list")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-sm font-semibold transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-sm font-mono font-semibold transition-colors ${
             viewMode === "list"
-              ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-              : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50"
+              ? "bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/30"
+              : "bg-white/[0.04] border border-white/[0.06] text-white/50 hover:border-white/[0.12]"
           }`}
         >
           <List className="h-4 w-4" />
@@ -485,47 +485,47 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
       {/* Calendar Stats Summary (when filters hidden) */}
       {!hasError && !isLoading && !showFilters && calendarStats && (
         <div className="grid grid-cols-4 gap-4">
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 hover:border-white/[0.12] transition-colors group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-400">Total Posts</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Total Posts</p>
+                <p className="text-2xl font-bold font-mono text-white/90">
                   {calendarStats.totalPosts}
                 </p>
               </div>
-              <CalendarIcon className="h-8 w-8 text-blue-400 group-hover:scale-110 transition-transform" />
+              <CalendarIcon className="h-8 w-8 text-[#00F5FF] group-hover:scale-110 transition-transform" />
             </div>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 hover:border-white/[0.12] transition-colors group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-400">Upcoming</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Upcoming</p>
+                <p className="text-2xl font-bold font-mono text-white/90">
                   {calendarStats.upcomingPosts}
                 </p>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-400 group-hover:scale-110 transition-transform" />
+              <TrendingUp className="h-8 w-8 text-[#FF00FF] group-hover:scale-110 transition-transform" />
             </div>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 hover:border-white/[0.12] transition-colors group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-400">Approved</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Approved</p>
+                <p className="text-2xl font-bold font-mono text-white/90">
                   {calendarStats.byStatus.approved}
                 </p>
               </div>
-              <div className="text-3xl group-hover:scale-110 transition-transform">&#10003;</div>
+              <div className="text-3xl text-[#00FF88] group-hover:scale-110 transition-transform">&#10003;</div>
             </div>
           </div>
 
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 hover:border-white/[0.12] transition-colors group">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-400">Platforms</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Platforms</p>
+                <p className="text-2xl font-bold font-mono text-white/90">
                   {calendarStats.platforms.length}
                 </p>
               </div>

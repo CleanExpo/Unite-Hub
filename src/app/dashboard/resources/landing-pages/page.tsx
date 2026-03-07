@@ -1,14 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -73,7 +65,7 @@ export default function LandingPagesPage() {
     <FeaturePageWrapper
       featureName="Landing Page Checklist"
       description="DIY landing page builder with AI-generated copy"
-      icon={<FileText className="h-20 w-20 text-slate-600" />}
+      icon={<FileText className="h-20 w-20 text-white/30" />}
     >
       {(clientId) => <LandingPageFeature clientId={clientId} />}
     </FeaturePageWrapper>
@@ -230,7 +222,7 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
     } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to generate checklist",
+        description: (error as any).message || "Failed to generate checklist",
         variant: "destructive",
       });
     } finally {
@@ -270,7 +262,7 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
     } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to delete checklist",
+        description: (error as any).message || "Failed to delete checklist",
         variant: "destructive",
       });
     }
@@ -285,48 +277,43 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Landing Page Builder</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-3xl font-bold text-white">Landing Page Builder</h1>
+          <p className="text-white/50 mt-2">
             Create high-converting landing pages with AI-powered copy suggestions
           </p>
         </div>
-        <Button onClick={() => setIsCreateDialogOpen(true)} className="gap-2">
+        <button
+          onClick={() => setIsCreateDialogOpen(true)}
+          className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2"
+        >
           <Plus className="h-4 w-4" />
           New Landing Page
-        </Button>
+        </button>
       </div>
 
       {/* Stats */}
       {stats && (
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardDescription>Total Pages</CardDescription>
-              <CardTitle className="text-3xl">{stats.total}</CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardDescription>Completed</CardDescription>
-              <CardTitle className="text-3xl text-green-600">
-                {stats.byStatus.completed}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardDescription>In Progress</CardDescription>
-              <CardTitle className="text-3xl text-yellow-600">
-                {stats.byStatus.in_progress}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardDescription>Avg Completion</CardDescription>
-              <CardTitle className="text-3xl">{stats.avgCompletion}%</CardTitle>
-            </CardHeader>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-white/50 text-sm mb-1">Total Pages</p>
+            <p className="text-3xl font-bold text-white">{stats.total}</p>
+          </div>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-white/50 text-sm mb-1">Completed</p>
+            <p className="text-3xl font-bold text-[#00FF88]">
+              {stats.byStatus.completed}
+            </p>
+          </div>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-white/50 text-sm mb-1">In Progress</p>
+            <p className="text-3xl font-bold text-[#FFB800]">
+              {stats.byStatus.in_progress}
+            </p>
+          </div>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-white/50 text-sm mb-1">Avg Completion</p>
+            <p className="text-3xl font-bold text-white">{stats.avgCompletion}%</p>
+          </div>
         </div>
       )}
 
@@ -349,7 +336,7 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
               onDelete={handleDeleteChecklist}
             />
           ) : (
-            <div className="text-center py-12">Loading...</div>
+            <div className="text-center py-12 text-white/40">Loading...</div>
           )}
         </TabsContent>
 
@@ -361,83 +348,80 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
                 onDelete={handleDeleteChecklist}
               />
             ) : (
-              <div className="text-center py-12">Loading...</div>
+              <div className="text-center py-12 text-white/40">Loading...</div>
             )}
           </TabsContent>
         ))}
       </Tabs>
 
       {/* Features Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Landing Page Builder Features</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" />
-                <h3 className="font-semibold">AI-Generated Copy</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Get professionally written headlines, subheadlines, and body copy
-                tailored to your business and target audience
-              </p>
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+        <h3 className="text-white font-semibold mb-4">Landing Page Builder Features</h3>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-[#00F5FF]" />
+              <h4 className="font-semibold text-white">AI-Generated Copy</h4>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                <h3 className="font-semibold">A/B Test Variations</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Generate multiple copy variations for each section to test what
-                resonates best with your audience
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                <h3 className="font-semibold">SEO Optimization</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Get SEO-optimized meta titles, descriptions, and keywords to
-                improve your page's search visibility
-              </p>
-            </div>
+            <p className="text-sm text-white/50">
+              Get professionally written headlines, subheadlines, and body copy
+              tailored to your business and target audience
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-[#00F5FF]" />
+              <h4 className="font-semibold text-white">A/B Test Variations</h4>
+            </div>
+            <p className="text-sm text-white/50">
+              Generate multiple copy variations for each section to test what
+              resonates best with your audience
+            </p>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-[#00F5FF]" />
+              <h4 className="font-semibold text-white">SEO Optimisation</h4>
+            </div>
+            <p className="text-sm text-white/50">
+              Get SEO-optimised meta titles, descriptions, and keywords to
+              improve your page's search visibility
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Create Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-[#050505] border border-white/[0.06] rounded-sm">
           <DialogHeader>
-            <DialogTitle>Create New Landing Page</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-white">Create New Landing Page</DialogTitle>
+            <DialogDescription className="text-white/50">
               Generate an AI-powered landing page checklist with copy suggestions
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Page Title *</Label>
+              <Label htmlFor="title" className="text-white/70">Page Title *</Label>
               <Input
                 id="title"
                 placeholder="e.g., Product Launch Homepage"
                 value={newPageTitle}
                 onChange={(e) => setNewPageTitle(e.target.value)}
+                className="bg-[#050505] border border-white/[0.06] text-white placeholder:text-white/30 rounded-sm"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pageType">Page Type *</Label>
+              <Label htmlFor="pageType" className="text-white/70">Page Type *</Label>
               <Select value={newPageType} onValueChange={setNewPageType}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-[#050505] border border-white/[0.06] text-white rounded-sm">
                   <SelectValue placeholder="Select page type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-[#050505] border border-white/[0.06] rounded-sm">
                   {PAGE_TYPES.map(({ value, label }) => (
-                    <SelectItem key={value} value={value}>
+                    <SelectItem key={value} value={value} className="text-white">
                       {label}
                     </SelectItem>
                   ))}
@@ -446,41 +430,41 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="persona">Target Persona (Optional)</Label>
+              <Label htmlFor="persona" className="text-white/70">Target Persona (Optional)</Label>
               <Select value={selectedPersona} onValueChange={setSelectedPersona}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-[#050505] border border-white/[0.06] text-white rounded-sm">
                   <SelectValue placeholder="Select persona" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-[#050505] border border-white/[0.06] rounded-sm">
                   {personas?.map((persona) => (
-                    <SelectItem key={persona.id} value={persona.id}>
+                    <SelectItem key={persona.id} value={persona.id} className="text-white">
                       {persona.personaName}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-white/40">
                 AI will tailor copy to this persona's pain points and goals
               </p>
             </div>
           </div>
 
           <DialogFooter>
-            <Button
-              variant="outline"
+            <button
               onClick={() => setIsCreateDialogOpen(false)}
               disabled={isGenerating}
+              className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={handleCreateChecklist}
               disabled={isGenerating || !newPageTitle || !newPageType}
-              className="gap-2"
+              className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 disabled:opacity-40"
             >
               <Sparkles className="h-4 w-4" />
               {isGenerating ? "Generating..." : "Generate Checklist"}
-            </Button>
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

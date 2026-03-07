@@ -7,7 +7,6 @@ import { getAuctionStatus, getAuctionHistory, startAuction } from '@/lib/marketp
 import { LiveBidPanel } from '@/components/marketplace/LiveBidPanel';
 import { AuctionWinnerPanel } from '@/components/marketplace/AuctionWinnerPanel';
 import { MarketplaceHistoryTimeline } from '@/components/marketplace/MarketplaceHistoryTimeline';
-import { Button } from '@/components/ui/button';
 import { RefreshCw, Play, AlertCircle } from 'lucide-react';
 
 type TabType = 'live' | 'winner' | 'history';
@@ -146,8 +145,8 @@ export default function MarketplacePage() {
   if (!workspaceId) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="rounded-sm border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-900">
-          <p className="text-gray-600 dark:text-gray-400">Loading workspace information...</p>
+        <div className="rounded-sm border border-white/[0.06] bg-white/[0.02] p-8">
+          <p className="text-white/50">Loading workspace information...</p>
         </div>
       </div>
     );
@@ -156,41 +155,39 @@ export default function MarketplacePage() {
   return (
     <div className="h-full">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-6 py-4 dark:border-gray-700 dark:bg-gray-900">
+      <div className="border-b border-white/[0.06] bg-[#050505] px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-white/90">
               Task Marketplace
             </h1>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-1 text-sm text-white/50">
               Multi-agent auction system for task assignment and resource allocation
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={handleRefresh}
-              className="gap-2"
+              className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex items-center gap-2"
             >
               <RefreshCw className="h-4 w-4" />
               Refresh
-            </Button>
-            <Button
-              onClick={() => setShowStartAuction(true)}
-              className="gap-2"
+            </button>
+            <button
+              onClick={() => setShowStartDialog(true)}
+              className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2"
             >
               <Play className="h-4 w-4" />
               Start Auction
-            </Button>
+            </button>
           </div>
         </div>
       </div>
 
       {/* Error Alert */}
       {/* {errorMessage && (
-        <div className="border-b border-red-200 bg-red-50 px-6 py-3 dark:border-red-900 dark:bg-red-900/20">
-          <div className="flex items-center gap-2 text-red-700 dark:text-red-300">
+        <div className="border-b border-[#FF4444]/20 bg-[#FF4444]/10 px-6 py-3">
+          <div className="flex items-center gap-2 text-[#FF4444]">
             <AlertCircle className="h-5 w-5" />
             <p className="text-sm">{errorMessage}</p>
           </div>
@@ -198,34 +195,34 @@ export default function MarketplacePage() {
       )} */}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 bg-white px-6 dark:border-gray-700 dark:bg-gray-900">
+      <div className="border-b border-white/[0.06] bg-[#050505] px-6">
         <div className="flex gap-8">
           <button
             onClick={() => setActiveTab('live')}
-            className={`border-b-2 px-1 py-4 text-sm font-medium transition-colors ${
+            className={`border-b-2 px-1 py-4 text-sm font-medium font-mono ${
               activeTab === 'live'
-                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-                : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                ? 'border-[#00F5FF] text-[#00F5FF]'
+                : 'border-transparent text-white/50 hover:text-white/90'
             }`}
           >
             Live Auction
           </button>
           <button
             onClick={() => setActiveTab('winner')}
-            className={`border-b-2 px-1 py-4 text-sm font-medium transition-colors ${
+            className={`border-b-2 px-1 py-4 text-sm font-medium font-mono ${
               activeTab === 'winner'
-                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-                : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                ? 'border-[#00F5FF] text-[#00F5FF]'
+                : 'border-transparent text-white/50 hover:text-white/90'
             }`}
           >
             Winner
           </button>
           <button
             onClick={() => setActiveTab('history')}
-            className={`border-b-2 px-1 py-4 text-sm font-medium transition-colors ${
+            className={`border-b-2 px-1 py-4 text-sm font-medium font-mono ${
               activeTab === 'history'
-                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-                : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                ? 'border-[#00F5FF] text-[#00F5FF]'
+                : 'border-transparent text-white/50 hover:text-white/90'
             }`}
           >
             History
@@ -234,7 +231,7 @@ export default function MarketplacePage() {
       </div>
 
       {/* Content */}
-      <div className="bg-gray-50 p-6 dark:bg-gray-950">
+      <div className="bg-[#050505] p-6">
         {activeTab === 'live' && <LiveBidPanel workspaceId={workspaceId} />}
         {activeTab === 'winner' && <AuctionWinnerPanel workspaceId={workspaceId} />}
         {activeTab === 'history' && <MarketplaceHistoryTimeline workspaceId={workspaceId} />}

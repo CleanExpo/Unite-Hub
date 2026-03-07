@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -78,7 +77,7 @@ export default function NewProjectPage() {
   if (workspaceLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#00F5FF]" />
       </div>
     );
   }
@@ -93,30 +92,29 @@ export default function NewProjectPage() {
       />
 
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
+        <button
           onClick={() => router.back()}
-          className="text-slate-400 hover:text-white"
+          className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex items-center gap-2"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
-        </Button>
+        </button>
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Create New Project
           </h1>
-          <p className="text-slate-400">Add a new project to your workspace</p>
+          <p className="text-white/50">Add a new project to your workspace</p>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-sm p-4">
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="bg-[#FF4444]/10 border border-[#FF4444]/30 rounded-sm p-4">
+          <p className="text-[#FF4444] text-sm">{error}</p>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 space-y-6">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 space-y-6">
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="title" className="text-white">
@@ -129,7 +127,7 @@ export default function NewProjectPage() {
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
-              className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+              className="bg-white/[0.02] border border-white/[0.06] text-white placeholder:text-white/40"
             />
           </div>
 
@@ -145,7 +143,7 @@ export default function NewProjectPage() {
               value={formData.client_name}
               onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
               required
-              className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+              className="bg-white/[0.02] border border-white/[0.06] text-white placeholder:text-white/40"
             />
           </div>
 
@@ -160,7 +158,7 @@ export default function NewProjectPage() {
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={4}
-              className="bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+              className="bg-white/[0.02] border border-white/[0.06] text-white placeholder:text-white/40"
             />
           </div>
 
@@ -175,7 +173,7 @@ export default function NewProjectPage() {
                 value={formData.status}
                 onValueChange={(value) => setFormData({ ...formData, status: value as any })}
               >
-                <SelectTrigger className="bg-slate-900/50 border-slate-700/50 text-white">
+                <SelectTrigger className="bg-white/[0.02] border border-white/[0.06] text-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -196,7 +194,7 @@ export default function NewProjectPage() {
                 value={formData.priority}
                 onValueChange={(value) => setFormData({ ...formData, priority: value as any })}
               >
-                <SelectTrigger className="bg-slate-900/50 border-slate-700/50 text-white">
+                <SelectTrigger className="bg-white/[0.02] border border-white/[0.06] text-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -228,29 +226,28 @@ export default function NewProjectPage() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-          <Button
+          <button
             type="submit"
             disabled={isSubmitting || !formData.title || !formData.client_name}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50"
+            className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 disabled:opacity-50"
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className="h-4 w-4 mr-2 animate-spin inline" />
                 Creating...
               </>
             ) : (
               "Create Project & Open Mindmap"
             )}
-          </Button>
-          <Button
+          </button>
+          <button
             type="button"
-            variant="outline"
             onClick={() => router.back()}
             disabled={isSubmitting}
-            className="border-slate-700 text-slate-300 hover:text-white"
+            className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 disabled:opacity-50"
           >
             Cancel
-          </Button>
+          </button>
         </div>
       </form>
     </div>

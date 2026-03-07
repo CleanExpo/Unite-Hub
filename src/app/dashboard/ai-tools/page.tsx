@@ -41,50 +41,46 @@ export default function AIToolsPage() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+        <h1 className="text-2xl font-bold font-mono text-white/90 flex items-center gap-2">
           <Sparkles className="h-6 w-6 text-primary" />
           AI Tools
         </h1>
-        <p className="text-muted-foreground">Powerful AI-powered tools for content creation</p>
+        <p className="text-white/40">Powerful AI-powered tools for content creation</p>
       </div>
 
       {/* Tools Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {tools.map((tool) => (
-          <Card key={tool.name} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
+          <div key={tool.name} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 hover:border-white/[0.12] transition-colors">
+            <div className="mb-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-sm bg-primary/10">
                     <tool.icon className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle>{tool.name}</CardTitle>
+                  <span className="font-mono font-bold text-white/90">{tool.name}</span>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full ${
+                <span className={`text-xs px-2 py-1 rounded-sm font-mono ${
                   tool.status === "Active"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-gray-100 text-gray-600"
+                    ? "bg-[#00FF88]/10 text-[#00FF88]"
+                    : "bg-white/[0.04] text-white/30"
                 }`}>
                   {tool.status}
                 </span>
               </div>
-              <CardDescription>
+              <p className="text-white/40 text-sm mt-2 ml-11">
                 {tool.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button
-                variant="outline"
-                className="w-full"
-                asChild
-                disabled={tool.status !== "Active"}
-              >
-                <Link href={tool.href}>
-                  Open Tool <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+              </p>
+            </div>
+            <button
+              className="w-full bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 disabled:opacity-30 hover:border-white/[0.12] transition-colors flex items-center justify-center gap-2"
+              disabled={tool.status !== "Active"}
+            >
+              <Link href={tool.href} className="flex items-center gap-2">
+                Open Tool <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </button>
+          </div>
         ))}
       </div>
     </div>

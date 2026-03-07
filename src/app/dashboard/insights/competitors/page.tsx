@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Loader2,
@@ -30,7 +29,7 @@ export default function CompetitorsPage() {
     <FeaturePageWrapper
       featureName="Competitor Analysis"
       description="Track competitors, identify market gaps, find opportunities"
-      icon={<Target className="h-20 w-20 text-slate-600" />}
+      icon={<Target className="h-20 w-20 text-white/20" />}
     >
       {(clientId) => <CompetitorFeature clientId={clientId} />}
     </FeaturePageWrapper>
@@ -132,7 +131,7 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
       setActiveTab("swot");
     } catch (error: unknown) {
       console.error("Error running analysis:", error);
-      alert(error.message || "Failed to run analysis");
+      alert((error as Error).message || "Failed to run analysis");
     } finally {
       setAnalyzing(false);
     }
@@ -157,7 +156,7 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#00F5FF]" />
       </div>
     );
   }
@@ -171,97 +170,101 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold font-mono text-white/90">
             Competitor Analysis
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-white/40 mt-1">
             Track competitors and discover market opportunities
           </p>
         </div>
 
         <div className="flex gap-3">
           {latestAnalysis && (
-            <Button variant="outline" onClick={exportAnalysis}>
-              <Download className="w-4 h-4 mr-2" />
+            <button
+              className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex items-center gap-2"
+              onClick={exportAnalysis}
+            >
+              <Download className="w-4 h-4" />
               Export
-            </Button>
+            </button>
           )}
-          <Button
+          <button
+            className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 disabled:opacity-40"
             onClick={runAnalysis}
             disabled={analyzing || competitors.length === 0}
           >
             {analyzing ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin" />
                 Analyzing...
               </>
             ) : (
               <>
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <RefreshCw className="w-4 h-4" />
                 {latestAnalysis ? "Refresh Analysis" : "Run Analysis"}
               </>
             )}
-          </Button>
+          </button>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="p-6">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Competitors</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Total Competitors</p>
+              <p className="text-3xl font-bold text-white/90 mt-1">
                 {competitors.length}
               </p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-sm flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-[#00F5FF]/10 rounded-sm flex items-center justify-center">
+              <Users className="w-6 h-6 text-[#00F5FF]" />
             </div>
           </div>
-        </Card>
+        </div>
 
-        <Card className="p-6">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Direct Competitors</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Direct Competitors</p>
+              <p className="text-3xl font-bold text-white/90 mt-1">
                 {competitors.filter((c) => c.category === "direct").length}
               </p>
             </div>
-            <div className="w-12 h-12 bg-red-100 rounded-sm flex items-center justify-center">
-              <Target className="w-6 h-6 text-red-600" />
+            <div className="w-12 h-12 bg-[#FF4444]/10 rounded-sm flex items-center justify-center">
+              <Target className="w-6 h-6 text-[#FF4444]" />
             </div>
           </div>
-        </Card>
+        </div>
 
-        <Card className="p-6">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Market Gaps</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Market Gaps</p>
+              <p className="text-3xl font-bold text-white/90 mt-1">
                 {latestAnalysis?.marketGaps?.length || 0}
               </p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-sm flex items-center justify-center">
-              <Lightbulb className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-[#FF00FF]/10 rounded-sm flex items-center justify-center">
+              <Lightbulb className="w-6 h-6 text-[#FF00FF]" />
             </div>
           </div>
-        </Card>
+        </div>
 
-        <Card className="p-6">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Opportunities</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Opportunities</p>
+              <p className="text-3xl font-bold text-white/90 mt-1">
                 {latestAnalysis?.differentiationOpportunities?.length || 0}
               </p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-sm flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-green-600" />
+            <div className="w-12 h-12 bg-[#00FF88]/10 rounded-sm flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-[#00FF88]" />
             </div>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Main Content Tabs */}
@@ -297,18 +300,18 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
         <TabsContent value="overview" className="mt-6">
           {latestAnalysis ? (
             <div className="space-y-6">
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
+                <h3 className="text-lg font-semibold font-mono text-white/90 mb-4">
                   Analysis Summary
                 </h3>
-                <p className="text-gray-700 whitespace-pre-wrap">
+                <p className="text-white/70 whitespace-pre-wrap">
                   {latestAnalysis.aiSummary}
                 </p>
-                <div className="mt-4 text-sm text-gray-500">
-                  Last analyzed:{" "}
+                <div className="mt-4 text-sm text-white/30">
+                  Last analysed:{" "}
                   {new Date(latestAnalysis.analysisDate).toLocaleString()}
                 </div>
-              </Card>
+              </div>
 
               <CompetitorsList
                 clientId={clientId}
@@ -318,19 +321,23 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
             </div>
           ) : (
             <div>
-              <Card className="p-8 text-center mb-6">
-                <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-8 text-center mb-6">
+                <BarChart3 className="w-12 h-12 text-white/20 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold font-mono text-white/90 mb-2">
                   No Analysis Yet
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-white/40 mb-4">
                   Add competitors and run your first analysis to get insights
                 </p>
-                <Button onClick={runAnalysis} disabled={competitors.length === 0}>
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                <button
+                  className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 mx-auto disabled:opacity-40"
+                  onClick={runAnalysis}
+                  disabled={competitors.length === 0}
+                >
+                  <RefreshCw className="w-4 h-4" />
                   Run Analysis
-                </Button>
-              </Card>
+                </button>
+              </div>
 
               <CompetitorsList
                 clientId={clientId}
@@ -346,19 +353,23 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
           {latestAnalysis?.swotAnalysis ? (
             <SWOTAnalysis swot={latestAnalysis.swotAnalysis} />
           ) : (
-            <Card className="p-8 text-center">
-              <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-8 text-center">
+              <Target className="w-12 h-12 text-white/20 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold font-mono text-white/90 mb-2">
                 No SWOT Analysis
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-white/40 mb-4">
                 Run a competitor analysis to generate SWOT insights
               </p>
-              <Button onClick={runAnalysis} disabled={competitors.length === 0}>
-                <RefreshCw className="w-4 h-4 mr-2" />
+              <button
+                className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 mx-auto disabled:opacity-40"
+                onClick={runAnalysis}
+                disabled={competitors.length === 0}
+              >
+                <RefreshCw className="w-4 h-4" />
                 Run Analysis
-              </Button>
-            </Card>
+              </button>
+            </div>
           )}
         </TabsContent>
 
@@ -388,23 +399,23 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
       </Tabs>
 
       {/* Professional Tier Notice */}
-      <Card className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 bg-purple-100 rounded flex items-center justify-center flex-shrink-0">
-            <TrendingUp className="w-4 h-4 text-purple-600" />
+          <div className="w-8 h-8 bg-[#FF00FF]/10 rounded-sm flex items-center justify-center flex-shrink-0">
+            <TrendingUp className="w-4 h-4 text-[#FF00FF]" />
           </div>
           <div className="flex-1">
-            <h4 className="text-sm font-semibold text-purple-900 mb-1">
+            <h4 className="text-sm font-semibold font-mono text-[#FF00FF] mb-1">
               Professional Feature
             </h4>
-            <p className="text-sm text-purple-800">
+            <p className="text-sm text-white/40">
               Competitor analysis is available on the Professional plan. Track up
               to 10 competitors and get AI-powered insights to stay ahead of the
               competition.
             </p>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

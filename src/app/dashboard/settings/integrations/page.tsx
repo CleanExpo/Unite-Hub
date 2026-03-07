@@ -1,15 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -539,14 +530,14 @@ export default function IntegrationsPage() {
           <h1 className="text-3xl font-bold text-white mb-2">
             Integrations
           </h1>
-          <p className="text-slate-400">
+          <p className="text-white/50">
             Connect Gmail, Xero, and other third-party services
           </p>
         </div>
-        <Button
+        <button
           onClick={syncAllAccounts}
           disabled={syncing || integrations.length === 0}
-          className="bg-blue-600 hover:bg-blue-700 gap-2"
+          className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 disabled:opacity-50"
         >
           {syncing ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -554,41 +545,41 @@ export default function IntegrationsPage() {
             <RefreshCw className="w-4 h-4" />
           )}
           Sync All Accounts
-        </Button>
+        </button>
       </div>
 
-      <Card className="bg-slate-800 border-slate-700">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+        <div className="pb-3 mb-3">
+          <h2 className="text-white font-semibold flex items-center gap-2">
             <Mail className="w-5 h-5" />
             Gmail Accounts
-          </CardTitle>
-          <CardDescription>
+          </h2>
+          <p className="text-white/40 text-sm mt-1">
             {integrations.length === 0
               ? "No Gmail accounts connected"
               : `${integrations.length} account${integrations.length > 1 ? "s" : ""} connected`}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
+          </p>
+        </div>
+        <div className="space-y-3">
           {loading ? (
             <div className="text-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" />
+              <Loader2 className="w-6 h-6 animate-spin mx-auto text-white/40" />
             </div>
           ) : integrations.length === 0 ? (
-            <div className="text-center py-8 text-slate-400">
+            <div className="text-center py-8 text-white/40">
               <Mail className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p className="mb-4">No Gmail accounts connected yet</p>
-              <Button onClick={connectGmail} className="bg-blue-600 hover:bg-blue-700">
+              <button onClick={connectGmail} className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 mx-auto">
                 <Plus className="w-4 h-4 mr-2" />
                 Connect Gmail Account
-              </Button>
+              </button>
             </div>
           ) : (
             <>
               {integrations.map((integration) => (
                 <div
                   key={integration.id}
-                  className="bg-slate-700 border border-slate-600 rounded-sm p-4"
+                  className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -597,29 +588,29 @@ export default function IntegrationsPage() {
                           {integration.account_label || integration.email_address}
                         </h4>
                         {integration.is_primary && (
-                          <Badge variant="default" className="bg-blue-600">
-                            <Star className="w-3 h-3 mr-1" />
+                          <span className="bg-[#00F5FF]/10 text-[#00F5FF] font-mono text-xs px-2 py-0.5 rounded-sm border border-[#00F5FF]/20 flex items-center gap-1">
+                            <Star className="w-3 h-3" />
                             Primary
-                          </Badge>
+                          </span>
                         )}
                         {integration.sync_error && (
-                          <Badge variant="destructive">
-                            <AlertCircle className="w-3 h-3 mr-1" />
+                          <span className="bg-[#FF4444]/10 text-[#FF4444] font-mono text-xs px-2 py-0.5 rounded-sm border border-[#FF4444]/20 flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
                             Sync Error
-                          </Badge>
+                          </span>
                         )}
                       </div>
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-white/50">
                         {integration.email_address}
                       </p>
                       {integration.last_sync_at && (
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-xs text-white/40 mt-1">
                           Last synced:{" "}
                           {new Date(integration.last_sync_at).toLocaleString()}
                         </p>
                       )}
                       {integration.sync_error && (
-                        <p className="text-xs text-red-400 mt-1">
+                        <p className="text-xs text-[#FF4444] mt-1">
                           Error: {integration.sync_error}
                         </p>
                       )}
@@ -629,7 +620,7 @@ export default function IntegrationsPage() {
                       <div className="flex items-center gap-2">
                         <Label
                           htmlFor={`sync-${integration.id}`}
-                          className="text-sm text-slate-300"
+                          className="text-sm text-white/70"
                         >
                           Sync
                         </Label>
@@ -642,9 +633,8 @@ export default function IntegrationsPage() {
                         />
                       </div>
 
-                      <Button
-                        size="sm"
-                        variant="ghost"
+                      <button
+                        className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5"
                         onClick={() =>
                           setEditingLabel({
                             id: integration.id,
@@ -653,129 +643,123 @@ export default function IntegrationsPage() {
                         }
                       >
                         <Edit className="w-4 h-4" />
-                      </Button>
+                      </button>
 
                       {!integration.is_primary && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
+                        <button
+                          className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5"
                           onClick={() => setPrimary(integration.id)}
                           title="Set as primary"
                         >
                           <Star className="w-4 h-4" />
-                        </Button>
+                        </button>
                       )}
 
-                      <Button
-                        size="sm"
-                        variant="ghost"
+                      <button
+                        className="bg-white/[0.04] border border-white/[0.06] text-[#FF4444] font-mono text-sm rounded-sm px-3 py-1.5"
                         onClick={() => disconnectAccount(integration.id)}
-                        className="text-red-400 hover:text-red-300"
                       >
                         <Trash2 className="w-4 h-4" />
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </div>
               ))}
 
-              <Button
+              <button
                 onClick={connectGmail}
-                variant="outline"
-                className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
+                className="w-full bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Another Gmail Account
-              </Button>
+              </button>
             </>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Xero Accounting Integration */}
-      <Card className="bg-slate-800 border-slate-700">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+        <div className="pb-3 mb-3">
+          <h2 className="text-white font-semibold flex items-center gap-2">
             <DollarSign className="w-5 h-5" />
             Xero Accounting
-          </CardTitle>
-          <CardDescription>
+          </h2>
+          <p className="text-white/40 text-sm mt-1">
             Track real-time AI costs and client profitability
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <div className="space-y-4">
           {xeroLoading ? (
             <div className="text-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" />
+              <Loader2 className="w-6 h-6 animate-spin mx-auto text-white/40" />
             </div>
           ) : xeroStatus?.connected ? (
-            <div className="bg-slate-700 border border-slate-600 rounded-sm p-4">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="font-semibold text-white">
                       {xeroStatus.organization || "Xero Organization"}
                     </h4>
-                    <Badge variant="default" className="bg-green-600">
-                      <CheckCircle className="w-3 h-3 mr-1" />
+                    <span className="bg-[#00FF88]/10 text-[#00FF88] font-mono text-xs px-2 py-0.5 rounded-sm border border-[#00FF88]/20 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" />
                       Connected
-                    </Badge>
+                    </span>
                   </div>
                   {xeroStatus.connectedAt && (
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-white/50">
                       Connected: {new Date(xeroStatus.connectedAt).toLocaleString()}
                     </p>
                   )}
                   {xeroStatus.tokenExpiresIn && (
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-white/40 mt-1">
                       Token expires: {xeroStatus.tokenExpiresIn}
                     </p>
                   )}
                   {xeroStatus.lastUpdated && (
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-white/40 mt-1">
                       Last updated: {new Date(xeroStatus.lastUpdated).toLocaleString()}
                     </p>
                   )}
                 </div>
 
-                <Button
-                  size="sm"
-                  variant="ghost"
+                <button
                   onClick={disconnectXero}
-                  className="text-red-400 hover:text-red-300"
+                  className="bg-white/[0.04] border border-white/[0.06] text-[#FF4444] font-mono text-sm rounded-sm px-3 py-1.5 flex items-center gap-2"
                 >
                   <XCircle className="w-4 h-4 mr-2" />
                   Disconnect
-                </Button>
+                </button>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-slate-600">
-                <p className="text-sm text-slate-400 mb-2">
+              <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                <p className="text-sm text-white/50 mb-2">
                   ✅ Real-time cost tracking enabled
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-white/40">
                   All OpenRouter and Perplexity API costs are automatically tracked to your Xero organization.
                   View profitability reports in the Financial Operations dashboard (coming soon).
                 </p>
               </div>
             </div>
           ) : (
-            <div className="text-center py-8 text-slate-400">
+            <div className="text-center py-8 text-white/40">
               <DollarSign className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p className="mb-2">Xero not connected</p>
-              <p className="text-sm text-slate-500 mb-4 max-w-md mx-auto">
+              <p className="text-sm text-white/40 mb-4 max-w-md mx-auto">
                 Connect your Xero account to automatically track AI API costs, monitor client profitability,
                 and sync expenses to your accounting system.
               </p>
               {xeroStatus?.error && (
-                <p className="text-xs text-red-400 mb-4">
+                <p className="text-xs text-[#FF4444] mb-4">
                   Error: {xeroStatus.error}
                 </p>
               )}
-              <Button
+              <button
                 onClick={connectXero}
                 disabled={xeroConnecting}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 mx-auto disabled:opacity-50"
               >
                 {xeroConnecting ? (
                   <>
@@ -788,15 +772,15 @@ export default function IntegrationsPage() {
                     Connect Xero
                   </>
                 )}
-              </Button>
+              </button>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Edit Label Dialog */}
       <Dialog open={!!editingLabel} onOpenChange={() => setEditingLabel(null)}>
-        <DialogContent className="bg-slate-800 border-slate-700">
+        <DialogContent className="bg-[#050505] border border-white/[0.06]">
           <DialogHeader>
             <DialogTitle className="text-white">Edit Account Label</DialogTitle>
             <DialogDescription>
@@ -805,7 +789,7 @@ export default function IntegrationsPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="label" className="text-slate-300">
+              <Label htmlFor="label" className="text-white/70">
                 Account Label
               </Label>
               <Input
@@ -818,27 +802,26 @@ export default function IntegrationsPage() {
                   })
                 }
                 placeholder="e.g., Personal, Work, Sales"
-                className="bg-slate-700 border-slate-600 text-white mt-2"
+                className="bg-white/[0.02] border border-white/[0.06] text-white mt-2"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button
-              variant="ghost"
+            <button
               onClick={() => setEditingLabel(null)}
-              className="text-slate-300"
+              className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() =>
                 editingLabel &&
                 updateLabel(editingLabel.id, editingLabel.label)
               }
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2"
             >
               Save
-            </Button>
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

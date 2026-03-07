@@ -152,8 +152,8 @@ export default function SandboxControlPage() {
     return (
       <div className="p-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-slate-700 rounded w-1/3 mb-4"></div>
-          <div className="h-64 bg-slate-800 rounded"></div>
+          <div className="h-8 bg-white/[0.02] rounded-sm w-1/3 mb-4"></div>
+          <div className="h-64 bg-[#050505] rounded-sm"></div>
         </div>
       </div>
     );
@@ -163,20 +163,20 @@ export default function SandboxControlPage() {
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Shield className="h-6 w-6 text-yellow-500" />
+        <h1 className="text-2xl font-bold font-mono text-white/90 flex items-center gap-2">
+          <Shield className="h-6 w-6 text-[#FFB800]" />
           Sandbox Control Panel
         </h1>
-        <p className="text-slate-400 mt-1">
+        <p className="text-white/40 mt-1">
           Manage staff accounts for Stripe TEST mode billing
         </p>
       </div>
 
       {/* Error Banner */}
       {error && (
-        <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-sm text-red-200">
+        <div className="mb-4 p-4 bg-[#FF4444]/10 border border-[#FF4444]/30 rounded-sm text-[#FF4444]">
           {error}
-          <button onClick={() => setError(null)} className="ml-4 text-red-400 hover:text-red-300">
+          <button onClick={() => setError(null)} className="ml-4 text-[#FF4444]/70 hover:text-[#FF4444]">
             Dismiss
           </button>
         </div>
@@ -184,36 +184,36 @@ export default function SandboxControlPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-slate-800 rounded-sm p-4 border border-slate-700">
-          <div className="text-sm text-slate-400">Total Staff</div>
-          <div className="text-2xl font-bold text-white">{users.length}</div>
+        <div className="bg-white/[0.02] rounded-sm p-4 border border-white/[0.06]">
+          <div className="text-[10px] font-mono uppercase tracking-widest text-white/20">Total Staff</div>
+          <div className="text-2xl font-bold text-white/90">{users.length}</div>
         </div>
-        <div className="bg-slate-800 rounded-sm p-4 border border-slate-700">
-          <div className="text-sm text-slate-400">Sandbox Enabled</div>
-          <div className="text-2xl font-bold text-yellow-500">
+        <div className="bg-white/[0.02] rounded-sm p-4 border border-white/[0.06]">
+          <div className="text-[10px] font-mono uppercase tracking-widest text-white/20">Sandbox Enabled</div>
+          <div className="text-2xl font-bold text-[#FFB800]">
             {users.filter(u => u.sandbox_enabled).length}
           </div>
         </div>
-        <div className="bg-slate-800 rounded-sm p-4 border border-slate-700">
-          <div className="text-sm text-slate-400">Domain Defaults</div>
-          <div className="text-2xl font-bold text-blue-500">{DOMAIN_DEFAULTS.length}</div>
+        <div className="bg-white/[0.02] rounded-sm p-4 border border-white/[0.06]">
+          <div className="text-[10px] font-mono uppercase tracking-widest text-white/20">Domain Defaults</div>
+          <div className="text-2xl font-bold text-[#00F5FF]">{DOMAIN_DEFAULTS.length}</div>
         </div>
       </div>
 
       {/* Domain Defaults Section */}
-      <div className="bg-slate-800 rounded-sm border border-slate-700 p-4 mb-6">
-        <h2 className="text-lg font-semibold text-white mb-3">Domain Defaults</h2>
-        <p className="text-sm text-slate-400 mb-3">
+      <div className="bg-white/[0.02] rounded-sm border border-white/[0.06] p-4 mb-6">
+        <h2 className="text-lg font-semibold font-mono text-white/90 mb-3">Domain Defaults</h2>
+        <p className="text-sm text-white/40 mb-3">
           All emails from these domains automatically use TEST mode
         </p>
         <div className="space-y-2">
           {DOMAIN_DEFAULTS.map(d => (
-            <div key={d.domain} className="flex items-center justify-between bg-slate-900 rounded p-3">
+            <div key={d.domain} className="flex items-center justify-between bg-[#050505] rounded-sm p-3">
               <div>
-                <span className="text-white font-mono">@{d.domain}</span>
-                <span className="ml-2 text-xs text-slate-500">{d.description}</span>
+                <span className="text-white/90 font-mono">@{d.domain}</span>
+                <span className="ml-2 text-xs text-white/30">{d.description}</span>
               </div>
-              <span className="px-2 py-1 bg-yellow-900 text-yellow-300 text-xs rounded">
+              <span className="px-2 py-1 bg-[#FFB800]/10 text-[#FFB800] text-xs rounded-sm">
                 {d.mode}
               </span>
             </div>
@@ -222,28 +222,28 @@ export default function SandboxControlPage() {
       </div>
 
       {/* Staff Management Section */}
-      <div className="bg-slate-800 rounded-sm border border-slate-700">
+      <div className="bg-white/[0.02] rounded-sm border border-white/[0.06]">
         {/* Toolbar */}
-        <div className="p-4 border-b border-slate-700 flex items-center justify-between">
+        <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+            <h2 className="text-lg font-semibold font-mono text-white/90 flex items-center gap-2">
               <Users className="h-5 w-5" />
               Staff Registry
             </h2>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
               <input
                 type="text"
                 placeholder="Search..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 bg-slate-900 border border-slate-600 rounded text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                className="pl-9 pr-4 py-2 bg-[#050505] border border-white/[0.06] rounded-sm text-sm text-white/90 placeholder-white/20 focus:outline-none focus:border-[#00F5FF]/50"
               />
             </div>
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-sm font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm"
           >
             <Plus className="h-4 w-4" />
             Add Staff
@@ -254,24 +254,24 @@ export default function SandboxControlPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-700">
-                <th className="text-left p-4 text-xs font-medium text-slate-400 uppercase">Email</th>
-                <th className="text-left p-4 text-xs font-medium text-slate-400 uppercase">Name</th>
-                <th className="text-left p-4 text-xs font-medium text-slate-400 uppercase">Role</th>
-                <th className="text-left p-4 text-xs font-medium text-slate-400 uppercase">Sandbox</th>
-                <th className="text-left p-4 text-xs font-medium text-slate-400 uppercase">Actions</th>
+              <tr className="border-b border-white/[0.06]">
+                <th className="text-left p-4 text-[10px] font-mono uppercase tracking-widest text-white/20">Email</th>
+                <th className="text-left p-4 text-[10px] font-mono uppercase tracking-widest text-white/20">Name</th>
+                <th className="text-left p-4 text-[10px] font-mono uppercase tracking-widest text-white/20">Role</th>
+                <th className="text-left p-4 text-[10px] font-mono uppercase tracking-widest text-white/20">Sandbox</th>
+                <th className="text-left p-4 text-[10px] font-mono uppercase tracking-widest text-white/20">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredUsers.map(user => (
-                <tr key={user.id} className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                  <td className="p-4 text-white font-mono text-sm">{user.email}</td>
-                  <td className="p-4 text-white">{user.name}</td>
+                <tr key={user.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                  <td className="p-4 text-white/90 font-mono text-sm">{user.email}</td>
+                  <td className="p-4 text-white/90">{user.name}</td>
                   <td className="p-4">
                     <select
                       value={user.role}
                       onChange={e => handleUpdateRole(user.id, e.target.value)}
-                      className="bg-slate-900 border border-slate-600 rounded px-2 py-1 text-sm text-white"
+                      className="bg-[#050505] border border-white/[0.06] rounded-sm px-2 py-1 text-sm text-white/90"
                     >
                       {ROLES.map(r => (
                         <option key={r.value} value={r.value}>{r.label}</option>
@@ -281,10 +281,10 @@ export default function SandboxControlPage() {
                   <td className="p-4">
                     <button
                       onClick={() => handleToggleSandbox(user.id, !user.sandbox_enabled)}
-                      className={`px-3 py-1 rounded text-xs font-medium ${
+                      className={`px-3 py-1 rounded-sm text-xs font-mono font-medium ${
                         user.sandbox_enabled
-                          ? "bg-yellow-900 text-yellow-300"
-                          : "bg-slate-900 text-slate-400"
+                          ? "bg-[#FFB800]/10 text-[#FFB800]"
+                          : "bg-[#050505] text-white/30"
                       }`}
                     >
                       {user.sandbox_enabled ? "TEST" : "LIVE"}
@@ -293,7 +293,7 @@ export default function SandboxControlPage() {
                   <td className="p-4">
                     <button
                       onClick={() => handleDeleteUser(user.id)}
-                      className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+                      className="p-2 text-white/30 hover:text-[#FF4444] transition-colors"
                       title="Remove from sandbox"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -303,7 +303,7 @@ export default function SandboxControlPage() {
               ))}
               {filteredUsers.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-500">
+                  <td colSpan={5} className="p-8 text-center text-white/20">
                     No staff members found
                   </td>
                 </tr>
@@ -316,37 +316,37 @@ export default function SandboxControlPage() {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-slate-800 rounded-sm border border-slate-700 p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold text-white mb-4">Add Staff to Sandbox</h3>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold font-mono text-white/90 mb-4">Add Staff to Sandbox</h3>
             <form onSubmit={handleAddUser} className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-400 mb-1">Email</label>
+                <label className="block text-[10px] font-mono uppercase tracking-widest text-white/20 mb-1">Email</label>
                 <input
                   type="email"
                   required
                   value={newUser.email}
                   onChange={e => setNewUser({ ...newUser, email: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-white"
+                  className="w-full bg-[#050505] border border-white/[0.06] rounded-sm px-3 py-2 text-white/90"
                   placeholder="staff@example.com"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-400 mb-1">Name</label>
+                <label className="block text-[10px] font-mono uppercase tracking-widest text-white/20 mb-1">Name</label>
                 <input
                   type="text"
                   required
                   value={newUser.name}
                   onChange={e => setNewUser({ ...newUser, name: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-white"
+                  className="w-full bg-[#050505] border border-white/[0.06] rounded-sm px-3 py-2 text-white/90"
                   placeholder="Full Name"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-400 mb-1">Role</label>
+                <label className="block text-[10px] font-mono uppercase tracking-widest text-white/20 mb-1">Role</label>
                 <select
                   value={newUser.role}
                   onChange={e => setNewUser({ ...newUser, role: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-white"
+                  className="w-full bg-[#050505] border border-white/[0.06] rounded-sm px-3 py-2 text-white/90"
                 >
                   {ROLES.map(r => (
                     <option key={r.value} value={r.value}>{r.label}</option>
@@ -354,11 +354,11 @@ export default function SandboxControlPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-slate-400 mb-1">Notes (optional)</label>
+                <label className="block text-[10px] font-mono uppercase tracking-widest text-white/20 mb-1">Notes (optional)</label>
                 <textarea
                   value={newUser.notes}
                   onChange={e => setNewUser({ ...newUser, notes: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-white"
+                  className="w-full bg-[#050505] border border-white/[0.06] rounded-sm px-3 py-2 text-white/90"
                   rows={2}
                   placeholder="Optional notes..."
                 />
@@ -367,13 +367,13 @@ export default function SandboxControlPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded"
+                  className="flex-1 px-4 py-2 bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+                  className="flex-1 px-4 py-2 bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm"
                 >
                   Add to Sandbox
                 </button>

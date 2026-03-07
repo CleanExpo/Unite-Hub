@@ -12,14 +12,6 @@ import {
   ExternalLink,
   Sparkles,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -31,8 +23,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ErrorState } from "@/components/ErrorState";
@@ -214,10 +204,10 @@ export default function MeetingsPage() {
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <Calendar className="h-10 w-10 text-blue-400" />
-              <div className="text-4xl font-bold text-white">Meetings Calendar</div>
+              <Calendar className="h-10 w-10 text-[#00F5FF]" />
+              <div className="text-4xl font-bold text-white/90">Meetings Calendar</div>
             </div>
-            <div className="text-slate-400">AI-powered meeting management and scheduling</div>
+            <div className="text-white/50">AI-powered meeting management and scheduling</div>
           </div>
         </div>
 
@@ -230,17 +220,18 @@ export default function MeetingsPage() {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border-2 border-dashed border-slate-700/50 p-12">
-            <Calendar className="h-24 w-24 text-slate-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Google Calendar Not Connected</h2>
-            <p className="text-slate-400 mb-6 max-w-md">
+          <div className="bg-white/[0.02] rounded-sm border-2 border-dashed border-white/[0.06] p-12">
+            <Calendar className="h-24 w-24 text-white/30 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white/90 mb-2">Google Calendar Not Connected</h2>
+            <p className="text-white/50 mb-6 max-w-md">
               Connect your Google Calendar to view and manage your meetings with AI-powered scheduling assistance.
             </p>
-            <Button asChild className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50">
-              <a href="/dashboard/settings/integrations">
-                Connect Google Calendar
-              </a>
-            </Button>
+            <a
+              href="/dashboard/settings/integrations"
+              className="inline-flex items-center bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2"
+            >
+              Connect Google Calendar
+            </a>
           </div>
         </div>
       </div>
@@ -252,22 +243,22 @@ export default function MeetingsPage() {
       <Breadcrumbs items={[{ label: "Meetings" }]} />
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2 flex items-center gap-3">
-            <Calendar className="h-10 w-10 text-blue-400" />
+          <h1 className="text-4xl font-bold text-white/90 mb-2 flex items-center gap-3">
+            <Calendar className="h-10 w-10 text-[#00F5FF]" />
             Meetings Calendar
           </h1>
-          <p className="text-slate-400">
+          <p className="text-white/50">
             AI-powered meeting management and scheduling
           </p>
         </div>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
+            <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2">
               <Plus className="h-4 w-4" />
               Schedule Meeting
-            </Button>
+            </button>
           </DialogTrigger>
-          <DialogContent className="max-w-lg bg-slate-800/95 backdrop-blur-sm border-slate-700/50">
+          <DialogContent className="max-w-lg bg-[#050505] border border-white/[0.06]">
             <DialogHeader>
               <DialogTitle>Schedule New Meeting</DialogTitle>
               <DialogDescription>
@@ -348,10 +339,17 @@ export default function MeetingsPage() {
               </div>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+              <button
+                onClick={() => setShowCreateDialog(false)}
+                className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5"
+              >
                 Cancel
-              </Button>
-              <Button onClick={createMeeting} disabled={creating}>
+              </button>
+              <button
+                onClick={createMeeting}
+                disabled={creating}
+                className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 disabled:opacity-50"
+              >
                 {creating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -360,40 +358,40 @@ export default function MeetingsPage() {
                 ) : (
                   "Create Meeting"
                 )}
-              </Button>
+              </button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6">
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
         <div className="flex gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
               placeholder="Search meetings..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
+              className="pl-9 bg-[#050505] border-white/[0.06] text-white/90 placeholder:text-white/30"
             />
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => setViewMode("upcoming")}
-              className={`px-4 py-2 rounded-sm font-semibold transition-all ${
+              className={`px-4 py-2 rounded-sm font-mono text-sm font-semibold ${
                 viewMode === "upcoming"
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50"
-                  : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50"
+                  ? "bg-[#00F5FF] text-[#050505]"
+                  : "bg-white/[0.02] border border-white/[0.06] text-white/50 hover:bg-white/[0.04]"
               }`}
             >
               Upcoming
             </button>
             <button
               onClick={() => setViewMode("all")}
-              className={`px-4 py-2 rounded-sm font-semibold transition-all ${
+              className={`px-4 py-2 rounded-sm font-mono text-sm font-semibold ${
                 viewMode === "all"
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50"
-                  : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50"
+                  ? "bg-[#00F5FF] text-[#050505]"
+                  : "bg-white/[0.02] border border-white/[0.06] text-white/50 hover:bg-white/[0.04]"
               }`}
             >
               All
@@ -404,31 +402,31 @@ export default function MeetingsPage() {
 
       <div className="space-y-6">
         {Object.keys(groupedEvents).length === 0 ? (
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border-2 border-dashed border-slate-700/50 p-12 text-center">
-            <Calendar className="h-12 w-12 text-slate-500 mx-auto mb-2" />
-            <p className="text-slate-400">No meetings found</p>
+          <div className="bg-white/[0.02] rounded-sm border-2 border-dashed border-white/[0.06] p-12 text-center">
+            <Calendar className="h-12 w-12 text-white/30 mx-auto mb-2" />
+            <p className="text-white/40">No meetings found</p>
           </div>
         ) : (
           Object.entries(groupedEvents).map(([date, dayEvents]) => (
             <div key={date}>
-              <h2 className="text-lg font-semibold text-white mb-3">{date}</h2>
+              <h2 className="text-lg font-semibold text-white/90 mb-3">{date}</h2>
               <div className="space-y-3">
                 {dayEvents.map((event) => (
-                  <div key={event.id} className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-blue-500/50 transition-all">
+                  <div key={event.id} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 hover:border-[#00F5FF]/30">
 
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold text-white">{event.summary}</h3>
+                          <h3 className="text-lg font-semibold text-white/90">{event.summary}</h3>
                           {event.hangoutLink && (
-                            <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 border border-blue-500/30 gap-1">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/20">
                               <Video className="h-3 w-3" />
                               Meet
-                            </Badge>
+                            </span>
                           )}
                         </div>
 
-                        <div className="flex items-center gap-4 text-sm text-slate-400 mb-2">
+                        <div className="flex items-center gap-4 text-sm text-white/40 mb-2">
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
                             {new Date(event.start.dateTime).toLocaleTimeString("en-US", {
@@ -450,37 +448,34 @@ export default function MeetingsPage() {
                         </div>
 
                         {event.description && (
-                          <p className="text-sm text-slate-400 mb-2">{event.description}</p>
+                          <p className="text-sm text-white/40 mb-2">{event.description}</p>
                         )}
 
                         {event.location && (
-                          <p className="text-sm text-slate-400">Location: {event.location}</p>
+                          <p className="text-sm text-white/40">Location: {event.location}</p>
                         )}
                       </div>
 
                       <div className="flex gap-2">
                         {event.hangoutLink && (
-                          <Button size="sm" asChild className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-                            <a
-                              href={event.hangoutLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="gap-2"
-                            >
-                              <Video className="h-4 w-4" />
-                              Join
-                            </a>
-                          </Button>
-                        )}
-                        <Button size="sm" variant="outline" asChild className="border-slate-700/50 text-slate-300 hover:bg-slate-700/50">
                           <a
-                            href={`https://calendar.google.com/calendar/r/eventedit/${event.id}`}
+                            href={event.hangoutLink}
                             target="_blank"
                             rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2"
                           >
-                            <ExternalLink className="h-4 w-4" />
+                            <Video className="h-4 w-4" />
+                            Join
                           </a>
-                        </Button>
+                        )}
+                        <a
+                          href={`https://calendar.google.com/calendar/r/eventedit/${event.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
                       </div>
                     </div>
                   </div>

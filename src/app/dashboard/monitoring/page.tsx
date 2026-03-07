@@ -12,10 +12,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   AlertCircle,
@@ -121,55 +118,55 @@ export default function MonitoringDashboard() {
     switch (status) {
       case 'healthy':
       case 'pass':
-        return 'text-green-600 bg-green-50 border-green-200';
+        return 'text-[#00FF88] bg-[#00FF88]/10 border-[#00FF88]/20';
       case 'degraded':
       case 'warn':
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+        return 'text-[#FFB800] bg-[#FFB800]/10 border-[#FFB800]/20';
       case 'critical':
       case 'fail':
-        return 'text-red-600 bg-red-50 border-red-200';
+        return 'text-[#FF4444] bg-[#FF4444]/10 border-[#FF4444]/20';
       default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
+        return 'text-white/50 bg-white/[0.02] border-white/[0.06]';
     }
   };
 
   const getPriorityBadge = (priority: string) => {
     const colors: Record<string, string> = {
-      P0_CRITICAL: 'bg-red-600 text-white',
-      P1_HIGH: 'bg-orange-600 text-white',
-      P2_MEDIUM: 'bg-yellow-600 text-white',
-      P3_LOW: 'bg-blue-600 text-white',
-      P4_TRIVIAL: 'bg-gray-600 text-white',
+      P0_CRITICAL: 'bg-[#FF4444]/10 text-[#FF4444]',
+      P1_HIGH: 'bg-[#FFB800]/10 text-[#FFB800]',
+      P2_MEDIUM: 'bg-[#FFB800]/10 text-[#FFB800]',
+      P3_LOW: 'bg-[#00F5FF]/10 text-[#00F5FF]',
+      P4_TRIVIAL: 'bg-white/[0.04] text-white/50',
     };
 
     return (
-      <Badge className={colors[priority] || 'bg-gray-600 text-white'}>
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono font-medium ${colors[priority] || 'bg-white/[0.04] text-white/50'}`}>
         {priority.replace('_', ' ')}
-      </Badge>
+      </span>
     );
   };
 
   const getSeverityBadge = (severity: string) => {
     const colors: Record<string, string> = {
-      FATAL: 'bg-red-600 text-white',
-      ERROR: 'bg-orange-600 text-white',
-      WARNING: 'bg-yellow-600 text-white',
-      INFO: 'bg-blue-600 text-white',
+      FATAL: 'bg-[#FF4444]/10 text-[#FF4444]',
+      ERROR: 'bg-[#FFB800]/10 text-[#FFB800]',
+      WARNING: 'bg-[#FFB800]/10 text-[#FFB800]',
+      INFO: 'bg-[#00F5FF]/10 text-[#00F5FF]',
     };
 
     return (
-      <Badge className={colors[severity] || 'bg-gray-600 text-white'}>
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono font-medium ${colors[severity] || 'bg-white/[0.04] text-white/50'}`}>
         {severity}
-      </Badge>
+      </span>
     );
   };
 
   if (loading && !data) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="flex flex-col items-center gap-4">
-          <RefreshCw className="h-8 w-8 animate-spin text-blue-600" />
-          <p className="text-gray-600">Loading monitoring data...</p>
+          <RefreshCw className="h-8 w-8 animate-spin text-[#00F5FF]" />
+          <p className="text-white/50 font-mono">Loading monitoring data...</p>
         </div>
       </div>
     );
@@ -177,7 +174,7 @@ export default function MonitoringDashboard() {
 
   if (error && !data) {
     return (
-      <div className="p-6">
+      <div className="p-6 bg-[#050505]">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
@@ -188,149 +185,133 @@ export default function MonitoringDashboard() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-[#050505]">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Autonomous Monitoring</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-white/90">Autonomous Monitoring</h1>
+          <p className="text-white/50 mt-1">
             Self-contained system health tracking with database-backed logging
           </p>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-white/40 font-mono">
             Last updated: {lastRefresh.toLocaleTimeString()}
           </div>
-          <Button onClick={fetchData} disabled={loading} size="sm">
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <button
+            onClick={fetchData}
+            disabled={loading}
+            className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 disabled:opacity-50"
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
-          </Button>
+          </button>
         </div>
       </div>
 
       {/* System Health Overview */}
       {data?.systemHealth && (
-        <Card className={`border-2 ${getStatusColor(data.systemHealth.overallStatus)}`}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl">System Health</CardTitle>
-                <CardDescription>
-                  Last check: {new Date(data.systemHealth.lastCheckAt).toLocaleString()}
-                </CardDescription>
-              </div>
-
-              {data.systemHealth.overallStatus === 'healthy' && (
-                <CheckCircle className="h-12 w-12 text-green-600" />
-              )}
-              {data.systemHealth.overallStatus === 'degraded' && (
-                <AlertCircle className="h-12 w-12 text-yellow-600" />
-              )}
-              {data.systemHealth.overallStatus === 'critical' && (
-                <XCircle className="h-12 w-12 text-red-600" />
-              )}
+        <div className={`border-2 rounded-sm p-6 ${getStatusColor(data.systemHealth.overallStatus)}`}>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-bold">System Health</h2>
+              <p className="text-sm opacity-70">
+                Last check: {new Date(data.systemHealth.lastCheckAt).toLocaleString()}
+              </p>
             </div>
-          </CardHeader>
 
-          <CardContent>
-            <div className="grid grid-cols-4 gap-4">
-              <div className="text-center">
-                <p className="text-3xl font-bold text-green-600">
-                  {data.systemHealth.passedChecks}
-                </p>
-                <p className="text-sm text-gray-600">Passed</p>
-              </div>
+            {data.systemHealth.overallStatus === 'healthy' && (
+              <CheckCircle className="h-12 w-12 text-[#00FF88]" />
+            )}
+            {data.systemHealth.overallStatus === 'degraded' && (
+              <AlertCircle className="h-12 w-12 text-[#FFB800]" />
+            )}
+            {data.systemHealth.overallStatus === 'critical' && (
+              <XCircle className="h-12 w-12 text-[#FF4444]" />
+            )}
+          </div>
 
-              <div className="text-center">
-                <p className="text-3xl font-bold text-red-600">
-                  {data.systemHealth.failedChecks}
-                </p>
-                <p className="text-sm text-gray-600">Failed</p>
-              </div>
-
-              <div className="text-center">
-                <p className="text-3xl font-bold text-yellow-600">
-                  {data.systemHealth.warnings}
-                </p>
-                <p className="text-sm text-gray-600">Warnings</p>
-              </div>
-
-              <div className="text-center">
-                <p className="text-3xl font-bold text-blue-600">
-                  {data.systemHealth.uptime}
-                </p>
-                <p className="text-sm text-gray-600">Uptime</p>
-              </div>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#00FF88]">
+                {data.systemHealth.passedChecks}
+              </p>
+              <p className="text-sm text-white/50">Passed</p>
             </div>
-          </CardContent>
-        </Card>
+
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#FF4444]">
+                {data.systemHealth.failedChecks}
+              </p>
+              <p className="text-sm text-white/50">Failed</p>
+            </div>
+
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#FFB800]">
+                {data.systemHealth.warnings}
+              </p>
+              <p className="text-sm text-white/50">Warnings</p>
+            </div>
+
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#00F5FF]">
+                {data.systemHealth.uptime}
+              </p>
+              <p className="text-sm text-white/50">Uptime</p>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Error Statistics */}
       {data?.errorStats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Total Errors
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold">{data.errorStats.totalErrors}</p>
-                <AlertCircle className="h-8 w-8 text-gray-400" />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/50 mb-3">
+              Total Errors
+            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-3xl font-bold text-white/90">{data.errorStats.totalErrors}</p>
+              <AlertCircle className="h-8 w-8 text-white/30" />
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Critical Errors
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold text-red-600">
-                  {data.errorStats.criticalErrors}
-                </p>
-                <XCircle className="h-8 w-8 text-red-400" />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/50 mb-3">
+              Critical Errors
+            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-3xl font-bold text-[#FF4444]">
+                {data.errorStats.criticalErrors}
+              </p>
+              <XCircle className="h-8 w-8 text-[#FF4444]/40" />
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Resolved
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold text-green-600">
-                  {data.errorStats.resolvedErrors}
-                </p>
-                <CheckCircle className="h-8 w-8 text-green-400" />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/50 mb-3">
+              Resolved
+            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-3xl font-bold text-[#00FF88]">
+                {data.errorStats.resolvedErrors}
+              </p>
+              <CheckCircle className="h-8 w-8 text-[#00FF88]/40" />
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Unresolved
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold text-orange-600">
-                  {data.errorStats.unresolvedErrors}
-                </p>
-                <Activity className="h-8 w-8 text-orange-400" />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-sm font-medium text-white/50 mb-3">
+              Unresolved
+            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-3xl font-bold text-[#FFB800]">
+                {data.errorStats.unresolvedErrors}
+              </p>
+              <Activity className="h-8 w-8 text-[#FFB800]/40" />
+            </div>
+          </div>
         </div>
       )}
 
@@ -353,165 +334,147 @@ export default function MonitoringDashboard() {
 
         {/* Recent Errors Tab */}
         <TabsContent value="errors">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Errors (Last 24 Hours)</CardTitle>
-              <CardDescription>
-                Most recent errors tracked in the autonomous monitoring system
-              </CardDescription>
-            </CardHeader>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <h3 className="text-lg font-bold text-white/90 mb-1">Recent Errors (Last 24 Hours)</h3>
+            <p className="text-sm text-white/40 mb-4">
+              Most recent errors tracked in the autonomous monitoring system
+            </p>
 
-            <CardContent>
-              {data?.recentErrors && data.recentErrors.length > 0 ? (
-                <div className="space-y-4">
-                  {data.recentErrors.map((error) => (
-                    <div
-                      key={error.id}
-                      className="p-4 border rounded-sm hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-2 flex-1">
-                          <div className="flex items-center gap-2">
-                            {getSeverityBadge(error.severity)}
-                            {getPriorityBadge(error.priority)}
-                            {error.resolved && (
-                              <Badge className="bg-green-600 text-white">Resolved</Badge>
-                            )}
+            {data?.recentErrors && data.recentErrors.length > 0 ? (
+              <div className="space-y-4">
+                {data.recentErrors.map((error) => (
+                  <div
+                    key={error.id}
+                    className="p-4 border border-white/[0.06] rounded-sm hover:bg-white/[0.02]"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-2 flex-1">
+                        <div className="flex items-center gap-2">
+                          {getSeverityBadge(error.severity)}
+                          {getPriorityBadge(error.priority)}
+                          {error.resolved && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono font-medium bg-[#00FF88]/10 text-[#00FF88]">Resolved</span>
+                          )}
+                        </div>
+
+                        <p className="font-semibold text-white/90">{error.error_type}</p>
+                        <p className="text-sm text-white/50">{error.message}</p>
+
+                        <div className="flex items-center gap-4 text-xs text-white/30">
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {new Date(error.created_at).toLocaleString()}
                           </div>
 
-                          <p className="font-semibold text-gray-900">{error.error_type}</p>
-                          <p className="text-sm text-gray-600">{error.message}</p>
-
-                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                          {error.route && (
                             <div className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {new Date(error.created_at).toLocaleString()}
+                              <Database className="h-3 w-3" />
+                              {error.route}
                             </div>
-
-                            {error.route && (
-                              <div className="flex items-center gap-1">
-                                <Database className="h-3 w-3" />
-                                {error.route}
-                              </div>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <CheckCircle className="h-12 w-12 mx-auto mb-2 text-green-500" />
-                  <p>No errors in the last 24 hours</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-white/30">
+                <CheckCircle className="h-12 w-12 mx-auto mb-2 text-[#00FF88]" />
+                <p>No errors in the last 24 hours</p>
+              </div>
+            )}
+          </div>
         </TabsContent>
 
         {/* Slow Requests Tab */}
         <TabsContent value="performance">
-          <Card>
-            <CardHeader>
-              <CardTitle>Slow Requests (Last Hour)</CardTitle>
-              <CardDescription>
-                Requests exceeding performance thresholds
-              </CardDescription>
-            </CardHeader>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <h3 className="text-lg font-bold text-white/90 mb-1">Slow Requests (Last Hour)</h3>
+            <p className="text-sm text-white/40 mb-4">
+              Requests exceeding performance thresholds
+            </p>
 
-            <CardContent>
-              {data?.slowRequests && data.slowRequests.length > 0 ? (
-                <div className="space-y-4">
-                  {data.slowRequests.map((request) => (
-                    <div
-                      key={request.id}
-                      className="p-4 border rounded-sm hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-2 flex-1">
-                          <div className="flex items-center gap-2">
-                            <Badge className="bg-blue-600 text-white">
-                              {request.metric_type}
-                            </Badge>
-                            <Badge variant="outline">
-                              {request.duration_ms}ms (threshold: {request.threshold_ms}ms)
-                            </Badge>
-                          </div>
+            {data?.slowRequests && data.slowRequests.length > 0 ? (
+              <div className="space-y-4">
+                {data.slowRequests.map((request) => (
+                  <div
+                    key={request.id}
+                    className="p-4 border border-white/[0.06] rounded-sm hover:bg-white/[0.02]"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-2 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono font-medium bg-[#00F5FF]/10 text-[#00F5FF]">
+                            {request.metric_type}
+                          </span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono border border-white/[0.06] text-white/50">
+                            {request.duration_ms}ms (threshold: {request.threshold_ms}ms)
+                          </span>
+                        </div>
 
-                          {request.route && (
-                            <p className="text-sm font-medium text-gray-900">{request.route}</p>
-                          )}
+                        {request.route && (
+                          <p className="text-sm font-medium text-white/90">{request.route}</p>
+                        )}
 
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
-                            <Clock className="h-3 w-3" />
-                            {new Date(request.created_at).toLocaleString()}
-                          </div>
+                        <div className="flex items-center gap-1 text-xs text-white/30">
+                          <Clock className="h-3 w-3" />
+                          {new Date(request.created_at).toLocaleString()}
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Zap className="h-12 w-12 mx-auto mb-2 text-green-500" />
-                  <p>No slow requests detected in the last hour</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-white/30">
+                <Zap className="h-12 w-12 mx-auto mb-2 text-[#00FF88]" />
+                <p>No slow requests detected in the last hour</p>
+              </div>
+            )}
+          </div>
         </TabsContent>
 
         {/* Statistics Tab */}
         <TabsContent value="stats">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Errors by Priority */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Errors by Priority</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {data?.errorStats && (
-                  <div className="space-y-3">
-                    {Object.entries(data.errorStats.errorsByPriority).map(([priority, count]) => (
-                      <div key={priority} className="flex items-center justify-between">
-                        {getPriorityBadge(priority)}
-                        <span className="text-2xl font-bold">{count}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <h3 className="text-lg font-bold text-white/90 mb-4">Errors by Priority</h3>
+              {data?.errorStats && (
+                <div className="space-y-3">
+                  {Object.entries(data.errorStats.errorsByPriority).map(([priority, count]) => (
+                    <div key={priority} className="flex items-center justify-between">
+                      {getPriorityBadge(priority)}
+                      <span className="text-2xl font-bold text-white/90">{count}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Errors by Severity */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Errors by Severity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {data?.errorStats && (
-                  <div className="space-y-3">
-                    {Object.entries(data.errorStats.errorsBySeverity).map(([severity, count]) => (
-                      <div key={severity} className="flex items-center justify-between">
-                        {getSeverityBadge(severity)}
-                        <span className="text-2xl font-bold">{count}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <h3 className="text-lg font-bold text-white/90 mb-4">Errors by Severity</h3>
+              {data?.errorStats && (
+                <div className="space-y-3">
+                  {Object.entries(data.errorStats.errorsBySeverity).map(([severity, count]) => (
+                    <div key={severity} className="flex items-center justify-between">
+                      {getSeverityBadge(severity)}
+                      <span className="text-2xl font-bold text-white/90">{count}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </TabsContent>
       </Tabs>
 
       {/* Footer Info */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Autonomous Monitoring System</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-gray-600 space-y-2">
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+        <h3 className="text-sm font-bold text-white/90 mb-3">Autonomous Monitoring System</h3>
+        <div className="text-sm text-white/50 space-y-2">
           <div className="flex items-center gap-2">
             <Database className="h-4 w-4" />
             <span>Database-backed error tracking with 30-day retention</span>
@@ -528,8 +491,8 @@ export default function MonitoringDashboard() {
             <CheckCircle className="h-4 w-4" />
             <span>No external dependencies - fully self-contained system</span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

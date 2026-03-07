@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Plus, Copy, Edit, Trash2 } from "lucide-react";
 
@@ -17,44 +16,42 @@ export default function EmailTemplatesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Email Templates</h1>
-          <p className="text-slate-400 mt-1">Reusable email templates for campaigns</p>
+          <h1 className="text-3xl font-bold font-mono text-white/90">Email Templates</h1>
+          <p className="text-white/40 mt-1">Reusable email templates for campaigns</p>
         </div>
-        <Button className="bg-cyan-600 hover:bg-cyan-700">
-          <Plus className="h-4 w-4 mr-2" />
+        <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2">
+          <Plus className="h-4 w-4" />
           Create Template
-        </Button>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {templates.map((template, index) => (
-          <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-colors">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-3">
-                <div className="p-2 bg-slate-700 rounded-sm">
-                  <FileText className="h-5 w-5 text-cyan-500" />
-                </div>
-                <span className="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded">
-                  {template.category}
-                </span>
+          <div key={index} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 hover:border-white/[0.10] transition-colors">
+            <div className="flex items-start justify-between mb-3">
+              <div className="p-2 bg-white/[0.04] border border-white/[0.06] rounded-sm">
+                <FileText className="h-5 w-5 text-[#00F5FF]" />
               </div>
-              <h3 className="font-medium text-white mb-1">{template.name}</h3>
-              <p className="text-sm text-slate-400 mb-4">
-                {template.uses} uses • {template.lastUsed}
-              </p>
-              <div className="flex gap-2">
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                  <Edit className="h-3 w-3" />
-                </Button>
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                  <Copy className="h-3 w-3" />
-                </Button>
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-red-400">
-                  <Trash2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              <span className="text-[10px] font-mono uppercase tracking-widest bg-white/[0.04] text-white/50 px-2 py-1 rounded-sm">
+                {template.category}
+              </span>
+            </div>
+            <h3 className="font-medium font-mono text-white/90 mb-1">{template.name}</h3>
+            <p className="text-sm text-white/40 mb-4">
+              {template.uses} uses • {template.lastUsed}
+            </p>
+            <div className="flex gap-2">
+              <Button variant="ghost" size="sm" className="text-white/40 hover:text-white/90">
+                <Edit className="h-3 w-3" />
+              </Button>
+              <Button variant="ghost" size="sm" className="text-white/40 hover:text-white/90">
+                <Copy className="h-3 w-3" />
+              </Button>
+              <Button variant="ghost" size="sm" className="text-white/40 hover:text-[#FF4444]">
+                <Trash2 className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
         ))}
       </div>
     </div>
