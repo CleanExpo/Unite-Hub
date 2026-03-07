@@ -204,6 +204,24 @@ packages/shared/dist/
 apps/web/.next/
 apps/backend/.venv/
 
+# Veritas Kanban MCP — only packages/veritas-kanban-mcp/mcp/ is ours; ignore the rest of the upstream monorepo
+packages/veritas-kanban-mcp/*
+!packages/veritas-kanban-mcp/mcp/
+
+# Screenshots from browser automation
+dashboard-after-login.png
+login-page.png
+
+# Env files not covered by existing patterns
+.env.vercel-*
+.veritas-kanban/
+
+# Claude Code task state
+tasks/
+
+# Contract testing output
+pacts/
+
 .vercel
 
 # Diagnostic SQL scripts (root-level)
