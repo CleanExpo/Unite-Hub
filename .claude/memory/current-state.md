@@ -1,34 +1,29 @@
 # Current State
-> Updated: 07/03/2026 AEST
+> Updated: 07/03/2026 15:00 AEST
 
 ## Active Task
-Kanban + Obsidian integration — COMPLETE. All 10 tasks implemented, reviewed, fixed, and committed.
+COMPLETE — Kanban + Obsidian integration shipped to production.
 
-## Completed This Session (07/03/2026)
+## Production Status
+- **Site**: https://unite-group.in — LIVE ✅
+- **Health**: `status: "healthy"`, database connected (757ms), Redis disabled gracefully
+- **Last deploy**: 07/03/2026 ~14:40 AEST (auto via GitHub push to main)
+- **Vercel project**: `unite-group/unite-group` (re-linked from deleted `unite-hub`)
 
-### Kanban Feature (commits on main)
-- `8b1988bb` — migration 520 + TypeScript types
-- `925e9585` — Obsidian sync service (parser, writer, watcher, engine, boot)
-- `4cf3f886` — sync service error handling + filename collision prevention
-- `87c22fd3` — API routes (tasks CRUD + SSE events + sync)
-- `c44c3b6a` — UI components + pages + sidebar nav
-- `01e6f224` — Veritas Kanban MCP server + mcp_config.json
-- `9e5fc784` — auth guard + workspace isolation in API routes + settings page
+## Resolved Issues
+- `syd1::DEPLOYMENT_NOT_FOUND` — fixed by Redis graceful degradation + new deployment
+- Redis `ECONNREFUSED 127.0.0.1:6379` — fixed in `src/lib/cache/redis-client.ts` (`disabled` flag)
+- Migration 520 idempotency — `DROP POLICY IF EXISTS` added
+- `.vercel/project.json` pointed to deleted project — re-linked via `vercel link`
 
-### Git Cleanup (pending commit)
-- `.gitignore` — added veritas-kanban upstream exclusions, `pacts/`, screenshots, task state
-- `packages/veritas-kanban-mcp/.env.example` — tracked (safe placeholder file, upstream intentionally un-ignores it)
+## Kanban Feature (9 commits on main)
+All files present: obsidian-sync service, 4 API routes, 6 UI components, MCP server, migration 520
 
-## Next Steps (before production use)
-1. Apply migration 520 in Supabase SQL editor: `supabase/migrations/520_kanban_tasks.sql`
-2. Set vault path at `/kanban/settings` in the app
-3. Build MCP server: `cd packages/veritas-kanban-mcp/mcp && npm run build`
-4. Update `TASKS_DIR` in `mcp_config.json` to actual Obsidian vault path
+## DNS Note
+`unite-group.in` has dual A records (`216.150.1.1` + `76.76.21.21`) — Vercel says both work,
+"DNS Change Recommended" is cosmetic. Can clean up via Vercel DNS settings when convenient.
 
-## Known Limitations
-- KanbanBoard: no drag-and-drop rollback on SSE failure (flagged, not critical)
-- CSS `transition-*` used in KanbanColumn (should be Framer Motion — flagged)
-- Full `tsc --noEmit` OOM on Windows (pre-existing, unrelated to kanban)
-
-## Last Updated
-07/03/2026 AEST (post-implementation cleanup)
+## Next Steps
+- Apply migration 520 in Supabase SQL editor (now idempotent — will succeed)
+- Configure Obsidian vault path in Kanban settings page
+- Optional: remove `76.76.21.21` A record in Vercel DNS settings
