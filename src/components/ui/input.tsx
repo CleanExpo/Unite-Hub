@@ -3,7 +3,9 @@
  * Accessible form input with labels, errors, and Scientific Luxury styling
  */
 
-import React from 'react';
+'use client';
+
+import React, { useId } from 'react';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -23,7 +25,8 @@ export default function Input({
   className = '',
   ...props
 }: InputProps) {
-  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+  const generatedId = useId();
+  const inputId = id || generatedId;
   const hasError = !!error;
 
   return (

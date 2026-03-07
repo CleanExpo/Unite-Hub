@@ -106,7 +106,7 @@ export default function SidebarNav() {
               style={isActive ? { borderLeft: '2px solid #00F5FF' } : undefined}
               className={
                 isActive
-                  ? 'flex items-center space-x-3 px-4 py-3 rounded-sm text-[#00F5FF] bg-white/[0.04] border border-white/[0.08] transition-colors'
+                  ? 'flex items-center space-x-3 px-4 py-3 rounded-sm text-[#00F5FF] bg-white/[0.04] transition-colors'
                   : 'flex items-center space-x-3 px-4 py-3 rounded-sm text-white/50 hover:text-white/90 hover:bg-white/[0.03] transition-colors'
               }
             >
