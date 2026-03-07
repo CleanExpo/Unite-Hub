@@ -41,6 +41,12 @@ CREATE INDEX IF NOT EXISTS tasks_workspace_position_idx ON public.tasks (workspa
 ALTER TABLE public.tasks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.workspace_vault_config ENABLE ROW LEVEL SECURITY;
 
+-- Drop policies first so re-running this script is idempotent
+DROP POLICY IF EXISTS "tasks_workspace_isolation" ON public.tasks;
+DROP POLICY IF EXISTS "tasks_workspace_insert" ON public.tasks;
+DROP POLICY IF EXISTS "vault_config_isolation" ON public.workspace_vault_config;
+DROP POLICY IF EXISTS "vault_config_insert" ON public.workspace_vault_config;
+
 CREATE POLICY "tasks_workspace_isolation" ON public.tasks
   USING (
     workspace_id = current_setting('app.current_workspace_id', TRUE)::UUID
@@ -71,6 +77,7 @@ RETURNS TRIGGER AS $$
 BEGIN NEW.updated_at = NOW(); RETURN NEW; END;
 $$ language 'plpgsql';
 
+DROP TRIGGER IF EXISTS update_tasks_updated_at ON public.tasks;
 CREATE TRIGGER update_tasks_updated_at
   BEFORE UPDATE ON public.tasks
   FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
