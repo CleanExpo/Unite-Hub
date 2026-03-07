@@ -1,32 +1,18 @@
 # Current State
-> Updated: 07/03/2026 15:00 AEST
+> Updated by PreCompact hook. Session: 47025d02
 
 ## Active Task
-COMPLETE — Kanban + Obsidian integration shipped to production.
+Compaction triggered — context was saved at 07/03/2026 16:25 AEST.
+Re-read CONSTITUTION.md if rules feel unclear after compaction.
 
-## Production Status
-- **Site**: https://unite-group.in — LIVE ✅
-- **Health**: `status: "healthy"`, database connected (757ms), Redis disabled gracefully
-- **Last deploy**: 07/03/2026 ~14:40 AEST (auto via GitHub push to main)
-- **Vercel project**: `unite-group/unite-group` (re-linked from deleted `unite-hub`)
+## Recent Architectural Choices
+See architectural-decisions.md for logged decisions.
 
-## Resolved Issues
-- `syd1::DEPLOYMENT_NOT_FOUND` — new deployment propagated routing to all edge nodes
-- Redis `ECONNREFUSED 127.0.0.1:6379` — fixed in `src/lib/cache/redis-client.ts` (`disabled` flag)
-- Migration 520 idempotency — `DROP POLICY IF EXISTS` added
-- `.vercel/project.json` pointed to deleted project — re-linked via `vercel link`
-- **Auth broken** — `NEXT_PUBLIC_BASE_URL`, `NEXTAUTH_URL`, `NEXT_PUBLIC_URL` all pointed to deleted `unite-hub.vercel.app` — updated to `https://unite-group.in` via Vercel API
-- **Supabase Site URL** — was `https://unite-hub.vercel.app` — updated to `https://unite-group.in`
-- **Supabase Redirect URLs** — added `https://unite-group.in/auth/callback`
-
-## Kanban Feature (9 commits on main)
-All files present: obsidian-sync service, 4 API routes, 6 UI components, MCP server, migration 520
-
-## DNS Note
-`unite-group.in` has dual A records (`216.150.1.1` + `76.76.21.21`) — Vercel says both work,
-"DNS Change Recommended" is cosmetic. Can clean up via Vercel DNS settings when convenient.
+## In-Progress Work
+Check recent git status: `git status` and `git log --oneline -5`
 
 ## Next Steps
-- Apply migration 520 in Supabase SQL editor (now idempotent — will succeed)
-- Configure Obsidian vault path in Kanban settings page
-- Optional: remove `76.76.21.21` A record in Vercel DNS settings
+Re-read .claude/memory/CONSTITUTION.md to restore rule context.
+
+## Last Updated
+07/03/2026 16:25 AEST (PreCompact hook)
