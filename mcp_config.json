@@ -65,6 +65,16 @@
       },
       "enabled": false,
       "description": "Slack integration for notifications (requires Slack tokens)"
+    },
+    "veritas-kanban": {
+      "command": "node",
+      "args": ["packages/veritas-kanban-mcp/mcp/dist/index.js"],
+      "env": {
+        "TASKS_DIR": "C:/Users/Phill/Documents/ObsidianVault/Tasks",
+        "API_URL": "http://localhost:3000/api/kanban"
+      },
+      "enabled": true,
+      "description": "Veritas Kanban MCP server — AI task management tools bridging Kanban board to Obsidian vault"
     }
   },
   "settings": {
