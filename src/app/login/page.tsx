@@ -69,13 +69,13 @@ export default function LoginPage() {
             <Sparkles className="h-7 w-7 text-[#00F5FF]" />
           </div>
           <span className="text-2xl font-mono font-bold text-white/90">Unite-Group</span>
-          <span className="text-sm font-mono text-white/40">AI-Powered Marketing CRM</span>
+          <span className="text-sm font-mono text-white/40">AI-Powered Control Platform</span>
         </div>
 
         {/* Card */}
         <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-mono font-bold text-white/90 mb-2">Sign in to your Business Hub</h1>
+            <h1 className="text-2xl font-mono font-bold text-white/90 mb-2">Sign in to Unite-Group</h1>
           </div>
 
           {/* Error Message */}
@@ -208,7 +208,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-sm font-mono text-white/30 mt-6">
-          © 2025 Unite-Group. All rights reserved.
+          © 2026 Unite-Group. All rights reserved.
         </p>
       </div>
     </div>

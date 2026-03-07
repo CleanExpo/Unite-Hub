@@ -169,12 +169,12 @@ export default function Home() {
               transition={{ duration: 0.9, ease: EASE_OUT_EXPO }}
             >
               <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-6">
-                AI-Powered Business Hub
+                AI-Powered Control Platform
               </p>
               <h1 className="text-6xl md:text-8xl font-extralight tracking-tight text-white/90 leading-[0.95] mb-8">
                 Your Business.
                 <br />
-                <span className="text-[#00F5FF]">One Hub.</span>
+                <span className="text-[#00F5FF]">One Platform.</span>
               </h1>
               <p className="text-base text-white/50 max-w-xl leading-relaxed mb-12 font-light">
                 Manage contacts, deals, campaigns, and operations across all your
@@ -479,7 +479,7 @@ export default function Home() {
                 <span className="text-[#00F5FF]">Powerful.</span>
               </h2>
               <p className="text-sm text-white/50 leading-relaxed mb-4 max-w-lg font-light">
-                Unite-Group is a personal AI-powered Business Hub built for
+                Unite-Group is a central AI-powered control platform built for
                 founders who run multiple businesses. It combines CRM, email,
                 campaigns, analytics, and AI agents into one system designed to
                 give you complete control.
@@ -542,7 +542,7 @@ export default function Home() {
             <span className="text-[11px] uppercase tracking-[0.2em] text-white/40">
               Unite<span className="text-[#00F5FF]/80">Group</span>
             </span>
-            <span className="text-[10px] text-white/20">Business Hub</span>
+            <span className="text-[10px] text-white/20">Control Platform</span>
           </div>
 
           <div className="flex gap-8">
