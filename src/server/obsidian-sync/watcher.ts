@@ -19,7 +19,8 @@ export function startWatcher(vaultPath: string, onChange: ChangeCallback): void 
   watcher
     .on('add', (p) => onChange(p, 'add'))
     .on('change', (p) => onChange(p, 'change'))
-    .on('unlink', (p) => onChange(p, 'unlink'));
+    .on('unlink', (p) => onChange(p, 'unlink'))
+    .on('error', (err) => console.error('[ObsidianSync] Watcher error', err));
 
   watchers.set(vaultPath, watcher);
   console.log(`[ObsidianSync] Watching ${tasksDir}`);

@@ -45,11 +45,15 @@ async function handleFileChange(
     const parsed = parseTaskFile(content, relPath);
     if (!parsed.title) return;
 
-    const { data } = await supabase.from('tasks')
+    const { data, error: upsertError } = await supabase.from('tasks')
       .upsert({ ...parsed, workspace_id: workspaceId, obsidian_synced_at: new Date().toISOString() },
                { onConflict: 'obsidian_path,workspace_id' })
       .select().single();
 
+    if (upsertError) {
+      console.error('[ObsidianSync] Upsert failed', filePath, upsertError);
+      return;
+    }
     broadcast(workspaceId, { type: 'task_synced', task: data });
   } catch (e) {
     console.error('[ObsidianSync] Error processing', filePath, e);
