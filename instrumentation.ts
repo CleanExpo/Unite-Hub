@@ -8,5 +8,7 @@ export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     // Server-side instrumentation only
     await import('./src/lib/telemetry/instrumentation');
+    // Start Obsidian vault watchers for all workspaces with sync enabled
+    await import('./src/server/obsidian-sync/boot').then(m => m.bootVaultWatchers());
   }
 }
