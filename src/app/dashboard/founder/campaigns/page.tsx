@@ -284,7 +284,7 @@ export default function CampaignsPage() {
             </Select>
 
             {/* View Mode Toggle */}
-            <div className="flex gap-1 border rounded-lg p-1">
+            <div className="flex gap-1 border rounded-sm p-1">
               <Button
                 variant={viewMode === 'cards' ? 'default' : 'ghost'}
                 size="sm"

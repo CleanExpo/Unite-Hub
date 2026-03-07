@@ -174,7 +174,7 @@ export default function SandboxControlPage() {
 
       {/* Error Banner */}
       {error && (
-        <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
+        <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-sm text-red-200">
           {error}
           <button onClick={() => setError(null)} className="ml-4 text-red-400 hover:text-red-300">
             Dismiss
@@ -184,24 +184,24 @@ export default function SandboxControlPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+        <div className="bg-slate-800 rounded-sm p-4 border border-slate-700">
           <div className="text-sm text-slate-400">Total Staff</div>
           <div className="text-2xl font-bold text-white">{users.length}</div>
         </div>
-        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+        <div className="bg-slate-800 rounded-sm p-4 border border-slate-700">
           <div className="text-sm text-slate-400">Sandbox Enabled</div>
           <div className="text-2xl font-bold text-yellow-500">
             {users.filter(u => u.sandbox_enabled).length}
           </div>
         </div>
-        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+        <div className="bg-slate-800 rounded-sm p-4 border border-slate-700">
           <div className="text-sm text-slate-400">Domain Defaults</div>
           <div className="text-2xl font-bold text-blue-500">{DOMAIN_DEFAULTS.length}</div>
         </div>
       </div>
 
       {/* Domain Defaults Section */}
-      <div className="bg-slate-800 rounded-lg border border-slate-700 p-4 mb-6">
+      <div className="bg-slate-800 rounded-sm border border-slate-700 p-4 mb-6">
         <h2 className="text-lg font-semibold text-white mb-3">Domain Defaults</h2>
         <p className="text-sm text-slate-400 mb-3">
           All emails from these domains automatically use TEST mode
@@ -222,7 +222,7 @@ export default function SandboxControlPage() {
       </div>
 
       {/* Staff Management Section */}
-      <div className="bg-slate-800 rounded-lg border border-slate-700">
+      <div className="bg-slate-800 rounded-sm border border-slate-700">
         {/* Toolbar */}
         <div className="p-4 border-b border-slate-700 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -243,7 +243,7 @@ export default function SandboxControlPage() {
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-sm font-medium transition-colors"
           >
             <Plus className="h-4 w-4" />
             Add Staff
@@ -316,7 +316,7 @@ export default function SandboxControlPage() {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 w-full max-w-md">
+          <div className="bg-slate-800 rounded-sm border border-slate-700 p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold text-white mb-4">Add Staff to Sandbox</h3>
             <form onSubmit={handleAddUser} className="space-y-4">
               <div>

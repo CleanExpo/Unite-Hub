@@ -316,7 +316,7 @@ export default function ContactDetailPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                  <div className="p-3 rounded-sm bg-gradient-to-br from-purple-500/20 to-pink-500/20">
                     <Sparkles className="w-6 h-6 text-purple-400" />
                   </div>
                   <div>
@@ -490,7 +490,7 @@ export default function ContactDetailPage() {
                     {emails.map((email) => (
                       <div
                         key={email.id}
-                        className="p-4 rounded-lg bg-slate-900/50 border border-slate-700/50 hover:bg-slate-900/70 transition-colors"
+                        className="p-4 rounded-sm bg-slate-900/50 border border-slate-700/50 hover:bg-slate-900/70 transition-colors"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">

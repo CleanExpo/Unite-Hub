@@ -158,12 +158,12 @@ export default function ModernDashboard() {
           <input
             type="text"
             placeholder="Search projects, clients, tasks..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-900/50 border border-slate-700/50 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 bg-slate-900/50 border border-slate-700/50 rounded-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="relative p-2 rounded-lg bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 hover:bg-slate-700/50 text-slate-300 transition-all">
+          <button className="relative p-2 rounded-sm bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 hover:bg-slate-700/50 text-slate-300 transition-all">
             <Bell className="h-5 w-5" />
             {approvals.length > 0 && (
               <span className="absolute -top-1 -right-1 h-5 w-5 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center text-xs text-white font-semibold shadow-lg shadow-red-500/50">
@@ -201,14 +201,14 @@ export default function ModernDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           {loading ? (
-            <div className="h-48 bg-slate-800/30 rounded-lg animate-pulse" />
+            <div className="h-48 bg-slate-800/30 rounded-sm animate-pulse" />
           ) : (
             <ApprovalList approvals={approvals} onApprove={handleApprove} onDecline={handleDecline} />
           )}
         </div>
         <div className="lg:col-span-1">
           {loading ? (
-            <div className="h-48 bg-slate-800/30 rounded-lg animate-pulse" />
+            <div className="h-48 bg-slate-800/30 rounded-sm animate-pulse" />
           ) : (
             <TeamCapacity members={teamMembers} />
           )}
@@ -225,7 +225,7 @@ export default function ModernDashboard() {
         </div>
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[...Array(3)].map((_, i) => <div key={i} className="h-40 bg-slate-800/30 rounded-lg animate-pulse" />)}
+            {[...Array(3)].map((_, i) => <div key={i} className="h-40 bg-slate-800/30 rounded-sm animate-pulse" />)}
           </div>
         ) : projects.length > 0 ? (
           <ProjectCardGrid>

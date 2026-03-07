@@ -588,7 +588,7 @@ export default function IntegrationsPage() {
               {integrations.map((integration) => (
                 <div
                   key={integration.id}
-                  className="bg-slate-700 border border-slate-600 rounded-lg p-4"
+                  className="bg-slate-700 border border-slate-600 rounded-sm p-4"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -709,7 +709,7 @@ export default function IntegrationsPage() {
               <Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" />
             </div>
           ) : xeroStatus?.connected ? (
-            <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
+            <div className="bg-slate-700 border border-slate-600 rounded-sm p-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">

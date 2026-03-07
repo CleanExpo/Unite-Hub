@@ -367,7 +367,7 @@ export default function MonitoringDashboard() {
                   {data.recentErrors.map((error) => (
                     <div
                       key={error.id}
-                      className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                      className="p-4 border rounded-sm hover:bg-gray-50 transition-colors"
                     >
                       <div className="flex items-start justify-between">
                         <div className="space-y-2 flex-1">
@@ -426,7 +426,7 @@ export default function MonitoringDashboard() {
                   {data.slowRequests.map((request) => (
                     <div
                       key={request.id}
-                      className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                      className="p-4 border rounded-sm hover:bg-gray-50 transition-colors"
                     >
                       <div className="flex items-start justify-between">
                         <div className="space-y-2 flex-1">

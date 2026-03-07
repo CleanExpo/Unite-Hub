@@ -299,7 +299,7 @@ export default function AIDOOverviewPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-sm">
               <Zap className="w-6 h-6 text-blue-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">AI Discovery Optimization (AIDO)</h4>
@@ -314,7 +314,7 @@ export default function AIDOOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-sm">
               <CheckCircle className="w-6 h-6 text-green-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">Algorithmic Immunity Content</h4>
@@ -329,7 +329,7 @@ export default function AIDOOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-sm">
               <Clock className="w-6 h-6 text-purple-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">Reality-Loop Marketing</h4>
@@ -344,7 +344,7 @@ export default function AIDOOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-sm">
               <BarChart3 className="w-6 h-6 text-yellow-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">Conversational SEO Stacks</h4>
@@ -359,7 +359,7 @@ export default function AIDOOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-sm">
               <TrendingUp className="w-6 h-6 text-red-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">Google-Curve Anticipation Engine</h4>

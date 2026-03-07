@@ -52,7 +52,7 @@ export default function ResourcesPage() {
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
+                  <div className="p-2 rounded-sm bg-primary/10">
                     <resource.icon className="h-6 w-6 text-primary" />
                   </div>
                   <CardTitle>{resource.name}</CardTitle>

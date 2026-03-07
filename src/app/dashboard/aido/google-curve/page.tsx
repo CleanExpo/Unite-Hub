@@ -307,7 +307,7 @@ export default function GoogleCurvePage() {
                   />
                 </div>
 
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-sm">
                   <p className="text-sm text-blue-800 dark:text-blue-200">
                     <strong>Monitoring includes:</strong> SERP position, AI Overview presence, featured snippets,
                     local pack, people also ask, and competitor tracking.
@@ -502,7 +502,7 @@ export default function GoogleCurvePage() {
 
                       {/* Affected Keywords */}
                       {signal.affectedKeywords && signal.affectedKeywords.length > 0 && (
-                        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+                        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-sm">
                           <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
                             Affected Keywords ({signal.affectedKeywords.length}):
                           </p>

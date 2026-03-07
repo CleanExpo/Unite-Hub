@@ -42,7 +42,7 @@ export default function ClientLoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-950 text-gray-100 px-4">
-      <div className="w-full max-w-md bg-gray-900 rounded-xl p-8 shadow-xl border border-gray-800">
+      <div className="w-full max-w-md bg-gray-900 rounded-sm p-8 shadow-xl border border-gray-800">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Client Portal</h1>
           <p className="text-gray-400 text-sm">
@@ -61,7 +61,7 @@ export default function ClientLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg bg-gray-800 border border-gray-700 px-4 py-3 text-sm
+              className="w-full rounded-sm bg-gray-800 border border-gray-700 px-4 py-3 text-sm
                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                        placeholder-gray-500"
               placeholder="your@email.com"
@@ -79,7 +79,7 @@ export default function ClientLoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg bg-gray-800 border border-gray-700 px-4 py-3 text-sm
+              className="w-full rounded-sm bg-gray-800 border border-gray-700 px-4 py-3 text-sm
                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                        placeholder-gray-500"
               placeholder="••••••••"
@@ -88,7 +88,7 @@ export default function ClientLoginPage() {
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-900/20 border border-red-900/50 px-4 py-3">
+            <div className="rounded-sm bg-red-900/20 border border-red-900/50 px-4 py-3">
               <p className="text-sm text-red-400">{error}</p>
             </div>
           )}
@@ -96,7 +96,7 @@ export default function ClientLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed
+            className="w-full rounded-sm bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed
                      px-4 py-3 text-sm font-semibold transition-colors"
           >
             {loading ? 'Signing in...' : 'Sign In'}

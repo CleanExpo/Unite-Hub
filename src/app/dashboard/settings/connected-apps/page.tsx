@@ -24,7 +24,7 @@ export default function ConnectedAppsSettingsPage() {
           Back to Settings
         </Link>
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+          <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary/10">
             <Settings className="h-5 w-5 text-primary" />
           </div>
           <div>
@@ -37,7 +37,7 @@ export default function ConnectedAppsSettingsPage() {
       </div>
 
       {/* Security Notice */}
-      <div className="mb-6 flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+      <div className="mb-6 flex items-start gap-3 rounded-sm border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
         <Shield className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
         <div className="text-sm">
           <p className="font-medium text-blue-800 dark:text-blue-200">
@@ -58,19 +58,19 @@ export default function ConnectedAppsSettingsPage() {
       <div className="mt-12">
         <h2 className="mb-4 text-lg font-semibold">What you get</h2>
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-lg border bg-card p-4">
+          <div className="rounded-sm border bg-card p-4">
             <h3 className="font-medium">Email Sync</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               Automatically sync your email threads and link them to CRM contacts.
             </p>
           </div>
-          <div className="rounded-lg border bg-card p-4">
+          <div className="rounded-sm border bg-card p-4">
             <h3 className="font-medium">AI Insights</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               Extract action items, deadlines, and opportunities from emails.
             </p>
           </div>
-          <div className="rounded-lg border bg-card p-4">
+          <div className="rounded-sm border bg-card p-4">
             <h3 className="font-medium">Client Intelligence</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               View communication history and insights on each client profile.
@@ -83,7 +83,7 @@ export default function ConnectedAppsSettingsPage() {
       <div className="mt-12">
         <h2 className="mb-4 text-lg font-semibold">Frequently Asked Questions</h2>
         <div className="space-y-4">
-          <details className="group rounded-lg border bg-card">
+          <details className="group rounded-sm border bg-card">
             <summary className="flex cursor-pointer items-center justify-between p-4 font-medium">
               What permissions do you request?
               <span className="text-muted-foreground transition group-open:rotate-180">
@@ -101,7 +101,7 @@ export default function ConnectedAppsSettingsPage() {
               </p>
             </div>
           </details>
-          <details className="group rounded-lg border bg-card">
+          <details className="group rounded-sm border bg-card">
             <summary className="flex cursor-pointer items-center justify-between p-4 font-medium">
               How often are emails synced?
               <span className="text-muted-foreground transition group-open:rotate-180">
@@ -114,7 +114,7 @@ export default function ConnectedAppsSettingsPage() {
               of emails.
             </div>
           </details>
-          <details className="group rounded-lg border bg-card">
+          <details className="group rounded-sm border bg-card">
             <summary className="flex cursor-pointer items-center justify-between p-4 font-medium">
               What happens if I disconnect?
               <span className="text-muted-foreground transition group-open:rotate-180">

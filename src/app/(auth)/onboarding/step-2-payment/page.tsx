@@ -24,7 +24,7 @@ export default function OnboardingStep2Page() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
       <div className="max-w-4xl mx-auto py-12">
-        <div className="bg-white rounded-lg shadow-xl border border-gray-200 p-8">
+        <div className="bg-white rounded-sm shadow-xl border border-gray-200 p-8">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
@@ -39,7 +39,7 @@ export default function OnboardingStep2Page() {
           </div>
 
           {/* Free Trial Notice */}
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-sm text-sm">
             You're starting with a free 14-day trial. No credit card required. You can upgrade anytime from settings.
           </div>
 
@@ -113,7 +113,7 @@ function PlanCard({
   return (
     <div
       onClick={onSelect}
-      className={`relative p-6 border-2 rounded-lg cursor-pointer transition-all ${
+      className={`relative p-6 border-2 rounded-sm cursor-pointer transition-all ${
         selected
           ? "border-blue-600 bg-blue-50"
           : "border-gray-200 hover:border-gray-300"

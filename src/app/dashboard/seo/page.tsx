@@ -67,7 +67,7 @@ export default function SEOPage() {
         <CardContent>
           <div className="space-y-4">
             {rankings.map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-slate-700/50 rounded-sm">
                 <div>
                   <p className="font-medium text-white">{item.keyword}</p>
                   <p className="text-sm text-slate-400">{item.volume.toLocaleString()} monthly searches</p>

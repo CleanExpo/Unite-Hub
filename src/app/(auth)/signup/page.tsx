@@ -94,7 +94,7 @@ export default function SignupPage() {
         {/* Logo */}
         <div className="relative z-10">
           <Link href="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
+            <div className="h-12 w-12 rounded-sm bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
               <Sparkles className="h-7 w-7 text-white" />
             </div>
             <div className="flex flex-col">
@@ -140,7 +140,7 @@ export default function SignupPage() {
               { icon: Users, label: "Smart CRM" },
               { icon: Shield, label: "Secure" }
             ].map((item, index) => (
-              <div key={index} className="flex flex-col items-center gap-2 p-4 rounded-lg bg-white/5 border border-white/10">
+              <div key={index} className="flex flex-col items-center gap-2 p-4 rounded-sm bg-white/5 border border-white/10">
                 <item.icon className="h-6 w-6 text-blue-400" />
                 <span className="text-sm text-slate-300">{item.label}</span>
               </div>
@@ -164,7 +164,7 @@ export default function SignupPage() {
         <div className="w-full max-w-md space-y-8">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
+            <div className="h-10 w-10 rounded-sm bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
               <Sparkles className="h-6 w-6 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -180,7 +180,7 @@ export default function SignupPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-sm text-sm">
               {error}
             </div>
           )}

@@ -146,7 +146,7 @@ export default function MarketplacePage() {
   if (!workspaceId) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-900">
+        <div className="rounded-sm border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-900">
           <p className="text-gray-600 dark:text-gray-400">Loading workspace information...</p>
         </div>
       </div>

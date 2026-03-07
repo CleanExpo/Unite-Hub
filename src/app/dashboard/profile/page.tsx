@@ -351,7 +351,7 @@ export default function ProfilePage() {
           <Skeleton className="h-10 w-32" />
         </div>
 
-        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+        <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
           <CardHeader>
             <Skeleton className="h-6 w-48" />
           </CardHeader>
@@ -381,8 +381,8 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 text-center">
-          <p className="text-slate-400">Please log in to view your profile.</p>
+        <div className="bg-[#050505] border border-white/[0.06] rounded-sm p-8 text-center">
+          <p className="text-white/70">Please log in to view your profile.</p>
         </div>
       </div>
     );
@@ -398,7 +398,7 @@ export default function ProfilePage() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
             Profile
           </h1>
-          <p className="text-slate-400">Manage your account settings and preferences</p>
+          <p className="text-white/70">Manage your account settings and preferences</p>
         </div>
         {!isEditing ? (
           <Button
@@ -414,7 +414,7 @@ export default function ProfilePage() {
               onClick={handleCancel}
               variant="outline"
               disabled={isSaving}
-              className="border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50 gap-2"
+              className="border-white/[0.06] bg-[#050505] backdrop-blur-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.08] gap-2"
             >
               <X className="h-4 w-4" />
               Cancel
@@ -441,7 +441,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Card */}
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+      <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white text-xl font-semibold">Account Information</CardTitle>
         </CardHeader>
@@ -453,7 +453,7 @@ export default function ProfilePage() {
                 {profile?.avatar_url && (
                   <AvatarImage src={profile.avatar_url} alt={formData.full_name} />
                 )}
-                <AvatarFallback className="text-2xl bg-slate-700">
+                <AvatarFallback className="text-2xl bg-white/[0.06]">
                   {getInitials(formData.full_name)}
                 </AvatarFallback>
               </Avatar>
@@ -493,7 +493,7 @@ export default function ProfilePage() {
                   Remove Avatar
                 </Button>
               )}
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-white/70">
                 JPG, PNG, WebP or GIF. Max 2MB.
               </p>
             </div>
@@ -503,7 +503,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Username */}
             <div>
-              <Label htmlFor="username" className="text-slate-300">
+              <Label htmlFor="username" className="text-white/70">
                 Username
               </Label>
               {isEditing ? (
@@ -512,13 +512,13 @@ export default function ProfilePage() {
                     id="username"
                     value={formData.username}
                     onChange={(e) => handleInputChange("username", e.target.value)}
-                    className="bg-slate-900 border-slate-700 text-white mt-2"
+                    className="bg-[#050505] border-white/[0.06] text-white mt-2"
                     placeholder="johndoe"
                   />
                   {errors.username && (
                     <p className="text-xs text-red-400 mt-1">{errors.username}</p>
                   )}
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-white/70 mt-1">
                     3-30 characters, letters, numbers, - and _ only
                   </p>
                 </div>
@@ -529,7 +529,7 @@ export default function ProfilePage() {
 
             {/* Full Name */}
             <div>
-              <Label htmlFor="full_name" className="text-slate-300">
+              <Label htmlFor="full_name" className="text-white/70">
                 Full Name
               </Label>
               {isEditing ? (
@@ -537,7 +537,7 @@ export default function ProfilePage() {
                   id="full_name"
                   value={formData.full_name}
                   onChange={(e) => handleInputChange("full_name", e.target.value)}
-                  className="bg-slate-900 border-slate-700 text-white mt-2"
+                  className="bg-[#050505] border-white/[0.06] text-white mt-2"
                   placeholder="John Doe"
                 />
               ) : (
@@ -547,7 +547,7 @@ export default function ProfilePage() {
 
             {/* Business Name */}
             <div>
-              <Label htmlFor="business_name" className="text-slate-300">
+              <Label htmlFor="business_name" className="text-white/70">
                 Business Name
               </Label>
               {isEditing ? (
@@ -555,7 +555,7 @@ export default function ProfilePage() {
                   id="business_name"
                   value={formData.business_name}
                   onChange={(e) => handleInputChange("business_name", e.target.value)}
-                  className="bg-slate-900 border-slate-700 text-white mt-2"
+                  className="bg-[#050505] border-white/[0.06] text-white mt-2"
                   placeholder="Acme Corp"
                 />
               ) : (
@@ -565,7 +565,7 @@ export default function ProfilePage() {
 
             {/* Email (read-only) */}
             <div>
-              <Label htmlFor="email" className="text-slate-300">
+              <Label htmlFor="email" className="text-white/70">
                 Email Address
               </Label>
               <div className="text-white mt-2 flex items-center gap-2">
@@ -578,7 +578,7 @@ export default function ProfilePage() {
 
             {/* Phone */}
             <div>
-              <Label htmlFor="phone" className="text-slate-300">
+              <Label htmlFor="phone" className="text-white/70">
                 Phone Number
               </Label>
               {isEditing ? (
@@ -587,13 +587,13 @@ export default function ProfilePage() {
                     id="phone"
                     value={formData.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
-                    className="bg-slate-900 border-slate-700 text-white mt-2"
+                    className="bg-[#050505] border-white/[0.06] text-white mt-2"
                     placeholder="+1 (555) 123-4567"
                   />
                   {errors.phone && (
                     <p className="text-xs text-red-400 mt-1">{errors.phone}</p>
                   )}
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-white/70 mt-1">
                     International format (e.g., +14155552671)
                   </p>
                 </div>
@@ -604,7 +604,7 @@ export default function ProfilePage() {
 
             {/* Website */}
             <div>
-              <Label htmlFor="website" className="text-slate-300">
+              <Label htmlFor="website" className="text-white/70">
                 Website
               </Label>
               {isEditing ? (
@@ -613,7 +613,7 @@ export default function ProfilePage() {
                     id="website"
                     value={formData.website}
                     onChange={(e) => handleInputChange("website", e.target.value)}
-                    className="bg-slate-900 border-slate-700 text-white mt-2"
+                    className="bg-[#050505] border-white/[0.06] text-white mt-2"
                     placeholder="https://example.com"
                   />
                   {errors.website && (
@@ -640,7 +640,7 @@ export default function ProfilePage() {
 
             {/* Timezone */}
             <div className="md:col-span-2">
-              <Label htmlFor="timezone" className="text-slate-300">
+              <Label htmlFor="timezone" className="text-white/70">
                 Timezone
               </Label>
               {isEditing ? (
@@ -648,7 +648,7 @@ export default function ProfilePage() {
                   value={formData.timezone || "UTC"}
                   onValueChange={(value) => handleInputChange("timezone", value)}
                 >
-                  <SelectTrigger className="bg-slate-900 border-slate-700 text-white mt-2">
+                  <SelectTrigger className="bg-[#050505] border-white/[0.06] text-white mt-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -669,7 +669,7 @@ export default function ProfilePage() {
 
             {/* Bio */}
             <div className="md:col-span-2">
-              <Label htmlFor="bio" className="text-slate-300">
+              <Label htmlFor="bio" className="text-white/70">
                 Bio
               </Label>
               {isEditing ? (
@@ -678,14 +678,14 @@ export default function ProfilePage() {
                     id="bio"
                     value={formData.bio}
                     onChange={(e) => handleInputChange("bio", e.target.value)}
-                    className="bg-slate-900 border-slate-700 text-white mt-2 min-h-[100px]"
+                    className="bg-[#050505] border-white/[0.06] text-white mt-2 min-h-[100px]"
                     placeholder="Tell us about yourself..."
                     maxLength={500}
                   />
                   {errors.bio && (
                     <p className="text-xs text-red-400 mt-1">{errors.bio}</p>
                   )}
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-white/70 mt-1">
                     {formData.bio.length}/500 characters
                   </p>
                 </div>
@@ -698,7 +698,7 @@ export default function ProfilePage() {
       </Card>
 
       {/* Notification Preferences */}
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+      <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white text-xl font-semibold">Notification Preferences</CardTitle>
         </CardHeader>
@@ -708,7 +708,7 @@ export default function ProfilePage() {
               <Label htmlFor="email_notifications" className="text-white">
                 Email Notifications
               </Label>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-white/70">
                 Receive email notifications about your account activity
               </p>
             </div>
@@ -727,7 +727,7 @@ export default function ProfilePage() {
               <Label htmlFor="marketing_emails" className="text-white">
                 Marketing Emails
               </Label>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-white/70">
                 Receive emails about new features and updates
               </p>
             </div>
@@ -746,7 +746,7 @@ export default function ProfilePage() {
               <Label htmlFor="product_updates" className="text-white">
                 Product Updates
               </Label>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-white/70">
                 Get notified about product improvements and changes
               </p>
             </div>
@@ -765,7 +765,7 @@ export default function ProfilePage() {
               <Label htmlFor="weekly_digest" className="text-white">
                 Weekly Digest
               </Label>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-white/70">
                 Receive a weekly summary of your account activity
               </p>
             </div>
@@ -782,32 +782,32 @@ export default function ProfilePage() {
       </Card>
 
       {/* Account Stats */}
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+      <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white text-xl font-semibold">Account Activity</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg">
+            <div className="text-center p-4 bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm">
               <div className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Active</div>
-              <div className="text-sm text-slate-400">Account Status</div>
+              <div className="text-sm text-white/70">Account Status</div>
             </div>
-            <div className="text-center p-4 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg">
+            <div className="text-center p-4 bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm">
               <div className="text-2xl font-bold text-white">
                 {Math.floor(
                   (Date.now() - new Date(user.created_at).getTime()) /
                     (1000 * 60 * 60 * 24)
                 )}
               </div>
-              <div className="text-sm text-slate-400">Days Since Join</div>
+              <div className="text-sm text-white/70">Days Since Join</div>
             </div>
-            <div className="text-center p-4 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg">
+            <div className="text-center p-4 bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm">
               <div className="text-2xl font-bold text-white">
                 {new Date(
                   user.last_sign_in_at || user.created_at
                 ).toLocaleDateString()}
               </div>
-              <div className="text-sm text-slate-400">Last Sign In</div>
+              <div className="text-sm text-white/70">Last Sign In</div>
             </div>
           </div>
         </CardContent>

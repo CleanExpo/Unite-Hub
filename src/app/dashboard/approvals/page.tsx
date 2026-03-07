@@ -153,7 +153,7 @@ export default function ApprovalsPage() {
 
       {/* Error State */}
       {error && !loading && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6">
+        <div className="bg-red-500/10 border border-red-500/30 rounded-sm p-6">
           <div className="flex items-center gap-3">
             <AlertCircle className="h-5 w-5 text-red-400" />
             <div>
@@ -169,7 +169,7 @@ export default function ApprovalsPage() {
         <>
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
               <div className="flex items-center gap-3 mb-3">
                 <Clock className="h-8 w-8 text-orange-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-slate-400 text-sm font-medium">Pending</h3>
@@ -180,7 +180,7 @@ export default function ApprovalsPage() {
               <p className="text-slate-500 text-xs mt-2">Awaiting review</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
               <div className="flex items-center gap-3 mb-3">
                 <CheckCircle className="h-8 w-8 text-green-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-slate-400 text-sm font-medium">Approved Today</h3>
@@ -191,7 +191,7 @@ export default function ApprovalsPage() {
               <p className="text-slate-500 text-xs mt-2">{approved.length} total</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
               <div className="flex items-center gap-3 mb-3">
                 <XCircle className="h-8 w-8 text-red-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-slate-400 text-sm font-medium">Declined</h3>
@@ -202,7 +202,7 @@ export default function ApprovalsPage() {
               <p className="text-slate-500 text-xs mt-2">Needs revision</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
               <div className="flex items-center gap-3 mb-3">
                 <AlertCircle className="h-8 w-8 text-yellow-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-slate-400 text-sm font-medium">High Priority</h3>
@@ -236,7 +236,7 @@ export default function ApprovalsPage() {
                   <div className="flex gap-2 mb-6">
                     <button
                       onClick={() => setPriorityFilter("all")}
-                      className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      className={`px-4 py-2 rounded-sm font-semibold transition-all ${
                         priorityFilter === "all"
                           ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50"
                           : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50"
@@ -246,7 +246,7 @@ export default function ApprovalsPage() {
                     </button>
                     <button
                       onClick={() => setPriorityFilter("high")}
-                      className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      className={`px-4 py-2 rounded-sm font-semibold transition-all ${
                         priorityFilter === "high"
                           ? "bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg shadow-red-500/50"
                           : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50"
@@ -256,7 +256,7 @@ export default function ApprovalsPage() {
                     </button>
                     <button
                       onClick={() => setPriorityFilter("medium")}
-                      className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      className={`px-4 py-2 rounded-sm font-semibold transition-all ${
                         priorityFilter === "medium"
                           ? "bg-gradient-to-r from-yellow-600 to-amber-600 text-white shadow-lg shadow-yellow-500/50"
                           : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50"
@@ -266,7 +266,7 @@ export default function ApprovalsPage() {
                     </button>
                     <button
                       onClick={() => setPriorityFilter("low")}
-                      className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      className={`px-4 py-2 rounded-sm font-semibold transition-all ${
                         priorityFilter === "low"
                           ? "bg-gradient-to-r from-slate-600 to-gray-600 text-white shadow-lg shadow-slate-500/50"
                           : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50"
@@ -288,7 +288,7 @@ export default function ApprovalsPage() {
                   </div>
                 </>
               ) : (
-                <div className="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-lg border-2 border-dashed border-slate-700/50">
+                <div className="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-sm border-2 border-dashed border-slate-700/50">
                   <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-white mb-2">All caught up!</h3>
                   <p className="text-sm text-slate-400">No pending approvals at the moment.</p>
@@ -301,7 +301,7 @@ export default function ApprovalsPage() {
               {approved.length > 0 ? (
                 <div className="space-y-4">
                   {approved.map((item) => (
-                    <div key={item.id} className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-4 hover:border-green-500/50 transition-all">
+                    <div key={item.id} className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-4 hover:border-green-500/50 transition-all">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h4 className="font-semibold text-white mb-1">{item.title}</h4>
@@ -316,7 +316,7 @@ export default function ApprovalsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-lg border-2 border-dashed border-slate-700/50">
+                <div className="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-sm border-2 border-dashed border-slate-700/50">
                   <CheckCircle className="h-16 w-16 text-slate-600 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-slate-400 mb-2">No approved items yet</h3>
                   <p className="text-sm text-slate-500">Approved items will appear here.</p>
@@ -329,7 +329,7 @@ export default function ApprovalsPage() {
               {declined.length > 0 ? (
                 <div className="space-y-4">
                   {declined.map((item) => (
-                    <div key={item.id} className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-red-500/30 p-4 hover:border-red-500/50 transition-all">
+                    <div key={item.id} className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-red-500/30 p-4 hover:border-red-500/50 transition-all">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h4 className="font-semibold text-white mb-1">{item.title}</h4>
@@ -349,7 +349,7 @@ export default function ApprovalsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-lg border-2 border-dashed border-slate-700/50">
+                <div className="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-sm border-2 border-dashed border-slate-700/50">
                   <XCircle className="h-16 w-16 text-slate-600 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-slate-400 mb-2">No declined items</h3>
                   <p className="text-sm text-slate-500">Declined items will appear here.</p>

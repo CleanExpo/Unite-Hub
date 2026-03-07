@@ -88,7 +88,7 @@ export default function SmartBriefPage() {
 
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-sm shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
@@ -119,7 +119,7 @@ export default function SmartBriefPage() {
                   value={briefName}
                   onChange={(e) => setBriefName(e.target.value)}
                   placeholder="e.g., Summer 2025 Campaign Brief"
-                  className="w-full bg-[#0d2137]/60 border border-cyan-900/30 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full bg-[#0d2137]/60 border border-cyan-900/30 rounded-sm px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
                 />
               </div>
 
@@ -128,7 +128,7 @@ export default function SmartBriefPage() {
                 {sections.map((section) => (
                   <div
                     key={section.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-xl p-4"
+                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-sm p-4"
                   >
                     <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
                       <span className="text-cyan-400">{section.icon}</span>
@@ -139,7 +139,7 @@ export default function SmartBriefPage() {
                       onChange={(e) => handleSectionChange(section.id, e.target.value)}
                       placeholder={section.placeholder}
                       rows={3}
-                      className="w-full bg-[#071318]/60 border border-cyan-900/20 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors resize-none"
+                      className="w-full bg-[#071318]/60 border border-cyan-900/20 rounded-sm px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors resize-none"
                     />
                   </div>
                 ))}
@@ -150,7 +150,7 @@ export default function SmartBriefPage() {
                 <button
                   type="button"
                   onClick={handleGenerateBrief}
-                  className="flex items-center gap-2 bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-400 hover:to-green-400 text-black font-semibold px-6 py-3 rounded-lg transition-all shadow-lg shadow-lime-500/20"
+                  className="flex items-center gap-2 bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-400 hover:to-green-400 text-black font-semibold px-6 py-3 rounded-sm transition-all shadow-lg shadow-lime-500/20"
                 >
                   <Sparkles className="w-4 h-4" />
                   Generate AI Brief

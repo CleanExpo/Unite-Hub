@@ -110,13 +110,13 @@ export default function NewProjectPage() {
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+        <div className="bg-red-500/10 border border-red-500/30 rounded-sm p-4">
           <p className="text-red-400 text-sm">{error}</p>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 space-y-6">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 space-y-6">
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="title" className="text-white">

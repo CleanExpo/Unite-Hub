@@ -400,7 +400,7 @@ export default function AIDOOnboardingPage() {
                 </div>
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-sm">
                 <p className="text-sm text-blue-800 dark:text-blue-200">
                   <strong>What we'll generate:</strong> Business tagline, unique value
                   proposition, expertise areas, competitive differentiators, and core service
@@ -413,7 +413,7 @@ export default function AIDOOnboardingPage() {
           {/* Step 2: Authority Figure */}
           {currentStep === 2 && (
             <>
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mb-4">
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-sm mb-4">
                 <div className="flex items-start gap-2">
                   <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
                   <div>
@@ -522,7 +522,7 @@ export default function AIDOOnboardingPage() {
                 />
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-sm">
                 <p className="text-sm text-blue-800 dark:text-blue-200">
                   <strong>What we'll generate:</strong> Professional bio (150-200 words), short
                   byline (50-75 words), comprehensive About page (300-400 words), expertise areas,
@@ -535,7 +535,7 @@ export default function AIDOOnboardingPage() {
           {/* Step 3: Data Integrations */}
           {currentStep === 3 && (
             <>
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg mb-6">
+              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-sm mb-6">
                 <div className="flex items-start gap-2">
                   <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400 mt-0.5" />
                   <div>
@@ -645,7 +645,7 @@ export default function AIDOOnboardingPage() {
                 </Card>
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mt-6">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-sm mt-6">
                 <p className="text-sm text-blue-800 dark:text-blue-200">
                   <strong>What we'll generate:</strong> 3-5 audience personas based on real
                   customer data, content strategy with topic pillars, and H2-ready questions users

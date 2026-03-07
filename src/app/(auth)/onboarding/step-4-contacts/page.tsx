@@ -121,7 +121,7 @@ export default function OnboardingStep4Page() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
       <div className="max-w-2xl mx-auto py-12">
-        <div className="bg-white rounded-lg shadow-xl border border-gray-200 p-8">
+        <div className="bg-white rounded-sm shadow-xl border border-gray-200 p-8">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
@@ -139,7 +139,7 @@ export default function OnboardingStep4Page() {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-sm text-sm">
               {error}
             </div>
           )}
@@ -174,7 +174,7 @@ export default function OnboardingStep4Page() {
                   {emails.map((email) => (
                     <div
                       key={email}
-                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
+                      className="flex items-center justify-between p-3 border border-gray-200 rounded-sm"
                     >
                       <span className="text-gray-900">{email}</span>
                       <button
@@ -190,7 +190,7 @@ export default function OnboardingStep4Page() {
               </div>
             )}
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-sm p-4">
               <p className="text-sm text-blue-900">
                 These email addresses will be monitored for incoming messages. Our AI will
                 automatically analyze and respond to emails from your clients.

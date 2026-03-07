@@ -135,7 +135,7 @@ export default function ProjectsPage() {
         <>
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
               <div className="flex items-center gap-3 mb-3">
                 <FolderOpen className="h-8 w-8 text-blue-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-slate-400 text-sm font-medium">Total Projects</h3>
@@ -146,7 +146,7 @@ export default function ProjectsPage() {
               <p className="text-slate-500 text-xs mt-2">+3 this month</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
               <div className="flex items-center gap-3 mb-3">
                 <TrendingUp className="h-8 w-8 text-green-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-slate-400 text-sm font-medium">Active Projects</h3>
@@ -157,7 +157,7 @@ export default function ProjectsPage() {
               <p className="text-slate-500 text-xs mt-2">{totalProjects > 0 ? Math.round((activeProjects / totalProjects) * 100) : 0}% of total</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
               <div className="flex items-center gap-3 mb-3">
                 <AlertCircle className="h-8 w-8 text-orange-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-slate-400 text-sm font-medium">At Risk</h3>
@@ -168,7 +168,7 @@ export default function ProjectsPage() {
               <p className="text-slate-500 text-xs mt-2">Need attention</p>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
               <div className="flex items-center gap-3 mb-3">
                 <CheckCircle className="h-8 w-8 text-purple-400 group-hover:scale-110 transition-transform" />
                 <h3 className="text-slate-400 text-sm font-medium">Completed</h3>

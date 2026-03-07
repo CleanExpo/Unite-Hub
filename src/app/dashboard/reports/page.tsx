@@ -42,7 +42,7 @@ export default function ReportsPage() {
           <Card key={index} className="bg-slate-800/50 border-slate-700">
             <CardContent className="flex items-center justify-between p-4">
               <div className="flex items-center gap-4">
-                <div className="p-2 bg-slate-700 rounded-lg">
+                <div className="p-2 bg-slate-700 rounded-sm">
                   <FileText className="h-5 w-5 text-cyan-500" />
                 </div>
                 <div>

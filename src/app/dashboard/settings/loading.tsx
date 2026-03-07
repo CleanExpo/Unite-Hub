@@ -9,7 +9,7 @@ export default function SettingsLoading() {
 
       {/* Form sections */}
       {[1, 2, 3].map((section) => (
-        <div key={section} className="bg-gray-800/50 rounded-lg p-5 space-y-4 animate-pulse">
+        <div key={section} className="bg-gray-800/50 rounded-sm p-5 space-y-4 animate-pulse">
           <div className="h-5 bg-gray-700 rounded w-32 mb-4" />
           {[1, 2].map((field) => (
             <div key={field}>

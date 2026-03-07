@@ -434,7 +434,7 @@ export default function LandingPageDetailPage() {
         <TabsContent value="tips" className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             {/* Copy Tips */}
-            <div className="rounded-lg border p-6 space-y-4">
+            <div className="rounded-sm border p-6 space-y-4">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
                 <h3 className="font-semibold">Copy Writing Tips</h3>
@@ -450,7 +450,7 @@ export default function LandingPageDetailPage() {
             </div>
 
             {/* Design Tips */}
-            <div className="rounded-lg border p-6 space-y-4">
+            <div className="rounded-sm border p-6 space-y-4">
               <div className="flex items-center gap-2">
                 <Eye className="h-5 w-5 text-primary" />
                 <h3 className="font-semibold">Design Tips</h3>

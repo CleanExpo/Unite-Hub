@@ -118,7 +118,7 @@ export default function AIDOAnalyticsPage() {
     <Card>
       <CardContent className="pt-6">
         <div className="flex items-center justify-between mb-2">
-          <div className={`p-2 rounded-lg ${color}`}>
+          <div className={`p-2 rounded-sm ${color}`}>
             <Icon className="w-5 h-5 text-white" />
           </div>
           {trend && (
@@ -326,7 +326,7 @@ export default function AIDOAnalyticsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
+                <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-950 rounded-sm">
                   <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5" />
                   <div>
                     <p className="font-medium">Focus on hot leads</p>
@@ -335,7 +335,7 @@ export default function AIDOAnalyticsPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg">
+                <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-sm">
                   <Mail className="w-5 h-5 text-green-600 mt-0.5" />
                   <div>
                     <p className="font-medium">Improve open rates</p>
@@ -344,7 +344,7 @@ export default function AIDOAnalyticsPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 p-3 bg-purple-50 dark:bg-purple-950 rounded-lg">
+                <div className="flex items-start gap-3 p-3 bg-purple-50 dark:bg-purple-950 rounded-sm">
                   <Activity className="w-5 h-5 text-purple-600 mt-0.5" />
                   <div>
                     <p className="font-medium">Re-engage inactive contacts</p>

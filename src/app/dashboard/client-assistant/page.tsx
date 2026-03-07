@@ -137,7 +137,7 @@ export default function ClientAssistantPage() {
           </Select>
 
           {selectedClient && (
-            <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+            <div className="mt-4 p-3 bg-muted/50 rounded-sm">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">{selectedClient.name}</p>

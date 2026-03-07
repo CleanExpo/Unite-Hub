@@ -86,7 +86,7 @@ export default function InsightsPage() {
         {insights.map((insight, index) => (
           <Card key={index} className="bg-slate-800/50 border-slate-700">
             <CardContent className="flex items-start gap-4 p-4">
-              <div className={`p-2 bg-slate-700 rounded-lg ${insight.color}`}>
+              <div className={`p-2 bg-slate-700 rounded-sm ${insight.color}`}>
                 <insight.icon className="h-5 w-5" />
               </div>
               <div className="flex-1">

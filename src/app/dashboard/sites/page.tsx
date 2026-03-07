@@ -233,7 +233,7 @@ export default function SitesPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                    <div className="h-12 w-12 rounded-sm bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
                       <Globe className="w-6 h-6 text-white" />
                     </div>
                     <div>

@@ -145,14 +145,14 @@ export default function SettingsPage() {
           <Skeleton className="h-5 w-64" />
         </div>
 
-        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+        <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
           <CardHeader>
             <Skeleton className="h-6 w-48" />
             <Skeleton className="h-4 w-64 mt-2" />
           </CardHeader>
           <CardContent className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-4 flex justify-between items-center">
+              <div key={i} className="bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm p-4 flex justify-between items-center">
                 <div className="space-y-2">
                   <Skeleton className="h-5 w-24" />
                   <Skeleton className="h-4 w-32" />
@@ -174,22 +174,22 @@ export default function SettingsPage() {
         <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
           Settings
         </h1>
-        <p className="text-slate-400">Manage integrations and account</p>
+        <p className="text-white/70">Manage integrations and account</p>
       </div>
 
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+      <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white text-xl font-semibold flex items-center gap-2">
             <Mail className="w-5 h-5" />
             Email Integrations
           </CardTitle>
-          <CardDescription className="text-slate-400">Connect your email accounts</CardDescription>
+          <CardDescription className="text-white/70">Connect your email accounts</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-4 flex justify-between items-center hover:border-slate-600/50 transition-all">
+          <div className="bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm p-4 flex justify-between items-center hover:border-white/[0.08] transition-all">
             <div>
               <h4 className="font-semibold text-white">Gmail</h4>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-white/70">
                 {integrations.find((i) => i.provider === "gmail")
                   ? `Connected: ${integrations.find((i) => i.provider === "gmail")?.account_email}`
                   : "Not connected"}
@@ -215,7 +215,7 @@ export default function SettingsPage() {
                     )}
                     Sync Now
                   </Button>
-                  <Button size="sm" variant="outline" className="border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50">
+                  <Button size="sm" variant="outline" className="border-white/[0.06] bg-[#050505] backdrop-blur-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.08]">
                     Disconnect
                   </Button>
                 </>
@@ -231,20 +231,20 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-4 flex justify-between items-center hover:border-slate-600/50 transition-all">
+          <div className="bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm p-4 flex justify-between items-center hover:border-white/[0.08] transition-all">
             <div>
               <h4 className="font-semibold text-white">Outlook</h4>
-              <p className="text-sm text-slate-400">Not connected</p>
+              <p className="text-sm text-white/70">Not connected</p>
             </div>
-            <Button size="sm" className="bg-slate-700/50 hover:bg-slate-600/50 text-slate-400" disabled>
+            <Button size="sm" className="bg-white/[0.06] hover:bg-white/[0.06] text-white/70" disabled>
               Coming Soon
             </Button>
           </div>
 
-          <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-4 flex justify-between items-center hover:border-slate-600/50 transition-all">
+          <div className="bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm p-4 flex justify-between items-center hover:border-white/[0.08] transition-all">
             <div>
               <h4 className="font-semibold text-white">Slack</h4>
-              <p className="text-sm text-slate-400">Get notified of hot leads and email events</p>
+              <p className="text-sm text-white/70">Get notified of hot leads and email events</p>
             </div>
             <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50">
               Connect

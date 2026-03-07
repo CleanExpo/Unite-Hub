@@ -103,7 +103,7 @@ export default function ReviewQueuePage() {
 
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-sm shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
@@ -128,7 +128,7 @@ export default function ReviewQueuePage() {
                     key={f}
                     type="button"
                     onClick={() => setFilter(f)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`px-3 py-1.5 rounded-sm text-sm font-medium transition-colors ${
                       filter === f
                         ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
                         : "text-gray-400 hover:text-white hover:bg-[#0d2137]/60"
@@ -156,11 +156,11 @@ export default function ReviewQueuePage() {
                 {filteredItems.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-xl p-4 flex items-center gap-4 hover:bg-[#0d2137]/60 transition-colors"
+                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-sm p-4 flex items-center gap-4 hover:bg-[#0d2137]/60 transition-colors"
                   >
                     {/* Thumbnail */}
                     {item.thumbnailUrl && (
-                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-[#071318] flex-shrink-0">
+                      <div className="w-16 h-16 rounded-sm overflow-hidden bg-[#071318] flex-shrink-0">
                         <img
                           src={item.thumbnailUrl}
                           alt={item.title}

@@ -13,7 +13,7 @@ export default function ContactsLoading() {
       </div>
 
       {/* Table header */}
-      <div className="bg-gray-800/50 rounded-lg overflow-hidden">
+      <div className="bg-gray-800/50 rounded-sm overflow-hidden">
         <div className="grid grid-cols-5 gap-4 p-3 border-b border-gray-700 animate-pulse">
           {['w-24', 'w-32', 'w-28', 'w-20', 'w-16'].map((w, i) => (
             <div key={i} className={`h-4 bg-gray-700 rounded ${w}`} />

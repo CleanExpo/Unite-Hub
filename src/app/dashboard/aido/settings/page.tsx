@@ -196,7 +196,7 @@ export default function AIDOSettingsPage() {
                 id="ai-model"
                 value={aiModel}
                 onChange={(e) => setAiModel(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800"
+                className="w-full px-3 py-2 border rounded-sm bg-white dark:bg-gray-800"
               >
                 <option value="claude-sonnet-4-5-20250929">Claude Sonnet 4.5 (Recommended)</option>
                 <option value="claude-opus-4-5-20251101">Claude Opus 4 (Premium)</option>
@@ -261,7 +261,7 @@ export default function AIDOSettingsPage() {
                 value={emailSignature}
                 onChange={(e) => setEmailSignature(e.target.value)}
                 placeholder="Best regards,&#10;Your Name&#10;Your Company"
-                className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800 min-h-[100px]"
+                className="w-full px-3 py-2 border rounded-sm bg-white dark:bg-gray-800 min-h-[100px]"
               />
             </div>
 

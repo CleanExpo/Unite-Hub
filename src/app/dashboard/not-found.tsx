@@ -13,7 +13,7 @@ export default function DashboardNotFound() {
         </p>
         <Link
           href="/dashboard/overview"
-          className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+          className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-sm transition-colors"
         >
           Back to Dashboard
         </Link>

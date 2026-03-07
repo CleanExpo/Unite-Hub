@@ -96,7 +96,7 @@ function FeatureCard({
   return (
     <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/50 transition-all group">
       <CardContent className="p-6 space-y-4">
-        <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+        <div className={`h-12 w-12 rounded-sm bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
           <Icon className="h-6 w-6 text-white" />
         </div>
         <div className="space-y-2">

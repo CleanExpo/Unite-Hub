@@ -56,7 +56,7 @@ export default function TimeTrackerPage() {
         <CardContent>
           <div className="space-y-4">
             {entries.map((entry, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-slate-700/50 rounded-sm">
                 <div className="flex items-center gap-3">
                   <Clock className="h-4 w-4 text-slate-400" />
                   <div>

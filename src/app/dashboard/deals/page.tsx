@@ -126,13 +126,13 @@ export default function DealsPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-slate-800 rounded w-48" />
+          <div className="h-8 bg-[#050505] rounded w-48" />
           <div className="grid grid-cols-6 gap-3">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-20 bg-slate-800 rounded" />
+              <div key={i} className="h-20 bg-[#050505] rounded" />
             ))}
           </div>
-          <div className="h-96 bg-slate-800 rounded" />
+          <div className="h-96 bg-[#050505] rounded" />
         </div>
       </div>
     );
@@ -141,7 +141,7 @@ export default function DealsPage() {
   if (!workspaceId) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <div className="text-center py-20 text-slate-400">
+        <div className="text-center py-20 text-white/70">
           No workspace selected. Please select a workspace to view your deal pipeline.
         </div>
       </div>
@@ -154,7 +154,7 @@ export default function DealsPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-white">Deal Pipeline</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-white/70 mt-1">
             Track and manage your deals through the sales pipeline
           </p>
         </div>
@@ -163,7 +163,7 @@ export default function DealsPage() {
             variant="ghost"
             size="icon"
             onClick={() => { fetchDeals(); fetchStages(); }}
-            className="text-slate-400 hover:text-white"
+            className="text-white/70 hover:text-white"
           >
             <RefreshCw className="w-4 h-4" />
           </Button>
@@ -189,34 +189,34 @@ export default function DealsPage() {
       {/* Filters */}
       <div className="flex items-center gap-3 mb-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
           <Input
             placeholder="Search deals..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+            className="pl-9 bg-[#050505] border-white/[0.06] text-white placeholder:text-white/40"
           />
         </div>
 
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-32 bg-slate-800 border-slate-700 text-white">
+          <SelectTrigger className="w-32 bg-[#050505] border-white/[0.06] text-white">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-slate-800 border-slate-700">
-            <SelectItem value="open" className="text-white hover:bg-slate-700">Open</SelectItem>
-            <SelectItem value="won" className="text-white hover:bg-slate-700">Won</SelectItem>
-            <SelectItem value="lost" className="text-white hover:bg-slate-700">Lost</SelectItem>
-            <SelectItem value="abandoned" className="text-white hover:bg-slate-700">Abandoned</SelectItem>
+          <SelectContent className="bg-[#050505] border-white/[0.06]">
+            <SelectItem value="open" className="text-white hover:bg-white/[0.06]">Open</SelectItem>
+            <SelectItem value="won" className="text-white hover:bg-white/[0.06]">Won</SelectItem>
+            <SelectItem value="lost" className="text-white hover:bg-white/[0.06]">Lost</SelectItem>
+            <SelectItem value="abandoned" className="text-white hover:bg-white/[0.06]">Abandoned</SelectItem>
           </SelectContent>
         </Select>
 
-        <div className="flex border border-slate-700 rounded-md overflow-hidden">
+        <div className="flex border border-white/[0.06] rounded-sm overflow-hidden">
           <Button
             variant={viewMode === "board" ? "secondary" : "ghost"}
             size="icon"
             onClick={() => setViewMode("board")}
             className={`rounded-none h-9 w-9 ${
-              viewMode === "board" ? "bg-slate-700 text-white" : "text-slate-400"
+              viewMode === "board" ? "bg-white/[0.06] text-white" : "text-white/70"
             }`}
           >
             <LayoutGrid className="w-4 h-4" />
@@ -226,7 +226,7 @@ export default function DealsPage() {
             size="icon"
             onClick={() => setViewMode("list")}
             className={`rounded-none h-9 w-9 ${
-              viewMode === "list" ? "bg-slate-700 text-white" : "text-slate-400"
+              viewMode === "list" ? "bg-white/[0.06] text-white" : "text-white/70"
             }`}
           >
             <List className="w-4 h-4" />
@@ -236,7 +236,7 @@ export default function DealsPage() {
 
       {/* Error State */}
       {error && (
-        <div className="text-sm text-red-400 bg-red-400/10 rounded-md px-4 py-3 mb-4">
+        <div className="text-sm text-red-400 bg-red-400/10 rounded-sm px-4 py-3 mb-4">
           {error}
           <Button
             variant="link"
@@ -252,13 +252,13 @@ export default function DealsPage() {
       {loading ? (
         <div className="flex gap-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="flex-shrink-0 w-72 bg-slate-800/30 rounded-lg p-3">
+            <div key={i} className="flex-shrink-0 w-72 bg-[#050505] rounded-sm p-3">
               <div className="animate-pulse space-y-3">
-                <div className="h-4 bg-slate-700 rounded w-24" />
-                <div className="h-3 bg-slate-700 rounded w-16" />
+                <div className="h-4 bg-white/[0.06] rounded w-24" />
+                <div className="h-3 bg-white/[0.06] rounded w-16" />
                 <div className="space-y-2 mt-4">
                   {[...Array(2)].map((_, j) => (
-                    <div key={j} className="h-24 bg-slate-700/50 rounded" />
+                    <div key={j} className="h-24 bg-white/[0.06] rounded" />
                   ))}
                 </div>
               </div>
@@ -274,37 +274,37 @@ export default function DealsPage() {
         />
       ) : (
         /* Simple List View */
-        <div className="bg-slate-800/30 rounded-lg">
+        <div className="bg-[#050505] rounded-sm">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-700/50">
-                <th className="text-left text-xs text-slate-400 font-medium p-3">Deal</th>
-                <th className="text-left text-xs text-slate-400 font-medium p-3">Contact</th>
-                <th className="text-left text-xs text-slate-400 font-medium p-3">Stage</th>
-                <th className="text-right text-xs text-slate-400 font-medium p-3">Value</th>
-                <th className="text-center text-xs text-slate-400 font-medium p-3">Probability</th>
-                <th className="text-left text-xs text-slate-400 font-medium p-3">Expected Close</th>
+              <tr className="border-b border-white/[0.06]">
+                <th className="text-left text-xs text-white/70 font-medium p-3">Deal</th>
+                <th className="text-left text-xs text-white/70 font-medium p-3">Contact</th>
+                <th className="text-left text-xs text-white/70 font-medium p-3">Stage</th>
+                <th className="text-right text-xs text-white/70 font-medium p-3">Value</th>
+                <th className="text-center text-xs text-white/70 font-medium p-3">Probability</th>
+                <th className="text-left text-xs text-white/70 font-medium p-3">Expected Close</th>
               </tr>
             </thead>
             <tbody>
               {deals.map((deal) => (
                 <tr
                   key={deal.id}
-                  className="border-b border-slate-700/30 hover:bg-slate-800/40 cursor-pointer"
+                  className="border-b border-white/[0.06] hover:bg-[#050505] cursor-pointer"
                   onClick={() => window.location.href = `/dashboard/deals/${deal.id}`}
                 >
                   <td className="p-3">
                     <div className="text-sm font-medium text-white">{deal.title}</div>
                     {deal.source && (
-                      <div className="text-xs text-slate-500">{deal.source}</div>
+                      <div className="text-xs text-white/40">{deal.source}</div>
                     )}
                   </td>
                   <td className="p-3">
-                    <div className="text-sm text-slate-300">
+                    <div className="text-sm text-white/70">
                       {deal.contacts?.name || "—"}
                     </div>
                     {deal.contacts?.company && (
-                      <div className="text-xs text-slate-500">{deal.contacts.company}</div>
+                      <div className="text-xs text-white/40">{deal.contacts.company}</div>
                     )}
                   </td>
                   <td className="p-3">
@@ -313,7 +313,7 @@ export default function DealsPage() {
                         className="w-2 h-2 rounded-full"
                         style={{ backgroundColor: deal.pipeline_stages?.color || "#3B82F6" }}
                       />
-                      <span className="text-sm text-slate-300">
+                      <span className="text-sm text-white/70">
                         {deal.pipeline_stages?.name || "—"}
                       </span>
                     </div>
@@ -331,13 +331,13 @@ export default function DealsPage() {
                     <span className={`text-sm ${
                       deal.probability >= 75 ? "text-emerald-400" :
                       deal.probability >= 50 ? "text-yellow-400" :
-                      "text-slate-400"
+                      "text-white/70"
                     }`}>
                       {deal.probability}%
                     </span>
                   </td>
                   <td className="p-3">
-                    <span className="text-sm text-slate-400">
+                    <span className="text-sm text-white/70">
                       {deal.expected_close_date
                         ? new Date(deal.expected_close_date).toLocaleDateString("en-AU", {
                             day: "numeric",
@@ -350,7 +350,7 @@ export default function DealsPage() {
               ))}
               {deals.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="text-center py-12 text-slate-500">
+                  <td colSpan={6} className="text-center py-12 text-white/40">
                     No {statusFilter} deals found
                   </td>
                 </tr>

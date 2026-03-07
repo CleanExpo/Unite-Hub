@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
         {/* Logo */}
         <div className="relative z-10">
           <Link href="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
+            <div className="h-12 w-12 rounded-sm bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
               <Sparkles className="h-7 w-7 text-white" />
             </div>
             <div className="flex flex-col">
@@ -91,7 +91,7 @@ export default function ForgotPasswordPage() {
               }
             ].map((feature, index) => (
               <div key={index} className="flex items-start gap-4">
-                <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/10">
+                <div className="h-10 w-10 rounded-sm bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/10">
                   <feature.icon className="h-5 w-5 text-blue-400" />
                 </div>
                 <div>
@@ -119,7 +119,7 @@ export default function ForgotPasswordPage() {
         <div className="w-full max-w-md space-y-8">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
+            <div className="h-10 w-10 rounded-sm bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
               <Sparkles className="h-6 w-6 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -135,7 +135,7 @@ export default function ForgotPasswordPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-sm text-red-700">
+            <div className="p-4 bg-red-50 border border-red-200 rounded-sm flex items-center gap-3 text-sm text-red-700">
               <AlertCircle className="h-5 w-5 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -143,7 +143,7 @@ export default function ForgotPasswordPage() {
 
           {/* Success Message */}
           {success && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3 text-sm text-green-700">
+            <div className="p-4 bg-green-50 border border-green-200 rounded-sm flex items-center gap-3 text-sm text-green-700">
               <CheckCircle className="h-5 w-5 flex-shrink-0" />
               <div>
                 <p className="font-semibold">Check your email!</p>

@@ -16,7 +16,7 @@ export default function OnboardingStep3Page() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
       <div className="max-w-3xl mx-auto py-12">
-        <div className="bg-white rounded-lg shadow-xl border border-gray-200 p-8">
+        <div className="bg-white rounded-sm shadow-xl border border-gray-200 p-8">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">

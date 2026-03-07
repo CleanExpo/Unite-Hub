@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* Auth Card */}
-        <div className="bg-white rounded-lg shadow-2xl p-8">
+        <div className="bg-white rounded-sm shadow-2xl p-8">
           {children}
         </div>
 

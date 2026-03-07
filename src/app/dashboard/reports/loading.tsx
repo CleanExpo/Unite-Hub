@@ -15,7 +15,7 @@ export default function ReportsLoading() {
       </div>
 
       {/* Table */}
-      <div className="bg-gray-800/50 rounded-lg overflow-hidden">
+      <div className="bg-gray-800/50 rounded-sm overflow-hidden">
         <div className="grid grid-cols-4 gap-4 p-3 border-b border-gray-700 animate-pulse">
           {['w-28', 'w-20', 'w-24', 'w-16'].map((w, i) => (
             <div key={i} className={`h-4 bg-gray-700 rounded ${w}`} />

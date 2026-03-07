@@ -274,7 +274,7 @@ export default function IntentClustersPage() {
                 />
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-sm">
                 <p className="text-sm text-blue-800 dark:text-blue-200">
                   <strong>What you'll get:</strong> 10-15 questions users actually ask, organized by searcher mindset,
                   with business impact scores, difficulty analysis, and competitive gaps. Perfect for H2 headings.

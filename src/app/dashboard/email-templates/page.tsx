@@ -31,7 +31,7 @@ export default function EmailTemplatesPage() {
           <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-colors">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-3">
-                <div className="p-2 bg-slate-700 rounded-lg">
+                <div className="p-2 bg-slate-700 rounded-sm">
                   <FileText className="h-5 w-5 text-cyan-500" />
                 </div>
                 <span className="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded">

@@ -215,7 +215,7 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
                 {competitors.length}
               </p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-blue-100 rounded-sm flex items-center justify-center">
               <Users className="w-6 h-6 text-blue-600" />
             </div>
           </div>
@@ -229,7 +229,7 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
                 {competitors.filter((c) => c.category === "direct").length}
               </p>
             </div>
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-red-100 rounded-sm flex items-center justify-center">
               <Target className="w-6 h-6 text-red-600" />
             </div>
           </div>
@@ -243,7 +243,7 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
                 {latestAnalysis?.marketGaps?.length || 0}
               </p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-purple-100 rounded-sm flex items-center justify-center">
               <Lightbulb className="w-6 h-6 text-purple-600" />
             </div>
           </div>
@@ -257,7 +257,7 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
                 {latestAnalysis?.differentiationOpportunities?.length || 0}
               </p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-green-100 rounded-sm flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-green-600" />
             </div>
           </div>

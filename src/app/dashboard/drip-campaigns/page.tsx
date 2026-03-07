@@ -91,7 +91,7 @@ export default function DripCampaignsPage() {
           <Card key={s.label} className="bg-slate-800/50 border-slate-700">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div>
+                <div className={`p-2 rounded-sm ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div>
                 <div>
                   <p className="text-2xl font-bold text-white">{s.value}</p>
                   <p className="text-xs text-slate-400">{s.label}</p>
@@ -103,7 +103,7 @@ export default function DripCampaignsPage() {
       </div>
 
       {loading ? (
-        <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-slate-800/30 rounded-lg animate-pulse" />)}</div>
+        <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-slate-800/30 rounded-sm animate-pulse" />)}</div>
       ) : campaigns.length === 0 ? (
         <Card className="bg-slate-800/30 border-slate-700">
           <CardContent className="text-center py-16">
@@ -120,7 +120,7 @@ export default function DripCampaignsPage() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="p-2 bg-slate-700 rounded-lg"><Workflow className="h-5 w-5 text-cyan-500" /></div>
+                    <div className="p-2 bg-slate-700 rounded-sm"><Workflow className="h-5 w-5 text-cyan-500" /></div>
                     <div>
                       <h3 className="font-medium text-white">{c.name}</h3>
                       <div className="flex items-center gap-4 mt-1 text-sm text-slate-400">

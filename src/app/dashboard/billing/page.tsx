@@ -229,7 +229,7 @@ export default function BillingPage() {
           <Skeleton className="h-10 w-40" />
         </div>
 
-        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+        <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
           <CardHeader>
             <Skeleton className="h-6 w-48" />
             <Skeleton className="h-4 w-64 mt-2" />
@@ -237,7 +237,7 @@ export default function BillingPage() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-slate-900/50 rounded-lg p-4 border border-slate-700/30">
+                <div key={i} className="bg-[#050505] rounded-sm p-4 border border-white/[0.06]">
                   <Skeleton className="h-5 w-24 mb-2" />
                   <Skeleton className="h-8 w-32" />
                 </div>
@@ -250,7 +250,7 @@ export default function BillingPage() {
           <Skeleton className="h-8 w-48" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <Card key={i} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+              <Card key={i} className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
                 <CardHeader>
                   <Skeleton className="h-6 w-32" />
                   <Skeleton className="h-4 w-48 mt-2" />
@@ -282,7 +282,7 @@ export default function BillingPage() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
             Billing & Subscription
           </h1>
-          <p className="text-slate-400">Manage your subscription and billing details</p>
+          <p className="text-white/70">Manage your subscription and billing details</p>
         </div>
         {subscription && (
           <Button
@@ -297,12 +297,12 @@ export default function BillingPage() {
 
       {/* Current Subscription Status */}
       {subscription && (
-        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+        <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-white">Current Subscription</CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardDescription className="text-white/70">
                   Your active plan and billing information
                 </CardDescription>
               </div>
@@ -319,15 +319,15 @@ export default function BillingPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-700/30">
-                <div className="flex items-center gap-2 text-slate-400 text-sm mb-1">
+              <div className="bg-[#050505] rounded-sm p-4 border border-white/[0.06]">
+                <div className="flex items-center gap-2 text-white/70 text-sm mb-1">
                   <Sparkles className="w-4 h-4 text-blue-400" />
                   Plan
                 </div>
                 <div className="text-white font-bold text-xl">{subscription.plan_name}</div>
               </div>
-              <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-700/30">
-                <div className="flex items-center gap-2 text-slate-400 text-sm mb-1">
+              <div className="bg-[#050505] rounded-sm p-4 border border-white/[0.06]">
+                <div className="flex items-center gap-2 text-white/70 text-sm mb-1">
                   <Calendar className="w-4 h-4 text-purple-400" />
                   Billing Period
                 </div>
@@ -336,8 +336,8 @@ export default function BillingPage() {
                   {new Date(subscription.current_period_end).toLocaleDateString()}
                 </div>
               </div>
-              <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-700/30">
-                <div className="flex items-center gap-2 text-slate-400 text-sm mb-1">
+              <div className="bg-[#050505] rounded-sm p-4 border border-white/[0.06]">
+                <div className="flex items-center gap-2 text-white/70 text-sm mb-1">
                   <TrendingUp className="w-4 h-4 text-green-400" />
                   Renewal
                 </div>
@@ -350,7 +350,7 @@ export default function BillingPage() {
             </div>
 
             {subscription.cancel_at_period_end && (
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 flex items-start gap-3">
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-sm p-4 flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-yellow-400 font-semibold">
@@ -375,7 +375,7 @@ export default function BillingPage() {
           {plans.map((plan) => (
             <Card
               key={plan.name}
-              className={`bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/50 transition-all ${
+              className={`bg-[#050505] backdrop-blur-sm border-white/[0.06] hover:border-white/[0.08] transition-all ${
                 plan.popular ? "ring-2 ring-purple-500/50" : ""
               }`}
             >
@@ -387,7 +387,7 @@ export default function BillingPage() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <div
-                    className={`h-10 w-10 rounded-lg bg-gradient-to-br ${plan.gradient} flex items-center justify-center`}
+                    className={`h-10 w-10 rounded-sm bg-gradient-to-br ${plan.gradient} flex items-center justify-center`}
                   >
                     {plan.name === "Starter" ? (
                       <Zap className="w-5 h-5 text-white" />
@@ -399,7 +399,7 @@ export default function BillingPage() {
                   </div>
                   {plan.name}
                 </CardTitle>
-                <CardDescription className="text-slate-400">
+                <CardDescription className="text-white/70">
                   {plan.description}
                 </CardDescription>
                 <div className="mt-4">
@@ -407,14 +407,14 @@ export default function BillingPage() {
                     {plan.price}
                   </span>
                   {plan.price !== "Custom" && (
-                    <span className="text-slate-400 text-sm"> AUD/month</span>
+                    <span className="text-white/70 text-sm"> AUD/month</span>
                   )}
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="space-y-3">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2 text-slate-300 text-sm">
+                    <li key={index} className="flex items-start gap-2 text-white/70 text-sm">
                       <Check className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
                       {feature}
                     </li>
@@ -432,7 +432,7 @@ export default function BillingPage() {
                   }
                   className={`w-full ${
                     currentPlan === plan.name && subscription?.status === "active"
-                      ? "bg-slate-700 text-slate-400 cursor-not-allowed"
+                      ? "bg-white/[0.06] text-white/70 cursor-not-allowed"
                       : `bg-gradient-to-r ${plan.gradient} hover:opacity-90 text-white font-semibold shadow-lg`
                   }`}
                 >
