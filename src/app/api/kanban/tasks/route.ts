@@ -6,12 +6,15 @@ import { Task } from '@/types/kanban';
 
 export async function GET(req: NextRequest) {
   const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
+  const workspaceId = (user.user_metadata?.workspace_id ?? user.id) as string;
+
   const { searchParams } = new URL(req.url);
-  const workspaceId = searchParams.get('workspace_id');
   const status = searchParams.get('status');
   const assigneeType = searchParams.get('assignee_type');
 
-  let query = supabase.from('tasks').select('*').eq('workspace_id', workspaceId!).order('position');
+  let query = supabase.from('tasks').select('*').eq('workspace_id', workspaceId).order('position');
   if (status) query = query.eq('status', status);
   if (assigneeType && assigneeType !== 'all') query = query.eq('assignee_type', assigneeType);
 
@@ -22,17 +25,21 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
+  const workspaceId = (user.user_metadata?.workspace_id ?? user.id) as string;
+
   const body = await req.json();
 
   const { data: task, error } = await supabase
-    .from('tasks').insert(body).select().single();
+    .from('tasks').insert({ ...body, workspace_id: workspaceId }).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // Sync to vault if configured
   const { data: vaultConfig } = await supabase
     .from('workspace_vault_config')
     .select('vault_path, sync_enabled')
-    .eq('workspace_id', body.workspace_id).single();
+    .eq('workspace_id', workspaceId).single();
 
   if (vaultConfig?.sync_enabled) {
     const obsidianPath = await writeTaskToVault(task as Task, vaultConfig.vault_path);

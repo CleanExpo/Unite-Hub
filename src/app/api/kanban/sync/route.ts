@@ -5,23 +5,30 @@ import { initSync } from '@/server/obsidian-sync';
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
-  const { workspace_id } = await req.json();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
+  const workspaceId = (user.user_metadata?.workspace_id ?? user.id) as string;
+
+  const { vault_path, sync_enabled } = await req.json();
 
   const { data: config } = await supabase
-    .from('workspace_vault_config').select('*').eq('workspace_id', workspace_id).single();
+    .from('workspace_vault_config').select('*').eq('workspace_id', workspaceId).single();
   if (!config) return NextResponse.json({ error: 'No vault configured' }, { status: 404 });
 
-  await initSync(config.vault_path, workspace_id);
+  await initSync(config.vault_path, workspaceId);
   await supabase.from('workspace_vault_config')
-    .update({ last_synced_at: new Date().toISOString() }).eq('workspace_id', workspace_id);
+    .update({ vault_path, sync_enabled, last_synced_at: new Date().toISOString() }).eq('workspace_id', workspaceId);
 
-  return NextResponse.json({ ok: true, vault_path: config.vault_path });
+  return NextResponse.json({ ok: true, vault_path: vault_path ?? config.vault_path });
 }
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   const supabase = await createClient();
-  const workspaceId = new URL(req.url).searchParams.get('workspace_id');
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
+  const workspaceId = (user.user_metadata?.workspace_id ?? user.id) as string;
+
   const { data } = await supabase
-    .from('workspace_vault_config').select('*').eq('workspace_id', workspaceId!).single();
+    .from('workspace_vault_config').select('*').eq('workspace_id', workspaceId).single();
   return NextResponse.json(data ?? { sync_enabled: false });
 }

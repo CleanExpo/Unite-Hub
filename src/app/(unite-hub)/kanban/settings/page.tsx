@@ -10,7 +10,7 @@ export default function KanbanSettingsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('/api/kanban/sync?workspace_id=current')
+    fetch('/api/kanban/sync')
       .then(r => r.json())
       .then((d: { vault_path?: string; sync_enabled?: boolean }) => {
         if (d?.vault_path) { setVaultPath(d.vault_path); setSyncEnabled(d.sync_enabled ?? true); }
