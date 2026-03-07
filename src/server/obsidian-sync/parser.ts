@@ -2,7 +2,6 @@
 import matter from 'gray-matter';
 import { Task, TaskStatus, TaskPriority, AssigneeType } from '@/types/kanban';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
 const yaml = require('js-yaml') as { load: (s: string) => object; dump: (v: unknown, o?: Record<string, unknown>) => string };
 
 export function parseTaskFile(content: string, obsidianPath: string): Partial<Task> {

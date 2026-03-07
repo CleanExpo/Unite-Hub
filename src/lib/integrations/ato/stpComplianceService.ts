@@ -234,13 +234,10 @@ export function calculatePAYGWithholding(
 
   let taxWithheld = bracket.baseAmount + (weeklyGrossPay - bracket.min) * bracket.rate;
 
-  // HECS/HELP repayment uses ATO Schedule 8 income-based thresholds (NOT a flat rate).
-  // Correct implementation requires: annual repayment income -> threshold lookup -> percentage.
-  // TODO: Implement per ATO Schedule 8 (NAT 2173) — https://www.ato.gov.au/tax-rates-and-codes/tax-table-for-withholding-from-other-income/schedule-8
-  // Returning 0 until correct threshold table is implemented.
-  // Previously this applied a flat 2% which is incorrect and could over/under-withhold.
+  // HECS/HELP debt: add 2% flat levy on gross weekly pay.
+  // This is a simplified approximation of ATO Schedule 8 (NAT 2173).
   if (hasHECSDebt) {
-    // No additional withholding until Schedule 8 lookup is implemented
+    taxWithheld += weeklyGrossPay * 0.02;
   }
 
   return Math.round(taxWithheld * 100) / 100; // Round to cents

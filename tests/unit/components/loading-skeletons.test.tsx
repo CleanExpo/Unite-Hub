@@ -18,9 +18,9 @@ describe('Dashboard Loading Skeleton', () => {
   it('should render activity list skeletons', async () => {
     const { default: DashboardLoading } = await import('@/app/dashboard/loading');
     const { container } = render(<DashboardLoading />);
-    // 5 activity items with rounded-full avatars
-    const avatars = container.querySelectorAll('.rounded-full');
-    expect(avatars.length).toBe(5);
+    // 5 activity items — after Scientific Luxury migration avatars use rounded-sm not rounded-full
+    const activityItems = container.querySelectorAll('.flex.items-center.gap-3');
+    expect(activityItems.length).toBe(5);
   });
 });
 

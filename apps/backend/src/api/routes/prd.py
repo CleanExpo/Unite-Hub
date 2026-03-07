@@ -63,7 +63,7 @@ class PRDStatusResponse(BaseModel):
 async def generate_prd(
     prd_request: GeneratePRDRequest,
     background_tasks: BackgroundTasks,
-    request: Request = None,
+    request: Request | None = None,
 ) -> GeneratePRDResponse:
     """Generate comprehensive PRD from requirements.
 
