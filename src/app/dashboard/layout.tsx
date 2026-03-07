@@ -123,9 +123,7 @@ export default function DashboardLayout({
                 variant="outline"
                 onClick={async () => {
                   await signOut();
-                  if (typeof window !== 'undefined') {
-                    window.location.href = '/login';
-                  }
+                  router.push('/login');
                 }}
                 className="bg-white/[0.03] border-white/[0.06] text-white/90 hover:bg-white/[0.05]"
               >
@@ -402,9 +400,7 @@ export default function DashboardLayout({
                       className="text-red-400 cursor-pointer"
                       onClick={async () => {
                         await signOut();
-                        if (typeof window !== 'undefined') {
-                          window.location.href = '/login';
-                        }
+                        router.push('/login');
                       }}
                     >
                       Logout

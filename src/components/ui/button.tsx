@@ -3,7 +3,9 @@
  * Production-ready button with variants, sizes, and accessibility
  */
 
+'use client';
 import React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const buttonVariants = cva(
@@ -23,6 +25,7 @@ export const buttonVariants = cva(
         md: 'px-4 py-2 text-base',
         lg: 'px-6 py-3 text-lg',
         xl: 'px-8 py-4 text-xl',
+        icon: 'h-9 w-9 p-0',
       },
       fullWidth: {
         true: 'w-full',
@@ -43,6 +46,7 @@ export interface ButtonProps
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  asChild?: boolean;
 }
 
 export default function Button({
@@ -55,13 +59,15 @@ export default function Button({
   rightIcon,
   disabled,
   className,
+  asChild = false,
   ...props
 }: ButtonProps) {
+  const Comp = asChild ? Slot : 'button';
   return (
-    <button
+    <Comp
       className={buttonVariants({ variant, size, fullWidth, className })}
-      disabled={disabled || loading}
-      aria-busy={loading}
+      disabled={!asChild ? (disabled || loading) : undefined}
+      aria-busy={!asChild ? loading : undefined}
       {...props}
     >
       {loading && (
@@ -89,7 +95,7 @@ export default function Button({
       {!loading && leftIcon && <span className="mr-2">{leftIcon}</span>}
       {children}
       {!loading && rightIcon && <span className="ml-2">{rightIcon}</span>}
-    </button>
+    </Comp>
   );
 }
 

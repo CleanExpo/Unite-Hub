@@ -283,7 +283,7 @@ export default function ContactsPage() {
                       <Badge
                         className={
                           (contact.ai_score || 0) >= 80
-                            ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                            ? "bg-[#00FF88]/10 text-[#00FF88] border border-[#00FF88]/30"
                             : (contact.ai_score || 0) >= 70
                             ? "bg-[#FFB800]/10 text-[#FFB800] border border-[#FFB800]/30"
                             : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
@@ -296,7 +296,7 @@ export default function ContactsPage() {
                       <Badge
                         className={
                           contact.status === "prospect"
-                            ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                            ? "bg-[#00FF88]/10 text-[#00FF88] border border-[#00FF88]/30"
                             : contact.status === "lead"
                             ? "bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/30"
                             : "bg-white/[0.04] text-white/40 border border-white/[0.06]"
