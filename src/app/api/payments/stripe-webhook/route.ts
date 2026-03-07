@@ -149,7 +149,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         tier,
         package_id: packageId,
         amount: session.amount_total || 0,
-        currency: session.currency || 'aud',
+        currency: session.currency || 'usd',
         status: 'succeeded',
         customer_email: session.customer_email,
         paid_at: new Date().toISOString(),
