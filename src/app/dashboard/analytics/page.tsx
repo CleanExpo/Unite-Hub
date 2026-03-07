@@ -169,9 +169,9 @@ export default function AnalyticsPage() {
             <div>
               <p className="text-sm text-white/40 mb-2">Deal Pipeline Health</p>
               <div className="flex items-center gap-3">
-                <div className="flex-1 bg-white/[0.06] rounded-full h-3">
+                <div className="flex-1 bg-white/[0.06] rounded-none h-3">
                   <div
-                    className="bg-[#00F5FF] h-3 rounded-full transition-all"
+                    className="bg-[#00F5FF] h-3 rounded-none transition-all"
                     style={{ width: `${Math.min(100, analytics.dealsCount * 10)}%` }}
                   />
                 </div>
@@ -183,9 +183,9 @@ export default function AnalyticsPage() {
             <div>
               <p className="text-sm text-white/40 mb-2">Task Completion Rate</p>
               <div className="flex items-center gap-3">
-                <div className="flex-1 bg-white/[0.06] rounded-full h-3">
+                <div className="flex-1 bg-white/[0.06] rounded-none h-3">
                   <div
-                    className="bg-[#00FF88] h-3 rounded-full transition-all"
+                    className="bg-[#00FF88] h-3 rounded-none transition-all"
                     style={{ width: `${analytics.tasksTotal > 0 ? (analytics.tasksCompleted / analytics.tasksTotal) * 100 : 0}%` }}
                   />
                 </div>
@@ -199,9 +199,9 @@ export default function AnalyticsPage() {
             <div>
               <p className="text-sm text-white/40 mb-2">Email Activity</p>
               <div className="flex items-center gap-3">
-                <div className="flex-1 bg-white/[0.06] rounded-full h-3">
+                <div className="flex-1 bg-white/[0.06] rounded-none h-3">
                   <div
-                    className="bg-purple-500 h-3 rounded-full transition-all"
+                    className="bg-[#00F5FF] h-3 rounded-none transition-all"
                     style={{ width: `${Math.min(100, analytics.emailsSent * 2)}%` }}
                   />
                 </div>

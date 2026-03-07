@@ -67,7 +67,7 @@ export default function CampaignsPage() {
     draft: "text-white/40 border-white/[0.08]",
     scheduled: "text-purple-400 border-purple-400/30",
     active: "text-emerald-400 border-emerald-400/30",
-    completed: "text-blue-400 border-blue-400/30",
+    completed: "text-[#00FF88] border-[#00FF88]/30",
     paused: "text-yellow-400 border-yellow-400/30",
   };
 

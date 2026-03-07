@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toaster } from "@/components/ui/toaster";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { ClientProvider } from "@/contexts/ClientContext";
 import ClientSelector from "@/components/client/ClientSelector";
@@ -24,6 +24,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, profile, signOut, currentOrganization, organizations, loading: authLoading } = useAuth();
   const [orgId, setOrgId] = useState<string | null>(null);
   const [loadingTimeout, setLoadingTimeout] = useState(false);
@@ -78,9 +79,7 @@ export default function DashboardLayout({
 
   // Redirect to login if not authenticated
   if (!user) {
-    if (typeof window !== 'undefined') {
-      window.location.href = '/login';
-    }
+    router.push('/login');
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
         <div className="text-white">Redirecting to login...</div>
@@ -114,9 +113,7 @@ export default function DashboardLayout({
             <div className="flex flex-col gap-3">
               <Button
                 onClick={() => {
-                  if (typeof window !== 'undefined') {
-                    window.location.href = '/onboarding';
-                  }
+                  router.push('/onboarding');
                 }}
                 variant="primary"
               >
