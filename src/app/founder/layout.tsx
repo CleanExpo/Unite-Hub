@@ -34,19 +34,19 @@ export default function FounderLayout({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
+    <div className="min-h-screen bg-[#050505]">
       {/* Founder Top Bar */}
-      <nav className="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-50">
+      <nav className="border-b border-white/[0.06] bg-[#050505]/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link
               href="/dashboard/overview"
-              className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
+              className="text-xl font-bold font-mono text-[#00F5FF]"
             >
               Unite-Group
             </Link>
-            <ChevronRight className="w-4 h-4 text-slate-600" />
-            <span className="text-sm font-medium text-slate-300">Founder OS</span>
+            <ChevronRight className="w-4 h-4 text-white/20" />
+            <span className="text-sm font-mono text-white/50">Founder OS</span>
           </div>
           <div className="hidden md:flex items-center gap-1">
             {founderNavItems.map((item) => {
@@ -57,10 +57,10 @@ export default function FounderLayout({
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors",
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-sm font-mono transition-colors",
                     isActive
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                      ? "bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/20"
+                      : "text-white/40 hover:text-white/90 hover:bg-white/[0.03]"
                   )}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -71,7 +71,7 @@ export default function FounderLayout({
           </div>
           <Link
             href="/dashboard/overview"
-            className="text-sm text-slate-400 hover:text-white transition-colors"
+            className="text-sm font-mono text-white/40 hover:text-white/90 transition-colors"
           >
             Back to Dashboard
           </Link>
