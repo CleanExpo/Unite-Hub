@@ -11,9 +11,9 @@ interface LogoProps {
 }
 
 const LOGO_PATHS = {
-  default: '/logos/unite-hub-logo.png',
-  starter: '/logos/unite-hub-starter.png',
-  professional: '/logos/unite-hub-professional.png',
+  default: '/logos/unite-group-logo.png',
+  starter: '/logos/unite-group-starter.png',
+  professional: '/logos/unite-group-professional.png',
 } as const;
 
 const SIZES = {

@@ -116,8 +116,7 @@ function ChatTab({ session }: { session: { access_token?: string } | null }) {
   const [pendingTags, setPendingTags] = useState<string[]>([]);
   const [conversations, setConversations] = useState<SavedConversation[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<any>(null); // eslint-disable-line
 
   // Load history on mount
   useEffect(() => {
@@ -129,8 +128,7 @@ function ChatTab({ session }: { session: { access_token?: string } | null }) {
   }, [messages, showHistory]);
 
   const toggleSpeech = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition; // eslint-disable-line
     if (!SR) return;
 
     if (listening) {
@@ -143,7 +141,6 @@ function ChatTab({ session }: { session: { access_token?: string } | null }) {
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = "en-AU";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onresult = (e: any) => {
       setInput(e.results[0][0].transcript);
       setListening(false);
@@ -1283,8 +1280,7 @@ function CaptureTab() {
   const [recentCaptures, setRecentCaptures] = useState<string[]>([]);
   const [vaultConnected, setVaultConnected] = useState<boolean | null>(null);
   const [listening, setListening] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<any>(null); // eslint-disable-line
 
   // Check vault status on mount
   useEffect(() => {
@@ -1315,8 +1311,7 @@ function CaptureTab() {
   };
 
   const toggleSpeech = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition; // eslint-disable-line
     if (!SR) return;
 
     if (listening) {
@@ -1329,8 +1324,7 @@ function CaptureTab() {
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = "en-AU";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    recognition.onresult = (e: any) => {
+    recognition.onresult = (e: any) => { // eslint-disable-line
       setText(prev => prev ? `${prev} ${e.results[0][0].transcript}` : e.results[0][0].transcript);
       setListening(false);
     };
