@@ -136,7 +136,7 @@ function UniteGroupOrganizationSchema() {
     url: UNITE_URL,
     logo: {
       '@type': 'ImageObject',
-      url: `${UNITE_URL}/logos/unite-hub-logo.png`,
+      url: `${UNITE_URL}/logos/unite-group-logo.png`,
       width: 200,
       height: 60,
     },

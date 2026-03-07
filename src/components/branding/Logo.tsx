@@ -44,8 +44,8 @@ export function Logo({
       />
       {showText && variant === 'default' && (
         <div className="flex flex-col">
-          <span className="text-2xl font-bold text-[#2563ab]">
-            Unite-<span className="text-[#f39c12]">Hub</span>
+          <span className="text-2xl font-bold text-white/90">
+            Unite-<span className="text-[#00F5FF]">Group</span>
           </span>
         </div>
       )}
@@ -58,8 +58,8 @@ export function LogoText({ className }: { className?: string }) {
   return (
     <div className={cn('flex items-center gap-1', className)}>
       <span className="text-xl font-bold">
-        <span className="text-[#2563ab]">Unite-</span>
-        <span className="text-[#f39c12]">Hub</span>
+        <span className="text-white/90">Unite-</span>
+        <span className="text-[#00F5FF]">Group</span>
       </span>
     </div>
   );

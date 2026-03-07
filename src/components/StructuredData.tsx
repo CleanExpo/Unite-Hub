@@ -22,7 +22,7 @@ export function UniteGroupStructuredData() {
         "url": BASE_URL,
         "logo": {
           "@type": "ImageObject",
-          "url": `${BASE_URL}/logos/unite-hub-logo.png`,
+          "url": `${BASE_URL}/logos/unite-group-logo.png`,
           "width": 200,
           "height": 60,
         },

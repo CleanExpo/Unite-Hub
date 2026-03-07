@@ -22,7 +22,7 @@ interface GitHubPR {
   labels: { name: string; color: string }[];
 }
 
-const REPO = 'CleanExpo/Unite-Hub';
+const REPO = 'CleanExpo/Unite-Group';
 
 export async function GET() {
   try {

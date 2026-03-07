@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <Image
-            src="/logos/unite-hub-logo.png"
+            src="/logos/unite-group-logo.png"
             alt="Unite-Group Logo"
             width={120}
             height={120}

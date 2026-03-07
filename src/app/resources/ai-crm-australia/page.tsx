@@ -65,7 +65,7 @@ function ArticleSchema() {
       "url": "https://unite-group.in",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://unite-group.in/logos/unite-hub-logo.png",
+        "url": "https://unite-group.in/logos/unite-group-logo.png",
       },
     },
     "mainEntityOfPage": {

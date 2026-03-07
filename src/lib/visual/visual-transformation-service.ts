@@ -75,7 +75,7 @@ export interface ThemeUpdatePlan {
 }
 
 // Brand colors for Unite-Group
-const UNITE_HUB_THEME = {
+const UNITE_GROUP_THEME = {
   primary: "#B6F232", // Neon green
   secondary: "#1a1a1a",
   accent: "#A3D92D",
@@ -105,7 +105,7 @@ export const PLACEHOLDER_MANIFEST: PlaceholderManifest = {
       type: "logo",
       name: "Unite-Group Main Logo",
       description: "Primary brand logo for header and marketing",
-      currentUrl: "https://unite-group.in/logos/unite-hub-logo.png",
+      currentUrl: "https://unite-group.in/logos/unite-group-logo.png",
       status: "placeholder",
       prompt: "Modern SaaS company logo, 'Unite-Group' text, neon green (#B6F232) accent, clean minimalist design, professional tech aesthetic",
       style: "minimalist-tech",
@@ -251,13 +251,13 @@ export const COMPONENT_UPDATE_PLAN: ComponentUpdatePlan = {
 // Theme update plan
 export const THEME_UPDATE_PLAN: ThemeUpdatePlan = {
   createdAt: new Date().toISOString(),
-  colors: UNITE_HUB_THEME,
+  colors: UNITE_GROUP_THEME,
   typography: {
     fontFamily: "Inter, system-ui, sans-serif",
     headingFont: "Inter, system-ui, sans-serif",
   },
   assets: {
-    logoUrl: "/assets/brand/unite-hub-logo.png",
+    logoUrl: "/assets/brand/unite-group-logo.png",
     faviconUrl: "/favicon.ico",
     ogImageUrl: "/og-image.png",
   },

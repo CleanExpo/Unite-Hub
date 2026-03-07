@@ -9,11 +9,11 @@ import { NextResponse } from "next/server";
  */
 
 const TEAM_ID = "ab9c7810-4dd6-4ce2-8e8f-e1fc94c6b88b";
-const UNITE_HUB_PROJECT_ID = "b62d9b14-9d9c-46c7-a3f4-05fbd49550ff";
+const UNITE_GROUP_PROJECT_ID = "b62d9b14-9d9c-46c7-a3f4-05fbd49550ff";
 
 // Linear project URLs per business (configure when each business has a Linear project)
 const LINEAR_PROJECT_URLS: Record<string, string | undefined> = {
-  "unite-group": `https://linear.app/unite-group/project/unite-hub-af6312a91054/issues`,
+  "unite-group": `https://linear.app/unite-group/project/unite-group-af6312a91054/issues`,
   "disaster-recovery": undefined,
   "restore-assist": undefined,
   ato: undefined,
@@ -72,7 +72,7 @@ export async function GET(
     team(id: "${TEAM_ID}") {
       issues(
         filter: {
-          project: { id: { eq: "${UNITE_HUB_PROJECT_ID}" } }
+          project: { id: { eq: "${UNITE_GROUP_PROJECT_ID}" } }
           state: { type: { nin: ["cancelled", "completed"] } }
         }
         first: 250

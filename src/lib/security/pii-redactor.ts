@@ -427,7 +427,7 @@ export class PIIFieldEncryptor {
     }
 
     // Derive a 256-bit key from the master key
-    const salt = Buffer.from('unite-hub-pii-v1'); // Static salt for deterministic derivation
+    const salt = Buffer.from('unite-group-pii-v1'); // Static salt for deterministic derivation
     this.derivedKey = scryptSync(key, salt, 32);
   }
 

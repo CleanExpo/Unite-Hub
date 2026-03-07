@@ -12,6 +12,7 @@ import {
   Clock, Flame, ArrowRight, Video, X, ChevronRight,
   Zap, Activity, History, Search, Tag, BookmarkPlus, ExternalLink,
   BookOpen, Upload, Image, Download, CloudUpload, FileText,
+  Globe, Shield, Brain, Wrench, Network,
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,7 +22,7 @@ import { PushNotificationToggle } from "@/components/founder/PushNotificationTog
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type TabId = "chat" | "dashboard" | "calendar" | "kanban" | "capture";
+type TabId = "chat" | "dashboard" | "calendar" | "kanban" | "capture" | "ecosystem";
 
 interface Message {
   id: string;
@@ -90,6 +91,7 @@ function saveConversation(msgs: Message[], tags: string[]): SavedConversation {
 const TABS: { id: TabId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: "chat",      label: "Chat",      icon: MessageSquare },
   { id: "dashboard", label: "Status",    icon: LayoutDashboard },
+  { id: "ecosystem", label: "Ecosystem", icon: Network },
   { id: "calendar",  label: "Calendar",  icon: Calendar },
   { id: "kanban",    label: "Kanban",    icon: Kanban },
   { id: "capture",   label: "Capture",   icon: Camera },
@@ -427,6 +429,192 @@ function ChatTab({ session }: { session: { access_token?: string } | null }) {
             <Send className="w-4 h-4" />
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Ecosystem Tab ────────────────────────────────────────────────────────────
+
+interface EcosystemPlatform {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  category: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+type HealthStatus = "healthy" | "unknown" | "down";
+
+const ECOSYSTEM_PLATFORMS: EcosystemPlatform[] = [
+  {
+    id: "disaster-recovery",
+    name: "Disaster Recovery",
+    description: "Emergency response and business continuity platform",
+    url: process.env.NEXT_PUBLIC_DR_URL || "https://disaster-recovery.unitegroupau.com",
+    category: "Operations",
+    icon: Shield,
+  },
+  {
+    id: "nrpg",
+    name: "NRPG",
+    description: "Natural Resources Portfolio Group management",
+    url: process.env.NEXT_PUBLIC_NRPG_URL || "https://nrpg.unitegroupau.com",
+    category: "Portfolio",
+    icon: Globe,
+  },
+  {
+    id: "carsi",
+    name: "CARSI",
+    description: "Client acquisition and relationship scoring intelligence",
+    url: process.env.NEXT_PUBLIC_CARSI_URL || "https://carsi.unitegroupau.com",
+    category: "Intelligence",
+    icon: Brain,
+  },
+  {
+    id: "restore-assist",
+    name: "RestoreAssist",
+    description: "Restoration project management and contractor coordination",
+    url: process.env.NEXT_PUBLIC_RESTORE_URL || "https://restoreassist.unitegroupau.com",
+    category: "Operations",
+    icon: Wrench,
+  },
+  {
+    id: "synthex",
+    name: "Synthex",
+    description: "AI-powered marketing automation and content generation",
+    url: process.env.NEXT_PUBLIC_SYNTHEX_URL || "https://synthex.unitegroupau.com",
+    category: "Marketing",
+    icon: Zap,
+  },
+];
+
+const CATEGORY_COLOURS: Record<string, string> = {
+  Operations: "text-[#00FF88] bg-[#00FF88]/10 border-[#00FF88]/20",
+  Portfolio: "text-[#00F5FF] bg-[#00F5FF]/10 border-[#00F5FF]/20",
+  Intelligence: "text-[#FF00FF] bg-[#FF00FF]/10 border-[#FF00FF]/20",
+  Marketing: "text-[#FFB800] bg-[#FFB800]/10 border-[#FFB800]/20",
+};
+
+const HEALTH_DOT: Record<HealthStatus, string> = {
+  healthy: "#00FF88",
+  unknown: "#FFB800",
+  down: "#FF4444",
+};
+
+function EcosystemTab() {
+  const [health, setHealth] = useState<Record<string, HealthStatus>>({});
+  const [lastChecked, setLastChecked] = useState<Date | null>(null);
+  const [checking, setChecking] = useState(false);
+
+  const checkHealth = async () => {
+    setChecking(true);
+    try {
+      const res = await fetch("/api/connectors/health");
+      if (res.ok) {
+        const data = await res.json();
+        setHealth(data);
+        setLastChecked(new Date());
+      }
+    } catch {
+      // fail silently — show unknown for all
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  useEffect(() => { checkHealth(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const getStatus = (id: string): HealthStatus => health[id] ?? "unknown";
+
+  return (
+    <div className="flex flex-col h-full overflow-y-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] flex-shrink-0">
+        <div>
+          <h2 className="text-xs font-mono font-semibold text-[#00F5FF] uppercase tracking-widest">Ecosystem</h2>
+          <p className="text-[10px] text-white/30 mt-0.5">5 connected platforms</p>
+        </div>
+        <button
+          onClick={checkHealth}
+          disabled={checking}
+          className="flex items-center gap-1.5 text-[10px] text-white/40 hover:text-[#00F5FF] transition-colors font-mono"
+        >
+          <RefreshCw className={`w-3 h-3 ${checking ? "animate-spin" : ""}`} />
+          {lastChecked ? lastChecked.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" }) : "Check"}
+        </button>
+      </div>
+
+      {/* Platform cards */}
+      <div className="p-3 space-y-2.5 flex-1">
+        {ECOSYSTEM_PLATFORMS.map(platform => {
+          const Icon = platform.icon;
+          const status = getStatus(platform.id);
+          const catColour = CATEGORY_COLOURS[platform.category] ?? "text-white/40 bg-white/5 border-white/10";
+
+          return (
+            <div
+              key={platform.id}
+              className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-3 space-y-2"
+            >
+              {/* Top row */}
+              <div className="flex items-start gap-2.5">
+                <div className="w-8 h-8 rounded-sm bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Icon className="w-4 h-4 text-white/60" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-mono font-semibold text-white/90 truncate">{platform.name}</span>
+                    <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded-sm border uppercase tracking-wider ${catColour}`}>
+                      {platform.category}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-white/40 leading-snug mt-0.5 line-clamp-2">{platform.description}</p>
+                </div>
+              </div>
+
+              {/* Status row */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <div
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: HEALTH_DOT[status] }}
+                  />
+                  <span className="text-[10px] font-mono capitalize" style={{ color: HEALTH_DOT[status] }}>
+                    {status}
+                  </span>
+                </div>
+                <a
+                  href={platform.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-[10px] font-mono text-[#00F5FF] hover:text-white transition-colors"
+                >
+                  Open
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+
+              {/* Footer: last sync */}
+              <p className="text-[9px] text-white/20 font-mono">
+                Last checked: {lastChecked ? lastChecked.toLocaleString("en-AU", { timeZone: "Australia/Sydney" }) : "—"}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Footer link */}
+      <div className="px-4 pb-4 flex-shrink-0">
+        <Link
+          href="/founder/connections"
+          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-sm bg-white/[0.03] border border-white/[0.06] text-[10px] font-mono text-white/40 hover:text-[#00F5FF] hover:border-[#00F5FF]/20 transition-colors"
+        >
+          <Network className="w-3.5 h-3.5" />
+          Ecosystem Registry
+          <ChevronRight className="w-3 h-3" />
+        </Link>
       </div>
     </div>
   );
@@ -1610,6 +1798,7 @@ export default function PhillOSPage() {
       <div className="flex-1 overflow-hidden">
         {activeTab === "chat"      && <ChatTab session={session} />}
         {activeTab === "dashboard" && <DashboardTab />}
+        {activeTab === "ecosystem" && <EcosystemTab />}
         {activeTab === "calendar"  && <CalendarTab />}
         {activeTab === "kanban"    && <KanbanTab />}
         {activeTab === "capture"   && <CaptureTab />}

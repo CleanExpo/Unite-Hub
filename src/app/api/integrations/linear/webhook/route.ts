@@ -57,22 +57,22 @@ async function handleIssueEvent(
   // - Update local database with issue changes
   // - Send notifications to relevant users
   // - Trigger automations based on state changes
-  // - Sync with Unite-Group tasks
+  // - Sync with Unite-Group tasks (Unite-Group)
 
   switch (action) {
     case 'create':
       console.log('New issue created:', issue.identifier);
-      // await syncIssueToUniteHub(issue);
+      // await syncIssueToUniteGroup(issue);
       break;
 
     case 'update':
       console.log('Issue updated:', issue.identifier);
-      // await updateUniteHubTask(issue);
+      // await updateUniteGroupTask(issue);
       break;
 
     case 'remove':
       console.log('Issue deleted:', issue.identifier);
-      // await deleteUniteHubTask(issue.id);
+      // await deleteUniteGroupTask(issue.id);
       break;
   }
 }
