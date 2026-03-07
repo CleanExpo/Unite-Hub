@@ -2,28 +2,32 @@
 > Updated: 08/03/2026 AEST
 
 ## Active Task
-COMPLETE — session ended cleanly. No in-progress work.
-
-## Recent Architectural Choices
-See architectural-decisions.md for logged decisions.
+Database migration pending — blocked by Supabase technical incident.
 
 ## In-Progress Work
-None. All changes committed and pushed to origin/main.
+- Migration SQL is loaded in Supabase SQL editor, query submitted but hung due to Supabase outage
+- URL: https://supabase.com/dashboard/project/lksfwktwtmyznckodsau/sql/771b00a7-23ea-4139-9a60-b38c7e31bf17
+- Query name: "Deal Pipeline and Activities Schema"
+- All code changes committed and pushed (main is clean)
 
-## What Was Completed This Session
-- 97-file Scientific Luxury migration (commit ddbfcefb)
-- Auth unification: next-auth removed, Supabase PKCE unified (47d0cb54)
-- CI: lint fixes, vitest, mypy clean (2be56197)
-- Rebrand: Unite-Hub → Unite-Group across 12 files (c09cf7bd)
-- Navigation consolidation + CRM verification (0d7dfa65)
-- Ecosystem App Registry: 5 platforms + health API (0e1b7e61, 63cfa7f0)
-- Stripe revert (user correction: no Stripe on app) (931e46d2)
-- Copy fixes: Business Hub → Control Platform (faf8be72)
-- Vercel env vars: 7 production vars added (DR, NRPG, CARSI, Restore, Synthex URLs + XERO_REDIRECT_URI + FRONTEND_URL)
+## Blocking Issue
+Supabase technical incident ("We are investigating a technical issue") — SQL execution hanging
+Check status: https://status.supabase.com
+Once resolved: open the saved query above and click Run (idempotent — uses IF NOT EXISTS)
+
+## What the Migration Creates
+- pipeline_stages table (FK → workspaces.id) — fixes "Failed to fetch stages"
+- deals table — fixes "Failed to fetch deals"
+- deal_activities table
+- contacts.tags column — fixes contacts filter errors
+- Seeds 6 default stages per workspace (Lead/Qualified/Proposal/Negotiation/Won/Lost)
+- RLS + service_role policies on all 3 new tables
 
 ## Next Steps
-- Verify https://unite-group.in after Vercel redeploy completes
-- Remaining 15%: E2E Playwright tests, FastAPI↔Next.js wiring, real workspace QA
+1. Wait for Supabase incident to resolve
+2. Re-run the saved migration query
+3. Verify /dashboard/deals loads without errors
+4. Check /dashboard/contacts for tags column errors
 
 ## Last Updated
-08/03/2026 AEST (session end)
+08/03/2026 AEST
