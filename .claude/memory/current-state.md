@@ -1,18 +1,29 @@
 # Current State
-> Updated by PreCompact hook. Session: 47025d02
+> Updated: 08/03/2026 AEST
 
 ## Active Task
-Compaction triggered — context was saved at 07/03/2026 21:13 AEST.
-Re-read CONSTITUTION.md if rules feel unclear after compaction.
+Scientific Luxury design migration — COMPLETE ✅
 
-## Recent Architectural Choices
-See architectural-decisions.md for logged decisions.
+## Completed This Session
+- Wave 1: 8 core dashboard nav pages → SL
+- Wave 2: Loading/error/shell pages → SL
+- Wave 3: contacts/[id] + deals/[id] detail pages → SL
+- Wave 4: 29 secondary dashboard pages → SL
+- Wave 5: 97 files — auth, UI components, staff/client, CRM, email, analytics → SL
+- Commits: 4795e5aa → 1d6edb12 → 89a608e7 → e70ee3ff → ddbfcefb
+- Pushed to origin/main (Vercel auto-deploy triggered)
+- Build: exit code 0 ✅ | rg violations: 0 ✅ | CSS clean ✅
 
-## In-Progress Work
-Check recent git status: `git status` and `git log --oneline -5`
+## Key Architecture
+- base components (card.tsx, button.tsx, badge.tsx) are now SL wrappers
+  → all 237 non-dashboard pages inherit SL automatically via imports
+- ReactFlow campaign builder nodes use inline style= for handle colours (Tailwind unreliable in ReactFlow)
+- `src/app/dashboard/tasks/` requires `git add -f` (gitignore pattern match)
 
 ## Next Steps
-Re-read .claude/memory/CONSTITUTION.md to restore rule context.
+- Monitor Vercel deployment
+- Functional QA: test auth flows, CRM CRUD, campaign builder
+- Backend: FastAPI agent endpoints, AI provider connections
 
 ## Last Updated
-07/03/2026 21:13 AEST (PreCompact hook)
+08/03/2026 AEST
