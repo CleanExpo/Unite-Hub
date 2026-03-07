@@ -17,6 +17,10 @@ import {
   Search,
   LogOut,
   Network,
+  Brain,
+  FolderOpen,
+  Kanban,
+  FileText,
 } from "lucide-react";
 import { ClientProvider } from "@/contexts/ClientContext";
 import ClientSelector from "@/components/client/ClientSelector";
@@ -165,33 +169,43 @@ export default function DashboardLayout({
             <div className="px-5 py-5 border-b border-white/[0.06]">
               <Link href="/dashboard/overview">
                 <span className="text-base font-bold text-white/90 tracking-tight">Unite-Group</span>
-                <span className="block text-xs text-white/30 mt-0.5">CRM Platform</span>
+                <span className="block text-xs text-white/30 mt-0.5">Control Platform</span>
               </Link>
             </div>
 
             {/* Primary nav */}
             <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+              {/* Primary */}
+              <div className="pb-1 px-3">
+                <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">Primary</span>
+              </div>
               <SidebarLink href="/dashboard/overview" icon={Home} label="Dashboard" pathname={pathname} />
-              <SidebarLink href="/dashboard/tasks" icon={CheckSquare} label="Tasks" pathname={pathname} />
-              <SidebarLink href="/dashboard/activity" icon={Activity} label="Activity" pathname={pathname} />
+              <SidebarLink href="/founder/os" icon={Brain} label="Founder OS" pathname={pathname} />
+              <SidebarLink href="/founder/connections" icon={Network} label="Ecosystem" pathname={pathname} />
+
+              {/* CRM */}
+              <div className="pt-4 pb-1 px-3">
+                <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">CRM</span>
+              </div>
               <SidebarLink href="/dashboard/contacts" icon={Users} label="Contacts" pathname={pathname} />
               <SidebarLink href="/dashboard/deals" icon={Briefcase} label="Deals" pathname={pathname} />
-
-              <div className="pt-4 pb-1 px-3">
-                <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">Marketing</span>
-              </div>
               <SidebarLink href="/dashboard/campaigns" icon={Megaphone} label="Campaigns" pathname={pathname} />
               <SidebarLink href="/dashboard/emails" icon={Mail} label="Emails" pathname={pathname} />
+              <SidebarLink href="/dashboard/tasks" icon={CheckSquare} label="Tasks" pathname={pathname} />
 
+              {/* Operations */}
               <div className="pt-4 pb-1 px-3">
-                <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">Ecosystem</span>
+                <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">Operations</span>
               </div>
-              <SidebarLink href="/dashboard/ecosystem" icon={Network} label="Connected Businesses" pathname={pathname} />
-
-              <div className="pt-4 pb-1 px-3">
-                <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">System</span>
-              </div>
+              <SidebarLink href="/dashboard/projects" icon={FolderOpen} label="Projects" pathname={pathname} />
+              <SidebarLink href="/kanban" icon={Kanban} label="Kanban" pathname={pathname} />
               <SidebarLink href="/dashboard/analytics" icon={BarChart3} label="Analytics" pathname={pathname} />
+              <SidebarLink href="/dashboard/reports" icon={FileText} label="Reports" pathname={pathname} />
+
+              {/* Platform */}
+              <div className="pt-4 pb-1 px-3">
+                <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">Platform</span>
+              </div>
               <PermissionGate permission="settings:view">
                 <SidebarLink href="/dashboard/settings" icon={Settings} label="Settings" pathname={pathname} />
               </PermissionGate>
@@ -241,7 +255,7 @@ export default function DashboardLayout({
                 <Search className="h-4 w-4 text-white/20 flex-shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search customers, deals, contacts..."
+                  placeholder="Search contacts, deals, projects, campaigns..."
                   className="bg-transparent text-sm text-white/60 placeholder:text-white/20 outline-none w-full"
                 />
               </div>
