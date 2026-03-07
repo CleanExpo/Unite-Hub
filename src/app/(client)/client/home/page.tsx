@@ -7,20 +7,20 @@
 
 export default function ClientHome() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-[#050505]">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-[#080808] border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Client Portal (Phase 1 - New UI)
+              <h1 className="text-3xl font-bold text-white font-mono">
+                Client Portal (Phase 1 — New UI)
               </h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-white/40 mt-1 font-mono">
                 Submit ideas, track projects, manage your digital vault
               </p>
             </div>
-            <span className="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
+            <span className="px-3 py-1 bg-[#00FF88]/10 text-[#00FF88] text-sm font-medium font-mono border border-[#00FF88]/20 rounded-sm">
               ✓ Feature Flag Active
             </span>
           </div>
@@ -31,16 +31,16 @@ export default function ClientHome() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid gap-8">
           {/* Hero Section */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-8 md:p-12">
             <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-4xl font-bold text-white mb-4 font-mono">
                 Welcome to Your Creative Hub
               </h2>
-              <p className="text-xl text-gray-600 mb-8">
-                Share your ideas in any format - voice, text, or video. Our AI will help
+              <p className="text-xl text-white/40 mb-8 font-mono">
+                Share your ideas in any format — voice, text, or video. Our AI will help
                 transform them into actionable project proposals.
               </p>
-              <button className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg">
+              <button className="px-8 py-4 bg-[#00F5FF] text-[#050505] font-semibold font-mono rounded-sm hover:bg-[#00F5FF]/90 transition-colors">
                 Submit New Idea
               </button>
             </div>
@@ -49,10 +49,10 @@ export default function ClientHome() {
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Idea Submission */}
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 hover:bg-white/[0.04] transition-colors">
+              <div className="w-12 h-12 bg-white/[0.04] border border-white/[0.06] rounded-sm flex items-center justify-center mb-4">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-[#00F5FF]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -65,20 +65,20 @@ export default function ClientHome() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2 font-mono">
                 Idea Submission
               </h3>
-              <p className="text-gray-600 text-sm">
-                Submit ideas via voice recording, text, or video. AI analyzes and creates
+              <p className="text-white/40 text-sm font-mono">
+                Submit ideas via voice recording, text, or video. AI analyses and creates
                 structured proposals.
               </p>
             </div>
 
             {/* Project Tracking */}
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 hover:bg-white/[0.04] transition-colors">
+              <div className="w-12 h-12 bg-white/[0.04] border border-white/[0.06] rounded-sm flex items-center justify-center mb-4">
                 <svg
-                  className="w-6 h-6 text-green-600"
+                  className="w-6 h-6 text-[#00FF88]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -91,20 +91,20 @@ export default function ClientHome() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2 font-mono">
                 Project Tracking
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-white/40 text-sm font-mono">
                 Real-time progress updates, task completion proof, and transparent timeline
                 tracking.
               </p>
             </div>
 
             {/* Digital Vault */}
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 hover:bg-white/[0.04] transition-colors">
+              <div className="w-12 h-12 bg-white/[0.04] border border-white/[0.06] rounded-sm flex items-center justify-center mb-4">
                 <svg
-                  className="w-6 h-6 text-purple-600"
+                  className="w-6 h-6 text-[#FF00FF]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -117,10 +117,10 @@ export default function ClientHome() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2 font-mono">
                 Digital Vault
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-white/40 text-sm font-mono">
                 Secure storage for passwords, API keys, and credentials. Encrypted and
                 accessible only to you.
               </p>
@@ -128,13 +128,13 @@ export default function ClientHome() {
           </div>
 
           {/* Status Banner */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-xl p-8 text-white">
+          <div className="bg-white/[0.02] border border-[#00F5FF]/20 rounded-sm p-8">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-bold mb-2">
+                <h3 className="text-2xl font-bold mb-2 text-white font-mono">
                   Phase 1 Architecture Active
                 </h3>
-                <p className="text-blue-100">
+                <p className="text-white/40 font-mono text-sm">
                   This is the new client portal UI running in parallel with the existing
                   system. Feature-flagged for safe deployment.
                 </p>

@@ -1,7 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { DollarSign, Calendar, User, GripVertical } from "lucide-react";
 import Link from "next/link";
 
@@ -70,23 +68,24 @@ export function DealCard({ deal, onDragStart }: DealCardProps) {
 
   return (
     <Link href={`/dashboard/deals/${deal.id}`}>
-      <Card
-        className="bg-slate-800/60 border-slate-700 hover:border-slate-500 hover:bg-slate-800/80
+      <div
+        className="bg-white/[0.02] border border-white/[0.06] rounded-sm
+                   hover:bg-white/[0.04] hover:border-white/[0.10]
                    cursor-pointer transition-all duration-200 group p-3"
         draggable
         onDragStart={(e) => onDragStart?.(e, deal.id)}
       >
         <div className="flex items-start gap-2">
-          <GripVertical className="w-4 h-4 text-slate-600 group-hover:text-slate-400 mt-0.5 flex-shrink-0 cursor-grab" />
+          <GripVertical className="w-4 h-4 text-white/20 group-hover:text-white/40 mt-0.5 flex-shrink-0 cursor-grab" />
           <div className="flex-1 min-w-0">
             {/* Title */}
-            <h4 className="text-sm font-medium text-white truncate">{deal.title}</h4>
+            <h4 className="text-sm font-medium font-mono text-white truncate">{deal.title}</h4>
 
             {/* Contact */}
             {deal.contacts && (
               <div className="flex items-center gap-1 mt-1">
-                <User className="w-3 h-3 text-slate-500" />
-                <span className="text-xs text-slate-400 truncate">
+                <User className="w-3 h-3 text-white/30" />
+                <span className="text-xs text-white/50 truncate">
                   {deal.contacts.name}
                   {deal.contacts.company && ` · ${deal.contacts.company}`}
                 </span>
@@ -96,27 +95,26 @@ export function DealCard({ deal, onDragStart }: DealCardProps) {
             {/* Value and probability */}
             <div className="flex items-center justify-between mt-2">
               <div className="flex items-center gap-1">
-                <DollarSign className="w-3 h-3 text-emerald-400" />
-                <span className="text-sm font-semibold text-emerald-400">
+                <DollarSign className="w-3 h-3" style={{ color: "#00FF88" }} />
+                <span className="text-sm font-semibold font-mono" style={{ color: "#00FF88" }}>
                   {formatCurrency(deal.value, deal.currency)}
                 </span>
               </div>
-              <Badge
-                variant="outline"
-                className={`text-[10px] px-1.5 py-0 border-slate-600 ${
+              <span
+                className={`text-[10px] font-mono px-1.5 py-0 border rounded-sm ${
                   deal.probability >= 75
-                    ? "text-emerald-400"
+                    ? "border-[#00FF88]/30 text-[#00FF88]"
                     : deal.probability >= 50
-                    ? "text-yellow-400"
-                    : "text-slate-400"
+                    ? "border-[#FFB800]/30 text-[#FFB800]"
+                    : "border-white/10 text-white/40"
                 }`}
               >
                 {deal.probability}%
-              </Badge>
+              </span>
             </div>
 
             {/* Footer: close date & days in stage */}
-            <div className="flex items-center justify-between mt-2 text-[11px] text-slate-500">
+            <div className="flex items-center justify-between mt-2 text-[11px] text-white/30">
               {deal.expected_close_date && (
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
@@ -130,22 +128,21 @@ export function DealCard({ deal, onDragStart }: DealCardProps) {
             {deal.tags && deal.tags.length > 0 && (
               <div className="flex gap-1 mt-2 flex-wrap">
                 {deal.tags.slice(0, 2).map((tag) => (
-                  <Badge
+                  <span
                     key={tag}
-                    variant="secondary"
-                    className="text-[10px] px-1.5 py-0 bg-slate-700/50 text-slate-400"
+                    className="text-[10px] font-mono px-1.5 py-0 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/40"
                   >
                     {tag}
-                  </Badge>
+                  </span>
                 ))}
                 {deal.tags.length > 2 && (
-                  <span className="text-[10px] text-slate-500">+{deal.tags.length - 2}</span>
+                  <span className="text-[10px] text-white/30">+{deal.tags.length - 2}</span>
                 )}
               </div>
             )}
           </div>
         </div>
-      </Card>
+      </div>
     </Link>
   );
 }

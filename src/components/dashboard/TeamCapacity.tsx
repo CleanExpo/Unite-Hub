@@ -1,9 +1,6 @@
 "use client";
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
 
@@ -28,33 +25,31 @@ interface TeamCapacityProps {
 const statusConfig = {
   available: {
     label: "Available",
-    color: "bg-green-500",
-    badgeClass: "bg-green-100 text-green-700",
+    barColor: "bg-[#00FF88]",
+    badgeClass: "border-[#00FF88]/30 text-[#00FF88]",
   },
   "near-capacity": {
     label: "Near Capacity",
-    color: "bg-yellow-500",
-    badgeClass: "bg-yellow-100 text-yellow-700",
+    barColor: "bg-[#FFB800]",
+    badgeClass: "border-[#FFB800]/30 text-[#FFB800]",
   },
   "over-capacity": {
     label: "Over Capacity",
-    color: "bg-red-500",
-    badgeClass: "bg-red-100 text-red-700",
+    barColor: "bg-[#FF4444]",
+    badgeClass: "border-[#FF4444]/30 text-[#FF4444]",
   },
 };
 
 export function TeamCapacity({ members, className }: TeamCapacityProps) {
   return (
-    <Card className={className}>
-      <CardHeader className="border-b">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl font-bold text-unite-navy">Team Capacity</CardTitle>
-          <Badge variant="secondary" className="bg-unite-blue text-white">
-            {members.length} members
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="p-6">
+    <div className={cn("bg-white/[0.02] border border-white/[0.06] rounded-sm", className)}>
+      <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
+        <h3 className="text-sm font-mono font-bold text-white/90">Team Capacity</h3>
+        <span className="px-2 py-0.5 border border-white/[0.06] rounded-sm text-[10px] font-mono text-white/40">
+          {members.length} members
+        </span>
+      </div>
+      <div className="p-4">
         <div className="space-y-4">
           {members.map((member) => {
             const statusInfo = statusConfig[member.status];
@@ -63,22 +58,19 @@ export function TeamCapacity({ members, className }: TeamCapacityProps) {
                 {/* Member Info */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      {member.avatar && <AvatarImage src={member.avatar} alt={member.name} />}
-                      <AvatarFallback className="bg-gradient-to-br from-unite-teal to-unite-blue text-white">
-                        {member.initials}
-                      </AvatarFallback>
-                    </Avatar>
+                    <div className="h-10 w-10 rounded-sm border border-white/[0.06] bg-white/[0.04] flex items-center justify-center">
+                      <span className="text-xs font-mono font-bold text-[#00F5FF]">{member.initials}</span>
+                    </div>
                     <div>
-                      <p className="font-semibold text-unite-navy">{member.name}</p>
-                      <p className="text-sm text-gray-500">{member.role}</p>
+                      <p className="font-mono text-sm text-white/90">{member.name}</p>
+                      <p className="text-xs font-mono text-white/30">{member.role}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <Badge variant="outline" className={cn("text-xs mb-1", statusInfo.badgeClass)}>
+                    <span className={cn("px-1.5 py-0.5 border rounded-sm text-[10px] font-mono mb-1 inline-block", statusInfo.badgeClass)}>
                       {statusInfo.label}
-                    </Badge>
-                    <p className="text-xs text-gray-500">
+                    </span>
+                    <p className="text-xs font-mono text-white/20">
                       {member.currentProjects} {member.currentProjects === 1 ? "project" : "projects"}
                     </p>
                   </div>
@@ -87,22 +79,19 @@ export function TeamCapacity({ members, className }: TeamCapacityProps) {
                 {/* Capacity Bar */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">
+                    <span className="text-xs font-mono text-white/30">
                       {member.hoursAllocated}h / {member.hoursAvailable}h
                     </span>
                     <div className="flex items-center gap-1">
-                      <span className="font-semibold text-unite-navy">{member.capacity}%</span>
+                      <span className="font-mono font-bold text-sm text-white/90">{member.capacity}%</span>
                       {member.status === "over-capacity" && (
-                        <AlertCircle className="h-4 w-4 text-red-500" />
+                        <AlertCircle className="h-4 w-4 text-[#FF4444]" />
                       )}
                     </div>
                   </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-white/[0.06] rounded-sm overflow-hidden">
                     <div
-                      className={cn(
-                        "h-full rounded-full transition-all duration-300",
-                        statusInfo.color
-                      )}
+                      className={cn("h-full rounded-sm transition-all duration-300", statusInfo.barColor)}
                       style={{ width: `${Math.min(member.capacity, 100)}%` }}
                     />
                   </div>
@@ -113,30 +102,30 @@ export function TeamCapacity({ members, className }: TeamCapacityProps) {
         </div>
 
         {/* Summary */}
-        <div className="mt-6 pt-6 border-t border-gray-200">
+        <div className="mt-6 pt-6 border-t border-white/[0.06]">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold font-mono text-[#00FF88]">
                 {members.filter((m) => m.status === "available").length}
               </p>
-              <p className="text-xs text-gray-600 mt-1">Available</p>
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mt-1">Available</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-yellow-600">
+              <p className="text-2xl font-bold font-mono text-[#FFB800]">
                 {members.filter((m) => m.status === "near-capacity").length}
               </p>
-              <p className="text-xs text-gray-600 mt-1">Near Capacity</p>
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mt-1">Near Capacity</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-red-600">
+              <p className="text-2xl font-bold font-mono text-[#FF4444]">
                 {members.filter((m) => m.status === "over-capacity").length}
               </p>
-              <p className="text-xs text-gray-600 mt-1">Over Capacity</p>
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mt-1">Over Capacity</p>
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -160,14 +149,14 @@ export function CapacityBar({
   return (
     <div className={cn("space-y-2", className)}>
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-600">{label}</span>
-        <span className="font-semibold text-unite-navy">
+        <span className="text-xs font-mono text-white/30">{label}</span>
+        <span className="font-mono font-bold text-sm text-white/90">
           {current} / {total}
         </span>
       </div>
-      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-white/[0.06] rounded-sm overflow-hidden">
         <div
-          className={cn("h-full rounded-full transition-all duration-300", statusInfo.color)}
+          className={cn("h-full rounded-sm transition-all duration-300", statusInfo.barColor)}
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
       </div>

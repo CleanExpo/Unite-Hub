@@ -6,10 +6,6 @@ export const dynamic = 'force-dynamic';
 /**
  * Staff SEO Dashboard Page
  * Phase 4 Step 4: Dual-Mode SEO UI Shell
- *
- * Full-depth SEO console for staff with:
- * - Standard Mode: Rational analysis (GSC/Bing/Brave metrics)
- * - Hypnotic Mode: Content velocity and retention engineering
  */
 
 import { useState, useEffect } from "react";
@@ -37,7 +33,6 @@ export default function StaffSeoPage() {
         setLoading(true);
         setError(null);
 
-        // Fetch all SEO profiles for this organization
         const { data, error: fetchError } = await supabase
           .from("seo_profiles")
           .select("*")
@@ -48,7 +43,6 @@ export default function StaffSeoPage() {
 
         setSeoProfiles(data || []);
 
-        // Auto-select first profile if available
         if (data && data.length > 0 && !selectedProfileId) {
           setSelectedProfileId(data[0].id);
         }
@@ -65,10 +59,10 @@ export default function StaffSeoPage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
-          <p className="text-muted-foreground">Please sign in to access the SEO dashboard.</p>
+          <h2 className="text-xl font-mono font-semibold text-white mb-2">Authentication Required</h2>
+          <p className="text-white/40 font-mono text-sm">Please sign in to access the SEO dashboard.</p>
         </div>
       </div>
     );
@@ -76,10 +70,10 @@ export default function StaffSeoPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading SEO profiles...</p>
+          <div className="w-12 h-12 border-2 border-[#00F5FF]/20 border-t-[#00F5FF] rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white/40 font-mono text-sm">Loading SEO profiles...</p>
         </div>
       </div>
     );
@@ -87,10 +81,10 @@ export default function StaffSeoPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2 text-destructive">Error</h2>
-          <p className="text-muted-foreground">{error}</p>
+          <h2 className="text-xl font-mono font-semibold mb-2" style={{ color: '#FF4444' }}>Error</h2>
+          <p className="text-white/40 font-mono text-sm">{error}</p>
         </div>
       </div>
     );
@@ -98,18 +92,17 @@ export default function StaffSeoPage() {
 
   if (seoProfiles.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="text-center max-w-md">
-          <h2 className="text-2xl font-semibold mb-2">No SEO Profiles Found</h2>
-          <p className="text-muted-foreground mb-6">
+          <h2 className="text-2xl font-mono font-semibold text-white mb-2">No SEO Profiles Found</h2>
+          <p className="text-white/40 font-mono text-sm mb-6">
             Create an SEO profile to start tracking your search performance.
           </p>
           <button
             onClick={() => {
-              // TODO: Navigate to SEO profile creation page
               console.log("Create SEO profile");
             }}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+            className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 hover:bg-[#00F5FF]/90"
           >
             Create SEO Profile
           </button>
@@ -123,39 +116,41 @@ export default function StaffSeoPage() {
   return (
     <PageContainer>
       <Section>
-        {/* Profile Selector */}
-        {seoProfiles.length > 1 && (
-          <div className="border-b bg-card">
-            <div className="container mx-auto px-4 py-3">
-              <div className="flex items-center gap-4">
-                <label htmlFor="profile-select" className="text-sm font-medium">
-                  SEO Profile:
-                </label>
-                <select
-                  id="profile-select"
-                  value={selectedProfileId || ""}
-                  onChange={(e) => setSelectedProfileId(e.target.value)}
-                  className="px-3 py-1.5 bg-background border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  {seoProfiles.map((profile) => (
-                    <option key={profile.id} value={profile.id}>
-                      {profile.profile_name} ({profile.domain})
-                    </option>
-                  ))}
-                </select>
+        <div className="bg-[#050505]">
+          {/* Profile Selector */}
+          {seoProfiles.length > 1 && (
+            <div className="border-b border-white/[0.06] bg-white/[0.02]">
+              <div className="container mx-auto px-4 py-3">
+                <div className="flex items-center gap-4">
+                  <label htmlFor="profile-select" className="text-xs font-mono text-white/40 uppercase tracking-wider">
+                    SEO Profile:
+                  </label>
+                  <select
+                    id="profile-select"
+                    value={selectedProfileId || ""}
+                    onChange={(e) => setSelectedProfileId(e.target.value)}
+                    className="bg-white/[0.04] border border-white/[0.06] rounded-sm px-3 py-1.5 text-sm font-mono text-white focus:outline-none focus:border-[#00F5FF]/40 appearance-none"
+                  >
+                    {seoProfiles.map((profile) => (
+                      <option key={profile.id} value={profile.id} className="bg-[#050505]">
+                        {profile.profile_name} ({profile.domain})
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Dashboard Shell */}
-        {selectedProfile && currentOrganization && (
-          <SeoDashboardShell
-            seoProfile={selectedProfile}
-            organizationId={currentOrganization.org_id}
-            userRole="staff"
-          />
-        )}
+          {/* Dashboard Shell */}
+          {selectedProfile && currentOrganization && (
+            <SeoDashboardShell
+              seoProfile={selectedProfile}
+              organizationId={currentOrganization.org_id}
+              userRole="staff"
+            />
+          )}
+        </div>
       </Section>
     </PageContainer>
   );

@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { DollarSign, TrendingUp, Target, Clock, BarChart3, Trophy } from "lucide-react";
 import type { Deal } from "./DealCard";
 
@@ -62,60 +61,55 @@ export function PipelineMetrics({ deals }: PipelineMetricsProps) {
       label: "Pipeline Value",
       value: formatCurrency(totalPipeline),
       icon: DollarSign,
-      color: "text-emerald-400",
-      bgColor: "bg-emerald-500/10",
+      color: "#00FF88",
     },
     {
       label: "Weighted Pipeline",
       value: formatCurrency(weightedPipeline),
       icon: TrendingUp,
-      color: "text-blue-400",
-      bgColor: "bg-blue-500/10",
+      color: "#00F5FF",
     },
     {
       label: "Open Deals",
       value: openDeals.length.toString(),
       icon: BarChart3,
-      color: "text-purple-400",
-      bgColor: "bg-purple-500/10",
+      color: "#FF00FF",
     },
     {
       label: "Win Rate",
       value: `${winRate}%`,
       icon: Trophy,
-      color: "text-yellow-400",
-      bgColor: "bg-yellow-500/10",
+      color: "#FFB800",
     },
     {
       label: "Avg Deal Size",
       value: formatCurrency(avgDealSize),
       icon: Target,
-      color: "text-cyan-400",
-      bgColor: "bg-cyan-500/10",
+      color: "#00F5FF",
     },
     {
       label: "Avg Days to Close",
       value: avgDaysToClose > 0 ? `${avgDaysToClose}d` : "—",
       icon: Clock,
-      color: "text-orange-400",
-      bgColor: "bg-orange-500/10",
+      color: "#FFB800",
     },
   ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
       {metrics.map((metric) => (
-        <Card key={metric.label} className="bg-slate-800/50 border-slate-700">
-          <CardContent className="p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <div className={`p-1.5 rounded-md ${metric.bgColor}`}>
-                <metric.icon className={`w-3.5 h-3.5 ${metric.color}`} />
-              </div>
+        <div
+          key={metric.label}
+          className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-3"
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <div className="p-1.5 rounded-sm bg-white/[0.04]">
+              <metric.icon className="w-3.5 h-3.5" style={{ color: metric.color }} />
             </div>
-            <div className="text-lg font-bold text-white">{metric.value}</div>
-            <div className="text-[11px] text-slate-500">{metric.label}</div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="text-lg font-bold font-mono text-white">{metric.value}</div>
+          <div className="text-[11px] font-mono text-white/30">{metric.label}</div>
+        </div>
       ))}
     </div>
   );

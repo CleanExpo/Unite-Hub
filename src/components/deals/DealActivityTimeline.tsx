@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import {
   MessageSquare,
   Mail,
@@ -19,7 +18,7 @@ interface DealActivity {
   activity_type: string;
   title: string;
   description: string | null;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   created_at: string;
 }
 
@@ -38,15 +37,16 @@ const activityIcons: Record<string, React.ReactNode> = {
   status_change: <Activity className="w-4 h-4" />,
 };
 
-const activityColors: Record<string, string> = {
-  note: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  email: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  call: "bg-green-500/20 text-green-400 border-green-500/30",
-  meeting: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-  task: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
-  stage_change: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30",
-  value_change: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-  status_change: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+// Scientific Luxury activity colour tokens
+const activityColors: Record<string, { bg: string; text: string; border: string }> = {
+  note:         { bg: "rgba(0,245,255,0.08)",  text: "#00F5FF",  border: "rgba(0,245,255,0.2)" },
+  email:        { bg: "rgba(255,0,255,0.08)",  text: "#FF00FF",  border: "rgba(255,0,255,0.2)" },
+  call:         { bg: "rgba(0,255,136,0.08)",  text: "#00FF88",  border: "rgba(0,255,136,0.2)" },
+  meeting:      { bg: "rgba(255,184,0,0.08)",  text: "#FFB800",  border: "rgba(255,184,0,0.2)" },
+  task:         { bg: "rgba(0,245,255,0.08)",  text: "#00F5FF",  border: "rgba(0,245,255,0.2)" },
+  stage_change: { bg: "rgba(0,245,255,0.06)",  text: "#00F5FF",  border: "rgba(0,245,255,0.15)" },
+  value_change: { bg: "rgba(0,255,136,0.08)",  text: "#00FF88",  border: "rgba(0,255,136,0.2)" },
+  status_change:{ bg: "rgba(255,184,0,0.08)",  text: "#FFB800",  border: "rgba(255,184,0,0.2)" },
 };
 
 function formatActivityDate(dateStr: string): string {
@@ -72,10 +72,10 @@ function formatActivityDate(dateStr: string): string {
 export function DealActivityTimeline({ activities }: DealActivityTimelineProps) {
   if (activities.length === 0) {
     return (
-      <div className="text-center py-12 text-slate-500">
+      <div className="text-center py-12 text-white/30">
         <Activity className="w-8 h-8 mx-auto mb-3 opacity-50" />
-        <p className="text-sm">No activities yet</p>
-        <p className="text-xs mt-1">Activities will appear here as you interact with this deal</p>
+        <p className="text-sm font-mono">No activities yet</p>
+        <p className="text-xs mt-1 font-mono text-white/20">Activities will appear here as you interact with this deal</p>
       </div>
     );
   }
@@ -83,18 +83,23 @@ export function DealActivityTimeline({ activities }: DealActivityTimelineProps) 
   return (
     <div className="relative">
       {/* Timeline line */}
-      <div className="absolute left-5 top-0 bottom-0 w-px bg-slate-700/50" />
+      <div className="absolute left-5 top-0 bottom-0 w-px bg-white/[0.06]" />
 
       <div className="space-y-4">
         {activities.map((activity) => {
-          const colorClass = activityColors[activity.activity_type] || activityColors.note;
+          const colors = activityColors[activity.activity_type] || activityColors.note;
           const icon = activityIcons[activity.activity_type] || activityIcons.note;
 
           return (
             <div key={activity.id} className="relative flex gap-3 pl-1">
               {/* Icon */}
               <div
-                className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center border ${colorClass} z-10`}
+                className="flex-shrink-0 w-9 h-9 rounded-sm flex items-center justify-center border z-10"
+                style={{
+                  backgroundColor: colors.bg,
+                  borderColor: colors.border,
+                  color: colors.text,
+                }}
               >
                 {icon}
               </div>
@@ -103,26 +108,30 @@ export function DealActivityTimeline({ activities }: DealActivityTimelineProps) 
               <div className="flex-1 min-w-0 pb-1">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-white">{activity.title}</p>
+                    <p className="text-sm font-medium font-mono text-white">{activity.title}</p>
                     {activity.description && (
-                      <p className="text-xs text-slate-400 mt-0.5 line-clamp-2">
+                      <p className="text-xs text-white/40 mt-0.5 line-clamp-2">
                         {activity.description}
                       </p>
                     )}
                   </div>
-                  <span className="text-[11px] text-slate-500 whitespace-nowrap flex-shrink-0">
+                  <span className="text-[11px] font-mono text-white/30 whitespace-nowrap flex-shrink-0">
                     {formatActivityDate(activity.created_at)}
                   </span>
                 </div>
 
                 {/* Activity type badge */}
                 <div className="mt-1.5">
-                  <Badge
-                    variant="outline"
-                    className={`text-[10px] px-1.5 py-0 ${colorClass}`}
+                  <span
+                    className="text-[10px] font-mono px-1.5 py-0.5 border rounded-sm"
+                    style={{
+                      backgroundColor: colors.bg,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   >
                     {activity.activity_type.replace("_", " ")}
-                  </Badge>
+                  </span>
                 </div>
               </div>
             </div>

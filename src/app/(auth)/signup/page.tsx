@@ -4,9 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Building, User, ArrowRight, Sparkles, Shield, Zap, Users, Check, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase";
 
 export default function SignupPage() {
@@ -87,32 +84,29 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-12 flex-col justify-between relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/5"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
-
+      <div className="hidden lg:flex lg:w-1/2 bg-[#050505] border-r border-white/[0.06] p-12 flex-col justify-between relative overflow-hidden">
         {/* Logo */}
         <div className="relative z-10">
           <Link href="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-sm bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
-              <Sparkles className="h-7 w-7 text-white" />
+            <div className="h-12 w-12 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 flex items-center justify-center">
+              <Sparkles className="h-7 w-7 text-[#00F5FF]" />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-2xl font-mono font-bold text-white/90">
                 Unite-Group
               </span>
-              <span className="text-sm text-slate-400">AI-Powered CRM</span>
+              <span className="text-sm font-mono text-white/40">AI-Powered CRM</span>
             </div>
           </Link>
         </div>
 
         {/* Content */}
         <div className="relative z-10 space-y-8">
-          <h1 className="text-5xl font-bold text-white leading-tight">
+          <h1 className="text-5xl font-mono font-bold text-white/90 leading-tight">
             Transform your business with
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> intelligent automation</span>
+            <span className="text-[#00F5FF]"> intelligent automation</span>
           </h1>
-          <p className="text-xl text-slate-300 leading-relaxed">
+          <p className="text-xl text-white/50 leading-relaxed">
             Join thousands of businesses using AI to streamline their customer relationships and drive growth.
           </p>
 
@@ -125,10 +119,10 @@ export default function SignupPage() {
               "24/7 support and onboarding assistance"
             ].map((benefit, index) => (
               <div key={index} className="flex items-center gap-3">
-                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/10">
-                  <Check className="h-4 w-4 text-blue-400" />
+                <div className="h-6 w-6 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 flex items-center justify-center flex-shrink-0">
+                  <Check className="h-4 w-4 text-[#00F5FF]" />
                 </div>
-                <p className="text-slate-300">{benefit}</p>
+                <p className="text-white/60 font-mono text-sm">{benefit}</p>
               </div>
             ))}
           </div>
@@ -140,47 +134,47 @@ export default function SignupPage() {
               { icon: Users, label: "Smart CRM" },
               { icon: Shield, label: "Secure" }
             ].map((item, index) => (
-              <div key={index} className="flex flex-col items-center gap-2 p-4 rounded-sm bg-white/5 border border-white/10">
-                <item.icon className="h-6 w-6 text-blue-400" />
-                <span className="text-sm text-slate-300">{item.label}</span>
+              <div key={index} className="flex flex-col items-center gap-2 p-4 rounded-sm bg-white/[0.02] border border-white/[0.06]">
+                <item.icon className="h-6 w-6 text-[#00F5FF]" />
+                <span className="text-sm font-mono text-white/50">{item.label}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Footer */}
-        <div className="relative z-10 flex items-center justify-between text-sm text-slate-400">
+        <div className="relative z-10 flex items-center justify-between text-sm font-mono text-white/30">
           <span>© 2025 Unite-Group</span>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <a href="https://help.unite-group.in" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">Help</a>
+            <Link href="/privacy" className="hover:text-[#00F5FF] transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-[#00F5FF] transition-colors">Terms</Link>
+            <a href="https://help.unite-group.in" className="hover:text-[#00F5FF] transition-colors" target="_blank" rel="noopener noreferrer">Help</a>
           </div>
         </div>
       </div>
 
       {/* Right Side - Signup Form */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-white">
+      <div className="flex-1 flex items-center justify-center p-6 bg-[#050505]">
         <div className="w-full max-w-md space-y-8">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <div className="h-10 w-10 rounded-sm bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
-              <Sparkles className="h-6 w-6 text-white" />
+            <div className="h-10 w-10 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 flex items-center justify-center">
+              <Sparkles className="h-6 w-6 text-[#00F5FF]" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-mono font-bold text-white/90">
               Unite-Group
             </span>
           </div>
 
           {/* Header */}
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-slate-900">Start Your Free Trial</h2>
-            <p className="text-slate-600 mt-2">Get started in less than 2 minutes</p>
+            <h2 className="text-3xl font-mono font-bold text-white/90">Start Your Free Trial</h2>
+            <p className="text-white/40 mt-2 font-mono text-sm">Get started in less than 2 minutes</p>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-sm text-sm">
+            <div className="bg-[#FF4444]/10 border border-[#FF4444]/30 rounded-sm px-4 py-3 text-sm font-mono text-[#FF4444]">
               {error}
             </div>
           )}
@@ -188,16 +182,16 @@ export default function SignupPage() {
           {/* Signup Form */}
           <form onSubmit={handleSignup} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-semibold text-slate-700">Full Name</Label>
+              <label htmlFor="name" className="block text-sm font-mono font-medium text-white/50">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-                <Input
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/20" />
+                <input
                   id="name"
                   type="text"
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="pl-11 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                   required
                   disabled={loading}
                   autoComplete="name"
@@ -206,16 +200,16 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="businessName" className="text-sm font-semibold text-slate-700">Business Name</Label>
+              <label htmlFor="businessName" className="block text-sm font-mono font-medium text-white/50">Business Name</label>
               <div className="relative">
-                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-                <Input
+                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/20" />
+                <input
                   id="businessName"
                   type="text"
                   placeholder="Your Business"
                   value={formData.businessName}
                   onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                  className="pl-11 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                   required
                   disabled={loading}
                   autoComplete="organization"
@@ -224,16 +218,16 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-semibold text-slate-700">Work Email</Label>
+              <label htmlFor="email" className="block text-sm font-mono font-medium text-white/50">Work Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-                <Input
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/20" />
+                <input
                   id="email"
                   type="email"
                   placeholder="you@business.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="pl-11 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                   required
                   disabled={loading}
                   autoComplete="email"
@@ -242,22 +236,22 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-semibold text-slate-700">Password</Label>
+              <label htmlFor="password" className="block text-sm font-mono font-medium text-white/50">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-                <Input
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/20" />
+                <input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="pl-11 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                   required
                   disabled={loading}
                   autoComplete="new-password"
                 />
               </div>
-              <p className="text-xs text-slate-500">Must be at least 8 characters</p>
+              <p className="text-xs font-mono text-white/30">Must be at least 8 characters</p>
             </div>
 
             <div className="flex items-start">
@@ -265,49 +259,49 @@ export default function SignupPage() {
                 id="terms"
                 type="checkbox"
                 required
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded mt-1"
+                className="h-4 w-4 accent-[#00F5FF] mt-1"
               />
-              <label htmlFor="terms" className="ml-2 text-sm text-slate-600">
+              <label htmlFor="terms" className="ml-2 text-sm font-mono text-white/40">
                 I agree to the{" "}
-                <Link href="/terms" className="text-blue-600 hover:text-blue-700 font-semibold">
+                <Link href="/terms" className="text-[#00F5FF] hover:text-[#00F5FF]/80 font-semibold">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-blue-600 hover:text-blue-700 font-semibold">
+                <Link href="/privacy" className="text-[#00F5FF] hover:text-[#00F5FF]/80 font-semibold">
                   Privacy Policy
                 </Link>
               </label>
             </div>
 
-            <Button
+            <button
               type="submit"
-              className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 transition-all"
+              className="w-full bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-5 py-2.5 hover:bg-[#00F5FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Creating Account...
                 </>
               ) : (
                 <>
                   Start Free Trial
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="h-5 w-5" />
                 </>
               )}
-            </Button>
+            </button>
           </form>
 
           {/* Sign In Link */}
-          <div className="text-center text-sm">
-            <span className="text-slate-600">Already have an account? </span>
-            <Link href="/login" className="text-blue-600 hover:text-blue-700 font-semibold">
+          <div className="text-center text-sm font-mono">
+            <span className="text-white/40">Already have an account? </span>
+            <Link href="/login" className="text-[#00F5FF] hover:text-[#00F5FF]/80 font-semibold">
               Sign in
             </Link>
           </div>
 
           {/* Trust Badge */}
-          <div className="flex items-center justify-center gap-2 text-xs text-slate-500 pt-4">
+          <div className="flex items-center justify-center gap-2 text-xs font-mono text-white/30 pt-4">
             <Shield className="h-4 w-4" />
             <span>No credit card required • Cancel anytime</span>
           </div>

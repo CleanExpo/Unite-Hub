@@ -24,11 +24,11 @@ export default async function StaffDashboardPage() {
       <Section>
         {/* Page header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-100">
+          <h1 className="text-3xl font-bold text-white font-mono">
             Dashboard
           </h1>
-          <p className="text-gray-400 mt-2">
-            Welcome back! Here's your overview for today.
+          <p className="text-white/40 mt-2 font-mono text-sm">
+            Welcome back! Here&apos;s your overview for today.
           </p>
         </div>
       </Section>
@@ -41,13 +41,13 @@ export default async function StaffDashboardPage() {
           <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Active Projects</p>
-                <p className="text-3xl font-bold text-gray-100 mt-2">
+                <p className="text-sm text-white/40 font-mono">Active Projects</p>
+                <p className="text-3xl font-bold text-white mt-2 font-mono">
                   {stats.activeProjects}
                 </p>
               </div>
-              <div className="p-3 bg-blue-500/10 rounded-lg">
-                <FolderKanban className="h-6 w-6 text-blue-400" />
+              <div className="p-3 bg-white/[0.04] border border-white/[0.06] rounded-sm">
+                <FolderKanban className="h-6 w-6 text-[#00F5FF]" />
               </div>
             </div>
           </div>
@@ -58,13 +58,13 @@ export default async function StaffDashboardPage() {
           <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Pending Tasks</p>
-                <p className="text-3xl font-bold text-gray-100 mt-2">
+                <p className="text-sm text-white/40 font-mono">Pending Tasks</p>
+                <p className="text-3xl font-bold text-white mt-2 font-mono">
                   {stats.pendingTasks}
                 </p>
               </div>
-              <div className="p-3 bg-yellow-500/10 rounded-lg">
-                <CheckSquare className="h-6 w-6 text-yellow-400" />
+              <div className="p-3 bg-white/[0.04] border border-white/[0.06] rounded-sm">
+                <CheckSquare className="h-6 w-6 text-[#FFB800]" />
               </div>
             </div>
           </div>
@@ -75,13 +75,13 @@ export default async function StaffDashboardPage() {
           <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Completed (Week)</p>
-                <p className="text-3xl font-bold text-gray-100 mt-2">
+                <p className="text-sm text-white/40 font-mono">Completed (Week)</p>
+                <p className="text-3xl font-bold text-white mt-2 font-mono">
                   {stats.completedThisWeek}
                 </p>
               </div>
-              <div className="p-3 bg-green-500/10 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-green-400" />
+              <div className="p-3 bg-white/[0.04] border border-white/[0.06] rounded-sm">
+                <TrendingUp className="h-6 w-6 text-[#00FF88]" />
               </div>
             </div>
           </div>
@@ -92,13 +92,13 @@ export default async function StaffDashboardPage() {
           <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Total Tasks</p>
-                <p className="text-3xl font-bold text-gray-100 mt-2">
+                <p className="text-sm text-white/40 font-mono">Total Tasks</p>
+                <p className="text-3xl font-bold text-white mt-2 font-mono">
                   {stats.totalTasks}
                 </p>
               </div>
-              <div className="p-3 bg-purple-500/10 rounded-lg">
-                <Users className="h-6 w-6 text-purple-400" />
+              <div className="p-3 bg-white/[0.04] border border-white/[0.06] rounded-sm">
+                <Users className="h-6 w-6 text-[#FF00FF]" />
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@ export default async function StaffDashboardPage() {
       {/* Recent activity - wired to real data */}
       <Card>
         <div className="p-6">
-          <h2 className="text-xl font-semibold text-gray-100 mb-4">
+          <h2 className="text-xl font-semibold text-white mb-4 font-mono">
             Recent Activity
           </h2>
           <div className="space-y-4">
@@ -116,21 +116,21 @@ export default async function StaffDashboardPage() {
               stats.recentActivity.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-center justify-between py-3 border-b border-gray-800 last:border-0"
+                  className="flex items-center justify-between py-3 border-b border-white/[0.06] last:border-0"
                 >
                   <div className="flex items-center space-x-3">
                     <Badge variant="info">{activity.action}</Badge>
-                    <span className="text-gray-300">
+                    <span className="text-white/60 font-mono text-sm">
                       {activity.metadata?.description || activity.action}
                     </span>
                   </div>
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-white/40 font-mono">
                     {new Date(activity.timestamp).toLocaleString()}
                   </span>
                 </div>
               ))
             ) : (
-              <p className="text-gray-400 text-center py-4">No recent activity</p>
+              <p className="text-white/40 text-center py-4 font-mono text-sm">No recent activity</p>
             )}
           </div>
         </div>

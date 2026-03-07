@@ -50,103 +50,85 @@ export default function ClientReportsPage() {
     setLoading(false);
   };
 
-  if (loading) return <div className="p-8">Loading your reports...</div>;
+  if (loading) return (
+    <div className="p-8 text-white/40 font-mono text-sm">Loading your reports...</div>
+  );
 
   return (
     <PageContainer>
       <Section>
-        <h1 className="text-3xl font-bold">Your Financial Reports</h1>
+        <h1 className="text-3xl font-bold text-white font-mono">Your Financial Reports</h1>
       </Section>
 
       <Section>
         <Tabs defaultValue="billing">
-        <TabsList>
-          <TabsTrigger value="billing">Billing Summary</TabsTrigger>
-          <TabsTrigger value="hours">Hours Breakdown</TabsTrigger>
-          <TabsTrigger value="payments">Payment History</TabsTrigger>
+        <TabsList className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-1">
+          <TabsTrigger value="billing" className="font-mono text-sm rounded-sm data-[state=active]:bg-white/[0.04] data-[state=active]:text-[#00F5FF]">Billing Summary</TabsTrigger>
+          <TabsTrigger value="hours" className="font-mono text-sm rounded-sm data-[state=active]:bg-white/[0.04] data-[state=active]:text-[#00F5FF]">Hours Breakdown</TabsTrigger>
+          <TabsTrigger value="payments" className="font-mono text-sm rounded-sm data-[state=active]:bg-white/[0.04] data-[state=active]:text-[#00F5FF]">Payment History</TabsTrigger>
         </TabsList>
 
         <TabsContent value="billing" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>Billable Hours</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{billing?.billableHours?.toFixed(1) || '0.0'}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Total Billed</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">${billing?.totalBillableAmount?.toFixed(2) || '0.00'}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Outstanding Balance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-amber-600">
-                  ${billing?.outstandingBalance?.toFixed(2) || '0.00'}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-5">
+              <p className="text-sm text-white/40 font-mono mb-2">Billable Hours</p>
+              <div className="text-3xl font-bold text-white font-mono">{billing?.billableHours?.toFixed(1) || '0.0'}</div>
+            </div>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-5">
+              <p className="text-sm text-white/40 font-mono mb-2">Total Billed</p>
+              <div className="text-3xl font-bold text-white font-mono">${billing?.totalBillableAmount?.toFixed(2) || '0.00'}</div>
+            </div>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-5">
+              <p className="text-sm text-white/40 font-mono mb-2">Outstanding Balance</p>
+              <div className="text-3xl font-bold text-[#FFB800] font-mono">
+                ${billing?.outstandingBalance?.toFixed(2) || '0.00'}
+              </div>
+            </div>
           </div>
         </TabsContent>
 
         <TabsContent value="hours">
-          <Card>
-            <CardHeader>
-              <CardTitle>Time Entries</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {hours?.entries?.slice(0, 10).map((entry: any) => (
-                  <div key={entry.id} className="flex justify-between border-b pb-2">
-                    <div>
-                      <div className="font-medium">{entry.description}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {new Date(entry.date).toLocaleDateString()}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold">{entry.hours}h</div>
-                      <div className="text-sm">${(entry.hours * entry.hourly_rate).toFixed(2)}</div>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-5">
+            <h3 className="text-white font-mono font-semibold mb-4">Time Entries</h3>
+            <div className="space-y-2">
+              {hours?.entries?.slice(0, 10).map((entry: any) => (
+                <div key={entry.id} className="flex justify-between border-b border-white/[0.06] pb-2">
+                  <div>
+                    <div className="font-medium text-white font-mono text-sm">{entry.description}</div>
+                    <div className="text-sm text-white/40 font-mono">
+                      {new Date(entry.date).toLocaleDateString('en-AU')}
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="text-right">
+                    <div className="font-semibold text-white font-mono">{entry.hours}h</div>
+                    <div className="text-sm text-white/40 font-mono">${(entry.hours * entry.hourly_rate).toFixed(2)}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="payments">
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {payments?.payments?.slice(0, 10).map((payment: any) => (
-                  <div key={payment.id} className="flex justify-between border-b pb-2">
-                    <div>
-                      <div className="font-medium">{payment.description || 'Payment'}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {new Date(payment.payment_date).toLocaleDateString()}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold">${parseFloat(payment.amount).toFixed(2)}</div>
-                      <div className="text-sm text-green-600">{payment.status}</div>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-5">
+            <h3 className="text-white font-mono font-semibold mb-4">Payment History</h3>
+            <div className="space-y-2">
+              {payments?.payments?.slice(0, 10).map((payment: any) => (
+                <div key={payment.id} className="flex justify-between border-b border-white/[0.06] pb-2">
+                  <div>
+                    <div className="font-medium text-white font-mono text-sm">{payment.description || 'Payment'}</div>
+                    <div className="text-sm text-white/40 font-mono">
+                      {new Date(payment.payment_date).toLocaleDateString('en-AU')}
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="text-right">
+                    <div className="font-semibold text-white font-mono">${parseFloat(payment.amount).toFixed(2)}</div>
+                    <div className="text-sm text-[#00FF88] font-mono">{payment.status}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
       </Section>

@@ -47,22 +47,22 @@ interface ClientEmailIdeaListProps {
 }
 
 const typeConfig: Record<string, { icon: typeof Lightbulb; label: string; color: string }> = {
-  action_item: { icon: CheckSquare, label: 'Action Items', color: 'text-blue-500' },
-  meeting_request: { icon: Calendar, label: 'Meeting Requests', color: 'text-purple-500' },
-  deadline: { icon: Clock, label: 'Deadlines', color: 'text-red-500' },
-  follow_up: { icon: MessageSquare, label: 'Follow-ups', color: 'text-amber-500' },
-  opportunity: { icon: TrendingUp, label: 'Opportunities', color: 'text-green-500' },
-  concern: { icon: AlertTriangle, label: 'Concerns', color: 'text-orange-500' },
-  feedback: { icon: MessageSquare, label: 'Feedback', color: 'text-cyan-500' },
-  question: { icon: HelpCircle, label: 'Questions', color: 'text-violet-500' },
-  decision_needed: { icon: Lightbulb, label: 'Decisions Needed', color: 'text-pink-500' },
+  action_item:      { icon: CheckSquare,    label: 'Action Items',      color: '#00F5FF' },
+  meeting_request:  { icon: Calendar,       label: 'Meeting Requests',   color: '#FF00FF' },
+  deadline:         { icon: Clock,          label: 'Deadlines',          color: '#FF4444' },
+  follow_up:        { icon: MessageSquare,  label: 'Follow-ups',         color: '#FFB800' },
+  opportunity:      { icon: TrendingUp,     label: 'Opportunities',      color: '#00FF88' },
+  concern:          { icon: AlertTriangle,  label: 'Concerns',           color: '#FFB800' },
+  feedback:         { icon: MessageSquare,  label: 'Feedback',           color: '#00F5FF' },
+  question:         { icon: HelpCircle,     label: 'Questions',          color: '#FF00FF' },
+  decision_needed:  { icon: Lightbulb,      label: 'Decisions Needed',   color: '#FFB800' },
 };
 
-const priorityConfig: Record<string, { color: string; bgColor: string }> = {
-  urgent: { color: 'text-red-700', bgColor: 'bg-red-100 dark:bg-red-900/30' },
-  high: { color: 'text-orange-700', bgColor: 'bg-orange-100 dark:bg-orange-900/30' },
-  medium: { color: 'text-yellow-700', bgColor: 'bg-yellow-100 dark:bg-yellow-900/30' },
-  low: { color: 'text-gray-600', bgColor: 'bg-gray-100 dark:bg-gray-800' },
+const priorityConfig: Record<string, { color: string; bg: string; border: string }> = {
+  urgent: { color: '#FF4444', bg: 'rgba(255,68,68,0.10)',   border: 'rgba(255,68,68,0.25)' },
+  high:   { color: '#FFB800', bg: 'rgba(255,184,0,0.10)',   border: 'rgba(255,184,0,0.25)' },
+  medium: { color: '#FFB800', bg: 'rgba(255,184,0,0.06)',   border: 'rgba(255,184,0,0.15)' },
+  low:    { color: '#ffffff40', bg: 'rgba(255,255,255,0.03)', border: 'rgba(255,255,255,0.08)' },
 };
 
 export function ClientEmailIdeaList({
@@ -167,7 +167,7 @@ export function ClientEmailIdeaList({
   if (isLoading) {
     return (
       <div className={cn('flex items-center justify-center py-8', className)}>
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="h-6 w-6 animate-spin text-white/30" />
       </div>
     );
   }
@@ -175,7 +175,7 @@ export function ClientEmailIdeaList({
   if (error) {
     return (
       <div className={cn('p-4 text-center', className)}>
-        <p className="text-sm text-destructive">{error}</p>
+        <p className="text-sm font-mono" style={{ color: '#FF4444' }}>{error}</p>
       </div>
     );
   }
@@ -183,46 +183,46 @@ export function ClientEmailIdeaList({
   const renderIdea = (idea: EmailIdea) => {
     const config = typeConfig[idea.type] || typeConfig.action_item;
     const Icon = config.icon;
-    const priorityStyle = priorityConfig[idea.priority] || priorityConfig.medium;
+    const pStyle = priorityConfig[idea.priority] || priorityConfig.medium;
 
     return (
       <div
         key={idea.id}
         className={cn(
-          'group flex items-start justify-between rounded-lg border p-3',
-          'hover:bg-muted/50 transition-colors cursor-pointer',
+          'group flex items-start justify-between rounded-sm border p-3',
+          'bg-white/[0.02] border-white/[0.06]',
+          'hover:bg-white/[0.04] hover:border-white/[0.10] transition-colors cursor-pointer',
           idea.status === 'completed' && 'opacity-60'
         )}
         onClick={() => onIdeaSelect?.(idea)}
       >
         <div className="flex items-start gap-3">
-          <Icon className={cn('h-5 w-5 shrink-0 mt-0.5', config.color)} />
+          <Icon className="h-5 w-5 shrink-0 mt-0.5" style={{ color: config.color }} />
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className={cn(
-                'rounded-full px-2 py-0.5 text-xs font-medium',
-                priorityStyle.bgColor,
-                priorityStyle.color
-              )}>
+              <span
+                className="rounded-sm px-2 py-0.5 text-xs font-mono border"
+                style={{ color: pStyle.color, backgroundColor: pStyle.bg, borderColor: pStyle.border }}
+              >
                 {idea.priority}
               </span>
               {idea.dueDate && (
                 <span className={cn(
-                  'text-xs',
-                  isOverdue(idea.dueDate, idea.status) ? 'text-red-600' : 'text-muted-foreground'
+                  'text-xs font-mono',
+                  isOverdue(idea.dueDate, idea.status) ? 'text-[#FF4444]' : 'text-white/30'
                 )}>
                   Due {formatDate(idea.dueDate)}
                 </span>
               )}
             </div>
             <p className={cn(
-              'text-sm font-medium',
+              'text-sm font-medium font-mono text-white',
               idea.status === 'completed' && 'line-through'
             )}>
               {idea.title}
             </p>
             {idea.description && (
-              <p className="text-xs text-muted-foreground line-clamp-2">
+              <p className="text-xs text-white/40 line-clamp-2">
                 {idea.description}
               </p>
             )}
@@ -237,10 +237,10 @@ export function ClientEmailIdeaList({
             );
           }}
           className={cn(
-            'shrink-0 rounded-md p-1.5 opacity-0 group-hover:opacity-100 transition-opacity',
-            'hover:bg-muted',
-            idea.status === 'completed' ? 'text-green-600' : 'text-muted-foreground hover:text-green-600'
+            'shrink-0 rounded-sm p-1.5 opacity-0 group-hover:opacity-100 transition-opacity',
+            'hover:bg-white/[0.04]',
           )}
+          style={{ color: idea.status === 'completed' ? '#00FF88' : 'rgba(255,255,255,0.3)' }}
           title={idea.status === 'completed' ? 'Mark as pending' : 'Mark as complete'}
         >
           <CheckCircle2 className="h-5 w-5" />
@@ -254,11 +254,11 @@ export function ClientEmailIdeaList({
       {/* Filters */}
       {showFilters && (
         <div className="flex flex-wrap items-center gap-2">
-          <Filter className="h-4 w-4 text-muted-foreground" />
+          <Filter className="h-4 w-4 text-white/30" />
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="rounded-md border bg-background px-2 py-1 text-sm"
+            className="rounded-sm border bg-white/[0.03] border-white/[0.08] text-white px-2 py-1 text-sm font-mono"
           >
             <option value="pending">Pending</option>
             <option value="in_progress">In Progress</option>
@@ -268,7 +268,7 @@ export function ClientEmailIdeaList({
           <select
             value={filterType || ''}
             onChange={(e) => setFilterType(e.target.value || null)}
-            className="rounded-md border bg-background px-2 py-1 text-sm"
+            className="rounded-sm border bg-white/[0.03] border-white/[0.08] text-white px-2 py-1 text-sm font-mono"
           >
             <option value="">All Types</option>
             {Object.entries(typeConfig).map(([key, val]) => (
@@ -278,7 +278,7 @@ export function ClientEmailIdeaList({
           <select
             value={filterPriority || ''}
             onChange={(e) => setFilterPriority(e.target.value || null)}
-            className="rounded-md border bg-background px-2 py-1 text-sm"
+            className="rounded-sm border bg-white/[0.03] border-white/[0.08] text-white px-2 py-1 text-sm font-mono"
           >
             <option value="">All Priorities</option>
             <option value="urgent">Urgent</option>
@@ -291,13 +291,13 @@ export function ClientEmailIdeaList({
 
       {/* Stats */}
       {stats.total !== undefined && (
-        <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+        <div className="flex flex-wrap gap-3 text-xs font-mono text-white/30">
           <span>{stats.total} total</span>
           {stats.overdue > 0 && (
-            <span className="text-red-600">{stats.overdue} overdue</span>
+            <span style={{ color: '#FF4444' }}>{stats.overdue} overdue</span>
           )}
           {stats.urgent > 0 && (
-            <span className="text-orange-600">{stats.urgent} urgent</span>
+            <span style={{ color: '#FFB800' }}>{stats.urgent} urgent</span>
           )}
         </div>
       )}
@@ -305,8 +305,8 @@ export function ClientEmailIdeaList({
       {/* Ideas List */}
       {ideas.length === 0 ? (
         <div className="py-8 text-center">
-          <Lightbulb className="mx-auto h-8 w-8 text-muted-foreground" />
-          <p className="mt-2 text-sm text-muted-foreground">
+          <Lightbulb className="mx-auto h-8 w-8 text-white/20" />
+          <p className="mt-2 text-sm font-mono text-white/30">
             No ideas found matching your filters.
           </p>
         </div>
@@ -321,9 +321,9 @@ export function ClientEmailIdeaList({
             return (
               <div key={type}>
                 <div className="mb-2 flex items-center gap-2">
-                  <Icon className={cn('h-4 w-4', config.color)} />
-                  <h3 className="text-sm font-semibold">{config.label}</h3>
-                  <span className="text-xs text-muted-foreground">
+                  <Icon className="h-4 w-4" style={{ color: config.color }} />
+                  <h3 className="text-sm font-semibold font-mono text-white">{config.label}</h3>
+                  <span className="text-xs font-mono text-white/30">
                     ({typeIdeas.length})
                   </span>
                 </div>

@@ -1,12 +1,8 @@
 "use client";
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Clock, Calendar, Network } from "lucide-react";
+import { Calendar, Network } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ProjectCardProps {
@@ -28,30 +24,30 @@ interface ProjectCardProps {
 const statusConfig = {
   "on-track": {
     label: "On Track",
-    color: "bg-green-500",
-    badgeClass: "bg-green-100 text-green-700 border-green-200",
+    barColor: "bg-[#00FF88]",
+    badgeClass: "border-[#00FF88]/30 text-[#00FF88]",
   },
   "at-risk": {
     label: "At Risk",
-    color: "bg-yellow-500",
-    badgeClass: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    barColor: "bg-[#FFB800]",
+    badgeClass: "border-[#FFB800]/30 text-[#FFB800]",
   },
   delayed: {
     label: "Delayed",
-    color: "bg-red-500",
-    badgeClass: "bg-red-100 text-red-700 border-red-200",
+    barColor: "bg-[#FF4444]",
+    badgeClass: "border-[#FF4444]/30 text-[#FF4444]",
   },
   completed: {
     label: "Completed",
-    color: "bg-blue-500",
-    badgeClass: "bg-blue-100 text-blue-700 border-blue-200",
+    barColor: "bg-[#00F5FF]",
+    badgeClass: "border-[#00F5FF]/30 text-[#00F5FF]",
   },
 };
 
 const priorityConfig = {
-  high: "bg-red-100 text-red-700 border-red-200",
-  medium: "bg-yellow-100 text-yellow-700 border-yellow-200",
-  low: "bg-gray-100 text-gray-700 border-gray-200",
+  high: "border-[#FF4444]/30 text-[#FF4444]",
+  medium: "border-[#FFB800]/30 text-[#FFB800]",
+  low: "border-white/[0.06] text-white/40",
 };
 
 export function ProjectCard({
@@ -69,41 +65,38 @@ export function ProjectCard({
   const statusInfo = statusConfig[status];
 
   return (
-    <Card className={cn("hover:shadow-lg transition-shadow duration-200", className)}>
-      <CardHeader className="pb-3">
+    <div className={cn("bg-white/[0.02] border border-white/[0.06] rounded-sm hover:border-white/10 transition-colors", className)}>
+      <div className="p-4 pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <CardTitle className="text-lg font-semibold text-unite-navy mb-1">
+            <h4 className="font-mono text-sm font-bold text-white/90 mb-1">
               {title}
-            </CardTitle>
-            <p className="text-sm text-gray-500">{client}</p>
+            </h4>
+            <p className="text-xs font-mono text-white/30">{client}</p>
           </div>
           <div className="flex gap-2">
             {priority && (
-              <Badge variant="outline" className={cn("text-xs", priorityConfig[priority])}>
+              <span className={cn("px-1.5 py-0.5 border rounded-sm text-[10px] font-mono", priorityConfig[priority])}>
                 {priority.charAt(0).toUpperCase() + priority.slice(1)}
-              </Badge>
+              </span>
             )}
-            <Badge variant="outline" className={cn("text-xs", statusInfo.badgeClass)}>
+            <span className={cn("px-1.5 py-0.5 border rounded-sm text-[10px] font-mono", statusInfo.badgeClass)}>
               {statusInfo.label}
-            </Badge>
+            </span>
           </div>
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="space-y-4">
+      <div className="px-4 pb-4 space-y-4">
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Progress</span>
-            <span className="font-semibold text-unite-navy">{progress}%</span>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-white/20">Progress</span>
+            <span className="font-mono font-bold text-sm text-white/90">{progress}%</span>
           </div>
-          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-white/[0.06] rounded-sm overflow-hidden">
             <div
-              className={cn(
-                "h-full rounded-full transition-all duration-300",
-                statusInfo.color
-              )}
+              className={cn("h-full rounded-sm transition-all duration-300", statusInfo.barColor)}
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -111,7 +104,7 @@ export function ProjectCard({
 
         {/* Due Date and Assignees */}
         <div className="flex items-center justify-between pt-2">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-xs font-mono text-white/30">
             <Calendar className="h-4 w-4" />
             <span>Due {dueDate}</span>
           </div>
@@ -119,18 +112,16 @@ export function ProjectCard({
           {assignees.length > 0 && (
             <div className="flex -space-x-2">
               {assignees.slice(0, 3).map((assignee, index) => (
-                <Avatar
+                <div
                   key={index}
-                  className="h-8 w-8 border-2 border-white ring-1 ring-gray-200"
+                  className="h-8 w-8 border border-white/[0.06] bg-white/[0.04] rounded-sm flex items-center justify-center"
+                  title={assignee.name}
                 >
-                  {assignee.avatar && <AvatarImage src={assignee.avatar} alt={assignee.name} />}
-                  <AvatarFallback className="bg-gradient-to-br from-unite-teal to-unite-blue text-white text-xs">
-                    {assignee.initials}
-                  </AvatarFallback>
-                </Avatar>
+                  <span className="text-[10px] font-mono font-bold text-[#00F5FF]">{assignee.initials}</span>
+                </div>
               ))}
               {assignees.length > 3 && (
-                <div className="h-8 w-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
+                <div className="h-8 w-8 border border-white/[0.06] bg-white/[0.04] rounded-sm flex items-center justify-center text-[10px] font-mono text-white/40">
                   +{assignees.length - 3}
                 </div>
               )}
@@ -140,23 +131,21 @@ export function ProjectCard({
 
         {/* Mindmap Button */}
         {id && (
-          <div className="pt-2 border-t">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full"
+          <div className="pt-2 border-t border-white/[0.06]">
+            <button
+              className="w-full flex items-center justify-center gap-2 py-2 border border-white/[0.06] rounded-sm text-xs font-mono text-white/40 hover:text-white/90 hover:border-white/20 transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 router.push(`/dashboard/projects/${id}/mindmap`);
               }}
             >
-              <Network className="h-4 w-4 mr-2" />
+              <Network className="h-4 w-4" />
               View Mindmap
-            </Button>
+            </button>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

@@ -22,13 +22,13 @@ export interface BusinessKpiData {
   updatedAt: string;
 }
 
-// ─── Status config ────────────────────────────────────────────────────────────
+// ─── Status config — Scientific Luxury tokens ─────────────────────────────────
 
 const STATUS_CONFIG = {
-  healthy:  { label: "Healthy",  dot: "bg-emerald-400", badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-  warning:  { label: "Warning",  dot: "bg-amber-400",   badge: "bg-amber-500/10  text-amber-400  border-amber-500/20"  },
-  critical: { label: "Critical", dot: "bg-red-400",     badge: "bg-red-500/10    text-red-400    border-red-500/20"    },
-  building: { label: "Building", dot: "bg-blue-400",    badge: "bg-blue-500/10   text-blue-400   border-blue-500/20"   },
+  healthy:  { label: "Healthy",  dot: "#00FF88", badge: { color: "#00FF88", bg: "#00FF8810", border: "#00FF8840" } },
+  warning:  { label: "Warning",  dot: "#FFB800", badge: { color: "#FFB800", bg: "#FFB80010", border: "#FFB80040" } },
+  critical: { label: "Critical", dot: "#FF4444", badge: { color: "#FF4444", bg: "#FF444410", border: "#FF444440" } },
+  building: { label: "Building", dot: "#00F5FF", badge: { color: "#00F5FF", bg: "#00F5FF10", border: "#00F5FF40" } },
 };
 
 // ─── Sparkline tooltip ────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ const STATUS_CONFIG = {
 function SparkTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-xs text-white shadow">
+    <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-sm px-2 py-1 font-mono text-xs text-white">
       ${payload[0].value?.toLocaleString()}
     </div>
   );
@@ -58,12 +58,12 @@ export function BusinessKpiCard({ data, className, onDrillDown }: BusinessKpiCar
   const sparkData = data.sparkline.map((v, i) => ({ day: i + 1, mrr: v }));
 
   const TrendIcon = trendFlat ? Minus : trendUp ? TrendingUp : TrendingDown;
-  const trendColor = trendFlat ? "text-zinc-400" : trendUp ? "text-emerald-400" : "text-red-400";
+  const trendColor = trendFlat ? "rgba(255,255,255,0.3)" : trendUp ? "#00FF88" : "#FF4444";
 
   return (
     <div
       className={cn(
-        "group flex flex-col bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden transition-all hover:border-zinc-700 hover:shadow-lg hover:shadow-black/30",
+        "group flex flex-col bg-white/[0.02] border border-white/[0.06] rounded-sm overflow-hidden transition-all hover:border-white/[0.10]",
         className
       )}
     >
@@ -74,15 +74,21 @@ export function BusinessKpiCard({ data, className, onDrillDown }: BusinessKpiCar
             {data.emoji}
           </span>
           <div>
-            <h3 className="text-sm font-semibold text-white leading-tight">{data.name}</h3>
-            <span className="text-[10px] font-mono text-zinc-500">{data.code}</span>
+            <h3 className="font-mono text-sm font-semibold text-white leading-tight">{data.name}</h3>
+            <span className="font-mono text-[10px] text-white/30">{data.code}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           {/* Status badge */}
-          <span className={cn("inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full border", status.badge)}>
-            <span className={cn("w-1.5 h-1.5 rounded-full", status.dot)} />
+          <span
+            className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium px-2 py-0.5 rounded-sm border"
+            style={{ color: status.badge.color, backgroundColor: status.badge.bg, borderColor: status.badge.border }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: status.dot }}
+            />
             {status.label}
           </span>
           {/* External link */}
@@ -91,7 +97,7 @@ export function BusinessKpiCard({ data, className, onDrillDown }: BusinessKpiCar
               href={data.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-zinc-600 hover:text-zinc-300 transition-colors"
+              className="text-white/20 hover:text-white/60 transition-colors"
               onClick={e => e.stopPropagation()}
             >
               <ExternalLink className="w-3.5 h-3.5" />
@@ -101,15 +107,15 @@ export function BusinessKpiCard({ data, className, onDrillDown }: BusinessKpiCar
       </div>
 
       {/* Metrics row */}
-      <div className="grid grid-cols-2 gap-px bg-zinc-800 mx-4 rounded-xl overflow-hidden mb-3">
+      <div className="grid grid-cols-2 gap-px bg-white/[0.04] mx-4 rounded-sm overflow-hidden mb-3">
         {/* MRR */}
-        <div className="bg-zinc-900 px-3 py-2.5">
-          <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-0.5">MRR</p>
+        <div className="bg-[#050505] px-3 py-2.5">
+          <p className="font-mono text-[10px] text-white/30 uppercase tracking-wider mb-0.5">MRR</p>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-lg font-bold text-white">
+            <span className="font-mono text-lg font-bold text-white">
               ${data.mrr >= 1000 ? `${(data.mrr / 1000).toFixed(1)}k` : data.mrr.toLocaleString()}
             </span>
-            <div className={cn("flex items-center gap-0.5 text-xs", trendColor)}>
+            <div className="flex items-center gap-0.5 font-mono text-xs" style={{ color: trendColor }}>
               <TrendIcon className="w-3 h-3" />
               <span>{Math.abs(data.mrrChange)}%</span>
             </div>
@@ -117,17 +123,17 @@ export function BusinessKpiCard({ data, className, onDrillDown }: BusinessKpiCar
         </div>
 
         {/* Active users */}
-        <div className="bg-zinc-900 px-3 py-2.5">
-          <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-0.5">Active Users</p>
-          <span className="text-lg font-bold text-white">
+        <div className="bg-[#050505] px-3 py-2.5">
+          <p className="font-mono text-[10px] text-white/30 uppercase tracking-wider mb-0.5">Active Users</p>
+          <span className="font-mono text-lg font-bold text-white">
             {data.activeUsers >= 1000 ? `${(data.activeUsers / 1000).toFixed(1)}k` : data.activeUsers.toLocaleString()}
           </span>
         </div>
 
         {/* Top metric */}
-        <div className="bg-zinc-900 px-3 py-2.5 col-span-2">
-          <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-0.5">{data.topMetric.label}</p>
-          <span className="text-sm font-semibold text-cyan-400">
+        <div className="bg-[#050505] px-3 py-2.5 col-span-2">
+          <p className="font-mono text-[10px] text-white/30 uppercase tracking-wider mb-0.5">{data.topMetric.label}</p>
+          <span className="font-mono text-sm font-semibold" style={{ color: '#00F5FF' }}>
             {typeof data.topMetric.value === "number"
               ? data.topMetric.value.toLocaleString()
               : data.topMetric.value}
@@ -137,14 +143,14 @@ export function BusinessKpiCard({ data, className, onDrillDown }: BusinessKpiCar
 
       {/* Sparkline — 30-day MRR */}
       <div className="px-4 pb-1">
-        <p className="text-[9px] text-zinc-600 uppercase tracking-wider mb-1">30-day MRR trend</p>
+        <p className="font-mono text-[9px] text-white/20 uppercase tracking-wider mb-1">30-day MRR trend</p>
         <div className="h-10">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={sparkData}>
               <Line
                 type="monotone"
                 dataKey="mrr"
-                stroke={data.mrrChange >= 0 ? "#22d3ee" : "#f87171"}
+                stroke={data.mrrChange >= 0 ? "#00F5FF" : "#FF4444"}
                 strokeWidth={1.5}
                 dot={false}
                 isAnimationActive={false}
@@ -157,18 +163,21 @@ export function BusinessKpiCard({ data, className, onDrillDown }: BusinessKpiCar
 
       {/* Footer */}
       <div
-        className="flex items-center justify-between px-4 py-2.5 mt-auto border-t border-zinc-800 cursor-pointer hover:bg-zinc-800/40 transition-colors"
+        className="flex items-center justify-between px-4 py-2.5 mt-auto border-t border-white/[0.04] cursor-pointer hover:bg-white/[0.02] transition-colors"
         onClick={() => onDrillDown?.(data.id)}
         role="button"
         tabIndex={0}
         onKeyDown={e => e.key === "Enter" && onDrillDown?.(data.id)}
         aria-label={`View ${data.name} details`}
       >
-        <div className="flex items-center gap-1 text-[10px] text-zinc-600">
+        <div className="flex items-center gap-1 font-mono text-[10px] text-white/30">
           <Clock className="w-3 h-3" />
           <span>Updated {new Date(data.updatedAt).toLocaleDateString("en-AU", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
         </div>
-        <span className="text-[10px] text-cyan-600 group-hover:text-cyan-400 transition-colors font-medium">
+        <span
+          className="font-mono text-[10px] font-medium transition-colors"
+          style={{ color: '#00F5FF60' }}
+        >
           View details →
         </span>
       </div>
@@ -180,25 +189,25 @@ export function BusinessKpiCard({ data, className, onDrillDown }: BusinessKpiCar
 
 export function BusinessKpiCardSkeleton() {
   return (
-    <div className="flex flex-col bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden animate-pulse">
+    <div className="flex flex-col bg-white/[0.02] border border-white/[0.06] rounded-sm overflow-hidden animate-pulse">
       <div className="px-4 pt-4 pb-2 flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-full bg-zinc-800" />
+        <div className="w-8 h-8 rounded-sm bg-white/[0.04]" />
         <div>
-          <div className="h-3.5 w-28 bg-zinc-800 rounded mb-1" />
-          <div className="h-2.5 w-12 bg-zinc-800 rounded" />
+          <div className="h-3.5 w-28 bg-white/[0.04] rounded-sm mb-1" />
+          <div className="h-2.5 w-12 bg-white/[0.04] rounded-sm" />
         </div>
-        <div className="ml-auto h-5 w-16 bg-zinc-800 rounded-full" />
+        <div className="ml-auto h-5 w-16 bg-white/[0.04] rounded-sm" />
       </div>
-      <div className="grid grid-cols-2 gap-px bg-zinc-800 mx-4 rounded-xl overflow-hidden mb-3">
+      <div className="grid grid-cols-2 gap-px bg-white/[0.04] mx-4 rounded-sm overflow-hidden mb-3">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className={cn("bg-zinc-900 px-3 py-2.5", i === 2 ? "col-span-2" : "")}>
-            <div className="h-2 w-10 bg-zinc-800 rounded mb-1.5" />
-            <div className="h-5 w-16 bg-zinc-800 rounded" />
+          <div key={i} className={cn("bg-[#050505] px-3 py-2.5", i === 2 ? "col-span-2" : "")}>
+            <div className="h-2 w-10 bg-white/[0.04] rounded-sm mb-1.5" />
+            <div className="h-5 w-16 bg-white/[0.04] rounded-sm" />
           </div>
         ))}
       </div>
-      <div className="h-10 mx-4 mb-1 bg-zinc-800 rounded" />
-      <div className="h-10 border-t border-zinc-800 mx-0 bg-zinc-900" />
+      <div className="h-10 mx-4 mb-1 bg-white/[0.04] rounded-sm" />
+      <div className="h-10 border-t border-white/[0.04] mx-0 bg-[#050505]" />
     </div>
   );
 }

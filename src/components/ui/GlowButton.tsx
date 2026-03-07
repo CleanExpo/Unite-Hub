@@ -21,12 +21,12 @@ export function GlowButton({
   return (
     <button
       className={cn(
-        'relative px-6 py-3 rounded-lg font-medium transition-all',
-        'border border-[rgba(255,255,255,0.08)]',
-        'hover:shadow-[0_0_20px_rgba(59,130,246,0.4)]',
+        'relative px-6 py-3 rounded-sm font-medium transition-all',
+        'border border-white/[0.08]',
+        'hover:shadow-[0_0_20px_rgba(0,245,255,0.3)]',
         'hover:-translate-y-0.5',
-        variant === 'primary' && 'bg-[var(--accent,#3b82f6)] text-white',
-        variant === 'secondary' && 'bg-transparent text-[var(--accent,#3b82f6)]',
+        variant === 'primary' && 'bg-[#00F5FF] text-[#050505]',
+        variant === 'secondary' && 'bg-transparent text-[#00F5FF]',
         className
       )}
       {...props}

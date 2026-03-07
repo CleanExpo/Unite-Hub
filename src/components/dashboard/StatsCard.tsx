@@ -3,7 +3,6 @@
 import React from "react";
 import { LucideIcon, TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface StatsCardProps {
   title: string;
@@ -14,8 +13,7 @@ interface StatsCardProps {
     isPositive: boolean;
     label?: string;
   };
-  gradientFrom: string;
-  gradientTo: string;
+  accentColor?: string;
   className?: string;
 }
 
@@ -24,50 +22,56 @@ export function StatsCard({
   value,
   icon: Icon,
   trend,
-  gradientFrom,
-  gradientTo,
+  accentColor = '#00F5FF',
   className,
 }: StatsCardProps) {
+  const trendColor = trend?.isPositive ? '#00FF88' : '#FF4444';
+
   return (
-    <Card className={cn("border-0 shadow-lg overflow-hidden", className)}>
-      <CardContent className="p-0">
-        <div className={cn("p-6 bg-gradient-to-br", gradientFrom, gradientTo)}>
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <p className="text-sm font-medium text-white/80 mb-1">{title}</p>
-              <p className="text-3xl font-bold text-white mb-2">{value}</p>
-              {trend && (
-                <div className="flex items-center gap-1">
-                  {trend.isPositive ? (
-                    <TrendingUp className="h-4 w-4 text-white" />
-                  ) : (
-                    <TrendingDown className="h-4 w-4 text-white" />
-                  )}
-                  <span
-                    className={cn(
-                      "text-sm font-medium text-white"
-                    )}
-                  >
-                    {trend.value > 0 ? "+" : ""}
-                    {trend.value}%
-                  </span>
-                  {trend.label && (
-                    <span className="text-xs text-white/70 ml-1">{trend.label}</span>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-              <Icon className="h-6 w-6 text-white" />
-            </div>
+    <div
+      className={cn(
+        "bg-white/[0.02] border border-white/[0.06] rounded-sm overflow-hidden",
+        className
+      )}
+    >
+      <div className="p-6">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <p className="font-mono text-sm font-medium text-white/50 mb-1">{title}</p>
+            <p className="font-mono text-3xl font-bold text-white mb-2">{value}</p>
+            {trend && (
+              <div className="flex items-center gap-1">
+                {trend.isPositive ? (
+                  <TrendingUp className="h-4 w-4" style={{ color: trendColor }} />
+                ) : (
+                  <TrendingDown className="h-4 w-4" style={{ color: trendColor }} />
+                )}
+                <span
+                  className="font-mono text-sm font-medium"
+                  style={{ color: trendColor }}
+                >
+                  {trend.value > 0 ? "+" : ""}
+                  {trend.value}%
+                </span>
+                {trend.label && (
+                  <span className="font-mono text-xs text-white/30 ml-1">{trend.label}</span>
+                )}
+              </div>
+            )}
+          </div>
+          <div
+            className="p-3 rounded-sm"
+            style={{ backgroundColor: `${accentColor}20`, border: `1px solid ${accentColor}30` }}
+          >
+            <Icon className="h-6 w-6" style={{ color: accentColor }} />
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
-// Pre-configured stat card variants matching the design
+// Pre-configured stat card variants matching Scientific Luxury design
 export function RevenueStatsCard({ value, trend }: { value: string; trend?: StatsCardProps["trend"] }) {
   return (
     <StatsCard
@@ -75,8 +79,7 @@ export function RevenueStatsCard({ value, trend }: { value: string; trend?: Stat
       value={value}
       icon={TrendingUp}
       trend={trend}
-      gradientFrom="from-unite-teal"
-      gradientTo="to-unite-blue"
+      accentColor="#00F5FF"
     />
   );
 }
@@ -88,8 +91,7 @@ export function ProjectsStatsCard({ value, trend }: { value: number; trend?: Sta
       value={value}
       icon={TrendingUp}
       trend={trend}
-      gradientFrom="from-unite-blue"
-      gradientTo="to-purple-600"
+      accentColor="#00F5FF"
     />
   );
 }
@@ -101,8 +103,7 @@ export function ClientsStatsCard({ value, trend }: { value: number; trend?: Stat
       value={value}
       icon={TrendingUp}
       trend={trend}
-      gradientFrom="from-unite-orange"
-      gradientTo="to-unite-gold"
+      accentColor="#FFB800"
     />
   );
 }
@@ -114,8 +115,7 @@ export function CompletionStatsCard({ value, trend }: { value: string; trend?: S
       value={value}
       icon={TrendingUp}
       trend={trend}
-      gradientFrom="from-green-500"
-      gradientTo="to-emerald-600"
+      accentColor="#00FF88"
     />
   );
 }

@@ -9,12 +9,7 @@
  */
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   AlertCircle,
   DollarSign,
@@ -176,7 +171,7 @@ export default function GeoSettingsPage() {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="flex items-center justify-center h-[400px]">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <Loader2 className="h-12 w-12 animate-spin text-[#00F5FF]" />
         </div>
       </div>
     );
@@ -187,89 +182,83 @@ export default function GeoSettingsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">GEO Targeting Settings</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold font-mono tracking-tight text-white/90">GEO Targeting Settings</h1>
+          <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mt-1">
             Manage your local SEO service area and suburb targeting
           </p>
         </div>
 
         {/* Current Configuration */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Current GEO Configuration</CardTitle>
-                <CardDescription>Domain: {domain}</CardDescription>
-              </div>
-              <Badge variant="outline">{tier} Tier</Badge>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+          <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-mono font-bold text-white/90">Current GEO Configuration</h3>
+              <p className="text-[10px] font-mono text-white/30 mt-0.5">Domain: {domain}</p>
             </div>
-          </CardHeader>
-          <CardContent>
+            <span className="px-2 py-0.5 border border-[#00F5FF]/30 rounded-sm text-[10px] font-mono text-[#00F5FF]">
+              {tier} Tier
+            </span>
+          </div>
+          <div className="p-4">
             <div className="grid gap-4 md:grid-cols-3">
-              <Card className="border-2">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-full bg-primary/10">
-                      <MapPin className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Service Radius</p>
-                      <p className="text-2xl font-bold">{currentRadius} km</p>
-                    </div>
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 border border-[#00F5FF]/20 bg-[#00F5FF]/[0.06] rounded-sm">
+                    <MapPin className="h-6 w-6 text-[#00F5FF]" />
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Service Radius</p>
+                    <p className="text-2xl font-bold font-mono text-white/90">{currentRadius} km</p>
+                  </div>
+                </div>
+              </div>
 
-              <Card className="border-2">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-950">
-                      <DollarSign className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Cost Multiplier</p>
-                      <p className="text-2xl font-bold">
-                        {getCostMultiplier(currentRadius).toFixed(2)}x
-                      </p>
-                    </div>
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 border border-[#00FF88]/20 bg-[#00FF88]/[0.06] rounded-sm">
+                    <DollarSign className="h-6 w-6 text-[#00FF88]" />
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Cost Multiplier</p>
+                    <p className="text-2xl font-bold font-mono text-white/90">
+                      {getCostMultiplier(currentRadius).toFixed(2)}x
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-              <Card className="border-2">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-full bg-green-100 dark:bg-green-950">
-                      <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Monthly Cost</p>
-                      <p className="text-2xl font-bold">
-                        ${(getCostMultiplier(currentRadius) * 15).toFixed(0)}
-                      </p>
-                    </div>
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 border border-[#FFB800]/20 bg-[#FFB800]/[0.06] rounded-sm">
+                    <TrendingUp className="h-6 w-6 text-[#FFB800]" />
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Monthly Cost</p>
+                    <p className="text-2xl font-bold font-mono text-white/90">
+                      ${(getCostMultiplier(currentRadius) * 15).toFixed(0)}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Update Radius */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Update Service Radius</CardTitle>
-            <CardDescription>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+          <div className="p-4 border-b border-white/[0.06]">
+            <h3 className="text-sm font-mono font-bold text-white/90">Update Service Radius</h3>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mt-0.5">
               Adjust your service area coverage (changes will trigger re-discovery)
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
+            </p>
+          </div>
+          <div className="p-4 space-y-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label>New Service Radius (km)</Label>
-                <Badge variant="outline" className="text-lg font-bold">
+                <label className="text-[10px] font-mono uppercase tracking-widest text-white/40">New Service Radius (km)</label>
+                <span className="px-2 py-0.5 border border-[#00F5FF]/30 rounded-sm text-sm font-mono font-bold text-[#00F5FF]">
                   {newRadius} km
-                </Badge>
+                </span>
               </div>
               <Slider
                 value={[newRadius]}
@@ -279,83 +268,97 @@ export default function GeoSettingsPage() {
                 step={1}
                 className="w-full"
               />
-              <div className="flex justify-between text-xs text-muted-foreground">
+              <div className="flex justify-between text-[10px] font-mono text-white/20">
                 <span>3 km</span>
                 <span>{maxRadius} km (max for {tier})</span>
               </div>
             </div>
 
             {hasChanges && (
-              <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-500 mt-0.5" />
-                    <div className="flex-1 space-y-2">
-                      <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                        Radius Change Detected
-                      </p>
-                      <p className="text-xs text-yellow-700 dark:text-yellow-400">
-                        Changing from {currentRadius} km to {newRadius} km will affect your cost
-                        multiplier ({getCostMultiplier(currentRadius).toFixed(2)}x →{" "}
-                        {costMultiplier.toFixed(2)}x) and may require suburb re-discovery.
-                      </p>
-                    </div>
+              <div className="border border-[#FFB800]/20 bg-[#FFB800]/[0.04] rounded-sm p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-[#FFB800] mt-0.5" />
+                  <div className="flex-1 space-y-2">
+                    <p className="text-sm font-mono font-bold text-[#FFB800]">
+                      Radius Change Detected
+                    </p>
+                    <p className="text-xs font-mono text-[#FFB800]/70">
+                      Changing from {currentRadius} km to {newRadius} km will affect your cost
+                      multiplier ({getCostMultiplier(currentRadius).toFixed(2)}x →{" "}
+                      {costMultiplier.toFixed(2)}x) and may require suburb re-discovery.
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             )}
 
             <div className="flex justify-end gap-3">
-              <Button
-                variant="outline"
+              <button
                 onClick={() => setNewRadius(currentRadius)}
                 disabled={!hasChanges}
+                className="px-4 py-2 border border-white/[0.06] rounded-sm text-xs font-mono text-white/60 hover:text-white/90 hover:border-white/20 transition-colors disabled:opacity-50"
               >
                 Reset
-              </Button>
-              <Button onClick={handleUpdateRadius} disabled={!hasChanges || saving}>
+              </button>
+              <button
+                onClick={handleUpdateRadius}
+                disabled={!hasChanges || saving}
+                className="flex items-center gap-2 px-4 py-2 bg-[#00F5FF]/10 border border-[#00F5FF]/30 rounded-sm text-xs font-mono text-[#00F5FF] hover:bg-[#00F5FF]/20 transition-colors disabled:opacity-50"
+              >
                 {saving ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     Saving...
                   </>
                 ) : (
                   "Save Changes"
                 )}
-              </Button>
+              </button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>GEO Actions</CardTitle>
-            <CardDescription>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+          <div className="p-4 border-b border-white/[0.06]">
+            <h3 className="text-sm font-mono font-bold text-white/90">GEO Actions</h3>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mt-0.5">
               Manage your GEO targeting and generate reports
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
+            </p>
+          </div>
+          <div className="p-4">
             <div className="grid gap-3 md:grid-cols-2">
-              <Button variant="outline" onClick={handleTriggerAudit} className="w-full">
-                <Play className="mr-2 h-4 w-4" />
+              <button
+                onClick={handleTriggerAudit}
+                className="flex items-center justify-center gap-2 py-2 border border-white/[0.06] rounded-sm text-xs font-mono text-white/60 hover:text-white/90 hover:border-white/20 transition-colors w-full"
+              >
+                <Play className="h-4 w-4" />
                 Trigger GEO Audit
-              </Button>
-              <Button variant="outline" className="w-full" disabled>
-                <RefreshCw className="mr-2 h-4 w-4" />
+              </button>
+              <button
+                disabled
+                className="flex items-center justify-center gap-2 py-2 border border-white/[0.06] rounded-sm text-xs font-mono text-white/30 disabled:opacity-50 w-full"
+              >
+                <RefreshCw className="h-4 w-4" />
                 Re-discover Suburbs
-              </Button>
-              <Button variant="outline" className="w-full" disabled>
-                <Download className="mr-2 h-4 w-4" />
+              </button>
+              <button
+                disabled
+                className="flex items-center justify-center gap-2 py-2 border border-white/[0.06] rounded-sm text-xs font-mono text-white/30 disabled:opacity-50 w-full"
+              >
+                <Download className="h-4 w-4" />
                 Download Suburb CSV
-              </Button>
-              <Button variant="outline" className="w-full" disabled>
-                <MapPin className="mr-2 h-4 w-4" />
+              </button>
+              <button
+                disabled
+                className="flex items-center justify-center gap-2 py-2 border border-white/[0.06] rounded-sm text-xs font-mono text-white/30 disabled:opacity-50 w-full"
+              >
+                <MapPin className="h-4 w-4" />
                 View GEO Reports
-              </Button>
+              </button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

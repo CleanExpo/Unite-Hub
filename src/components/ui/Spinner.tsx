@@ -24,8 +24,8 @@ export default function Spinner({
   };
 
   const colorClasses = {
-    primary: 'border-blue-600 border-t-transparent dark:border-blue-400',
-    secondary: 'border-gray-600 border-t-transparent dark:border-gray-400',
+    primary: 'border-[#00F5FF] border-t-transparent',
+    secondary: 'border-white/50 border-t-transparent',
     white: 'border-white border-t-transparent',
   };
 
@@ -45,11 +45,11 @@ export default function Spinner({
  */
 export function SpinnerOverlay({ message }: { message?: string }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 text-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+      <div className="bg-[#050505] border border-white/[0.08] rounded-sm shadow-2xl p-8 text-center">
         <Spinner size="xl" />
         {message && (
-          <p className="mt-4 text-gray-700 dark:text-gray-300 font-medium">
+          <p className="mt-4 text-white/50 font-medium">
             {message}
           </p>
         )}

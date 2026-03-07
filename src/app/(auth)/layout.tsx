@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-unite-navy via-gray-900 to-unite-navy flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
@@ -15,16 +15,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             priority
             className="object-contain mb-3"
           />
-          <p className="text-gray-400 text-sm">AI-Powered Marketing CRM</p>
+          <p className="text-white/40 text-sm font-mono">AI-Powered Marketing CRM</p>
         </div>
 
         {/* Auth Card */}
-        <div className="bg-white rounded-sm shadow-2xl p-8">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-8">
           {children}
         </div>
 
         {/* Footer */}
-        <p className="text-center text-gray-500 text-sm mt-6">
+        <p className="text-center text-white/30 text-sm mt-6 font-mono">
           © 2025 Unite-Group. All rights reserved.
         </p>
       </div>

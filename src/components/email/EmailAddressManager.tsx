@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Mail, Check, X, Trash2, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Plus, Mail, Check, Trash2, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 interface EmailAddress {
   _id: string;
@@ -55,26 +53,28 @@ export function EmailAddressManager({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-900">Email Addresses</h3>
+        <h3 className="font-mono font-semibold text-white">Email Addresses</h3>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" variant="outline" className="gap-2">
+            <button
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-sm border border-white/[0.08] font-mono text-sm text-white hover:bg-white/[0.04] transition-colors"
+            >
               <Plus className="h-4 w-4" />
               Add Email
-            </Button>
+            </button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-[#0a0a0a] border border-white/[0.08] rounded-sm text-white">
             <DialogHeader>
-              <DialogTitle>Add Email Address</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="font-mono text-white">Add Email Address</DialogTitle>
+              <DialogDescription className="font-mono text-white/40">
                 Add an additional email address to link with your account.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1.5 block">
+                <label className="font-mono text-sm font-medium text-white/60 mb-1.5 block">
                   Email Address
                 </label>
                 <Input
@@ -82,25 +82,28 @@ export function EmailAddressManager({
                   placeholder="email@example.com"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
+                  className="bg-white/[0.04] border-white/[0.08] rounded-sm text-white font-mono placeholder:text-white/20"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1.5 block">
+                <label className="font-mono text-sm font-medium text-white/60 mb-1.5 block">
                   Label (Optional)
                 </label>
                 <Input
                   placeholder="e.g., Work, Personal, Partnership"
                   value={newLabel}
                   onChange={(e) => setNewLabel(e.target.value)}
+                  className="bg-white/[0.04] border-white/[0.08] rounded-sm text-white font-mono placeholder:text-white/20"
                 />
               </div>
-              <Button
+              <button
                 onClick={handleAddEmail}
                 disabled={isLoading || !newEmail}
-                className="w-full"
+                className="w-full px-4 py-2 rounded-sm font-mono text-sm font-medium text-[#050505] disabled:opacity-50 transition-opacity hover:opacity-80"
+                style={{ backgroundColor: '#00F5FF' }}
               >
                 {isLoading ? "Adding..." : "Add Email"}
-              </Button>
+              </button>
             </div>
           </DialogContent>
         </Dialog>
@@ -110,60 +113,69 @@ export function EmailAddressManager({
         {emails.map((email) => (
           <div
             key={email._id}
-            className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center justify-between p-3 border border-white/[0.06] rounded-sm hover:bg-white/[0.02] transition-colors"
           >
             <div className="flex items-center gap-3 flex-1">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Mail className="h-4 w-4 text-blue-700" />
+              <div
+                className="p-2 rounded-sm"
+                style={{ backgroundColor: '#00F5FF15' }}
+              >
+                <Mail className="h-4 w-4" style={{ color: '#00F5FF' }} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="font-mono text-sm font-medium text-white truncate">
                     {email.emailAddress}
                   </p>
                   {email.isPrimary && (
-                    <Badge variant="secondary" className="gap-1">
+                    <span
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-[10px] font-mono font-medium border"
+                      style={{ color: '#FFB800', borderColor: '#FFB80040', backgroundColor: '#FFB80010' }}
+                    >
                       <Star className="h-3 w-3" />
                       Primary
-                    </Badge>
+                    </span>
                   )}
                   {email.verified ? (
-                    <Badge variant="outline" className="gap-1 text-green-700 border-green-200">
+                    <span
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-[10px] font-mono font-medium border"
+                      style={{ color: '#00FF88', borderColor: '#00FF8840', backgroundColor: '#00FF8810' }}
+                    >
                       <Check className="h-3 w-3" />
                       Verified
-                    </Badge>
+                    </span>
                   ) : (
-                    <Badge variant="outline" className="gap-1 text-orange-700 border-orange-200">
+                    <span
+                      className="inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] font-mono font-medium border"
+                      style={{ color: '#FFB800', borderColor: '#FFB80040', backgroundColor: '#FFB80010' }}
+                    >
                       Pending
-                    </Badge>
+                    </span>
                   )}
                 </div>
                 {email.label && (
-                  <p className="text-xs text-gray-600">{email.label}</p>
+                  <p className="font-mono text-xs text-white/40">{email.label}</p>
                 )}
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               {!email.isPrimary && (
-                <Button
-                  size="sm"
-                  variant="ghost"
+                <button
                   onClick={() => onSetPrimary(email._id)}
-                  className="text-xs"
+                  className="px-2 py-1 rounded-sm font-mono text-xs text-white/50 hover:text-white hover:bg-white/[0.04] transition-colors"
                 >
                   Set Primary
-                </Button>
+                </button>
               )}
               {!email.isPrimary && (
-                <Button
-                  size="sm"
-                  variant="ghost"
+                <button
                   onClick={() => onRemoveEmail(email._id)}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="p-1.5 rounded-sm font-mono text-xs hover:bg-white/[0.04] transition-colors"
+                  style={{ color: '#FF4444' }}
                 >
                   <Trash2 className="h-4 w-4" />
-                </Button>
+                </button>
               )}
             </div>
           </div>

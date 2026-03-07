@@ -65,10 +65,10 @@ export default function ClientSeoPage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
-          <p className="text-muted-foreground">Please sign in to access your SEO insights.</p>
+          <h2 className="text-xl font-mono font-semibold text-white mb-2">Authentication Required</h2>
+          <p className="text-white/40 font-mono">Please sign in to access your SEO insights.</p>
         </div>
       </div>
     );
@@ -76,10 +76,10 @@ export default function ClientSeoPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your SEO insights...</p>
+          <div className="animate-spin rounded-sm h-12 w-12 border-b-2 border-[#00F5FF] mx-auto mb-4"></div>
+          <p className="text-white/40 font-mono">Loading your SEO insights...</p>
         </div>
       </div>
     );
@@ -87,10 +87,10 @@ export default function ClientSeoPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2 text-destructive">Error</h2>
-          <p className="text-muted-foreground">{error}</p>
+          <h2 className="text-xl font-mono font-semibold mb-2 text-[#FF4444]">Error</h2>
+          <p className="text-white/40 font-mono">{error}</p>
         </div>
       </div>
     );
@@ -98,13 +98,13 @@ export default function ClientSeoPage() {
 
   if (seoProfiles.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
         <div className="text-center max-w-md">
-          <h2 className="text-2xl font-semibold mb-2">No SEO Data Available</h2>
-          <p className="text-muted-foreground mb-6">
+          <h2 className="text-2xl font-mono font-semibold text-white mb-2">No SEO Data Available</h2>
+          <p className="text-white/40 font-mono mb-6">
             Your SEO insights will appear here once your account manager has configured them.
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm font-mono text-white/30">
             Contact your account manager for more information.
           </p>
         </div>
@@ -119,17 +119,17 @@ export default function ClientSeoPage() {
       <Section>
         {/* Profile Selector (only show if multiple profiles) */}
         {seoProfiles.length > 1 && (
-          <div className="border-b bg-card">
+          <div className="border-b border-white/[0.06] bg-white/[0.02]">
             <div className="container mx-auto px-4 py-3">
               <div className="flex items-center gap-4">
-                <label htmlFor="profile-select" className="text-sm font-medium">
+                <label htmlFor="profile-select" className="text-sm font-mono font-medium text-white/60">
                   Website:
                 </label>
                 <select
                   id="profile-select"
                   value={selectedProfileId || ""}
                   onChange={(e) => setSelectedProfileId(e.target.value)}
-                  className="px-3 py-1.5 bg-background border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="px-3 py-1.5 bg-white/[0.04] border border-white/[0.06] rounded-sm text-sm font-mono text-white focus:outline-none focus:border-[#00F5FF]/40"
                 >
                   {seoProfiles.map((profile) => (
                     <option key={profile.id} value={profile.id}>

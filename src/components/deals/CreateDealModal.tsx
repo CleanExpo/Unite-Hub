@@ -9,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -149,37 +148,38 @@ export function CreateDealModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-900 border-slate-700 text-white sm:max-w-[500px]">
+      <DialogContent className="bg-[#050505] border border-white/[0.08] text-white sm:max-w-[500px] rounded-sm">
         <DialogHeader>
-          <DialogTitle>Create New Deal</DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogTitle className="font-mono">Create New Deal</DialogTitle>
+          <DialogDescription className="text-white/40">
             Add a new deal to your pipeline
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
+            <div className="text-sm font-mono px-3 py-2 rounded-sm border"
+              style={{ color: "#FF4444", backgroundColor: "rgba(255,68,68,0.08)", borderColor: "rgba(255,68,68,0.2)" }}>
               {error}
             </div>
           )}
 
           {/* Title */}
           <div className="space-y-1.5">
-            <Label htmlFor="title" className="text-slate-300">Title *</Label>
+            <Label htmlFor="title" className="text-white/60 font-mono text-xs">Title *</Label>
             <Input
               id="title"
               placeholder="e.g. Website redesign for ACME Corp"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+              className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 rounded-sm font-mono"
             />
           </div>
 
           {/* Value and Stage */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="value" className="text-slate-300">Value (AUD)</Label>
+              <Label htmlFor="value" className="text-white/60 font-mono text-xs">Value (AUD)</Label>
               <Input
                 id="value"
                 type="number"
@@ -188,16 +188,16 @@ export function CreateDealModal({
                 step="100"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+                className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 rounded-sm font-mono"
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-slate-300">Stage *</Label>
+              <Label className="text-white/60 font-mono text-xs">Stage *</Label>
               <Select value={stageId} onValueChange={setStageId}>
-                <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                <SelectTrigger className="bg-white/[0.03] border-white/[0.08] text-white rounded-sm font-mono">
                   <SelectValue placeholder="Select stage" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectContent className="bg-[#0a0a0a] border-white/[0.08] rounded-sm">
                   {stages
                     .filter((s) => !s.is_won && !s.is_lost)
                     .sort((a, b) => a.position - b.position)
@@ -205,11 +205,11 @@ export function CreateDealModal({
                       <SelectItem
                         key={stage.id}
                         value={stage.id}
-                        className="text-white hover:bg-slate-700"
+                        className="text-white hover:bg-white/[0.04] font-mono"
                       >
                         <div className="flex items-center gap-2">
                           <div
-                            className="w-2 h-2 rounded-full"
+                            className="w-2 h-2 rounded-sm"
                             style={{ backgroundColor: stage.color }}
                           />
                           {stage.name}
@@ -223,36 +223,36 @@ export function CreateDealModal({
 
           {/* Contact */}
           <div className="space-y-1.5">
-            <Label className="text-slate-300">Contact</Label>
+            <Label className="text-white/60 font-mono text-xs">Contact</Label>
             <Select value={contactId} onValueChange={setContactId}>
-              <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+              <SelectTrigger className="bg-white/[0.03] border-white/[0.08] text-white rounded-sm font-mono">
                 <SelectValue placeholder="Link to a contact (optional)" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700 max-h-48">
+              <SelectContent className="bg-[#0a0a0a] border-white/[0.08] max-h-48 rounded-sm">
                 <div className="p-2">
                   <Input
                     placeholder="Search contacts..."
                     value={contactSearch}
                     onChange={(e) => setContactSearch(e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white text-sm placeholder:text-slate-500"
+                    className="bg-white/[0.04] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-sm font-mono"
                   />
                 </div>
                 {filteredContacts.slice(0, 20).map((contact) => (
                   <SelectItem
                     key={contact.id}
                     value={contact.id}
-                    className="text-white hover:bg-slate-700"
+                    className="text-white hover:bg-white/[0.04] font-mono"
                   >
                     <div>
                       <span className="font-medium">{contact.name}</span>
                       {contact.company && (
-                        <span className="text-slate-400 ml-1">· {contact.company}</span>
+                        <span className="text-white/40 ml-1">· {contact.company}</span>
                       )}
                     </div>
                   </SelectItem>
                 ))}
                 {filteredContacts.length === 0 && (
-                  <div className="text-sm text-slate-500 text-center py-2">No contacts found</div>
+                  <div className="text-sm text-white/30 text-center py-2 font-mono">No contacts found</div>
                 )}
               </SelectContent>
             </Select>
@@ -261,7 +261,7 @@ export function CreateDealModal({
           {/* Probability and Expected Close */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="probability" className="text-slate-300">Probability (%)</Label>
+              <Label htmlFor="probability" className="text-white/60 font-mono text-xs">Probability (%)</Label>
               <Input
                 id="probability"
                 type="number"
@@ -269,32 +269,32 @@ export function CreateDealModal({
                 max="100"
                 value={probability}
                 onChange={(e) => setProbability(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white"
+                className="bg-white/[0.03] border-white/[0.08] text-white rounded-sm font-mono"
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="closeDate" className="text-slate-300">Expected Close</Label>
+              <Label htmlFor="closeDate" className="text-white/60 font-mono text-xs">Expected Close</Label>
               <Input
                 id="closeDate"
                 type="date"
                 value={expectedCloseDate}
                 onChange={(e) => setExpectedCloseDate(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white"
+                className="bg-white/[0.03] border-white/[0.08] text-white rounded-sm font-mono"
               />
             </div>
           </div>
 
           {/* Source */}
           <div className="space-y-1.5">
-            <Label className="text-slate-300">Source</Label>
+            <Label className="text-white/60 font-mono text-xs">Source</Label>
             <Select value={source} onValueChange={setSource}>
-              <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+              <SelectTrigger className="bg-white/[0.03] border-white/[0.08] text-white rounded-sm font-mono">
                 <SelectValue placeholder="How did this deal come in?" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
+              <SelectContent className="bg-[#0a0a0a] border-white/[0.08] rounded-sm">
                 {["referral", "inbound", "outbound", "website", "social", "event", "cold_call", "partner", "other"].map(
                   (s) => (
-                    <SelectItem key={s} value={s} className="text-white hover:bg-slate-700">
+                    <SelectItem key={s} value={s} className="text-white hover:bg-white/[0.04] font-mono">
                       {s.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
                     </SelectItem>
                   )
@@ -305,32 +305,36 @@ export function CreateDealModal({
 
           {/* Notes */}
           <div className="space-y-1.5">
-            <Label htmlFor="notes" className="text-slate-300">Notes</Label>
+            <Label htmlFor="notes" className="text-white/60 font-mono text-xs">Notes</Label>
             <Textarea
               id="notes"
               placeholder="Additional notes about this deal..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 min-h-[60px]"
+              className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 min-h-[60px] rounded-sm font-mono"
             />
           </div>
 
           <DialogFooter>
-            <Button
+            <button
               type="button"
-              variant="ghost"
               onClick={() => onOpenChange(false)}
-              className="text-slate-400 hover:text-white"
+              className="px-4 py-2 text-sm font-mono text-white/40 hover:text-white/70 transition-colors"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
               type="submit"
               disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="px-4 py-2 text-sm font-mono rounded-sm border transition-all duration-200 disabled:opacity-50"
+              style={{
+                backgroundColor: "rgba(0,245,255,0.1)",
+                borderColor: "rgba(0,245,255,0.3)",
+                color: "#00F5FF",
+              }}
             >
               {loading ? "Creating..." : "Create Deal"}
-            </Button>
+            </button>
           </DialogFooter>
         </form>
       </DialogContent>

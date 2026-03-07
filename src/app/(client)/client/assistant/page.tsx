@@ -8,9 +8,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { AILoader } from '@/components/ai/AILoader';
 import { AIInsightBubble } from '@/components/ai/AIInsightBubble';
 import { Bot, Send, Lightbulb, FolderKanban, HelpCircle } from 'lucide-react';
@@ -86,10 +83,10 @@ export default function ClientAssistantPage() {
       <Section>
         {/* Page header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-100">
+          <h1 className="text-3xl font-bold font-mono text-white">
             AI Assistant
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="text-white/40 mt-2">
             Get instant answers about your projects, ideas, and proposals
           </p>
         </div>
@@ -100,7 +97,7 @@ export default function ClientAssistantPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main chat area */}
         <div className="lg:col-span-2">
-          <Card className="h-[600px] flex flex-col">
+          <div className="h-[600px] flex flex-col bg-white/[0.02] border border-white/[0.06] rounded-sm">
             {/* Chat messages */}
             <div className="flex-1 p-6 overflow-y-auto space-y-4">
               {messages.map((message) => (
@@ -112,15 +109,15 @@ export default function ClientAssistantPage() {
                 >
                   {message.role === 'assistant' && (
                     <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-purple-500/10 rounded-lg">
-                        <Bot className="h-5 w-5 text-purple-400" />
+                      <div className="p-2 bg-[#FF00FF]/10 rounded-sm">
+                        <Bot className="h-5 w-5 text-[#FF00FF]" />
                       </div>
                       <div className="max-w-md">
-                        <div className="p-4 bg-gray-800/50 rounded-lg">
-                          <p className="text-gray-100">{message.content}</p>
+                        <div className="p-4 bg-white/[0.04] border border-white/[0.06] rounded-sm">
+                          <p className="text-white font-mono text-sm">{message.content}</p>
                         </div>
-                        <p className="text-xs text-gray-400 mt-1 ml-1">
-                          {message.timestamp.toLocaleTimeString('en-US', {
+                        <p className="text-xs text-white/30 mt-1 ml-1 font-mono">
+                          {message.timestamp.toLocaleTimeString('en-AU', {
                             hour: '2-digit',
                             minute: '2-digit',
                           })}
@@ -131,11 +128,11 @@ export default function ClientAssistantPage() {
 
                   {message.role === 'user' && (
                     <div className="max-w-md">
-                      <div className="p-4 bg-blue-500/20 rounded-lg">
-                        <p className="text-gray-100">{message.content}</p>
+                      <div className="p-4 bg-[#00F5FF]/10 border border-[#00F5FF]/20 rounded-sm">
+                        <p className="text-white font-mono text-sm">{message.content}</p>
                       </div>
-                      <p className="text-xs text-gray-400 mt-1 mr-1 text-right">
-                        {message.timestamp.toLocaleTimeString('en-US', {
+                      <p className="text-xs text-white/30 mt-1 mr-1 text-right font-mono">
+                        {message.timestamp.toLocaleTimeString('en-AU', {
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
@@ -149,10 +146,10 @@ export default function ClientAssistantPage() {
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="flex items-start space-x-3">
-                    <div className="p-2 bg-purple-500/10 rounded-lg">
-                      <Bot className="h-5 w-5 text-purple-400" />
+                    <div className="p-2 bg-[#FF00FF]/10 rounded-sm">
+                      <Bot className="h-5 w-5 text-[#FF00FF]" />
                     </div>
-                    <div className="p-4 bg-gray-800/50 rounded-lg">
+                    <div className="p-4 bg-white/[0.04] border border-white/[0.06] rounded-sm">
                       <AILoader text="Thinking..." />
                     </div>
                   </div>
@@ -161,10 +158,11 @@ export default function ClientAssistantPage() {
             </div>
 
             {/* Input area */}
-            <div className="p-4 border-t border-gray-800">
+            <div className="p-4 border-t border-white/[0.06]">
               <div className="flex items-end space-x-3">
                 <div className="flex-1">
-                  <Input
+                  <input
+                    type="text"
                     placeholder="Ask me anything about your projects..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -174,26 +172,28 @@ export default function ClientAssistantPage() {
                         handleSend();
                       }
                     }}
+                    className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white font-mono text-sm placeholder-white/30 focus:outline-none focus:border-[#00F5FF]/40"
                   />
                 </div>
-                <Button
+                <button
                   onClick={handleSend}
                   disabled={!input.trim() || isLoading}
-                  leftIcon={<Send className="h-4 w-4" />}
+                  className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 disabled:opacity-50"
                 >
+                  <Send className="h-4 w-4" />
                   Send
-                </Button>
+                </button>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Sidebar with suggestions and tips */}
         <div className="space-y-6">
           {/* Suggested questions */}
-          <Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
             <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-100 mb-4">
+              <h3 className="text-lg font-mono font-semibold text-white mb-4">
                 Suggested Questions
               </h3>
               <div className="space-y-2">
@@ -203,21 +203,21 @@ export default function ClientAssistantPage() {
                     <button
                       key={index}
                       onClick={() => handleSuggestedQuestion(item.question)}
-                      className="w-full flex items-start space-x-3 p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-colors text-left"
+                      className="w-full flex items-start space-x-3 p-3 bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-sm transition-colors text-left"
                     >
-                      <Icon className="h-4 w-4 text-gray-400 mt-0.5" />
-                      <span className="text-sm text-gray-300">{item.question}</span>
+                      <Icon className="h-4 w-4 text-white/40 mt-0.5" />
+                      <span className="text-sm font-mono text-white/60">{item.question}</span>
                     </button>
                   );
                 })}
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* AI capabilities */}
-          <Card>
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
             <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-100 mb-4">
+              <h3 className="text-lg font-mono font-semibold text-white mb-4">
                 What I Can Help With
               </h3>
               <div className="space-y-3">
@@ -235,24 +235,24 @@ export default function ClientAssistantPage() {
                 />
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* AI info */}
-          <Card variant="glass">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
             <div className="p-6">
               <div className="flex items-start space-x-3">
-                <Bot className="h-5 w-5 text-purple-400 mt-0.5" />
+                <Bot className="h-5 w-5 text-[#FF00FF] mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-gray-100 mb-1">
+                  <p className="text-sm font-mono font-medium text-white mb-1">
                     Powered by AI
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs font-mono text-white/40">
                     This assistant uses intelligent routing between Gemini 3 Pro, OpenRouter, and Anthropic for optimal responses.
                   </p>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
       </Section>

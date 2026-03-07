@@ -37,10 +37,10 @@ export default function Toast({
   if (!visible) return null;
 
   const typeStyles = {
-    success: 'bg-green-600 text-white',
-    error: 'bg-red-600 text-white',
-    warning: 'bg-yellow-600 text-white',
-    info: 'bg-blue-600 text-white',
+    success: 'bg-[#00FF88]/10 border border-[#00FF88]/30 text-[#00FF88]',
+    error: 'bg-[#FF4444]/10 border border-[#FF4444]/30 text-[#FF4444]',
+    warning: 'bg-[#FFB800]/10 border border-[#FFB800]/30 text-[#FFB800]',
+    info: 'bg-[#00F5FF]/10 border border-[#00F5FF]/30 text-[#00F5FF]',
   };
 
   const icons = {
@@ -72,7 +72,7 @@ export default function Toast({
       role="alert"
       aria-live="polite"
     >
-      <div className={`flex items-center gap-3 px-6 py-4 rounded-lg shadow-lg ${typeStyles[type]}`}>
+      <div className={`flex items-center gap-3 px-6 py-4 rounded-sm shadow-lg ${typeStyles[type]}`}>
         <div className="flex-shrink-0">{icons[type]}</div>
         <p className="font-medium">{message}</p>
         <button
@@ -80,7 +80,7 @@ export default function Toast({
             setVisible(false);
             onClose?.();
           }}
-          className="ml-4 flex-shrink-0 text-white/80 hover:text-white transition-colors"
+          className="ml-4 flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity"
           aria-label="Close notification"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

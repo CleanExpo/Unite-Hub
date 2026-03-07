@@ -62,142 +62,127 @@ export default function StaffReportsPage() {
     await loadReports();
   };
 
-  if (loading) return <div className="p-8">Loading reports...</div>;
+  if (loading) return (
+    <div className="p-8 text-white/40 font-mono text-sm">Loading reports...</div>
+  );
 
   return (
     <PageContainer>
       <Section>
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Financial Reports</h1>
-          <Button onClick={handleRefresh}>
-            <RefreshCw className="w-4 h-4 mr-2" /> Refresh
-          </Button>
+          <h1 className="text-3xl font-bold text-white font-mono">Financial Reports</h1>
+          <button
+            onClick={handleRefresh}
+            className="flex items-center gap-2 px-4 py-2 bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm hover:bg-[#00F5FF]/90 transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" /> Refresh
+          </button>
         </div>
       </Section>
 
       <Section>
         <Tabs defaultValue="summary">
-        <TabsList>
-          <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="pnl">P&L</TabsTrigger>
-          <TabsTrigger value="projects">Projects</TabsTrigger>
-          <TabsTrigger value="ai">AI Costs</TabsTrigger>
+        <TabsList className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-1">
+          <TabsTrigger value="summary" className="font-mono text-sm rounded-sm data-[state=active]:bg-white/[0.04] data-[state=active]:text-[#00F5FF]">Summary</TabsTrigger>
+          <TabsTrigger value="pnl" className="font-mono text-sm rounded-sm data-[state=active]:bg-white/[0.04] data-[state=active]:text-[#00F5FF]">P&amp;L</TabsTrigger>
+          <TabsTrigger value="projects" className="font-mono text-sm rounded-sm data-[state=active]:bg-white/[0.04] data-[state=active]:text-[#00F5FF]">Projects</TabsTrigger>
+          <TabsTrigger value="ai" className="font-mono text-sm rounded-sm data-[state=active]:bg-white/[0.04] data-[state=active]:text-[#00F5FF]">AI Costs</TabsTrigger>
         </TabsList>
 
         <TabsContent value="summary" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">${summary?.totalRevenue?.toFixed(2) || '0.00'}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Gross Profit</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">${summary?.grossProfit?.toFixed(2) || '0.00'}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Profit Margin</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{summary?.profitMargin?.toFixed(1) || '0.0'}%</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Outstanding</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">${summary?.outstandingBalance?.toFixed(2) || '0.00'}</div>
-              </CardContent>
-            </Card>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <p className="text-sm text-white/40 font-mono mb-1">Total Revenue</p>
+              <div className="text-2xl font-bold text-white font-mono">${summary?.totalRevenue?.toFixed(2) || '0.00'}</div>
+            </div>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <p className="text-sm text-white/40 font-mono mb-1">Gross Profit</p>
+              <div className="text-2xl font-bold text-white font-mono">${summary?.grossProfit?.toFixed(2) || '0.00'}</div>
+            </div>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <p className="text-sm text-white/40 font-mono mb-1">Profit Margin</p>
+              <div className="text-2xl font-bold text-white font-mono">{summary?.profitMargin?.toFixed(1) || '0.0'}%</div>
+            </div>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <p className="text-sm text-white/40 font-mono mb-1">Outstanding</p>
+              <div className="text-2xl font-bold text-white font-mono">${summary?.outstandingBalance?.toFixed(2) || '0.00'}</div>
+            </div>
           </div>
         </TabsContent>
 
         <TabsContent value="pnl">
           {pnl && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Profit & Loss Statement</CardTitle>
-                <CardDescription>{pnl.periodLabel}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h3 className="font-semibold mb-2">Revenue</h3>
-                  <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <span>Billable Time</span>
-                      <span>${pnl.revenue?.billableTime?.toFixed(2) || '0.00'}</span>
-                    </div>
-                    <div className="flex justify-between font-bold">
-                      <span>Total Revenue</span>
-                      <span>${pnl.revenue?.total?.toFixed(2) || '0.00'}</span>
-                    </div>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 space-y-4">
+              <div>
+                <h3 className="text-white font-mono font-semibold mb-0.5">Profit &amp; Loss Statement</h3>
+                <p className="text-sm text-white/40 font-mono">{pnl.periodLabel}</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2 text-white font-mono text-sm">Revenue</h4>
+                <div className="space-y-1">
+                  <div className="flex justify-between text-sm font-mono">
+                    <span className="text-white/60">Billable Time</span>
+                    <span className="text-white">${pnl.revenue?.billableTime?.toFixed(2) || '0.00'}</span>
+                  </div>
+                  <div className="flex justify-between font-bold font-mono text-sm">
+                    <span className="text-white/80">Total Revenue</span>
+                    <span className="text-white">${pnl.revenue?.total?.toFixed(2) || '0.00'}</span>
                   </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Costs</h3>
-                  <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <span>Labor</span>
-                      <span>${pnl.costs?.labor?.toFixed(2) || '0.00'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>AI Costs</span>
-                      <span>${pnl.costs?.aiCosts?.toFixed(2) || '0.00'}</span>
-                    </div>
-                    <div className="flex justify-between font-bold">
-                      <span>Total Costs</span>
-                      <span>${pnl.costs?.total?.toFixed(2) || '0.00'}</span>
-                    </div>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2 text-white font-mono text-sm">Costs</h4>
+                <div className="space-y-1">
+                  <div className="flex justify-between text-sm font-mono">
+                    <span className="text-white/60">Labour</span>
+                    <span className="text-white">${pnl.costs?.labor?.toFixed(2) || '0.00'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm font-mono">
+                    <span className="text-white/60">AI Costs</span>
+                    <span className="text-white">${pnl.costs?.aiCosts?.toFixed(2) || '0.00'}</span>
+                  </div>
+                  <div className="flex justify-between font-bold font-mono text-sm">
+                    <span className="text-white/80">Total Costs</span>
+                    <span className="text-white">${pnl.costs?.total?.toFixed(2) || '0.00'}</span>
                   </div>
                 </div>
-                <div className="border-t pt-4">
-                  <div className="flex justify-between text-xl font-bold">
-                    <span>Net Profit</span>
-                    <span className={pnl.netProfit >= 0 ? 'text-green-600' : 'text-red-600'}>
-                      ${pnl.netProfit?.toFixed(2) || '0.00'}
-                    </span>
-                  </div>
+              </div>
+              <div className="border-t border-white/[0.06] pt-4">
+                <div className="flex justify-between text-xl font-bold font-mono">
+                  <span className="text-white">Net Profit</span>
+                  <span className={pnl.netProfit >= 0 ? 'text-[#00FF88]' : 'text-[#FF4444]'}>
+                    ${pnl.netProfit?.toFixed(2) || '0.00'}
+                  </span>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </TabsContent>
 
         <TabsContent value="projects">
           <div className="space-y-4">
             {projects.map((project: any) => (
-              <Card key={project.projectId}>
-                <CardHeader>
-                  <CardTitle>{project.projectName}</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-2 md:grid-cols-4">
+              <div key={project.projectId} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-5">
+                <h3 className="text-white font-mono font-semibold mb-3">{project.projectName}</h3>
+                <div className="grid gap-2 md:grid-cols-4">
                   <div>
-                    <div className="text-sm text-muted-foreground">Revenue</div>
-                    <div className="font-semibold">${project.totalRevenue?.toFixed(2)}</div>
+                    <div className="text-sm text-white/40 font-mono">Revenue</div>
+                    <div className="font-semibold text-white font-mono">${project.totalRevenue?.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Profit</div>
-                    <div className="font-semibold">${project.grossProfit?.toFixed(2)}</div>
+                    <div className="text-sm text-white/40 font-mono">Profit</div>
+                    <div className="font-semibold text-white font-mono">${project.grossProfit?.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Margin</div>
-                    <div className="font-semibold">{project.profitMarginPercent?.toFixed(1)}%</div>
+                    <div className="text-sm text-white/40 font-mono">Margin</div>
+                    <div className="font-semibold text-white font-mono">{project.profitMarginPercent?.toFixed(1)}%</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Hours</div>
-                    <div className="font-semibold">{project.billableHours?.toFixed(1)}</div>
+                    <div className="text-sm text-white/40 font-mono">Hours</div>
+                    <div className="font-semibold text-white font-mono">{project.billableHours?.toFixed(1)}</div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </TabsContent>
@@ -205,29 +190,27 @@ export default function StaffReportsPage() {
         <TabsContent value="ai">
           <div className="space-y-4">
             {aiCosts.map((cost: any, idx: number) => (
-              <Card key={idx}>
-                <CardHeader>
-                  <CardTitle>{cost.provider} - {cost.modelName}</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-2 md:grid-cols-4">
+              <div key={idx} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-5">
+                <h3 className="text-white font-mono font-semibold mb-3">{cost.provider} — {cost.modelName}</h3>
+                <div className="grid gap-2 md:grid-cols-4">
                   <div>
-                    <div className="text-sm text-muted-foreground">Requests</div>
-                    <div className="font-semibold">{cost.totalRequests}</div>
+                    <div className="text-sm text-white/40 font-mono">Requests</div>
+                    <div className="font-semibold text-white font-mono">{cost.totalRequests}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Input Tokens</div>
-                    <div className="font-semibold">{cost.totalInputTokens?.toLocaleString()}</div>
+                    <div className="text-sm text-white/40 font-mono">Input Tokens</div>
+                    <div className="font-semibold text-white font-mono">{cost.totalInputTokens?.toLocaleString()}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Output Tokens</div>
-                    <div className="font-semibold">{cost.totalOutputTokens?.toLocaleString()}</div>
+                    <div className="text-sm text-white/40 font-mono">Output Tokens</div>
+                    <div className="font-semibold text-white font-mono">{cost.totalOutputTokens?.toLocaleString()}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Total Cost</div>
-                    <div className="font-semibold">${cost.totalCost?.toFixed(4)}</div>
+                    <div className="text-sm text-white/40 font-mono">Total Cost</div>
+                    <div className="font-semibold text-white font-mono">${cost.totalCost?.toFixed(4)}</div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </TabsContent>

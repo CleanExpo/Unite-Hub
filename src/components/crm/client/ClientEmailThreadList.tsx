@@ -10,8 +10,6 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import {
   Mail,
-  ChevronRight,
-  Clock,
   MessageSquare,
   Loader2,
   RefreshCw,
@@ -109,7 +107,7 @@ export function ClientEmailThreadList({
   if (isLoading) {
     return (
       <div className={cn('flex items-center justify-center py-8', className)}>
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="h-6 w-6 animate-spin text-white/30" />
       </div>
     );
   }
@@ -117,10 +115,11 @@ export function ClientEmailThreadList({
   if (error) {
     return (
       <div className={cn('p-4 text-center', className)}>
-        <p className="text-sm text-destructive">{error}</p>
+        <p className="text-sm font-mono" style={{ color: '#FF4444' }}>{error}</p>
         <button
           onClick={() => fetchThreads(true)}
-          className="mt-2 text-sm text-primary hover:underline"
+          className="mt-2 text-sm font-mono transition-colors"
+          style={{ color: '#00F5FF' }}
         >
           Try again
         </button>
@@ -131,8 +130,8 @@ export function ClientEmailThreadList({
   if (threads.length === 0) {
     return (
       <div className={cn('p-4 text-center', className)}>
-        <Mail className="mx-auto h-8 w-8 text-muted-foreground" />
-        <p className="mt-2 text-sm text-muted-foreground">
+        <Mail className="mx-auto h-8 w-8 text-white/20" />
+        <p className="mt-2 text-sm font-mono text-white/30">
           No email threads found for this client.
         </p>
       </div>
@@ -143,13 +142,13 @@ export function ClientEmailThreadList({
     <div className={cn('space-y-2', className)}>
       {/* Header */}
       <div className="flex items-center justify-between px-1">
-        <span className="text-sm font-medium text-muted-foreground">
+        <span className="text-sm font-mono text-white/40">
           {threads.length} thread{threads.length !== 1 ? 's' : ''}
         </span>
         <button
           onClick={() => fetchThreads(true)}
           disabled={isRefreshing}
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+          className="inline-flex items-center gap-1 text-xs font-mono text-white/30 hover:text-white/60 transition-colors"
         >
           <RefreshCw className={cn('h-3 w-3', isRefreshing && 'animate-spin')} />
           Refresh
@@ -163,9 +162,11 @@ export function ClientEmailThreadList({
             key={thread.id}
             onClick={() => onThreadSelect?.(thread)}
             className={cn(
-              'w-full text-left rounded-lg border p-3 transition-colors',
-              'hover:bg-muted/50',
-              selectedThreadId === thread.id && 'bg-muted border-primary',
+              'w-full text-left rounded-sm border p-3 transition-colors',
+              'hover:bg-white/[0.04] hover:border-white/[0.10]',
+              selectedThreadId === thread.id
+                ? 'bg-white/[0.04] border-[#00F5FF]/30'
+                : 'bg-white/[0.02] border-white/[0.06]',
               compact && 'p-2'
             )}
           >
@@ -173,37 +174,40 @@ export function ClientEmailThreadList({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <h4 className={cn(
-                    'truncate font-medium',
+                    'truncate font-mono font-medium text-white',
                     compact ? 'text-sm' : 'text-base'
                   )}>
                     {thread.subject || '(No subject)'}
                   </h4>
                 </div>
                 {!compact && (
-                  <p className="mt-1 truncate text-sm text-muted-foreground">
+                  <p className="mt-1 truncate text-sm font-mono text-white/40">
                     {thread.snippet}
                   </p>
                 )}
               </div>
               <div className="flex shrink-0 flex-col items-end gap-1">
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs font-mono text-white/30">
                   {formatDate(thread.lastMessageAt)}
                 </span>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1 text-xs font-mono text-white/30">
                   <MessageSquare className="h-3 w-3" />
                   {thread.messageCount}
                 </div>
               </div>
             </div>
             {!compact && thread.participants.length > 0 && (
-              <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="mt-2 flex items-center gap-1 text-xs text-white/30">
                 {thread.participants.slice(0, 3).map((p, i) => (
-                  <span key={i} className="rounded-full bg-muted px-2 py-0.5">
+                  <span
+                    key={i}
+                    className="rounded-sm bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 font-mono"
+                  >
                     {p.name || p.email}
                   </span>
                 ))}
                 {thread.participants.length > 3 && (
-                  <span>+{thread.participants.length - 3} more</span>
+                  <span className="font-mono">+{thread.participants.length - 3} more</span>
                 )}
               </div>
             )}
@@ -217,17 +221,17 @@ export function ClientEmailThreadList({
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="rounded px-2 py-1 text-sm disabled:opacity-50"
+            className="rounded-sm px-2 py-1 text-sm font-mono text-white/40 hover:text-white/70 disabled:opacity-30 transition-colors"
           >
             Previous
           </button>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm font-mono text-white/30">
             Page {page} of {totalPages}
           </span>
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="rounded px-2 py-1 text-sm disabled:opacity-50"
+            className="rounded-sm px-2 py-1 text-sm font-mono text-white/40 hover:text-white/70 disabled:opacity-30 transition-colors"
           >
             Next
           </button>

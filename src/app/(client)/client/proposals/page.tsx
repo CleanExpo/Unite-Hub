@@ -13,7 +13,7 @@
  * - Bearer token authentication
  * - Toast notifications for feedback
  * - Loading states and error handling
- * - Responsive design with shadcn/ui
+ * - Responsive design with Scientific Luxury system
  */
 
 import { useState, useEffect } from 'react';
@@ -126,8 +126,8 @@ export default function ClientProposalsPage() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-        <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-        <p className="text-gray-400">Loading your proposal...</p>
+        <Loader2 className="w-12 h-12 text-[#00F5FF] animate-spin" />
+        <p className="text-white/40 font-mono text-sm">Loading your proposal...</p>
       </div>
     );
   }
@@ -136,20 +136,17 @@ export default function ClientProposalsPage() {
   if (error || !proposal) {
     return (
       <div className="max-w-2xl mx-auto mt-12">
-        <Alert variant="destructive" className="bg-red-900/20 border-red-800">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            {error || 'Proposal not found'}
-          </AlertDescription>
-        </Alert>
+        <div className="flex items-center gap-3 p-4 rounded-sm bg-[#FF4444]/10 border border-[#FF4444]/30 text-[#FF4444] text-sm font-mono">
+          <AlertCircle className="h-4 w-4 flex-shrink-0" />
+          <span>{error || 'Proposal not found'}</span>
+        </div>
         <div className="mt-6 flex justify-center">
-          <Button
+          <button
             onClick={() => router.push('/client/ideas')}
-            variant="outline"
-            className="border-gray-700 text-gray-300 hover:bg-gray-800"
+            className="px-4 py-2 bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm hover:bg-white/[0.06] hover:text-white/80 transition-colors"
           >
             Return to My Ideas
-          </Button>
+          </button>
         </div>
       </div>
     );
@@ -164,17 +161,17 @@ export default function ClientProposalsPage() {
         {/* Page Header */}
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold text-gray-100">
+            <h1 className="text-3xl font-bold text-white font-mono">
               {proposal.idea.title}
             </h1>
           {isAIGenerated && (
-            <Badge className="bg-purple-600/20 text-purple-300 border-purple-500/30">
+            <Badge className="bg-[#FF00FF]/10 text-[#FF00FF] border border-[#FF00FF]/20 font-mono text-xs">
               <Sparkles className="w-3 h-3 mr-1" />
               AI Generated
             </Badge>
           )}
         </div>
-        <p className="text-gray-400">
+        <p className="text-white/40 font-mono text-sm">
           Review your proposal packages and select the best fit for your project
         </p>
       </div>
@@ -184,48 +181,50 @@ export default function ClientProposalsPage() {
 
       {/* Proposal Overview */}
       {proposal.sections && proposal.sections.length > 0 && (
-        <Card className="bg-gray-900/50 border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-gray-100">Project Overview</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-5">
+          <h3 className="text-white font-mono font-semibold mb-4">Project Overview</h3>
+          <div className="space-y-4">
             {proposal.sections.map((section) => (
               <div key={section.id}>
-                <h3 className="text-sm font-semibold text-gray-300 mb-1">
+                <h4 className="text-sm font-semibold text-white/60 mb-1 font-mono">
                   {section.title}
-                </h3>
-                <p className="text-sm text-gray-400">
+                </h4>
+                <p className="text-sm text-white/40 font-mono">
                   {section.description}
                 </p>
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* View Mode Toggle */}
       {hasPackages && (
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-100">
+          <h2 className="text-2xl font-bold text-white font-mono">
             Choose Your Package
           </h2>
           <div className="flex gap-2">
-            <Button
-              variant={viewMode === 'cards' ? 'default' : 'outline'}
-              size="sm"
+            <button
               onClick={() => setViewMode('cards')}
-              className={viewMode === 'cards' ? 'bg-blue-600 hover:bg-blue-700' : 'border-gray-700 text-gray-300 hover:bg-gray-800'}
+              className={`px-3 py-1.5 font-mono text-sm rounded-sm border transition-colors ${
+                viewMode === 'cards'
+                  ? 'bg-white/[0.04] border-[#00F5FF]/40 text-[#00F5FF]'
+                  : 'bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60'
+              }`}
             >
               Cards View
-            </Button>
-            <Button
-              variant={viewMode === 'comparison' ? 'default' : 'outline'}
-              size="sm"
+            </button>
+            <button
               onClick={() => setViewMode('comparison')}
-              className={viewMode === 'comparison' ? 'bg-blue-600 hover:bg-blue-700' : 'border-gray-700 text-gray-300 hover:bg-gray-800'}
+              className={`px-3 py-1.5 font-mono text-sm rounded-sm border transition-colors ${
+                viewMode === 'comparison'
+                  ? 'bg-white/[0.04] border-[#00F5FF]/40 text-[#00F5FF]'
+                  : 'bg-white/[0.02] border-white/[0.06] text-white/40 hover:text-white/60'
+              }`}
             >
               Compare View
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -264,48 +263,43 @@ export default function ClientProposalsPage() {
 
       {/* No Packages State */}
       {!hasPackages && (
-        <Card className="bg-gray-900/50 border-gray-800">
-          <CardContent className="pt-12 pb-12 text-center">
-            <div className="text-gray-500 text-lg mb-4">
-              No packages available for this proposal
-            </div>
-            <Button
-              onClick={() => router.push('/client/ideas')}
-              variant="outline"
-              className="border-gray-700 text-gray-300 hover:bg-gray-800"
-            >
-              Return to My Ideas
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm pt-12 pb-12 text-center">
+          <div className="text-white/40 text-lg mb-4 font-mono">
+            No packages available for this proposal
+          </div>
+          <button
+            onClick={() => router.push('/client/ideas')}
+            className="px-4 py-2 bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm hover:bg-white/[0.06] hover:text-white/80 transition-colors"
+          >
+            Return to My Ideas
+          </button>
+        </div>
       )}
 
       {/* Help Text */}
       {hasPackages && (
-        <Card className="bg-blue-900/10 border-blue-800/30">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5" />
-              <div>
-                <h3 className="text-sm font-semibold text-blue-300 mb-1">
-                  Need help choosing?
-                </h3>
-                <p className="text-sm text-blue-200/70">
-                  Each package builds on the previous one. <strong>Good</strong> covers essentials,
-                  <strong> Better</strong> adds professional refinements, and <strong>Best</strong> includes
-                  premium features. You can always upgrade later.
-                </p>
-              </div>
+        <div className="bg-[#00F5FF]/5 border border-[#00F5FF]/20 rounded-sm p-5">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-[#00F5FF] mt-0.5 flex-shrink-0" />
+            <div>
+              <h3 className="text-sm font-semibold text-[#00F5FF] mb-1 font-mono">
+                Need help choosing?
+              </h3>
+              <p className="text-sm text-white/40 font-mono">
+                Each package builds on the previous one. <strong className="text-white/60">Good</strong> covers essentials,
+                <strong className="text-white/60"> Better</strong> adds professional refinements, and <strong className="text-white/60">Best</strong> includes
+                premium features. You can always upgrade later.
+              </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* Metadata Footer */}
       {proposal.metadata && (
-        <div className="text-center text-xs text-gray-500">
-          Generated {new Date(proposal.metadata.generatedAt).toLocaleDateString()}
-          {proposal.metadata.aiModel && ` • ${proposal.metadata.aiModel}`}
+        <div className="text-center text-xs text-white/20 font-mono">
+          Generated {new Date(proposal.metadata.generatedAt).toLocaleDateString('en-AU')}
+          {proposal.metadata.aiModel && ` · ${proposal.metadata.aiModel}`}
         </div>
       )}
       </Section>

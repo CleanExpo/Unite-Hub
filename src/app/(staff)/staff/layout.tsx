@@ -69,49 +69,49 @@ export default async function StaffLayout({ children }: StaffLayoutProps) {
   const userRole = session.user.user_metadata?.role || 'Staff';
 
   return (
-    <div className="min-h-screen flex bg-gray-950">
+    <div className="min-h-screen flex bg-[#050505]">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 border-r border-gray-800 flex flex-col">
+      <aside className="w-64 bg-[#080808] border-r border-white/[0.06] flex flex-col">
         {/* Logo/Brand */}
-        <div className="p-6 border-b border-gray-800">
-          <h1 className="text-xl font-bold text-gray-100">
+        <div className="p-6 border-b border-white/[0.06]">
+          <h1 className="text-xl font-bold text-white font-mono">
             Unite-Group
           </h1>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-white/40 mt-1 font-mono">
             Staff Portal
           </p>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-1">
           {navigationItems.map((item) => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-gray-100 transition-colors"
+                className="flex items-center space-x-3 px-4 py-3 rounded-sm text-white/40 hover:text-white/80 hover:bg-white/[0.03] transition-colors"
               >
                 <Icon className="h-5 w-5" />
-                <span>{item.label}</span>
+                <span className="font-mono text-sm">{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
         {/* User info & logout */}
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-white/[0.06]">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-100 truncate">
+              <p className="text-sm font-medium text-white truncate font-mono">
                 {userEmail}
               </p>
-              <p className="text-xs text-gray-400 truncate">
+              <p className="text-xs text-white/40 truncate font-mono">
                 {userRole}
               </p>
             </div>
             <button
-              className="ml-3 text-gray-400 hover:text-gray-100 transition-colors"
+              className="ml-3 text-white/40 hover:text-white/80 transition-colors"
               aria-label="Logout"
               title="Logout"
             >
@@ -124,13 +124,13 @@ export default async function StaffLayout({ children }: StaffLayoutProps) {
       {/* Main content area */}
       <div className="flex-1 flex flex-col">
         {/* Top bar with breadcrumbs */}
-        <header className="bg-gray-900 border-b border-gray-800 px-8 py-4">
+        <header className="bg-[#080808] border-b border-white/[0.06] px-8 py-4">
           <div className="flex items-center justify-between">
             <StaffBreadcrumbs />
 
             {/* Mobile menu button (future enhancement) */}
             <button
-              className="lg:hidden text-gray-400 hover:text-gray-100"
+              className="lg:hidden text-white/40 hover:text-white/80"
               aria-label="Toggle menu"
             >
               <Menu className="h-6 w-6" />

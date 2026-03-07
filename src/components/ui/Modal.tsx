@@ -67,22 +67,22 @@ export default function Modal({
     >
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Modal */}
       <div
-        className={`relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-y-auto animate-scaleIn`}
+        className={`relative bg-[#050505] border border-white/[0.08] rounded-sm shadow-2xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-y-auto animate-scaleIn`}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
             {title && (
               <h2
                 id="modal-title"
-                className="text-xl font-semibold text-gray-900 dark:text-gray-100"
+                className="text-xl font-semibold text-white/90"
               >
                 {title}
               </h2>
@@ -90,7 +90,7 @@ export default function Modal({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 text-white/50 hover:text-white/90 rounded-sm hover:bg-white/[0.04] transition-colors"
                 aria-label="Close modal"
               >
                 <svg
@@ -128,7 +128,7 @@ export default function Modal({
  */
 export function ModalFooter({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`flex items-center justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700 ${className}`}>
+    <div className={`flex items-center justify-end gap-3 pt-6 border-t border-white/[0.06] ${className}`}>
       {children}
     </div>
   );

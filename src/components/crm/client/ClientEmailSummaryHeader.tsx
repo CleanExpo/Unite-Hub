@@ -127,9 +127,9 @@ export function ClientEmailSummaryHeader({
   }, [clientId, workspaceId, session?.access_token, meetingContext]);
 
   const getSentimentColor = (score: number) => {
-    if (score > 0.3) return 'text-green-600';
-    if (score < -0.3) return 'text-red-600';
-    return 'text-yellow-600';
+    if (score > 0.3) return '#00FF88';
+    if (score < -0.3) return '#FF4444';
+    return '#FFB800';
   };
 
   const getSentimentIcon = (score: number) => {
@@ -141,36 +141,37 @@ export function ClientEmailSummaryHeader({
   if (isLoading) {
     return (
       <div className={cn('flex items-center justify-center py-4', className)}>
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <Loader2 className="h-5 w-5 animate-spin text-white/30" />
       </div>
     );
   }
 
   if (!summary) {
     return (
-      <div className={cn('rounded-lg border bg-muted/50 p-4', className)}>
-        <div className="flex items-center gap-2 text-muted-foreground">
+      <div className={cn('rounded-sm border bg-white/[0.02] border-white/[0.06] p-4', className)}>
+        <div className="flex items-center gap-2 text-white/30">
           <Mail className="h-5 w-5" />
-          <span className="text-sm">No email history with this client.</span>
+          <span className="text-sm font-mono">No email history with this client.</span>
         </div>
       </div>
     );
   }
 
   const SentimentIcon = getSentimentIcon(summary.averageSentiment);
+  const sentimentColor = getSentimentColor(summary.averageSentiment);
 
   if (compact) {
     return (
       <div className={cn('flex items-center gap-4 text-sm', className)}>
-        <div className="flex items-center gap-1">
-          <MessageSquare className="h-4 w-4 text-muted-foreground" />
+        <div className="flex items-center gap-1 font-mono text-white/40">
+          <MessageSquare className="h-4 w-4" />
           <span>{summary.totalMessages} emails</span>
         </div>
-        <div className="flex items-center gap-1">
-          <Lightbulb className="h-4 w-4 text-muted-foreground" />
+        <div className="flex items-center gap-1 font-mono text-white/40">
+          <Lightbulb className="h-4 w-4" />
           <span>{summary.pendingIdeas} pending</span>
         </div>
-        <div className={cn('flex items-center gap-1', getSentimentColor(summary.averageSentiment))}>
+        <div className="flex items-center gap-1 font-mono" style={{ color: sentimentColor }}>
           <SentimentIcon className="h-4 w-4" />
           <span>{briefing?.overallSentiment || 'Neutral'}</span>
         </div>
@@ -182,58 +183,44 @@ export function ClientEmailSummaryHeader({
     <div className={cn('space-y-4', className)}>
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-lg bg-muted/50 p-3">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Mail className="h-4 w-4" />
-            <span className="text-xs">Threads</span>
+        {[
+          { icon: Mail,         label: 'Threads',         value: summary.totalThreads },
+          { icon: MessageSquare,label: 'Messages',         value: summary.totalMessages },
+          { icon: Lightbulb,    label: 'Pending Actions',  value: summary.pendingIdeas },
+          { icon: Target,       label: 'Engagement',       value: `${summary.engagementScore}%` },
+        ].map(({ icon: Icon, label, value }) => (
+          <div key={label} className="rounded-sm bg-white/[0.02] border border-white/[0.06] p-3">
+            <div className="flex items-center gap-2 text-white/30">
+              <Icon className="h-4 w-4" />
+              <span className="text-xs font-mono">{label}</span>
+            </div>
+            <div className="mt-1 text-xl font-bold font-mono text-white">{value}</div>
           </div>
-          <div className="mt-1 text-xl font-bold">{summary.totalThreads}</div>
-        </div>
-        <div className="rounded-lg bg-muted/50 p-3">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <MessageSquare className="h-4 w-4" />
-            <span className="text-xs">Messages</span>
-          </div>
-          <div className="mt-1 text-xl font-bold">{summary.totalMessages}</div>
-        </div>
-        <div className="rounded-lg bg-muted/50 p-3">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Lightbulb className="h-4 w-4" />
-            <span className="text-xs">Pending Actions</span>
-          </div>
-          <div className="mt-1 text-xl font-bold">{summary.pendingIdeas}</div>
-        </div>
-        <div className="rounded-lg bg-muted/50 p-3">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Target className="h-4 w-4" />
-            <span className="text-xs">Engagement</span>
-          </div>
-          <div className="mt-1 text-xl font-bold">{summary.engagementScore}%</div>
-        </div>
+        ))}
       </div>
 
       {/* Quick Info */}
       <div className="flex flex-wrap items-center gap-4 text-sm">
         {summary.lastEmailAt && (
-          <div className="flex items-center gap-1 text-muted-foreground">
+          <div className="flex items-center gap-1 font-mono text-white/30">
             <Clock className="h-4 w-4" />
             <span>Last contact: {new Date(summary.lastEmailAt).toLocaleDateString()}</span>
           </div>
         )}
         {briefing?.relationshipDuration && (
-          <div className="flex items-center gap-1 text-muted-foreground">
+          <div className="flex items-center gap-1 font-mono text-white/30">
             <Calendar className="h-4 w-4" />
             <span>{briefing.relationshipDuration} relationship</span>
           </div>
         )}
-        <div className={cn('flex items-center gap-1', getSentimentColor(summary.averageSentiment))}>
+        <div className="flex items-center gap-1 font-mono" style={{ color: sentimentColor }}>
           <SentimentIcon className="h-4 w-4" />
           <span>{briefing?.overallSentiment || 'Neutral'} sentiment</span>
         </div>
         <button
           onClick={() => fetchSummary(true)}
           disabled={isRefreshing}
-          className="ml-auto inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+          className="ml-auto inline-flex items-center gap-1 text-xs font-mono text-white/30 hover:text-white/60 transition-colors"
         >
           <RefreshCw className={cn('h-3 w-3', isRefreshing && 'animate-spin')} />
           Refresh
@@ -242,45 +229,45 @@ export function ClientEmailSummaryHeader({
 
       {/* Meeting Briefing */}
       {showBriefing && briefing && (
-        <div className="rounded-lg border bg-card">
+        <div className="rounded-sm border bg-white/[0.02] border-white/[0.06]">
           <button
             onClick={() => setIsBriefingExpanded(!isBriefingExpanded)}
             className="flex w-full items-center justify-between p-4 text-left"
           >
             <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-primary" />
-              <span className="font-medium">Meeting Briefing</span>
+              <Calendar className="h-5 w-5" style={{ color: '#00F5FF' }} />
+              <span className="font-mono font-medium text-white">Meeting Briefing</span>
             </div>
             {isBriefingExpanded ? (
-              <ChevronUp className="h-5 w-5 text-muted-foreground" />
+              <ChevronUp className="h-5 w-5 text-white/30" />
             ) : (
-              <ChevronDown className="h-5 w-5 text-muted-foreground" />
+              <ChevronDown className="h-5 w-5 text-white/30" />
             )}
           </button>
 
           {isBriefingExpanded && (
-            <div className="space-y-4 border-t px-4 pb-4 pt-2">
+            <div className="space-y-4 border-t border-white/[0.06] px-4 pb-4 pt-2">
               {/* AI Summary */}
               {summary.insights?.summary && (
                 <div>
-                  <span className="text-xs font-medium uppercase text-muted-foreground">
+                  <span className="text-xs font-mono uppercase text-white/30">
                     Overview
                   </span>
-                  <p className="mt-1 text-sm">{summary.insights.summary}</p>
+                  <p className="mt-1 text-sm text-white/70">{summary.insights.summary}</p>
                 </div>
               )}
 
               {/* Key Topics */}
               {briefing.keyTopics.length > 0 && (
                 <div>
-                  <span className="text-xs font-medium uppercase text-muted-foreground">
+                  <span className="text-xs font-mono uppercase text-white/30">
                     Key Topics
                   </span>
                   <div className="mt-1 flex flex-wrap gap-1">
                     {briefing.keyTopics.map((topic, i) => (
                       <span
                         key={i}
-                        className="rounded-full bg-muted px-2 py-0.5 text-xs"
+                        className="rounded-sm bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 text-xs font-mono text-white/60"
                       >
                         {topic}
                       </span>
@@ -292,14 +279,14 @@ export function ClientEmailSummaryHeader({
               {/* Talking Points */}
               {briefing.talkingPoints.length > 0 && (
                 <div>
-                  <span className="text-xs font-medium uppercase text-muted-foreground">
+                  <span className="text-xs font-mono uppercase text-white/30">
                     Talking Points
                   </span>
                   <ul className="mt-1 space-y-1 text-sm">
                     {briefing.talkingPoints.map((point, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>{point}</span>
+                        <span style={{ color: '#00F5FF' }}>•</span>
+                        <span className="text-white/70">{point}</span>
                       </li>
                     ))}
                   </ul>
@@ -309,12 +296,12 @@ export function ClientEmailSummaryHeader({
               {/* Opportunities */}
               {briefing.opportunitySignals.length > 0 && (
                 <div>
-                  <span className="text-xs font-medium uppercase text-muted-foreground">
+                  <span className="text-xs font-mono uppercase text-white/30">
                     Opportunities
                   </span>
                   <ul className="mt-1 space-y-1 text-sm">
                     {briefing.opportunitySignals.map((opp, i) => (
-                      <li key={i} className="flex items-start gap-2 text-green-600">
+                      <li key={i} className="flex items-start gap-2" style={{ color: '#00FF88' }}>
                         <TrendingUp className="h-4 w-4 shrink-0" />
                         <span>{opp}</span>
                       </li>
@@ -326,12 +313,12 @@ export function ClientEmailSummaryHeader({
               {/* Risks */}
               {briefing.riskIndicators.length > 0 && (
                 <div>
-                  <span className="text-xs font-medium uppercase text-muted-foreground">
+                  <span className="text-xs font-mono uppercase text-white/30">
                     Risks to Address
                   </span>
                   <ul className="mt-1 space-y-1 text-sm">
                     {briefing.riskIndicators.map((risk, i) => (
-                      <li key={i} className="flex items-start gap-2 text-amber-600">
+                      <li key={i} className="flex items-start gap-2" style={{ color: '#FFB800' }}>
                         <AlertTriangle className="h-4 w-4 shrink-0" />
                         <span>{risk}</span>
                       </li>
@@ -343,14 +330,14 @@ export function ClientEmailSummaryHeader({
               {/* Suggested Actions */}
               {briefing.suggestedActions.length > 0 && (
                 <div>
-                  <span className="text-xs font-medium uppercase text-muted-foreground">
+                  <span className="text-xs font-mono uppercase text-white/30">
                     Suggested Actions
                   </span>
                   <ul className="mt-1 space-y-1 text-sm">
                     {briefing.suggestedActions.map((action, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <Target className="h-4 w-4 shrink-0 text-primary" />
-                        <span>{action}</span>
+                        <Target className="h-4 w-4 shrink-0" style={{ color: '#00F5FF' }} />
+                        <span className="text-white/70">{action}</span>
                       </li>
                     ))}
                   </ul>

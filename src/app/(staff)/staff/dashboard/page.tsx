@@ -46,21 +46,21 @@ export default function StaffDashboardPage() {
   const criticalCount = businesses.filter(b => b.status === "critical").length;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Building2 className="w-6 h-6 text-cyan-400" />
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2 font-mono">
+              <Building2 className="w-6 h-6 text-[#00F5FF]" />
               Business Performance
             </h1>
-            <p className="text-sm text-zinc-400 mt-1">
+            <p className="text-sm text-white/40 mt-1 font-mono">
               Real-time KPI view across all 6 Unite Group businesses
             </p>
             {lastUpdated && (
-              <p className="text-xs text-zinc-600 mt-0.5">
+              <p className="text-xs text-white/20 mt-0.5 font-mono">
                 Last updated {lastUpdated.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" })}
               </p>
             )}
@@ -68,7 +68,7 @@ export default function StaffDashboardPage() {
           <button
             onClick={fetchKpis}
             disabled={loading}
-            className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-zinc-800 border border-zinc-800"
+            className="flex items-center gap-1.5 text-sm text-white/40 hover:text-white/80 transition-colors px-3 py-2 rounded-sm bg-white/[0.04] border border-white/[0.06] font-mono"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             Refresh
@@ -78,18 +78,18 @@ export default function StaffDashboardPage() {
         {/* Summary bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: "Total MRR",      value: `$${totalMrr >= 1000 ? `${(totalMrr / 1000).toFixed(1)}k` : totalMrr.toLocaleString()}`, icon: TrendingUp,  color: "text-cyan-400" },
-            { label: "Active Users",   value: totalUsers.toLocaleString(),  icon: BarChart2,    color: "text-violet-400" },
-            { label: "Healthy",        value: `${healthyCount}/6`,          icon: Building2,    color: "text-emerald-400" },
-            { label: "Critical",       value: criticalCount.toString(),      icon: AlertCircle,  color: "text-red-400" },
+            { label: "Total MRR",    value: `$${totalMrr >= 1000 ? `${(totalMrr / 1000).toFixed(1)}k` : totalMrr.toLocaleString()}`, icon: TrendingUp,  color: "text-[#00F5FF]" },
+            { label: "Active Users", value: totalUsers.toLocaleString(),  icon: BarChart2,    color: "text-[#FF00FF]" },
+            { label: "Healthy",      value: `${healthyCount}/6`,          icon: Building2,    color: "text-[#00FF88]" },
+            { label: "Critical",     value: criticalCount.toString(),      icon: AlertCircle,  color: "text-[#FF4444]" },
           ].map(stat => {
             const Icon = stat.icon;
             return (
-              <div key={stat.label} className="bg-zinc-900 border border-zinc-800 rounded-xl p-3 flex items-center gap-3">
+              <div key={stat.label} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-3 flex items-center gap-3">
                 <Icon className={`w-5 h-5 flex-shrink-0 ${stat.color}`} />
                 <div>
-                  <p className={`text-lg font-bold ${stat.color}`}>{loading ? "—" : stat.value}</p>
-                  <p className="text-xs text-zinc-500">{stat.label}</p>
+                  <p className={`text-lg font-bold font-mono ${stat.color}`}>{loading ? "—" : stat.value}</p>
+                  <p className="text-xs text-white/40 font-mono">{stat.label}</p>
                 </div>
               </div>
             );
@@ -98,7 +98,7 @@ export default function StaffDashboardPage() {
 
         {/* Error state */}
         {error && (
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-red-900/20 border border-red-500/30 text-red-300 text-sm">
+          <div className="flex items-center gap-3 p-4 rounded-sm bg-[#FF4444]/10 border border-[#FF4444]/30 text-[#FF4444] text-sm font-mono">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>Failed to load KPI data: {error}</span>
             <button onClick={fetchKpis} className="ml-auto underline underline-offset-2 hover:text-white">
@@ -122,7 +122,7 @@ export default function StaffDashboardPage() {
         </div>
 
         {/* Footer note */}
-        <p className="text-xs text-zinc-700 text-center pb-4">
+        <p className="text-xs text-white/20 text-center pb-4 font-mono">
           MRR data is indicative. Connect Stripe restricted keys per business to activate live revenue tracking.
         </p>
       </div>

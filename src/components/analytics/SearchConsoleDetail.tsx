@@ -6,10 +6,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -17,14 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Search, ArrowUpDown, TrendingUp, TrendingDown } from 'lucide-react';
 
 interface SearchConsoleDetailProps {
@@ -73,14 +61,12 @@ export function SearchConsoleDetail({ workspaceId, brandSlug }: SearchConsoleDet
 
     let queries = [...data.data.queries];
 
-    // Filter by search term
     if (searchTerm) {
       queries = queries.filter((q: any) =>
         q.query.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Sort
     queries.sort((a: any, b: any) => {
       const aValue = a[sortBy];
       const bValue = b[sortBy];
@@ -106,28 +92,27 @@ export function SearchConsoleDetail({ workspaceId, brandSlug }: SearchConsoleDet
 
   if (loading) {
     return (
-      <Card>
-        <CardContent className="py-12">
-          <div className="flex items-center justify-center">
-            <span className="text-muted-foreground">Loading Search Console data...</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-12">
+        <div className="flex items-center justify-center">
+          <span className="text-white/40 font-mono text-xs uppercase tracking-widest">Loading Search Console data...</span>
+        </div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Card>
-        <CardContent className="py-12">
-          <div className="text-center">
-            <p className="text-destructive mb-4">{error}</p>
-            <Button onClick={fetchData} variant="outline">
-              Retry
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-12">
+        <div className="text-center">
+          <p className="text-[#FF4444] font-mono text-sm mb-4">{error}</p>
+          <button
+            onClick={fetchData}
+            className="px-4 py-2 border border-white/[0.06] rounded-sm text-xs font-mono text-white/60 hover:text-white/90 hover:border-white/20 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
     );
   }
 
@@ -138,81 +123,65 @@ export function SearchConsoleDetail({ workspaceId, brandSlug }: SearchConsoleDet
       {/* Summary Cards */}
       {data.data && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Impressions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <span className="text-2xl font-bold">
-                {data.data.totalImpressions?.toLocaleString() || 0}
-              </span>
-              {data.data.google && data.data.bing && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  Google: {data.data.google.totalImpressions?.toLocaleString() || 0} • Bing:{' '}
-                  {data.data.bing.totalImpressions?.toLocaleString() || 0}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Clicks</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <span className="text-2xl font-bold">
-                {data.data.totalClicks?.toLocaleString() || 0}
-              </span>
-              {data.data.google && data.data.bing && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  Google: {data.data.google.totalClicks?.toLocaleString() || 0} • Bing:{' '}
-                  {data.data.bing.totalClicks?.toLocaleString() || 0}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Unique Queries</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <span className="text-2xl font-bold">{data.data.queries?.length || 0}</span>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Date Range</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm">
-                {data.dateStart} to {data.dateEnd}
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">Total Impressions</p>
+            <span className="text-2xl font-bold font-mono text-white/90">
+              {data.data.totalImpressions?.toLocaleString() || 0}
+            </span>
+            {data.data.google && data.data.bing && (
+              <p className="text-xs text-white/20 font-mono mt-1">
+                Google: {data.data.google.totalImpressions?.toLocaleString() || 0} · Bing:{' '}
+                {data.data.bing.totalImpressions?.toLocaleString() || 0}
               </p>
-            </CardContent>
-          </Card>
+            )}
+          </div>
+
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">Total Clicks</p>
+            <span className="text-2xl font-bold font-mono text-white/90">
+              {data.data.totalClicks?.toLocaleString() || 0}
+            </span>
+            {data.data.google && data.data.bing && (
+              <p className="text-xs text-white/20 font-mono mt-1">
+                Google: {data.data.google.totalClicks?.toLocaleString() || 0} · Bing:{' '}
+                {data.data.bing.totalClicks?.toLocaleString() || 0}
+              </p>
+            )}
+          </div>
+
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">Unique Queries</p>
+            <span className="text-2xl font-bold font-mono text-white/90">{data.data.queries?.length || 0}</span>
+          </div>
+
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">Date Range</p>
+            <p className="text-sm font-mono text-white/90">
+              {data.dateStart} to {data.dateEnd}
+            </p>
+          </div>
         </div>
       )}
 
-      {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Query Analysis</CardTitle>
-          <CardDescription>Search and analyze your search queries</CardDescription>
-        </CardHeader>
-        <CardContent>
+      {/* Filters + Query Table */}
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+        <div className="p-4 border-b border-white/[0.06]">
+          <h3 className="text-sm font-mono font-bold text-white/90 mb-1">Query Analysis</h3>
+          <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Search and analyse your search queries</p>
+        </div>
+        <div className="p-4">
           <div className="flex gap-4 mb-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20" />
+              <input
                 placeholder="Search queries..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="w-full bg-white/[0.03] border border-white/[0.06] rounded-sm pl-10 pr-3 py-2 text-sm font-mono text-white/90 placeholder-white/20 focus:outline-none focus:border-[#00F5FF]/40"
               />
             </div>
             <Select value={source} onValueChange={(value: any) => setSource(value)}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[200px] bg-white/[0.03] border-white/[0.06] rounded-sm font-mono text-sm text-white/90">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -224,141 +193,132 @@ export function SearchConsoleDetail({ workspaceId, brandSlug }: SearchConsoleDet
           </div>
 
           {/* Queries Table */}
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[40%]">Query</TableHead>
-                  <TableHead className="w-[15%]">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+          <div className="border border-white/[0.06] rounded-sm overflow-hidden">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="w-[40%] text-left p-3 text-[10px] font-mono uppercase tracking-widest text-white/20">Query</th>
+                  <th className="w-[15%] text-left p-3">
+                    <button
                       onClick={() => toggleSort('impressions')}
-                      className="h-8 px-2"
+                      className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest text-white/20 hover:text-white/60"
                     >
                       Impressions
-                      <ArrowUpDown className="ml-1 h-3 w-3" />
-                    </Button>
-                  </TableHead>
-                  <TableHead className="w-[15%]">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                      <ArrowUpDown className="h-3 w-3" />
+                    </button>
+                  </th>
+                  <th className="w-[15%] text-left p-3">
+                    <button
                       onClick={() => toggleSort('clicks')}
-                      className="h-8 px-2"
+                      className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest text-white/20 hover:text-white/60"
                     >
                       Clicks
-                      <ArrowUpDown className="ml-1 h-3 w-3" />
-                    </Button>
-                  </TableHead>
-                  <TableHead className="w-[15%]">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                      <ArrowUpDown className="h-3 w-3" />
+                    </button>
+                  </th>
+                  <th className="w-[15%] text-left p-3">
+                    <button
                       onClick={() => toggleSort('ctr')}
-                      className="h-8 px-2"
+                      className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest text-white/20 hover:text-white/60"
                     >
                       CTR
-                      <ArrowUpDown className="ml-1 h-3 w-3" />
-                    </Button>
-                  </TableHead>
-                  <TableHead className="w-[15%]">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                      <ArrowUpDown className="h-3 w-3" />
+                    </button>
+                  </th>
+                  <th className="w-[15%] text-left p-3">
+                    <button
                       onClick={() => toggleSort('position')}
-                      className="h-8 px-2"
+                      className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest text-white/20 hover:text-white/60"
                     >
                       Position
-                      <ArrowUpDown className="ml-1 h-3 w-3" />
-                    </Button>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+                      <ArrowUpDown className="h-3 w-3" />
+                    </button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
                 {filteredQueries.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                  <tr>
+                    <td colSpan={5} className="text-center py-8 text-white/20 font-mono text-xs">
                       No queries found
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ) : (
                   filteredQueries.slice(0, 50).map((query: any, index: number) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">
+                    <tr key={index} className="border-t border-white/[0.04] hover:bg-white/[0.02]">
+                      <td className="p-3 font-mono text-sm text-white/90">
                         {query.query}
                         {query.source && (
-                          <Badge variant="outline" className="ml-2 text-xs">
+                          <span className="ml-2 px-1.5 py-0.5 border border-white/[0.06] rounded-sm text-[10px] font-mono text-white/30">
                             {query.source}
-                          </Badge>
+                          </span>
                         )}
-                      </TableCell>
-                      <TableCell>{query.impressions.toLocaleString()}</TableCell>
-                      <TableCell>{query.clicks}</TableCell>
-                      <TableCell>
-                        <span className={query.ctr >= 0.05 ? 'text-green-600' : ''}>
+                      </td>
+                      <td className="p-3 font-mono text-sm text-white/70">{query.impressions.toLocaleString()}</td>
+                      <td className="p-3 font-mono text-sm text-white/70">{query.clicks}</td>
+                      <td className="p-3">
+                        <span className={`font-mono text-sm ${query.ctr >= 0.05 ? 'text-[#00FF88]' : 'text-white/70'}`}>
                           {(query.ctr * 100).toFixed(2)}%
                         </span>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
+                      </td>
+                      <td className="p-3">
+                        <div className="flex items-center font-mono text-sm text-white/70">
                           {query.position.toFixed(1)}
                           {query.position <= 3 ? (
-                            <TrendingUp className="ml-1 h-3 w-3 text-green-500" />
+                            <TrendingUp className="ml-1 h-3 w-3 text-[#00FF88]" />
                           ) : query.position > 10 ? (
-                            <TrendingDown className="ml-1 h-3 w-3 text-orange-500" />
+                            <TrendingDown className="ml-1 h-3 w-3 text-[#FFB800]" />
                           ) : null}
                         </div>
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   ))
                 )}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
 
           {filteredQueries.length > 50 && (
-            <p className="text-sm text-muted-foreground mt-4 text-center">
+            <p className="text-xs font-mono text-white/20 mt-4 text-center">
               Showing top 50 of {filteredQueries.length} queries
             </p>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Improvement Opportunities */}
       {data.improvementOpportunities && data.improvementOpportunities.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Improvement Opportunities</CardTitle>
-            <CardDescription>
-              High-impression queries ranking in positions 4-10 (page 1 bottom)
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {data.improvementOpportunities.map((query: any, index: number) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 border rounded-lg"
-                >
-                  <div>
-                    <p className="font-medium">{query.query}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Position {query.position.toFixed(1)} • {query.impressions.toLocaleString()}{' '}
-                      impressions
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant="outline">{query.clicks} clicks</Badge>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      CTR: {(query.ctr * 100).toFixed(2)}%
-                    </p>
-                  </div>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+          <div className="p-4 border-b border-white/[0.06]">
+            <h3 className="text-sm font-mono font-bold text-white/90 mb-1">Improvement Opportunities</h3>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">
+              High-impression queries ranking in positions 4–10 (page 1 bottom)
+            </p>
+          </div>
+          <div className="p-4 space-y-3">
+            {data.improvementOpportunities.map((query: any, index: number) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-4 border border-white/[0.06] rounded-sm"
+              >
+                <div>
+                  <p className="font-mono text-sm text-white/90">{query.query}</p>
+                  <p className="text-xs font-mono text-white/30 mt-1">
+                    Position {query.position.toFixed(1)} · {query.impressions.toLocaleString()} impressions
+                  </p>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                <div className="text-right">
+                  <span className="px-2 py-0.5 border border-white/[0.06] rounded-sm text-xs font-mono text-white/60">
+                    {query.clicks} clicks
+                  </span>
+                  <p className="text-[10px] font-mono text-white/20 mt-1">
+                    CTR: {(query.ctr * 100).toFixed(2)}%
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

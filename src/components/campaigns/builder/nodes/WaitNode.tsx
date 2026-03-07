@@ -23,6 +23,8 @@ interface WaitNodeData {
   };
 }
 
+const ACCENT = '#FFB800';
+
 export const WaitNode = memo(({ data, selected }: NodeProps<WaitNodeData>) => {
   const isEventBased = data.config?.type === 'until_event';
   const duration = data.config?.value
@@ -31,18 +33,21 @@ export const WaitNode = memo(({ data, selected }: NodeProps<WaitNodeData>) => {
 
   return (
     <div
-      className={`
-        relative px-4 py-3 rounded-lg border-2 bg-white shadow-md min-w-[200px]
-        ${selected ? 'border-blue-500 shadow-lg' : 'border-amber-500'}
-        transition-all duration-200 hover:shadow-lg
-      `}
+      className="relative px-4 py-3 rounded-sm min-w-[200px] bg-white/[0.04] transition-all duration-200"
+      style={{
+        border: `2px solid ${selected ? '#00F5FF' : ACCENT}`,
+        boxShadow: selected ? `0 0 0 1px #00F5FF40` : undefined,
+      }}
     >
-      {/* Icon */}
-      <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center shadow-md">
+      {/* Icon badge */}
+      <div
+        className="absolute -top-3 -left-3 w-8 h-8 rounded-sm flex items-center justify-center"
+        style={{ backgroundColor: ACCENT }}
+      >
         {isEventBased ? (
-          <Zap className="w-4 h-4 text-white" />
+          <Zap className="w-4 h-4 text-[#050505]" />
         ) : (
-          <Clock className="w-4 h-4 text-white" />
+          <Clock className="w-4 h-4 text-[#050505]" />
         )}
       </div>
 
@@ -50,20 +55,22 @@ export const WaitNode = memo(({ data, selected }: NodeProps<WaitNodeData>) => {
       <Handle
         type="target"
         position={Position.Top}
-        className="w-3 h-3 !bg-amber-500 !border-2 !border-white"
+        style={{ background: ACCENT, borderColor: '#050505' }}
+        className="w-3 h-3 !border-2"
       />
 
       {/* Content */}
-      <div className="text-sm font-semibold text-gray-900 mb-1">{data.label}</div>
-      <div className="text-xs text-gray-500">
-        {isEventBased ? `Wait for: ${data.config.event_type}` : duration}
+      <div className="font-mono text-sm font-semibold text-white mb-1">{data.label}</div>
+      <div className="font-mono text-xs text-white/40">
+        {isEventBased ? `Wait for: ${data.config?.event_type}` : duration}
       </div>
 
       {/* Output Handle */}
       <Handle
         type="source"
         position={Position.Bottom}
-        className="w-3 h-3 !bg-amber-500 !border-2 !border-white"
+        style={{ background: ACCENT, borderColor: '#050505' }}
+        className="w-3 h-3 !border-2"
       />
     </div>
   );

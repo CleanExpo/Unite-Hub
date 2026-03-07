@@ -30,43 +30,48 @@ const actionIcons = {
   notification: Bell,
 };
 
-const actionColors = {
-  tag: 'bg-cyan-500 border-cyan-500',
-  score: 'bg-orange-500 border-orange-500',
-  field_update: 'bg-teal-500 border-teal-500',
-  webhook: 'bg-slate-500 border-slate-500',
-  segment: 'bg-sky-500 border-sky-500',
-  notification: 'bg-rose-500 border-rose-500',
+// Scientific Luxury accent per action type
+const actionAccents: Record<string, string> = {
+  tag:          '#00F5FF',
+  score:        '#FFB800',
+  field_update: '#00FF88',
+  webhook:      '#ffffff60',
+  segment:      '#00F5FF',
+  notification: '#FF4444',
 };
 
 export const ActionNode = memo(({ data, selected }: NodeProps<ActionNodeData>) => {
   const actionType = data.config?.type || 'tag';
   const Icon = actionIcons[actionType] || Zap;
-  const colorClass = actionColors[actionType] || 'bg-cyan-500 border-cyan-500';
+  const accent = actionAccents[actionType] || '#00F5FF';
 
   return (
     <div
-      className={`
-        relative px-4 py-3 rounded-lg border-2 bg-white shadow-md min-w-[200px]
-        ${selected ? 'border-blue-500 shadow-lg' : colorClass}
-        transition-all duration-200 hover:shadow-lg
-      `}
+      className="relative px-4 py-3 rounded-sm min-w-[200px] bg-white/[0.04] transition-all duration-200"
+      style={{
+        border: `2px solid ${selected ? '#00F5FF' : accent}`,
+        boxShadow: selected ? `0 0 0 1px #00F5FF40` : undefined,
+      }}
     >
-      {/* Icon */}
-      <div className={`absolute -top-3 -left-3 w-8 h-8 rounded-full ${colorClass.split(' ')[0]} flex items-center justify-center shadow-md`}>
-        <Icon className="w-4 h-4 text-white" />
+      {/* Icon badge */}
+      <div
+        className="absolute -top-3 -left-3 w-8 h-8 rounded-sm flex items-center justify-center"
+        style={{ backgroundColor: accent }}
+      >
+        <Icon className="w-4 h-4 text-[#050505]" />
       </div>
 
       {/* Input Handle */}
       <Handle
         type="target"
         position={Position.Top}
-        className={`w-3 h-3 !${colorClass.split(' ')[0]} !border-2 !border-white`}
+        style={{ background: accent, borderColor: '#050505' }}
+        className="w-3 h-3 !border-2"
       />
 
       {/* Content */}
-      <div className="text-sm font-semibold text-gray-900 mb-1">{data.label}</div>
-      <div className="text-xs text-gray-500 capitalize">
+      <div className="font-mono text-sm font-semibold text-white mb-1">{data.label}</div>
+      <div className="font-mono text-xs text-white/40 capitalize">
         {actionType.replace('_', ' ')}
       </div>
 
@@ -74,7 +79,8 @@ export const ActionNode = memo(({ data, selected }: NodeProps<ActionNodeData>) =
       <Handle
         type="source"
         position={Position.Bottom}
-        className={`w-3 h-3 !${colorClass.split(' ')[0]} !border-2 !border-white`}
+        style={{ background: accent, borderColor: '#050505' }}
+        className="w-3 h-3 !border-2"
       />
     </div>
   );

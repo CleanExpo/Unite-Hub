@@ -6,9 +6,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { RefreshCw, TrendingUp, TrendingDown, Eye, MousePointerClick, Target, Users } from 'lucide-react';
 
 interface AnalyticsOverviewProps {
@@ -66,7 +63,6 @@ export function AnalyticsOverviewPanel({ workspaceId, brandSlug }: AnalyticsOver
         throw new Error(data.error || 'Sync failed');
       }
 
-      // Refresh overview after sync
       await fetchOverview();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sync failed');
@@ -81,29 +77,28 @@ export function AnalyticsOverviewPanel({ workspaceId, brandSlug }: AnalyticsOver
 
   if (loading && !overview) {
     return (
-      <Card>
-        <CardContent className="py-12">
-          <div className="flex items-center justify-center">
-            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-            <span className="ml-3 text-muted-foreground">Loading analytics...</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-12">
+        <div className="flex items-center justify-center">
+          <RefreshCw className="h-8 w-8 animate-spin text-white/20" />
+          <span className="ml-3 text-white/40 font-mono text-xs uppercase tracking-widest">Loading analytics...</span>
+        </div>
+      </div>
     );
   }
 
   if (error && !overview) {
     return (
-      <Card>
-        <CardContent className="py-12">
-          <div className="text-center">
-            <p className="text-destructive mb-4">{error}</p>
-            <Button onClick={fetchOverview} variant="outline">
-              Retry
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-12">
+        <div className="text-center">
+          <p className="text-[#FF4444] font-mono text-sm mb-4">{error}</p>
+          <button
+            onClick={fetchOverview}
+            className="px-4 py-2 border border-white/[0.06] rounded-sm text-xs font-mono text-white/60 hover:text-white/90 hover:border-white/20 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
     );
   }
 
@@ -116,120 +111,106 @@ export function AnalyticsOverviewPanel({ workspaceId, brandSlug }: AnalyticsOver
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Analytics Overview</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-2xl font-bold font-mono text-white/90">Analytics Overview</h2>
+          <p className="text-white/30 font-mono text-sm">
             {overview.dateStart} to {overview.dateEnd}
           </p>
         </div>
-        <Button onClick={handleSync} disabled={syncing}>
-          <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+        <button
+          onClick={handleSync}
+          disabled={syncing}
+          className="flex items-center gap-2 px-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-sm text-xs font-mono text-white/60 hover:text-white/90 hover:border-white/20 transition-colors disabled:opacity-50"
+        >
+          <RefreshCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
           {syncing ? 'Syncing...' : 'Refresh Data'}
-        </Button>
+        </button>
       </div>
 
       {/* Search Console Metrics */}
       {overview.searchConsole && (
         <div>
-          <h3 className="text-lg font-semibold mb-4">Search Console Performance</h3>
+          <h3 className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-4">Search Console Performance</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Total Impressions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold">
-                    {overview.searchConsole.totalImpressions.toLocaleString()}
-                  </span>
-                  <Eye className="h-5 w-5 text-muted-foreground" />
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Total Impressions</p>
+                <Eye className="h-4 w-4 text-white/20" />
+              </div>
+              <span className="text-2xl font-bold font-mono text-white/90">
+                {overview.searchConsole.totalImpressions.toLocaleString()}
+              </span>
+              {overview.searchConsole.google && overview.searchConsole.bing && (
+                <div className="mt-2 text-xs font-mono text-white/20">
+                  Google: {overview.searchConsole.google.impressions.toLocaleString()} · Bing:{' '}
+                  {overview.searchConsole.bing.impressions.toLocaleString()}
                 </div>
-                {overview.searchConsole.google && overview.searchConsole.bing && (
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    Google: {overview.searchConsole.google.impressions.toLocaleString()} • Bing:{' '}
-                    {overview.searchConsole.bing.impressions.toLocaleString()}
-                  </div>
+              )}
+            </div>
+
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Total Clicks</p>
+                <MousePointerClick className="h-4 w-4 text-white/20" />
+              </div>
+              <span className="text-2xl font-bold font-mono text-white/90">
+                {overview.searchConsole.totalClicks.toLocaleString()}
+              </span>
+              {overview.searchConsole.google && overview.searchConsole.bing && (
+                <div className="mt-2 text-xs font-mono text-white/20">
+                  Google: {overview.searchConsole.google.clicks.toLocaleString()} · Bing:{' '}
+                  {overview.searchConsole.bing.clicks.toLocaleString()}
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Average CTR</p>
+                <Target className="h-4 w-4 text-white/20" />
+              </div>
+              <span className="text-2xl font-bold font-mono text-white/90">
+                {(overview.searchConsole.averageCtr * 100).toFixed(2)}%
+              </span>
+            </div>
+
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Average Position</p>
+                {overview.searchConsole.averagePosition <= 5 ? (
+                  <TrendingUp className="h-4 w-4 text-[#00FF88]" />
+                ) : (
+                  <TrendingDown className="h-4 w-4 text-[#FFB800]" />
                 )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Total Clicks</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold">
-                    {overview.searchConsole.totalClicks.toLocaleString()}
-                  </span>
-                  <MousePointerClick className="h-5 w-5 text-muted-foreground" />
-                </div>
-                {overview.searchConsole.google && overview.searchConsole.bing && (
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    Google: {overview.searchConsole.google.clicks.toLocaleString()} • Bing:{' '}
-                    {overview.searchConsole.bing.clicks.toLocaleString()}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Average CTR</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold">
-                    {(overview.searchConsole.averageCtr * 100).toFixed(2)}%
-                  </span>
-                  <Target className="h-5 w-5 text-muted-foreground" />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Average Position</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold">
-                    {overview.searchConsole.averagePosition.toFixed(1)}
-                  </span>
-                  {overview.searchConsole.averagePosition <= 5 ? (
-                    <TrendingUp className="h-5 w-5 text-green-500" />
-                  ) : (
-                    <TrendingDown className="h-5 w-5 text-orange-500" />
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+              <span className="text-2xl font-bold font-mono text-white/90">
+                {overview.searchConsole.averagePosition.toFixed(1)}
+              </span>
+            </div>
           </div>
 
           {/* Top Queries */}
           {overview.searchConsole.topQueries && overview.searchConsole.topQueries.length > 0 && (
-            <Card className="mt-4">
-              <CardHeader>
-                <CardTitle>Top Performing Queries</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {overview.searchConsole.topQueries.slice(0, 5).map((query: any, index: number) => (
-                    <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
-                      <div className="flex-1">
-                        <p className="font-medium">{query.query}</p>
-                        <p className="text-xs text-muted-foreground">
-                          Position {query.position.toFixed(1)} • {query.source}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">{query.impressions.toLocaleString()}</p>
-                        <p className="text-xs text-muted-foreground">{query.clicks} clicks</p>
-                      </div>
+            <div className="mt-4 bg-white/[0.02] border border-white/[0.06] rounded-sm">
+              <div className="p-4 border-b border-white/[0.06]">
+                <h4 className="text-sm font-mono font-bold text-white/90">Top Performing Queries</h4>
+              </div>
+              <div className="p-4 space-y-2">
+                {overview.searchConsole.topQueries.slice(0, 5).map((query: any, index: number) => (
+                  <div key={index} className="flex items-center justify-between py-2 border-b border-white/[0.04] last:border-0">
+                    <div className="flex-1">
+                      <p className="font-mono text-sm text-white/90">{query.query}</p>
+                      <p className="text-xs font-mono text-white/20">
+                        Position {query.position.toFixed(1)} · {query.source}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    <div className="text-right">
+                      <p className="font-mono font-bold text-sm text-white/90">{query.impressions.toLocaleString()}</p>
+                      <p className="text-xs font-mono text-white/20">{query.clicks} clicks</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       )}
@@ -237,177 +218,159 @@ export function AnalyticsOverviewPanel({ workspaceId, brandSlug }: AnalyticsOver
       {/* Google Analytics Metrics */}
       {overview.analytics && (
         <div>
-          <h3 className="text-lg font-semibold mb-4">Website Analytics</h3>
+          <h3 className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-4">Website Analytics</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Sessions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <span className="text-2xl font-bold">{overview.analytics.sessions.toLocaleString()}</span>
-              </CardContent>
-            </Card>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">Sessions</p>
+              <span className="text-2xl font-bold font-mono text-white/90">{overview.analytics.sessions.toLocaleString()}</span>
+            </div>
 
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Users</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold">{overview.analytics.users.toLocaleString()}</span>
-                  <Users className="h-5 w-5 text-muted-foreground" />
-                </div>
-              </CardContent>
-            </Card>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Users</p>
+                <Users className="h-4 w-4 text-white/20" />
+              </div>
+              <span className="text-2xl font-bold font-mono text-white/90">{overview.analytics.users.toLocaleString()}</span>
+            </div>
 
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Pageviews</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <span className="text-2xl font-bold">{overview.analytics.pageviews.toLocaleString()}</span>
-              </CardContent>
-            </Card>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">Pageviews</p>
+              <span className="text-2xl font-bold font-mono text-white/90">{overview.analytics.pageviews.toLocaleString()}</span>
+            </div>
 
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Bounce Rate</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <span className="text-2xl font-bold">
-                  {(overview.analytics.bounceRate * 100).toFixed(1)}%
-                </span>
-              </CardContent>
-            </Card>
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">Bounce Rate</p>
+              <span className="text-2xl font-bold font-mono text-white/90">
+                {(overview.analytics.bounceRate * 100).toFixed(1)}%
+              </span>
+            </div>
           </div>
         </div>
       )}
 
       {/* Keyword Opportunities */}
       {overview.keywords && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Keyword Opportunities</CardTitle>
-            <CardDescription>{overview.keywords.totalKeywords} keywords tracked</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <p className="text-2xl font-bold">
-                    {overview.keywords.totalSearchVolume.toLocaleString()}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Total Search Volume</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">{overview.keywords.averageDifficulty.toFixed(1)}</p>
-                  <p className="text-xs text-muted-foreground">Avg Difficulty</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">${overview.keywords.averageCpc.toFixed(2)}</p>
-                  <p className="text-xs text-muted-foreground">Avg CPC</p>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+          <div className="p-4 border-b border-white/[0.06]">
+            <h3 className="text-sm font-mono font-bold text-white/90 mb-1">Keyword Opportunities</h3>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">{overview.keywords.totalKeywords} keywords tracked</p>
+          </div>
+          <div className="p-4 space-y-4">
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <p className="text-2xl font-bold font-mono text-white/90">
+                  {overview.keywords.totalSearchVolume.toLocaleString()}
+                </p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Total Search Volume</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold font-mono text-white/90">{overview.keywords.averageDifficulty.toFixed(1)}</p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Avg Difficulty</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold font-mono text-white/90">${overview.keywords.averageCpc.toFixed(2)}</p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">Avg CPC</p>
+              </div>
+            </div>
+
+            {overview.keywords.lowHangingFruit && overview.keywords.lowHangingFruit.length > 0 && (
+              <div>
+                <h4 className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">Low-Hanging Fruit (Easy Wins)</h4>
+                <div className="space-y-2">
+                  {overview.keywords.lowHangingFruit.map((kw: any, index: number) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-white/[0.02] rounded-sm">
+                      <div>
+                        <p className="font-mono text-sm text-white/90">{kw.keyword}</p>
+                        <p className="text-xs font-mono text-white/30">{kw.opportunity}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="px-2 py-0.5 border border-white/[0.06] rounded-sm text-xs font-mono text-white/60">
+                          {kw.searchVolume.toLocaleString()}/mo
+                        </span>
+                        <p className="text-[10px] font-mono text-white/20 mt-1">
+                          Difficulty: {kw.difficulty}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              {overview.keywords.lowHangingFruit && overview.keywords.lowHangingFruit.length > 0 && (
-                <div>
-                  <h4 className="font-semibold mb-2">Low-Hanging Fruit (Easy Wins)</h4>
-                  <div className="space-y-2">
-                    {overview.keywords.lowHangingFruit.map((kw: any, index: number) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-muted rounded">
-                        <div>
-                          <p className="font-medium">{kw.keyword}</p>
-                          <p className="text-xs text-muted-foreground">{kw.opportunity}</p>
-                        </div>
-                        <div className="text-right">
-                          <Badge variant="outline">{kw.searchVolume.toLocaleString()}/mo</Badge>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Difficulty: {kw.difficulty}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+            )}
+          </div>
+        </div>
       )}
 
       {/* Insights */}
       {overview.insights && overview.insights.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Insights & Recommendations</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {overview.insights.map((insight: any, index: number) => (
-                <div
-                  key={index}
-                  className={`p-4 rounded-lg border ${
-                    insight.type === 'success'
-                      ? 'bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800'
-                      : insight.type === 'warning'
-                        ? 'bg-orange-50 border-orange-200 dark:bg-orange-950 dark:border-orange-800'
-                        : 'bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800'
-                  }`}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <Badge variant="outline" className="mb-2">
-                        {insight.category.replace(/_/g, ' ')}
-                      </Badge>
-                      <p className="font-medium mb-1">{insight.message}</p>
-                      <p className="text-sm text-muted-foreground">{insight.recommendation}</p>
-                      {insight.keywords && (
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {insight.keywords.map((kw: string, i: number) => (
-                            <Badge key={i} variant="secondary" className="text-xs">
-                              {kw}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+          <div className="p-4 border-b border-white/[0.06]">
+            <h3 className="text-sm font-mono font-bold text-white/90">Insights & Recommendations</h3>
+          </div>
+          <div className="p-4 space-y-3">
+            {overview.insights.map((insight: any, index: number) => (
+              <div
+                key={index}
+                className={`p-4 rounded-sm border ${
+                  insight.type === 'success'
+                    ? 'border-[#00FF88]/20 bg-[#00FF88]/[0.04]'
+                    : insight.type === 'warning'
+                      ? 'border-[#FFB800]/20 bg-[#FFB800]/[0.04]'
+                      : 'border-[#00F5FF]/20 bg-[#00F5FF]/[0.04]'
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <span className="px-2 py-0.5 border border-white/[0.06] rounded-sm text-[10px] font-mono text-white/40 mb-2 inline-block">
+                      {insight.category.replace(/_/g, ' ')}
+                    </span>
+                    <p className="font-mono text-sm text-white/90 mb-1">{insight.message}</p>
+                    <p className="text-xs font-mono text-white/40">{insight.recommendation}</p>
+                    {insight.keywords && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {insight.keywords.map((kw: string, i: number) => (
+                          <span key={i} className="px-1.5 py-0.5 bg-white/[0.03] border border-white/[0.06] rounded-sm text-[10px] font-mono text-white/40">
+                            {kw}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Cache Status */}
       {overview.cacheStatus && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Cache Status</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+          <div className="p-4 border-b border-white/[0.06]">
+            <h3 className="text-sm font-mono font-bold text-white/90">Cache Status</h3>
+          </div>
+          <div className="p-4">
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
-                <p className="font-medium">Search Console</p>
-                <p className="text-muted-foreground">
+                <p className="font-mono text-sm text-white/90">Search Console</p>
+                <p className="text-xs font-mono text-white/30">
                   {overview.cacheStatus.search_console?.valid_entries || 0} entries cached
                 </p>
               </div>
               <div>
-                <p className="font-medium">Analytics</p>
-                <p className="text-muted-foreground">
+                <p className="font-mono text-sm text-white/90">Analytics</p>
+                <p className="text-xs font-mono text-white/30">
                   {overview.cacheStatus.analytics?.valid_entries || 0} entries cached
                 </p>
               </div>
               <div>
-                <p className="font-medium">DataForSEO</p>
-                <p className="text-muted-foreground">
+                <p className="font-mono text-sm text-white/90">DataForSEO</p>
+                <p className="text-xs font-mono text-white/30">
                   {overview.cacheStatus.dataforseo?.valid_entries || 0} entries cached
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
     </div>
   );

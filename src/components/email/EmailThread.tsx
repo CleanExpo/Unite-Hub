@@ -1,9 +1,10 @@
 "use client";
 
+// NOTE: dangerouslySetInnerHTML is intentional here — all HTML is sanitised
+// via sanitizeEmailHtml() before render. This is the same pattern as the original.
+
 import React from "react";
-import { Mail, User, Calendar, Bot, CheckCircle2, ExternalLink } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Mail, User, Calendar, Bot, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { sanitizeEmailHtml } from "@/lib/sanitize-html";
 
@@ -30,32 +31,35 @@ interface EmailThreadProps {
 
 export function EmailThread({ email }: EmailThreadProps) {
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="h-full overflow-y-auto bg-[#050505]">
       <div className="max-w-4xl mx-auto p-6">
         {/* Email Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 mb-4">
+          <h1 className="text-2xl font-mono font-bold text-white mb-4">
             {email.subject}
           </h1>
 
           <div className="flex items-start gap-4 mb-4">
-            <div className="p-3 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full">
-              <User className="h-6 w-6 text-blue-700" />
+            <div className="p-3 bg-white/[0.04] border border-white/[0.06] rounded-sm">
+              <User className="h-6 w-6" style={{ color: '#00F5FF' }} />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <p className="font-semibold text-gray-900">
+                <p className="font-mono font-semibold text-white">
                   {email.senderName || "Unknown Sender"}
                 </p>
                 {email.autoReplySent && (
-                  <Badge variant="outline" className="gap-1">
+                  <span
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[10px] font-mono font-medium border"
+                    style={{ color: '#00FF88', borderColor: '#00FF8840', backgroundColor: '#00FF8810' }}
+                  >
                     <Bot className="h-3 w-3" />
                     Auto-replied
-                  </Badge>
+                  </span>
                 )}
               </div>
-              <p className="text-sm text-gray-600">{email.senderEmail}</p>
-              <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+              <p className="font-mono text-sm text-white/50">{email.senderEmail}</p>
+              <div className="flex items-center gap-1 font-mono text-xs text-white/30 mt-1">
                 <Calendar className="h-3 w-3" />
                 {format(email.receivedAt, "PPpp")}
               </div>
@@ -64,8 +68,8 @@ export function EmailThread({ email }: EmailThreadProps) {
 
           {/* Attachments */}
           {email.attachments.length > 0 && (
-            <div className="border-t border-gray-200 pt-4">
-              <p className="text-sm font-medium text-gray-700 mb-2">
+            <div className="border-t border-white/[0.06] pt-4">
+              <p className="font-mono text-sm font-medium text-white/60 mb-2">
                 Attachments ({email.attachments.length})
               </p>
               <div className="space-y-2">
@@ -75,16 +79,16 @@ export function EmailThread({ email }: EmailThreadProps) {
                     href={attachment.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-2 p-2 border border-white/[0.06] rounded-sm hover:bg-white/[0.04] transition-colors"
                   >
-                    <Mail className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm text-gray-900 flex-1">
+                    <Mail className="h-4 w-4 text-white/40" />
+                    <span className="font-mono text-sm text-white flex-1">
                       {attachment.fileName}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="font-mono text-xs text-white/30">
                       {(attachment.fileSize / 1024).toFixed(1)} KB
                     </span>
-                    <ExternalLink className="h-4 w-4 text-gray-400" />
+                    <ExternalLink className="h-4 w-4 text-white/30" />
                   </a>
                 ))}
               </div>
@@ -93,30 +97,36 @@ export function EmailThread({ email }: EmailThreadProps) {
         </div>
 
         {/* Email Body */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 mb-4">
           <div
-            className="prose prose-sm max-w-none"
+            className="prose prose-sm max-w-none prose-invert"
             dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(email.messageBody) }}
           />
         </div>
 
         {/* Auto Reply */}
         {email.autoReplySent && email.autoReplyContent && (
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 p-6">
+          <div
+            className="rounded-sm border p-6"
+            style={{ backgroundColor: '#00FF8808', borderColor: '#00FF8830' }}
+          >
             <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Bot className="h-5 w-5 text-green-700" />
+              <div
+                className="p-2 rounded-sm"
+                style={{ backgroundColor: '#00FF8820' }}
+              >
+                <Bot className="h-5 w-5" style={{ color: '#00FF88' }} />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">AI Auto-Reply</h3>
-                <p className="text-xs text-gray-600">
+                <h3 className="font-mono font-semibold text-white">AI Auto-Reply</h3>
+                <p className="font-mono text-xs text-white/40">
                   Sent {email.autoReplySentAt && format(email.autoReplySentAt, "PPpp")}
                 </p>
               </div>
             </div>
-            <div className="bg-white rounded-lg p-4 border border-green-200">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
               <div
-                className="prose prose-sm max-w-none"
+                className="prose prose-sm max-w-none prose-invert"
                 dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(email.autoReplyContent) }}
               />
             </div>
@@ -125,9 +135,15 @@ export function EmailThread({ email }: EmailThreadProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-3 mt-6">
-          <Button variant="outline">Reply Manually</Button>
-          <Button variant="outline">Forward</Button>
-          <Button variant="outline">Archive</Button>
+          <button className="px-4 py-2 rounded-sm border border-white/[0.08] font-mono text-sm text-white hover:bg-white/[0.04] transition-colors">
+            Reply Manually
+          </button>
+          <button className="px-4 py-2 rounded-sm border border-white/[0.08] font-mono text-sm text-white hover:bg-white/[0.04] transition-colors">
+            Forward
+          </button>
+          <button className="px-4 py-2 rounded-sm border border-white/[0.08] font-mono text-sm text-white hover:bg-white/[0.04] transition-colors">
+            Archive
+          </button>
         </div>
       </div>
     </div>

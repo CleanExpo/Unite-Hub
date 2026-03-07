@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -12,8 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar, Sparkles, Plus, X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Sparkles, Plus, X } from "lucide-react";
 
 interface CampaignBuilderProps {
   onSave?: (campaign: any) => void;
@@ -72,65 +70,75 @@ export function CampaignBuilder({ onSave, onCancel }: CampaignBuilderProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Create New Campaign</h2>
+    <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6">
+      <h2 className="text-2xl font-bold font-mono text-white mb-6">Create New Campaign</h2>
 
       <div className="space-y-6">
         {/* Platform Selection */}
         <div>
-          <Label>Platform</Label>
+          <Label className="text-white/60 font-mono text-xs">Platform</Label>
           <Select
             value={campaignData.platform}
             onValueChange={(value) =>
               setCampaignData({ ...campaignData, platform: value })
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="bg-white/[0.03] border-white/[0.08] text-white rounded-sm font-mono mt-1.5">
               <SelectValue placeholder="Select platform" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="facebook">Facebook</SelectItem>
-              <SelectItem value="instagram">Instagram</SelectItem>
-              <SelectItem value="tiktok">TikTok</SelectItem>
-              <SelectItem value="linkedin">LinkedIn</SelectItem>
+            <SelectContent className="bg-[#0a0a0a] border-white/[0.08] rounded-sm">
+              {["facebook", "instagram", "tiktok", "linkedin"].map((p) => (
+                <SelectItem key={p} value={p} className="text-white hover:bg-white/[0.04] font-mono capitalize">
+                  {p.charAt(0).toUpperCase() + p.slice(1)}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
         {/* Campaign Name */}
         <div>
-          <Label>Campaign Name</Label>
+          <Label className="text-white/60 font-mono text-xs">Campaign Name</Label>
           <Input
             placeholder="Enter campaign name"
             value={campaignData.campaignName}
             onChange={(e) =>
               setCampaignData({ ...campaignData, campaignName: e.target.value })
             }
+            className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 rounded-sm font-mono mt-1.5"
           />
         </div>
 
         {/* Themes */}
         <div>
-          <Label>Campaign Themes</Label>
-          <div className="flex gap-2 mb-2">
+          <Label className="text-white/60 font-mono text-xs">Campaign Themes</Label>
+          <div className="flex gap-2 mb-2 mt-1.5">
             <Input
               placeholder="Add a theme"
               value={themeInput}
               onChange={(e) => setThemeInput(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && addTheme()}
+              className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 rounded-sm font-mono"
             />
-            <Button onClick={addTheme} size="sm">
+            <button
+              onClick={addTheme}
+              className="px-3 py-1.5 text-sm font-mono rounded-sm border transition-all"
+              style={{ color: '#00F5FF', backgroundColor: 'rgba(0,245,255,0.08)', borderColor: 'rgba(0,245,255,0.2)' }}
+            >
               <Plus className="h-4 w-4" />
-            </Button>
+            </button>
           </div>
           <div className="flex flex-wrap gap-2">
             {campaignData.themes.map((theme) => (
-              <Badge key={theme} variant="secondary" className="gap-1">
+              <span
+                key={theme}
+                className="inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded-sm border border-white/[0.08] text-white/50 bg-white/[0.04]"
+              >
                 {theme}
-                <button onClick={() => removeTheme(theme)}>
+                <button onClick={() => removeTheme(theme)} className="hover:text-white/80 transition-colors">
                   <X className="h-3 w-3" />
                 </button>
-              </Badge>
+              </span>
             ))}
           </div>
         </div>
@@ -138,45 +146,49 @@ export function CampaignBuilder({ onSave, onCancel }: CampaignBuilderProps) {
         {/* Ad Copy Variations */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <Label>Ad Copy Variations</Label>
-            <Button onClick={addAdVariation} size="sm" variant="outline" className="gap-2">
+            <Label className="text-white/60 font-mono text-xs">Ad Copy Variations</Label>
+            <button
+              onClick={addAdVariation}
+              className="inline-flex items-center gap-1 text-xs font-mono px-2 py-1 rounded-sm border transition-all border-white/[0.08] text-white/50 bg-white/[0.02] hover:bg-white/[0.06] hover:text-white"
+            >
               <Plus className="h-4 w-4" />
               Add Variation
-            </Button>
+            </button>
           </div>
 
           <div className="space-y-4">
             {campaignData.adCopyVariations.map((variation, index) => (
-              <div key={index} className="p-4 border border-gray-200 rounded-lg">
+              <div key={index} className="p-4 border border-white/[0.06] rounded-sm bg-white/[0.02]">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium text-gray-900">{variation.variant}</h4>
+                  <h4 className="font-mono font-medium text-white">{variation.variant}</h4>
                   {campaignData.adCopyVariations.length > 1 && (
-                    <Button
+                    <button
                       onClick={() => removeAdVariation(index)}
-                      size="sm"
-                      variant="ghost"
-                      className="text-red-600"
+                      className="p-1.5 text-xs font-mono rounded-sm transition-colors hover:bg-white/[0.04]"
+                      style={{ color: '#FF4444' }}
                     >
                       <X className="h-4 w-4" />
-                    </Button>
+                    </button>
                   )}
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-sm">Ad Copy</Label>
+                    <Label className="text-white/60 font-mono text-xs">Ad Copy</Label>
                     <Textarea
                       placeholder="Enter ad copy"
                       value={variation.copy}
                       onChange={(e) => updateAdVariation(index, "copy", e.target.value)}
                       rows={3}
+                      className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 rounded-sm font-mono mt-1.5"
                     />
                   </div>
                   <div>
-                    <Label className="text-sm">Call to Action</Label>
+                    <Label className="text-white/60 font-mono text-xs">Call to Action</Label>
                     <Input
                       placeholder="e.g., Shop Now, Learn More"
                       value={variation.cta}
                       onChange={(e) => updateAdVariation(index, "cta", e.target.value)}
+                      className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 rounded-sm font-mono mt-1.5"
                     />
                   </div>
                 </div>
@@ -186,21 +198,33 @@ export function CampaignBuilder({ onSave, onCancel }: CampaignBuilderProps) {
         </div>
 
         {/* AI Generate Button */}
-        <Button
-          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 gap-2"
+        <button
+          className="w-full flex items-center justify-center gap-2 py-3 text-sm font-mono rounded-sm border transition-all"
+          style={{
+            color: '#FF00FF',
+            backgroundColor: 'rgba(255,0,255,0.08)',
+            borderColor: 'rgba(255,0,255,0.25)',
+          }}
         >
           <Sparkles className="h-5 w-5" />
           AI Generate Campaign Content
-        </Button>
+        </button>
 
         {/* Actions */}
-        <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
-          <Button onClick={() => onSave?.(campaignData)} className="flex-1">
+        <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
+          <button
+            onClick={() => onSave?.(campaignData)}
+            className="flex-1 py-2 text-sm font-mono rounded-sm border transition-all"
+            style={{ color: '#00F5FF', backgroundColor: 'rgba(0,245,255,0.08)', borderColor: 'rgba(0,245,255,0.25)' }}
+          >
             Save Campaign
-          </Button>
-          <Button onClick={onCancel} variant="outline" className="flex-1">
+          </button>
+          <button
+            onClick={onCancel}
+            className="flex-1 py-2 text-sm font-mono rounded-sm border border-white/[0.08] text-white/50 hover:text-white hover:border-white/[0.15] transition-all"
+          >
             Cancel
-          </Button>
+          </button>
         </div>
       </div>
     </div>

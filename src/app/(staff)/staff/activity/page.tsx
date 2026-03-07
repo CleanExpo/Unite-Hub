@@ -54,10 +54,10 @@ export default async function StaffActivityPage() {
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-100">
+            <h1 className="text-3xl font-bold text-white font-mono">
               Activity Log
             </h1>
-            <p className="text-gray-400 mt-2">
+            <p className="text-white/40 mt-2 font-mono text-sm">
               View recent activity and system events
             </p>
           </div>
@@ -78,8 +78,8 @@ export default async function StaffActivityPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card variant="glass">
           <div className="p-4">
-            <p className="text-sm text-gray-400">Today</p>
-            <p className="text-2xl font-bold text-gray-100 mt-1">
+            <p className="text-sm text-white/40 font-mono">Today</p>
+            <p className="text-2xl font-bold text-white mt-1 font-mono">
               {logs.filter((log) => {
                 const logDate = new Date(log.timestamp).toDateString();
                 const today = new Date().toDateString();
@@ -90,24 +90,24 @@ export default async function StaffActivityPage() {
         </Card>
         <Card variant="glass">
           <div className="p-4">
-            <p className="text-sm text-gray-400">This Week</p>
-            <p className="text-2xl font-bold text-gray-100 mt-1">
+            <p className="text-sm text-white/40 font-mono">This Week</p>
+            <p className="text-2xl font-bold text-white mt-1 font-mono">
               {logs.length}
             </p>
           </div>
         </Card>
         <Card variant="glass">
           <div className="p-4">
-            <p className="text-sm text-gray-400">Tasks Completed</p>
-            <p className="text-2xl font-bold text-green-400 mt-1">
+            <p className="text-sm text-white/40 font-mono">Tasks Completed</p>
+            <p className="text-2xl font-bold text-[#00FF88] mt-1 font-mono">
               {logs.filter((log) => log.action === 'task_completed').length}
             </p>
           </div>
         </Card>
         <Card variant="glass">
           <div className="p-4">
-            <p className="text-sm text-gray-400">Projects Updated</p>
-            <p className="text-2xl font-bold text-blue-400 mt-1">
+            <p className="text-sm text-white/40 font-mono">Projects Updated</p>
+            <p className="text-2xl font-bold text-[#00F5FF] mt-1 font-mono">
               {logs.filter((log) => log.action === 'project_updated').length}
             </p>
           </div>
@@ -117,7 +117,7 @@ export default async function StaffActivityPage() {
       {/* Activity timeline */}
       <Card>
         <div className="p-6">
-          <h2 className="text-xl font-semibold text-gray-100 mb-6">
+          <h2 className="text-xl font-semibold text-white mb-6 font-mono">
             Recent Activity
           </h2>
 
@@ -126,16 +126,16 @@ export default async function StaffActivityPage() {
               <div
                 key={log.id}
                 className={`flex items-start space-x-4 pb-4 ${
-                  index !== logs.length - 1 ? 'border-b border-gray-800' : ''
+                  index !== logs.length - 1 ? 'border-b border-white/[0.06]' : ''
                 }`}
               >
                 {/* Timeline dot */}
                 <div className="flex flex-col items-center">
-                  <div className="p-2 bg-gray-800 rounded-full">
-                    <Activity className="h-4 w-4 text-gray-400" />
+                  <div className="p-2 bg-white/[0.04] border border-white/[0.06] rounded-sm">
+                    <Activity className="h-4 w-4 text-white/40" />
                   </div>
                   {index !== logs.length - 1 && (
-                    <div className="w-px h-full bg-gray-800 mt-2" />
+                    <div className="w-px h-full bg-white/[0.06] mt-2" />
                   )}
                 </div>
 
@@ -146,7 +146,7 @@ export default async function StaffActivityPage() {
                       <Badge variant={getActionVariant(log.action) as any}>
                         {getActionLabel(log.action)}
                       </Badge>
-                      <span className="text-sm text-gray-400">
+                      <span className="text-sm text-white/40 font-mono">
                         {formatTimestamp(log.timestamp)}
                       </span>
                     </div>
@@ -154,8 +154,8 @@ export default async function StaffActivityPage() {
 
                   {/* Metadata */}
                   {log.metadata && (
-                    <div className="mt-2 p-3 bg-gray-800/50 rounded-lg">
-                      <pre className="text-xs text-gray-300 overflow-x-auto">
+                    <div className="mt-2 p-3 bg-white/[0.02] border border-white/[0.06] rounded-sm">
+                      <pre className="text-xs text-white/60 overflow-x-auto font-mono">
                         {JSON.stringify(log.metadata, null, 2)}
                       </pre>
                     </div>
@@ -171,8 +171,8 @@ export default async function StaffActivityPage() {
       {logs.length === 0 && (
         <Card>
           <div className="p-12 text-center">
-            <Activity className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">
+            <Activity className="h-12 w-12 text-white/20 mx-auto mb-4" />
+            <p className="text-white/40 font-mono text-sm">
               No activity recorded yet.
             </p>
           </div>

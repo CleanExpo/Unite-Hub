@@ -34,15 +34,15 @@ export default function StaffLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Card */}
-        <div className="bg-white rounded-sm shadow-2xl p-8">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-[#00F5FF]/10 border border-[#00F5FF]/20 rounded-sm flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-8 h-8 text-white"
+                className="w-8 h-8 text-[#00F5FF]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -55,11 +55,11 @@ export default function StaffLoginPage() {
                 />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-mono font-bold text-white/90 mb-2">
               Staff Login
             </h1>
-            <p className="text-gray-600 text-sm">
-              Phase 1 - New Supabase Authentication
+            <p className="text-white/40 text-sm font-mono">
+              Phase 1 — New Supabase Authentication
             </p>
           </div>
 
@@ -67,8 +67,8 @@ export default function StaffLoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-sm p-4">
-                <p className="text-sm text-red-800">{error}</p>
+              <div className="bg-[#FF4444]/10 border border-[#FF4444]/30 rounded-sm p-4">
+                <p className="text-sm text-[#FF4444]">{error}</p>
               </div>
             )}
 
@@ -76,7 +76,7 @@ export default function StaffLoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-mono font-medium text-white/50 mb-2"
               >
                 Email Address
               </label>
@@ -86,7 +86,7 @@ export default function StaffLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                 placeholder="your-email@unite-group.in"
               />
             </div>
@@ -95,7 +95,7 @@ export default function StaffLoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-mono font-medium text-white/50 mb-2"
               >
                 Password
               </label>
@@ -105,7 +105,7 @@ export default function StaffLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                 placeholder="••••••••"
               />
             </div>
@@ -114,12 +114,12 @@ export default function StaffLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg"
+              className="w-full bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-5 py-2.5 hover:bg-[#00F5FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#050505]"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -147,26 +147,26 @@ export default function StaffLoginPage() {
           </form>
 
           {/* Divider */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="mt-8 pt-6 border-t border-white/[0.06]">
             <button
               onClick={() => router.push('/login')}
-              className="w-full text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              className="w-full text-sm font-mono text-white/40 hover:text-[#00F5FF] transition-colors"
             >
               ← Back to old authentication
             </button>
           </div>
 
           {/* Info Banner */}
-          <div className="mt-6 bg-blue-50 rounded-sm p-4">
-            <p className="text-xs text-blue-800">
-              <strong>Phase 1 Testing:</strong> This is the new staff authentication
-              system. The old system at /login continues to work independently.
+          <div className="mt-6 bg-[#00F5FF]/[0.04] border border-[#00F5FF]/[0.12] rounded-sm p-4">
+            <p className="text-xs font-mono text-[#00F5FF]/70">
+              <strong className="text-[#00F5FF]">Phase 1 Testing:</strong> This is the new staff
+              authentication system. The old system at /login continues to work independently.
             </p>
           </div>
         </div>
 
         {/* Footer Note */}
-        <p className="text-center text-sm text-gray-400 mt-6">
+        <p className="text-center text-sm font-mono text-white/30 mt-6">
           Feature-flagged deployment • Safe parallel architecture
         </p>
       </div>

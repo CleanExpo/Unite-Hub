@@ -4,9 +4,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { AlertCircle, Loader2, Mail, Lock, User, Sparkles, ArrowRight, Shield, Zap, Users, Check } from "lucide-react";
 
 export default function RegisterPage() {
@@ -73,32 +70,29 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-12 flex-col justify-between relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/5"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
-
+      <div className="hidden lg:flex lg:w-1/2 bg-[#050505] border-r border-white/[0.06] p-12 flex-col justify-between relative overflow-hidden">
         {/* Logo */}
         <div className="relative z-10">
           <Link href="/" className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-sm bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
-              <Sparkles className="h-7 w-7 text-white" />
+            <div className="h-12 w-12 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 flex items-center justify-center">
+              <Sparkles className="h-7 w-7 text-[#00F5FF]" />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-2xl font-mono font-bold text-white/90">
                 Unite-Group
               </span>
-              <span className="text-sm text-slate-400">AI-Powered CRM</span>
+              <span className="text-sm font-mono text-white/40">AI-Powered CRM</span>
             </div>
           </Link>
         </div>
 
         {/* Content */}
         <div className="relative z-10 space-y-8">
-          <h1 className="text-5xl font-bold text-white leading-tight">
+          <h1 className="text-5xl font-mono font-bold text-white/90 leading-tight">
             Start your journey to
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> smarter customer relationships</span>
+            <span className="text-[#00F5FF]"> smarter customer relationships</span>
           </h1>
-          <p className="text-xl text-slate-300 leading-relaxed">
+          <p className="text-xl text-white/50 leading-relaxed">
             Join thousands of businesses using AI to transform how they manage customers.
           </p>
 
@@ -111,69 +105,68 @@ export default function RegisterPage() {
               "24/7 support from our team"
             ].map((benefit, index) => (
               <div key={index} className="flex items-center gap-3">
-                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/10">
-                  <Check className="h-4 w-4 text-blue-400" />
+                <div className="h-6 w-6 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 flex items-center justify-center flex-shrink-0">
+                  <Check className="h-4 w-4 text-[#00F5FF]" />
                 </div>
-                <p className="text-slate-300">{benefit}</p>
+                <p className="text-white/60 font-mono text-sm">{benefit}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Footer */}
-        <div className="relative z-10 flex items-center justify-between text-sm text-slate-400">
+        <div className="relative z-10 flex items-center justify-between text-sm font-mono text-white/30">
           <span>© 2025 Unite-Group</span>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <a href="https://help.unite-group.in" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">Help</a>
+            <Link href="/privacy" className="hover:text-[#00F5FF] transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-[#00F5FF] transition-colors">Terms</Link>
+            <a href="https://help.unite-group.in" className="hover:text-[#00F5FF] transition-colors" target="_blank" rel="noopener noreferrer">Help</a>
           </div>
         </div>
       </div>
 
       {/* Right Side - Register Form */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-white">
+      <div className="flex-1 flex items-center justify-center p-6 bg-[#050505]">
         <div className="w-full max-w-md space-y-8">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <div className="h-10 w-10 rounded-sm bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
-              <Sparkles className="h-6 w-6 text-white" />
+            <div className="h-10 w-10 rounded-sm bg-[#00F5FF]/10 border border-[#00F5FF]/20 flex items-center justify-center">
+              <Sparkles className="h-6 w-6 text-[#00F5FF]" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-mono font-bold text-white/90">
               Unite-Group
             </span>
           </div>
 
           {/* Header */}
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-slate-900">Create your account</h2>
-            <p className="text-slate-600 mt-2">Start your 14-day free trial today</p>
+            <h2 className="text-3xl font-mono font-bold text-white/90">Create your account</h2>
+            <p className="text-white/40 mt-2 font-mono text-sm">Start your 14-day free trial today</p>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-sm flex items-center gap-3 text-sm text-red-700">
+            <div className="p-4 bg-[#FF4444]/10 border border-[#FF4444]/30 rounded-sm flex items-center gap-3 text-sm text-[#FF4444]">
               <AlertCircle className="h-5 w-5 flex-shrink-0" />
-              <span>{error}</span>
+              <span className="font-mono">{error}</span>
             </div>
           )}
 
           {/* Google Sign Up Button */}
-          <Button
+          <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={googleLoading || loading}
-            className="w-full h-12 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-200 hover:border-slate-300 font-semibold transition-all shadow-sm hover:shadow-md"
-            variant="outline"
+            className="w-full h-12 bg-white/[0.04] hover:bg-white/[0.06] text-white/70 border border-white/[0.06] hover:border-white/[0.12] font-mono text-sm font-semibold rounded-sm transition-colors flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {googleLoading ? (
               <>
-                <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                <Loader2 className="h-5 w-5 animate-spin" />
                 Signing up with Google...
               </>
             ) : (
               <>
-                <svg className="h-5 w-5 mr-3" viewBox="0 0 24 24">
+                <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -182,31 +175,31 @@ export default function RegisterPage() {
                 Continue with Google
               </>
             )}
-          </Button>
+          </button>
 
           {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200"></div>
+              <div className="w-full border-t border-white/[0.06]"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-slate-500 font-medium">Or continue with email</span>
+              <span className="px-4 bg-[#050505] text-white/30 font-mono">Or continue with email</span>
             </div>
           </div>
 
           {/* Register Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-sm font-semibold text-slate-700">Full Name</Label>
+              <label htmlFor="fullName" className="block text-sm font-mono font-medium text-white/50">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-                <Input
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/20" />
+                <input
                   id="fullName"
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="John Doe"
-                  className="pl-11 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                   required
                   disabled={loading}
                   autoComplete="name"
@@ -215,16 +208,16 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-semibold text-slate-700">Email Address</Label>
+              <label htmlFor="email" className="block text-sm font-mono font-medium text-white/50">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-                <Input
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/20" />
+                <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="pl-11 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                   required
                   disabled={loading}
                   autoComplete="email"
@@ -233,35 +226,35 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-semibold text-slate-700">Password</Label>
+              <label htmlFor="password" className="block text-sm font-mono font-medium text-white/50">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-                <Input
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/20" />
+                <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-11 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                   required
                   disabled={loading}
                   autoComplete="new-password"
                 />
               </div>
-              <p className="text-xs text-slate-500">Must be at least 8 characters</p>
+              <p className="text-xs font-mono text-white/30">Must be at least 8 characters</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-sm font-semibold text-slate-700">Confirm Password</Label>
+              <label htmlFor="confirmPassword" className="block text-sm font-mono font-medium text-white/50">Confirm Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-                <Input
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/20" />
+                <input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-11 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full pl-11 pr-4 py-3 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white/90 placeholder:text-white/20 focus:border-[#00F5FF]/50 outline-none transition-colors font-mono text-sm"
                   required
                   disabled={loading}
                   autoComplete="new-password"
@@ -274,49 +267,49 @@ export default function RegisterPage() {
                 id="terms"
                 type="checkbox"
                 required
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded mt-1"
+                className="h-4 w-4 accent-[#00F5FF] border-white/[0.06] mt-1"
               />
-              <label htmlFor="terms" className="ml-2 text-sm text-slate-600">
+              <label htmlFor="terms" className="ml-2 text-sm font-mono text-white/40">
                 I agree to the{" "}
-                <Link href="/terms" className="text-blue-600 hover:text-blue-700 font-semibold">
+                <Link href="/terms" className="text-[#00F5FF] hover:text-[#00F5FF]/80 font-semibold">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-blue-600 hover:text-blue-700 font-semibold">
+                <Link href="/privacy" className="text-[#00F5FF] hover:text-[#00F5FF]/80 font-semibold">
                   Privacy Policy
                 </Link>
               </label>
             </div>
 
-            <Button
+            <button
               type="submit"
-              className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 transition-all"
+              className="w-full bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-5 py-2.5 hover:bg-[#00F5FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Creating account...
                 </>
               ) : (
                 <>
                   Create Account
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="h-5 w-5" />
                 </>
               )}
-            </Button>
+            </button>
           </form>
 
           {/* Sign In Link */}
-          <div className="text-center text-sm">
-            <span className="text-slate-600">Already have an account? </span>
-            <Link href="/login" className="text-blue-600 hover:text-blue-700 font-semibold">
+          <div className="text-center text-sm font-mono">
+            <span className="text-white/40">Already have an account? </span>
+            <Link href="/login" className="text-[#00F5FF] hover:text-[#00F5FF]/80 font-semibold">
               Sign in
             </Link>
           </div>
 
           {/* Trust Badge */}
-          <div className="flex items-center justify-center gap-2 text-xs text-slate-500 pt-4">
+          <div className="flex items-center justify-center gap-2 text-xs font-mono text-white/30 pt-4">
             <Shield className="h-4 w-4" />
             <span>Protected by enterprise-grade security</span>
           </div>

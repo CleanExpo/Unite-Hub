@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from "react";
 import { DealCard, type Deal } from "./DealCard";
-import { Button } from "@/components/ui/button";
 import { Plus, DollarSign } from "lucide-react";
 
 export interface PipelineStage {
@@ -79,32 +78,32 @@ export function PipelineBoard({ stages, deals, onDealMove, onAddDeal }: Pipeline
           return (
             <div
               key={stage.id}
-              className={`flex-shrink-0 w-72 flex flex-col rounded-lg transition-colors duration-200 ${
+              className={`flex-shrink-0 w-72 flex flex-col rounded-sm transition-colors duration-200 ${
                 dragOverStage === stage.id
-                  ? "bg-slate-700/40 ring-2 ring-blue-500/50"
-                  : "bg-slate-800/30"
+                  ? "bg-white/[0.04] ring-2 ring-[#00F5FF]/30"
+                  : "bg-white/[0.02]"
               }`}
               onDragOver={(e) => handleDragOver(e, stage.id)}
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, stage.id)}
             >
               {/* Column Header */}
-              <div className="p-3 border-b border-slate-700/50">
+              <div className="p-3 border-b border-white/[0.06]">
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
                     <div
-                      className="w-3 h-3 rounded-full"
+                      className="w-2 h-2 rounded-sm"
                       style={{ backgroundColor: stage.color }}
                     />
-                    <h3 className="text-sm font-semibold text-white">{stage.name}</h3>
+                    <h3 className="text-sm font-semibold font-mono text-white">{stage.name}</h3>
                   </div>
-                  <span className="text-xs text-slate-400 bg-slate-700/50 px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-mono text-white/40 bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 rounded-sm">
                     {stageDeals.length}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 text-xs text-slate-500">
+                <div className="flex items-center gap-1 text-xs text-white/30">
                   <DollarSign className="w-3 h-3" />
-                  <span>{formatCurrency(stageValue)}</span>
+                  <span className="font-mono">{formatCurrency(stageValue)}</span>
                 </div>
               </div>
 
@@ -119,7 +118,7 @@ export function PipelineBoard({ stages, deals, onDealMove, onAddDeal }: Pipeline
                 ))}
 
                 {stageDeals.length === 0 && (
-                  <div className="text-center py-8 text-slate-600 text-sm">
+                  <div className="text-center py-8 text-white/20 text-sm font-mono">
                     No deals
                   </div>
                 )}
@@ -127,15 +126,15 @@ export function PipelineBoard({ stages, deals, onDealMove, onAddDeal }: Pipeline
 
               {/* Add Deal Button */}
               {!stage.is_won && !stage.is_lost && (
-                <div className="p-2 border-t border-slate-700/30">
-                  <Button
-                    variant="ghost"
-                    className="w-full text-slate-500 hover:text-white hover:bg-slate-700/50 h-8 text-xs"
+                <div className="p-2 border-t border-white/[0.04]">
+                  <button
+                    className="w-full text-white/30 hover:text-white/70 hover:bg-white/[0.04] h-8 text-xs font-mono
+                               flex items-center justify-center gap-1 rounded-sm transition-colors duration-200"
                     onClick={() => onAddDeal(stage.id)}
                   >
-                    <Plus className="w-3 h-3 mr-1" />
+                    <Plus className="w-3 h-3" />
                     Add Deal
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>

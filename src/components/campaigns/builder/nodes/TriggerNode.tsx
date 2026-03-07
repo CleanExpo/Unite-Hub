@@ -22,13 +22,15 @@ interface TriggerNodeData {
 }
 
 const triggerIcons = {
-  manual: Play,
-  new_contact: Play,
-  tag: Tag,
+  manual:          Play,
+  new_contact:     Play,
+  tag:             Tag,
   score_threshold: TrendingUp,
-  webhook: Webhook,
-  scheduled: Calendar,
+  webhook:         Webhook,
+  scheduled:       Calendar,
 };
+
+const ACCENT = '#00FF88';
 
 export const TriggerNode = memo(({ data, selected }: NodeProps<TriggerNodeData>) => {
   const triggerType = data.config?.trigger_type || 'manual';
@@ -36,20 +38,23 @@ export const TriggerNode = memo(({ data, selected }: NodeProps<TriggerNodeData>)
 
   return (
     <div
-      className={`
-        relative px-4 py-3 rounded-lg border-2 bg-white shadow-md min-w-[200px]
-        ${selected ? 'border-blue-500 shadow-lg' : 'border-emerald-500'}
-        transition-all duration-200 hover:shadow-lg
-      `}
+      className="relative px-4 py-3 rounded-sm min-w-[200px] bg-white/[0.04] transition-all duration-200"
+      style={{
+        border: `2px solid ${selected ? '#00F5FF' : ACCENT}`,
+        boxShadow: selected ? `0 0 0 1px #00F5FF40` : undefined,
+      }}
     >
-      {/* Icon */}
-      <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-md">
-        <Icon className="w-4 h-4 text-white" />
+      {/* Icon badge */}
+      <div
+        className="absolute -top-3 -left-3 w-8 h-8 rounded-sm flex items-center justify-center"
+        style={{ backgroundColor: ACCENT }}
+      >
+        <Icon className="w-4 h-4 text-[#050505]" />
       </div>
 
       {/* Content */}
-      <div className="text-sm font-semibold text-gray-900 mb-1">{data.label}</div>
-      <div className="text-xs text-gray-500 capitalize">
+      <div className="font-mono text-sm font-semibold text-white mb-1">{data.label}</div>
+      <div className="font-mono text-xs text-white/40 capitalize">
         {triggerType.replace('_', ' ')}
       </div>
 
@@ -57,7 +62,8 @@ export const TriggerNode = memo(({ data, selected }: NodeProps<TriggerNodeData>)
       <Handle
         type="source"
         position={Position.Bottom}
-        className="w-3 h-3 !bg-emerald-500 !border-2 !border-white"
+        style={{ background: ACCENT, borderColor: '#050505' }}
+        className="w-3 h-3 !border-2"
       />
     </div>
   );

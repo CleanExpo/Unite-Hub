@@ -13,16 +13,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import {
   ThumbsUp,
   ThumbsDown,
-  Eye,
   BarChart3,
   Target,
   Zap,
@@ -76,7 +72,6 @@ export function CampaignDetailedView({
       setBlueprint(data.blueprint);
       setRevisions(data.revisions || []);
 
-      // Auto-select first channel
       if (data.blueprint.channels && Object.keys(data.blueprint.channels).length > 0) {
         setSelectedChannel(Object.keys(data.blueprint.channels)[0]);
       }
@@ -116,11 +111,7 @@ export function CampaignDetailedView({
       if (onApprove) onApprove(blueprintId!, channel);
     } catch (error) {
       console.error('Error approving channel:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to approve channel',
-        variant: 'destructive',
-      });
+      toast({ title: 'Error', description: 'Failed to approve channel', variant: 'destructive' });
     }
   };
 
@@ -140,19 +131,11 @@ export function CampaignDetailedView({
       const data = await response.json();
       setBlueprint(data.blueprint);
 
-      toast({
-        title: 'Blueprint Approved',
-        description: 'All channels have been approved',
-      });
-
+      toast({ title: 'Blueprint Approved', description: 'All channels have been approved' });
       if (onApprove) onApprove(blueprintId!);
     } catch (error) {
       console.error('Error approving blueprint:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to approve blueprint',
-        variant: 'destructive',
-      });
+      toast({ title: 'Error', description: 'Failed to approve blueprint', variant: 'destructive' });
     }
   };
 
@@ -184,32 +167,43 @@ export function CampaignDetailedView({
       const data = await response.json();
       setBlueprint(data.blueprint);
 
-      toast({
-        title: 'Blueprint Rejected',
-        description: 'The blueprint has been rejected',
-      });
-
+      toast({ title: 'Blueprint Rejected', description: 'The blueprint has been rejected' });
       if (onReject) onReject(blueprintId!, rejectReason);
       onClose();
     } catch (error) {
       console.error('Error rejecting blueprint:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to reject blueprint',
-        variant: 'destructive',
-      });
+      toast({ title: 'Error', description: 'Failed to reject blueprint', variant: 'destructive' });
     }
   };
 
   const getChannelApprovalBadge = (channel: string) => {
     const approval = blueprint?.channel_approvals?.[channel];
     if (approval === 'approved')
-      return <Badge variant="default"><CheckCircle className="h-3 w-3 mr-1" />Approved</Badge>;
+      return (
+        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded-sm border"
+          style={{ color: '#00FF88', backgroundColor: 'rgba(0,255,136,0.10)', borderColor: 'rgba(0,255,136,0.25)' }}>
+          <CheckCircle className="h-3 w-3" />Approved
+        </span>
+      );
     if (approval === 'rejected')
-      return <Badge variant="destructive"><ThumbsDown className="h-3 w-3 mr-1" />Rejected</Badge>;
+      return (
+        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded-sm border"
+          style={{ color: '#FF4444', backgroundColor: 'rgba(255,68,68,0.10)', borderColor: 'rgba(255,68,68,0.25)' }}>
+          <ThumbsDown className="h-3 w-3" />Rejected
+        </span>
+      );
     if (approval === 'pending')
-      return <Badge variant="outline"><Clock className="h-3 w-3 mr-1" />Pending</Badge>;
-    return <Badge variant="secondary">Draft</Badge>;
+      return (
+        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded-sm border"
+          style={{ color: '#FFB800', backgroundColor: 'rgba(255,184,0,0.10)', borderColor: 'rgba(255,184,0,0.25)' }}>
+          <Clock className="h-3 w-3" />Pending
+        </span>
+      );
+    return (
+      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm border border-white/[0.08] text-white/40 bg-white/[0.03]">
+        Draft
+      </span>
+    );
   };
 
   const getChannelContent = (channel: string) => {
@@ -223,128 +217,111 @@ export function CampaignDetailedView({
     return null;
   };
 
+  const approvalStatusBadge = () => {
+    const s = blueprint?.approval_status;
+    if (s === 'approved')
+      return <span className="text-xs font-mono px-2 py-0.5 rounded-sm border" style={{ color: '#00FF88', backgroundColor: 'rgba(0,255,136,0.10)', borderColor: 'rgba(0,255,136,0.25)' }}>{s.replace(/_/g, ' ')}</span>;
+    if (s === 'rejected')
+      return <span className="text-xs font-mono px-2 py-0.5 rounded-sm border" style={{ color: '#FF4444', backgroundColor: 'rgba(255,68,68,0.10)', borderColor: 'rgba(255,68,68,0.25)' }}>{s.replace(/_/g, ' ')}</span>;
+    return <span className="text-xs font-mono px-2 py-0.5 rounded-sm border border-white/[0.08] text-white/40 bg-white/[0.03]">{s?.replace(/_/g, ' ')}</span>;
+  };
+
   if (!blueprint && !loading) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto bg-[#050505] border border-white/[0.08] rounded-sm text-white">
         <DialogHeader>
           <div className="flex items-start justify-between">
             <div>
-              <DialogTitle className="text-2xl">{blueprint?.blueprint_title}</DialogTitle>
-              <DialogDescription className="mt-1">
+              <DialogTitle className="text-2xl font-mono text-white">{blueprint?.blueprint_title}</DialogTitle>
+              <DialogDescription className="mt-1 font-mono text-white/40">
                 {blueprint?.brand_slug.replace(/_/g, ' ')} •{' '}
                 {blueprint?.blueprint_type.replace(/_/g, ' ')}
               </DialogDescription>
             </div>
-            <Badge
-              variant={
-                blueprint?.approval_status === 'approved'
-                  ? 'default'
-                  : blueprint?.approval_status === 'rejected'
-                  ? 'destructive'
-                  : 'secondary'
-              }
-            >
-              {blueprint?.approval_status.replace(/_/g, ' ')}
-            </Badge>
+            {approvalStatusBadge()}
           </div>
         </DialogHeader>
 
         {loading ? (
-          <div className="py-12 text-center text-muted-foreground">Loading blueprint...</div>
+          <div className="py-12 text-center font-mono text-white/30">Loading blueprint...</div>
         ) : (
           <Tabs defaultValue="overview" className="mt-4">
-            <TabsList className="grid grid-cols-5 w-full">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="content">Content</TabsTrigger>
-              <TabsTrigger value="visuals">Visuals</TabsTrigger>
-              <TabsTrigger value="scoring">Scoring</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
+            <TabsList className="grid grid-cols-5 w-full bg-white/[0.03] border border-white/[0.06] rounded-sm p-1">
+              {["overview","content","visuals","scoring","history"].map((tab) => (
+                <TabsTrigger
+                  key={tab}
+                  value={tab}
+                  className="font-mono text-xs text-white/50 data-[state=active]:text-white data-[state=active]:bg-white/[0.08] rounded-sm capitalize"
+                >
+                  {tab}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-4">
               {/* Scoring Summary */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5" />
-                    Campaign Scores
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-4 gap-4 text-center">
-                    <div>
-                      <p className="text-3xl font-bold text-green-600">
-                        {blueprint?.priority_score?.toFixed(1) || 'N/A'}
-                      </p>
-                      <p className="text-sm text-muted-foreground">Priority</p>
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                <h4 className="flex items-center gap-2 text-sm font-mono font-semibold text-white mb-4">
+                  <BarChart3 className="h-5 w-5" style={{ color: '#00F5FF' }} />
+                  Campaign Scores
+                </h4>
+                <div className="grid grid-cols-4 gap-4 text-center">
+                  {[
+                    { label: 'Priority', value: blueprint?.priority_score?.toFixed(1) || 'N/A', color: '#00FF88' },
+                    { label: 'Impact',   value: blueprint?.impact_score || 'N/A',                color: '#00F5FF' },
+                    { label: 'Difficulty',value: blueprint?.difficulty_score || 'N/A',           color: '#FFB800' },
+                    { label: 'Effort',   value: blueprint?.effort_score || 'N/A',                color: '#FF00FF' },
+                  ].map(({ label, value, color }) => (
+                    <div key={label}>
+                      <p className="text-3xl font-bold font-mono" style={{ color }}>{value}</p>
+                      <p className="text-sm font-mono text-white/30">{label}</p>
                     </div>
-                    <div>
-                      <p className="text-3xl font-bold">{blueprint?.impact_score || 'N/A'}</p>
-                      <p className="text-sm text-muted-foreground">Impact</p>
-                    </div>
-                    <div>
-                      <p className="text-3xl font-bold">{blueprint?.difficulty_score || 'N/A'}</p>
-                      <p className="text-sm text-muted-foreground">Difficulty</p>
-                    </div>
-                    <div>
-                      <p className="text-3xl font-bold">{blueprint?.effort_score || 'N/A'}</p>
-                      <p className="text-sm text-muted-foreground">Effort</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  ))}
+                </div>
+              </div>
 
               {/* Keywords & Objective */}
               <div className="grid grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Target className="h-5 w-5" />
-                      Primary Objective
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="capitalize">{blueprint?.primary_objective?.replace(/_/g, ' ')}</p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Zap className="h-5 w-5" />
-                      Keywords
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {blueprint?.topic_keywords?.map((keyword: string) => (
-                        <Badge key={keyword} variant="outline">
-                          {keyword}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                  <h4 className="flex items-center gap-2 text-sm font-mono font-semibold text-white mb-3">
+                    <Target className="h-5 w-5" style={{ color: '#00F5FF' }} />
+                    Primary Objective
+                  </h4>
+                  <p className="capitalize font-mono text-white/70">
+                    {blueprint?.primary_objective?.replace(/_/g, ' ')}
+                  </p>
+                </div>
+                <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                  <h4 className="flex items-center gap-2 text-sm font-mono font-semibold text-white mb-3">
+                    <Zap className="h-5 w-5" style={{ color: '#FFB800' }} />
+                    Keywords
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {blueprint?.topic_keywords?.map((keyword: string) => (
+                      <span key={keyword} className="text-xs font-mono px-2 py-0.5 rounded-sm border border-white/[0.08] text-white/50 bg-white/[0.03]">
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Uncertainty Notes */}
               {blueprint?.uncertainty_notes && (
-                <Card className="border-orange-200 bg-orange-50 dark:bg-orange-950">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-orange-800 dark:text-orange-200">
-                      <AlertCircle className="h-5 w-5" />
-                      Review Required
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-orange-700 dark:text-orange-300">
-                      {blueprint.uncertainty_notes}
-                    </p>
-                  </CardContent>
-                </Card>
+                <div className="rounded-sm border p-4"
+                  style={{ backgroundColor: 'rgba(255,184,0,0.06)', borderColor: 'rgba(255,184,0,0.2)' }}>
+                  <h4 className="flex items-center gap-2 text-sm font-mono font-semibold mb-2"
+                    style={{ color: '#FFB800' }}>
+                    <AlertCircle className="h-5 w-5" />
+                    Review Required
+                  </h4>
+                  <p className="text-sm font-mono" style={{ color: '#FFB800', opacity: 0.8 }}>
+                    {blueprint.uncertainty_notes}
+                  </p>
+                </div>
               )}
             </TabsContent>
 
@@ -353,304 +330,291 @@ export function CampaignDetailedView({
               <div className="grid grid-cols-4 gap-2 mb-4">
                 {blueprint?.channels &&
                   Object.keys(blueprint.channels).map((channel) => (
-                    <Button
+                    <button
                       key={channel}
-                      variant={selectedChannel === channel ? 'default' : 'outline'}
-                      size="sm"
                       onClick={() => setSelectedChannel(channel)}
-                      className="justify-between"
+                      className={`flex items-center justify-between p-2 text-xs font-mono rounded-sm border transition-all ${
+                        selectedChannel === channel
+                          ? 'border-[#00F5FF]/40 bg-[#00F5FF]/10 text-[#00F5FF]'
+                          : 'border-white/[0.06] bg-white/[0.02] text-white/50 hover:bg-white/[0.04]'
+                      }`}
                     >
-                      <span className="text-xs truncate">
-                        {channel.replace(/_/g, ' ')}
-                      </span>
+                      <span className="truncate">{channel.replace(/_/g, ' ')}</span>
                       {getChannelApprovalBadge(channel)}
-                    </Button>
+                    </button>
                   ))}
               </div>
 
               {selectedChannel && (
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between">
+                <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                  <div className="flex items-center justify-between mb-4">
                     <div>
-                      <CardTitle>{selectedChannel.replace(/_/g, ' ')}</CardTitle>
-                      <CardDescription>Draft content for review</CardDescription>
+                      <h4 className="font-mono font-semibold text-white">
+                        {selectedChannel.replace(/_/g, ' ')}
+                      </h4>
+                      <p className="text-xs font-mono text-white/30">Draft content for review</p>
                     </div>
                     {blueprint?.channel_approvals?.[selectedChannel] !== 'approved' && (
-                      <Button onClick={() => handleApproveChannel(selectedChannel)}>
-                        <ThumbsUp className="h-4 w-4 mr-2" />
+                      <button
+                        onClick={() => handleApproveChannel(selectedChannel)}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono rounded-sm border transition-all"
+                        style={{ color: '#00FF88', backgroundColor: 'rgba(0,255,136,0.10)', borderColor: 'rgba(0,255,136,0.25)' }}
+                      >
+                        <ThumbsUp className="h-4 w-4" />
                         Approve Channel
-                      </Button>
+                      </button>
                     )}
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+                  </div>
+                  <div className="space-y-4">
                     {(() => {
                       const content = getChannelContent(selectedChannel);
-                      if (!content) return <p className="text-muted-foreground">No content generated</p>;
+                      if (!content) return <p className="font-mono text-white/30">No content generated</p>;
 
                       return (
                         <>
                           {content.headline && (
                             <div>
-                              <p className="text-sm font-semibold text-muted-foreground">Headline</p>
-                              <p className="text-lg font-bold">{content.headline}</p>
+                              <p className="text-xs font-mono text-white/30 mb-1">Headline</p>
+                              <p className="text-lg font-bold font-mono text-white">{content.headline}</p>
                             </div>
                           )}
                           {content.hook && (
                             <div>
-                              <p className="text-sm font-semibold text-muted-foreground">Hook</p>
-                              <p>{content.hook}</p>
+                              <p className="text-xs font-mono text-white/30 mb-1">Hook</p>
+                              <p className="font-mono text-white/70">{content.hook}</p>
                             </div>
                           )}
                           {content.draft_content && (
                             <div>
-                              <p className="text-sm font-semibold text-muted-foreground">Content</p>
-                              <div className="prose dark:prose-invert max-w-none">
-                                <p className="whitespace-pre-wrap">{content.draft_content}</p>
-                              </div>
+                              <p className="text-xs font-mono text-white/30 mb-1">Content</p>
+                              <p className="whitespace-pre-wrap font-mono text-sm text-white/70">{content.draft_content}</p>
                             </div>
                           )}
                           {content.cta && (
                             <div>
-                              <p className="text-sm font-semibold text-muted-foreground">Call to Action</p>
-                              <p className="font-semibold">{content.cta}</p>
+                              <p className="text-xs font-mono text-white/30 mb-1">Call to Action</p>
+                              <p className="font-semibold font-mono text-white">{content.cta}</p>
                             </div>
                           )}
                           {content.hashtags && content.hashtags.length > 0 && (
                             <div>
-                              <p className="text-sm font-semibold text-muted-foreground">Hashtags</p>
+                              <p className="text-xs font-mono text-white/30 mb-1">Hashtags</p>
                               <div className="flex flex-wrap gap-1">
                                 {content.hashtags.map((tag: string) => (
-                                  <Badge key={tag} variant="secondary">
+                                  <span key={tag} className="text-xs font-mono px-2 py-0.5 rounded-sm border border-white/[0.08] text-white/40 bg-white/[0.03]">
                                     #{tag}
-                                  </Badge>
+                                  </span>
                                 ))}
                               </div>
                             </div>
                           )}
                           {content.word_count && (
-                            <div className="text-sm text-muted-foreground">
+                            <div className="text-sm font-mono text-white/30">
                               Word count: {content.word_count}
                             </div>
                           )}
                         </>
                       );
                     })()}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               )}
             </TabsContent>
 
             {/* Visuals Tab */}
             <TabsContent value="visuals" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <ImageIcon className="h-5 w-5" />
-                    Visual Concepts
-                  </CardTitle>
-                  <CardDescription>
-                    AI-generated visual concepts (placeholders pending VIF generation)
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {blueprint?.visual_concepts && blueprint.visual_concepts.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-4">
-                      {blueprint.visual_concepts.map((visual: any, index: number) => (
-                        <div key={index} className="border rounded-lg p-4 space-y-2">
-                          <Badge variant="outline">{visual.visual_type?.replace(/_/g, ' ')}</Badge>
-                          <p className="text-sm">{visual.description}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Dimensions: {visual.dimensions}
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                <h4 className="flex items-center gap-2 text-sm font-mono font-semibold text-white mb-1">
+                  <ImageIcon className="h-5 w-5" style={{ color: '#FF00FF' }} />
+                  Visual Concepts
+                </h4>
+                <p className="text-xs font-mono text-white/30 mb-4">
+                  AI-generated visual concepts (placeholders pending VIF generation)
+                </p>
+                {blueprint?.visual_concepts && blueprint.visual_concepts.length > 0 ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    {blueprint.visual_concepts.map((visual: any, index: number) => (
+                      <div key={index} className="border border-white/[0.06] rounded-sm p-4 space-y-2 bg-white/[0.02]">
+                        <span className="text-xs font-mono px-2 py-0.5 rounded-sm border border-white/[0.08] text-white/40">
+                          {visual.visual_type?.replace(/_/g, ' ')}
+                        </span>
+                        <p className="text-sm font-mono text-white/70">{visual.description}</p>
+                        <p className="text-xs font-mono text-white/30">
+                          Dimensions: {visual.dimensions}
+                        </p>
+                        {visual.vif_prompt_id && (
+                          <p className="text-xs font-mono text-white/30">
+                            VIF ID: {visual.vif_prompt_id}
                           </p>
-                          {visual.vif_prompt_id && (
-                            <p className="text-xs text-muted-foreground font-mono">
-                              VIF ID: {visual.vif_prompt_id}
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground">No visual concepts generated</p>
-                  )}
-                </CardContent>
-              </Card>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="font-mono text-white/30">No visual concepts generated</p>
+                )}
+              </div>
 
-              {/* SEO Recommendations */}
               {blueprint?.seo_recommendations && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>SEO Recommendations</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
+                <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                  <h4 className="text-sm font-mono font-semibold text-white mb-3">SEO Recommendations</h4>
+                  <div className="space-y-2 text-sm font-mono text-white/70">
                     <div>
-                      <span className="font-semibold">Primary Keyword:</span>{' '}
+                      <span className="text-white/40">Primary Keyword:</span>{' '}
                       {blueprint.seo_recommendations.primary_keyword}
                     </div>
                     {blueprint.seo_recommendations.secondary_keywords && (
                       <div>
-                        <span className="font-semibold">Secondary Keywords:</span>
+                        <span className="text-white/40">Secondary Keywords:</span>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {blueprint.seo_recommendations.secondary_keywords.map((kw: string) => (
-                            <Badge key={kw} variant="outline">
+                            <span key={kw} className="text-xs font-mono px-2 py-0.5 rounded-sm border border-white/[0.08] text-white/40 bg-white/[0.03]">
                               {kw}
-                            </Badge>
+                            </span>
                           ))}
                         </div>
                       </div>
                     )}
                     {blueprint.seo_recommendations.search_volume && (
                       <div>
-                        <span className="font-semibold">Search Volume:</span>{' '}
+                        <span className="text-white/40">Search Volume:</span>{' '}
                         {blueprint.seo_recommendations.search_volume}/month
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               )}
             </TabsContent>
 
             {/* Scoring Tab */}
             <TabsContent value="scoring" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Scoring Breakdown</CardTitle>
-                  <CardDescription>
-                    Priority = (Impact × 10) / (Difficulty + Effort)
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold">Impact Score</span>
-                      <Badge>{blueprint?.impact_score}/10</Badge>
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                <h4 className="text-sm font-mono font-semibold text-white mb-1">Scoring Breakdown</h4>
+                <p className="text-xs font-mono text-white/30 mb-4">
+                  Priority = (Impact × 10) / (Difficulty + Effort)
+                </p>
+                <div className="space-y-4">
+                  {[
+                    { label: 'Impact Score',     value: blueprint?.impact_score,     desc: 'Potential reach and business impact of this campaign' },
+                    { label: 'Difficulty Score', value: blueprint?.difficulty_score, desc: 'Complexity based on keyword competition and content requirements' },
+                    { label: 'Effort Score',     value: blueprint?.effort_score,     desc: 'Resources and time required for execution across all channels' },
+                  ].map(({ label, value, desc }) => (
+                    <div key={label}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold font-mono text-white">{label}</span>
+                        <span className="text-xs font-mono px-2 py-0.5 rounded-sm border border-white/[0.08] text-white/50 bg-white/[0.03]">
+                          {value}/10
+                        </span>
+                      </div>
+                      <p className="text-sm font-mono text-white/30">{desc}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Potential reach and business impact of this campaign
-                    </p>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold">Difficulty Score</span>
-                      <Badge>{blueprint?.difficulty_score}/10</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Complexity based on keyword competition and content requirements
-                    </p>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold">Effort Score</span>
-                      <Badge>{blueprint?.effort_score}/10</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Resources and time required for execution across all channels
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t">
+                  ))}
+                  <div className="pt-4 border-t border-white/[0.06]">
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold">Priority Score</span>
-                      <Badge variant="default" className="text-lg">
+                      <span className="text-lg font-bold font-mono text-white">Priority Score</span>
+                      <span className="text-lg font-mono px-3 py-1 rounded-sm border"
+                        style={{ color: '#00FF88', backgroundColor: 'rgba(0,255,136,0.10)', borderColor: 'rgba(0,255,136,0.25)' }}>
                         {blueprint?.priority_score?.toFixed(2)}
-                      </Badge>
+                      </span>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
-              {/* Data Sources */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Data Sources</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {blueprint?.data_sources && blueprint.data_sources.length > 0 ? (
-                    <ul className="space-y-1">
-                      {blueprint.data_sources.map((source: string, index: number) => (
-                        <li key={index} className="text-sm flex items-center gap-2">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          {source}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-muted-foreground">No data sources recorded</p>
-                  )}
-                  {blueprint?.ai_confidence_score && (
-                    <div className="mt-4 pt-4 border-t">
-                      <span className="font-semibold">AI Confidence:</span>{' '}
-                      {(blueprint.ai_confidence_score * 100).toFixed(0)}%
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                <h4 className="text-sm font-mono font-semibold text-white mb-3">Data Sources</h4>
+                {blueprint?.data_sources && blueprint.data_sources.length > 0 ? (
+                  <ul className="space-y-1">
+                    {blueprint.data_sources.map((source: string, index: number) => (
+                      <li key={index} className="text-sm font-mono flex items-center gap-2 text-white/60">
+                        <CheckCircle className="h-4 w-4" style={{ color: '#00FF88' }} />
+                        {source}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="font-mono text-white/30">No data sources recorded</p>
+                )}
+                {blueprint?.ai_confidence_score && (
+                  <div className="mt-4 pt-4 border-t border-white/[0.06] font-mono text-white/60">
+                    <span className="font-semibold text-white">AI Confidence:</span>{' '}
+                    {(blueprint.ai_confidence_score * 100).toFixed(0)}%
+                  </div>
+                )}
+              </div>
             </TabsContent>
 
             {/* History Tab */}
             <TabsContent value="history" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Revision History
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {revisions && revisions.length > 0 ? (
-                    <div className="space-y-4">
-                      {revisions.map((revision: any) => (
-                        <div key={revision.id} className="border-l-2 border-muted pl-4">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Badge variant="outline">v{revision.revision_number}</Badge>
-                            <span className="text-sm text-muted-foreground">
-                              {new Date(revision.created_at).toLocaleString()}
-                            </span>
-                          </div>
-                          {revision.changes_summary && (
-                            <p className="text-sm">{revision.changes_summary}</p>
-                          )}
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4">
+                <h4 className="flex items-center gap-2 text-sm font-mono font-semibold text-white mb-4">
+                  <Calendar className="h-5 w-5" style={{ color: '#00F5FF' }} />
+                  Revision History
+                </h4>
+                {revisions && revisions.length > 0 ? (
+                  <div className="space-y-4">
+                    {revisions.map((revision: any) => (
+                      <div key={revision.id} className="border-l-2 pl-4" style={{ borderColor: 'rgba(0,245,255,0.2)' }}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-mono px-1.5 py-0.5 rounded-sm border border-white/[0.08] text-white/50 bg-white/[0.03]">
+                            v{revision.revision_number}
+                          </span>
+                          <span className="text-sm font-mono text-white/30">
+                            {new Date(revision.created_at).toLocaleString()}
+                          </span>
                         </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground">No revision history</p>
-                  )}
-                </CardContent>
-              </Card>
+                        {revision.changes_summary && (
+                          <p className="text-sm font-mono text-white/60">{revision.changes_summary}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="font-mono text-white/30">No revision history</p>
+                )}
+              </div>
             </TabsContent>
           </Tabs>
         )}
 
         {/* Actions Footer */}
-        <div className="flex items-center justify-between pt-4 border-t mt-6">
+        <div className="flex items-center justify-between pt-4 border-t border-white/[0.06] mt-6">
           <div className="flex gap-2">
             {blueprint?.approval_status === 'pending_review' && (
               <>
-                <Button onClick={handleApproveAll}>
-                  <ThumbsUp className="h-4 w-4 mr-2" />
+                <button
+                  onClick={handleApproveAll}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-mono rounded-sm border transition-all"
+                  style={{ color: '#00FF88', backgroundColor: 'rgba(0,255,136,0.10)', borderColor: 'rgba(0,255,136,0.25)' }}
+                >
+                  <ThumbsUp className="h-4 w-4" />
                   Approve All Channels
-                </Button>
+                </button>
                 <div className="flex gap-2">
                   <Textarea
                     placeholder="Reason for rejection..."
                     value={rejectReason}
                     onChange={(e) => setRejectReason(e.target.value)}
-                    className="w-64"
+                    className="w-64 bg-white/[0.03] border-white/[0.08] text-white placeholder:text-white/20 rounded-sm font-mono text-sm"
                   />
-                  <Button variant="destructive" onClick={handleReject}>
-                    <ThumbsDown className="h-4 w-4 mr-2" />
+                  <button
+                    onClick={handleReject}
+                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-mono rounded-sm border transition-all"
+                    style={{ color: '#FF4444', backgroundColor: 'rgba(255,68,68,0.10)', borderColor: 'rgba(255,68,68,0.25)' }}
+                  >
+                    <ThumbsDown className="h-4 w-4" />
                     Reject
-                  </Button>
+                  </button>
                 </div>
               </>
             )}
           </div>
-          <Button variant="outline" onClick={onClose}>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-mono rounded-sm border border-white/[0.08] text-white/50 hover:text-white hover:border-white/[0.15] transition-all"
+          >
             Close
-          </Button>
+          </button>
         </div>
       </DialogContent>
     </Dialog>

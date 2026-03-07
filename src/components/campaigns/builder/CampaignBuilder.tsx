@@ -96,7 +96,7 @@ export function CampaignBuilder({
 
   // Handle node deletion
   const onNodesDelete = useCallback(
-    (deleted: Node[]) => {
+    (_deleted: Node[]) => {
       if (readOnly) return;
       // Additional cleanup can be done here
     },
@@ -118,7 +118,7 @@ export function CampaignBuilder({
   }, [reactFlowInstance, nodes, edges, onSave]);
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-50" ref={reactFlowWrapper}>
+    <div className="w-full h-full flex flex-col bg-[#050505]" ref={reactFlowWrapper}>
       <ReactFlowProvider>
         <ReactFlow
           nodes={nodes}
@@ -131,13 +131,13 @@ export function CampaignBuilder({
           nodeTypes={nodeTypes}
           fitView
           attributionPosition="bottom-left"
-          className="bg-gray-50"
+          className="bg-[#050505]"
           nodesDraggable={!readOnly}
           nodesConnectable={!readOnly}
           elementsSelectable={!readOnly}
         >
           {/* Background Grid */}
-          <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="#cbd5e1" />
+          <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="#ffffff10" />
 
           {/* Controls (Zoom, Fit View, etc.) */}
           <Controls showInteractive={!readOnly} />
@@ -146,17 +146,18 @@ export function CampaignBuilder({
           <MiniMap
             nodeColor={(node) => {
               const colors: Record<string, string> = {
-                trigger: '#10b981',
-                email: '#6366f1',
-                wait: '#f59e0b',
-                condition: '#8b5cf6',
-                split: '#d946ef',
-                action: '#06b6d4',
-                exit: '#ef4444',
+                trigger: '#00FF88',
+                email: '#00F5FF',
+                wait: '#FFB800',
+                condition: '#FF00FF',
+                split: '#FF00FF',
+                action: '#00F5FF',
+                exit: '#FF4444',
               };
-              return colors[node.type || 'default'] || '#94a3b8';
+              return colors[node.type || 'default'] || '#ffffff30';
             }}
-            maskColor="rgba(0, 0, 0, 0.1)"
+            maskColor="rgba(5, 5, 5, 0.7)"
+            style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.06)' }}
           />
 
           {/* Toolbar Panel */}
@@ -167,13 +168,15 @@ export function CampaignBuilder({
           )}
 
           {/* Info Panel */}
-          <Panel position="top-right" className="bg-white p-3 rounded-lg shadow-md">
-            <div className="text-sm space-y-1">
-              <div className="font-semibold text-gray-900">
-                {campaignId ? 'Editing Campaign' : 'New Campaign'}
-              </div>
-              <div className="text-gray-500 text-xs">
-                {nodes.length} nodes, {edges.length} connections
+          <Panel position="top-right">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-3">
+              <div className="text-sm space-y-1">
+                <div className="font-mono font-semibold text-white">
+                  {campaignId ? 'Editing Campaign' : 'New Campaign'}
+                </div>
+                <div className="font-mono text-white/40 text-xs">
+                  {nodes.length} nodes, {edges.length} connections
+                </div>
               </div>
             </div>
           </Panel>

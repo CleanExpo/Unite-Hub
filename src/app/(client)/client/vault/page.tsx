@@ -9,10 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Modal } from '@/components/ui/Modal';
 import { Lock, Plus, Eye, EyeOff, Copy, Trash2 } from 'lucide-react';
 import { getVaultEntries, createVaultEntry, deleteVaultEntry, type VaultEntry } from '@/lib/services/client/clientService';
@@ -119,18 +116,18 @@ export default function ClientVaultPage() {
     }
   }
 
-  const getCategoryBadge = (category: string) => {
-    const variants: Record<string, any> = {
-      api_keys: 'info',
-      credentials: 'warning',
-      tokens: 'success',
-      other: 'default',
+  const getCategoryColour = (category: string): string => {
+    const map: Record<string, string> = {
+      api_keys: '#00F5FF',
+      credentials: '#FFB800',
+      tokens: '#00FF88',
+      other: '#ffffff',
     };
-    return variants[category] || 'default';
+    return map[category] || '#ffffff';
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('en-AU', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -139,8 +136,8 @@ export default function ClientVaultPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-400">Loading vault entries...</p>
+      <div className="flex items-center justify-center min-h-screen bg-[#050505]">
+        <p className="text-white/40 font-mono">Loading vault entries...</p>
       </div>
     );
   }
@@ -151,94 +148,100 @@ export default function ClientVaultPage() {
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-100">
+            <h1 className="text-3xl font-bold font-mono text-white">
               Digital Vault
             </h1>
-            <p className="text-gray-400 mt-2">
+            <p className="text-white/40 mt-2 font-mono">
               Securely store API keys, credentials, and sensitive data
             </p>
           </div>
 
-          <Button
-            leftIcon={<Plus className="h-4 w-4" />}
+          <button
             onClick={() => setShowAddModal(true)}
+            className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2"
           >
+            <Plus className="h-4 w-4" />
             Add Entry
-          </Button>
+          </button>
         </div>
       </Section>
 
       <Section>
 
       {/* Security notice */}
-      <Card variant="warning">
-        <div className="p-4">
-          <div className="flex items-start space-x-3">
-            <Lock className="h-5 w-5 text-yellow-400 mt-0.5" />
-            <div>
-              <p className="text-sm font-medium text-gray-100 mb-1">
-                Your data is encrypted
-              </p>
-              <p className="text-sm text-gray-400">
-                All vault entries are encrypted at rest and in transit. Never share your vault entries with untrusted parties.
-              </p>
-            </div>
+      <div className="bg-[#FFB800]/10 border border-[#FFB800]/30 rounded-sm p-4">
+        <div className="flex items-start space-x-3">
+          <Lock className="h-5 w-5 text-[#FFB800] mt-0.5" />
+          <div>
+            <p className="text-sm font-mono font-medium text-white mb-1">
+              Your data is encrypted
+            </p>
+            <p className="text-sm font-mono text-white/40">
+              All vault entries are encrypted at rest and in transit. Never share your vault entries with untrusted parties.
+            </p>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Vault stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card variant="glass">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
           <div className="p-4">
-            <p className="text-sm text-gray-400">Total Entries</p>
-            <p className="text-2xl font-bold text-gray-100 mt-1">
+            <p className="text-sm font-mono text-white/40">Total Entries</p>
+            <p className="text-2xl font-bold font-mono text-white mt-1">
               {entries.length}
             </p>
           </div>
-        </Card>
-        <Card variant="glass">
+        </div>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
           <div className="p-4">
-            <p className="text-sm text-gray-400">Services</p>
-            <p className="text-2xl font-bold text-blue-400 mt-1">
+            <p className="text-sm font-mono text-white/40">Services</p>
+            <p className="text-2xl font-bold font-mono text-[#00F5FF] mt-1">
               {new Set(entries.map((e) => e.service_name)).size}
             </p>
           </div>
-        </Card>
-        <Card variant="glass">
+        </div>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
           <div className="p-4">
-            <p className="text-sm text-gray-400">Encrypted</p>
-            <p className="text-2xl font-bold text-green-400 mt-1">
+            <p className="text-sm font-mono text-white/40">Encrypted</p>
+            <p className="text-2xl font-bold font-mono text-[#00FF88] mt-1">
               {entries.length}
             </p>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Vault entries */}
       <div className="space-y-3">
         {entries.map((entry) => (
-          <Card key={entry.id} variant="glass">
+          <div key={entry.id} className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
             <div className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   {/* Entry header */}
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-2 bg-green-500/10 rounded-lg">
-                      <Lock className="h-4 w-4 text-green-400" />
+                    <div className="p-2 bg-[#00FF88]/10 rounded-sm">
+                      <Lock className="h-4 w-4 text-[#00FF88]" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-100">
+                      <h3 className="text-lg font-mono font-semibold text-white">
                         {entry.service_name}
                       </h3>
                       <div className="flex items-center space-x-2 mt-1">
                         {entry.username && (
-                          <Badge variant="info">
+                          <span
+                            className="text-xs font-mono px-2 py-0.5 rounded-sm border"
+                            style={{
+                              color: getCategoryColour('api_keys'),
+                              borderColor: `${getCategoryColour('api_keys')}40`,
+                              backgroundColor: `${getCategoryColour('api_keys')}10`,
+                            }}
+                          >
                             {entry.username}
-                          </Badge>
+                          </span>
                         )}
                         {entry.created_at && (
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs font-mono text-white/40">
                             Added {formatDate(entry.created_at)}
                           </span>
                         )}
@@ -248,15 +251,15 @@ export default function ClientVaultPage() {
 
                   {/* Notes */}
                   {entry.notes && (
-                    <p className="text-sm text-gray-400 mb-3">
+                    <p className="text-sm font-mono text-white/40 mb-3">
                       {entry.notes}
                     </p>
                   )}
 
                   {/* Value display */}
-                  <div className="p-3 bg-gray-800/50 rounded-lg">
+                  <div className="p-3 bg-white/[0.02] border border-white/[0.06] rounded-sm">
                     <div className="flex items-center justify-between">
-                      <code className="text-sm text-gray-300 font-mono">
+                      <code className="text-sm text-white/60 font-mono">
                         {visibleValues[entry.id]
                           ? entry.encrypted_password
                           : '•'.repeat(entry.encrypted_password.length)}
@@ -264,7 +267,7 @@ export default function ClientVaultPage() {
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => toggleValueVisibility(entry.id)}
-                          className="text-gray-400 hover:text-gray-100 transition-colors"
+                          className="text-white/40 hover:text-white transition-colors"
                           aria-label={visibleValues[entry.id] ? 'Hide value' : 'Show value'}
                         >
                           {visibleValues[entry.id] ? (
@@ -275,7 +278,7 @@ export default function ClientVaultPage() {
                         </button>
                         <button
                           onClick={() => copyToClipboard(entry.encrypted_password)}
-                          className="text-gray-400 hover:text-gray-100 transition-colors"
+                          className="text-white/40 hover:text-white transition-colors"
                           aria-label="Copy to clipboard"
                         >
                           <Copy className="h-4 w-4" />
@@ -288,33 +291,34 @@ export default function ClientVaultPage() {
                 {/* Delete button */}
                 <button
                   onClick={() => handleDeleteEntry(entry.id)}
-                  className="ml-4 text-gray-400 hover:text-red-400 transition-colors"
+                  className="ml-4 text-white/40 hover:text-[#FF4444] transition-colors"
                   aria-label="Delete entry"
                 >
                   <Trash2 className="h-5 w-5" />
                 </button>
               </div>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
 
       {/* Empty state */}
       {entries.length === 0 && !loading && (
-        <Card>
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
           <div className="p-12 text-center">
-            <Lock className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 mb-4">
+            <Lock className="h-12 w-12 text-white/20 mx-auto mb-4" />
+            <p className="text-white/40 font-mono mb-4">
               No vault entries yet. Add your first API key or credential to get started.
             </p>
-            <Button
-              leftIcon={<Plus className="h-4 w-4" />}
+            <button
               onClick={() => setShowAddModal(true)}
+              className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 flex items-center gap-2 mx-auto"
             >
+              <Plus className="h-4 w-4" />
               Add First Entry
-            </Button>
+            </button>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* Add entry modal */}
@@ -333,13 +337,13 @@ export default function ClientVaultPage() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="block text-sm font-mono font-medium text-white/60 mb-2">
               Category/Notes
             </label>
             <select
               value={newEntryCategory}
               onChange={(e) => setNewEntryCategory(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.06] rounded-sm text-white font-mono text-sm focus:outline-none focus:border-[#00F5FF]/40"
             >
               <option value="api_keys">API Keys</option>
               <option value="credentials">Credentials</option>
@@ -358,8 +362,7 @@ export default function ClientVaultPage() {
           />
 
           <div className="flex items-center justify-end space-x-3 pt-4">
-            <Button
-              variant="outline"
+            <button
               onClick={() => {
                 setShowAddModal(false);
                 setNewEntryName('');
@@ -367,15 +370,17 @@ export default function ClientVaultPage() {
                 setNewEntryValue('');
               }}
               disabled={submitting}
+              className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-3 py-1.5 disabled:opacity-50"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={handleAddEntry}
               disabled={submitting}
+              className="bg-[#00F5FF] text-[#050505] font-mono text-sm font-bold rounded-sm px-4 py-2 disabled:opacity-50"
             >
               {submitting ? 'Adding...' : 'Add Entry'}
-            </Button>
+            </button>
           </div>
         </div>
       </Modal>
