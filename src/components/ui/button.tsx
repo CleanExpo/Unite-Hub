@@ -7,16 +7,16 @@ import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+  'inline-flex items-center justify-center rounded-sm font-medium focus:outline-none focus:border-[#00F5FF]/60 disabled:opacity-50 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
-        primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600',
-        secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600',
-        danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600',
-        success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 dark:bg-green-500 dark:hover:bg-green-600',
-        outline: 'border-2 border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 focus:ring-gray-500 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800',
-        ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-300 dark:hover:bg-gray-800',
+        primary: 'bg-[#00F5FF]/10 border border-[#00F5FF]/40 text-[#00F5FF] hover:bg-[#00F5FF]/20 hover:border-[#00F5FF]/60',
+        secondary: 'bg-white/[0.04] border border-white/[0.1] text-white/70 hover:bg-white/[0.06] hover:text-white/90',
+        danger: 'bg-[#FF4444]/10 border border-[#FF4444]/40 text-[#FF4444] hover:bg-[#FF4444]/20',
+        success: 'bg-[#00FF88]/10 border border-[#00FF88]/40 text-[#00FF88] hover:bg-[#00FF88]/20',
+        outline: 'bg-transparent border border-white/[0.1] text-white/70 hover:border-white/[0.2] hover:text-white/90',
+        ghost: 'bg-transparent text-white/50 hover:bg-white/[0.03] hover:text-white/70',
       },
       size: {
         sm: 'px-3 py-1.5 text-sm',

@@ -19,14 +19,14 @@ export default function Skeleton({
   className = '',
 }: SkeletonProps) {
   const variantClasses = {
-    text: 'rounded',
-    circular: 'rounded-full',
-    rectangular: 'rounded-lg',
+    text: 'rounded-sm',
+    circular: 'rounded-sm',
+    rectangular: 'rounded-sm',
   };
 
   return (
     <div
-      className={`bg-gray-200 dark:bg-gray-700 animate-pulse ${variantClasses[variant]} ${className}`}
+      className={`bg-white/[0.03] animate-pulse rounded-sm ${variantClasses[variant]} ${className}`}
       style={{ width, height }}
       aria-label="Loading..."
       role="status"
@@ -39,7 +39,7 @@ export default function Skeleton({
  */
 export function SkeletonCard() {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-4">
+    <div className="bg-white/[0.02] border-[0.5px] border-white/[0.06] rounded-sm p-6 space-y-4">
       <Skeleton height="2rem" width="60%" />
       <Skeleton height="1rem" width="100%" />
       <Skeleton height="1rem" width="90%" />

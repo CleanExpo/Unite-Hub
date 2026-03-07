@@ -1,6 +1,6 @@
 /**
  * Input Component - Phase 2 UI Library
- * Accessible form input with labels, errors, and dark mode
+ * Accessible form input with labels, errors, and Scientific Luxury styling
  */
 
 import React from 'react';
@@ -31,16 +31,16 @@ export default function Input({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          className="block text-sm font-medium text-white/60 mb-2"
         >
           {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
+          {props.required && <span className="text-[#FF4444] ml-1">*</span>}
         </label>
       )}
 
       <div className="relative">
         {leftIcon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/30">
             {leftIcon}
           </div>
         )}
@@ -48,17 +48,11 @@ export default function Input({
         <input
           id={inputId}
           className={`
-            block w-full rounded-lg border
-            ${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'}
+            block w-full rounded-sm border-[0.5px] bg-white/[0.02] text-white/90 placeholder-white/30 focus:outline-none focus:border-[#00F5FF]/40 disabled:opacity-50 disabled:cursor-not-allowed
+            ${hasError ? 'border-[#FF4444]/40 focus:border-[#FF4444]/60' : 'border-white/[0.06]'}
             ${leftIcon ? 'pl-10' : 'pl-4'}
             ${rightIcon ? 'pr-10' : 'pr-4'}
             py-2.5
-            bg-white dark:bg-gray-800
-            text-gray-900 dark:text-gray-100
-            placeholder-gray-400 dark:placeholder-gray-500
-            focus:outline-none focus:ring-2
-            disabled:opacity-50 disabled:cursor-not-allowed
-            transition-colors
             ${className}
           `}
           aria-invalid={hasError}
@@ -69,7 +63,7 @@ export default function Input({
         />
 
         {rightIcon && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-white/30">
             {rightIcon}
           </div>
         )}
@@ -78,7 +72,7 @@ export default function Input({
       {error && (
         <p
           id={`${inputId}-error`}
-          className="mt-2 text-sm text-red-600 dark:text-red-400"
+          className="mt-2 text-sm text-[#FF4444]"
           role="alert"
         >
           {error}
@@ -88,7 +82,7 @@ export default function Input({
       {helpText && !error && (
         <p
           id={`${inputId}-help`}
-          className="mt-2 text-sm text-gray-500 dark:text-gray-400"
+          className="mt-2 text-sm text-white/40"
         >
           {helpText}
         </p>
