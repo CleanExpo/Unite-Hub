@@ -99,11 +99,11 @@ export default function AnalyticsPage() {
     new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", minimumFractionDigits: 0 }).format(value);
 
   const metrics = [
-    { label: "Total Contacts", value: analytics.contactsCount.toLocaleString(), icon: Users, color: "text-blue-400", bgColor: "bg-blue-500/10" },
-    { label: "Open Deals", value: analytics.dealsCount.toLocaleString(), icon: Target, color: "text-emerald-400", bgColor: "bg-emerald-500/10" },
-    { label: "Pipeline Value", value: formatCurrency(analytics.pipelineValue), icon: DollarSign, color: "text-cyan-400", bgColor: "bg-cyan-500/10" },
+    { label: "Total Contacts", value: analytics.contactsCount.toLocaleString(), icon: Users, color: "text-[#00F5FF]", bgColor: "bg-[#00F5FF]/10" },
+    { label: "Open Deals", value: analytics.dealsCount.toLocaleString(), icon: Target, color: "text-[#00FF88]", bgColor: "bg-[#00FF88]/10" },
+    { label: "Pipeline Value", value: formatCurrency(analytics.pipelineValue), icon: DollarSign, color: "text-[#00F5FF]", bgColor: "bg-[#00F5FF]/10" },
     { label: "Emails Sent", value: analytics.emailsSent.toLocaleString(), icon: Mail, color: "text-purple-400", bgColor: "bg-purple-500/10" },
-    { label: "Active Campaigns", value: analytics.activeCampaigns.toLocaleString(), icon: Megaphone, color: "text-orange-400", bgColor: "bg-orange-500/10" },
+    { label: "Active Campaigns", value: analytics.activeCampaigns.toLocaleString(), icon: Megaphone, color: "text-[#FFB800]", bgColor: "bg-[#FFB800]/10" },
     { label: "Tasks Done", value: `${analytics.tasksCompleted}/${analytics.tasksTotal}`, icon: CheckSquare, color: "text-yellow-400", bgColor: "bg-yellow-500/10" },
   ];
 
@@ -111,9 +111,9 @@ export default function AnalyticsPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-slate-800 rounded w-48" />
+          <div className="h-8 bg-white/[0.03] rounded-sm w-48" />
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => <div key={i} className="h-24 bg-slate-800 rounded" />)}
+            {[...Array(6)].map((_, i) => <div key={i} className="h-24 bg-white/[0.03] rounded-sm" />)}
           </div>
         </div>
       </div>
@@ -124,12 +124,12 @@ export default function AnalyticsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Analytics</h1>
-        <p className="text-sm text-slate-400 mt-1">Track performance metrics and business insights</p>
+        <p className="text-sm text-white/40 mt-1">Track performance metrics and business insights</p>
         {isInTrial && (
-          <div className="mt-4 p-3 bg-blue-900/30 border border-blue-700 rounded-lg flex items-center gap-2">
-            <Eye className="h-4 w-4 text-blue-400" />
-            <span className="text-sm text-blue-200">
-              <strong>Read-only mode:</strong> During your trial, analytics are viewable but not editable.
+          <div className="mt-4 p-3 bg-[#00F5FF]/[0.05] border border-[#00F5FF]/20 rounded-sm flex items-center gap-2">
+            <Eye className="h-4 w-4 text-[#00F5FF]" />
+            <span className="text-sm text-white/70">
+              <strong className="text-white">Read-only mode:</strong> During your trial, analytics are viewable but not editable.
             </span>
           </div>
         )}
@@ -137,18 +137,18 @@ export default function AnalyticsPage() {
 
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => <div key={i} className="h-24 bg-slate-800/30 rounded-lg animate-pulse" />)}
+          {[...Array(6)].map((_, i) => <div key={i} className="h-24 bg-white/[0.03] rounded-sm animate-pulse" />)}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {metrics.map((m) => (
-            <Card key={m.label} className="bg-slate-800/50 border-slate-700">
+            <Card key={m.label} className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className={`p-2 rounded-lg ${m.bgColor}`}>
+                  <div className={`p-2 rounded-sm ${m.bgColor}`}>
                     <m.icon className={`h-5 w-5 ${m.color}`} />
                   </div>
-                  <span className="text-xs text-slate-400">{m.label}</span>
+                  <span className="text-xs text-white/40">{m.label}</span>
                 </div>
                 <p className="text-2xl font-bold text-white">{m.value}</p>
               </CardContent>
@@ -157,7 +157,7 @@ export default function AnalyticsPage() {
         </div>
       )}
 
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <BarChart3 className="h-5 w-5" /> Performance Overview
@@ -167,11 +167,11 @@ export default function AnalyticsPage() {
           <div className="space-y-4">
             {/* Deal Conversion Funnel */}
             <div>
-              <p className="text-sm text-slate-400 mb-2">Deal Pipeline Health</p>
+              <p className="text-sm text-white/40 mb-2">Deal Pipeline Health</p>
               <div className="flex items-center gap-3">
-                <div className="flex-1 bg-slate-700/50 rounded-full h-3">
+                <div className="flex-1 bg-white/[0.06] rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-blue-500 to-emerald-500 h-3 rounded-full transition-all"
+                    className="bg-[#00F5FF] h-3 rounded-full transition-all"
                     style={{ width: `${Math.min(100, analytics.dealsCount * 10)}%` }}
                   />
                 </div>
@@ -181,11 +181,11 @@ export default function AnalyticsPage() {
 
             {/* Task Completion Rate */}
             <div>
-              <p className="text-sm text-slate-400 mb-2">Task Completion Rate</p>
+              <p className="text-sm text-white/40 mb-2">Task Completion Rate</p>
               <div className="flex items-center gap-3">
-                <div className="flex-1 bg-slate-700/50 rounded-full h-3">
+                <div className="flex-1 bg-white/[0.06] rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-yellow-500 to-emerald-500 h-3 rounded-full transition-all"
+                    className="bg-[#00FF88] h-3 rounded-full transition-all"
                     style={{ width: `${analytics.tasksTotal > 0 ? (analytics.tasksCompleted / analytics.tasksTotal) * 100 : 0}%` }}
                   />
                 </div>
@@ -197,11 +197,11 @@ export default function AnalyticsPage() {
 
             {/* Email Activity */}
             <div>
-              <p className="text-sm text-slate-400 mb-2">Email Activity</p>
+              <p className="text-sm text-white/40 mb-2">Email Activity</p>
               <div className="flex items-center gap-3">
-                <div className="flex-1 bg-slate-700/50 rounded-full h-3">
+                <div className="flex-1 bg-white/[0.06] rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all"
+                    className="bg-purple-500 h-3 rounded-full transition-all"
                     style={{ width: `${Math.min(100, analytics.emailsSent * 2)}%` }}
                   />
                 </div>

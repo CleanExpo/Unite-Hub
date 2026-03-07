@@ -64,7 +64,7 @@ export default function CampaignsPage() {
   }, [workspaceId, session?.access_token, fetchCampaigns]);
 
   const statusColors: Record<string, string> = {
-    draft: "text-slate-400 border-slate-600",
+    draft: "text-white/40 border-white/[0.08]",
     scheduled: "text-purple-400 border-purple-400/30",
     active: "text-emerald-400 border-emerald-400/30",
     completed: "text-blue-400 border-blue-400/30",
@@ -88,9 +88,9 @@ export default function CampaignsPage() {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-slate-800 rounded w-48" />
+          <div className="h-8 bg-white/[0.03] rounded-sm w-48" />
           <div className="grid grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-slate-800 rounded" />)}
+            {[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-white/[0.03] rounded-sm" />)}
           </div>
         </div>
       </div>
@@ -104,13 +104,13 @@ export default function CampaignsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Campaigns</h1>
-          <p className="text-sm text-slate-400 mt-1">Create and manage your email campaigns</p>
+          <p className="text-sm text-white/40 mt-1">Create and manage your email campaigns</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={fetchCampaigns} className="text-slate-400 hover:text-white">
+          <Button variant="ghost" size="icon" onClick={fetchCampaigns} className="text-white/40 hover:text-white/90">
             <RefreshCw className="w-4 h-4" />
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button variant="primary">
             <Plus className="w-4 h-4 mr-2" /> New Campaign
           </Button>
         </div>
@@ -118,18 +118,18 @@ export default function CampaignsPage() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Total", value: total, icon: Megaphone, color: "text-blue-400", bg: "bg-blue-500/10" },
-          { label: "Active", value: active, icon: Play, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-          { label: "Drafts", value: drafts, icon: Mail, color: "text-slate-400", bg: "bg-slate-500/10" },
+          { label: "Total", value: total, icon: Megaphone, color: "text-[#00F5FF]", bg: "bg-[#00F5FF]/10" },
+          { label: "Active", value: active, icon: Play, color: "text-[#00FF88]", bg: "bg-[#00FF88]/10" },
+          { label: "Drafts", value: drafts, icon: Mail, color: "text-white/40", bg: "bg-white/[0.04]" },
           { label: "Completed", value: done, icon: BarChart3, color: "text-purple-400", bg: "bg-purple-500/10" },
         ].map((s) => (
-          <Card key={s.label} className="bg-slate-800/50 border-slate-700">
+          <Card key={s.label} className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div>
+                <div className={`p-2 rounded-sm ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div>
                 <div>
                   <p className="text-2xl font-bold text-white">{s.value}</p>
-                  <p className="text-xs text-slate-400">{s.label}</p>
+                  <p className="text-xs text-white/40">{s.label}</p>
                 </div>
               </div>
             </CardContent>
@@ -139,15 +139,15 @@ export default function CampaignsPage() {
 
       <div className="flex items-center gap-3">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
           <Input placeholder="Search campaigns..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+            className="pl-9 bg-white/[0.02] border-white/[0.06] text-white placeholder:text-white/40" />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-36 bg-slate-800 border-slate-700 text-white"><SelectValue /></SelectTrigger>
-          <SelectContent className="bg-slate-800 border-slate-700">
+          <SelectTrigger className="w-36 bg-white/[0.02] border-white/[0.06] text-white"><SelectValue /></SelectTrigger>
+          <SelectContent className="bg-[#0a0a0a] border-white/[0.06]">
             {["all","draft","scheduled","active","completed","paused"].map((v) => (
-              <SelectItem key={v} value={v} className="text-white hover:bg-slate-700">
+              <SelectItem key={v} value={v} className="text-white hover:bg-white/[0.04]">
                 {v === "all" ? "All Status" : v.charAt(0).toUpperCase() + v.slice(1)}
               </SelectItem>
             ))}
@@ -156,40 +156,40 @@ export default function CampaignsPage() {
       </div>
 
       {loading ? (
-        <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-slate-800/30 rounded-lg animate-pulse" />)}</div>
+        <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-white/[0.03] rounded-sm animate-pulse" />)}</div>
       ) : campaigns.length === 0 ? (
-        <Card className="bg-slate-800/30 border-slate-700">
+        <Card className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
           <CardContent className="text-center py-16">
-            <Megaphone className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+            <Megaphone className="w-12 h-12 text-white/40 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-white mb-2">No campaigns yet</h3>
-            <p className="text-sm text-slate-400 mb-6">Create your first email campaign to start reaching your contacts</p>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white"><Plus className="w-4 h-4 mr-2" /> Create Campaign</Button>
+            <p className="text-sm text-white/40 mb-6">Create your first email campaign to start reaching your contacts</p>
+            <Button variant="primary"><Plus className="w-4 h-4 mr-2" /> Create Campaign</Button>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-3">
           {campaigns.map((c) => (
-            <Card key={c.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors cursor-pointer">
+            <Card key={c.id} className="bg-white/[0.02] border-[0.5px] border-white/[0.06] hover:bg-white/[0.03] transition-colors cursor-pointer">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <div className="p-2 bg-slate-700/50 rounded-lg flex-shrink-0">
-                      {statusIcons[c.status] || <Mail className="w-5 h-5 text-slate-400" />}
+                    <div className="p-2 bg-white/[0.04] rounded-sm flex-shrink-0">
+                      {statusIcons[c.status] || <Mail className="w-5 h-5 text-white/40" />}
                     </div>
                     <div className="min-w-0 flex-1">
                       <h3 className="font-medium text-white truncate">{c.name}</h3>
-                      <p className="text-xs text-slate-400 truncate mt-0.5">Subject: {c.subject}</p>
+                      <p className="text-xs text-white/40 truncate mt-0.5">Subject: {c.subject}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0">
                     {c.scheduled_at && (
-                      <span className="text-xs text-slate-500 flex items-center gap-1">
+                      <span className="text-xs text-white/40 flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         {new Date(c.scheduled_at).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}
                       </span>
                     )}
-                    <Badge variant="outline" className={`text-[10px] ${statusColors[c.status] || "text-slate-400 border-slate-600"}`}>{c.status}</Badge>
-                    <span className="text-[11px] text-slate-500">{new Date(c.created_at).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}</span>
+                    <Badge variant="outline" className={`text-[10px] ${statusColors[c.status] || "text-white/40 border-white/[0.08]"}`}>{c.status}</Badge>
+                    <span className="text-[11px] text-white/40">{new Date(c.created_at).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}</span>
                   </div>
                 </div>
               </CardContent>
