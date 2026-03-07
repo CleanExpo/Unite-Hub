@@ -18,8 +18,9 @@ export interface CacheOptions {
 }
 
 class CacheManager {
-  private redis: Redis;
+  private redis: Redis | null = null;
   private circuitBreaker: CircuitBreaker;
+  private disabled = false;
   private metrics = {
     hits: 0,
     misses: 0,
@@ -56,9 +57,11 @@ class CacheManager {
     } else if (host) {
       this.redis = new Redis({ host, port, password, db: 0, ...baseOptions });
     } else {
-      // No Redis configured — connect to localhost but suppress retry noise
-      this.redis = new Redis({ host: 'localhost', port: 6379, db: 0, ...baseOptions });
+      // No Redis configured — disable cache entirely, all ops are no-ops
+      this.disabled = true;
     }
+
+    if (!this.redis) return;
 
     this.redis.on('error', (err) => {
       console.error('[Redis] Connection error:', err);
@@ -78,6 +81,7 @@ class CacheManager {
    * Get value from cache with circuit breaker protection
    */
   async get<T>(key: string, options?: CacheOptions): Promise<T | null> {
+    if (this.disabled || !this.redis) return null;
     try {
       const prefixedKey = this.getPrefixedKey(key, options?.prefix);
 
@@ -111,6 +115,7 @@ class CacheManager {
    * Set value in cache with circuit breaker protection
    */
   async set<T>(key: string, value: T, options?: CacheOptions): Promise<void> {
+    if (this.disabled || !this.redis) return;
     try {
       const prefixedKey = this.getPrefixedKey(key, options?.prefix);
       const ttl = options?.ttl || 3600;
@@ -137,6 +142,7 @@ class CacheManager {
    * Delete key from cache
    */
   async del(key: string, prefix?: string): Promise<void> {
+    if (this.disabled || !this.redis) return;
     try {
       const prefixedKey = this.getPrefixedKey(key, prefix);
       await this.redis.del(prefixedKey);
@@ -151,6 +157,7 @@ class CacheManager {
    * Invalidate cache keys matching pattern
    */
   async invalidatePattern(pattern: string): Promise<number> {
+    if (this.disabled || !this.redis) return 0;
     try {
       const keys = await this.redis.keys(pattern);
       if (keys.length > 0) {
@@ -170,6 +177,7 @@ class CacheManager {
    * Increment counter
    */
   async increment(key: string, amount: number = 1): Promise<number> {
+    if (this.disabled || !this.redis) return 0;
     try {
       const result = await this.redis.incrby(key, amount);
       return result;
@@ -184,6 +192,7 @@ class CacheManager {
    * Set with expiration
    */
   async setex(key: string, ttl: number, value: any): Promise<void> {
+    if (this.disabled || !this.redis) return;
     try {
       await this.redis.setex(key, ttl, JSON.stringify(value));
       this.metrics.sets++;
@@ -197,6 +206,7 @@ class CacheManager {
    * Get all keys matching pattern
    */
   async getPattern(pattern: string): Promise<Map<string, any>> {
+    if (this.disabled || !this.redis) return new Map();
     try {
       const keys = await this.redis.keys(pattern);
       const result = new Map<string, any>();
@@ -220,6 +230,7 @@ class CacheManager {
    * Clear all cache
    */
   async flush(): Promise<void> {
+    if (this.disabled || !this.redis) return;
     try {
       await this.redis.flushdb();
       console.log('[Redis] Cache flushed');
@@ -277,6 +288,7 @@ class CacheManager {
    * Get connection status considering circuit breaker state
    */
   async getStatus(): Promise<string> {
+    if (this.disabled || !this.redis) return 'disabled';
     // Check circuit breaker first
     if (this.isDegraded()) {
       return 'degraded';
@@ -297,6 +309,7 @@ class CacheManager {
    * Close Redis connection
    */
   async close(): Promise<void> {
+    if (this.disabled || !this.redis) return;
     try {
       await this.redis.quit();
       console.log('[Redis] Connection closed');
