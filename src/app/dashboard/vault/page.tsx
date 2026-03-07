@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Archive, Search, FolderOpen, Image, FileText, Video, Grid, List } from "lucide-react";
-import { WorkspaceSidebar } from "@/components/workspace/WorkspaceSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface VaultItem {
@@ -112,8 +111,6 @@ export default function VaultPage() {
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
         <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-sm shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
-          <WorkspaceSidebar />
-
           {/* Main Content */}
           <main className="flex-1 p-6 overflow-y-auto">
             {/* Header */}

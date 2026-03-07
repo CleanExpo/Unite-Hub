@@ -81,25 +81,25 @@ jobs:
       - name: Type Check
         id: type-check
         run: |
-          pnpm turbo run type-check
+          pnpm run type-check
           echo "status=$?" >> $GITHUB_OUTPUT
 
       - name: Lint
         id: lint
         run: |
-          pnpm turbo run lint
+          pnpm run lint
           echo "status=$?" >> $GITHUB_OUTPUT
 
       - name: Unit Tests
         id: test
         run: |
-          pnpm turbo run test
+          pnpm run test
           echo "status=$?" >> $GITHUB_OUTPUT
 
       - name: Build
         id: build
         run: |
-          pnpm turbo run build
+          pnpm run build
           echo "status=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
 
