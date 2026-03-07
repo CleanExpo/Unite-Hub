@@ -16,6 +16,7 @@ import {
   Settings,
   Search,
   LogOut,
+  Network,
 } from "lucide-react";
 import { ClientProvider } from "@/contexts/ClientContext";
 import ClientSelector from "@/components/client/ClientSelector";
@@ -181,6 +182,11 @@ export default function DashboardLayout({
               </div>
               <SidebarLink href="/dashboard/campaigns" icon={Megaphone} label="Campaigns" pathname={pathname} />
               <SidebarLink href="/dashboard/emails" icon={Mail} label="Emails" pathname={pathname} />
+
+              <div className="pt-4 pb-1 px-3">
+                <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">Ecosystem</span>
+              </div>
+              <SidebarLink href="/dashboard/ecosystem" icon={Network} label="Connected Businesses" pathname={pathname} />
 
               <div className="pt-4 pb-1 px-3">
                 <span className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">System</span>
