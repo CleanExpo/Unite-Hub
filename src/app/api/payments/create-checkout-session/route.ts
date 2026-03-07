@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
     // Create checkout session
     const { sessionId, sessionUrl } = await createCheckoutSession({
       priceAmount: priceInCents,
-      currency: 'usd',
+      currency: 'aud',
       productName: `${idea.title} - ${selectedPackage.label} Package`,
       productDescription: selectedPackage.summary,
       metadata: {
@@ -183,7 +183,7 @@ export async function POST(req: NextRequest) {
         tier: selectedPackage.tier,
         package_id: selectedPackage.id,
         amount: priceInCents,
-        currency: 'usd',
+        currency: 'aud',
         status: 'pending',
         created_by: userEmail,
         created_at: new Date().toISOString(),
@@ -205,7 +205,7 @@ export async function POST(req: NextRequest) {
           tier: selectedPackage.tier,
           packageId: selectedPackage.id,
           amount: priceInCents,
-          currency: 'usd',
+          currency: 'aud',
         },
       })
       .select('id')

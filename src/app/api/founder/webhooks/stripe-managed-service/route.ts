@@ -38,7 +38,9 @@ function getStripeClient(): Stripe {
   return stripeClient;
 }
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
+function getWebhookSecret(): string {
+  return process.env.STRIPE_WEBHOOK_SECRET || '';
+}
 
 interface StripeEvent {
   id: string;
@@ -57,6 +59,10 @@ function verifyWebhookSignature(
 ): StripeEvent | null {
   try {
     const stripe = getStripeClient();
+    const webhookSecret = getWebhookSecret();
+    if (!webhookSecret) {
+      throw new Error('STRIPE_WEBHOOK_SECRET not configured');
+    }
     const event = stripe.webhooks.constructEvent(body, signature, webhookSecret) as StripeEvent;
     return event;
   } catch (error) {
@@ -105,6 +111,8 @@ async function handleSubscriptionCreated(event: StripeEvent, supabase: ReturnTyp
   });
 
   try {
+    const stripe = getStripeClient();
+
     // Get customer details
     const customer = await stripe.customers.retrieve(customerId);
     const customerEmail = (customer as any).email || 'unknown@example.com';

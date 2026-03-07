@@ -24,8 +24,11 @@ let _stripeClient: Stripe | null = null;
 
 function getStripeClient(): Stripe {
   if (!_stripeClient) {
-    _stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-      apiVersion: '2024-12-18.acacia',
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is required');
+    }
+    _stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-11-20.acacia',
       typescript: true,
     });
   }
@@ -256,9 +259,9 @@ export async function getPaymentIntent(
  * @param currency - ISO currency code
  * @returns Formatted currency string (e.g., "$50.00")
  */
-export function formatCurrency(amountInCents: number, currency: string = 'usd'): string {
+export function formatCurrency(amountInCents: number, currency: string = 'aud'): string {
   const amount = amountInCents / 100;
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-AU', {
     style: 'currency',
     currency: currency.toUpperCase(),
   }).format(amount);
