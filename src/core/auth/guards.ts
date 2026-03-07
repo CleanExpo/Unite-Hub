@@ -47,7 +47,7 @@ export function hasMinimumRole(userRole: UserRole, minimumRole: UserRole): boole
  * Unite-Group guard - Staff only (FOUNDER, STAFF, ADMIN)
  * Used for internal CRM routes
  */
-export function requireUniteHubAccess(role: UserRole): boolean {
+export function requireUniteGroupAccess(role: UserRole): boolean {
   return hasRole(role, ['FOUNDER', 'STAFF', 'ADMIN']);
 }
 
@@ -155,15 +155,15 @@ export const PERMISSION_PRESETS = {
   // Unite-Group routes (staff CRM)
   UNITE_HUB_READ: {
     allowedRoles: ['FOUNDER', 'STAFF', 'ADMIN'] as UserRole[],
-    projectContext: 'unite-hub' as ProjectContext,
+    projectContext: 'unite-group' as ProjectContext,
   },
   UNITE_HUB_WRITE: {
     allowedRoles: ['FOUNDER', 'STAFF', 'ADMIN'] as UserRole[],
-    projectContext: 'unite-hub' as ProjectContext,
+    projectContext: 'unite-group' as ProjectContext,
   },
   UNITE_HUB_ADMIN: {
     allowedRoles: ['FOUNDER', 'ADMIN'] as UserRole[],
-    projectContext: 'unite-hub' as ProjectContext,
+    projectContext: 'unite-group' as ProjectContext,
   },
 
   // Synthex routes (client portal)

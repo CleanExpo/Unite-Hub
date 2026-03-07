@@ -25,7 +25,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         {/* Footer */}
         <p className="text-center text-gray-500 text-sm mt-6">
-          © 2025 Unite Hub. All rights reserved.
+          © 2025 Unite-Group. All rights reserved.
         </p>
       </div>
     </div>

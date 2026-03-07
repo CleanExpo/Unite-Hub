@@ -6,6 +6,6 @@
 
 import { redirect } from "next/navigation";
 
-export default function UniteHubCrossBusinessDashboard() {
+export default function UniteGroupCrossBusinessDashboard() {
   redirect("/staff/dashboard");
 }

@@ -3,7 +3,7 @@
  * GET /api/cron/linear-guardian
  *
  * Runs daily at 09:00 UTC via Vercel Cron.
- * Checks for stale P0/P1 issues in the Unite-Hub Linear team.
+ * Checks for stale P0/P1 issues in the Unite-Group Linear team.
  * Creates alerts for any P0 issue open >7 days without activity.
  *
  * Auth: CRON_SECRET header

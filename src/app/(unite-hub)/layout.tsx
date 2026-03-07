@@ -16,11 +16,11 @@ import { getStaffSession } from '@/lib/auth/supabase';
 import { LogOut, Menu } from 'lucide-react';
 import SidebarNav from './SidebarNav';
 
-interface UniteHubLayoutProps {
+interface UniteGroupLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function UniteHubLayout({ children }: UniteHubLayoutProps) {
+export default async function UniteGroupLayout({ children }: UniteGroupLayoutProps) {
   // Session guard: redirect to login if not authenticated
   const { session, error } = await getStaffSession();
 

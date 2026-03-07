@@ -516,7 +516,7 @@ export class RedditClient extends BasePlatformClient {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.config.accessToken}`,
-        'User-Agent': 'UniteHub/1.0',
+        'User-Agent': 'Unite-Group/1.0',
         ...options.headers,
       },
     });

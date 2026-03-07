@@ -21,7 +21,7 @@ export type UserRole = 'FOUNDER' | 'STAFF' | 'CLIENT' | 'ADMIN';
  * Unite-Group: Staff CRM (FOUNDER, STAFF, ADMIN only)
  * Synthex: Client marketing portal (CLIENT + tiers)
  */
-export type ProjectContext = 'unite-hub' | 'synthex' | 'shared';
+export type ProjectContext = 'unite-group' | 'synthex' | 'shared';
 
 /**
  * Synthex subscription tiers

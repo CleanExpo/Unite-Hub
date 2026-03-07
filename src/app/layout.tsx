@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { UniteHubStructuredData } from "@/components/StructuredData";
+import { UniteGroupStructuredData } from "@/components/StructuredData";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 
 // Force all pages to be dynamically rendered at request time
@@ -118,7 +118,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <UniteHubStructuredData />
+        <UniteGroupStructuredData />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AnalyticsScripts />

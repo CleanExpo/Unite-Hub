@@ -61,7 +61,7 @@ export {
 export {
   hasRole,
   hasMinimumRole,
-  requireUniteHubAccess,
+  requireUniteGroupAccess,
   requireSynthexAccess,
   requireAdmin,
   requireFounder,
@@ -78,7 +78,7 @@ export {
   withPermissions,
   withWorkspace,
   withWorkspaceAndRole,
-  withUniteHubAccess,
+  withUniteGroupAccess,
   withSynthexAccess,
   extractBearerToken,
 } from './middleware';

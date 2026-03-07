@@ -274,7 +274,7 @@ export function withWorkspaceAndRole(
  *
  * For routes that should only be accessible by Unite staff.
  */
-export function withUniteHubAccess(handler: WorkspaceScopedHandler) {
+export function withUniteGroupAccess(handler: WorkspaceScopedHandler) {
   return withWorkspaceAndRole(['FOUNDER', 'STAFF', 'ADMIN'], handler);
 }
 

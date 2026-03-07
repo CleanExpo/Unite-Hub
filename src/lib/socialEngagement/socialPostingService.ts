@@ -539,7 +539,7 @@ export class SocialPostingService {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Bearer ${accessToken}`,
-        'User-Agent': 'UniteHub/1.0',
+        'User-Agent': 'Unite-Group/1.0',
       },
       body: body.toString(),
     });

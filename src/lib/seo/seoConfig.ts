@@ -22,7 +22,7 @@ export const seoConfig = {
     url: process.env.NEXT_PUBLIC_APP_URL || 'https://unite-group.in',
     image: '/og-image.png',
     logo: '/logo.png',
-    twitter: '@unitehub',
+    twitter: '@unitegroup',
     locale: 'en_US',
     contact: {
       email: 'hello@unite-group.in',

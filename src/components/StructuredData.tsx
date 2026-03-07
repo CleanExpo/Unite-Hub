@@ -10,7 +10,7 @@
 
 const BASE_URL = "https://unite-group.in";
 
-export function UniteHubStructuredData() {
+export function UniteGroupStructuredData() {
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
