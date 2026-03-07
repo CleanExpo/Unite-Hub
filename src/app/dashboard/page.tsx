@@ -11,8 +11,8 @@ export default function DashboardRoot() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-      <p className="text-slate-400">Loading dashboard...</p>
+    <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+      <p className="text-white/30">Loading dashboard...</p>
     </div>
   );
 }
