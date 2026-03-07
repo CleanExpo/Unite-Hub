@@ -56,8 +56,8 @@ const navigationItems = [
     icon: Mail,
   },
   {
-    label: 'Projects',
-    href: '/dashboard/projects',
+    label: 'Kanban',
+    href: '/kanban',
     icon: FolderKanban,
   },
   {
