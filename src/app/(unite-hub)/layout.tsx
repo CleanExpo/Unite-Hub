@@ -43,7 +43,10 @@ export default async function UniteHubLayout({ children }: UniteHubLayoutProps) 
   return (
     <div className="min-h-screen flex bg-[#050505]">
       {/* Sidebar Navigation */}
-      <aside className="w-64 bg-[#050505] border-r border-[0.5px] border-white/[0.06] flex flex-col">
+      <aside
+        className="w-64 bg-[#050505] border-r border-white/[0.06] flex flex-col"
+        style={{ borderRightWidth: '0.5px' }}
+      >
         {/* Logo/Brand */}
         <div className="p-6 border-b border-white/[0.06]">
           <h1 className="text-xl font-bold text-white/90">

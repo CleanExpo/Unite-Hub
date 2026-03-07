@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
   Users,
@@ -77,6 +78,11 @@ const navigationItems = [
 
 export default function SidebarNav() {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -87,19 +93,20 @@ export default function SidebarNav() {
         return (
           <motion.div
             key={item.href}
-            initial={{ opacity: 0, x: -20 }}
+            initial={mounted ? false : { opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
-              delay: index * 0.05,
+              delay: mounted ? 0 : index * 0.05,
               duration: 0.4,
               ease: [0.19, 1, 0.22, 1],
             }}
           >
             <Link
               href={item.href}
+              style={isActive ? { borderLeft: '2px solid #00F5FF' } : undefined}
               className={
                 isActive
-                  ? 'flex items-center space-x-3 px-4 py-3 rounded-sm text-[#00F5FF] bg-white/[0.04] border border-white/[0.08] border-l-2 border-l-[#00F5FF] transition-colors'
+                  ? 'flex items-center space-x-3 px-4 py-3 rounded-sm text-[#00F5FF] bg-white/[0.04] border border-white/[0.08] transition-colors'
                   : 'flex items-center space-x-3 px-4 py-3 rounded-sm text-white/50 hover:text-white/90 hover:bg-white/[0.03] transition-colors'
               }
             >
