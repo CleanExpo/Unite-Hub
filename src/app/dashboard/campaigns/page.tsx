@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -86,7 +87,7 @@ export default function CampaignsPage() {
 
   if (workspaceLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="p-6">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-white/[0.03] rounded-sm w-48" />
           <div className="grid grid-cols-4 gap-4">
@@ -98,56 +99,74 @@ export default function CampaignsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+    <div className="p-6 space-y-6">
       <Breadcrumbs items={[{ label: "Campaigns" }]} />
 
+      {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Campaigns</h1>
+          <h1 className="text-2xl font-bold font-mono text-white/90">Campaigns</h1>
           <p className="text-sm text-white/40 mt-1">Create and manage your email campaigns</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={fetchCampaigns} className="text-white/40 hover:text-white/90">
+          <button
+            onClick={fetchCampaigns}
+            className="p-2 text-white/40 hover:text-white/90 rounded-sm transition-none"
+          >
             <RefreshCw className="w-4 h-4" />
-          </Button>
-          <Button variant="primary">
-            <Plus className="w-4 h-4 mr-2" /> New Campaign
-          </Button>
+          </button>
+          <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm rounded-sm px-4 py-2 flex items-center gap-2">
+            <Plus className="w-4 h-4" /> New Campaign
+          </button>
         </div>
       </div>
 
+      {/* Stat cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total", value: total, icon: Megaphone, color: "text-[#00F5FF]", bg: "bg-[#00F5FF]/10" },
           { label: "Active", value: active, icon: Play, color: "text-[#00FF88]", bg: "bg-[#00FF88]/10" },
           { label: "Drafts", value: drafts, icon: Mail, color: "text-white/40", bg: "bg-white/[0.04]" },
           { label: "Completed", value: done, icon: BarChart3, color: "text-purple-400", bg: "bg-purple-500/10" },
-        ].map((s) => (
-          <Card key={s.label} className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-sm ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div>
-                <div>
-                  <p className="text-2xl font-bold text-white">{s.value}</p>
-                  <p className="text-xs text-white/40">{s.label}</p>
-                </div>
+        ].map((s, i) => (
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: i * 0.05 }}
+            className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4"
+          >
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-sm ${s.bg}`}>
+                <s.icon className={`h-5 w-5 ${s.color}`} />
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <p className="text-2xl font-bold font-mono text-white/90">{s.value}</p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">{s.label}</p>
+              </div>
+            </div>
+          </motion.div>
         ))}
       </div>
 
+      {/* Filters */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-          <Input placeholder="Search campaigns..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-white/[0.02] border-white/[0.06] text-white placeholder:text-white/40" />
+          <Input
+            placeholder="Search campaigns..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9 bg-white/[0.02] border-white/[0.06] text-white/90 placeholder:text-white/40 rounded-sm"
+          />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-36 bg-white/[0.02] border-white/[0.06] text-white"><SelectValue /></SelectTrigger>
-          <SelectContent className="bg-[#0a0a0a] border-white/[0.06]">
-            {["all","draft","scheduled","active","completed","paused"].map((v) => (
-              <SelectItem key={v} value={v} className="text-white hover:bg-white/[0.04]">
+          <SelectTrigger className="w-36 bg-white/[0.02] border-white/[0.06] text-white/90 rounded-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-[#0a0a0a] border-white/[0.06] rounded-sm">
+            {["all", "draft", "scheduled", "active", "completed", "paused"].map((v) => (
+              <SelectItem key={v} value={v} className="text-white/90 hover:bg-white/[0.04] font-mono text-sm">
                 {v === "all" ? "All Status" : v.charAt(0).toUpperCase() + v.slice(1)}
               </SelectItem>
             ))}
@@ -155,29 +174,49 @@ export default function CampaignsPage() {
         </Select>
       </div>
 
+      {/* Campaign list */}
       {loading ? (
-        <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-white/[0.03] rounded-sm animate-pulse" />)}</div>
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-20 bg-white/[0.03] rounded-sm animate-pulse" />
+          ))}
+        </div>
       ) : campaigns.length === 0 ? (
-        <Card className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
-          <CardContent className="text-center py-16">
-            <Megaphone className="w-12 h-12 text-white/40 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-white mb-2">No campaigns yet</h3>
-            <p className="text-sm text-white/40 mb-6">Create your first email campaign to start reaching your contacts</p>
-            <Button variant="primary"><Plus className="w-4 h-4 mr-2" /> Create Campaign</Button>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-white/[0.02] border border-white/[0.06] rounded-sm"
+        >
+          <div className="text-center py-16 px-4">
+            <Megaphone className="w-12 h-12 text-white/20 mx-auto mb-4" />
+            <h3 className="text-lg font-mono font-semibold text-white/90 mb-2">No campaigns yet</h3>
+            <p className="text-sm text-white/40 mb-6">
+              Create your first email campaign to start reaching your contacts
+            </p>
+            <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm rounded-sm px-4 py-2 flex items-center gap-2 mx-auto">
+              <Plus className="w-4 h-4" /> Create Campaign
+            </button>
+          </div>
+        </motion.div>
       ) : (
         <div className="space-y-3">
-          {campaigns.map((c) => (
-            <Card key={c.id} className="bg-white/[0.02] border-[0.5px] border-white/[0.06] hover:bg-white/[0.03] transition-colors cursor-pointer">
-              <CardContent className="p-4">
+          {campaigns.map((c, i) => (
+            <motion.div
+              key={c.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.05 }}
+              className="bg-white/[0.02] border border-white/[0.06] rounded-sm hover:bg-white/[0.03] cursor-pointer"
+            >
+              <div className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <div className="p-2 bg-white/[0.04] rounded-sm flex-shrink-0">
-                      {statusIcons[c.status] || <Mail className="w-5 h-5 text-white/40" />}
+                    <div className="p-2 bg-white/[0.04] rounded-sm flex-shrink-0 text-white/40">
+                      {statusIcons[c.status] || <Mail className="w-5 h-5" />}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-medium text-white truncate">{c.name}</h3>
+                      <h3 className="font-mono font-medium text-white/90 truncate">{c.name}</h3>
                       <p className="text-xs text-white/40 truncate mt-0.5">Subject: {c.subject}</p>
                     </div>
                   </div>
@@ -188,12 +227,19 @@ export default function CampaignsPage() {
                         {new Date(c.scheduled_at).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}
                       </span>
                     )}
-                    <Badge variant="outline" className={`text-[10px] ${statusColors[c.status] || "text-white/40 border-white/[0.08]"}`}>{c.status}</Badge>
-                    <span className="text-[11px] text-white/40">{new Date(c.created_at).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}</span>
+                    <Badge
+                      variant="outline"
+                      className={`text-[10px] font-mono uppercase tracking-widest rounded-sm ${statusColors[c.status] || "text-white/40 border-white/[0.08]"}`}
+                    >
+                      {c.status}
+                    </Badge>
+                    <span className="text-[11px] font-mono text-white/40">
+                      {new Date(c.created_at).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}
+                    </span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </motion.div>
           ))}
         </div>
       )}

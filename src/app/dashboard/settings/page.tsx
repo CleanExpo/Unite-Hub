@@ -1,9 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Loader2, Mail, RefreshCw } from "lucide-react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -124,72 +121,79 @@ export default function SettingsPage() {
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <div className="p-6">
         <Breadcrumbs items={[{ label: "Settings" }]} />
-        <ErrorState
-          title="Failed to Load Settings"
-          message={error}
-          onRetry={loadIntegrations}
-        />
+        <div className="mt-6">
+          <ErrorState
+            title="Failed to Load Settings"
+            message={error}
+            onRetry={loadIntegrations}
+          />
+        </div>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <div className="p-6 space-y-8">
         <Breadcrumbs items={[{ label: "Settings" }]} />
 
         <div className="space-y-2">
-          <Skeleton className="h-10 w-48" />
-          <Skeleton className="h-5 w-64" />
+          <Skeleton className="h-8 w-48 bg-white/[0.04]" />
+          <Skeleton className="h-4 w-64 bg-white/[0.04]" />
         </div>
 
-        <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
-          <CardHeader>
-            <Skeleton className="h-6 w-48" />
-            <Skeleton className="h-4 w-64 mt-2" />
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+          <div className="p-6 border-b border-white/[0.06]">
+            <Skeleton className="h-4 w-48 bg-white/[0.04]" />
+            <Skeleton className="h-3 w-64 mt-2 bg-white/[0.04]" />
+          </div>
+          <div className="p-6 space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm p-4 flex justify-between items-center">
+              <div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 flex justify-between items-center">
                 <div className="space-y-2">
-                  <Skeleton className="h-5 w-24" />
-                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-4 w-24 bg-white/[0.04]" />
+                  <Skeleton className="h-3 w-32 bg-white/[0.04]" />
                 </div>
-                <Skeleton className="h-9 w-24" />
+                <Skeleton className="h-8 w-24 bg-white/[0.04]" />
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+    <div className="p-6 space-y-8">
       <Breadcrumbs items={[{ label: "Settings" }]} />
 
       <div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+        <h1 className="text-2xl font-mono font-semibold text-white/90 mb-1">
           Settings
         </h1>
-        <p className="text-white/70">Manage integrations and account</p>
+        <p className="text-sm font-mono text-white/40">Manage integrations and account</p>
       </div>
 
-      <Card className="bg-[#050505] backdrop-blur-sm border-white/[0.06]">
-        <CardHeader>
-          <CardTitle className="text-white text-xl font-semibold flex items-center gap-2">
-            <Mail className="w-5 h-5" />
-            Email Integrations
-          </CardTitle>
-          <CardDescription className="text-white/70">Connect your email accounts</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm p-4 flex justify-between items-center hover:border-white/[0.08] transition-all">
+      {/* Email Integrations */}
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+        <div className="p-6 border-b border-white/[0.06]">
+          <div className="flex items-center gap-2">
+            <Mail className="w-4 h-4 text-[#00F5FF]" />
+            <h2 className="text-xs font-mono text-white/40 uppercase tracking-widest">
+              Email Integrations
+            </h2>
+          </div>
+          <p className="mt-1 text-sm font-mono text-white/40">Connect your email accounts</p>
+        </div>
+
+        <div className="p-6 space-y-3">
+          {/* Gmail */}
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 flex justify-between items-center">
             <div>
-              <h4 className="font-semibold text-white">Gmail</h4>
-              <p className="text-sm text-white/70">
+              <h4 className="text-sm font-mono font-semibold text-white/90">Gmail</h4>
+              <p className="text-xs font-mono text-white/40 mt-0.5">
                 {integrations.find((i) => i.provider === "gmail")
                   ? `Connected: ${integrations.find((i) => i.provider === "gmail")?.account_email}`
                   : "Not connected"}
@@ -198,15 +202,14 @@ export default function SettingsPage() {
             <div className="flex gap-2">
               {integrations.find((i) => i.provider === "gmail") ? (
                 <>
-                  <Button
+                  <button
                     onClick={() =>
                       syncEmails(
                         integrations.find((i) => i.provider === "gmail")?.id
                       )
                     }
                     disabled={syncing}
-                    size="sm"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2"
+                    className="flex items-center gap-1.5 bg-[#00F5FF] text-[#050505] font-mono text-sm rounded-sm px-4 py-2 disabled:opacity-40"
                   >
                     {syncing ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -214,44 +217,48 @@ export default function SettingsPage() {
                       <RefreshCw className="w-4 h-4" />
                     )}
                     Sync Now
-                  </Button>
-                  <Button size="sm" variant="outline" className="border-white/[0.06] bg-[#050505] backdrop-blur-sm text-white/70 hover:bg-white/[0.06] hover:border-white/[0.08]">
+                  </button>
+                  <button className="bg-white/[0.04] border border-white/[0.06] text-white/60 font-mono text-sm rounded-sm px-4 py-2">
                     Disconnect
-                  </Button>
+                  </button>
                 </>
               ) : (
-                <Button
+                <button
                   onClick={connectGmail}
-                  size="sm"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50"
+                  className="bg-[#00F5FF] text-[#050505] font-mono text-sm rounded-sm px-4 py-2"
                 >
                   Connect
-                </Button>
+                </button>
               )}
             </div>
           </div>
 
-          <div className="bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm p-4 flex justify-between items-center hover:border-white/[0.08] transition-all">
+          {/* Outlook */}
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 flex justify-between items-center">
             <div>
-              <h4 className="font-semibold text-white">Outlook</h4>
-              <p className="text-sm text-white/70">Not connected</p>
+              <h4 className="text-sm font-mono font-semibold text-white/90">Outlook</h4>
+              <p className="text-xs font-mono text-white/40 mt-0.5">Not connected</p>
             </div>
-            <Button size="sm" className="bg-white/[0.06] hover:bg-white/[0.06] text-white/70" disabled>
+            <button
+              disabled
+              className="bg-white/[0.04] border border-white/[0.06] text-white/20 font-mono text-sm rounded-sm px-4 py-2 cursor-not-allowed"
+            >
               Coming Soon
-            </Button>
+            </button>
           </div>
 
-          <div className="bg-[#050505] backdrop-blur-sm border border-white/[0.06] rounded-sm p-4 flex justify-between items-center hover:border-white/[0.08] transition-all">
+          {/* Slack */}
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4 flex justify-between items-center">
             <div>
-              <h4 className="font-semibold text-white">Slack</h4>
-              <p className="text-sm text-white/70">Get notified of hot leads and email events</p>
+              <h4 className="text-sm font-mono font-semibold text-white/90">Slack</h4>
+              <p className="text-xs font-mono text-white/40 mt-0.5">Get notified of hot leads and email events</p>
             </div>
-            <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50">
+            <button className="bg-[#00F5FF] text-[#050505] font-mono text-sm rounded-sm px-4 py-2">
               Connect
-            </Button>
+            </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

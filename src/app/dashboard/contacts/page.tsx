@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -130,49 +131,53 @@ export default function ContactsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+    <motion.div
+      className="p-6 space-y-6"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <Breadcrumbs items={[{ label: "Contacts" }]} />
 
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold text-white/90 mb-2">
+          <h1 className="text-xl font-mono font-bold text-white/90 tracking-wide mb-1">
             Contacts
           </h1>
-          <p className="text-white/40">Manage all your contacts and leads in one place</p>
+          <p className="text-white/40 text-sm">Manage all your contacts and leads in one place</p>
         </div>
-        <Button
+        <button
           onClick={() => setIsAddModalOpen(true)}
-          variant="primary"
-          className="gap-2"
+          className="flex items-center gap-2 bg-[#00F5FF] text-[#050505] font-mono text-sm rounded-sm px-4 py-2 hover:bg-[#00F5FF]/90"
         >
           <Plus className="w-4 h-4" />
           Add Contact
-        </Button>
+        </button>
       </div>
 
       {/* Search & Filter */}
       <div className="flex gap-3">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-3 w-5 h-5 text-white/40" />
+          <Search className="absolute left-3 top-3 w-4 h-4 text-white/40" />
           <Input
             placeholder="Search contacts by name, email, or company..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-11 h-12 bg-white/[0.02] border-white/[0.06] text-white placeholder:text-white/40 focus:border-[#00F5FF]/50"
+            className="pl-10 h-10 bg-white/[0.04] border-white/[0.06] text-white/90 placeholder:text-white/20 rounded-sm focus:border-[#00F5FF]/50"
           />
         </div>
-        <Button variant="outline" className="border-white/[0.06] bg-white/[0.02] text-white/70 hover:bg-white/[0.04] hover:border-white/[0.08] gap-2 h-12">
+        <button className="flex items-center gap-2 border border-white/[0.06] bg-white/[0.02] text-white/40 font-mono text-sm rounded-sm px-4 py-2 hover:bg-white/[0.04] hover:border-white/[0.08]">
           <Filter className="w-4 h-4" />
           Filter
-        </Button>
+        </button>
       </div>
 
       {/* Stats */}
       {loading ? (
         <StatsGridSkeleton count={4} />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="Total Contacts"
             value={contacts.length.toString()}
@@ -203,12 +208,12 @@ export default function ContactsPage() {
       )}
 
       {/* Contacts Table */}
-      <Card className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
-        <CardHeader>
-          <CardTitle className="text-white text-xl font-semibold">All Contacts</CardTitle>
-          <CardDescription className="text-white/40">View and manage your contact database</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-white/[0.02] border border-white/[0.06] rounded-sm">
+        <div className="px-6 py-4 border-b border-white/[0.06]">
+          <h2 className="text-xl font-mono font-bold text-white/90 tracking-wide">All Contacts</h2>
+          <p className="text-white/40 text-sm mt-0.5">View and manage your contact database</p>
+        </div>
+        <div className="p-6">
           {error ? (
             <ErrorState
               title="Failed to load contacts"
@@ -224,56 +229,59 @@ export default function ContactsPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-sm bg-white/[0.04] border border-white/[0.06] mb-4">
                 <Users className="h-8 w-8 text-[#00F5FF]" />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">
+              <h3 className="text-base font-mono font-semibold text-white/90 mb-2">
                 {searchTerm ? "No contacts found" : "No contacts yet"}
               </h3>
-              <p className="text-white/40 mb-4">
+              <p className="text-white/40 text-sm mb-4">
                 {searchTerm ? "Try a different search term" : "Add your first contact to get started"}
               </p>
               {!searchTerm && (
-                <Button variant="primary" className="gap-2">
+                <button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="flex items-center gap-2 mx-auto bg-[#00F5FF] text-[#050505] font-mono text-sm rounded-sm px-4 py-2 hover:bg-[#00F5FF]/90"
+                >
                   <Plus className="w-4 h-4" />
                   Add Contact
-                </Button>
+                </button>
               )}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-white/[0.06] hover:bg-white/[0.02]">
-                    <TableHead className="text-white/70 font-semibold">Name</TableHead>
-                    <TableHead className="text-white/70 font-semibold">Company</TableHead>
-                    <TableHead className="text-white/70 font-semibold">Email</TableHead>
-                    <TableHead className="text-white/70 font-semibold">AI Score</TableHead>
-                    <TableHead className="text-white/70 font-semibold">Status</TableHead>
-                    <TableHead className="text-white/70 font-semibold">Last Interaction</TableHead>
-                    <TableHead className="text-white/70 font-semibold">Actions</TableHead>
+                  <TableRow className="border-b border-white/[0.04] hover:bg-transparent">
+                    <TableHead className="text-[10px] font-mono uppercase tracking-widest text-white/20">Name</TableHead>
+                    <TableHead className="text-[10px] font-mono uppercase tracking-widest text-white/20">Company</TableHead>
+                    <TableHead className="text-[10px] font-mono uppercase tracking-widest text-white/20">Email</TableHead>
+                    <TableHead className="text-[10px] font-mono uppercase tracking-widest text-white/20">AI Score</TableHead>
+                    <TableHead className="text-[10px] font-mono uppercase tracking-widest text-white/20">Status</TableHead>
+                    <TableHead className="text-[10px] font-mono uppercase tracking-widest text-white/20">Last Interaction</TableHead>
+                    <TableHead className="text-[10px] font-mono uppercase tracking-widest text-white/20">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {contacts.map((contact) => (
-                  <TableRow key={contact.id} className="border-white/[0.06] hover:bg-white/[0.02] transition-colors">
+                  <TableRow key={contact.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
                     <TableCell>
                       <Link
                         href={`/dashboard/contacts/${contact.id}`}
-                        className="text-white font-semibold hover:text-[#00F5FF] transition-colors"
+                        className="text-white/90 font-mono font-semibold hover:text-[#00F5FF]"
                       >
                         {contact.name}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-white/40">{contact.company || "—"}</TableCell>
+                    <TableCell className="text-white/40 font-mono text-sm">{contact.company || "—"}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <a
                           href={`mailto:${contact.email}`}
-                          className="text-[#00F5FF] hover:text-[#00F5FF]/80 flex items-center gap-1 transition-colors"
+                          className="text-[#00F5FF] hover:text-[#00F5FF]/80 flex items-center gap-1 font-mono text-sm"
                         >
-                          <Mail className="w-4 h-4" />
+                          <Mail className="w-3.5 h-3.5" />
                           {contact.email}
                         </a>
                         {contact.emailCount && contact.emailCount > 1 && (
-                          <Badge className="bg-white/[0.04] text-white/40 border border-white/[0.08] text-xs">
+                          <Badge className="bg-transparent text-white/40 border border-white/[0.08] text-xs rounded-sm font-mono">
                             +{contact.emailCount - 1}
                           </Badge>
                         )}
@@ -283,10 +291,10 @@ export default function ContactsPage() {
                       <Badge
                         className={
                           (contact.ai_score || 0) >= 80
-                            ? "bg-[#00FF88]/10 text-[#00FF88] border border-[#00FF88]/30"
+                            ? "bg-transparent text-[#00FF88] border border-[#00FF88]/30 rounded-sm font-mono text-xs"
                             : (contact.ai_score || 0) >= 70
-                            ? "bg-[#FFB800]/10 text-[#FFB800] border border-[#FFB800]/30"
-                            : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                            ? "bg-transparent text-[#FFB800] border border-[#FFB800]/30 rounded-sm font-mono text-xs"
+                            : "bg-transparent text-[#FFB800]/60 border border-[#FFB800]/20 rounded-sm font-mono text-xs"
                         }
                       >
                         {contact.ai_score || 0}
@@ -296,36 +304,36 @@ export default function ContactsPage() {
                       <Badge
                         className={
                           contact.status === "prospect"
-                            ? "bg-[#00FF88]/10 text-[#00FF88] border border-[#00FF88]/30"
+                            ? "bg-transparent text-[#00FF88] border border-[#00FF88]/30 rounded-sm font-mono text-xs"
                             : contact.status === "lead"
-                            ? "bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/30"
-                            : "bg-white/[0.04] text-white/40 border border-white/[0.06]"
+                            ? "bg-transparent text-[#00F5FF] border border-[#00F5FF]/30 rounded-sm font-mono text-xs"
+                            : "bg-transparent text-white/40 border border-white/[0.06] rounded-sm font-mono text-xs"
                         }
                       >
                         {contact.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-white/40">
+                    <TableCell className="text-white/40 font-mono text-sm">
                       {contact.last_interaction ? new Date(contact.last_interaction).toLocaleDateString() : '—'}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button size="sm" variant="ghost" className="hover:bg-white/[0.04]">
+                          <button className="p-1.5 rounded-sm text-white/40 hover:text-white/90 hover:bg-white/[0.04]">
                             <MoreHorizontal className="w-4 h-4" />
-                          </Button>
+                          </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-[#0a0a0a] border-white/[0.06]">
+                        <DropdownMenuContent align="end" className="bg-[#0a0a0a] border border-white/[0.06] rounded-sm">
                           <DropdownMenuItem
                             onClick={() => handleSendEmail(contact)}
-                            className="text-white/60 hover:text-white/90 hover:bg-white/[0.04] cursor-pointer"
+                            className="text-white/60 hover:text-white/90 hover:bg-white/[0.04] cursor-pointer font-mono text-sm rounded-sm"
                           >
                             <Mail className="w-4 h-4 mr-2" />
                             Send Email
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleEditClick(contact)}
-                            className="text-white/60 hover:text-white/90 hover:bg-white/[0.04] cursor-pointer"
+                            className="text-white/60 hover:text-white/90 hover:bg-white/[0.04] cursor-pointer font-mono text-sm rounded-sm"
                           >
                             <Edit className="w-4 h-4 mr-2" />
                             Edit Contact
@@ -333,7 +341,7 @@ export default function ContactsPage() {
                           <DropdownMenuItem asChild>
                             <Link
                               href={`/dashboard/contacts/${contact.id}`}
-                              className="text-white/60 hover:text-white/90 hover:bg-white/[0.04] flex items-center cursor-pointer"
+                              className="text-white/60 hover:text-white/90 hover:bg-white/[0.04] flex items-center cursor-pointer font-mono text-sm rounded-sm"
                             >
                               <ExternalLink className="w-4 h-4 mr-2" />
                               View Profile
@@ -341,7 +349,7 @@ export default function ContactsPage() {
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDeleteClick(contact)}
-                            className="text-red-400 hover:text-red-300 hover:bg-red-400/10 cursor-pointer"
+                            className="text-[#FF4444] hover:text-[#FF4444]/80 hover:bg-[#FF4444]/10 cursor-pointer font-mono text-sm rounded-sm"
                           >
                             Delete
                           </DropdownMenuItem>
@@ -354,8 +362,8 @@ export default function ContactsPage() {
               </Table>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Add Contact Modal */}
       {workspaceId && (
@@ -420,7 +428,7 @@ export default function ContactsPage() {
           onContactUpdated={handleContactUpdated}
         />
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -436,18 +444,23 @@ function StatCard({
   iconColor: string;
 }) {
   return (
-    <Card className="bg-white/[0.02] border-[0.5px] border-white/[0.06] hover:border-white/[0.08] transition-all group">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="h-12 w-12 rounded-sm bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Icon className={`h-6 w-6 ${iconColor}`} />
-          </div>
-        </div>
-        <div className="space-y-1">
-          <p className="text-sm text-white/40 font-medium">{title}</p>
-          <p className="text-3xl font-bold text-white">{value}</p>
-        </div>
-      </CardContent>
-    </Card>
+    <motion.div
+      className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-6 hover:border-white/[0.08] group"
+      whileHover={{ borderColor: "rgba(255,255,255,0.08)" }}
+    >
+      <div className="flex items-start justify-between mb-4">
+        <motion.div
+          className="h-12 w-12 rounded-sm bg-white/[0.04] border border-white/[0.06] flex items-center justify-center"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Icon className={`h-6 w-6 ${iconColor}`} />
+        </motion.div>
+      </div>
+      <div className="space-y-1">
+        <p className="text-[10px] font-mono uppercase tracking-widest text-white/20">{title}</p>
+        <p className="text-3xl font-mono font-bold text-white/90">{value}</p>
+      </div>
+    </motion.div>
   );
 }

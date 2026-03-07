@@ -1,91 +1,107 @@
 "use client";
 
-import React from "react";
+import { motion } from "framer-motion";
 import { MessageSquare, Phone, Mail, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+
+const EASE = [0.19, 1, 0.22, 1] as const;
+
+const CHANNELS = [
+  {
+    name: "WhatsApp",
+    description: "Manage WhatsApp conversations with contacts",
+    icon: MessageSquare,
+    href: "/dashboard/messages/whatsapp",
+    status: "Active",
+    colour: "#00FF88",
+    unread: 5,
+  },
+  {
+    name: "SMS",
+    description: "Send and receive SMS messages",
+    icon: Phone,
+    href: "/dashboard/messages/sms",
+    status: "Coming Soon",
+    colour: "#FFB800",
+    unread: 0,
+  },
+  {
+    name: "Email",
+    description: "Direct email messaging",
+    icon: Mail,
+    href: "/dashboard/emails",
+    status: "Active",
+    colour: "#00F5FF",
+    unread: 0,
+  },
+];
 
 export default function MessagesPage() {
-  const channels = [
-    {
-      name: "WhatsApp",
-      description: "Manage WhatsApp conversations with contacts",
-      icon: MessageSquare,
-      href: "/dashboard/messages/whatsapp",
-      status: "Active",
-      unread: 5,
-    },
-    {
-      name: "SMS",
-      description: "Send and receive SMS messages",
-      icon: Phone,
-      href: "/dashboard/messages/sms",
-      status: "Coming Soon",
-      unread: 0,
-    },
-    {
-      name: "Email",
-      description: "Direct email messaging",
-      icon: Mail,
-      href: "/dashboard/emails",
-      status: "Active",
-      unread: 12,
-    },
-  ];
-
   return (
-    <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Messages</h1>
-        <p className="text-muted-foreground">Manage all your communication channels</p>
-      </div>
+    <div className="p-6 max-w-3xl">
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: EASE }}
+        className="mb-8"
+      >
+        <div className="flex items-center gap-2 mb-1">
+          <MessageSquare className="h-5 w-5 text-[#00F5FF]" />
+          <h1 className="text-xl font-mono font-bold text-white/90 tracking-wide">MESSAGES</h1>
+        </div>
+        <p className="text-sm text-white/40">Unified messaging across all channels</p>
+      </motion.div>
 
-      {/* Channel Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {channels.map((channel) => (
-          <Card key={channel.name} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-sm bg-primary/10">
-                    <channel.icon className="h-6 w-6 text-primary" />
+      <div className="space-y-3">
+        {CHANNELS.map((channel, i) => {
+          const Icon = channel.icon;
+          return (
+            <motion.div
+              key={channel.name}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.06 + i * 0.07, ease: EASE }}
+            >
+              <Link
+                href={channel.href}
+                className="flex items-center justify-between bg-white/[0.02] border border-white/[0.06] rounded-sm p-5 hover:border-white/[0.12] hover:bg-white/[0.03] transition-colors group block"
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className="w-10 h-10 rounded-sm flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${channel.colour}10`, border: `1px solid ${channel.colour}30` }}
+                  >
+                    <Icon className="h-5 w-5" style={{ color: channel.colour }} />
                   </div>
                   <div>
-                    <CardTitle>{channel.name}</CardTitle>
-                    {channel.unread > 0 && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        {channel.unread} unread
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-white/90">{channel.name}</p>
+                      {channel.unread > 0 && (
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/30">
+                          {channel.unread} new
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-white/40 mt-0.5">{channel.description}</p>
                   </div>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full ${
-                  channel.status === "Active"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-gray-100 text-gray-600"
-                }`}>
-                  {channel.status}
-                </span>
-              </div>
-              <CardDescription className="mt-2">
-                {channel.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button
-                variant="outline"
-                className="w-full"
-                asChild
-                disabled={channel.status !== "Active"}
-              >
-                <Link href={channel.href}>
-                  Open {channel.name} <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+                <div className="flex items-center gap-3">
+                  <span
+                    className="text-[10px] font-mono px-2 py-0.5 rounded-sm border"
+                    style={{
+                      color: channel.colour,
+                      borderColor: `${channel.colour}40`,
+                      backgroundColor: `${channel.colour}10`,
+                    }}
+                  >
+                    {channel.status}
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-white/20 group-hover:text-white/50 transition-colors" />
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, TrendingUp, Users, Mail, Target, Activity, Eye, DollarSign, Megaphone, CheckSquare } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  BarChart3, Users, Mail, Target, Activity, Eye, DollarSign, Megaphone, CheckSquare,
+} from "lucide-react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -109,7 +111,7 @@ export default function AnalyticsPage() {
 
   if (workspaceLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="p-6">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-white/[0.03] rounded-sm w-48" />
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -121,96 +123,120 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <div className="p-6 space-y-6">
+      {/* Page header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Analytics</h1>
+        <h1 className="text-2xl font-bold font-mono text-white/90">Analytics</h1>
         <p className="text-sm text-white/40 mt-1">Track performance metrics and business insights</p>
         {isInTrial && (
           <div className="mt-4 p-3 bg-[#00F5FF]/[0.05] border border-[#00F5FF]/20 rounded-sm flex items-center gap-2">
             <Eye className="h-4 w-4 text-[#00F5FF]" />
-            <span className="text-sm text-white/70">
-              <strong className="text-white">Read-only mode:</strong> During your trial, analytics are viewable but not editable.
+            <span className="text-sm text-white/40">
+              <strong className="text-white/90">Read-only mode:</strong> During your trial, analytics are viewable but not editable.
             </span>
           </div>
         )}
       </div>
 
+      {/* Metric cards */}
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => <div key={i} className="h-24 bg-white/[0.03] rounded-sm animate-pulse" />)}
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-24 bg-white/[0.03] rounded-sm animate-pulse" />
+          ))}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {metrics.map((m) => (
-            <Card key={m.label} className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`p-2 rounded-sm ${m.bgColor}`}>
-                    <m.icon className={`h-5 w-5 ${m.color}`} />
-                  </div>
-                  <span className="text-xs text-white/40">{m.label}</span>
+          {metrics.map((m, i) => (
+            <motion.div
+              key={m.label}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.05 }}
+              className="bg-white/[0.02] border border-white/[0.06] rounded-sm p-4"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`p-2 rounded-sm ${m.bgColor}`}>
+                  <m.icon className={`h-5 w-5 ${m.color}`} />
                 </div>
-                <p className="text-2xl font-bold text-white">{m.value}</p>
-              </CardContent>
-            </Card>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-white/20">
+                  {m.label}
+                </span>
+              </div>
+              <p className="text-2xl font-bold font-mono text-white/90">{m.value}</p>
+            </motion.div>
           ))}
         </div>
       )}
 
-      <Card className="bg-white/[0.02] border-[0.5px] border-white/[0.06]">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" /> Performance Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {/* Deal Conversion Funnel */}
-            <div>
-              <p className="text-sm text-white/40 mb-2">Deal Pipeline Health</p>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 bg-white/[0.06] rounded-none h-3">
-                  <div
-                    className="bg-[#00F5FF] h-3 rounded-none transition-all"
-                    style={{ width: `${Math.min(100, analytics.dealsCount * 10)}%` }}
-                  />
-                </div>
-                <span className="text-sm text-white font-medium">{analytics.dealsCount} open deals</span>
+      {/* Performance overview */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.35 }}
+        className="bg-white/[0.02] border border-white/[0.06] rounded-sm"
+      >
+        <div className="p-4 border-b border-white/[0.06]">
+          <h2 className="text-white/90 font-mono font-semibold flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-[#00F5FF]" /> Performance Overview
+          </h2>
+        </div>
+        <div className="p-4 space-y-4">
+          {/* Deal Conversion Funnel */}
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">
+              Deal Pipeline Health
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 bg-white/[0.06] h-3">
+                <div
+                  className="bg-[#00F5FF] h-3"
+                  style={{ width: `${Math.min(100, analytics.dealsCount * 10)}%` }}
+                />
               </div>
-            </div>
-
-            {/* Task Completion Rate */}
-            <div>
-              <p className="text-sm text-white/40 mb-2">Task Completion Rate</p>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 bg-white/[0.06] rounded-none h-3">
-                  <div
-                    className="bg-[#00FF88] h-3 rounded-none transition-all"
-                    style={{ width: `${analytics.tasksTotal > 0 ? (analytics.tasksCompleted / analytics.tasksTotal) * 100 : 0}%` }}
-                  />
-                </div>
-                <span className="text-sm text-white font-medium">
-                  {analytics.tasksTotal > 0 ? Math.round((analytics.tasksCompleted / analytics.tasksTotal) * 100) : 0}%
-                </span>
-              </div>
-            </div>
-
-            {/* Email Activity */}
-            <div>
-              <p className="text-sm text-white/40 mb-2">Email Activity</p>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 bg-white/[0.06] rounded-none h-3">
-                  <div
-                    className="bg-[#00F5FF] h-3 rounded-none transition-all"
-                    style={{ width: `${Math.min(100, analytics.emailsSent * 2)}%` }}
-                  />
-                </div>
-                <span className="text-sm text-white font-medium">{analytics.emailsSent} sent</span>
-              </div>
+              <span className="text-sm font-mono text-white/90">{analytics.dealsCount} open deals</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Task Completion Rate */}
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">
+              Task Completion Rate
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 bg-white/[0.06] h-3">
+                <div
+                  className="bg-[#00FF88] h-3"
+                  style={{
+                    width: `${analytics.tasksTotal > 0 ? (analytics.tasksCompleted / analytics.tasksTotal) * 100 : 0}%`,
+                  }}
+                />
+              </div>
+              <span className="text-sm font-mono text-white/90">
+                {analytics.tasksTotal > 0
+                  ? Math.round((analytics.tasksCompleted / analytics.tasksTotal) * 100)
+                  : 0}%
+              </span>
+            </div>
+          </div>
+
+          {/* Email Activity */}
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/20 mb-2">
+              Email Activity
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 bg-white/[0.06] h-3">
+                <div
+                  className="bg-[#00F5FF] h-3"
+                  style={{ width: `${Math.min(100, analytics.emailsSent * 2)}%` }}
+                />
+              </div>
+              <span className="text-sm font-mono text-white/90">{analytics.emailsSent} sent</span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
