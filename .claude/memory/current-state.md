@@ -11,10 +11,13 @@ COMPLETE — Kanban + Obsidian integration shipped to production.
 - **Vercel project**: `unite-group/unite-group` (re-linked from deleted `unite-hub`)
 
 ## Resolved Issues
-- `syd1::DEPLOYMENT_NOT_FOUND` — fixed by Redis graceful degradation + new deployment
+- `syd1::DEPLOYMENT_NOT_FOUND` — new deployment propagated routing to all edge nodes
 - Redis `ECONNREFUSED 127.0.0.1:6379` — fixed in `src/lib/cache/redis-client.ts` (`disabled` flag)
 - Migration 520 idempotency — `DROP POLICY IF EXISTS` added
 - `.vercel/project.json` pointed to deleted project — re-linked via `vercel link`
+- **Auth broken** — `NEXT_PUBLIC_BASE_URL`, `NEXTAUTH_URL`, `NEXT_PUBLIC_URL` all pointed to deleted `unite-hub.vercel.app` — updated to `https://unite-group.in` via Vercel API
+- **Supabase Site URL** — was `https://unite-hub.vercel.app` — updated to `https://unite-group.in`
+- **Supabase Redirect URLs** — added `https://unite-group.in/auth/callback`
 
 ## Kanban Feature (9 commits on main)
 All files present: obsidian-sync service, 4 API routes, 6 UI components, MCP server, migration 520
