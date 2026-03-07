@@ -60,7 +60,8 @@ export class XeroService {
    * Exchange authorization code for tokens
    */
   async exchangeCodeForToken(code: string): Promise<TokenSet> {
-    const tokenSet = await this.client.apiCallback(`http://localhost:3008/api/integrations/xero/callback?code=${code}`);
+    const redirectUri = process.env.XERO_REDIRECT_URI || 'http://localhost:3008/api/integrations/xero/callback';
+    const tokenSet = await this.client.apiCallback(`${redirectUri}?code=${code}`);
     return tokenSet;
   }
 
@@ -253,7 +254,7 @@ export class XeroService {
       console.error('❌ Xero connection test failed:', error);
       return {
         success: false,
-        error: error.message
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }

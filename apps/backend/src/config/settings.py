@@ -40,6 +40,15 @@ class Settings(BaseSettings):
         description="Allowed CORS origins. Set CORS_ORIGINS env var in production.",
     )
 
+    # FRONTEND_URL is the canonical public URL of the Next.js frontend.
+    # If set, it is automatically added to cors_origins so production deployments
+    # (e.g. Vercel) are permitted without needing to repeat the URL in CORS_ORIGINS.
+    # Example: FRONTEND_URL=https://unite-group.vercel.app
+    frontend_url: str = Field(
+        default="",
+        description="Canonical frontend URL. Automatically appended to cors_origins when set.",
+    )
+
     # Database (PostgreSQL)
     database_url: str = Field(
         default="postgresql://starter_user:local_dev_password@localhost:5433/starter_db",
@@ -60,8 +69,13 @@ class Settings(BaseSettings):
     )
 
     @model_validator(mode="after")
-    def _reject_unsafe_defaults_in_production(self) -> "Settings":
-        """Reject insecure default secrets when running in production."""
+    def _validate_settings(self) -> "Settings":
+        """Combined post-validation: CORS expansion and production safety checks."""
+        # Append FRONTEND_URL to cors_origins if set and not already present
+        if self.frontend_url and self.frontend_url not in self.cors_origins:
+            self.cors_origins = [*self.cors_origins, self.frontend_url]
+
+        # Reject insecure JWT defaults in production
         if self.environment == "production":
             if self.jwt_secret_key in _UNSAFE_JWT_DEFAULTS:
                 raise ValueError(
