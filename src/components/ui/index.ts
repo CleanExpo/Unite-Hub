@@ -13,9 +13,6 @@ export * from './avatar';
 // Badge - default export
 export { default as Badge } from './badge';
 
-// Breadcrumbs - PascalCase file
-export { default as Breadcrumbs } from './Breadcrumbs';
-
 // Button - default export
 export { default as Button } from './button';
 

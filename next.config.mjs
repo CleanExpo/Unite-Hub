@@ -37,8 +37,9 @@ const nextConfig = {
     root: path.resolve(process.cwd()),
   },
 
-  // Enable standalone output for Docker
-  output: 'standalone',
+  // standalone output disabled — Vercel deployment does not require it
+  // (also incompatible with Windows NTFS due to colon in chunk filenames)
+  // output: 'standalone',
 
   // Compression
   compress: true,
