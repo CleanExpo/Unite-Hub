@@ -16,8 +16,8 @@ let _supabaseStaff: SupabaseClient<Database> | null = null;
 export function getSupabaseStaff(): SupabaseClient<Database> {
   if (!_supabaseStaff) {
     _supabaseStaff = createClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         auth: {
           persistSession: true,
