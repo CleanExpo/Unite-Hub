@@ -2,6 +2,13 @@ import { defineConfig } from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 
+/**
+ * Vitest Configuration — Unite-Group Nexus 2.0
+ *
+ * Unit + integration tests for all Nexus 2.0 source files.
+ * E2E tests use Playwright (playwright.config.ts).
+ */
+
 export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
@@ -11,31 +18,32 @@ export default defineConfig({
       ['**/*.test.tsx', 'jsdom'],
       ['**/components/**/*.test.ts', 'jsdom'],
     ],
-    setupFiles: ['./tests/setup.ts'],
-    // Exclude Playwright tests and separate projects
+    setupFiles: ['./vitest.setup.ts'],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
       '**/.next/**',
       '**/coverage/**',
-      '**/*.spec.ts', // Playwright E2E tests
-      '**/tests/e2e/**', // E2E test directory
-      '**/*.e2e.spec.ts', // E2E test files
-      '**/NodeJS-Starter-V1/**', // Separate project with own test setup
-      '**/external/**', // External projects (Auto-Claude, etc.)
-      '**/tests/api/**', // HTTP integration tests (require running server)
-      'apps/web/__tests__/**', // apps/web has its own @/ alias (apps/web root), incompatible with root config
-      'apps/web/tests/contracts/**', // Pact contract tests require a running server
-      'packages/veritas-kanban-mcp/web/**', // Has own vitest.config.ts with correct @/ alias
+      '**/tests/**',                          // v1 legacy test suite — references deleted modules
+      '**/*.spec.ts',                         // Playwright E2E — use `pnpm playwright test` instead
+      '**/e2e/**',
+      'apps/web/**',                          // apps/web has its own @/ alias (apps/web root), incompatible with root config
+      'packages/veritas-kanban-mcp/web/**',   // separate package with own vitest.config.ts
+      'NodeJS-Starter-V1/**',                 // separate project — has its own test setup
     ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
-      include: ['src/cli/services/**/*.ts', 'src/cli/commands/**/*.ts'],
+      include: [
+        'src/lib/**/*.ts',
+        'src/app/api/**/*.ts',
+        'src/components/ui/**/*.tsx',
+        'src/hooks/**/*.ts',
+      ],
       exclude: [
         'node_modules/',
-        'tests/',
         '**/*.test.ts',
+        '**/*.test.tsx',
         '**/*.spec.ts',
         '**/types.ts',
         '**/index.ts',
@@ -53,8 +61,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@/next': path.resolve(__dirname, './next'),
-      '@/convex': path.resolve(__dirname, './convex'),
       '@config': path.resolve(__dirname, './config'),
     },
   },
