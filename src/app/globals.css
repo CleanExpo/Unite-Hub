@@ -238,3 +238,36 @@
 *::-webkit-scrollbar { width: 2px; height: 2px; }
 *::-webkit-scrollbar-thumb { background: #333; }
 *::-webkit-scrollbar-track { background: transparent; }
+
+/* Novel block editor */
+.novel-editor .ProseMirror {
+  outline: none;
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  color: #c4c4c4;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.novel-editor .ProseMirror h1 {
+  font-size: 30px;
+  font-weight: 600;
+  color: #f0f0f0;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+.novel-editor .ProseMirror h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #e0e0e0;
+  letter-spacing: -0.02em;
+  margin: 24px 0 8px;
+}
+.novel-editor .ProseMirror p {
+  margin: 0 0 4px;
+}
+.novel-editor .ProseMirror .is-empty::before {
+  color: #555;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
