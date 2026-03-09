@@ -1,0 +1,43 @@
+// src/components/layout/SidebarNav.tsx
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { LayoutDashboard, Columns2, Lock, ClipboardCheck } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+const NAV_ITEMS = [
+  { href: '/founder/dashboard', label: 'Dashboard',  icon: LayoutDashboard },
+  { href: '/founder/kanban',    label: 'Kanban',     icon: Columns2 },
+  { href: '/founder/vault',     label: 'Vault',      icon: Lock },
+  { href: '/founder/approvals', label: 'Approvals',  icon: ClipboardCheck },
+] as const
+
+interface SidebarNavProps { collapsed: boolean }
+
+export function SidebarNav({ collapsed }: SidebarNavProps) {
+  const pathname = usePathname()
+
+  return (
+    <nav className="flex flex-col gap-0.5 px-2">
+      {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        const active = pathname.startsWith(href)
+        return (
+          <Link
+            key={href}
+            href={href}
+            className={cn(
+              'relative flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors duration-100',
+              active
+                ? 'text-[#f0f0f0] bg-[#161616] before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:bg-[#00F5FF] before:rounded-r-sm'
+                : 'text-[#888] hover:bg-[#111] hover:text-[#ccc]'
+            )}
+          >
+            <Icon size={16} strokeWidth={1.75} className="shrink-0" />
+            {!collapsed && <span>{label}</span>}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
