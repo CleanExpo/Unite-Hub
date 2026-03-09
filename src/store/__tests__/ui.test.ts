@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react'
 import { useUIStore } from '../ui'
 
 beforeEach(() => {
-  useUIStore.setState({ sidebarOpen: true, expandedBusinesses: [] })
+  useUIStore.setState({ sidebarOpen: true, expandedBusinesses: [], theme: 'dark' })
 })
 
 describe('useUIStore', () => {
@@ -32,5 +32,25 @@ describe('useUIStore', () => {
     const { result } = renderHook(() => useUIStore())
     act(() => result.current.toggleBusiness('dr'))
     expect(result.current.expandedBusinesses).not.toContain('dr')
+  })
+})
+
+describe('theme', () => {
+  it('defaults to dark', () => {
+    const { result } = renderHook(() => useUIStore())
+    expect(result.current.theme).toBe('dark')
+  })
+
+  it('toggleTheme switches dark → light', () => {
+    const { result } = renderHook(() => useUIStore())
+    act(() => result.current.toggleTheme())
+    expect(result.current.theme).toBe('light')
+  })
+
+  it('toggleTheme switches light → dark', () => {
+    useUIStore.setState({ sidebarOpen: true, expandedBusinesses: [], theme: 'light' })
+    const { result } = renderHook(() => useUIStore())
+    act(() => result.current.toggleTheme())
+    expect(result.current.theme).toBe('dark')
   })
 })
