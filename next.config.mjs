@@ -90,16 +90,6 @@ const nextConfig = {
 
   // Security and caching headers
   headers: async () => [
-    // Aggressive caching for static assets (JavaScript, CSS, fonts)
-    {
-      source: '/_next/static/:path*',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=31536000, immutable',
-        },
-      ],
-    },
     // Aggressive caching for public static files
     {
       source: '/static/:path*',
