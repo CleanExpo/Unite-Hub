@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { NovelEditor } from '@/components/founder/editor/NovelEditor'
 
 interface Props {

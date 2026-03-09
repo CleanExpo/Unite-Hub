@@ -1,4 +1,6 @@
 // src/app/(founder)/founder/dashboard/page.tsx
+export const dynamic = 'force-dynamic'
+
 import { KPIGrid } from '@/components/founder/dashboard/KPIGrid'
 
 export default function DashboardPage() {

@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import { VaultLock } from '@/components/founder/vault/VaultLock'
 import { VaultGrid } from '@/components/founder/vault/VaultGrid'

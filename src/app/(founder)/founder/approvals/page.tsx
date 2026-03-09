@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { ApprovalQueue } from '@/components/founder/approvals/ApprovalQueue'
 
 export default function ApprovalsPage() {

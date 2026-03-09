@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { KanbanBoard } from '@/components/founder/kanban/KanbanBoard'
 
 export default function KanbanPage() {
