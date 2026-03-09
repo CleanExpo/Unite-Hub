@@ -22,6 +22,17 @@ logs/
 tasks/
 pacts/
 
+# Supabase — 455 migration files slow down all searches
+supabase/migrations/
+supabase/_archive/
+
+# Python backend venvs and caches
+apps/backend/.venv/
+apps/backend/__pycache__/
+apps/backend/.ruff_cache/
+**/__pycache__/
+**/*.pyc
+
 # Generated / cache
 .turbo/
 .vercel/
