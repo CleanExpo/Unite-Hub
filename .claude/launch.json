@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "Nexus 2.0",
-      "runtimeExecutable": "C:/Users/Phill/AppData/Roaming/npm/pnpm",
-      "runtimeArgs": ["dev"],
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "pnpm", "dev", "--port", "3007"],
       "port": 3007
     }
   ]
