@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { type Business } from '@/lib/businesses'
 import { type StripeMRR } from '@/lib/integrations/stripe'
+import { type XeroRevenueMTD } from '@/lib/integrations/xero'
 
 interface KPICardProps {
   business: Business
@@ -13,6 +14,7 @@ interface KPICardProps {
   trend: { value: string; positive: boolean }
   secondary: string
   stripeBusinessKey?: string
+  xeroBusinessKey?: string
 }
 
 function formatAUD(cents: number): string {
@@ -24,9 +26,11 @@ function formatAUD(cents: number): string {
   }).format(cents / 100)
 }
 
-interface MRRState {
-  data: StripeMRR | null
-  source: 'stripe' | 'mock' | null
+interface LiveState {
+  metric: string | null
+  trend: { value: string; positive: boolean } | null
+  secondary: string | null
+  source: 'stripe' | 'xero' | 'mock' | null
   loading: boolean
 }
 
@@ -37,44 +41,63 @@ export function KPICard({
   trend,
   secondary,
   stripeBusinessKey,
+  xeroBusinessKey,
 }: KPICardProps) {
   const isPlanning = business.status === 'planning'
 
-  const [mrr, setMrr] = useState<MRRState>({ data: null, source: null, loading: false })
+  const [live, setLive] = useState<LiveState>({
+    metric: null, trend: null, secondary: null, source: null, loading: false,
+  })
 
   useEffect(() => {
-    if (!stripeBusinessKey || isPlanning) return
+    if (isPlanning) return
 
-    setMrr(prev => ({ ...prev, loading: true }))
+    if (stripeBusinessKey) {
+      setLive(prev => ({ ...prev, loading: true }))
+      fetch(`/api/stripe/mrr?business=${encodeURIComponent(stripeBusinessKey)}`)
+        .then(res => res.json() as Promise<{ data: StripeMRR; source: 'stripe' | 'mock' }>)
+        .then(({ data, source }) => {
+          setLive({
+            metric: formatAUD(data.mrr),
+            trend: {
+              value: `${data.growth >= 0 ? '+' : ''}${data.growth.toFixed(1)}% MoM`,
+              positive: data.growth >= 0,
+            },
+            secondary: `${data.activeSubscriptions} Active · ${data.churnRate.toFixed(1)}% churn`,
+            source,
+            loading: false,
+          })
+        })
+        .catch(() => setLive({ metric: null, trend: null, secondary: null, source: null, loading: false }))
+      return
+    }
 
-    fetch(`/api/stripe/mrr?business=${encodeURIComponent(stripeBusinessKey)}`)
-      .then(res => res.json() as Promise<{ data: StripeMRR; source: 'stripe' | 'mock' }>)
-      .then(json => {
-        setMrr({ data: json.data, source: json.source, loading: false })
-      })
-      .catch(() => {
-        setMrr({ data: null, source: null, loading: false })
-      })
-  }, [stripeBusinessKey, isPlanning])
+    if (xeroBusinessKey) {
+      setLive(prev => ({ ...prev, loading: true }))
+      fetch(`/api/xero/revenue?business=${encodeURIComponent(xeroBusinessKey)}`)
+        .then(res => res.json() as Promise<{ data: XeroRevenueMTD; source: 'xero' | 'mock' }>)
+        .then(({ data, source }) => {
+          setLive({
+            metric: formatAUD(data.revenueCents),
+            trend: {
+              value: `${data.growth >= 0 ? '+' : ''}${data.growth.toFixed(1)}% MoM`,
+              positive: data.growth >= 0,
+            },
+            secondary: `${data.invoiceCount} Invoices MTD`,
+            source,
+            loading: false,
+          })
+        })
+        .catch(() => setLive({ metric: null, trend: null, secondary: null, source: null, loading: false }))
+    }
+  }, [stripeBusinessKey, xeroBusinessKey, isPlanning])
 
-  // Derive display values — use live MRR data when available, fall back to static props
-  const displayMetric =
-    mrr.data && !mrr.loading
-      ? formatAUD(mrr.data.mrr)
-      : metric
+  const isLive = !!(stripeBusinessKey || xeroBusinessKey) && !isPlanning
 
-  const displayTrend =
-    mrr.data && !mrr.loading
-      ? {
-          value: `${mrr.data.growth >= 0 ? '+' : ''}${mrr.data.growth.toFixed(1)}% MoM`,
-          positive: mrr.data.growth >= 0,
-        }
-      : trend
-
-  const displaySecondary =
-    mrr.data && !mrr.loading
-      ? `${mrr.data.activeSubscriptions} Active · ${mrr.data.churnRate.toFixed(1)}% churn`
-      : secondary
+  // Fall back to static props when live data hasn't loaded
+  const displayMetric = live.metric ?? metric
+  const displayTrend = live.trend ?? trend
+  const displaySecondary = live.secondary ?? secondary
 
   return (
     <motion.div
@@ -99,12 +122,12 @@ export function KPICard({
             Planning
           </span>
         )}
-        {/* Live / Demo badge — only shown when Stripe key is wired up */}
-        {stripeBusinessKey && !isPlanning && (
+        {/* Live / Demo badge */}
+        {isLive && (
           <span className="ml-auto flex items-center gap-1">
-            {mrr.loading ? (
+            {live.loading ? (
               <span className="text-[10px] text-[#555]">—</span>
-            ) : mrr.source === 'stripe' ? (
+            ) : live.source === 'stripe' || live.source === 'xero' ? (
               <>
                 <span
                   className="rounded-full shrink-0"
@@ -137,7 +160,7 @@ export function KPICard({
       {/* Primary metric */}
       <div>
         <div className="text-[30px] font-semibold text-[#f0f0f0] leading-none tracking-tight">
-          {mrr.loading ? (
+          {live.loading ? (
             <span className="text-[#555]">—</span>
           ) : (
             displayMetric
