@@ -27,11 +27,15 @@ export function SidebarNav({ collapsed }: SidebarNavProps) {
             key={href}
             href={href}
             className={cn(
-              'relative flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors duration-100',
+              'nav-item-hover relative flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors duration-100',
               active
-                ? 'text-[#f0f0f0] bg-[#161616] before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:bg-[#00F5FF] before:rounded-r-sm'
-                : 'text-[#888] hover:bg-[#111] hover:text-[#ccc]'
+                ? 'before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:bg-[#00F5FF] before:rounded-r-sm'
+                : ''
             )}
+            style={active
+              ? { color: 'var(--color-text-primary)', background: 'var(--surface-elevated)' }
+              : { color: 'var(--color-text-muted)' }
+            }
           >
             <Icon size={16} strokeWidth={1.75} className="shrink-0" />
             {!collapsed && <span>{label}</span>}

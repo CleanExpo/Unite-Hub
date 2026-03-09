@@ -209,6 +209,12 @@
     @apply max-w-7xl mx-auto;
   }
 
+  /* Nav item hover — CSS vars can't be used in Tailwind hover: modifiers */
+  .nav-item-hover:hover {
+    background: var(--surface-card);
+    color: var(--color-text-secondary);
+  }
+
   /* Glassmorphism Utility */
   .glassmorphic {
     background: var(--glass-bg);
