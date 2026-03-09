@@ -1,5 +1,16 @@
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+// Mock fetch so the board resolves past the loading skeleton
+beforeEach(() => {
+  global.fetch = vi.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      columns: { today: [], hot: [], pipeline: [], someday: [], done: [] },
+      stateMap: {},
+    }),
+  } as unknown as Response)
+})
 
 // Mock dnd-kit — JSDOM doesn't support pointer events or drag
 vi.mock('@dnd-kit/core', () => ({
@@ -36,9 +47,9 @@ vi.mock('@dnd-kit/utilities', () => ({
 import { KanbanBoard } from '../KanbanBoard'
 
 describe('KanbanBoard', () => {
-  it('renders 5 column headers', () => {
+  it('renders 5 column headers', async () => {
     render(<KanbanBoard />)
-    expect(screen.getByText('TODAY')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText('TODAY')).toBeInTheDocument())
     expect(screen.getByText('HOT')).toBeInTheDocument()
     expect(screen.getByText('PIPELINE')).toBeInTheDocument()
     expect(screen.getByText('SOMEDAY')).toBeInTheDocument()
