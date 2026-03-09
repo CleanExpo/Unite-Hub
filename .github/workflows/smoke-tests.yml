@@ -20,7 +20,7 @@ env:
 
 jobs:
   smoke-tests:
-    name: Smoke Tests (12 checks)
+    name: Smoke Tests (8 checks)
     runs-on: ubuntu-latest
     # Only run if the CI pipeline succeeded (or manually dispatched)
     if: >
@@ -42,11 +42,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright
-        run: npx playwright install chromium --with-deps
-
       # ── Check 1: Health endpoint ──────────────────────────────────────────
-      - name: 'Check 1: App health endpoint'
+      - name: 'Check 1: App health endpoint returns 200'
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/api/health" --max-time 10)
           echo "Health status: $STATUS"
@@ -56,31 +53,28 @@ jobs:
           fi
           echo "PASS: Health endpoint OK"
 
-      # ── Check 2: Homepage renders ─────────────────────────────────────────
-      - name: 'Check 2: Homepage renders (200 + HTML)'
+      # ── Check 2: Homepage redirects to auth (private CRM) ─────────────────
+      - name: 'Check 2: Homepage redirects to auth (307)'
         run: |
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/" --max-time 15)
           echo "Homepage status: $RESPONSE"
-          if [ "$RESPONSE" != "200" ]; then
-            echo "FAIL: Homepage returned $RESPONSE"
+          # Private CRM — unauthenticated requests redirect to login (307)
+          if [ "$RESPONSE" != "307" ] && [ "$RESPONSE" != "302" ] && [ "$RESPONSE" != "301" ]; then
+            echo "FAIL: Expected auth redirect, got $RESPONSE"
             exit 1
           fi
-          echo "PASS: Homepage OK"
+          echo "PASS: Homepage correctly redirects to auth ($RESPONSE)"
 
-      # ── Check 3: Key resource pages ──────────────────────────────────────
-      - name: 'Check 3: Resource pages load'
+      # ── Check 3: Login page reachable ────────────────────────────────────
+      - name: 'Check 3: Login page reachable'
         run: |
-          PAGES="/resources/ato-tax-guide /resources/ai-crm-australia /xero-integration"
-          FAILED=0
-          for PAGE in $PAGES; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$PAGE" --max-time 15)
-            echo "$PAGE → $STATUS"
-            if [ "$STATUS" != "200" ]; then
-              echo "FAIL: $PAGE returned $STATUS"
-              FAILED=1
-            fi
-          done
-          [ $FAILED -eq 0 ] && echo "PASS: All resource pages OK" || exit 1
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/auth/login" --max-time 15)
+          echo "Login status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "FAIL: Login page returned $STATUS"
+            exit 1
+          fi
+          echo "PASS: Login page OK"
 
       # ── Check 4: API routes respond ───────────────────────────────────────
       - name: 'Check 4: Core API routes respond'
@@ -100,8 +94,7 @@ jobs:
       # ── Check 5: Static assets load ───────────────────────────────────────
       - name: 'Check 5: Static assets load (no 404s)'
         run: |
-          # Check favicon and manifest
-          for ASSET in "/favicon.ico"; do
+          for ASSET in "/favicon.ico" "/logos/unite-group-nexus-logo.png"; do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$ASSET" --max-time 10)
             echo "$ASSET → $STATUS"
             if [ "$STATUS" = "404" ]; then
@@ -111,53 +104,23 @@ jobs:
           done
           echo "PASS: Static assets OK"
 
-      # ── Check 6: Sitemap valid ────────────────────────────────────────────
-      - name: 'Check 6: Sitemap returns valid XML'
+      # ── Check 6: robots.txt present ──────────────────────────────────────
+      - name: 'Check 6: robots.txt present'
         run: |
-          STATUS=$(curl -s -o /tmp/sitemap.xml -w "%{http_code}" "$BASE_URL/sitemap.xml" --max-time 15)
-          echo "Sitemap status: $STATUS"
-          if [ "$STATUS" != "200" ]; then
-            echo "FAIL: Sitemap returned $STATUS"
-            exit 1
-          fi
-          if ! grep -q '<urlset' /tmp/sitemap.xml; then
-            echo "FAIL: Sitemap missing <urlset> element"
-            exit 1
-          fi
-          URL_COUNT=$(grep -c '<url>' /tmp/sitemap.xml || true)
-          echo "PASS: Sitemap OK ($URL_COUNT URLs)"
-
-      # ── Check 7: robots.txt valid ─────────────────────────────────────────
-      - name: 'Check 7: robots.txt present'
-        run: |
-          STATUS=$(curl -s -o /tmp/robots.txt -w "%{http_code}" "$BASE_URL/robots.txt" --max-time 10)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/robots.txt" --max-time 10)
           echo "robots.txt status: $STATUS"
-          if [ "$STATUS" != "200" ]; then
+          # 200 or 404 are both acceptable for a private CRM
+          if [ "$STATUS" = "000" ] || [ "$STATUS" = "500" ]; then
             echo "FAIL: robots.txt returned $STATUS"
             exit 1
           fi
-          echo "PASS: robots.txt OK"
+          echo "PASS: robots.txt reachable ($STATUS)"
 
-      # ── Check 8: Auth pages reachable ────────────────────────────────────
-      - name: 'Check 8: Auth pages reachable'
+      # ── Check 7: Security headers present ────────────────────────────────
+      - name: 'Check 7: Security headers present'
         run: |
-          for PAGE in "/login" "/signup" "/register"; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$PAGE" --max-time 15)
-            echo "$PAGE → $STATUS"
-            # 200 (page) or 301/302 (redirect) are both acceptable
-            if [ "$STATUS" = "000" ] || [ "$STATUS" = "500" ] || [ "$STATUS" = "503" ]; then
-              echo "FAIL: $PAGE returned $STATUS"
-              exit 1
-            fi
-          done
-          echo "PASS: Auth pages reachable"
-
-      # ── Check 9: Security headers present ────────────────────────────────
-      - name: 'Check 9: Security headers present'
-        run: |
-          HEADERS=$(curl -sI "$BASE_URL/" --max-time 10)
+          HEADERS=$(curl -sI "$BASE_URL/auth/login" --max-time 10)
           echo "$HEADERS"
-          FAILED=0
           for HEADER in "x-content-type-options" "x-frame-options"; do
             if echo "$HEADERS" | grep -qi "$HEADER"; then
               echo "PASS: $HEADER present"
@@ -166,13 +129,19 @@ jobs:
             fi
           done
 
-      # ── Check 10: No mixed content errors (Playwright) ───────────────────
-      - name: 'Check 10-12: Playwright smoke tests'
-        run: npx playwright test tests/smoke/ --reporter=line
-        env:
-          BASE_URL: ${{ env.BASE_URL }}
-          PLAYWRIGHT_BASE_URL: ${{ env.BASE_URL }}
-        continue-on-error: true
+      # ── Check 8: No 5xx errors on auth flow ──────────────────────────────
+      - name: 'Check 8: No 5xx on auth pages'
+        run: |
+          FAILED=0
+          for PAGE in "/auth/login" "/register" "/forgot-password"; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$PAGE" --max-time 15)
+            echo "$PAGE → $STATUS"
+            if [[ "$STATUS" == 5* ]]; then
+              echo "FAIL: $PAGE returned $STATUS"
+              FAILED=1
+            fi
+          done
+          [ $FAILED -eq 0 ] && echo "PASS: No 5xx on auth pages" || exit 1
 
       - name: Upload smoke test results
         uses: actions/upload-artifact@v4
