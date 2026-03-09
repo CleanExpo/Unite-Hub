@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .superpowers/hooks/session-start",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
