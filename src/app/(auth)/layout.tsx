@@ -8,14 +8,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <Image
-            src="/logos/unite-hub-logo.png"
-            alt="Unite-Group Logo"
+            src="/logos/unite-group-nexus-logo.png"
+            alt="Unite-Group Nexus Logo"
             width={120}
             height={120}
             priority
             className="object-contain mb-3"
           />
-          <p className="text-white/40 text-sm font-mono">AI-Powered Marketing CRM</p>
+          <p className="text-white/40 text-sm font-mono">Unite-Group Nexus</p>
         </div>
 
         {/* Auth Card */}
