@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Nexus 2.0",
+      "runtimeExecutable": "C:/Users/Phill/AppData/Roaming/npm/pnpm",
+      "runtimeArgs": ["dev"],
+      "port": 3007
+    }
+  ]
+}

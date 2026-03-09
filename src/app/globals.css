@@ -8,6 +8,8 @@
 @layer base {
   /* Modern Design Tokens & Light Mode (default) */
   :root {
+    color-scheme: dark;
+
     /* Typography */
     --font-primary: 'Geist Sans', 'Inter', sans-serif;
     --font-mono: 'Geist Mono', 'Fira Code', monospace;
