@@ -54,15 +54,19 @@ export function ApprovalItem({
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button
+          type="button"
           onClick={handleReject}
-          className="h-7 px-3 rounded-sm text-[12px] font-medium border transition-colors hover:bg-[rgba(239,68,68,0.08)]"
+          disabled={exiting !== null}
+          className="h-7 px-3 rounded-sm text-[12px] font-medium border transition-colors hover:bg-[rgba(239,68,68,0.08)] disabled:opacity-40 disabled:cursor-not-allowed"
           style={{ color: 'var(--color-danger)', borderColor: 'var(--color-danger)' }}
         >
           Reject
         </button>
         <button
+          type="button"
           onClick={handleApprove}
-          className="h-7 px-3 rounded-sm text-[12px] font-medium border transition-colors hover:bg-[rgba(34,197,94,0.08)]"
+          disabled={exiting !== null}
+          className="h-7 px-3 rounded-sm text-[12px] font-medium border transition-colors hover:bg-[rgba(34,197,94,0.08)] disabled:opacity-40 disabled:cursor-not-allowed"
           style={{ color: 'var(--color-success)', borderColor: 'var(--color-success)' }}
         >
           Approve

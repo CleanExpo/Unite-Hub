@@ -4,7 +4,8 @@ import { ApprovalItem } from '../ApprovalItem'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, className, style }: React.HTMLAttributes<HTMLDivElement>) => (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    div: ({ children, className, style }: any) => (
       <div className={className} style={style}>{children}</div>
     ),
   },
