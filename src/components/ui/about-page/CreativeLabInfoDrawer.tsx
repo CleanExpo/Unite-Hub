@@ -7,7 +7,6 @@
  * Persistent slide-out drawer with full narrative about the Creative Lab
  */
 
-import { useState } from "react";
 import { X, Info, CheckCircle, XCircle, Cpu, Shield, Users } from "lucide-react";
 
 interface CreativeLabInfoDrawerProps {

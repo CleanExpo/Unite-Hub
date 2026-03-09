@@ -39,7 +39,7 @@ export default function OnboardingStep2Page() {
 
           {/* Free Trial Notice */}
           <div className="mb-6 bg-[#00FF88]/[0.06] border border-[#00FF88]/20 rounded-sm text-[#00FF88] px-4 py-3 text-sm font-mono">
-            You're starting with a free 14-day trial. No credit card required. You can upgrade anytime from settings.
+            You&apos;re starting with a free 14-day trial. No credit card required. You can upgrade anytime from settings.
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
