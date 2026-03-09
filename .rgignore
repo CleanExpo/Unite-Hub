@@ -1,0 +1,35 @@
+# ripgrep ignore — keeps searches fast by excluding large/irrelevant directories
+# Survives context compaction; re-read if searches start timing out again.
+
+# Build output
+.next/
+dist/
+build/
+out/
+coverage/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Old project (pre-rebuild artefacts)
+NodeJS-Starter-V1/
+archived/
+ai-review/
+audit-reports/
+reports/
+logs/
+tasks/
+pacts/
+
+# Generated / cache
+.turbo/
+.vercel/
+.ruff_cache/
+supabase/.branches/
+supabase/.temp/
+playwright-report/
+.beads/
+
+# Large binary / media
+public/
