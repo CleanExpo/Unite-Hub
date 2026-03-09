@@ -1,0 +1,22 @@
+'use client'
+
+import { useState } from 'react'
+import { VaultLock } from './VaultLock'
+import { VaultGrid } from './VaultGrid'
+
+export function VaultPageClient() {
+  const [unlocked, setUnlocked] = useState(false)
+
+  return (
+    <div className="relative p-6">
+      <h1
+        className="text-[24px] font-semibold tracking-tight mb-6"
+        style={{ color: 'var(--color-text-primary)' }}
+      >
+        Vault
+      </h1>
+      <VaultGrid />
+      {!unlocked && <VaultLock onUnlock={() => setUnlocked(true)} />}
+    </div>
+  )
+}

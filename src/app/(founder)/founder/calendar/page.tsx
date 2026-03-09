@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { isGoogleConfigured, getMockEvents } from '@/lib/integrations/google'
 import { ConnectCard } from '@/components/founder/integrations/ConnectCard'
 

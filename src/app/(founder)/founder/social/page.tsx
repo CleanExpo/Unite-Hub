@@ -1,4 +1,6 @@
 // src/app/(founder)/founder/social/page.tsx
+export const dynamic = 'force-dynamic'
+
 import { getConnections } from '@/lib/integrations/social'
 
 const PLATFORM_META = {

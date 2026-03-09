@@ -1,4 +1,6 @@
 // src/app/(founder)/founder/xero/page.tsx
+export const dynamic = 'force-dynamic'
+
 import { isXeroConfigured } from '@/lib/integrations/xero'
 import { ConnectCard } from '@/components/founder/integrations/ConnectCard'
 

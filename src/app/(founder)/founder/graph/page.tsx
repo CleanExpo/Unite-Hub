@@ -1,4 +1,6 @@
 // src/app/(founder)/founder/graph/page.tsx
+export const dynamic = 'force-dynamic'
+
 import { ConnectCard } from '@/components/founder/integrations/ConnectCard'
 
 export default function GraphPage() {
