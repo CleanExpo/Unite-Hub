@@ -2,7 +2,6 @@
 
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { BUSINESSES } from '@/lib/businesses'
 import { KanbanCard } from './KanbanCard'
 
 interface Card {
@@ -52,7 +51,7 @@ export function KanbanColumn({ id, title, cards, isDone }: KanbanColumnProps) {
               id={card.id}
               title={card.title}
               businessKey={card.businessKey}
-              businessColor={BUSINESSES.find((b) => b.key === card.businessKey)?.color ?? '#555555'}
+              businessColor={card.businessColor}
               isDone={isDone}
             />
           ))}
