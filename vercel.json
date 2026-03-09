@@ -11,14 +11,6 @@
       "maxDuration": 60
     }
   },
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
-    "ANTHROPIC_API_KEY": "@anthropic_api_key",
-    "VAULT_MASTER_KEY_SALT": "@vault_master_key_salt",
-    "NEXT_PUBLIC_APP_URL": "@next_public_app_url"
-  },
   "headers": [
     {
       "source": "/api/(.*)",
