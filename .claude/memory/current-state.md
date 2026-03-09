@@ -1,23 +1,21 @@
 # Current State
-> Updated by PreCompact hook. Session: ef11b34a
+> Updated manually. Session end: 10/03/2026
 
 ## Active Task
-Idle — session complete.
+Light mode implementation — plan written and committed, awaiting user execution choice.
 
 ## Recent Architectural Choices
-- Removed `/_next/static/:path*` immutable cache header from `next.config.mjs` (commit `2a123f62`)
-  - Turbopack dev uses path-based chunk IDs; immutable caching caused permanent stale JS
-- Google OAuth login added (`src/app/(auth)/auth/login/page.tsx`) + callback route
-- Xero OAuth connect flow added (`src/app/(founder)/integrations/xero/page.tsx`)
+- Light mode via CSS Variables (`.light` class on `<html>`) — see docs/plans/2026-03-10-light-mode-design.md
+- Turbopack dev caching fix: removed immutable Cache-Control from `/_next/static/` in next.config.mjs
 
 ## In-Progress Work
-None. All changes committed to `main`.
+Light mode plan at `docs/plans/2026-03-10-light-mode.md` — 8 tasks, TDD, ready to execute.
+User was offered Subagent-Driven vs Parallel Session execution choice.
 
 ## Next Steps
-- Hard-reload `/auth/login` in Chrome (`Ctrl+Shift+R`) to see Google OAuth button
-- Enable Google provider in Supabase dashboard (Authentication → Providers)
-- Configure Xero developer portal credentials when ready
-- Connect CARSI / DR / DR Qld Xero accounts via OAuth
+1. User chooses execution method (subagent-driven or parallel session)
+2. Execute 8-task light mode plan
+3. After light mode: Google OAuth Supabase dashboard config (user action), Xero credentials
 
 ## Last Updated
 10/03/2026 (session end)
