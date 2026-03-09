@@ -1,25 +1,23 @@
 # Current State
-> Updated: 10/03/2026 AEST
+> Updated by PreCompact hook. Session: ef11b34a
 
 ## Active Task
-Xero OAuth app created ("Unite Group Nexus") — awaiting Client ID + Secret from user.
-App ID: 29ea9ead-6207-4ad2-b91d-5f46097eab6f
-
-## In-Progress Work
-- Xero OAuth app created at developer.xero.com (Web app type)
-- Redirect URIs registered: https://unite-group.in/api/xero/callback + http://localhost:3003/api/xero/callback
-- Waiting for user to copy Client ID + Secret from Xero config page
-- Once credentials received → write to .env.local → connect CARSI, DR, DR Qld
-
-## Next Steps
-1. User pastes Client ID + Secret
-2. Write XERO_CLIENT_ID + XERO_CLIENT_SECRET to .env.local
-3. Test OAuth flow: /founder/xero?business=carsi
-4. Add BankTransactions API to xero.ts for per-account transaction history
-5. Gmail auto-forward rule → Xero receipt inbox per business
+Idle — session complete.
 
 ## Recent Architectural Choices
-See architectural-decisions.md for logged decisions.
+- Removed `/_next/static/:path*` immutable cache header from `next.config.mjs` (commit `2a123f62`)
+  - Turbopack dev uses path-based chunk IDs; immutable caching caused permanent stale JS
+- Google OAuth login added (`src/app/(auth)/auth/login/page.tsx`) + callback route
+- Xero OAuth connect flow added (`src/app/(founder)/integrations/xero/page.tsx`)
+
+## In-Progress Work
+None. All changes committed to `main`.
+
+## Next Steps
+- Hard-reload `/auth/login` in Chrome (`Ctrl+Shift+R`) to see Google OAuth button
+- Enable Google provider in Supabase dashboard (Authentication → Providers)
+- Configure Xero developer portal credentials when ready
+- Connect CARSI / DR / DR Qld Xero accounts via OAuth
 
 ## Last Updated
-10/03/2026 AEST (manual)
+10/03/2026 (session end)
