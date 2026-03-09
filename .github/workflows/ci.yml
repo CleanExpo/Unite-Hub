@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, "rebuild/nexus-2.0"]
   pull_request:
-    branches: [main, develop]
+    branches: [main, develop, "rebuild/nexus-2.0"]
 
 permissions:
   contents: read
@@ -114,6 +114,7 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_APP_URL: https://nexus.unite-group.com.au
 
   security:
     name: Security Scan

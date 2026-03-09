@@ -8,12 +8,14 @@
 @layer base {
   /* Modern Design Tokens & Light Mode (default) */
   :root {
+    color-scheme: dark;
+
     /* Typography */
     --font-primary: 'Geist Sans', 'Inter', sans-serif;
     --font-mono: 'Geist Mono', 'Fira Code', monospace;
 
     /* Borders */
-    --border-style: 1px solid rgba(255, 255, 255, 0.08);
+    --border-style: 1px solid rgba(255, 255, 255, 0.10);
     --radius-container: 12px;
     --radius-component: 8px;
     --radius-bento: 16px;
@@ -58,6 +60,37 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+
+    /* Nexus 2.0 — Surface Stack */
+    --surface-canvas:    #050505;
+    --surface-sidebar:   #0d0d0d;
+    --surface-card:      #111111;
+    --surface-elevated:  #161616;
+    --surface-overlay:   #1f1f1f;
+    --surface-selected:  #2a2a2a;
+
+    /* Colour Tokens */
+    --color-accent:         #00F5FF;
+    --color-accent-dim:     rgba(0, 245, 255, 0.08);
+    --color-accent-border:  rgba(0, 245, 255, 0.3);
+    --color-text-primary:   #f0f0f0;
+    --color-text-secondary: #999999;
+    --color-text-muted:     #888888;
+    --color-text-disabled:  #555555;
+    --color-border:         rgba(255, 255, 255, 0.10);
+    --color-border-strong:  rgba(255, 255, 255, 0.18);
+    --color-success:        #22c55e;
+    --color-danger:         #ef4444;
+    --color-warning:        #f97316;
+
+    /* Business Dot Colours */
+    --biz-dr:      #ef4444;
+    --biz-nrpg:    #f97316;
+    --biz-carsi:   #eab308;
+    --biz-restore: #22c55e;
+    --biz-synthex: #a855f7;
+    --biz-ato:     #3b82f6;
+    --biz-ccw:     #06b6d4;
   }
 
   /* Dark Mode */
@@ -88,8 +121,8 @@
   }
 
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background-color: #050505;
+    color: #f0f0f0;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -159,7 +192,7 @@
     border-radius: var(--radius-component);
   }
 
-  /* Bento Tile */
+  /* Bento Tile — no box-shadow (elevation via surface lightness only) */
   .bento-tile {
     background: var(--bg-surface, #111111);
     border: var(--border-style);
@@ -168,7 +201,6 @@
   }
 
   .bento-tile:hover {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
     transform: translateY(-2px);
   }
 
@@ -192,8 +224,52 @@
       radial-gradient(circle at 75% 75%, rgba(244, 114, 182, 0.1) 0%, transparent 50%);
   }
 
-  /* Glow Effect */
-  .shadow-glow {
-    box-shadow: 0 0 20px rgba(var(--accent-rgb, 59, 130, 246), 0.4);
-  }
+}
+
+/* Focus ring — keyboard nav only */
+:focus-visible {
+  outline: 2px solid #00F5FF;
+  outline-offset: 2px;
+}
+
+/* Thin scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+}
+*::-webkit-scrollbar { width: 2px; height: 2px; }
+*::-webkit-scrollbar-thumb { background: #333; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* Novel block editor */
+.novel-editor .ProseMirror {
+  outline: none;
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.novel-editor .ProseMirror h1 {
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+.novel-editor .ProseMirror h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  margin: 24px 0 8px;
+}
+.novel-editor .ProseMirror p {
+  margin: 0 0 4px;
+}
+.novel-editor .ProseMirror .is-empty::before {
+  color: var(--color-text-muted);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

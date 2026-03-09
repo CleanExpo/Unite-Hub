@@ -1,85 +1,50 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright Configuration for Unite-Hub Hierarchical Strategy System
+ * Playwright Configuration — Unite-Group Nexus 2.0
  *
- * Test Framework: Playwright Test (TypeScript)
- * Phase 3: Task 6 - End-to-End Testing Engine
- *
- * Coverage: 6 test suites for complete strategy dashboard workflows
- * - strategy-create.spec.ts: Strategy creation and L1-L4 decomposition
- * - strategy-hierarchy.spec.ts: Hierarchy rendering and expansion
- * - strategy-validation.spec.ts: Validation pipeline and agent scores
- * - strategy-synergy.spec.ts: Synergy metrics and analysis
- * - strategy-history.spec.ts: Timeline and historical patterns
- * - strategy-realtime.spec.ts: Real-time updates and polling
+ * E2E tests live in `e2e/` directory.
+ * Unit/integration tests use Vitest (vitest.config.ts).
  *
  * Run tests:
- *   npx playwright test                     # Run all tests
- *   npx playwright test --headed            # Run in headed mode
- *   npx playwright test strategy-create     # Run specific test
- *   npx playwright show-report              # View HTML report
+ *   pnpm playwright test              # All E2E tests
+ *   pnpm playwright test --headed     # With browser UI
+ *   pnpm playwright show-report       # View HTML report
  */
 
 export default defineConfig({
-  // Test discovery settings
-  testDir: './tests',
+  testDir: './e2e',
   testMatch: '**/*.spec.ts',
-  testIgnore: '**/*.skip.ts',
 
-  // Parallel execution settings
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : 1,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 1 : undefined,
 
-  // Reporters for different output formats
   reporter: [
     ['html', { outputFolder: 'playwright-report' }],
-    ['json', { outputFile: 'test-results/results.json' }],
-    ['junit', { outputFile: 'test-results/junit.xml' }],
     ['list'],
   ],
 
-  // Default test configuration
   use: {
-    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3008',
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    actionTimeout: 10000,
-    navigationTimeout: 30000,
-    acceptDownloads: true,
   },
 
-  // Global test timeout
-  timeout: 60000,
+  timeout: 30000,
 
-  // Global setup and teardown hooks
-  globalSetup: './tests/global-setup.ts',
-  globalTeardown: './tests/global-teardown.ts',
-
-  // Browser configurations
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
   ],
 
-  // Development server configuration
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3008',
+    command: 'pnpm dev',
+    url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000,
+    timeout: 120_000,
   },
 });

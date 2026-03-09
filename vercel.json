@@ -1,59 +1,22 @@
 {
-  "buildCommand": "pnpm run build",
-  "devCommand": "pnpm run dev",
-  "installCommand": "npm install -g pnpm@9.15.0 && pnpm install --no-frozen-lockfile",
   "framework": "nextjs",
+  "buildCommand": "pnpm build",
   "outputDirectory": ".next",
+  "installCommand": "pnpm install",
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/ai/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
   "headers": [
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
       ]
-    }
-  ],
-  "crons": [
-    {
-      "path": "/api/agents/continuous-intelligence",
-      "schedule": "*/30 * * * *"
-    },
-    {
-      "path": "/api/aido/google-curve/monitor",
-      "schedule": "0 */6 * * *"
-    },
-    {
-      "path": "/api/cron/health-check",
-      "schedule": "*/5 * * * *"
-    },
-    {
-      "path": "/api/seo/sync-rankings",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/managed/scheduler/weekly",
-      "schedule": "0 9 * * 1"
-    },
-    {
-      "path": "/api/cron/founder-briefing",
-      "schedule": "0 21 * * 0"
-    },
-    {
-      "path": "/api/cron/document-expiry",
-      "schedule": "0 21 * * *"
-    },
-    {
-      "path": "/api/cron/strategic-review",
-      "schedule": "0 */3 * * *"
-    },
-    {
-      "path": "/api/cron/linear-guardian",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/founder/analytics/weekly-report",
-      "schedule": "0 22 * * 0"
     }
   ]
 }

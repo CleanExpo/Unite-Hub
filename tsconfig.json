@@ -40,8 +40,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "convex/_generated/**/*.ts"
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
@@ -49,6 +48,7 @@
     "tests",
     "NodeJS-Starter-V1",
     "convex.bak",
+    "convex",
     "examples",
     "scripts",
     "logs",
@@ -58,6 +58,9 @@
     "apps",
     "packages",
     "skills",
+    "sentry.client.config.ts",
+    "sentry.server.config.ts",
+    "sentry.edge.config.ts",
     "**/__tests__/**",
     "**/*.test.ts",
     "**/*.test.tsx",

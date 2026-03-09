@@ -14,7 +14,7 @@ interface GlowButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function GlowButton({
   children,
   variant = 'primary',
-  glowColor,
+  glowColor: _glowColor,
   className,
   ...props
 }: GlowButtonProps) {

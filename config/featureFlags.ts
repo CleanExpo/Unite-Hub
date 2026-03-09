@@ -33,7 +33,7 @@ export function getFeatureFlags(): FeatureFlags {
     const flagsPath = path.join(process.cwd(), 'config', 'featureFlags.json');
     const flagsData = fs.readFileSync(flagsPath, 'utf-8');
     const config = JSON.parse(flagsData);
-    cachedFlags = config.flags;
+    cachedFlags = config.flags as FeatureFlags;
     return cachedFlags;
   } catch (error) {
     console.error('Failed to load feature flags, using defaults:', error);

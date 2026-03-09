@@ -1,1 +1,0 @@
-export { CheckoutButton } from './CheckoutButton';

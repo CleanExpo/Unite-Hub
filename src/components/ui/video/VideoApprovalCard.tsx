@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 /**
  * Video Approval Card
  * Phase 35: Integrity Framework
@@ -51,10 +53,11 @@ export default function VideoApprovalCard({
       {/* Thumbnail */}
       <div className="relative aspect-video bg-gray-100 dark:bg-gray-700">
         {thumbnailUrl ? (
-          <img
+          <Image
             src={thumbnailUrl}
             alt={title}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">

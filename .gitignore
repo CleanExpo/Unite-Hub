@@ -243,3 +243,10 @@ create-missing-*.sql
 verify-*.sql
 MIGRATION_*_DIAGNOSTICS.sql
 EXECUTE_MIGRATIONS_NOW.sql
+
+# AI session artefact guard — prevent root *.md accumulation
+/*.md
+!/README.md
+!/CHANGELOG.md
+!/ENGINEERING-FRAMEWORK.md
+!/CLAUDE.md
