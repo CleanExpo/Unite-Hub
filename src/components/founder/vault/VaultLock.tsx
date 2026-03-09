@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { Lock } from 'lucide-react'
 
-const MASTER_PASSWORD = 'nexus2026' // Phase 3: local only
+// TODO(phase-4): replace with Supabase vault auth — remove hardcoded password
+const MASTER_PASSWORD = 'nexus2026'
 
 interface VaultLockProps { onUnlock: () => void }
 

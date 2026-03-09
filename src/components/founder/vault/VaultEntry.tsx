@@ -15,9 +15,13 @@ export function VaultEntry({ label, username, secret, businessColor }: VaultEntr
   const [copied, setCopied] = useState(false)
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(secret)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 800)
+    try {
+      await navigator.clipboard.writeText(secret)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 800)
+    } catch {
+      // clipboard unavailable — no feedback, icon stays neutral
+    }
   }
 
   return (
