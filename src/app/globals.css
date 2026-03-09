@@ -13,7 +13,7 @@
     --font-mono: 'Geist Mono', 'Fira Code', monospace;
 
     /* Borders */
-    --border-style: 1px solid rgba(255, 255, 255, 0.08);
+    --border-style: 1px solid rgba(255, 255, 255, 0.10);
     --radius-container: 12px;
     --radius-component: 8px;
     --radius-bento: 16px;
@@ -73,10 +73,10 @@
     --color-accent-border:  rgba(0, 245, 255, 0.3);
     --color-text-primary:   #f0f0f0;
     --color-text-secondary: #999999;
-    --color-text-muted:     #555555;
-    --color-text-disabled:  #333333;
-    --color-border:         rgba(255, 255, 255, 0.06);
-    --color-border-strong:  rgba(255, 255, 255, 0.12);
+    --color-text-muted:     #888888;
+    --color-text-disabled:  #555555;
+    --color-border:         rgba(255, 255, 255, 0.10);
+    --color-border-strong:  rgba(255, 255, 255, 0.18);
     --color-success:        #22c55e;
     --color-danger:         #ef4444;
     --color-warning:        #f97316;
@@ -119,8 +119,8 @@
   }
 
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background-color: #050505;
+    color: #f0f0f0;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 

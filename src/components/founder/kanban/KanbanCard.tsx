@@ -40,7 +40,7 @@ export function KanbanCard({ id, title, businessKey, businessColor, isDone }: Ka
         <span
           className="text-sm"
           style={{
-            color: isDone ? '#555' : 'var(--color-text-primary)',
+            color: isDone ? '#888888' : 'var(--color-text-primary)',
             textDecoration: isDone ? 'line-through' : 'none',
           }}
         >
