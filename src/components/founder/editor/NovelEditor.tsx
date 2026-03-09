@@ -21,7 +21,7 @@ const DEFAULT_CONTENT: JSONContent = {
 export function NovelEditor({ businessKey: _businessKey, pageId: _pageId }: NovelEditorProps) {
   return (
     <div
-      className="min-h-[calc(100vh-112px)]"
+      className="min-h-[calc(100vh-112px)]" /* 112px = 64px topbar + 48px (h-12) page toolbar */
       style={{ background: 'var(--surface-canvas)' }}
     >
       <EditorRoot>

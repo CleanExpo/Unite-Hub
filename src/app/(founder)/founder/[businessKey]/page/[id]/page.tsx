@@ -5,7 +5,7 @@ interface Props {
 }
 
 export default async function PageEditorPage({ params }: Props) {
-  const { businessKey, id } = await params
+  const { businessKey, id: pageId } = await params
 
   return (
     <div>
@@ -21,7 +21,7 @@ export default async function PageEditorPage({ params }: Props) {
 
       {/* Editor — centred prose width */}
       <div className="max-w-[720px] mx-auto px-6 pt-12">
-        <NovelEditor businessKey={businessKey} pageId={id} />
+        <NovelEditor businessKey={businessKey} pageId={pageId} />
       </div>
     </div>
   )
