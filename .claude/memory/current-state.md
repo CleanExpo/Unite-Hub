@@ -1,24 +1,25 @@
 # Current State
-> Updated by PreCompact hook. Session: ef11b34a
+> Updated: 10/03/2026 AEST
 
 ## Active Task
-Connecting Xero OAuth — waiting for user to log into developer.xero.com.
+Xero OAuth app created ("Unite Group Nexus") — awaiting Client ID + Secret from user.
+App ID: 29ea9ead-6207-4ad2-b91d-5f46097eab6f
+
+## In-Progress Work
+- Xero OAuth app created at developer.xero.com (Web app type)
+- Redirect URIs registered: https://unite-group.in/api/xero/callback + http://localhost:3003/api/xero/callback
+- Waiting for user to copy Client ID + Secret from Xero config page
+- Once credentials received → write to .env.local → connect CARSI, DR, DR Qld
+
+## Next Steps
+1. User pastes Client ID + Secret
+2. Write XERO_CLIENT_ID + XERO_CLIENT_SECRET to .env.local
+3. Test OAuth flow: /founder/xero?business=carsi
+4. Add BankTransactions API to xero.ts for per-account transaction history
+5. Gmail auto-forward rule → Xero receipt inbox per business
 
 ## Recent Architectural Choices
 See architectural-decisions.md for logged decisions.
 
-## In-Progress Work
-- Xero integration fully built (xero.ts, /api/xero/callback, /api/xero/revenue, KPICard, KPIGrid)
-- XERO_CLIENT_ID + XERO_CLIENT_SECRET NOT yet added to .env.local or Vercel
-- Dev server port changed to 3003 (.claude/launch.json)
-- Redirect URIs to register: http://localhost:3003/api/xero/callback + https://unite-group.in/api/xero/callback
-
-## Next Steps
-1. User logs into developer.xero.com
-2. Create OAuth app → copy Client ID + Secret
-3. Add to .env.local + Vercel env vars
-4. Register redirect URIs
-5. Connect 3 business accounts via OAuth (state param = businessKey: dr, nrpg, carsi, ccw)
-
 ## Last Updated
-10/03/2026 AEST
+10/03/2026 AEST (manual)
