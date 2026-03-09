@@ -25,6 +25,7 @@ export function SidebarBusinessItem({ business, collapsed }: SidebarBusinessItem
     <div>
       <button
         onClick={() => toggleBusiness(business.key)}
+        aria-expanded={isExpanded}
         className={cn(
           'w-full flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors duration-100',
           isActive

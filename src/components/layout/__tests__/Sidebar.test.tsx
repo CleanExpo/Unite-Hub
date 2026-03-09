@@ -1,6 +1,7 @@
 // src/components/layout/__tests__/Sidebar.test.tsx
 import { render, screen } from '@testing-library/react'
 import { Sidebar } from '../Sidebar'
+import { useUIStore } from '@/store/ui'
 
 vi.mock('framer-motion', () => ({
   motion: {
@@ -54,5 +55,20 @@ describe('Sidebar', () => {
     expect(screen.getByText('Disaster Recovery')).toBeInTheDocument()
     expect(screen.getByText('Synthex')).toBeInTheDocument()
     expect(screen.getByText('ATO Tax Optimizer')).toBeInTheDocument()
+  })
+
+  it('hides text labels when sidebar is collapsed', () => {
+    vi.mocked(useUIStore).mockImplementation((selector?: (s: any) => any) => {
+      const state = {
+        sidebarOpen: false,
+        expandedBusinesses: [],
+        toggleSidebar: vi.fn(),
+        toggleBusiness: vi.fn(),
+      }
+      return selector ? selector(state) : state
+    })
+    render(<Sidebar />)
+    expect(screen.queryByText('NEXUS')).not.toBeInTheDocument()
+    expect(screen.queryByText('Dashboard')).not.toBeInTheDocument()
   })
 })
