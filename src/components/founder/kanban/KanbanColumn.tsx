@@ -17,6 +17,16 @@ interface KanbanColumnProps {
   cards: Card[]
 }
 
+const BUSINESS_COLORS: Record<string, string> = {
+  dr: '#ef4444',
+  nrpg: '#f97316',
+  carsi: '#eab308',
+  restore: '#22c55e',
+  synthex: '#a855f7',
+  ato: '#3b82f6',
+  ccw: '#06b6d4',
+}
+
 export function KanbanColumn({ id, title, cards }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id })
 
@@ -51,7 +61,7 @@ export function KanbanColumn({ id, title, cards }: KanbanColumnProps) {
               id={card.id}
               title={card.title}
               businessKey={card.businessKey}
-              businessColor={card.businessColor}
+              businessColor={BUSINESS_COLORS[card.businessKey] ?? '#ffffff'}
             />
           ))}
         </div>
