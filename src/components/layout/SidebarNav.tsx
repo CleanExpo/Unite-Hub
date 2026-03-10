@@ -3,12 +3,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Columns2, Lock, ClipboardCheck } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Columns2, Lock, ClipboardCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { href: '/founder/dashboard', label: 'Dashboard',  icon: LayoutDashboard },
-  { href: '/founder/kanban',    label: 'Kanban',     icon: Columns2 },
+  { href: '/founder/dashboard',   label: 'Dashboard',  icon: LayoutDashboard },
+  { href: '/founder/bookkeeper', label: 'Bookkeeper', icon: BookOpen },
+  { href: '/founder/kanban',     label: 'Kanban',     icon: Columns2 },
   { href: '/founder/vault',     label: 'Vault',      icon: Lock },
   { href: '/founder/approvals', label: 'Approvals',  icon: ClipboardCheck },
 ] as const
