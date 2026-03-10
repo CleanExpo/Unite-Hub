@@ -46,6 +46,7 @@ export function KanbanBoard() {
   const [activeCard, setActiveCard] = useState<Card | null>(null)
   const [loading, setLoading] = useState(true)
   const [stale, setStale] = useState(false)
+  const [configured, setConfigured] = useState(true)
   const [lastSynced, setLastSynced] = useState<Date | null>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
@@ -57,7 +58,9 @@ export function KanbanBoard() {
       const data = await res.json() as {
         columns: Record<string, Card[]>
         stateMap: Record<string, Record<string, string>>
+        configured?: boolean
       }
+      setConfigured(data.configured ?? true)
       setStateMap(data.stateMap)
       setColumns(
         COLUMN_ORDER.map((id) => ({
@@ -171,7 +174,16 @@ export function KanbanBoard() {
 
   return (
     <div className="flex flex-col gap-3 h-full">
-      {stale && (
+      {!configured && (
+        <div
+          className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs"
+          style={{ background: '#0a1020', border: '1px solid #334155', color: '#94a3b8' }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#334155]" />
+          Demo — connect Linear via Settings to see live issues
+        </div>
+      )}
+      {stale && configured && (
         <div
           className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs"
           style={{ background: '#1a1000', border: '1px solid #FFB800', color: '#FFB800' }}
@@ -183,7 +195,7 @@ export function KanbanBoard() {
           </button>
         </div>
       )}
-      {lastSynced && !stale && (
+      {lastSynced && !stale && configured && (
         <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
           Synced with Linear — {lastSynced.toLocaleTimeString('en-AU')}
         </p>

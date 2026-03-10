@@ -3,6 +3,7 @@
 // PATCH — update an issue's state when dragged to a new column
 
 import { NextResponse } from 'next/server'
+import { getUser } from '@/lib/supabase/server'
 import {
   fetchIssues,
   fetchTeamStates,
@@ -13,10 +14,26 @@ import {
 } from '@/lib/integrations/linear'
 import { BUSINESSES } from '@/lib/businesses'
 
+export const dynamic = 'force-dynamic'
+
 const bizColor = (key: string): string =>
   BUSINESSES.find((b) => b.key === key)?.color ?? '#555555'
 
+const EMPTY_COLUMNS = {
+  today: [], hot: [], pipeline: [], someday: [], done: [],
+} as const
+
 export async function GET() {
+  const user = await getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
+  // Return empty board when Linear is not configured — not an error
+  if (!process.env.LINEAR_API_KEY) {
+    return NextResponse.json({ columns: EMPTY_COLUMNS, stateMap: {}, configured: false })
+  }
+
   try {
     const [issues, teams] = await Promise.all([fetchIssues(), fetchTeamStates()])
 
@@ -31,7 +48,16 @@ export async function GET() {
     }
 
     // Group issues by column
-    const columns: Record<string, { id: string; title: string; linearId: string; businessKey: string; businessColor: string; priority: number; stateId: string; teamKey: string }[]> = {
+    const columns: Record<string, {
+      id: string
+      title: string
+      linearId: string
+      businessKey: string
+      businessColor: string
+      priority: number
+      stateId: string
+      teamKey: string
+    }[]> = {
       today: [], hot: [], pipeline: [], someday: [], done: [],
     }
 
@@ -50,7 +76,7 @@ export async function GET() {
       })
     }
 
-    return NextResponse.json({ columns, stateMap })
+    return NextResponse.json({ columns, stateMap, configured: true })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'
     return NextResponse.json({ error: message }, { status: 502 })
@@ -58,6 +84,11 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
+  const user = await getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
   try {
     const { issueId, columnId, teamKey, stateMap } = await request.json() as {
       issueId: string
