@@ -88,7 +88,7 @@ export async function GET(request: Request) {
     const businessKey = state ?? 'default'
 
     const supabase = createServiceClient()
-    await supabase.from('credentials_vault').upsert(
+    const { error: upsertError } = await supabase.from('credentials_vault').upsert(
       {
         founder_id: user.id,
         service: 'xero',
@@ -97,10 +97,14 @@ export async function GET(request: Request) {
         iv: payload.iv,
         salt: payload.salt,
         notes: tenant.tenantName,
-        metadata: { tenantId: tenant.tenantId },
       },
       { onConflict: 'founder_id,service,label' }
     )
+
+    if (upsertError) {
+      console.error('[Xero Callback] Vault upsert failed:', upsertError.message)
+      return NextResponse.redirect(new URL('/founder/xero?error=vault_save', request.url))
+    }
 
     return NextResponse.redirect(
       new URL(`/founder/xero?connected=true&business=${businessKey}`, request.url)

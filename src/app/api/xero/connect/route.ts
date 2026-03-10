@@ -26,7 +26,7 @@ export async function GET(request: Request) {
     response_type: 'code',
     client_id: process.env.XERO_CLIENT_ID,
     redirect_uri: redirectUri,
-    scope: 'openid profile email accounting.transactions accounting.reports.read offline_access',
+    scope: 'openid profile email accounting.transactions accounting.reports.read accounting.contacts.read offline_access',
     state: businessKey,
   })
 
