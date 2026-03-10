@@ -6,6 +6,7 @@
 import type { XeroBankTransaction } from '@/lib/integrations/xero/types'
 import type { ReconciliationMatch } from '@/lib/bookkeeper/reconciliation'
 import { AU_TAX_CODES } from '@/lib/bookkeeper/au-tax-codes'
+import { toCents, parseXeroDate } from '@/lib/bookkeeper/utils'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -38,13 +39,6 @@ export interface BASCalculation {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-/**
- * Convert a dollar amount to cents (rounded to avoid floating-point drift).
- */
-function toCents(amount: number): number {
-  return Math.round(amount * 100)
-}
 
 /**
  * Get the Australian financial year for a given date.
@@ -253,7 +247,7 @@ export function calculateBAS(
     if (!txn) continue
 
     // Parse and check date is within the BAS period
-    const txnDate = parseTransactionDate(txn.Date)
+    const txnDate = parseXeroDate(txn.Date)
     if (txnDate < periodStart || txnDate > periodEnd) continue
 
     const taxCode = match.taxCode || ''
@@ -341,18 +335,6 @@ export function calculateBAS(
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
-
-/**
- * Parse a Xero date string into a JS Date.
- * Handles both ISO format and the legacy /Date(...)/ format.
- */
-function parseTransactionDate(dateStr: string): Date {
-  const msMatch = dateStr.match(/\/Date\((\d+)([+-]\d{4})?\)\//)
-  if (msMatch) {
-    return new Date(parseInt(msMatch[1], 10))
-  }
-  return new Date(dateStr)
-}
 
 /**
  * Update the breakdown-by-tax-code accumulator.

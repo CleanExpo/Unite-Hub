@@ -6,6 +6,7 @@
 import type { XeroBankTransaction } from '@/lib/integrations/xero/types'
 import type { ReconciliationMatch } from '@/lib/bookkeeper/reconciliation'
 import { DEDUCTION_CATEGORIES } from '@/lib/bookkeeper/au-tax-codes'
+import { toCents, getBankTransactionDescription } from '@/lib/bookkeeper/utils'
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -106,26 +107,7 @@ function matchesAnyPattern(description: string, patterns: RegExp[]): boolean {
   return patterns.some((p) => p.test(normalised))
 }
 
-/**
- * Build a combined description string from a bank transaction.
- * Mirrors the approach used in reconciliation.ts.
- */
-function getTransactionDescription(txn: XeroBankTransaction): string {
-  const parts: string[] = []
-  if (txn.Reference) parts.push(txn.Reference)
-  if (txn.Contact?.Name) parts.push(txn.Contact.Name)
-  for (const li of txn.LineItems) {
-    if (li.Description) parts.push(li.Description)
-  }
-  return parts.join(' ')
-}
-
-/**
- * Convert a dollar amount to cents (rounded to avoid floating-point drift).
- */
-function toCents(amount: number): number {
-  return Math.round(amount * 100)
-}
+// toCents and getBankTransactionDescription imported from @/lib/bookkeeper/utils
 
 // ---------------------------------------------------------------------------
 // Deduction Rules
@@ -299,7 +281,7 @@ export function optimiseDeductions(
       continue
     }
 
-    const description = getTransactionDescription(txn)
+    const description = getBankTransactionDescription(txn)
     const amountCents = toCents(txn.Total)
     const absAmountCents = Math.abs(amountCents)
 

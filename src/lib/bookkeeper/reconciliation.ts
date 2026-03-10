@@ -8,6 +8,7 @@ import type {
   XeroContact,
 } from '@/lib/integrations/xero/types'
 import { classifyTransaction, calculateGstAmount } from '@/lib/bookkeeper/au-tax-codes'
+import { toCents, parseXeroDate, getBankTransactionDescription } from '@/lib/bookkeeper/utils'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -37,24 +38,6 @@ export interface ReconciliationResult {
     unmatched: number
     manualReview: number
   }
-}
-
-// ---------------------------------------------------------------------------
-// Helper: Parse Xero date strings
-// ---------------------------------------------------------------------------
-
-/**
- * Parse a Xero date string into a JS Date.
- * Handles both ISO format ("2026-03-01T00:00:00") and the legacy
- * /Date(...)/ format that Xero sometimes returns.
- */
-function parseXeroDate(dateStr: string): Date {
-  // Handle /Date(1234567890000+0000)/ format
-  const msMatch = dateStr.match(/\/Date\((\d+)([+-]\d{4})?\)\//)
-  if (msMatch) {
-    return new Date(parseInt(msMatch[1], 10))
-  }
-  return new Date(dateStr)
 }
 
 // ---------------------------------------------------------------------------
@@ -163,14 +146,6 @@ function isDuplicate(
 }
 
 // ---------------------------------------------------------------------------
-// Helper: Convert amount to cents
-// ---------------------------------------------------------------------------
-
-function toCents(amount: number): number {
-  return Math.round(amount * 100)
-}
-
-// ---------------------------------------------------------------------------
 // Helper: Build contact name lookup
 // ---------------------------------------------------------------------------
 
@@ -180,21 +155,6 @@ function buildContactLookup(contacts: XeroContact[]): Map<string, string> {
     lookup.set(contact.ContactID, contact.Name)
   }
   return lookup
-}
-
-// ---------------------------------------------------------------------------
-// Helper: Get bank transaction description
-// ---------------------------------------------------------------------------
-
-function getBankTransactionDescription(txn: XeroBankTransaction): string {
-  // Combine reference and line item descriptions for matching
-  const parts: string[] = []
-  if (txn.Reference) parts.push(txn.Reference)
-  if (txn.Contact?.Name) parts.push(txn.Contact.Name)
-  for (const li of txn.LineItems) {
-    if (li.Description) parts.push(li.Description)
-  }
-  return parts.join(' ')
 }
 
 // ---------------------------------------------------------------------------
