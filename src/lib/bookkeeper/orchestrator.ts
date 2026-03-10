@@ -327,7 +327,7 @@ export async function runBookkeeperForAllBusinesses(
   }
 
   // Update run record with final results
-  await supabase
+  const { error: updateError } = await supabase
     .from('bookkeeper_runs')
     .update({
       completed_at: completedAt.toISOString(),
@@ -343,6 +343,10 @@ export async function runBookkeeperForAllBusinesses(
       error_log: errorLog.length > 0 ? errorLog : null,
     })
     .eq('id', runId)
+
+  if (updateError) {
+    console.error(`[Bookkeeper] Failed to update run record ${runId}:`, updateError)
+  }
 
   return {
     runId,
