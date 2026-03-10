@@ -45,6 +45,8 @@ import {
   saveXeroTokens,
   xeroApiFetch,
   parsePandLRevenue,
+  parsePandLExpenses,
+  calculateMoMGrowth,
   fetchRevenueMTD,
   fetchBankTransactions,
   fetchInvoices,
@@ -174,6 +176,107 @@ describe('Xero Client', () => {
     it('returns 0 when Reports is empty', () => {
       expect(parsePandLRevenue({})).toBe(0)
       expect(parsePandLRevenue({ Reports: [] })).toBe(0)
+    })
+  })
+
+  // ── parsePandLExpenses ────────────────────────────────────────────────
+
+  describe('parsePandLExpenses', () => {
+    it('sums Cost of Sales and Operating Expenses sections', () => {
+      const report = {
+        Reports: [{
+          Rows: [
+            {
+              RowType: 'Section',
+              Title: 'Less Cost of Sales',
+              Rows: [{
+                RowType: 'SummaryRow',
+                Cells: [{ Value: 'Total Cost of Sales' }, { Value: '5,000.00' }],
+              }],
+            },
+            {
+              RowType: 'Section',
+              Title: 'Less Operating Expenses',
+              Rows: [{
+                RowType: 'SummaryRow',
+                Cells: [{ Value: 'Total Operating Expenses' }, { Value: '3,000.00' }],
+              }],
+            },
+          ],
+        }],
+      }
+      // 5,000 + 3,000 = 8,000 dollars → 800,000 cents
+      expect(parsePandLExpenses(report)).toBe(800_000)
+    })
+
+    it('returns 0 when no expense sections exist', () => {
+      const report = {
+        Reports: [{ Rows: [{ RowType: 'Section', Title: 'Income' }] }],
+      }
+      expect(parsePandLExpenses(report)).toBe(0)
+    })
+
+    it('returns 0 for empty report', () => {
+      expect(parsePandLExpenses({})).toBe(0)
+    })
+  })
+
+  // ── calculateMoMGrowth ────────────────────────────────────────────────
+
+  describe('calculateMoMGrowth', () => {
+    it('calculates positive month-on-month growth percentage', () => {
+      const report = {
+        Reports: [{
+          Rows: [{
+            RowType: 'Section',
+            Title: 'Income',
+            Rows: [{
+              RowType: 'SummaryRow',
+              // Cells[1] = current (11,000), Cells[2] = prior (10,000)
+              Cells: [{ Value: 'Total' }, { Value: '11,000.00' }, { Value: '10,000.00' }],
+            }],
+          }],
+        }],
+      }
+      // (11000 - 10000) / 10000 * 100 = 10%
+      expect(calculateMoMGrowth(report)).toBe(10)
+    })
+
+    it('calculates negative month-on-month growth', () => {
+      const report = {
+        Reports: [{
+          Rows: [{
+            RowType: 'Section',
+            Title: 'Income',
+            Rows: [{
+              RowType: 'SummaryRow',
+              Cells: [{ Value: 'Total' }, { Value: '9,000.00' }, { Value: '10,000.00' }],
+            }],
+          }],
+        }],
+      }
+      // (9000 - 10000) / 10000 * 100 = -10%
+      expect(calculateMoMGrowth(report)).toBe(-10)
+    })
+
+    it('returns 0 when prior period is zero (no division by zero)', () => {
+      const report = {
+        Reports: [{
+          Rows: [{
+            RowType: 'Section',
+            Title: 'Income',
+            Rows: [{
+              RowType: 'SummaryRow',
+              Cells: [{ Value: 'Total' }, { Value: '5,000.00' }, { Value: '0' }],
+            }],
+          }],
+        }],
+      }
+      expect(calculateMoMGrowth(report)).toBe(0)
+    })
+
+    it('returns 0 for empty report', () => {
+      expect(calculateMoMGrowth({})).toBe(0)
     })
   })
 
@@ -739,32 +842,90 @@ describe('Xero Client', () => {
       expect(result.source).toBe('mock')
     })
 
-    it('fetches real revenue from Xero when configured and tokens exist', async () => {
+    it('fetches real revenue, expenses, growth and invoice count from Xero', async () => {
       setupVaultMock(MOCK_TOKENS)
 
-      global.fetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({
-          Reports: [{
-            Rows: [{
+      // Two-period P&L: Cells[1] = current, Cells[2] = prior
+      const pandlResponse = {
+        Reports: [{
+          Rows: [
+            {
               RowType: 'Section',
               Title: 'Income',
               Rows: [{
                 RowType: 'SummaryRow',
-                Cells: [{ Value: 'Total Income' }, { Value: '15,000.00' }],
+                Cells: [{ Value: 'Total Income' }, { Value: '15,000.00' }, { Value: '12,000.00' }],
               }],
-            }],
-          }],
-        }),
-      })
+            },
+            {
+              RowType: 'Section',
+              Title: 'Less Cost of Sales',
+              Rows: [{
+                RowType: 'SummaryRow',
+                Cells: [{ Value: 'Total CoS' }, { Value: '4,000.00' }],
+              }],
+            },
+            {
+              RowType: 'Section',
+              Title: 'Less Operating Expenses',
+              Rows: [{
+                RowType: 'SummaryRow',
+                Cells: [{ Value: 'Total OpEx' }, { Value: '3,500.00' }],
+              }],
+            },
+          ],
+        }],
+      }
+
+      const invoiceResponse = {
+        Invoices: [
+          { InvoiceID: 'inv-1', Type: 'ACCREC', Status: 'PAID', Total: 5000 },
+          { InvoiceID: 'inv-2', Type: 'ACCREC', Status: 'PAID', Total: 10000 },
+        ],
+      }
+
+      global.fetch = vi.fn()
+        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(pandlResponse) })
+        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(invoiceResponse) })
 
       const result = await fetchRevenueMTD(FOUNDER_ID, BUSINESS_KEY)
 
       expect(result.source).toBe('xero')
-      expect(result.data.revenueCents).toBe(1_500_000)
+      expect(result.data.revenueCents).toBe(1_500_000)  // 15,000.00
+      expect(result.data.expensesCents).toBe(750_000)   // 4,000 + 3,500 = 7,500
+      expect(result.data.growth).toBe(25)               // (15000 - 12000) / 12000 * 100 = 25%
+      expect(result.data.invoiceCount).toBe(2)
     })
 
-    it('falls back to mock when API call fails', async () => {
+    it('returns live revenue data even when invoice count fetch fails', async () => {
+      setupVaultMock(MOCK_TOKENS)
+
+      const pandlResponse = {
+        Reports: [{
+          Rows: [{
+            RowType: 'Section',
+            Title: 'Income',
+            Rows: [{
+              RowType: 'SummaryRow',
+              Cells: [{ Value: 'Total Income' }, { Value: '10,000.00' }, { Value: '8,000.00' }],
+            }],
+          }],
+        }],
+      }
+
+      global.fetch = vi.fn()
+        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(pandlResponse) })
+        .mockResolvedValueOnce({ ok: false, status: 429 }) // invoice count rate-limited
+
+      const result = await fetchRevenueMTD(FOUNDER_ID, BUSINESS_KEY)
+
+      // Primary data intact — invoice count gracefully degraded
+      expect(result.source).toBe('xero')
+      expect(result.data.revenueCents).toBe(1_000_000)
+      expect(result.data.invoiceCount).toBe(0)
+    })
+
+    it('falls back to mock when P&L API call fails', async () => {
       setupVaultMock(MOCK_TOKENS)
 
       global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 })

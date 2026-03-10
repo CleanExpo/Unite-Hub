@@ -1,6 +1,12 @@
 // src/lib/integrations/google.ts
 // Real Gmail + Calendar API integration via stored OAuth tokens in credentials_vault
 // Falls back to mocks when Google is not configured or no accounts connected
+// Results are cached in-memory for 5 minutes to reduce API call volume
+
+import { getCached, setCache, invalidateCache } from '@/lib/cache'
+
+/** Cache TTL for Gmail threads and Calendar events (5 minutes in ms) */
+const GOOGLE_CACHE_TTL_MS = 5 * 60 * 1_000
 
 export function isGoogleConfigured(): boolean {
   return Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
@@ -197,6 +203,10 @@ export async function getConnectedGoogleAccounts(founderId: string): Promise<Con
 export async function fetchGmailThreads(founderId: string): Promise<GmailThread[]> {
   if (!isGoogleConfigured()) return getMockThreads()
 
+  const cacheKey = `gmail:${founderId}`
+  const cached = getCached<GmailThread[]>(cacheKey)
+  if (cached) return cached
+
   const { createServiceClient } = await import('@/lib/supabase/service')
   const { decrypt } = await import('@/lib/vault')
 
@@ -225,11 +235,17 @@ export async function fetchGmailThreads(founderId: string): Promise<GmailThread[
     })
   )
 
-  return allThreads.flat().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  const threads = allThreads.flat().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  setCache(cacheKey, threads, GOOGLE_CACHE_TTL_MS)
+  return threads
 }
 
 export async function fetchCalendarEvents(founderId: string): Promise<CalendarEvent[]> {
   if (!isGoogleConfigured()) return getMockEvents()
+
+  const cacheKey = `calendar:${founderId}`
+  const cached = getCached<CalendarEvent[]>(cacheKey)
+  if (cached) return cached
 
   const { createServiceClient } = await import('@/lib/supabase/service')
   const { decrypt } = await import('@/lib/vault')
@@ -259,7 +275,17 @@ export async function fetchCalendarEvents(founderId: string): Promise<CalendarEv
     })
   )
 
-  return allEvents.flat().sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+  const events = allEvents.flat().sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+  setCache(cacheKey, events, GOOGLE_CACHE_TTL_MS)
+  return events
+}
+
+/**
+ * Manually invalidate cached Gmail + Calendar data for a founder.
+ * Call this when the user clicks a "Refresh" button to force a re-fetch.
+ */
+export function invalidateGoogleCache(founderId: string): void {
+  invalidateCache(founderId)
 }
 
 // ─── Mocks (dev / pre-connect fallback) ─────────────────────────────────────

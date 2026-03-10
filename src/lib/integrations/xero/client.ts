@@ -189,19 +189,63 @@ export async function xeroApiFetch<T>(
   return res.json() as Promise<T>
 }
 
-// ── P&L Report parser ───────────────────────────────────────────────────────
+// ── P&L Report parsers ─────────────────────────────────────────────────────
 
-export function parsePandLRevenue(report: { Reports?: Array<{ Rows?: XeroReportRow[] }> }): number {
-  const rows = report.Reports?.[0]?.Rows ?? []
+/**
+ * Extract a SummaryRow total (in cents) for named P&L sections.
+ * cellIndex 1 = current period, cellIndex 2 = prior period (when periods=2).
+ */
+function parseSectionSummaryCents(
+  rows: XeroReportRow[],
+  sectionTitles: string[],
+  cellIndex: number,
+): number {
+  let total = 0
   for (const section of rows) {
-    if (section.RowType === 'Section' && section.Title === 'Income') {
-      const summaryRow = section.Rows?.find(r => r.RowType === 'SummaryRow')
-      const valueStr = summaryRow?.Cells?.[1]?.Value ?? '0'
+    if (
+      section.RowType === 'Section' &&
+      sectionTitles.some((t) => section.Title?.includes(t))
+    ) {
+      const summaryRow = section.Rows?.find((r) => r.RowType === 'SummaryRow')
+      const valueStr = summaryRow?.Cells?.[cellIndex]?.Value ?? '0'
       const dollars = parseFloat(valueStr.replace(/[^0-9.-]/g, '')) || 0
-      return Math.round(dollars * 100)
+      total += Math.round(dollars * 100)
     }
   }
-  return 0
+  return total
+}
+
+/** Total income (revenue) for the current period, in cents */
+export function parsePandLRevenue(
+  report: { Reports?: Array<{ Rows?: XeroReportRow[] }> }
+): number {
+  return parseSectionSummaryCents(report.Reports?.[0]?.Rows ?? [], ['Income'], 1)
+}
+
+/** Total expenses (Cost of Sales + Operating Expenses) for the current period, in cents */
+export function parsePandLExpenses(
+  report: { Reports?: Array<{ Rows?: XeroReportRow[] }> }
+): number {
+  return parseSectionSummaryCents(
+    report.Reports?.[0]?.Rows ?? [],
+    ['Less Cost of Sales', 'Less Operating Expenses'],
+    1,
+  )
+}
+
+/**
+ * Month-on-month revenue growth (%) from a two-period P&L (periods=2).
+ * Column index 1 = current period, index 2 = prior period.
+ * Returns 0 when prior period is zero to avoid division by zero.
+ */
+export function calculateMoMGrowth(
+  report: { Reports?: Array<{ Rows?: XeroReportRow[] }> }
+): number {
+  const rows = report.Reports?.[0]?.Rows ?? []
+  const current = parseSectionSummaryCents(rows, ['Income'], 1)
+  const prior = parseSectionSummaryCents(rows, ['Income'], 2)
+  if (prior === 0) return 0
+  return Math.round(((current - prior) / prior) * 100)
 }
 
 // ── Revenue MTD fetch ───────────────────────────────────────────────────────
@@ -227,14 +271,30 @@ export async function fetchRevenueMTD(
     )
 
     const revenueCents = parsePandLRevenue(report)
+    const expensesCents = parsePandLExpenses(report)
+    const growth = calculateMoMGrowth(report)
+
+    // Count paid sales invoices this month — best-effort, non-fatal
+    let invoiceCount = 0
+    try {
+      const dateWhere = buildDateWhereClause(fromDate, toDate)
+      const where = `Type=="ACCREC"&&Status=="PAID"${dateWhere ? '&&' + dateWhere : ''}`
+      const invoiceResponse = await xeroApiFetch<{ Invoices?: XeroInvoice[] }>(
+        tokens,
+        `/Invoices?${new URLSearchParams({ where, page: '1' }).toString()}`
+      )
+      invoiceCount = invoiceResponse.Invoices?.length ?? 0
+    } catch {
+      // Invoice count is a KPI metric only — do not fail the whole fetch
+    }
 
     return {
       data: {
         businessKey,
         revenueCents,
-        expensesCents: 0,
-        growth: 0,
-        invoiceCount: 0,
+        expensesCents,
+        growth,
+        invoiceCount,
         lastUpdated: new Date().toISOString(),
       },
       source: 'xero',
