@@ -25,12 +25,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@/convex/*": [
-        "./convex/*"
-      ],
-      "@config/*": [
-        "./config/*"
       ]
     },
     "allowJs": true
@@ -44,20 +38,11 @@
   ],
   "exclude": [
     "node_modules",
-    "_disabled",
-    "tests",
     "NodeJS-Starter-V1",
-    "convex.bak",
-    "convex",
-    "examples",
     "scripts",
     "logs",
-    "modules",
-    "lib",
     "next",
-    "apps",
     "packages",
-    "skills",
     "sentry.client.config.ts",
     "sentry.server.config.ts",
     "sentry.edge.config.ts",

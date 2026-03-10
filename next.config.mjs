@@ -4,14 +4,10 @@ import path from 'node:path';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  typescript: {
-    // Temporarily ignore TypeScript errors during build (legacy Convex code)
-    ignoreBuildErrors: true,
-  },
-  transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
 
-  // Next.js 16: Move serverComponentsExternalPackages to top level
-  serverExternalPackages: ['zustand', '@clerk/nextjs'],
+  // Note: zustand and @clerk/nextjs removed from serverExternalPackages.
+  // zustand MUST be bundled to share React instance (prevents useRef null errors during SSG).
+  // @clerk/nextjs is unused (v1 cruft — Nexus 2.0 uses Supabase auth).
 
   experimental: {
     // Enable optimized compilation
@@ -23,7 +19,7 @@ const nextConfig = {
       '@anthropic-ai/sdk',
       'recharts',
       'date-fns',
-      'lodash',
+
       'framer-motion',
       '@radix-ui/react-icons',
       'zod',

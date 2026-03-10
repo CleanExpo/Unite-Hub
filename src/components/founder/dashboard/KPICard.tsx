@@ -68,7 +68,10 @@ export function KPICard({
             loading: false,
           })
         })
-        .catch(() => setLive({ metric: null, trend: null, secondary: null, source: null, loading: false }))
+        .catch((error) => {
+          console.error(`[kpi] Stripe fetch failed for ${stripeBusinessKey}:`, error)
+          setLive({ metric: null, trend: null, secondary: null, source: null, loading: false })
+        })
       return
     }
 
@@ -88,7 +91,10 @@ export function KPICard({
             loading: false,
           })
         })
-        .catch(() => setLive({ metric: null, trend: null, secondary: null, source: null, loading: false }))
+        .catch((error) => {
+          console.error(`[kpi] Xero fetch failed for ${xeroBusinessKey}:`, error)
+          setLive({ metric: null, trend: null, secondary: null, source: null, loading: false })
+        })
     }
   }, [stripeBusinessKey, xeroBusinessKey, isPlanning])
 

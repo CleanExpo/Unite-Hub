@@ -1,6 +1,9 @@
 import React from "react";
 import Image from "next/image";
 
+// Force dynamic rendering for all auth pages — they require session context
+export const dynamic = 'force-dynamic';
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">

@@ -1,12 +1,33 @@
 // src/lib/integrations/stripe.ts
-// Stripe MRR integration — real subscriptions.list() when key is configured
+// Stripe MRR integration — per-business keys with fallback to single key
 
 import Stripe from 'stripe'
 
-const STRIPE_KEY = process.env.STRIPE_SECRET_KEY
+// Per-business Stripe secret key mapping
+// Each business can have its own Stripe account (separate legal entities)
+const STRIPE_KEY_MAP: Record<string, string | undefined> = {
+  dr:      process.env.STRIPE_SECRET_KEY_DR,
+  dr_qld:  process.env.STRIPE_SECRET_KEY_DR,         // shares DR's Stripe account
+  carsi:   process.env.STRIPE_SECRET_KEY_CARSI,
+  restore: process.env.STRIPE_SECRET_KEY_RESTOREASSIST,
+  synthex: process.env.STRIPE_SECRET_KEY_SYNTHEX,
+  ccw:     process.env.STRIPE_SECRET_KEY_CCW,
+  nrpg:    process.env.STRIPE_SECRET_KEY_NRPG,
+  ato:     process.env.STRIPE_SECRET_KEY_ATO,
+}
 
-export function isStripeConfigured(): boolean {
-  return Boolean(STRIPE_KEY)
+// Legacy fallback — single key for backwards compatibility
+const STRIPE_FALLBACK_KEY = process.env.STRIPE_SECRET_KEY
+
+function getStripeKey(businessKey?: string): string | undefined {
+  if (businessKey && STRIPE_KEY_MAP[businessKey]) {
+    return STRIPE_KEY_MAP[businessKey]
+  }
+  return STRIPE_FALLBACK_KEY
+}
+
+export function isStripeConfigured(businessKey?: string): boolean {
+  return Boolean(getStripeKey(businessKey))
 }
 
 export interface StripeMRR {
@@ -35,10 +56,11 @@ export function getMockMRR(businessKey: string): StripeMRR {
 // ─── Real Stripe fetch ───────────────────────────────────────────────────────
 
 export async function fetchMRR(businessKey: string): Promise<StripeMRR> {
-  if (!isStripeConfigured()) return getMockMRR(businessKey)
+  const key = getStripeKey(businessKey)
+  if (!key) return getMockMRR(businessKey)
 
   try {
-    const stripe = new Stripe(STRIPE_KEY!, { apiVersion: '2025-10-29.clover' })
+    const stripe = new Stripe(key, { apiVersion: '2025-10-29.clover' })
 
     let mrr = 0
     let count = 0
@@ -80,8 +102,10 @@ export async function fetchMRR(businessKey: string): Promise<StripeMRR> {
       churnRate: 0, // churn event log needed
       lastUpdated: new Date().toISOString(),
     }
-  } catch {
+  } catch (error) {
     // Stripe API error — fall back to mock so dashboard doesn't crash
+    // Log for production observability (Sentry captures console.error)
+    console.error(`[stripe] fetchMRR failed for ${businessKey}:`, error instanceof Error ? error.message : 'Unknown error')
     return getMockMRR(businessKey)
   }
 }

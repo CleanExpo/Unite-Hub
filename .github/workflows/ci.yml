@@ -34,11 +34,9 @@ jobs:
 
       - name: Run ESLint
         run: pnpm run lint
-        continue-on-error: true
 
       - name: Run TypeScript
         run: pnpm run type-check
-        continue-on-error: true
 
   test:
     name: Unit & Integration Tests
@@ -88,7 +86,6 @@ jobs:
 
       - name: Run tests
         run: pnpm run test
-        continue-on-error: true
 
   build:
     name: Build Application

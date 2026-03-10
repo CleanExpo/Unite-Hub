@@ -4,9 +4,27 @@
 
 import { randomBytes, createCipheriv, createDecipheriv, pbkdf2Sync } from 'crypto'
 
-const VAULT_KEY = process.env.VAULT_ENCRYPTION_KEY ?? 'dev-placeholder-key-change-in-production'
+const VAULT_KEY = process.env.VAULT_ENCRYPTION_KEY
+
+if (!VAULT_KEY) {
+  // In production: fatal — credentials would be unencrypted or use a known key.
+  // In development: warn loudly so devs know to set the env var.
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'VAULT_ENCRYPTION_KEY is required in production. ' +
+      'Generate one with: openssl rand -hex 32'
+    )
+  }
+  console.warn(
+    '⚠️  VAULT_ENCRYPTION_KEY not set — vault operations will fail. ' +
+    'Add it to .env.local (generate with: openssl rand -hex 32)'
+  )
+}
 
 function deriveKey(salt: Buffer): Buffer {
+  if (!VAULT_KEY) {
+    throw new Error('VAULT_ENCRYPTION_KEY is not configured — cannot perform vault operations')
+  }
   return pbkdf2Sync(VAULT_KEY, salt, 100_000, 32, 'sha256')
 }
 
