@@ -16,7 +16,6 @@ export async function register() {
     'VAULT_ENCRYPTION_KEY',
     'SUPABASE_SERVICE_ROLE_KEY',
     'CRON_SECRET',
-    'FOUNDER_USER_ID',
   ] as const
 
   // ─── Optional (warned when missing) ────────────────────────────────────────
@@ -45,6 +44,11 @@ export async function register() {
         'These are required for secure operation in production.'
       )
     }
+  }
+
+  // ─── Warn about missing FOUNDER_USER_ID (CRON-only, not app startup) ───────
+  if (isProduction && !process.env.FOUNDER_USER_ID) {
+    console.warn('⚠️  FOUNDER_USER_ID not set — bookkeeper CRON will be disabled until configured.')
   }
 
   // ─── Check optional integrations ───────────────────────────────────────────
