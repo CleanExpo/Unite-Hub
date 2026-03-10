@@ -24,6 +24,7 @@
  */
 
 import https from 'node:https';
+import { fileURLToPath } from 'node:url';
 
 function requireApiKey() {
   const key = process.env.LINEAR_API_KEY;
@@ -127,31 +128,34 @@ export async function listIssues() {
 }
 
 // ─── CLI interface ────────────────────────────────────────────────────────────
+// Guard: only run CLI code when this file is the entry point (not when imported)
 
-const [, , command, ...args] = process.argv;
+if (fileURLToPath(import.meta.url) === process.argv[1]) {
+  const [, , command, ...args] = process.argv;
 
-if (command === 'issues') {
-  const issues = await listIssues();
-  console.log(`\nUNI team — ${issues.length} issues:\n`);
-  issues.forEach((i) => {
-    const state = i.state.name.padEnd(14);
-    console.log(`  ${i.identifier.padEnd(10)} [${state}]  ${i.title}`);
-  });
-} else if (command === 'state') {
-  const [issueId, stateId] = args;
-  if (!issueId || !stateId) {
-    console.error('Usage: node scripts/linear-update.mjs state <issueId> <stateId>');
+  if (command === 'issues') {
+    const issues = await listIssues();
+    console.log(`\nUNI team — ${issues.length} issues:\n`);
+    issues.forEach((i) => {
+      const state = i.state.name.padEnd(14);
+      console.log(`  ${i.identifier.padEnd(10)} [${state}]  ${i.title}`);
+    });
+  } else if (command === 'state') {
+    const [issueId, stateId] = args;
+    if (!issueId || !stateId) {
+      console.error('Usage: node scripts/linear-update.mjs state <issueId> <stateId>');
+      process.exit(1);
+    }
+    const result = await linearSetState(issueId, stateId);
+    if (result.success) {
+      console.log(`✅ ${result.issue.identifier} → ${result.issue.state.name}: ${result.issue.title}`);
+    } else {
+      console.error('❌ State update failed');
+      process.exit(1);
+    }
+  } else if (command) {
+    console.error(`Unknown command: "${command}"`);
+    console.error('Available commands: issues, state <issueId> <stateId>');
     process.exit(1);
   }
-  const result = await linearSetState(issueId, stateId);
-  if (result.success) {
-    console.log(`✅ ${result.issue.identifier} → ${result.issue.state.name}: ${result.issue.title}`);
-  } else {
-    console.error('❌ State update failed');
-    process.exit(1);
-  }
-} else if (command) {
-  console.error(`Unknown command: "${command}"`);
-  console.error('Available commands: issues, state <issueId> <stateId>');
-  process.exit(1);
 }
