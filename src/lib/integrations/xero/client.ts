@@ -138,7 +138,7 @@ export async function saveXeroTokens(
   const payload = encrypt(JSON.stringify(tokens))
   const supabase = createServiceClient()
 
-  await supabase
+  const { error } = await supabase
     .from('credentials_vault')
     .upsert(
       {
@@ -152,6 +152,10 @@ export async function saveXeroTokens(
       },
       { onConflict: 'founder_id,service,label' }
     )
+
+  if (error) {
+    throw new Error(`Failed to save Xero tokens for ${businessKey}: ${error.message}`)
+  }
 }
 
 // ── Core API fetch helper ───────────────────────────────────────────────────
@@ -161,6 +165,9 @@ export async function xeroApiFetch<T>(
   path: string,
   options?: { method?: string; body?: unknown }
 ): Promise<T> {
+  // Centralised rate-limit delay before every API call
+  await delay(RATE_LIMIT_DELAY_MS)
+
   const url = path.startsWith('http') ? path : `${XERO_API_BASE}${path}`
 
   const res = await fetch(url, {
@@ -207,13 +214,8 @@ export async function fetchRevenueMTD(
     return { data: getMockRevenueMTD(businessKey), source: 'mock' }
   }
 
-  const storedTokens = await loadXeroTokens(founderId, businessKey)
-  if (!storedTokens) {
-    return { data: getMockRevenueMTD(businessKey), source: 'mock' }
-  }
-
   try {
-    const tokens = await getValidXeroToken(storedTokens)
+    const tokens = await getTokensForBusiness(founderId, businessKey)
 
     const now = new Date()
     const fromDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
@@ -267,7 +269,14 @@ async function getTokensForBusiness(
   if (!storedTokens) {
     throw new Error(`No Xero tokens found for business "${businessKey}"`)
   }
-  return getValidXeroToken(storedTokens)
+  const validTokens = await getValidXeroToken(storedTokens)
+
+  // Persist refreshed tokens to vault if they changed (Xero uses rotating refresh tokens)
+  if (validTokens.access_token !== storedTokens.access_token) {
+    await saveXeroTokens(founderId, businessKey, validTokens)
+  }
+
+  return validTokens
 }
 
 // ── Bank Transactions ───────────────────────────────────────────────────────
@@ -289,8 +298,6 @@ export async function fetchBankTransactions(
     BankTransactions: XeroBankTransaction[]
     pagination?: { page: number; pageCount: number; pageSize: number; itemCount: number }
   }>(tokens, `/BankTransactions?${queryStr}`)
-
-  await delay(RATE_LIMIT_DELAY_MS)
 
   return {
     items: response.BankTransactions ?? [],
@@ -315,15 +322,13 @@ export async function fetchInvoices(
 
   const params = new URLSearchParams()
   if (whereParts.length > 0) params.set('where', whereParts.join('&&'))
-  params.set('page', '1')
+  params.set('page', String(options?.page ?? 1))
 
   const queryStr = params.toString()
   const response = await xeroApiFetch<{
     Invoices: XeroInvoice[]
     pagination?: { page: number; pageCount: number; pageSize: number; itemCount: number }
   }>(tokens, `/Invoices?${queryStr}`)
-
-  await delay(RATE_LIMIT_DELAY_MS)
 
   return {
     items: response.Invoices ?? [],
@@ -341,8 +346,6 @@ export async function fetchContacts(
 
   const response = await xeroApiFetch<{ Contacts: XeroContact[] }>(tokens, '/Contacts')
 
-  await delay(RATE_LIMIT_DELAY_MS)
-
   return response.Contacts ?? []
 }
 
@@ -356,8 +359,6 @@ export async function fetchAccounts(
 
   const response = await xeroApiFetch<{ Accounts: XeroAccount[] }>(tokens, '/Accounts')
 
-  await delay(RATE_LIMIT_DELAY_MS)
-
   return response.Accounts ?? []
 }
 
@@ -370,8 +371,6 @@ export async function fetchTaxRates(
   const tokens = await getTokensForBusiness(founderId, businessKey)
 
   const response = await xeroApiFetch<{ TaxRates: XeroTaxRate[] }>(tokens, '/TaxRates')
-
-  await delay(RATE_LIMIT_DELAY_MS)
 
   return response.TaxRates ?? []
 }
@@ -399,8 +398,6 @@ export async function reconcileTransaction(
     '/BankTransactions',
     { method: 'PUT', body }
   )
-
-  await delay(RATE_LIMIT_DELAY_MS)
 
   const result = response.BankTransactions?.[0]
   if (!result) throw new Error(`Reconciliation failed for transaction ${transactionId}`)

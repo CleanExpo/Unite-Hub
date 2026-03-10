@@ -7,7 +7,7 @@ export type {
   XeroRevenueMTD,
   XeroReportRow,
   XeroBankTransaction,
-  XeroBankTransactionLineItem,
+  XeroLineItem,
   XeroBankTransactionOptions,
   XeroInvoice,
   XeroInvoiceOptions,

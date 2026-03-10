@@ -32,7 +32,7 @@ export interface XeroReportRow {
 
 // ── Bank Transactions ───────────────────────────────────────────────────────
 
-export interface XeroBankTransactionLineItem {
+export interface XeroLineItem {
   LineItemID: string
   Description?: string
   Quantity?: number
@@ -46,7 +46,7 @@ export interface XeroBankTransaction {
   BankTransactionID: string
   Type: 'RECEIVE' | 'SPEND' | 'RECEIVE-OVERPAYMENT' | 'RECEIVE-PREPAYMENT' | 'SPEND-OVERPAYMENT' | 'SPEND-PREPAYMENT'
   Contact: { ContactID: string; Name: string }
-  LineItems: XeroBankTransactionLineItem[]
+  LineItems: XeroLineItem[]
   BankAccount: { AccountID: string; Code?: string; Name?: string }
   Total: number
   Date: string        // /Date(...)/ or ISO string
@@ -72,7 +72,7 @@ export interface XeroInvoice {
   DueDate: string
   Reference?: string
   CurrencyCode?: string
-  LineItems?: XeroBankTransactionLineItem[]
+  LineItems?: XeroLineItem[]
   UpdatedDateUTC?: string
 }
 
@@ -148,4 +148,5 @@ export interface XeroInvoiceOptions {
   fromDate?: string
   toDate?: string
   type?: 'ACCREC' | 'ACCPAY'
+  page?: number       // 1-indexed
 }

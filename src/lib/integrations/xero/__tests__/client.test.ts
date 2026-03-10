@@ -278,6 +278,67 @@ describe('Xero Client', () => {
         { onConflict: 'founder_id,service,label' }
       )
     })
+
+    it('throws when Supabase upsert returns an error', async () => {
+      mockUpsert.mockReturnValueOnce({ error: { message: 'unique constraint violated' } })
+
+      await expect(saveXeroTokens(FOUNDER_ID, BUSINESS_KEY, MOCK_TOKENS))
+        .rejects.toThrow('Failed to save Xero tokens for dr: unique constraint violated')
+    })
+  })
+
+  // ── getTokensForBusiness (tested indirectly via endpoint functions) ──
+
+  describe('token persistence on refresh', () => {
+    it('persists refreshed tokens back to the vault when they change', async () => {
+      // Set up vault with expired tokens so a refresh will occur
+      setupVaultMock(EXPIRED_TOKENS)
+
+      // Mock the token refresh response
+      const refreshResponse = {
+        ok: true,
+        json: () => Promise.resolve({
+          access_token: 'refreshed-access',
+          refresh_token: 'refreshed-refresh',
+          expires_in: 1800,
+        }),
+      }
+
+      // Mock fetch: first call = token refresh, second call = actual API call
+      global.fetch = vi.fn()
+        .mockResolvedValueOnce(refreshResponse)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ Contacts: [] }),
+        })
+
+      await fetchContacts(FOUNDER_ID, BUSINESS_KEY)
+
+      // Verify saveXeroTokens was called (upsert with new tokens)
+      expect(mockUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          founder_id: FOUNDER_ID,
+          service: 'xero',
+          label: BUSINESS_KEY,
+        }),
+        { onConflict: 'founder_id,service,label' }
+      )
+    })
+
+    it('does not persist tokens when they have not changed', async () => {
+      // Set up vault with valid (non-expired) tokens
+      setupVaultMock(MOCK_TOKENS)
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ Contacts: [] }),
+      })
+
+      await fetchContacts(FOUNDER_ID, BUSINESS_KEY)
+
+      // saveXeroTokens should NOT have been called (mockUpsert not invoked)
+      expect(mockUpsert).not.toHaveBeenCalled()
+    })
   })
 
   // ── xeroApiFetch ──────────────────────────────────────────────────────
@@ -289,7 +350,9 @@ describe('Xero Client', () => {
         json: () => Promise.resolve({ data: 'test' }),
       })
 
-      await xeroApiFetch(MOCK_TOKENS, '/TestEndpoint')
+      const promise = xeroApiFetch(MOCK_TOKENS, '/TestEndpoint')
+      await vi.advanceTimersByTimeAsync(1_000)
+      await promise
 
       expect(global.fetch).toHaveBeenCalledWith(
         'https://api.xero.com/api.xro/2.0/TestEndpoint',
@@ -311,7 +374,9 @@ describe('Xero Client', () => {
       })
 
       const body = { BankTransactions: [{ IsReconciled: true }] }
-      await xeroApiFetch(MOCK_TOKENS, '/BankTransactions', { method: 'PUT', body })
+      const promise = xeroApiFetch(MOCK_TOKENS, '/BankTransactions', { method: 'PUT', body })
+      await vi.advanceTimersByTimeAsync(1_000)
+      await promise
 
       expect(global.fetch).toHaveBeenCalledWith(
         'https://api.xero.com/api.xro/2.0/BankTransactions',
@@ -332,7 +397,27 @@ describe('Xero Client', () => {
         text: () => Promise.resolve('Forbidden'),
       })
 
-      await expect(xeroApiFetch(MOCK_TOKENS, '/TestEndpoint')).rejects.toThrow('Xero API error 403: Forbidden')
+      // Attach rejection handler immediately to prevent PromiseRejectionHandledWarning
+      const promise = xeroApiFetch(MOCK_TOKENS, '/TestEndpoint').catch((e: Error) => e)
+      await vi.advanceTimersByTimeAsync(1_000)
+      const error = await promise
+      expect(error).toBeInstanceOf(Error)
+      expect((error as Error).message).toBe('Xero API error 403: Forbidden')
+    })
+
+    it('applies rate-limit delay before making the API call', async () => {
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ data: 'test' }),
+      })
+
+      const start = Date.now()
+      const promise = xeroApiFetch(MOCK_TOKENS, '/TestEndpoint')
+      await vi.advanceTimersByTimeAsync(1_000)
+      await promise
+      const elapsed = Date.now() - start
+
+      expect(elapsed).toBeGreaterThanOrEqual(1_000)
     })
   })
 
@@ -455,6 +540,36 @@ describe('Xero Client', () => {
       const url = fetchCall[0] as string
       // Should NOT contain Type filter
       expect(url).not.toContain('Type')
+    })
+
+    it('passes page parameter to the Xero API', async () => {
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({
+          Invoices: [],
+          pagination: { page: 3, pageCount: 5, pageSize: 100, itemCount: 450 },
+        }),
+      })
+
+      const result = await fetchInvoices(FOUNDER_ID, BUSINESS_KEY, { page: 3 })
+
+      const fetchCall = vi.mocked(global.fetch).mock.calls[0]
+      const url = fetchCall[0] as string
+      expect(url).toContain('page=3')
+      expect(result.pagination?.page).toBe(3)
+    })
+
+    it('defaults to page 1 when no page option provided', async () => {
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ Invoices: [] }),
+      })
+
+      await fetchInvoices(FOUNDER_ID, BUSINESS_KEY, { type: 'ACCREC' })
+
+      const fetchCall = vi.mocked(global.fetch).mock.calls[0]
+      const url = fetchCall[0] as string
+      expect(url).toContain('page=1')
     })
   })
 
@@ -659,14 +774,14 @@ describe('Xero Client', () => {
     })
   })
 
-  // ── Rate limiting (delay between calls) ───────────────────────────────
+  // ── Rate limiting (centralised in xeroApiFetch) ────────────────────────
 
   describe('rate limiting', () => {
     beforeEach(() => {
       setupVaultMock(MOCK_TOKENS)
     })
 
-    it('applies a 1-second delay after fetching bank transactions', async () => {
+    it('applies a 1-second delay before each API call via xeroApiFetch', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ BankTransactions: [] }),
@@ -674,7 +789,7 @@ describe('Xero Client', () => {
 
       const start = Date.now()
       const promise = fetchBankTransactions(FOUNDER_ID, BUSINESS_KEY)
-      // Advance timers to let the delay resolve
+      // Advance timers to let the centralised delay resolve
       await vi.advanceTimersByTimeAsync(1_000)
       await promise
       const elapsed = Date.now() - start
