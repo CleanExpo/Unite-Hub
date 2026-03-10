@@ -61,7 +61,7 @@ describe('Instant Asset Write-Off Detection', () => {
     expect(result.suggestions).toHaveLength(1)
     expect(result.suggestions[0].atoReference).toBe('S.328-180')
     expect(result.suggestions[0].bankTransactionId).toBe('bt-asset-1')
-    expect(result.suggestions[0].potentialSavingsCents).toBe(137500) // 550000 * 0.25
+    expect(result.suggestions[0].potentialSavingsCents).toBe(165000) // 550000 * 0.30
     expect(result.matches[0].deductionCategory).toBe('instant_asset_writeoff')
     expect(result.matches[0].deductionNotes).toContain('S.328-180')
   })
@@ -141,11 +141,25 @@ describe('Instant Asset Write-Off Detection', () => {
     expect(assetSuggestion).toBeUndefined()
   })
 
-  it('flags exactly $300 (boundary: minimum threshold met)', () => {
+  it('does NOT flag exactly $300.00 (boundary: must be strictly greater than $300)', () => {
     const match = makeMatch({ bankTransactionId: 'bt-300', isDeductible: true })
     const txn = makeBankTxn({
       BankTransactionID: 'bt-300',
       Total: -300.00,
+      LineItems: [{ LineItemID: 'li-1', Description: 'Small computer monitor' }],
+    })
+
+    const result = optimiseDeductions([match], [txn])
+
+    const assetSuggestion = result.suggestions.find((s) => s.atoReference === 'S.328-180')
+    expect(assetSuggestion).toBeUndefined()
+  })
+
+  it('flags $300.01 (boundary: just above $300 minimum)', () => {
+    const match = makeMatch({ bankTransactionId: 'bt-300-01', isDeductible: true })
+    const txn = makeBankTxn({
+      BankTransactionID: 'bt-300-01',
+      Total: -300.01,
       LineItems: [{ LineItemID: 'li-1', Description: 'Small computer monitor' }],
     })
 
@@ -287,7 +301,7 @@ describe('Prepaid Expenses', () => {
 
     const prepaidSuggestion = result.suggestions.find((s) => s.atoReference === 'S.8-1')
     expect(prepaidSuggestion).toBeDefined()
-    expect(prepaidSuggestion!.potentialSavingsCents).toBe(30000) // 120000 * 0.25
+    expect(prepaidSuggestion!.potentialSavingsCents).toBe(36000) // 120000 * 0.30
     expect(result.matches[0].deductionNotes).toContain('S.8-1')
     expect(result.matches[0].deductionNotes).toContain('Prepaid')
   })

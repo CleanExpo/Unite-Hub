@@ -17,8 +17,9 @@ const INSTANT_ASSET_WRITEOFF_THRESHOLD_CENTS = 2_000_000
 /** Minimum amount for instant asset write-off consideration ($300 AUD) */
 const INSTANT_ASSET_WRITEOFF_MINIMUM_CENTS = 30_000
 
-/** Corporate tax rate for small businesses (base rate entity) */
-const CORPORATE_TAX_RATE = 0.25
+/** Standard corporate tax rate (30%). Base rate entity rate is 25% but we use
+ *  the standard corporate rate as a conservative estimate. */
+const CORPORATE_TAX_RATE = 0.30
 
 /** Fixed-rate home office deduction per hour (from 01/07/2022) */
 const HOME_OFFICE_RATE_PER_HOUR = 0.67
@@ -143,7 +144,7 @@ function checkInstantAssetWriteOff(
   const absAmount = Math.abs(amountCents)
 
   if (
-    absAmount >= INSTANT_ASSET_WRITEOFF_MINIMUM_CENTS &&
+    absAmount > INSTANT_ASSET_WRITEOFF_MINIMUM_CENTS &&
     absAmount < INSTANT_ASSET_WRITEOFF_THRESHOLD_CENTS &&
     match.isDeductible &&
     matchesAnyPattern(description, ASSET_KEYWORDS)
