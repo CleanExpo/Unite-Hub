@@ -2,8 +2,8 @@
 import { BUSINESSES } from '../businesses'
 
 describe('BUSINESSES', () => {
-  it('has 7 entries', () => {
-    expect(BUSINESSES).toHaveLength(7)
+  it('has 8 entries', () => {
+    expect(BUSINESSES).toHaveLength(8)
   })
 
   it('each entry has key, name, color, status', () => {

@@ -21,9 +21,12 @@
       "Bash(uv run python:*)",
       "Bash(uv run pytest:*)",
       "Bash(pnpm turbo run lint:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(gws auth status)"
     ]
   },
-  "enabledMcpjsonServers": ["linear"],
-  "enableAllProjectMcpServers": true
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "linear"
+  ]
 }

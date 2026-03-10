@@ -1,7 +1,7 @@
 // src/components/layout/Topbar.tsx
 'use client'
 
-import { Menu, HelpCircle } from 'lucide-react'
+import { Menu, HelpCircle, Sun, Moon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useUIStore } from '@/store/ui'
 
@@ -22,6 +22,8 @@ function getBreadcrumb(pathname: string): string {
 export function Topbar() {
   const pathname = usePathname()
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)
+  const theme = useUIStore((s) => s.theme)
+  const toggleTheme = useUIStore((s) => s.toggleTheme)
   const breadcrumb = getBreadcrumb(pathname)
 
   return (
@@ -32,26 +34,54 @@ export function Topbar() {
       {/* Mobile hamburger */}
       <button
         onClick={toggleSidebar}
-        className="md:hidden text-[#555] hover:text-[#888] transition-colors"
+        className="md:hidden transition-colors"
+        style={{ color: 'var(--color-text-disabled)' }}
         aria-label="Toggle sidebar"
       >
         <Menu size={16} strokeWidth={1.75} />
       </button>
 
       {/* Breadcrumb */}
-      <span className="text-[13px] font-medium text-[#f0f0f0]">{breadcrumb}</span>
+      <span
+        className="text-[13px] font-medium"
+        style={{ color: 'var(--color-text-primary)' }}
+      >
+        {breadcrumb}
+      </span>
 
       {/* Right actions */}
       <div className="ml-auto flex items-center gap-3">
         <button
-          className="flex items-center gap-2 px-3 h-7 rounded-sm text-[12px] text-[#555] border transition-colors hover:text-[#888]"
-          style={{ borderColor: 'var(--color-border)', background: 'var(--surface-card)' }}
+          className="flex items-center gap-2 px-3 h-7 rounded-sm text-[12px] border transition-colors"
+          style={{
+            borderColor: 'var(--color-border)',
+            background: 'var(--surface-card)',
+            color: 'var(--color-text-disabled)',
+          }}
           aria-label="Command palette"
         >
           <span>Search</span>
           <span className="font-mono text-[10px]">⌘K</span>
         </button>
-        <button className="text-[#555] hover:text-[#888] transition-colors" aria-label="Help">
+
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          className="transition-colors"
+          style={{ color: 'var(--color-text-disabled)' }}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {theme === 'dark'
+            ? <Sun size={16} strokeWidth={1.75} />
+            : <Moon size={16} strokeWidth={1.75} />
+          }
+        </button>
+
+        <button
+          className="transition-colors"
+          style={{ color: 'var(--color-text-disabled)' }}
+          aria-label="Help"
+        >
           <HelpCircle size={16} strokeWidth={1.75} />
         </button>
       </div>

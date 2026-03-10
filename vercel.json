@@ -3,12 +3,21 @@
   "buildCommand": "pnpm build",
   "outputDirectory": ".next",
   "installCommand": "pnpm install",
+  "crons": [
+    {
+      "path": "/api/cron/bookkeeper",
+      "schedule": "0 16 * * *"
+    }
+  ],
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     },
     "src/app/api/ai/**/*.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/cron/bookkeeper/route.ts": {
+      "maxDuration": 300
     }
   },
   "headers": [

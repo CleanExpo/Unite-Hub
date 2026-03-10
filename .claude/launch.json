@@ -4,8 +4,8 @@
     {
       "name": "Nexus 2.0",
       "runtimeExecutable": "cmd",
-      "runtimeArgs": ["/c", "pnpm", "dev", "--port", "3007"],
-      "port": 3007
+      "runtimeArgs": ["/c", "pnpm", "dev", "--port", "3003"],
+      "port": 3003
     }
   ]
 }

@@ -30,12 +30,20 @@ export function Sidebar() {
           ◈
         </span>
         {sidebarOpen && (
-          <span className="ml-2 text-[13px] font-semibold text-[#f0f0f0] tracking-widest">
+          <span
+            className="ml-2 text-[13px] font-semibold tracking-widest"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
             NEXUS
           </span>
         )}
         {sidebarOpen && (
-          <span className="ml-auto text-[10px] text-[#333] font-mono">⌘\</span>
+          <span
+            className="ml-auto font-mono text-[10px]"
+            style={{ color: 'var(--color-text-disabled)' }}
+          >
+            ⌘\
+          </span>
         )}
       </div>
 
@@ -44,10 +52,11 @@ export function Sidebar() {
         {sidebarOpen && (
           <div className="px-2">
             <button
-              className="w-full flex items-center gap-2 px-2 h-7 rounded-sm text-[12px] text-[#555] transition-colors hover:bg-[#111] hover:text-[#888]"
+              className="w-full flex items-center gap-2 px-2 h-7 rounded-sm text-[12px] transition-colors"
               style={{
                 background: 'var(--surface-card)',
                 border: '1px solid var(--color-border)',
+                color: 'var(--color-text-disabled)',
               }}
             >
               <Search size={12} strokeWidth={1.75} />
@@ -63,7 +72,10 @@ export function Sidebar() {
         {/* MY BUSINESSES */}
         <div className="flex flex-col gap-0.5">
           {sidebarOpen && (
-            <span className="px-4 text-[10px] font-medium tracking-widest text-[#333] uppercase">
+            <span
+              className="px-4 text-[10px] font-medium tracking-widest uppercase"
+              style={{ color: 'var(--color-text-disabled)' }}
+            >
               My Businesses
             </span>
           )}
@@ -81,13 +93,18 @@ export function Sidebar() {
         style={{ borderColor: 'var(--color-border)' }}
       >
         <div
-          className="w-6 h-6 rounded-sm flex items-center justify-center text-[10px] font-semibold text-[#050505] shrink-0"
-          style={{ background: '#00F5FF' }}
+          className="w-6 h-6 rounded-sm flex items-center justify-center text-[10px] font-semibold shrink-0"
+          style={{ background: '#00F5FF', color: '#050505' }}
         >
           P
         </div>
         {sidebarOpen && (
-          <span className="ml-2 text-[12px] text-[#666] truncate">Phill McGurk</span>
+          <span
+            className="ml-2 text-[12px] truncate"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Phill McGurk
+          </span>
         )}
       </div>
     </motion.aside>

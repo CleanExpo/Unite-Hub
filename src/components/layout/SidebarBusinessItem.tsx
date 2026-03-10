@@ -27,11 +27,12 @@ export function SidebarBusinessItem({ business, collapsed }: SidebarBusinessItem
         onClick={() => toggleBusiness(business.key)}
         aria-expanded={isExpanded}
         className={cn(
-          'w-full flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors duration-100',
-          isActive
-            ? 'text-[#f0f0f0] bg-[#161616]'
-            : 'text-[#777] hover:bg-[#111] hover:text-[#bbb]'
+          'nav-item-hover w-full flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors duration-100',
         )}
+        style={isActive
+          ? { color: 'var(--color-text-primary)', background: 'var(--surface-elevated)' }
+          : { color: 'var(--color-text-muted)' }
+        }
       >
         <span
           className="shrink-0 rounded-full"
@@ -41,17 +42,18 @@ export function SidebarBusinessItem({ business, collapsed }: SidebarBusinessItem
           <>
             <span className="flex-1 text-left truncate">{business.name}</span>
             {business.status === 'planning' && (
-              <span className="text-[10px] font-medium tracking-widest text-[#555] uppercase">
+              <span
+                className="text-[10px] font-medium tracking-widest uppercase"
+                style={{ color: 'var(--color-text-disabled)' }}
+              >
                 plan
               </span>
             )}
             <ChevronRight
               size={12}
               strokeWidth={2}
-              className={cn(
-                'shrink-0 text-[#555] transition-transform duration-150',
-                isExpanded && 'rotate-90'
-              )}
+              className={cn('shrink-0 transition-transform duration-150', isExpanded && 'rotate-90')}
+              style={{ color: 'var(--color-text-disabled)' }}
             />
           </>
         )}
@@ -69,7 +71,8 @@ export function SidebarBusinessItem({ business, collapsed }: SidebarBusinessItem
             <div className="pl-6 py-0.5 flex flex-col gap-0.5">
               <Link
                 href={`/founder/${business.key}/page/new`}
-                className="flex items-center gap-2 px-2 h-7 rounded-sm text-[12px] text-[#666] hover:text-[#aaa] hover:bg-[#111] transition-colors duration-100"
+                className="nav-item-hover flex items-center gap-2 px-2 h-7 rounded-sm text-[12px] transition-colors duration-100"
+                style={{ color: 'var(--color-text-muted)' }}
               >
                 <FileText size={12} strokeWidth={1.75} />
                 <span>New Page</span>
