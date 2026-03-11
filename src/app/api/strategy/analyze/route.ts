@@ -18,7 +18,6 @@ export async function POST(request: Request) {
   let businessContext: string | undefined
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = await request.json() as { prompt: string; businessContext?: string }
     prompt = body.prompt
     businessContext = body.businessContext

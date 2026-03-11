@@ -34,13 +34,11 @@ export function StrategyRoomClient() {
       })
 
       if (!res.ok) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const errData = await res.json() as { error?: string }
         setOutput(`Analysis failed: ${errData.error ?? 'Please try again.'}`)
         return
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const data = await res.json() as { output: string }
       setOutput(data.output)
     } finally {
