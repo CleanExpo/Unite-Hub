@@ -29,7 +29,7 @@ export function IdeaCapture() {
   // Reset on close
   useEffect(() => {
     if (!captureOpen) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setState('input')
         setRawIdea('')
         setMessages([])
@@ -38,6 +38,7 @@ export function IdeaCapture() {
         setSuccessId(null)
         setUserInput('')
       }, 300)
+      return () => clearTimeout(timer)
     }
   }, [captureOpen])
 
