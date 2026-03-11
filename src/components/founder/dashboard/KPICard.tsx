@@ -4,7 +4,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { type Business } from '@/lib/businesses'
-import { type StripeMRR } from '@/lib/integrations/stripe'
 import { type XeroRevenueMTD } from '@/lib/integrations/xero'
 
 interface KPICardProps {
@@ -13,7 +12,6 @@ interface KPICardProps {
   metricLabel: string
   trend: { value: string; positive: boolean }
   secondary: string
-  stripeBusinessKey?: string
   xeroBusinessKey?: string
 }
 
@@ -30,7 +28,7 @@ interface LiveState {
   metric: string | null
   trend: { value: string; positive: boolean } | null
   secondary: string | null
-  source: 'stripe' | 'xero' | 'mock' | null
+  source: 'xero' | 'mock' | null
   loading: boolean
 }
 
@@ -40,7 +38,6 @@ export function KPICard({
   metricLabel,
   trend,
   secondary,
-  stripeBusinessKey,
   xeroBusinessKey,
 }: KPICardProps) {
   const [live, setLive] = useState<LiveState>({
@@ -48,29 +45,6 @@ export function KPICard({
   })
 
   useEffect(() => {
-    if (stripeBusinessKey) {
-      setLive(prev => ({ ...prev, loading: true }))
-      fetch(`/api/stripe/mrr?business=${encodeURIComponent(stripeBusinessKey)}`)
-        .then(res => res.json() as Promise<{ data: StripeMRR; source: 'stripe' | 'mock' }>)
-        .then(({ data, source }) => {
-          setLive({
-            metric: formatAUD(data.mrr),
-            trend: {
-              value: `${data.growth >= 0 ? '+' : ''}${data.growth.toFixed(1)}% MoM`,
-              positive: data.growth >= 0,
-            },
-            secondary: `${data.activeSubscriptions} Active · ${data.churnRate.toFixed(1)}% churn`,
-            source,
-            loading: false,
-          })
-        })
-        .catch((error) => {
-          console.error(`[kpi] Stripe fetch failed for ${stripeBusinessKey}:`, error)
-          setLive({ metric: null, trend: null, secondary: null, source: null, loading: false })
-        })
-      return
-    }
-
     if (xeroBusinessKey) {
       setLive(prev => ({ ...prev, loading: true }))
       fetch(`/api/xero/revenue?business=${encodeURIComponent(xeroBusinessKey)}`)
@@ -92,9 +66,9 @@ export function KPICard({
           setLive({ metric: null, trend: null, secondary: null, source: null, loading: false })
         })
     }
-  }, [stripeBusinessKey, xeroBusinessKey])
+  }, [xeroBusinessKey])
 
-  const isLive = !!(stripeBusinessKey || xeroBusinessKey)
+  const isLive = !!xeroBusinessKey
 
   // Fall back to static props when live data hasn't loaded
   const displayMetric = live.metric ?? metric
@@ -123,7 +97,7 @@ export function KPICard({
           <span className="ml-auto flex items-center gap-1">
             {live.loading ? (
               <span className="text-[10px] text-[#555]">—</span>
-            ) : live.source === 'stripe' || live.source === 'xero' ? (
+            ) : live.source === 'xero' ? (
               <>
                 <span
                   className="rounded-full shrink-0"

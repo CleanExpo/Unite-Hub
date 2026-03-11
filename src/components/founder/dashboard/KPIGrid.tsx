@@ -2,18 +2,17 @@
 import { KPICard } from './KPICard'
 import { BUSINESSES } from '@/lib/businesses'
 
-// stripeBusinessKey — SaaS businesses billed via Stripe subscriptions (synthex, restore)
-// xeroBusinessKey   — Service/product businesses billed via Xero invoices (dr, nrpg, carsi, ccw)
+// xeroBusinessKey — businesses connected via Xero invoices
 // Fallback values are neutral placeholders — live data replaces them via KPICard fetch
 const DASHBOARD_DATA = [
-  { key: 'dr',      metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', stripeBusinessKey: undefined, xeroBusinessKey: 'dr'      },
-  { key: 'dr_qld',  metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', stripeBusinessKey: undefined, xeroBusinessKey: 'dr_qld'  },
-  { key: 'nrpg',    metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', stripeBusinessKey: undefined, xeroBusinessKey: 'nrpg'    },
-  { key: 'carsi',   metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', stripeBusinessKey: undefined, xeroBusinessKey: 'carsi'   },
-  { key: 'restore', metric: '—', metricLabel: 'MRR',         trend: { value: '—', positive: true  }, secondary: 'Loading...', stripeBusinessKey: 'restore', xeroBusinessKey: undefined  },
-  { key: 'synthex', metric: '—', metricLabel: 'MRR',         trend: { value: '—', positive: true  }, secondary: 'Loading...', stripeBusinessKey: 'synthex', xeroBusinessKey: undefined  },
-  { key: 'ato',     metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Not yet launched', stripeBusinessKey: undefined, xeroBusinessKey: undefined },
-  { key: 'ccw',     metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', stripeBusinessKey: undefined, xeroBusinessKey: 'ccw'     },
+  { key: 'dr',      metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'dr'      },
+  { key: 'dr_qld',  metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'dr_qld'  },
+  { key: 'nrpg',    metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'nrpg'    },
+  { key: 'carsi',   metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'carsi'   },
+  { key: 'restore', metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'restore' },
+  { key: 'synthex', metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'synthex' },
+  { key: 'ato',     metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Not yet launched', xeroBusinessKey: undefined },
+  { key: 'ccw',     metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'ccw'     },
 ]
 
 export function KPIGrid() {
@@ -29,7 +28,6 @@ export function KPIGrid() {
             metricLabel={data.metricLabel}
             trend={data.trend}
             secondary={data.secondary}
-            stripeBusinessKey={data.stripeBusinessKey}
             xeroBusinessKey={data.xeroBusinessKey}
           />
         )

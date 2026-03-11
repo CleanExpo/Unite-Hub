@@ -2,10 +2,8 @@
 // Server Component — reads env vars directly, never exposes keys to client
 // Renders a compact status strip showing which integrations are configured
 
-import { isStripeConfigured } from '@/lib/integrations/stripe'
 import { isXeroConfigured } from '@/lib/integrations/xero/client'
 import { isGoogleConfigured } from '@/lib/integrations/google'
-import { BUSINESSES } from '@/lib/businesses'
 
 interface IntegrationDot {
   label: string
@@ -31,13 +29,6 @@ function StatusDot({ connected, label, detail }: IntegrationDot) {
 }
 
 export function IntegrationStatus() {
-  // Stripe — count how many distinct business keys have a configured key
-  const stripeBusinessKeys = BUSINESSES.map((b) => b.key)
-  const stripeConnectedCount = stripeBusinessKeys.filter((k) =>
-    isStripeConfigured(k)
-  ).length
-  const stripeConnected = stripeConnectedCount > 0
-
   // Xero — single OAuth app, one config covers all businesses
   const xeroConnected = isXeroConfigured()
 
@@ -61,15 +52,6 @@ export function IntegrationStatus() {
       >
         Integrations
       </span>
-      <StatusDot
-        label="Stripe"
-        connected={stripeConnected}
-        detail={
-          stripeConnected
-            ? `${stripeConnectedCount} business${stripeConnectedCount !== 1 ? 'es' : ''}`
-            : 'Not configured'
-        }
-      />
       <StatusDot
         label="Xero"
         connected={xeroConnected}
