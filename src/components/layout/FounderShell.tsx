@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Topbar } from '@/components/layout/Topbar'
+import { IdeaCapture } from './IdeaCapture'
 import { useUIStore } from '@/store/ui'
 
 export function FounderShell({ children }: { children: React.ReactNode }) {
@@ -38,6 +39,7 @@ export function FounderShell({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+      <IdeaCapture />
     </div>
   )
 }

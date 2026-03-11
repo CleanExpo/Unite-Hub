@@ -1,7 +1,7 @@
 // src/components/layout/Topbar.tsx
 'use client'
 
-import { Menu, HelpCircle } from 'lucide-react'
+import { Menu, HelpCircle, Zap } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useUIStore } from '@/store/ui'
 
@@ -23,6 +23,7 @@ function getBreadcrumb(pathname: string): string {
 export function Topbar() {
   const pathname = usePathname()
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)
+  const toggleCapture = useUIStore((s) => s.toggleCapture)
   const breadcrumb = getBreadcrumb(pathname)
 
   return (
@@ -50,6 +51,16 @@ export function Topbar() {
 
       {/* Right actions */}
       <div className="ml-auto flex items-center gap-3">
+        <button
+          onClick={toggleCapture}
+          className="transition-colors"
+          style={{ color: 'var(--color-text-disabled)' }}
+          aria-label="Capture idea"
+          title="Capture idea (send to Linear)"
+        >
+          <Zap size={16} strokeWidth={1.75} />
+        </button>
+
         <button
           className="flex items-center gap-2 px-3 h-7 rounded-sm text-[12px] border transition-colors"
           style={{
