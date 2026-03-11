@@ -20,6 +20,10 @@ export async function POST(request: Request) {
 
   const { spec } = await request.json() as { spec: IdeaSpec }
 
+  if (!spec?.title || !spec?.teamKey || !Array.isArray(spec?.acceptanceCriteria)) {
+    return NextResponse.json({ error: 'Invalid spec payload' }, { status: 400 })
+  }
+
   const acceptanceBlock = spec.acceptanceCriteria.length > 0
     ? `\n\n**Acceptance criteria:**\n${spec.acceptanceCriteria.map(c => `- ${c}`).join('\n')}`
     : ''

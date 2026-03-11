@@ -25,6 +25,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'rawIdea is required' }, { status: 400 })
   }
 
+  if (!Array.isArray(messages)) {
+    return NextResponse.json({ error: 'messages must be an array' }, { status: 400 })
+  }
+
   // Build message history — first message is always the raw idea
   const history: ConversationMessage[] = messages.length === 0
     ? [{ role: 'user', content: rawIdea }]
