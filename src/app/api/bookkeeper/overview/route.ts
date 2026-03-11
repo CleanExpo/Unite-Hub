@@ -11,7 +11,9 @@ export async function GET() {
 
   const supabase = await createClient()
 
-  const { data: lastRunData } = await supabase
+  const queryErrors: string[] = []
+
+  const { data: lastRunData, error: runsError } = await supabase
     .from('bookkeeper_runs')
     .select('*')
     .eq('founder_id', user.id)
@@ -19,36 +21,61 @@ export async function GET() {
     .limit(1)
     .maybeSingle()
 
+  if (runsError) {
+    console.error('[bookkeeper/overview] bookkeeper_runs query failed:', runsError.message)
+    queryErrors.push(`runs: ${runsError.message}`)
+  }
+
   const twelveMonthsAgo = new Date()
   twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
   const cutoff = twelveMonthsAgo.toISOString().slice(0, 10)
 
-  const { count: pendingReconciliation } = await supabase
+  const { count: pendingReconciliation, error: reconError } = await supabase
     .from('bookkeeper_transactions')
     .select('id', { count: 'exact', head: true })
     .eq('founder_id', user.id)
     .in('reconciliation_status', ['unmatched', 'suggested_match'])
     .gte('transaction_date', cutoff)
 
-  const { count: pendingApproval } = await supabase
+  if (reconError) {
+    console.error('[bookkeeper/overview] pending reconciliation query failed:', reconError.message)
+    queryErrors.push(`reconciliation: ${reconError.message}`)
+  }
+
+  const { count: pendingApproval, error: approvalError } = await supabase
     .from('bookkeeper_transactions')
     .select('id', { count: 'exact', head: true })
     .eq('founder_id', user.id)
     .eq('reconciliation_status', 'manual_review')
     .gte('transaction_date', cutoff)
 
-  const { count: totalTransactions12m } = await supabase
+  if (approvalError) {
+    console.error('[bookkeeper/overview] pending approval query failed:', approvalError.message)
+    queryErrors.push(`approval: ${approvalError.message}`)
+  }
+
+  const { count: totalTransactions12m, error: totalError } = await supabase
     .from('bookkeeper_transactions')
     .select('id', { count: 'exact', head: true })
     .eq('founder_id', user.id)
     .gte('transaction_date', cutoff)
 
-  const { data: deductibleData } = await supabase
+  if (totalError) {
+    console.error('[bookkeeper/overview] total transactions query failed:', totalError.message)
+    queryErrors.push(`total: ${totalError.message}`)
+  }
+
+  const { data: deductibleData, error: deductibleError } = await supabase
     .from('bookkeeper_transactions')
     .select('amount_cents')
     .eq('founder_id', user.id)
     .eq('is_deductible', true)
     .gte('transaction_date', cutoff)
+
+  if (deductibleError) {
+    console.error('[bookkeeper/overview] deductible query failed:', deductibleError.message)
+    queryErrors.push(`deductible: ${deductibleError.message}`)
+  }
 
   const totalDeductibleCents = (deductibleData ?? []).reduce(
     (sum, r) => sum + Math.abs(Number(r.amount_cents)),
@@ -80,5 +107,8 @@ export async function GET() {
     alertCount,
   }
 
-  return NextResponse.json(overview)
+  return NextResponse.json({
+    ...overview,
+    ...(queryErrors.length > 0 ? { _queryErrors: queryErrors } : {}),
+  })
 }
