@@ -122,3 +122,13 @@ export async function updateIssueState(issueId: string, stateId: string): Promis
     }
   `, { id: issueId, stateId })
 }
+
+export async function fetchIssueCountByBusiness(): Promise<Record<string, number>> {
+  const issues = await fetchIssues()
+  const counts: Record<string, number> = {}
+  for (const issue of issues) {
+    const bizKey = teamKeyToBusiness(issue.team.key)
+    counts[bizKey] = (counts[bizKey] ?? 0) + 1
+  }
+  return counts
+}
