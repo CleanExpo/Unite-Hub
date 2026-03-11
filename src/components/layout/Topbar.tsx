@@ -1,7 +1,7 @@
 // src/components/layout/Topbar.tsx
 'use client'
 
-import { Menu, HelpCircle, Sun, Moon } from 'lucide-react'
+import { Menu, HelpCircle } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useUIStore } from '@/store/ui'
 
@@ -22,8 +22,6 @@ function getBreadcrumb(pathname: string): string {
 export function Topbar() {
   const pathname = usePathname()
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)
-  const theme = useUIStore((s) => s.theme)
-  const toggleTheme = useUIStore((s) => s.toggleTheme)
   const breadcrumb = getBreadcrumb(pathname)
 
   return (
@@ -62,19 +60,6 @@ export function Topbar() {
         >
           <span>Search</span>
           <span className="font-mono text-[10px]">⌘K</span>
-        </button>
-
-        {/* Theme toggle */}
-        <button
-          onClick={toggleTheme}
-          className="transition-colors"
-          style={{ color: 'var(--color-text-disabled)' }}
-          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          {theme === 'dark'
-            ? <Sun size={16} strokeWidth={1.75} />
-            : <Moon size={16} strokeWidth={1.75} />
-          }
         </button>
 
         <button

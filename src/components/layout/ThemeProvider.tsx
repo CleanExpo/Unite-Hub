@@ -1,15 +1,7 @@
 // src/components/layout/ThemeProvider.tsx
-'use client'
-
-import { useEffect } from 'react'
-import { useUIStore } from '@/store/ui'
+// Dark-only app — no theme toggle. This component is kept as a passthrough
+// in case layout hierarchy needs it; it applies no class manipulation.
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const theme = useUIStore((s) => s.theme)
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('light', theme === 'light')
-  }, [theme])
-
   return <>{children}</>
 }

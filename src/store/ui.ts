@@ -5,10 +5,8 @@ import { persist } from 'zustand/middleware'
 interface UIStore {
   sidebarOpen: boolean
   expandedBusinesses: string[]
-  theme: 'dark' | 'light'
   toggleSidebar: () => void
   toggleBusiness: (key: string) => void
-  toggleTheme: () => void
 }
 
 export const useUIStore = create<UIStore>()(
@@ -16,7 +14,6 @@ export const useUIStore = create<UIStore>()(
     (set) => ({
       sidebarOpen: true,
       expandedBusinesses: [],
-      theme: 'dark',
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
       toggleBusiness: (key) =>
         set((s) => ({
@@ -24,9 +21,11 @@ export const useUIStore = create<UIStore>()(
             ? s.expandedBusinesses.filter((k) => k !== key)
             : [...s.expandedBusinesses, key],
         })),
-      toggleTheme: () =>
-        set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
     }),
-    { name: 'nexus-ui' }
+    {
+      name: 'nexus-ui',
+      // Only persist UI layout state — never theme (dark-only app)
+      partialize: (s) => ({ sidebarOpen: s.sidebarOpen, expandedBusinesses: s.expandedBusinesses }),
+    }
   )
 )
