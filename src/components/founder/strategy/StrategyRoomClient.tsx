@@ -13,6 +13,12 @@ export function StrategyRoomClient() {
 
   async function analyze() {
     if (!prompt.trim() || loading) return
+
+    if (prompt.trim().length > 4000) {
+      setOutput('Prompt too long. Please keep it under 4,000 characters.')
+      return
+    }
+
     setLoading(true)
     setOutput(null)
 
@@ -28,10 +34,13 @@ export function StrategyRoomClient() {
       })
 
       if (!res.ok) {
-        setOutput('Analysis failed. Please try again.')
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const errData = await res.json() as { error?: string }
+        setOutput(`Analysis failed: ${errData.error ?? 'Please try again.'}`)
         return
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const data = await res.json() as { output: string }
       setOutput(data.output)
     } finally {

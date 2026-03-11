@@ -18,6 +18,7 @@ export async function POST(request: Request) {
   let businessContext: string | undefined
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = await request.json() as { prompt: string; businessContext?: string }
     prompt = body.prompt
     businessContext = body.businessContext
@@ -27,6 +28,10 @@ export async function POST(request: Request) {
 
   if (!prompt?.trim()) {
     return NextResponse.json({ error: 'prompt is required' }, { status: 400 })
+  }
+
+  if (prompt.trim().length > 4000) {
+    return NextResponse.json({ error: 'prompt exceeds 4,000 character limit' }, { status: 400 })
   }
 
   const systemPrompt = `You are a strategic advisor to Phill McGurk, founder of Unite-Group which oversees 8 businesses.
