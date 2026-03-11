@@ -18,7 +18,7 @@ const DASHBOARD_DATA = [
 
 export function KPIGrid() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+    <div data-testid="kpi-grid" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
       {DASHBOARD_DATA.map((data) => {
         const business = BUSINESSES.find(b => b.key === data.key)!
         return (
