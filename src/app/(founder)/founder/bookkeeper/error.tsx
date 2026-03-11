@@ -4,6 +4,7 @@
 // Route-level error boundary for the bookkeeper / Xero workbench
 
 import { useEffect } from 'react'
+import Link from 'next/link'
 import * as Sentry from '@sentry/nextjs'
 
 export default function BookkeeperError({
@@ -49,7 +50,7 @@ export default function BookkeeperError({
         >
           Try again
         </button>
-        <a
+        <Link
           href="/founder/xero"
           className="px-4 py-2 rounded-sm text-sm font-medium transition-colors duration-150"
           style={{
@@ -59,7 +60,7 @@ export default function BookkeeperError({
           }}
         >
           Reconnect Xero
-        </a>
+        </Link>
       </div>
     </div>
   )

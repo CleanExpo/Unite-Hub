@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic'
 
+import Link from 'next/link'
 import { getUser } from '@/lib/supabase/server'
 import {
   isGoogleConfigured,
@@ -32,9 +33,9 @@ export default async function CalendarPage() {
       {configured && connectedAccounts.length === 0 && (
         <div className="border border-white/10 px-4 py-3 rounded-sm text-sm text-white/40">
           No Google accounts connected — visit{' '}
-          <a href="/founder/email" className="text-[#00F5FF] hover:underline">
+          <Link href="/founder/email" className="text-[#00F5FF] hover:underline">
             Email settings
-          </a>{' '}
+          </Link>{' '}
           to connect.
         </div>
       )}

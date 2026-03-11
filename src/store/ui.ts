@@ -8,9 +8,13 @@ interface UIStore {
   sidebarOpen: boolean
   expandedBusinesses: string[]
   theme: Theme
+  captureOpen: boolean
+  bronOpen: boolean
   toggleSidebar: () => void
   toggleBusiness: (key: string) => void
   setTheme: (theme: Theme) => void
+  toggleCapture: () => void
+  toggleBron: () => void
 }
 
 export const useUIStore = create<UIStore>()(
@@ -19,6 +23,8 @@ export const useUIStore = create<UIStore>()(
       sidebarOpen: true,
       expandedBusinesses: [],
       theme: 'dark',
+      captureOpen: false,
+      bronOpen: false,
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
       toggleBusiness: (key) =>
         set((s) => ({
@@ -27,6 +33,8 @@ export const useUIStore = create<UIStore>()(
             : [...s.expandedBusinesses, key],
         })),
       setTheme: (theme) => set({ theme }),
+      toggleCapture: () => set((s) => ({ captureOpen: !s.captureOpen })),
+      toggleBron: () => set((s) => ({ bronOpen: !s.bronOpen })),
     }),
     {
       name: 'nexus-ui',
