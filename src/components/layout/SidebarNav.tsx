@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, BookOpen, Columns2, Lock, ClipboardCheck, Scale } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Columns2, Lock, ClipboardCheck, Scale, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: '/founder/vault',     label: 'Vault',      icon: Lock },
   { href: '/founder/approvals', label: 'Approvals',  icon: ClipboardCheck },
   { href: '/founder/advisory',  label: 'Advisory',   icon: Scale },
+  { href: '/founder/settings',  label: 'Settings',   icon: Settings },
 ] as const
 
 interface SidebarNavProps { collapsed: boolean }

@@ -10,6 +10,7 @@ const BREADCRUMB_MAP: Record<string, string> = {
   '/founder/kanban':    'Kanban',
   '/founder/vault':     'Vault',
   '/founder/approvals': 'Approvals',
+  '/founder/settings':  'Settings',
 }
 
 function getBreadcrumb(pathname: string): string {
