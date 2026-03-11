@@ -162,7 +162,7 @@
     /* Accent #00F5FF and business dot colours are intentionally unchanged */
   }
 
-  *
+  * {
     border-color: hsl(var(--border));
   }
 
