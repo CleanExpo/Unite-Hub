@@ -1,6 +1,5 @@
 // src/components/layout/__tests__/Topbar.test.tsx
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { Topbar } from '../Topbar'
 import { useUIStore } from '@/store/ui'
 
@@ -23,21 +22,18 @@ describe('Topbar', () => {
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
   })
 
-  it('renders Sun icon button when theme is dark', () => {
+  it('renders search command palette button', () => {
     render(<Topbar />)
-    expect(screen.getByLabelText('Switch to light mode')).toBeInTheDocument()
+    expect(screen.getByLabelText('Command palette')).toBeInTheDocument()
   })
 
-  it('renders Moon icon button when theme is light', () => {
-    useUIStore.setState({ sidebarOpen: true, expandedBusinesses: [], theme: 'light' })
+  it('renders help button', () => {
     render(<Topbar />)
-    expect(screen.getByLabelText('Switch to dark mode')).toBeInTheDocument()
+    expect(screen.getByLabelText('Help')).toBeInTheDocument()
   })
 
-  it('calls toggleTheme when toggle button is clicked', async () => {
-    const user = userEvent.setup()
+  it('renders toggle sidebar button on mobile', () => {
     render(<Topbar />)
-    await user.click(screen.getByLabelText('Switch to light mode'))
-    expect(useUIStore.getState().theme).toBe('light')
+    expect(screen.getByLabelText('Toggle sidebar')).toBeInTheDocument()
   })
 })

@@ -16,10 +16,12 @@ export function SettingsPageClient() {
   const router = useRouter()
 
   useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => {
-      setEmail(data.user?.email ?? null)
-    })
+    async function loadEmail() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      setEmail(user?.email ?? null)
+    }
+    void loadEmail()
   }, [])
 
   async function handleSignOut() {

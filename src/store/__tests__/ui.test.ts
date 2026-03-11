@@ -41,16 +41,16 @@ describe('theme', () => {
     expect(result.current.theme).toBe('dark')
   })
 
-  it('toggleTheme switches dark → light', () => {
+  it('setTheme switches to light', () => {
     const { result } = renderHook(() => useUIStore())
-    act(() => result.current.toggleTheme())
+    act(() => result.current.setTheme('light'))
     expect(result.current.theme).toBe('light')
   })
 
-  it('toggleTheme switches light → dark', () => {
+  it('setTheme switches back to dark', () => {
     useUIStore.setState({ sidebarOpen: true, expandedBusinesses: [], theme: 'light' })
     const { result } = renderHook(() => useUIStore())
-    act(() => result.current.toggleTheme())
+    act(() => result.current.setTheme('dark'))
     expect(result.current.theme).toBe('dark')
   })
 })
