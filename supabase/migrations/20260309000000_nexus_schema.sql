@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS credentials_vault (
   iv               TEXT NOT NULL,
   salt             TEXT NOT NULL,
   notes            TEXT,
+  metadata         JSONB NOT NULL DEFAULT '{}',
   last_accessed_at TIMESTAMPTZ,
   created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
