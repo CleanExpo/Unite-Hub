@@ -73,9 +73,19 @@ export function parseClaudeResponse(raw: string): ClaudeResponse {
   const match = raw.match(/```json\s*([\s\S]*?)\s*```/)
   if (match) {
     try {
-      const parsed = JSON.parse(match[1]) as IdeaSpec & { type: string }
-      if (parsed.type === 'spec') {
-        return { type: 'spec', spec: parsed }
+      // JSON.parse returns unknown — validate required fields before trusting
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const parsed = JSON.parse(match[1]) as Record<string, any>
+      if (
+        parsed.type === 'spec' &&
+        typeof parsed.title === 'string' &&
+        typeof parsed.teamKey === 'string' &&
+        typeof parsed.priority === 'number' &&
+        Array.isArray(parsed.labels) &&
+        typeof parsed.description === 'string' &&
+        Array.isArray(parsed.acceptanceCriteria)
+      ) {
+        return { type: 'spec', spec: parsed as unknown as IdeaSpec }
       }
     } catch {
       // Fall through to question
