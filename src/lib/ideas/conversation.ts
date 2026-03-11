@@ -1,8 +1,8 @@
 // src/lib/ideas/conversation.ts
-import { BUSINESSES } from '@/lib/businesses'
+import { BUSINESSES, BusinessKey } from '@/lib/businesses'
 
 // Business key → Linear team key mapping
-export const BUSINESS_TO_TEAM_KEY: Record<string, string> = {
+export const BUSINESS_TO_TEAM_KEY: Record<BusinessKey, string> = {
   dr:       'DR',
   dr_qld:   'DR',
   nrpg:     'DR',
