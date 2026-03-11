@@ -23,7 +23,6 @@ export async function register() {
     { name: 'Xero',   vars: ['XERO_CLIENT_ID', 'XERO_CLIENT_SECRET'] },
     { name: 'Google',  vars: ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'] },
     { name: 'Linear',  vars: ['LINEAR_API_KEY'] },
-    { name: 'Stripe',  vars: ['STRIPE_SECRET_KEY_SYNTHEX', 'STRIPE_SECRET_KEY_DR'] },
     { name: 'Sentry',  vars: ['SENTRY_AUTH_TOKEN'] },
   ] as const
 

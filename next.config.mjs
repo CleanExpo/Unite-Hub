@@ -76,14 +76,6 @@ const nextConfig = {
     qualities: [75, 85],
   },
 
-  redirects: async () => [
-    {
-      source: '/dashboard',
-      destination: '/dashboard/overview',
-      permanent: false,
-    },
-  ],
-
   // Security and caching headers
   headers: async () => [
     // Aggressive caching for public static files

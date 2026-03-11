@@ -39,7 +39,7 @@ export default function DashboardError({
         </div>
         <h2 className="text-lg font-semibold">Dashboard unavailable</h2>
         <p className="text-sm max-w-sm" style={{ color: 'var(--color-text-muted)' }}>
-          One or more integrations failed to load. Check your Stripe or Xero connections.
+          One or more integrations failed to load. Check your Xero or API connections.
         </p>
       </div>
       <div className="flex items-center gap-3">
