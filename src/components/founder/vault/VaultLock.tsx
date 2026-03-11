@@ -2,19 +2,21 @@
 
 import { useState } from 'react'
 import { Lock } from 'lucide-react'
-
-// TODO(phase-4): replace with Supabase vault auth — remove hardcoded password
-const MASTER_PASSWORD = 'nexus2026'
+import { verifyVaultPassword } from '@/lib/vault-password'
 
 interface VaultLockProps { onUnlock: () => void }
 
 export function VaultLock({ onUnlock }: VaultLockProps) {
   const [value, setValue] = useState('')
   const [error, setError] = useState(false)
+  const [checking, setChecking] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (value === MASTER_PASSWORD) {
+    setChecking(true)
+    const ok = await verifyVaultPassword(value)
+    setChecking(false)
+    if (ok) {
       setError(false)
       onUnlock()
     } else {
@@ -56,10 +58,11 @@ export function VaultLock({ onUnlock }: VaultLockProps) {
           )}
           <button
             type="submit"
-            className="h-9 rounded-sm text-[13px] font-medium transition-opacity hover:opacity-90"
+            disabled={checking}
+            className="h-9 rounded-sm text-[13px] font-medium transition-opacity hover:opacity-90 disabled:opacity-50"
             style={{ background: '#00F5FF', color: '#050505' }}
           >
-            Unlock Vault
+            {checking ? 'Checking...' : 'Unlock Vault'}
           </button>
         </form>
       </div>

@@ -43,15 +43,11 @@ export function KPICard({
   stripeBusinessKey,
   xeroBusinessKey,
 }: KPICardProps) {
-  const isPlanning = business.status === 'planning'
-
   const [live, setLive] = useState<LiveState>({
     metric: null, trend: null, secondary: null, source: null, loading: false,
   })
 
   useEffect(() => {
-    if (isPlanning) return
-
     if (stripeBusinessKey) {
       setLive(prev => ({ ...prev, loading: true }))
       fetch(`/api/stripe/mrr?business=${encodeURIComponent(stripeBusinessKey)}`)
@@ -96,9 +92,9 @@ export function KPICard({
           setLive({ metric: null, trend: null, secondary: null, source: null, loading: false })
         })
     }
-  }, [stripeBusinessKey, xeroBusinessKey, isPlanning])
+  }, [stripeBusinessKey, xeroBusinessKey])
 
-  const isLive = !!(stripeBusinessKey || xeroBusinessKey) && !isPlanning
+  const isLive = !!(stripeBusinessKey || xeroBusinessKey)
 
   // Fall back to static props when live data hasn't loaded
   const displayMetric = live.metric ?? metric
@@ -107,13 +103,12 @@ export function KPICard({
 
   return (
     <motion.div
-      whileHover={!isPlanning ? { y: -2 } : undefined}
+      whileHover={{ y: -2 }}
       transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
       className="relative rounded-sm border p-5 flex flex-col gap-3"
       style={{
         background: 'var(--surface-card)',
         borderColor: 'var(--color-border)',
-        opacity: isPlanning ? 0.5 : 1,
       }}
     >
       {/* Business header */}
@@ -123,11 +118,6 @@ export function KPICard({
           style={{ width: 8, height: 8, background: business.color }}
         />
         <span className="text-[13px] font-medium text-[#ccc]">{business.name}</span>
-        {business.status === 'planning' && (
-          <span className="ml-auto text-[10px] font-medium tracking-widest uppercase text-[#555]">
-            Planning
-          </span>
-        )}
         {/* Live / Demo badge */}
         {isLive && (
           <span className="ml-auto flex items-center gap-1">
@@ -190,13 +180,6 @@ export function KPICard({
         <span className="text-[11px] text-[#555]">{displaySecondary}</span>
       </div>
 
-      {/* Planning overlay */}
-      {isPlanning && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-sm">
-          <span className="text-[24px] text-[#333]">⬡</span>
-          <span className="text-[12px] text-[#555] mt-1">Not yet launched</span>
-        </div>
-      )}
     </motion.div>
   )
 }

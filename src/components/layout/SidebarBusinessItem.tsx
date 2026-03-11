@@ -41,14 +41,6 @@ export function SidebarBusinessItem({ business, collapsed }: SidebarBusinessItem
         {!collapsed && (
           <>
             <span className="flex-1 text-left truncate">{business.name}</span>
-            {business.status === 'planning' && (
-              <span
-                className="text-[10px] font-medium tracking-widest uppercase"
-                style={{ color: 'var(--color-text-disabled)' }}
-              >
-                plan
-              </span>
-            )}
             <ChevronRight
               size={12}
               strokeWidth={2}
