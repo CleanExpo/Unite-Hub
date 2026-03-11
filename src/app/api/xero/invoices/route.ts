@@ -16,7 +16,16 @@ export async function GET(request: Request) {
   try {
     const result = await fetchInvoices(user.id, business, { type })
     return NextResponse.json(result)
-  } catch {
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    // No tokens = business not connected to Xero yet (not a server error)
+    if (message.includes('No Xero tokens found')) {
+      return NextResponse.json(
+        { error: `Xero not connected for this business. Connect via Settings → Xero.` },
+        { status: 503 }
+      )
+    }
+    console.error(`[xero/invoices] ${message}`)
     return NextResponse.json({ error: 'Failed to fetch invoices' }, { status: 500 })
   }
 }
