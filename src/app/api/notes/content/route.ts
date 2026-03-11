@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   try {
     const content = await getVaultFileContent(user.id, fileId)
     return NextResponse.json({ content })
-  } catch (err) {
+  } catch (_err) {
     return NextResponse.json(
       { error: 'Failed to fetch note content' },
       { status: 500 }
