@@ -31,7 +31,7 @@ export function VaultPageClient() {
         )}
       </div>
 
-      <VaultGrid />
+      <VaultGrid unlocked={unlocked} />
 
       {!unlocked && <VaultLock onUnlock={() => setUnlocked(true)} />}
       {changingPw && <VaultChangePassword onClose={() => setChangingPw(false)} />}

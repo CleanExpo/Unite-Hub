@@ -1,18 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import { Eye, EyeOff, Copy } from 'lucide-react'
+import { Eye, EyeOff, Copy, Trash2 } from 'lucide-react'
 
 interface VaultEntryProps {
+  id: string
   label: string
   username: string
   secret: string
   businessColor: string
+  onDelete: (id: string) => void
 }
 
-export function VaultEntry({ label, username, secret, businessColor }: VaultEntryProps) {
+export function VaultEntry({ id, label, username, secret, businessColor, onDelete }: VaultEntryProps) {
   const [revealed, setRevealed] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   async function handleCopy() {
     try {
@@ -20,7 +23,22 @@ export function VaultEntry({ label, username, secret, businessColor }: VaultEntr
       setCopied(true)
       setTimeout(() => setCopied(false), 800)
     } catch {
-      // clipboard unavailable — no feedback, icon stays neutral
+      // clipboard unavailable — no feedback
+    }
+  }
+
+  async function handleDelete() {
+    if (!confirm(`Delete "${label}"? This cannot be undone.`)) return
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/vault/entries/${id}`, { method: 'DELETE' })
+      if (res.ok || res.status === 204) {
+        onDelete(id)
+      }
+    } catch {
+      // silently fail — entry stays in UI
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -50,6 +68,15 @@ export function VaultEntry({ label, username, secret, businessColor }: VaultEntr
           aria-label="Copy"
         >
           <Copy size={14} />
+        </button>
+        <button
+          onClick={handleDelete}
+          disabled={deleting}
+          className="transition-colors hover:text-red-400 disabled:opacity-40"
+          style={{ color: '#555' }}
+          aria-label="Delete"
+        >
+          <Trash2 size={14} />
         </button>
       </div>
     </div>
