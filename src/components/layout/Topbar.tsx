@@ -11,6 +11,7 @@ const BREADCRUMB_MAP: Record<string, string> = {
   '/founder/vault':     'Vault',
   '/founder/approvals': 'Approvals',
   '/founder/settings':  'Settings',
+  '/founder/strategy':  'Strategy Room',
 }
 
 function getBreadcrumb(pathname: string): string {
