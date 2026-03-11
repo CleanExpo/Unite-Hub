@@ -36,13 +36,23 @@ export async function POST(request: Request) {
     businessContext?: string
   }
 
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 2048,
-    system: buildBronSystem(pageContext, businessContext),
-    messages,
-  })
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return NextResponse.json({ error: 'messages is required and must be a non-empty array' }, { status: 400 })
+  }
 
-  const text = response.content[0].type === 'text' ? response.content[0].text : ''
-  return NextResponse.json({ content: text })
+  try {
+    const response = await anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 2048,
+      system: buildBronSystem(pageContext, businessContext),
+      messages,
+    })
+
+    const firstBlock = response.content[0]
+    const text = firstBlock?.type === 'text' ? firstBlock.text : ''
+    return NextResponse.json({ content: text })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'AI unavailable'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }
