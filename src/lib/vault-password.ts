@@ -39,3 +39,13 @@ export async function changeVaultPassword(currentPw: string, newPw: string): Pro
   localStorage.setItem(STORAGE_KEY, newHash)
   return true
 }
+
+/**
+ * Resets the master password without requiring the current password.
+ * Safe to call — the vault_pw_hash is a UI gate only, not an encryption key.
+ * Actual credential decryption uses the server-side VAULT_ENCRYPTION_KEY.
+ */
+export async function resetVaultPassword(newPw: string): Promise<void> {
+  const newHash = await sha256hex(newPw)
+  localStorage.setItem(STORAGE_KEY, newHash)
+}
