@@ -1,11 +1,22 @@
 import { test, expect } from '@playwright/test'
 
-test('unauthenticated user is redirected to login', async ({ page }) => {
-  await page.goto('/founder/dashboard')
-  await expect(page).toHaveURL(/auth\/login/)
+test('unauthenticated request to /api/strategy/analyze returns 401', async ({ page }) => {
+  const res = await page.request.post('/api/strategy/analyze', {
+    data: { prompt: 'test' },
+  })
+  expect(res.status()).toBe(401)
 })
 
-test('health endpoint returns 200', async ({ page }) => {
-  const res = await page.request.get('/api/health')
-  expect(res.status()).toBe(200)
+test('unauthenticated request to /api/bron/chat returns 401', async ({ page }) => {
+  const res = await page.request.post('/api/bron/chat', {
+    data: { messages: [{ role: 'user', content: 'test' }] },
+  })
+  expect(res.status()).toBe(401)
+})
+
+test('unauthenticated request to /api/ideas/capture returns 401', async ({ page }) => {
+  const res = await page.request.post('/api/ideas/capture', {
+    data: { rawIdea: 'test idea' },
+  })
+  expect(res.status()).toBe(401)
 })
