@@ -53,6 +53,34 @@ export async function GET() {
       .single(),
   ])
 
+  // Check count queries for genuine errors
+  const countResults = [
+    { name: 'contacts', result: contactsResult },
+    { name: 'credentials_vault', result: vaultResult },
+    { name: 'approval_queue', result: approvalsResult },
+    { name: 'advisory_cases', result: casesResult },
+  ]
+  for (const { name, result } of countResults) {
+    if (result.error) {
+      console.error(`Dashboard stats: ${name} query failed`, result.error)
+      return NextResponse.json(
+        { error: 'Failed to load dashboard stats' },
+        { status: 500 },
+      )
+    }
+  }
+
+  // PGRST116 = "no rows returned" from .single() — not a real error
+  const isBookkeeperError =
+    bookkeeperResult.error && bookkeeperResult.error.code !== 'PGRST116'
+  if (isBookkeeperError) {
+    console.error('Dashboard stats: bookkeeper_runs query failed', bookkeeperResult.error)
+    return NextResponse.json(
+      { error: 'Failed to load dashboard stats' },
+      { status: 500 },
+    )
+  }
+
   return NextResponse.json({
     contacts: contactsResult.count ?? 0,
     vaultEntries: vaultResult.count ?? 0,
