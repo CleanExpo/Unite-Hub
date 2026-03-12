@@ -10,11 +10,13 @@ interface UIStore {
   theme: Theme
   captureOpen: boolean
   bronOpen: boolean
+  commandBarOpen: boolean
   toggleSidebar: () => void
   toggleBusiness: (key: string) => void
   setTheme: (theme: Theme) => void
   toggleCapture: () => void
   toggleBron: () => void
+  toggleCommandBar: () => void
 }
 
 export const useUIStore = create<UIStore>()(
@@ -25,6 +27,7 @@ export const useUIStore = create<UIStore>()(
       theme: 'dark',
       captureOpen: false,
       bronOpen: false,
+      commandBarOpen: false,
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
       toggleBusiness: (key) =>
         set((s) => ({
@@ -35,6 +38,7 @@ export const useUIStore = create<UIStore>()(
       setTheme: (theme) => set({ theme }),
       toggleCapture: () => set((s) => ({ captureOpen: !s.captureOpen })),
       toggleBron: () => set((s) => ({ bronOpen: !s.bronOpen })),
+      toggleCommandBar: () => set((s) => ({ commandBarOpen: !s.commandBarOpen })),
     }),
     {
       name: 'nexus-ui',

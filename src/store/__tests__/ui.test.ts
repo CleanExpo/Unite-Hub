@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react'
 import { useUIStore } from '../ui'
 
 beforeEach(() => {
-  useUIStore.setState({ sidebarOpen: true, expandedBusinesses: [], theme: 'dark' })
+  useUIStore.setState({ sidebarOpen: true, expandedBusinesses: [], theme: 'dark', commandBarOpen: false })
 })
 
 describe('useUIStore', () => {
@@ -52,5 +52,25 @@ describe('theme', () => {
     const { result } = renderHook(() => useUIStore())
     act(() => result.current.setTheme('dark'))
     expect(result.current.theme).toBe('dark')
+  })
+})
+
+describe('commandBar', () => {
+  it('commandBarOpen defaults to false', () => {
+    const { result } = renderHook(() => useUIStore())
+    expect(result.current.commandBarOpen).toBe(false)
+  })
+
+  it('toggleCommandBar opens when closed', () => {
+    const { result } = renderHook(() => useUIStore())
+    act(() => result.current.toggleCommandBar())
+    expect(result.current.commandBarOpen).toBe(true)
+  })
+
+  it('toggleCommandBar closes when open', () => {
+    useUIStore.setState({ commandBarOpen: true } as never)
+    const { result } = renderHook(() => useUIStore())
+    act(() => result.current.toggleCommandBar())
+    expect(result.current.commandBarOpen).toBe(false)
   })
 })
