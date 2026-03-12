@@ -85,19 +85,29 @@ export function CommandBar() {
     }
 
     setLoading(true)
+    const controller = new AbortController()
+
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal })
+        if (!res.ok) {
+          setResults(null)
+          return
+        }
         const data: SearchResults = await res.json()
         setResults(data)
-      } catch {
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return
         setResults(null)
       } finally {
         setLoading(false)
       }
     }, 300)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
+    }
   }, [query])
 
   // Reset all search state when the dialog closes

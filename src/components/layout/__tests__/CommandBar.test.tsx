@@ -126,7 +126,7 @@ describe('CommandBar', () => {
 
     it('shows "Searching…" state while fetch is in-flight', async () => {
       // Fetch never resolves during this test
-      global.fetch = vi.fn(() => new Promise(() => {})) as any
+      vi.spyOn(globalThis, 'fetch').mockImplementation(() => new Promise(() => {}))
 
       render(<CommandBar />)
       const input = screen.getByTestId('command-input')
@@ -150,9 +150,7 @@ describe('CommandBar', () => {
         approvals: [{ id: '3', title: 'Budget', status: 'pending' }],
       }
 
-      global.fetch = vi.fn(() =>
-        Promise.resolve(new Response(JSON.stringify(mockData), { status: 200 }))
-      ) as any
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify(mockData), { status: 200 }))
 
       render(<CommandBar />)
       const input = screen.getByTestId('command-input')
@@ -181,9 +179,7 @@ describe('CommandBar', () => {
         approvals: [],
       }
 
-      global.fetch = vi.fn(() =>
-        Promise.resolve(new Response(JSON.stringify(mockData), { status: 200 }))
-      ) as any
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify(mockData), { status: 200 }))
 
       render(<CommandBar />)
       const input = screen.getByTestId('command-input')
@@ -210,9 +206,7 @@ describe('CommandBar', () => {
         approvals: [],
       }
 
-      global.fetch = vi.fn(() =>
-        Promise.resolve(new Response(JSON.stringify(mockData), { status: 200 }))
-      ) as any
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify(mockData), { status: 200 }))
 
       render(<CommandBar />)
       const input = screen.getByTestId('command-input')
