@@ -25,10 +25,10 @@ export function buildFileReference(fileId: string) {
  */
 export async function uploadFile(
   file: Blob | Buffer,
-  filename: string
+  _filename: string
 ): Promise<{ fileId: string; filename: string }> {
   const client = getAIClient()
-  // Use type assertion for beta API access
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Files API is beta, types not stable
   const result = await (client.beta.files as any).upload({
     file,
     betas: ['files-api-2025-04-14'],

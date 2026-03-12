@@ -50,6 +50,7 @@ export function buildBatchRequest(
  */
 export async function createBatch(requests: BatchRequest[]): Promise<BatchResult> {
   const client = getAIClient()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Batch API types not yet in SDK
   const batch = await (client.messages.batches as any).create({ requests })
   return {
     id: batch.id,
@@ -63,6 +64,7 @@ export async function createBatch(requests: BatchRequest[]): Promise<BatchResult
  */
 export async function checkBatchStatus(batchId: string): Promise<BatchResult> {
   const client = getAIClient()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Batch API types not yet in SDK
   const batch = await (client.messages.batches as any).retrieve(batchId)
   return {
     id: batch.id,
