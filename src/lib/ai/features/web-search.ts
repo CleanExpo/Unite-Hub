@@ -55,7 +55,7 @@ export function parseWebSearchResults(blocks: unknown[]): Citation[] {
     const b = block as Record<string, unknown>
     if (b.type !== 'web_search_tool_result') continue
 
-    const content = (b as WebSearchToolResultBlock).content
+    const content = (b as unknown as WebSearchToolResultBlock).content
     if (!Array.isArray(content)) continue
 
     for (const result of content) {
