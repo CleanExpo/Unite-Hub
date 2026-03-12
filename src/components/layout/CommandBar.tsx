@@ -92,14 +92,15 @@ export function CommandBar() {
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal })
         if (!res.ok) {
           setResults(null)
+          setLoading(false)
           return
         }
         const data: SearchResults = await res.json()
         setResults(data)
+        setLoading(false)
       } catch (err) {
         if (err instanceof DOMException && err.name === 'AbortError') return
         setResults(null)
-      } finally {
         setLoading(false)
       }
     }, 300)
