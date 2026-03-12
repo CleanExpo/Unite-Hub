@@ -3,7 +3,8 @@
 // Each agent is a configuration (system prompt + model) — not an autonomous process.
 // The debate engine calls the Anthropic API with these configs.
 
-import Anthropic from '@anthropic-ai/sdk'
+import type Anthropic from '@anthropic-ai/sdk'
+import { getAIClient } from '@/lib/ai/client'
 import type { FirmKey, FirmAgentConfig, JudgeAgentConfig, FirmProposalData, JudgeScoreSummary, RoundType, FinancialContext } from './types'
 import { FIRM_META, ROUND_LABELS } from './types'
 import { parseFirmProposal, parseJudgeOutput } from './structured-output'
@@ -20,18 +21,7 @@ const JUDGE_MODEL = 'claude-opus-4-5-20250514'
 const DEFAULT_MAX_OUTPUT_TOKENS = 4096
 const JUDGE_MAX_OUTPUT_TOKENS = 8192
 
-// ── Anthropic client (singleton) ─────────────────────────────────────────────
-
-let _client: Anthropic | null = null
-
-function getClient(): Anthropic {
-  if (!_client) {
-    const apiKey = process.env.ANTHROPIC_API_KEY
-    if (!apiKey) throw new Error('ANTHROPIC_API_KEY not configured')
-    _client = new Anthropic({ apiKey })
-  }
-  return _client
-}
+// ── Anthropic client — delegated to centralised singleton ────────────────────
 
 // ── Firm agent configs ───────────────────────────────────────────────────────
 
@@ -161,7 +151,7 @@ export async function callFirmAgent(
   config: FirmAgentConfig,
   userMessage: string
 ): Promise<FirmCallResult> {
-  const client = getClient()
+  const client = getAIClient()
 
   const response = await client.messages.create({
     model: config.model,
@@ -228,7 +218,7 @@ export function buildJudgeUserMessage(
 }
 
 export async function callJudgeAgent(userMessage: string): Promise<JudgeCallResult> {
-  const client = getClient()
+  const client = getAIClient()
   const config = getJudgeAgentConfig()
 
   const response = await client.messages.create({

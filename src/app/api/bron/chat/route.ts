@@ -3,28 +3,14 @@
 // Body: { messages: {role, content}[], pageContext?: string, businessContext?: string }
 
 import { NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
 import { getUser } from '@/lib/supabase/server'
+import { execute } from '@/lib/ai/router'
+import { registerAllCapabilities } from '@/lib/ai/capabilities'
 
 export const dynamic = 'force-dynamic'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-
-function buildBronSystem(pageContext?: string, businessContext?: string): string {
-  return `You are Bron, a concise AI assistant embedded in Phill McGurk's private founder CRM (Unite-Group Nexus).
-
-Phill runs 8 businesses: Disaster Recovery, NRPG, CARSI, RestoreAssist, Synthex, ATO Tax Optimizer, CCW-ERP/CRM.
-
-${pageContext ? `Current page: ${pageContext}` : ''}
-${businessContext ? `Current business context: ${businessContext}` : ''}
-
-Rules:
-- Be concise — Phill is a founder, not a developer
-- Provide recommendations with reasoning when asked
-- Reference specific business data when available
-- Never make up financial figures — say "I don't have that data" if unsure
-- Format responses clearly with markdown when helpful`
-}
+// Ensure capabilities are registered before first request
+registerAllCapabilities()
 
 export async function POST(request: Request) {
   const user = await getUser()
@@ -41,16 +27,12 @@ export async function POST(request: Request) {
   }
 
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
-      system: buildBronSystem(pageContext, businessContext),
+    const result = await execute('chat', {
       messages,
+      context: { userId: user.id, pageContext, businessKey: businessContext },
     })
 
-    const firstBlock = response.content[0]
-    const text = firstBlock?.type === 'text' ? firstBlock.text : ''
-    return NextResponse.json({ content: text })
+    return NextResponse.json({ content: result.content })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'AI unavailable'
     return NextResponse.json({ error: message }, { status: 500 })

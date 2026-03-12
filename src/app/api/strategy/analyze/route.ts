@@ -3,12 +3,14 @@
 // Body: { prompt: string, businessContext?: string }
 
 import { NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
 import { getUser } from '@/lib/supabase/server'
+import { execute } from '@/lib/ai/router'
+import { registerAllCapabilities } from '@/lib/ai/capabilities'
 
 export const dynamic = 'force-dynamic'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+// Ensure capabilities are registered before first request
+registerAllCapabilities()
 
 export async function POST(request: Request) {
   const user = await getUser()
@@ -33,26 +35,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'prompt exceeds 4,000 character limit' }, { status: 400 })
   }
 
-  const systemPrompt = `You are a strategic advisor to Phill McGurk, founder of Unite-Group which oversees 8 businesses.
-${businessContext ? `\nFocus: ${businessContext}` : ''}
-Provide structured, actionable analysis. Use markdown headers and bullet points.
-Be direct — Phill needs decisions, not theory.`
-
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-opus-4-6',
-      max_tokens: 16000,
-      thinking: { type: 'enabled', budget_tokens: 10000 },
-      system: systemPrompt,
+    const result = await execute('analyze', {
       messages: [{ role: 'user', content: prompt }],
+      context: { userId: user.id, businessKey: businessContext },
     })
 
-    const output = response.content
-      .filter(b => b.type === 'text')
-      .map(b => b.type === 'text' ? b.text : '')
-      .join('\n\n')
-
-    return NextResponse.json({ output })
+    return NextResponse.json({ output: result.content })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'AI unavailable'
     return NextResponse.json({ error: message }, { status: 500 })

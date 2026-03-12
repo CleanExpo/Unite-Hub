@@ -58,8 +58,7 @@ export async function execute(
       : cap.systemPrompt
 
   // Build Anthropic API params
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const params: Record<string, any> = {
+  const params: Anthropic.MessageCreateParamsNonStreaming = {
     model: cap.model,
     max_tokens: cap.maxTokens,
     system: systemPrompt,
@@ -68,15 +67,17 @@ export async function execute(
 
   // Thinking feature
   if (cap.features.thinking) {
-    params.thinking = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(params as any).thinking = {
       type: 'enabled',
       budget_tokens: cap.features.thinking.budgetTokens,
     }
   }
 
-  // Web search tool
+  // Web search tool (server-side tool — not a standard Tool type)
   if (cap.features.webSearch) {
-    params.tools = [
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(params as any).tools = [
       { type: 'web_search_20250305', name: 'web_search' },
     ]
   }

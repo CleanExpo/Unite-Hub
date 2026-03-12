@@ -4,13 +4,15 @@
 // Returns: { type: 'question', question: string } | { type: 'spec', spec: IdeaSpec }
 
 import { NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
 import { getUser } from '@/lib/supabase/server'
-import { buildSystemPrompt, parseClaudeResponse, type ConversationMessage } from '@/lib/ideas/conversation'
+import { parseClaudeResponse, type ConversationMessage } from '@/lib/ideas/conversation'
+import { execute } from '@/lib/ai/router'
+import { registerAllCapabilities } from '@/lib/ai/capabilities'
 
 export const dynamic = 'force-dynamic'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+// Ensure capabilities are registered before first request
+registerAllCapabilities()
 
 export async function POST(request: Request) {
   const user = await getUser()
@@ -34,15 +36,8 @@ export async function POST(request: Request) {
     ? [{ role: 'user', content: rawIdea }]
     : messages
 
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1024,
-    system: buildSystemPrompt(),
-    messages: history,
-  })
-
-  const raw = response.content[0].type === 'text' ? response.content[0].text : ''
-  const parsed = parseClaudeResponse(raw)
+  const result = await execute('ideas', { messages: history })
+  const parsed = parseClaudeResponse(result.content)
 
   return NextResponse.json(parsed)
 }
