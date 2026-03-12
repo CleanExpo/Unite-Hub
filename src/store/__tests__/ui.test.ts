@@ -73,4 +73,9 @@ describe('commandBar', () => {
     act(() => result.current.toggleCommandBar())
     expect(result.current.commandBarOpen).toBe(false)
   })
+
+  it('commandBarOpen is excluded from persisted state', () => {
+    const partialised = useUIStore.persist.getOptions().partialize?.(useUIStore.getState())
+    expect(partialised).not.toHaveProperty('commandBarOpen')
+  })
 })

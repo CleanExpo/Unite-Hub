@@ -42,6 +42,7 @@ export const useUIStore = create<UIStore>()(
     }),
     {
       name: 'nexus-ui',
+      // commandBarOpen intentionally excluded — always starts closed
       partialize: (s) => ({
         sidebarOpen: s.sidebarOpen,
         expandedBusinesses: s.expandedBusinesses,
