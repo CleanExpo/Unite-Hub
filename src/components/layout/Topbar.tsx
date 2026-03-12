@@ -26,6 +26,7 @@ export function Topbar() {
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)
   const toggleCapture = useUIStore((s) => s.toggleCapture)
   const toggleBron = useUIStore((s) => s.toggleBron)
+  const toggleCommandBar = useUIStore((s) => s.toggleCommandBar)
   const breadcrumb = getBreadcrumb(pathname)
 
   return (
@@ -69,6 +70,7 @@ export function Topbar() {
         </button>
 
         <button
+          onClick={toggleCommandBar}
           className="flex items-center gap-2 px-3 h-7 rounded-sm text-[12px] border transition-colors"
           style={{
             borderColor: 'var(--color-border)',
