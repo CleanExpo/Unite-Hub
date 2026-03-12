@@ -116,6 +116,7 @@ describe('GET /api/search', () => {
           select: vi.fn().mockReturnThis(),
           eq:     vi.fn().mockReturnThis(),
           or:     vi.fn().mockReturnThis(),
+          ilike:  vi.fn().mockReturnThis(),
           limit:  vi.fn().mockRejectedValue(new Error('DB timeout')),
         }
       }

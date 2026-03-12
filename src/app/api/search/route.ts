@@ -68,13 +68,15 @@ export async function GET(request: NextRequest) {
       .limit(5),
   ])
 
+  // DB-level errors fall through to empty arrays (allSettled semantics) —
+  // intentional: partial search failure should not break the UI.
   const contacts: SearchContact[] =
     contactsResult.status === 'fulfilled' && contactsResult.value.data
       ? contactsResult.value.data.map((c) => ({
           id: c.id as string,
           name: [c.first_name, c.last_name].filter(Boolean).join(' '),
           email: (c.email as string) ?? '',
-          company: (c.company as string | null) ?? null,
+          company: c.company as string | null,
         }))
       : []
 
