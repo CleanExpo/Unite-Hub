@@ -25,3 +25,5 @@ export type {
   AIResponse,
   Citation,
 } from './types'
+export * from './features'
+export { trackUsage, getUsageSummary, resetUsage } from './cost-tracker'
