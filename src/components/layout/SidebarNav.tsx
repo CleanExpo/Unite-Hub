@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, BookOpen, Columns2, Lock, FileText, ClipboardCheck, Scale, Share2, Settings } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Columns2, Lock, FileText, ClipboardCheck, Scale, Share2, Users, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { href: '/founder/approvals', label: 'Approvals',  icon: ClipboardCheck },
   { href: '/founder/advisory',  label: 'Advisory',   icon: Scale },
   { href: '/founder/social',    label: 'Social',     icon: Share2 },
+  { href: '/founder/contacts',  label: 'Contacts',  icon: Users },
   { href: '/founder/settings',  label: 'Settings',   icon: Settings },
 ] as const
 
