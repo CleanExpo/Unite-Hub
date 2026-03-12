@@ -16,7 +16,7 @@ vi.mock('@/components/ui/command', () => ({
   CommandGroup: ({ heading, children }: { heading?: string; children: React.ReactNode }) =>
     <div data-testid={`group-${heading}`}><span>{heading}</span>{children}</div>,
   CommandItem: ({ children, onSelect }: { children: React.ReactNode; value?: string; onSelect?: () => void }) =>
-    <div data-testid="command-item" onClick={onSelect} role="option">{children}</div>,
+    <div data-testid="command-item" onClick={onSelect} role="option" aria-selected={false}>{children}</div>,
   CommandShortcut: ({ children }: { children: React.ReactNode }) =>
     <span>{children}</span>,
 }))
