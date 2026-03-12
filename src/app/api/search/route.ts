@@ -34,7 +34,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
 
-  const q = request.nextUrl.searchParams.get('q') ?? ''
+  // Strip PostgREST .or() filter metacharacters to prevent filter string injection
+  const q = (request.nextUrl.searchParams.get('q') ?? '').replace(/[,()]/g, '')
   if (q.length < 2) {
     return NextResponse.json(
       { error: 'Query must be at least 2 characters' },
@@ -64,6 +65,7 @@ export async function GET(request: NextRequest) {
       .from('approval_queue')
       .select('id, title, status')
       .eq('founder_id', user.id)
+      // description is searched but not selected — used as filter predicate only
       .or(`title.ilike.${pattern},description.ilike.${pattern}`)
       .limit(5),
   ])
