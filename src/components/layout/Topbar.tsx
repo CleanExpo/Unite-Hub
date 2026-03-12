@@ -1,7 +1,7 @@
 // src/components/layout/Topbar.tsx
 'use client'
 
-import { Menu, HelpCircle } from 'lucide-react'
+import { Menu, HelpCircle, Zap, MessageSquare } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useUIStore } from '@/store/ui'
 
@@ -11,6 +11,7 @@ const BREADCRUMB_MAP: Record<string, string> = {
   '/founder/vault':     'Vault',
   '/founder/approvals': 'Approvals',
   '/founder/settings':  'Settings',
+  '/founder/strategy':  'Strategy Room',
 }
 
 function getBreadcrumb(pathname: string): string {
@@ -23,6 +24,8 @@ function getBreadcrumb(pathname: string): string {
 export function Topbar() {
   const pathname = usePathname()
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)
+  const toggleCapture = useUIStore((s) => s.toggleCapture)
+  const toggleBron = useUIStore((s) => s.toggleBron)
   const breadcrumb = getBreadcrumb(pathname)
 
   return (
@@ -50,6 +53,21 @@ export function Topbar() {
 
       {/* Right actions */}
       <div className="ml-auto flex items-center gap-3">
+        <button
+          onClick={toggleCapture}
+          className="transition-colors"
+          style={{ color: 'var(--color-text-disabled)' }}
+          aria-label="Capture idea"
+          title="Capture idea (send to Linear)"
+        >
+          <Zap size={16} strokeWidth={1.75} />
+        </button>
+
+        <button onClick={toggleBron} className="transition-colors"
+          style={{ color: 'var(--color-text-disabled)' }} aria-label="Bron AI">
+          <MessageSquare size={16} strokeWidth={1.75} />
+        </button>
+
         <button
           className="flex items-center gap-2 px-3 h-7 rounded-sm text-[12px] border transition-colors"
           style={{

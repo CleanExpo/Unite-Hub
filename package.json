@@ -132,6 +132,7 @@
     "@types/dagre": "^0.7.53",
     "@types/uuid": "^10.0.0",
     "@types/web-push": "^3.6.4",
+    "@vercel/analytics": "^2.0.0",
     "axios": "^1.13.5",
     "bcryptjs": "^3.0.3",
     "brave-search": "^0.9.0",

@@ -13,6 +13,7 @@ interface KPICardProps {
   trend: { value: string; positive: boolean }
   secondary: string
   xeroBusinessKey?: string
+  linearBusinessKey?: string
 }
 
 function formatAUD(cents: number): string {
@@ -39,10 +40,12 @@ export function KPICard({
   trend,
   secondary,
   xeroBusinessKey,
+  linearBusinessKey,
 }: KPICardProps) {
   const [live, setLive] = useState<LiveState>({
     metric: null, trend: null, secondary: null, source: null, loading: false,
   })
+  const [linearCount, setLinearCount] = useState<number | null>(null)
 
   useEffect(() => {
     if (xeroBusinessKey) {
@@ -68,12 +71,22 @@ export function KPICard({
     }
   }, [xeroBusinessKey])
 
+  useEffect(() => {
+    if (!linearBusinessKey) return
+    fetch(`/api/linear/kpi?business=${encodeURIComponent(linearBusinessKey)}`)
+      .then(res => res.json() as Promise<{ activeCount: number }>)
+      .then(({ activeCount }) => { setLinearCount(activeCount) })
+      .catch(() => {})
+  }, [linearBusinessKey])
+
   const isLive = !!xeroBusinessKey
 
   // Fall back to static props when live data hasn't loaded
   const displayMetric = live.metric ?? metric
   const displayTrend = live.trend ?? trend
-  const displaySecondary = live.secondary ?? secondary
+  const displaySecondary = linearCount !== null
+    ? `${linearCount} active issue${linearCount !== 1 ? 's' : ''}`
+    : (live.secondary ?? secondary)
 
   return (
     <motion.div

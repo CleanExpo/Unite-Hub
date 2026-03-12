@@ -122,3 +122,54 @@ export async function updateIssueState(issueId: string, stateId: string): Promis
     }
   `, { id: issueId, stateId })
 }
+
+// ─── Issue creation ───────────────────────────────────────────────────────────
+
+export interface CreateIssueInput {
+  teamKey: string
+  title: string
+  description: string
+  priority: number
+  labels?: string[]
+}
+
+export async function resolveTeamId(teamKey: string): Promise<string> {
+  const teams = await fetchTeamStates()
+  const team = teams.find(t => t.key === teamKey)
+  if (!team) throw new Error(`Linear team not found: ${teamKey}`)
+  return team.id
+}
+
+export async function createIssue(input: CreateIssueInput): Promise<string> {
+  const teamId = await resolveTeamId(input.teamKey)
+
+  const data = await gql<{ issueCreate: { issue: { id: string; identifier: string } } }>(`
+    mutation CreateIssue($teamId: String!, $title: String!, $description: String, $priority: Int) {
+      issueCreate(input: {
+        teamId: $teamId
+        title: $title
+        description: $description
+        priority: $priority
+      }) {
+        issue { id identifier }
+      }
+    }
+  `, {
+    teamId,
+    title: input.title,
+    description: input.description,
+    priority: input.priority,
+  })
+
+  return data.issueCreate.issue.identifier
+}
+
+export async function fetchIssueCountByBusiness(): Promise<Record<string, number>> {
+  const issues = await fetchIssues()
+  const counts: Record<string, number> = {}
+  for (const issue of issues) {
+    const bizKey = teamKeyToBusiness(issue.team.key)
+    counts[bizKey] = (counts[bizKey] ?? 0) + 1
+  }
+  return counts
+}
