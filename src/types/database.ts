@@ -196,16 +196,17 @@ export type Database = {
       contacts: {
         Row: {
           id: string;
-          workspace_id: string;
-          name: string;
-          email: string;
-          company: string | null;
+          founder_id: string;
+          business_id: string | null;
+          first_name: string | null;
+          last_name: string | null;
+          email: string | null;
           phone: string | null;
-          job_title: string | null;
-          ai_score: number;
-          status: 'prospect' | 'lead' | 'customer' | 'contact';
-          last_interaction: string | null;
+          company: string | null;
+          role: string | null;
+          status: 'lead' | 'prospect' | 'client' | 'churned' | 'archived';
           tags: string[];
+          metadata: Record<string, unknown>;
           created_at: string;
           updated_at: string;
         };
