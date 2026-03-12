@@ -17,13 +17,7 @@ describe('BUSINESSES', () => {
     }
   })
 
-  it('ATO has planning status', () => {
-    const ato = BUSINESSES.find(b => b.key === 'ato')
-    expect(ato?.status).toBe('planning')
-  })
-
-  it('all other businesses are active', () => {
-    const others = BUSINESSES.filter(b => b.key !== 'ato')
-    expect(others.every(b => b.status === 'active')).toBe(true)
+  it('all businesses are active', () => {
+    expect(BUSINESSES.every(b => b.status === 'active')).toBe(true)
   })
 })
