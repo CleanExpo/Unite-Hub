@@ -35,7 +35,7 @@ export interface CalendarEvent {
 
 // ─── Token helpers ──────────────────────────────────────────────────────────
 
-interface StoredTokens {
+export interface StoredTokens {
   access_token: string
   refresh_token: string | null
   expires_at: number
@@ -61,7 +61,7 @@ async function refreshAccessToken(tokens: StoredTokens): Promise<string> {
   return refreshed.access_token
 }
 
-async function getValidToken(tokens: StoredTokens): Promise<string> {
+export async function getValidToken(tokens: StoredTokens): Promise<string> {
   // Refresh 60 seconds before expiry
   if (tokens.expires_at > Date.now() + 60_000) {
     return tokens.access_token
