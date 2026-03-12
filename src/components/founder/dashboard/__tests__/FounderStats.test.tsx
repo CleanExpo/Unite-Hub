@@ -2,17 +2,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 
-// Mock framer-motion (same pattern as KPICard tests)
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, className, style, ...rest }: Record<string, unknown>) => (
-      <div className={className as string} style={style as Record<string, string>} {...rest}>
-        {children as React.ReactNode}
-      </div>
-    ),
-  },
-}))
-
 import { FounderStats } from '../FounderStats'
 
 beforeEach(() => {

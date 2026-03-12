@@ -14,6 +14,8 @@ interface DashboardStats {
   } | null
 }
 
+const HIGHLIGHT_COLOUR = '#f97316'
+
 const STAT_ITEMS = [
   { key: 'contacts',         label: 'Contacts', icon: Users,          field: 'contacts' as const },
   { key: 'vault',            label: 'Vault',    icon: Lock,           field: 'vaultEntries' as const },
@@ -72,11 +74,11 @@ export function FounderStats() {
               <Icon
                 size={14}
                 strokeWidth={1.5}
-                style={{ color: highlight ? '#f97316' : 'var(--color-text-disabled)' }}
+                style={{ color: highlight ? HIGHLIGHT_COLOUR : 'var(--color-text-disabled)' }}
               />
               <span
                 className="text-[18px] font-semibold tabular-nums"
-                style={{ color: highlight ? '#f97316' : 'var(--color-text-primary)' }}
+                style={{ color: highlight ? HIGHLIGHT_COLOUR : 'var(--color-text-primary)' }}
               >
                 {value !== null ? value : '\u2014'}
               </span>
