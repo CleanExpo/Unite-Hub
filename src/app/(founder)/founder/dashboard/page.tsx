@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 
 import { KPIGrid } from '@/components/founder/dashboard/KPIGrid'
 import { IntegrationStatus } from '@/components/founder/dashboard/IntegrationStatus'
+import { FounderStats } from '@/components/founder/dashboard/FounderStats'
 
 export default function DashboardPage() {
   return (
@@ -10,6 +11,7 @@ export default function DashboardPage() {
       <h1 className="text-[24px] font-semibold text-[#f0f0f0] tracking-tight">
         Dashboard
       </h1>
+      <FounderStats />
       <KPIGrid />
       <IntegrationStatus />
     </div>
