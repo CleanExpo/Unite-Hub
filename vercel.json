@@ -7,6 +7,22 @@
     {
       "path": "/api/cron/bookkeeper",
       "schedule": "0 16 * * *"
+    },
+    {
+      "path": "/api/cron/coaches/life",
+      "schedule": "15 21 * * *"
+    },
+    {
+      "path": "/api/cron/coaches/revenue",
+      "schedule": "30 21 * * *"
+    },
+    {
+      "path": "/api/cron/coaches/build",
+      "schedule": "45 21 * * *"
+    },
+    {
+      "path": "/api/cron/coaches/marketing",
+      "schedule": "0 22 * * *"
     }
   ],
   "functions": {
@@ -18,6 +34,9 @@
     },
     "src/app/api/cron/bookkeeper/route.ts": {
       "maxDuration": 300
+    },
+    "src/app/api/cron/coaches/*/route.ts": {
+      "maxDuration": 60
     }
   },
   "headers": [
