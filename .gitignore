@@ -250,3 +250,6 @@ EXECUTE_MIGRATIONS_NOW.sql
 !/CHANGELOG.md
 !/ENGINEERING-FRAMEWORK.md
 !/CLAUDE.md
+
+# Claude Code worktrees
+.claude/worktrees/
