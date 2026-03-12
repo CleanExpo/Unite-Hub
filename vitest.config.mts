@@ -30,6 +30,7 @@ export default defineConfig({
       'apps/web/**',                          // apps/web has its own @/ alias (apps/web root), incompatible with root config
       'packages/veritas-kanban-mcp/web/**',   // separate package with own vitest.config.ts
       'NodeJS-Starter-V1/**',                 // separate project — has its own test setup
+      '.claude/worktrees/**',                 // git worktrees — each runs tests against its own src/
     ],
     coverage: {
       provider: 'v8',
