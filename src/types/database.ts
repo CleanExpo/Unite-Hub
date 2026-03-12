@@ -276,3 +276,17 @@ export type ProjectFull = Project & {
   deliverables: Deliverable[];
   messages: ProjectMessage[];
 };
+
+// User settings type
+export type UserSettings = {
+  id: string;
+  user_id: string;
+  timezone: string;
+  locale: string;
+  notification_digest: boolean;
+  notification_alerts: boolean;
+  notification_cases: boolean;
+  google_drive_vault_folder_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
