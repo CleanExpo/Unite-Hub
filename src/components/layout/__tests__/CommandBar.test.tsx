@@ -81,6 +81,7 @@ describe('CommandBar', () => {
     expect(screen.getByText('Vault')).toBeInTheDocument()
     expect(screen.getByText('Approvals')).toBeInTheDocument()
     expect(screen.getByText('Advisory')).toBeInTheDocument()
+    expect(screen.getByText('Social')).toBeInTheDocument()
     expect(screen.getByText('Settings')).toBeInTheDocument()
   })
 
@@ -96,6 +97,15 @@ describe('CommandBar', () => {
     const dashboardItem = screen.getByText('Dashboard').closest('[data-testid="command-item"]')!
     await user.click(dashboardItem)
     expect(mockPush).toHaveBeenCalledWith('/founder/dashboard')
+    expect(mockToggleCommandBar).toHaveBeenCalled()
+  })
+
+  it('executes action command and closes on action item select', async () => {
+    const user = userEvent.setup()
+    render(<CommandBar />)
+    const bronItem = screen.getByText('Open Bron Chat').closest('[data-testid="command-item"]')!
+    await user.click(bronItem)
+    expect(mockToggleBron).toHaveBeenCalled()
     expect(mockToggleCommandBar).toHaveBeenCalled()
   })
 })
