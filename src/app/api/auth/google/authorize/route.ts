@@ -24,8 +24,8 @@ export async function GET(request: Request) {
   if (!email) return NextResponse.json({ error: 'email param required' }, { status: 400 })
 
   const params = new URLSearchParams({
-    client_id: process.env.GOOGLE_CLIENT_ID!,
-    redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`,
+    client_id: process.env.GOOGLE_CLIENT_ID!.trim(),
+    redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL!.trim()}/api/auth/google/callback`,
     response_type: 'code',
     scope: SCOPES,
     access_type: 'offline',

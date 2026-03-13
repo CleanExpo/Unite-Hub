@@ -82,13 +82,14 @@ export default async function EmailPage({
                   <p className="text-sm text-white/80 truncate">{account.email}</p>
                   <p className="text-[10px] uppercase tracking-wider mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
                     {account.label} · {account.businessKey}
+                    {account.provider !== 'google' && ` · ${account.provider}`}
                   </p>
                 </div>
                 {isConnected ? (
                   <span className="text-[10px] uppercase tracking-wider text-[#00F5FF] flex-shrink-0">
                     Connected
                   </span>
-                ) : configured ? (
+                ) : account.provider === 'google' && configured ? (
                   <a
                     href={`/api/auth/google/authorize?email=${encodeURIComponent(account.email)}`}
                     className="text-[10px] uppercase tracking-wider hover:text-white/70 transition-colors flex-shrink-0"
@@ -96,6 +97,10 @@ export default async function EmailPage({
                   >
                     Connect →
                   </a>
+                ) : account.provider !== 'google' ? (
+                  <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
+                    {account.provider === 'microsoft' ? 'Microsoft · TBD' : 'IMAP · TBD'}
+                  </span>
                 ) : (
                   <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
                     Not available
