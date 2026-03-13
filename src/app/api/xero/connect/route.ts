@@ -49,7 +49,7 @@ export async function GET(request: Request) {
     client_id: clientId,
     redirect_uri: redirectUri,
     scope:
-      'openid profile email accounting.transactions accounting.reports.read accounting.contacts.read offline_access',
+      'openid profile email offline_access accounting.reports.profitandloss.read accounting.invoices.read accounting.banktransactions accounting.contacts.read accounting.settings.read',
     state: businessKey,
   })
 

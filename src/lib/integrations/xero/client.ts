@@ -37,7 +37,7 @@ export function getXeroCredentials(businessKey: string): {
   if (DR_BUSINESS_KEYS.has(businessKey)) {
     return {
       clientId: process.env.DR_CLIENT_ID ?? '',
-      clientSecret: process.env.DR_Client_Secret ?? '',
+      clientSecret: process.env.DR_CLIENT_SECRET ?? '',
     }
   }
   return {
