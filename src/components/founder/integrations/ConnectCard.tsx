@@ -24,7 +24,7 @@ export function ConnectCard({
       <h2 className="text-lg font-light text-white/90 mb-2">Connect {service}</h2>
       <p className="text-sm text-white/50 mb-6 leading-relaxed">{description}</p>
       {comingSoon ? (
-        <div className="inline-flex items-center gap-2 px-4 py-2 border border-white/10 text-white/30 text-xs uppercase tracking-widest rounded-sm cursor-not-allowed">
+        <div className="inline-flex items-center gap-2 px-4 py-2 border text-xs uppercase tracking-widest rounded-sm cursor-not-allowed" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>
           Coming Soon
         </div>
       ) : (

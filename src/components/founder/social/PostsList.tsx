@@ -3,7 +3,7 @@
 import type { SocialPost, SocialPlatform } from '@/lib/integrations/social/types'
 
 const STATUS_COLOURS: Record<string, string> = {
-  draft: 'text-white/40 border-white/20',
+  draft: 'text-[#999999] border-[#999999]/30',
   scheduled: 'text-[#00F5FF] border-[#00F5FF]/30',
   publishing: 'text-yellow-400 border-yellow-400/30',
   published: 'text-green-400 border-green-400/30',
@@ -25,7 +25,7 @@ interface Props {
 export function PostsList({ posts }: Props) {
   if (posts.length === 0) {
     return (
-      <div className="text-sm text-white/40 py-12 text-center">
+      <div className="text-sm py-12 text-center" style={{ color: 'var(--color-text-secondary)' }}>
         No posts yet — click <span className="text-[#00F5FF]">+ New Post</span> to get started
       </div>
     )
@@ -36,13 +36,13 @@ export function PostsList({ posts }: Props) {
       {posts.map(post => (
         <div
           key={post.id}
-          className="border border-white/[0.08] p-4 rounded-sm hover:border-white/[0.14] transition-colors"
+          className="border border-[rgba(255,255,255,0.06)] p-4 rounded-sm hover:border-[rgba(255,255,255,0.12)] transition-colors"
         >
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-white/80 line-clamp-2">{post.content}</p>
+              <p className="text-sm line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{post.content}</p>
               {post.scheduledAt && (
-                <p className="text-[11px] text-white/40 mt-1">
+                <p className="text-[11px] mt-1" style={{ color: 'var(--color-text-secondary)' }}>
                   Scheduled: {new Date(post.scheduledAt).toLocaleString('en-AU')}
                 </p>
               )}

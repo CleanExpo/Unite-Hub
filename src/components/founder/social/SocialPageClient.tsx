@@ -23,8 +23,8 @@ export function SocialPageClient({ channels, posts }: Props) {
     <div className="p-6 space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-light text-white/90">Social</h1>
-          <p className="text-sm text-white/40 mt-1">Content calendar across all platforms</p>
+          <h1 className="text-xl font-light" style={{ color: 'var(--color-text-primary)' }}>Social</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>Content calendar across all platforms</p>
         </div>
         <button
           onClick={() => setComposerOpen(true)}
@@ -37,7 +37,7 @@ export function SocialPageClient({ channels, posts }: Props) {
       <ConnectionStrip channels={channels} />
 
       {/* Tab bar */}
-      <div className="flex gap-0 border-b border-white/[0.08]">
+      <div className="flex gap-0 border-b" style={{ borderColor: 'var(--color-border)' }}>
         {TABS.map(tab => (
           <button
             key={tab}
@@ -45,7 +45,7 @@ export function SocialPageClient({ channels, posts }: Props) {
             className={`px-4 py-2 text-[11px] uppercase tracking-[0.12em] transition-colors ${
               activeTab === tab
                 ? 'text-[#00F5FF] border-b border-[#00F5FF] -mb-px'
-                : 'text-white/40 hover:text-white/60'
+                : 'text-[#999999] hover:text-[#f0f0f0]'
             }`}
           >
             {tab}
@@ -56,7 +56,7 @@ export function SocialPageClient({ channels, posts }: Props) {
       {activeTab === 'Calendar' && <CalendarView posts={posts} />}
       {activeTab === 'Posts' && <PostsList posts={posts} />}
       {activeTab === 'Analytics' && (
-        <div className="text-sm text-white/40 py-8 text-center">
+        <div className="text-sm py-8 text-center" style={{ color: 'var(--color-text-secondary)' }}>
           Analytics coming soon — connect accounts to see engagement data
         </div>
       )}

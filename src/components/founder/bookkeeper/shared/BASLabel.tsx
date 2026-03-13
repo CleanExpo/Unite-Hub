@@ -16,7 +16,7 @@ export function BASLabel({ label, amountCents }: { label: string; amountCents: n
   return (
     <div className="flex items-center justify-between py-2">
       <div className="flex items-center gap-2">
-        <span className="text-[11px] font-mono text-white/40 w-6">{label}</span>
+        <span className="text-[11px] font-mono w-6" style={{ color: 'var(--color-text-secondary)' }}>{label}</span>
         <span className="text-[12px] text-white/60">{LABEL_DESCRIPTIONS[label] ?? label}</span>
       </div>
       <span
@@ -24,7 +24,7 @@ export function BASLabel({ label, amountCents }: { label: string; amountCents: n
         style={{ color: isRefund ? 'var(--color-success)' : isPayable ? 'var(--color-danger)' : 'var(--color-text-primary)' }}
       >
         {formatAUD(Math.abs(amountCents))}
-        {isRefund && <span className="text-[10px] ml-1 text-white/40">refund</span>}
+        {isRefund && <span className="text-[10px] ml-1" style={{ color: 'var(--color-text-secondary)' }}>refund</span>}
       </span>
     </div>
   )

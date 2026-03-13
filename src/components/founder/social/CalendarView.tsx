@@ -44,35 +44,38 @@ export function CalendarView({ posts }: Props) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-white/60">{monthLabel}</span>
+        <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{monthLabel}</span>
         <div className="flex gap-2">
           <button
             onClick={() => { if (month === 0) { setMonth(11); setYear(y => y - 1) } else setMonth(m => m - 1) }}
-            className="px-2 py-1 text-xs text-white/40 hover:text-white/70 border border-white/10 rounded-sm"
+            className="px-2 py-1 text-xs hover:text-[#f0f0f0] rounded-sm"
+            style={{ color: 'var(--color-text-secondary)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)' }}
           >{'\u2190'}</button>
           <button
             onClick={() => { if (month === 11) { setMonth(0); setYear(y => y + 1) } else setMonth(m => m + 1) }}
-            className="px-2 py-1 text-xs text-white/40 hover:text-white/70 border border-white/10 rounded-sm"
+            className="px-2 py-1 text-xs hover:text-[#f0f0f0] rounded-sm"
+            style={{ color: 'var(--color-text-secondary)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)' }}
           >{'\u2192'}</button>
         </div>
       </div>
 
       <div className="grid grid-cols-7 gap-px">
         {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => (
-          <div key={d} className="text-[9px] uppercase tracking-wider text-white/30 text-center py-1">{d}</div>
+          <div key={d} className="text-[9px] uppercase tracking-wider text-center py-1" style={{ color: 'var(--color-text-muted)' }}>{d}</div>
         ))}
         {cells.map((day, i) => (
           <div
             key={i}
-            className={`min-h-[64px] p-1 border border-white/[0.06] rounded-sm ${
+            className={`min-h-[64px] p-1 border rounded-sm ${
               day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
                 ? 'border-[#00F5FF]/30'
                 : ''
             }`}
+            style={day === today.getDate() && month === today.getMonth() && year === today.getFullYear() ? undefined : { borderColor: 'var(--color-border)' }}
           >
             {day && (
               <>
-                <span className="text-[10px] text-white/30">{day}</span>
+                <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>{day}</span>
                 <div className="mt-1 space-y-0.5">
                   {(postsByDay[day] ?? []).slice(0, 3).map(post => (
                     <div

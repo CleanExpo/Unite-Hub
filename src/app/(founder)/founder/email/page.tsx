@@ -46,7 +46,7 @@ export default async function EmailPage({
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-xl font-light text-white/90">Email</h1>
-        <p className="text-sm text-white/40 mt-1">Business threads · grouped by portfolio company</p>
+        <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>Business threads · grouped by portfolio company</p>
       </div>
 
       {params.connected && (
@@ -62,14 +62,14 @@ export default async function EmailPage({
       )}
 
       {!configured && (
-        <div className="border border-white/10 px-4 py-3 rounded-sm text-sm text-white/40">
+        <div className="border px-4 py-3 rounded-sm text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
           Google OAuth not configured — set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.
         </div>
       )}
 
       {/* Account grid */}
       <div>
-        <h2 className="text-xs uppercase tracking-widest text-white/30 mb-3">Email Accounts</h2>
+        <h2 className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>Email Accounts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {EMAIL_ACCOUNTS.map((account) => {
             const isConnected = connectedEmails.has(account.email)
@@ -80,7 +80,7 @@ export default async function EmailPage({
               >
                 <div className="min-w-0">
                   <p className="text-sm text-white/80 truncate">{account.email}</p>
-                  <p className="text-[10px] uppercase tracking-wider text-white/30 mt-0.5">
+                  <p className="text-[10px] uppercase tracking-wider mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
                     {account.label} · {account.businessKey}
                   </p>
                 </div>
@@ -91,12 +91,13 @@ export default async function EmailPage({
                 ) : configured ? (
                   <a
                     href={`/api/auth/google/authorize?email=${encodeURIComponent(account.email)}`}
-                    className="text-[10px] uppercase tracking-wider text-white/40 hover:text-white/70 transition-colors flex-shrink-0"
+                    className="text-[10px] uppercase tracking-wider hover:text-white/70 transition-colors flex-shrink-0"
+                    style={{ color: 'var(--color-text-secondary)' }}
                   >
                     Connect →
                   </a>
                 ) : (
-                  <span className="text-[10px] uppercase tracking-wider text-white/20 flex-shrink-0">
+                  <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
                     Not available
                   </span>
                 )}
@@ -121,7 +122,7 @@ export default async function EmailPage({
                     style={{ backgroundColor: biz.color }}
                   />
                   <h2 className="text-xs uppercase tracking-widest text-white/50">{biz.name}</h2>
-                  <span className="text-[10px] text-white/25">
+                  <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
                     {bThreads.length} thread{bThreads.length !== 1 ? 's' : ''}
                     {unreadCount > 0 && ` · ${unreadCount} unread`}
                   </span>
@@ -150,11 +151,11 @@ export default async function EmailPage({
                         >
                           {thread.subject}
                         </p>
-                        <p className="text-xs text-white/40 truncate mt-0.5">
+                        <p className="text-xs truncate mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
                           {thread.from} · {thread.snippet}
                         </p>
                       </div>
-                      <span className="text-[10px] uppercase tracking-wider text-white/25 flex-shrink-0">
+                      <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
                         {thread.email.split('@')[1]}
                       </span>
                     </div>
@@ -167,7 +168,7 @@ export default async function EmailPage({
       )}
 
       {connectedAccounts.length === 0 && configured && (
-        <p className="text-sm text-white/30 text-center py-8">
+        <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
           Connect an account above to see your threads here.
         </p>
       )}

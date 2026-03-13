@@ -16,7 +16,7 @@ export function DateRangeFilter({ from, to, onChange }: DateRangeFilterProps) {
         className="text-[12px] bg-transparent border rounded-sm px-2 py-1.5 focus:outline-none focus:border-[#00F5FF]/40"
         style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)', colorScheme: 'dark' }}
       />
-      <span className="text-[11px] text-white/30">to</span>
+      <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>to</span>
       <input
         type="date"
         value={to}

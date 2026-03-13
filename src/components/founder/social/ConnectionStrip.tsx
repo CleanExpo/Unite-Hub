@@ -40,7 +40,7 @@ export function ConnectionStrip({ channels }: Props) {
           <a
             key={platform}
             href={`/api/auth/${platform === 'facebook' || platform === 'instagram' ? 'meta' : platform}/authorize?business=dr`}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] border border-white/10 text-white/30 hover:border-white/20 hover:text-white/50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] border border-[rgba(255,255,255,0.06)] text-[#888888] hover:border-[rgba(255,255,255,0.12)] hover:text-[#999999] transition-colors"
           >
             <span>{meta.icon}</span>
             <span>Connect {meta.label}</span>

@@ -85,7 +85,7 @@ export function VaultGrid({ unlocked }: VaultGridProps) {
             <div key={business.key}>
               <div className="px-3 py-1 flex items-center gap-2">
                 <span className="rounded-full" style={{ width: 6, height: 6, background: business.color }} />
-                <span className="text-[10px] font-medium tracking-widest text-[#555] uppercase">
+                <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'var(--color-text-muted)' }}>
                   {business.name}
                 </span>
               </div>

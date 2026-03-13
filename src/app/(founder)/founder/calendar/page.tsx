@@ -21,17 +21,17 @@ export default async function CalendarPage() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-xl font-light text-white/90">Calendar</h1>
-        <p className="text-sm text-white/40 mt-1">Events · colour-coded by business</p>
+        <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>Events · colour-coded by business</p>
       </div>
 
       {!configured && (
-        <div className="border border-white/10 px-4 py-3 rounded-sm text-sm text-white/40">
+        <div className="border px-4 py-3 rounded-sm text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
           Google OAuth not configured — set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.
         </div>
       )}
 
       {configured && connectedAccounts.length === 0 && (
-        <div className="border border-white/10 px-4 py-3 rounded-sm text-sm text-white/40">
+        <div className="border px-4 py-3 rounded-sm text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
           No Google accounts connected — visit{' '}
           <Link href="/founder/email" className="text-[#00F5FF] hover:underline">
             Email settings
@@ -45,7 +45,8 @@ export default async function CalendarPage() {
           {events.map((event) => (
             <div
               key={event.id}
-              className="border border-white/[0.10] px-4 py-3 rounded-sm flex items-center gap-4 hover:border-white/[0.18] transition-colors"
+              className="border px-4 py-3 rounded-sm flex items-center gap-4 hover:border-white/[0.18] transition-colors"
+              style={{ borderColor: 'var(--color-border)' }}
             >
               {/* Business colour stripe */}
               <div
@@ -54,7 +55,7 @@ export default async function CalendarPage() {
               />
               <div className="min-w-0 flex-1">
                 <p className="text-sm text-white/90 truncate">{event.title}</p>
-                <p className="text-xs text-white/40 mt-0.5">
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
                   {new Date(event.start).toLocaleString('en-AU', {
                     dateStyle: 'short',
                     timeStyle: 'short',
@@ -62,10 +63,10 @@ export default async function CalendarPage() {
                 </p>
               </div>
               <div className="text-right flex-shrink-0">
-                <span className="text-[10px] uppercase tracking-wider text-white/30">
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
                   {event.businessKey}
                 </span>
-                <p className="text-[10px] text-white/20 mt-0.5">
+                <p className="text-[10px] mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
                   {event.email.split('@')[1]}
                 </p>
               </div>
@@ -74,7 +75,7 @@ export default async function CalendarPage() {
         </div>
       ) : (
         configured && connectedAccounts.length > 0 && (
-          <p className="text-sm text-white/30 text-center py-8">
+          <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
             No upcoming events across your connected calendars.
           </p>
         )

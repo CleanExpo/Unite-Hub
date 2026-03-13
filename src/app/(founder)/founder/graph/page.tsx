@@ -10,7 +10,7 @@ export default function GraphPage() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-xl font-light text-white/90">Knowledge Graph</h1>
-        <p className="text-sm text-white/40 mt-1">Obsidian vault · synced via Google Drive</p>
+        <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>Obsidian vault · synced via Google Drive</p>
       </div>
 
       {!configured ? (
@@ -21,7 +21,7 @@ export default function GraphPage() {
           icon="🔮"
         />
       ) : (
-        <div className="border border-white/[0.10] p-6 rounded-sm text-white/40 text-sm">
+        <div className="border p-6 rounded-sm text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
           Vault connected — graph rendering coming in Phase 5.
         </div>
       )}

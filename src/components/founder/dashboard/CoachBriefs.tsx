@@ -103,9 +103,9 @@ function CoachCard({
           <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>No report</span>
         )}
         {expanded ? (
-          <ChevronDown size={14} className="text-white/30" />
+          <ChevronDown size={14} style={{ color: 'var(--color-text-muted)' }} />
         ) : (
-          <ChevronRight size={14} className="text-white/30" />
+          <ChevronRight size={14} style={{ color: 'var(--color-text-muted)' }} />
         )}
       </button>
 

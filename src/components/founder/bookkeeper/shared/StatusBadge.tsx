@@ -9,7 +9,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; 
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  const config = STATUS_CONFIG[status] ?? { label: status, color: '#555', bg: 'rgba(85,85,85,0.08)', border: 'rgba(85,85,85,0.2)' }
+  const config = STATUS_CONFIG[status] ?? { label: status, color: '#888888', bg: 'rgba(136,136,136,0.08)', border: 'rgba(136,136,136,0.2)' }
   return (
     <span
       className="text-[10px] font-medium tracking-widest uppercase px-2 py-0.5 rounded-sm"

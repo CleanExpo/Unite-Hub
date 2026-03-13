@@ -73,21 +73,23 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="bg-[#0A0A0A] border border-white/[0.12] rounded-sm w-full max-w-lg p-6 space-y-4"
+        className="bg-[#0A0A0A] rounded-sm w-full max-w-lg p-6 space-y-4"
+        style={{ border: '1px solid var(--color-border-strong)' }}
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-light text-white/80">New Post</h2>
-          <button onClick={onClose} className="text-white/30 hover:text-white/60 text-lg">{'\u00D7'}</button>
+          <h2 className="text-sm font-light" style={{ color: 'var(--color-text-primary)' }}>New Post</h2>
+          <button onClick={onClose} className="hover:text-[#999999] text-lg" style={{ color: 'var(--color-text-muted)' }}>{'\u00D7'}</button>
         </div>
 
         {/* Business selector */}
         <div>
-          <label className="text-[10px] uppercase tracking-wider text-white/40 block mb-1">Business</label>
+          <label className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'var(--color-text-secondary)' }}>Business</label>
           <select
             value={businessKey}
             onChange={e => setBusinessKey(e.target.value)}
-            className="w-full bg-[#111] border border-white/10 rounded-sm px-3 py-2 text-sm text-white/80 focus:outline-none focus:border-[#00F5FF]/30"
+            className="w-full bg-[#111] rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#00F5FF]/30"
+            style={{ borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
           >
             {BUSINESSES.map(b => <option key={b.key} value={b.key}>{b.name}</option>)}
           </select>
@@ -95,23 +97,24 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
 
         {/* Content */}
         <div>
-          <label className="text-[10px] uppercase tracking-wider text-white/40 block mb-1">Content</label>
+          <label className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'var(--color-text-secondary)' }}>Content</label>
           <textarea
             value={content}
             onChange={e => setContent(e.target.value)}
             rows={4}
             placeholder="What do you want to share?"
-            className="w-full bg-[#111] border border-white/10 rounded-sm px-3 py-2 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-[#00F5FF]/30 resize-none"
+            className="w-full bg-[#111] rounded-sm px-3 py-2 text-sm placeholder:text-[#888888] focus:outline-none focus:border-[#00F5FF]/30 resize-none"
+            style={{ borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
           />
-          <p className="text-[10px] text-white/20 mt-1">{content.length} chars</p>
+          <p className="text-[10px] mt-1" style={{ color: 'var(--color-text-muted)' }}>{content.length} chars</p>
         </div>
 
         {/* Platform selector */}
         <div>
-          <label className="text-[10px] uppercase tracking-wider text-white/40 block mb-2">Platforms</label>
+          <label className="text-[10px] uppercase tracking-wider block mb-2" style={{ color: 'var(--color-text-secondary)' }}>Platforms</label>
           <div className="flex flex-wrap gap-2">
             {connectedPlatforms.length === 0 ? (
-              <p className="text-[11px] text-white/30">No platforms connected yet</p>
+              <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>No platforms connected yet</p>
             ) : connectedPlatforms.map(p => (
               <button
                 key={p}
@@ -119,8 +122,9 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
                 className={`px-3 py-1 text-[10px] rounded-sm border transition-colors ${
                   selectedPlatforms.includes(p)
                     ? 'border-[#00F5FF]/40 text-[#00F5FF] bg-[#00F5FF]/5'
-                    : 'border-white/10 text-white/40'
+                    : ''
                 }`}
+                style={selectedPlatforms.includes(p) ? undefined : { borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
               >
                 {PLATFORM_LABELS[p]}
               </button>
@@ -130,12 +134,13 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
 
         {/* Schedule */}
         <div>
-          <label className="text-[10px] uppercase tracking-wider text-white/40 block mb-1">Schedule (optional)</label>
+          <label className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'var(--color-text-secondary)' }}>Schedule (optional)</label>
           <input
             type="datetime-local"
             value={scheduledAt}
             onChange={e => setScheduledAt(e.target.value)}
-            className="bg-[#111] border border-white/10 rounded-sm px-3 py-2 text-sm text-white/80 focus:outline-none focus:border-[#00F5FF]/30"
+            className="bg-[#111] rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#00F5FF]/30"
+            style={{ borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
           />
         </div>
 
@@ -145,7 +150,8 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
           <button
             onClick={() => handleSubmit('draft')}
             disabled={saving}
-            className="px-4 py-2 text-[10px] uppercase tracking-wider text-white/50 border border-white/10 rounded-sm hover:border-white/20 transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-[10px] uppercase tracking-wider rounded-sm hover:border-[rgba(255,255,255,0.12)] transition-colors disabled:opacity-50"
+            style={{ color: 'var(--color-text-secondary)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)' }}
           >
             Save Draft
           </button>

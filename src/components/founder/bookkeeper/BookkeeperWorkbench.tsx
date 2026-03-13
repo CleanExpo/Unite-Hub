@@ -79,8 +79,9 @@ export function BookkeeperWorkbench() {
                   className={
                     isActive
                       ? ''
-                      : 'text-white/40 hover:text-white/60 transition-colors'
+                      : 'hover:text-white/60 transition-colors'
                   }
+                  style={isActive ? undefined : { color: 'var(--color-text-secondary)' }}
                 >
                   {tab.label}
                 </span>
