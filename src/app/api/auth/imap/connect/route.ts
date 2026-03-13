@@ -45,6 +45,7 @@ export async function POST(request: Request) {
     secure: true,
     auth: { user: email, pass: password },
     logger: false,
+    connectionTimeout: 10_000,
   })
 
   try {

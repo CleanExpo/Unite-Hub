@@ -44,6 +44,7 @@ async function fetchThreadsForImapAccount(
     secure: true,
     auth: { user: creds.username, pass: creds.password },
     logger: false,
+    connectionTimeout: 10_000,
   })
 
   try {
@@ -90,7 +91,7 @@ async function fetchThreadsForImapAccount(
       lock.release()
     }
 
-    await client.logout()
+    await client.logout().catch(() => {})
 
     // Return newest first (IMAP fetch is oldest-first by default)
     return threads.reverse()

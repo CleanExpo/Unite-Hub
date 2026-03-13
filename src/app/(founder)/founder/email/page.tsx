@@ -30,13 +30,11 @@ export default async function EmailPage({
   const imapAccounts = user ? await getConnectedImapAccounts(user.id) : []
   const imapConnectedEmails = new Set(imapAccounts.map((a) => a.email))
 
-  const gmailThreads = user && connectedAccounts.length > 0
-    ? await fetchGmailThreads(user.id)
-    : []
-
-  const imapThreads = user && imapAccounts.length > 0
-    ? await fetchImapThreads(user.id)
-    : []
+  // Fetch Gmail + IMAP threads in parallel to reduce page load latency
+  const [gmailThreads, imapThreads] = await Promise.all([
+    user && connectedAccounts.length > 0 ? fetchGmailThreads(user.id) : Promise.resolve([]),
+    user && imapAccounts.length > 0 ? fetchImapThreads(user.id) : Promise.resolve([]),
+  ])
 
   const threads = [...gmailThreads, ...imapThreads]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
