@@ -81,16 +81,17 @@ export function MFAGate({ businessKey, businessName, onCancel }: MFAGateProps) {
     setBusy(true)
     const supabase = getSupabase()
 
-    // Clean up any pending (unverified) factors from previous attempts
+    // Unenroll ALL existing TOTP factors before re-enrolling (handles stuck
+    // unverified factors and duplicate friendly name errors from Supabase)
     const { data: existing } = await supabase.auth.mfa.listFactors()
-    const pending = existing?.totp?.find(f => f.status !== 'verified')
-    if (pending) {
-      await supabase.auth.mfa.unenroll({ factorId: pending.id })
-    }
+    const allTotp = existing?.totp ?? []
+    await Promise.allSettled(
+      allTotp.map(f => supabase.auth.mfa.unenroll({ factorId: f.id }))
+    )
 
     const { data, error: err } = await supabase.auth.mfa.enroll({
       factorType: 'totp',
-      friendlyName: `Nexus Authenticator`,
+      friendlyName: 'Nexus Authenticator',
     })
 
     setBusy(false)
