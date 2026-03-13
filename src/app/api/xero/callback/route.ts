@@ -3,17 +3,20 @@
 
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
+import { getXeroCredentials } from '@/lib/integrations/xero'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const state = searchParams.get('state') // businessKey passed via OAuth state param
+  const businessKey = state ?? 'default'
 
   if (!code) {
     return NextResponse.redirect(new URL('/founder/xero?error=no_code', request.url))
   }
 
-  if (!process.env.XERO_CLIENT_ID || !process.env.XERO_CLIENT_SECRET) {
+  const { clientId, clientSecret } = getXeroCredentials(businessKey)
+  if (!clientId || !clientSecret) {
     return NextResponse.redirect(new URL('/founder/xero?error=not_configured', request.url))
   }
 
@@ -23,11 +26,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Exchange auth code for tokens
+    // Exchange auth code for tokens — credentials routed by business account group
     const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/xero/callback`
-    const credentials = Buffer.from(
-      `${process.env.XERO_CLIENT_ID}:${process.env.XERO_CLIENT_SECRET}`
-    ).toString('base64')
+    const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
 
     const tokenRes = await fetch('https://identity.xero.com/connect/token', {
       method: 'POST',
@@ -85,7 +86,6 @@ export async function GET(request: Request) {
     const { createServiceClient } = await import('@/lib/supabase/service')
 
     const payload = encrypt(JSON.stringify(storedTokens))
-    const businessKey = state ?? 'default'
 
     const supabase = createServiceClient()
     const { error: upsertError } = await supabase.from('credentials_vault').upsert(

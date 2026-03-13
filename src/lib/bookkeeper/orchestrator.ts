@@ -154,7 +154,7 @@ export async function processOneBusiness(
   }
 
   // Step 2: Validate/refresh token — persist if refreshed
-  const validTokens = await getValidXeroToken(storedTokens)
+  const validTokens = await getValidXeroToken(storedTokens, businessKey)
   if (validTokens.access_token !== storedTokens.access_token) {
     await saveXeroTokens(founderId, businessKey, validTokens)
   }

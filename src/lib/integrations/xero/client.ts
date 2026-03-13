@@ -24,10 +24,34 @@ const XERO_IDENTITY_URL = 'https://identity.xero.com/connect/token'
 /** Rate-limit delay between consecutive Xero API calls (ms) */
 const RATE_LIMIT_DELAY_MS = 1_000
 
+// ── Multi-account credential routing ────────────────────────────────────────
+// DR Xero Account:   businesses dr, nrpg, dr_qld → DR_XERO_CLIENT_ID/SECRET
+// CARSI Xero Account: all other businesses       → XERO_CLIENT_ID/SECRET
+
+const DR_BUSINESS_KEYS = new Set(['dr', 'nrpg', 'dr_qld'])
+
+export function getXeroCredentials(businessKey: string): {
+  clientId: string
+  clientSecret: string
+} {
+  if (DR_BUSINESS_KEYS.has(businessKey)) {
+    return {
+      clientId: process.env.DR_XERO_CLIENT_ID ?? '',
+      clientSecret: process.env.DR_XERO_CLIENT_SECRET ?? '',
+    }
+  }
+  return {
+    clientId: process.env.XERO_CLIENT_ID ?? '',
+    clientSecret: process.env.XERO_CLIENT_SECRET ?? '',
+  }
+}
+
 // ── Configuration check ─────────────────────────────────────────────────────
 
 export function isXeroConfigured(): boolean {
-  return Boolean(process.env.XERO_CLIENT_ID && process.env.XERO_CLIENT_SECRET)
+  const drOk = Boolean(process.env.DR_XERO_CLIENT_ID && process.env.DR_XERO_CLIENT_SECRET)
+  const carsiOk = Boolean(process.env.XERO_CLIENT_ID && process.env.XERO_CLIENT_SECRET)
+  return drOk || carsiOk
 }
 
 // ── Mock data (dev / pre-connect fallback) ──────────────────────────────────
@@ -57,10 +81,12 @@ function delay(ms: number): Promise<void> {
 
 // ── Token management ────────────────────────────────────────────────────────
 
-export async function refreshXeroToken(tokens: StoredXeroTokens): Promise<StoredXeroTokens> {
-  const credentials = Buffer.from(
-    `${process.env.XERO_CLIENT_ID}:${process.env.XERO_CLIENT_SECRET}`
-  ).toString('base64')
+export async function refreshXeroToken(
+  tokens: StoredXeroTokens,
+  businessKey: string
+): Promise<StoredXeroTokens> {
+  const { clientId, clientSecret } = getXeroCredentials(businessKey)
+  const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
 
   const res = await fetch(XERO_IDENTITY_URL, {
     method: 'POST',
@@ -90,10 +116,13 @@ export async function refreshXeroToken(tokens: StoredXeroTokens): Promise<Stored
   }
 }
 
-export async function getValidXeroToken(tokens: StoredXeroTokens): Promise<StoredXeroTokens> {
+export async function getValidXeroToken(
+  tokens: StoredXeroTokens,
+  businessKey: string
+): Promise<StoredXeroTokens> {
   // Refresh if token expires within 60 seconds
   if (tokens.expires_at > Date.now() + 60_000) return tokens
-  return refreshXeroToken(tokens)
+  return refreshXeroToken(tokens, businessKey)
 }
 
 // ── Vault-backed token loader ───────────────────────────────────────────────
@@ -329,7 +358,7 @@ async function getTokensForBusiness(
   if (!storedTokens) {
     throw new Error(`No Xero tokens found for business "${businessKey}"`)
   }
-  const validTokens = await getValidXeroToken(storedTokens)
+  const validTokens = await getValidXeroToken(storedTokens, businessKey)
 
   // Persist refreshed tokens to vault if they changed (Xero uses rotating refresh tokens)
   if (validTokens.access_token !== storedTokens.access_token) {

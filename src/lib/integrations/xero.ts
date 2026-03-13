@@ -20,6 +20,7 @@ export type {
 
 export {
   isXeroConfigured,
+  getXeroCredentials,
   getMockRevenueMTD,
   refreshXeroToken,
   getValidXeroToken,
