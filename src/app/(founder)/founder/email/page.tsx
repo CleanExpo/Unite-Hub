@@ -7,6 +7,8 @@ import {
   getConnectedGoogleAccounts,
   type GmailThread,
 } from '@/lib/integrations/google'
+import { getConnectedImapAccounts, fetchImapThreads } from '@/lib/integrations/imap'
+import { ImapConnectForm } from '@/components/founder/email/ImapConnectForm'
 import { EMAIL_ACCOUNTS } from '@/lib/email-accounts'
 import { BUSINESSES } from '@/lib/businesses'
 
@@ -25,9 +27,19 @@ export default async function EmailPage({
   const connectedAccounts = user ? await getConnectedGoogleAccounts(user.id) : []
   const connectedEmails = new Set(connectedAccounts.map((a) => a.email))
 
-  const threads = user && connectedAccounts.length > 0
+  const imapAccounts = user ? await getConnectedImapAccounts(user.id) : []
+  const imapConnectedEmails = new Set(imapAccounts.map((a) => a.email))
+
+  const gmailThreads = user && connectedAccounts.length > 0
     ? await fetchGmailThreads(user.id)
     : []
+
+  const imapThreads = user && imapAccounts.length > 0
+    ? await fetchImapThreads(user.id)
+    : []
+
+  const threads = [...gmailThreads, ...imapThreads]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   // Group threads by businessKey, then sort groups by BUSINESSES config order
   const grouped = new Map<string, GmailThread[]>()
@@ -97,10 +109,16 @@ export default async function EmailPage({
                   >
                     Connect →
                   </a>
-                ) : account.provider !== 'google' ? (
+                ) : account.provider === 'microsoft' ? (
                   <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
-                    {account.provider === 'microsoft' ? 'Microsoft · TBD' : 'IMAP · TBD'}
+                    Microsoft · TBD
                   </span>
+                ) : account.provider === 'siteground' && imapConnectedEmails.has(account.email) ? (
+                  <span className="text-[10px] uppercase tracking-wider text-[#00F5FF] flex-shrink-0">
+                    Connected
+                  </span>
+                ) : account.provider === 'siteground' ? (
+                  <ImapConnectForm email={account.email} label={account.label} />
                 ) : (
                   <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
                     Not available
@@ -172,7 +190,7 @@ export default async function EmailPage({
         </div>
       )}
 
-      {connectedAccounts.length === 0 && configured && (
+      {connectedAccounts.length === 0 && imapAccounts.length === 0 && configured && (
         <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
           Connect an account above to see your threads here.
         </p>
