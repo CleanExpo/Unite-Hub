@@ -100,7 +100,7 @@ function CoachCard({
         {report ? (
           <StatusBadge status={report.status} />
         ) : (
-          <span className="text-xs text-white/30">No report</span>
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>No report</span>
         )}
         {expanded ? (
           <ChevronDown size={14} className="text-white/30" />
@@ -123,7 +123,7 @@ function CoachCard({
               Coach is generating today&apos;s brief...
             </p>
           ) : (
-            <p className="mt-3 text-sm text-white/30">
+            <p className="mt-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>
               No brief available yet. The {config.name.toLowerCase()} runs daily at its scheduled time.
             </p>
           )}
@@ -223,7 +223,7 @@ export function CoachBriefs() {
         Daily Coaches
       </h2>
       {loading ? (
-        <div className="flex items-center gap-2 text-sm text-white/30 py-4">
+        <div className="flex items-center gap-2 text-sm py-4" style={{ color: 'var(--color-text-muted)' }}>
           <Loader2 size={14} className="animate-spin" />
           Loading coach briefs...
         </div>

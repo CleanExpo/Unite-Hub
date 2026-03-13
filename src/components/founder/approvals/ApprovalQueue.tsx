@@ -30,8 +30,8 @@ export function ApprovalQueue() {
     <div>
       {queue.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
-          <span className="text-[24px] text-[#333]">&#x2713;</span>
-          <p className="text-[13px] text-[#555]">All caught up</p>
+          <span className="text-[24px]" style={{ color: 'var(--color-text-muted)' }}>&#x2713;</span>
+          <p className="text-[13px]" style={{ color: 'var(--color-text-muted)' }}>All caught up</p>
         </div>
       ) : (
         <div className="rounded-sm border overflow-hidden" style={{ borderColor: 'var(--color-border)' }}>
@@ -53,7 +53,7 @@ export function ApprovalQueue() {
 
       {approvedCount > 0 && (
         <div className="mt-6 opacity-50">
-          <p className="text-[10px] font-medium tracking-widest text-[#444] uppercase mb-2">
+          <p className="text-[10px] font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--color-text-muted)' }}>
             Approved ({approvedCount})
           </p>
         </div>

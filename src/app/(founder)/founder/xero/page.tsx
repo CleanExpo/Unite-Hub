@@ -39,8 +39,8 @@ export default async function XeroPage({
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-xl font-light text-white/90">Xero</h1>
-        <p className="text-sm text-white/40 mt-1">
+        <h1 className="text-xl font-light" style={{ color: 'var(--color-text-primary)' }}>Xero</h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>
           Financial data · Bank feeds · P&amp;L · BAS · GST
         </p>
       </div>
@@ -73,6 +73,7 @@ export default async function XeroPage({
               <div
                 key={biz.key}
                 className="flex items-center justify-between border border-white/[0.08] px-5 py-4 rounded-sm"
+                style={{ background: 'var(--surface-card)' }}
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -80,20 +81,23 @@ export default async function XeroPage({
                     style={{ backgroundColor: biz.color }}
                   />
                   <div>
-                    <p className="text-sm text-white/80 font-light">{biz.name}</p>
-                    <p className="text-xs text-white/30 mt-0.5">
+                    <p className="text-sm font-light" style={{ color: 'var(--color-text-primary)' }}>
+                      {biz.name}
+                    </p>
+                    <p className="text-xs mt-0.5" style={{ color: isConnected ? '#00F5FF' : 'var(--color-text-muted)' }}>
                       {isConnected ? 'Connected · bank feeds active' : 'Not connected'}
                     </p>
                   </div>
                 </div>
                 {isConnected ? (
-                  <span className="text-[10px] uppercase tracking-widest text-[#00F5FF]/60 border border-[#00F5FF]/20 px-2.5 py-1 rounded-sm">
+                  <span className="text-[10px] uppercase tracking-widest text-[#00F5FF]/80 border border-[#00F5FF]/30 px-2.5 py-1 rounded-sm">
                     Live
                   </span>
                 ) : (
                   <a
                     href={`/api/xero/connect?business=${biz.key}`}
-                    className="text-[10px] uppercase tracking-widest text-white/50 border border-white/10 px-2.5 py-1 rounded-sm hover:text-[#00F5FF]/80 hover:border-[#00F5FF]/30 transition-colors"
+                    className="text-[10px] uppercase tracking-widest border px-2.5 py-1 rounded-sm transition-colors"
+                    style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border-strong)' }}
                   >
                     Connect →
                   </a>

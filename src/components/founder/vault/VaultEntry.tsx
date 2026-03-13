@@ -48,15 +48,16 @@ export function VaultEntry({ id, label, username, secret, businessColor, onDelet
       style={{ borderColor: 'var(--color-border)' }}
     >
       <span className="shrink-0 rounded-full" style={{ width: 6, height: 6, background: businessColor }} />
-      <span className="text-[13px] text-[#ccc] w-40 truncate">{label}</span>
-      <span className="text-[12px] text-[#555] w-32 truncate">{username}</span>
-      <span className="flex-1 font-mono text-[12px] text-[#777]">
+      <span className="text-[13px] w-40 truncate" style={{ color: 'var(--color-text-secondary)' }}>{label}</span>
+      <span className="text-[12px] w-32 truncate" style={{ color: 'var(--color-text-muted)' }}>{username}</span>
+      <span className="flex-1 font-mono text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
         {revealed ? secret : '··········'}
       </span>
       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={() => setRevealed(!revealed)}
-          className="text-[#555] hover:text-[#888] transition-colors"
+          className="transition-colors hover:opacity-100"
+          style={{ color: 'var(--color-text-muted)' }}
           aria-label={revealed ? 'Hide' : 'Show'}
         >
           {revealed ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -64,7 +65,7 @@ export function VaultEntry({ id, label, username, secret, businessColor, onDelet
         <button
           onClick={handleCopy}
           className="transition-colors"
-          style={{ color: copied ? '#00F5FF' : '#555555' }}
+          style={{ color: copied ? '#00F5FF' : 'var(--color-text-muted)' }}
           aria-label="Copy"
         >
           <Copy size={14} />
@@ -73,7 +74,7 @@ export function VaultEntry({ id, label, username, secret, businessColor, onDelet
           onClick={handleDelete}
           disabled={deleting}
           className="transition-colors hover:text-red-400 disabled:opacity-40"
-          style={{ color: '#555' }}
+          style={{ color: 'var(--color-text-muted)' }}
           aria-label="Delete"
         >
           <Trash2 size={14} />

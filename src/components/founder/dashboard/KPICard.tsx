@@ -104,12 +104,12 @@ export function KPICard({
           className="rounded-full shrink-0"
           style={{ width: 8, height: 8, background: business.color }}
         />
-        <span className="text-[13px] font-medium text-[#ccc]">{business.name}</span>
+        <span className="text-[13px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>{business.name}</span>
         {/* Live / Demo badge */}
         {isLive && (
           <span className="ml-auto flex items-center gap-1">
             {live.loading ? (
-              <span className="text-[10px] text-[#555]">—</span>
+              <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>—</span>
             ) : live.source === 'xero' ? (
               <>
                 <span
@@ -131,7 +131,7 @@ export function KPICard({
                   className="rounded-full shrink-0"
                   style={{ width: 6, height: 6, background: '#555' }}
                 />
-                <span className="text-[10px] font-medium tracking-widest uppercase text-[#555]">
+                <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'var(--color-text-disabled)' }}>
                   Demo
                 </span>
               </>
@@ -144,12 +144,12 @@ export function KPICard({
       <div>
         <div className="text-[30px] font-semibold text-[#f0f0f0] leading-none tracking-tight">
           {live.loading ? (
-            <span className="text-[#555]">—</span>
+            <span style={{ color: 'var(--color-text-muted)' }}>—</span>
           ) : (
             displayMetric
           )}
         </div>
-        <div className="mt-1 text-[11px] text-[#555]">{metricLabel}</div>
+        <div className="mt-1 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{metricLabel}</div>
       </div>
 
       {/* Trend */}
@@ -164,7 +164,7 @@ export function KPICard({
 
       {/* Divider + secondary */}
       <div className="border-t pt-3" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-        <span className="text-[11px] text-[#555]">{displaySecondary}</span>
+        <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{displaySecondary}</span>
       </div>
 
     </motion.div>

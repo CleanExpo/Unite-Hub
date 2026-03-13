@@ -296,10 +296,13 @@
 /* Novel block editor */
 .novel-editor .ProseMirror {
   outline: none;
+  background: transparent;           /* prevent package CSS injecting light bg */
   font-family: var(--font-geist-sans, system-ui, sans-serif);
   color: var(--color-text-secondary);
   font-size: 15px;
   line-height: 1.7;
+  min-height: calc(100vh - 112px);
+  padding: 48px 64px;
 }
 .novel-editor .ProseMirror h1 {
   font-size: 30px;

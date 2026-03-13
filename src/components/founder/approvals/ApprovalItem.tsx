@@ -48,9 +48,9 @@ export function ApprovalItem({
         style={{ width: 6, height: 6, background: businessColor }}
       />
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-medium text-[#e0e0e0]">{action}</p>
-        <p className="text-[12px] text-[#555] mt-0.5">{detail}</p>
-        <p className="text-[11px] text-[#444] mt-1">Requested by {requestedBy} · {requestedAt}</p>
+        <p className="text-[13px] font-medium" style={{ color: 'var(--color-text-primary)' }}>{action}</p>
+        <p className="text-[12px] mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>{detail}</p>
+        <p className="text-[11px] mt-1" style={{ color: 'var(--color-text-muted)' }}>Requested by {requestedBy} · {requestedAt}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button

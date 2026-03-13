@@ -2,6 +2,7 @@
 // Server Component — reads env vars directly, never exposes keys to client
 // Renders a compact status strip showing which integrations are configured
 
+import Link from 'next/link'
 import { isXeroConfigured } from '@/lib/integrations/xero/client'
 import { isGoogleConfigured } from '@/lib/integrations/google'
 
@@ -9,23 +10,36 @@ interface IntegrationDot {
   label: string
   connected: boolean
   detail: string
+  href?: string
 }
 
-function StatusDot({ connected, label, detail }: IntegrationDot) {
-  return (
+function StatusDot({ connected, label, detail, href }: IntegrationDot) {
+  const inner = (
     <div className="flex items-center gap-2">
       <span
         className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-        style={{ background: connected ? '#00F5FF' : '#334155' }}
+        style={{ background: connected ? '#00F5FF' : '#4a5568' }}
       />
       <span className="text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
         {label}
       </span>
-      <span className="text-[11px]" style={{ color: connected ? '#00F5FF' : '#475569' }}>
+      <span
+        className="text-[11px]"
+        style={{ color: connected ? '#00F5FF' : 'var(--color-text-muted)' }}
+      >
         {detail}
       </span>
     </div>
   )
+
+  if (href) {
+    return (
+      <Link href={href} className="hover:opacity-80 transition-opacity">
+        {inner}
+      </Link>
+    )
+  }
+  return inner
 }
 
 export function IntegrationStatus() {
@@ -56,6 +70,7 @@ export function IntegrationStatus() {
         label="Xero"
         connected={xeroConnected}
         detail={xeroConnected ? 'Connected' : 'Not configured'}
+        href="/founder/xero"
       />
       <StatusDot
         label="Gmail"
