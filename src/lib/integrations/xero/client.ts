@@ -25,8 +25,8 @@ const XERO_IDENTITY_URL = 'https://identity.xero.com/connect/token'
 const RATE_LIMIT_DELAY_MS = 1_000
 
 // ── Multi-account credential routing ────────────────────────────────────────
-// DR Xero Account:   businesses dr, nrpg, dr_qld → DR_XERO_CLIENT_ID/SECRET
-// CARSI Xero Account: all other businesses       → XERO_CLIENT_ID/SECRET
+// DR Xero Account:   businesses dr, nrpg, dr_qld → DR_CLIENT_ID / DR_Client_Secret
+// CARSI Xero Account: all other businesses       → XERO_CLIENT_ID / XERO_CLIENT_SECRET
 
 const DR_BUSINESS_KEYS = new Set(['dr', 'nrpg', 'dr_qld'])
 
@@ -36,8 +36,8 @@ export function getXeroCredentials(businessKey: string): {
 } {
   if (DR_BUSINESS_KEYS.has(businessKey)) {
     return {
-      clientId: process.env.DR_XERO_CLIENT_ID ?? '',
-      clientSecret: process.env.DR_XERO_CLIENT_SECRET ?? '',
+      clientId: process.env.DR_CLIENT_ID ?? '',
+      clientSecret: process.env.DR_Client_Secret ?? '',
     }
   }
   return {
@@ -49,7 +49,7 @@ export function getXeroCredentials(businessKey: string): {
 // ── Configuration check ─────────────────────────────────────────────────────
 
 export function isXeroConfigured(): boolean {
-  const drOk = Boolean(process.env.DR_XERO_CLIENT_ID && process.env.DR_XERO_CLIENT_SECRET)
+  const drOk = Boolean(process.env.DR_CLIENT_ID && process.env.DR_Client_Secret)
   const carsiOk = Boolean(process.env.XERO_CLIENT_ID && process.env.XERO_CLIENT_SECRET)
   return drOk || carsiOk
 }

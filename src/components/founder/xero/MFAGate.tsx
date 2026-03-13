@@ -4,7 +4,7 @@
 // Supports TOTP (authenticator app) and email OTP.
 // On success navigates to /api/xero/connect?business=<key>.
 
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 
 type Step =
@@ -190,7 +190,15 @@ export function MFAGate({ businessKey, businessName, onCancel }: MFAGateProps) {
   // ── Shared styles ─────────────────────────────────────────────────────────
 
   const inputCls =
-    'w-full bg-white/[0.05] border border-white/[0.12] px-3 py-2.5 text-sm text-white/90 outline-none focus:border-[#00F5FF]/40 rounded-sm tracking-[0.25em] font-mono text-center'
+    'w-full bg-[#0d0d0d] border border-white/[0.12] px-3 py-2.5 text-sm outline-none focus:border-[#00F5FF]/40 rounded-sm tracking-[0.25em] font-mono text-center'
+
+  // Explicit inline styles defeat browser autofill overrides (white-on-white bug)
+  const inputStyle: React.CSSProperties = {
+    color: 'rgba(255,255,255,0.9)',
+    WebkitTextFillColor: 'rgba(255,255,255,0.9)',
+    caretColor: '#00F5FF',
+    WebkitBoxShadow: '0 0 0 1000px #0d0d0d inset',
+  }
   const btnCyan =
     'w-full py-2.5 bg-[#00F5FF]/10 border border-[#00F5FF]/30 text-[#00F5FF] text-[11px] uppercase tracking-[0.2em] hover:bg-[#00F5FF]/20 disabled:opacity-40 rounded-sm transition-colors'
   const btnGhost =
@@ -287,6 +295,8 @@ export function MFAGate({ businessKey, businessName, onCancel }: MFAGateProps) {
               value={code}
               onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
               className={inputCls}
+              style={inputStyle}
+              autoComplete="one-time-code"
               autoFocus
             />
             <button
@@ -312,6 +322,8 @@ export function MFAGate({ businessKey, businessName, onCancel }: MFAGateProps) {
               value={code}
               onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
               className={inputCls}
+              style={inputStyle}
+              autoComplete="one-time-code"
               autoFocus
             />
             <button
@@ -346,6 +358,8 @@ export function MFAGate({ businessKey, businessName, onCancel }: MFAGateProps) {
               value={code}
               onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
               className={inputCls}
+              style={inputStyle}
+              autoComplete="one-time-code"
               autoFocus
             />
             <button
