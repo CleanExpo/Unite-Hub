@@ -51,6 +51,8 @@ export async function GET(request: Request) {
   })
 
   if (!tokenRes.ok) {
+    const errBody = await tokenRes.text()
+    console.error('[Google OAuth] Token exchange failed:', tokenRes.status, errBody)
     return NextResponse.redirect(`${APP_URL}/founder/email?error=token_exchange_failed`)
   }
 

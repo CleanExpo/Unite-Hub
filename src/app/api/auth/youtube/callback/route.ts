@@ -6,7 +6,7 @@ import { upsertChannel } from '@/lib/integrations/social/channels'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
-  const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL!.trim()
   const user = await getUser()
   if (!user) return NextResponse.redirect(`${APP_URL}/auth/login`)
 
@@ -31,14 +31,18 @@ export async function GET(request: Request) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       code,
-      client_id: process.env.GOOGLE_CLIENT_ID!,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+      client_id: process.env.GOOGLE_CLIENT_ID!.trim(),
+      client_secret: process.env.GOOGLE_CLIENT_SECRET!.trim(),
       redirect_uri: `${APP_URL}/api/auth/youtube/callback`,
       grant_type: 'authorization_code',
     }),
   })
 
-  if (!tokenRes.ok) return NextResponse.redirect(`${APP_URL}/founder/social?error=token_exchange_failed`)
+  if (!tokenRes.ok) {
+    const errBody = await tokenRes.text()
+    console.error('[YouTube OAuth] Token exchange failed:', tokenRes.status, errBody)
+    return NextResponse.redirect(`${APP_URL}/founder/social?error=token_exchange_failed`)
+  }
   const tokens = await tokenRes.json() as {
     access_token: string
     refresh_token?: string

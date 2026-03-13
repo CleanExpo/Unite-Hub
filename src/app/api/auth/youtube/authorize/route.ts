@@ -19,11 +19,11 @@ export async function GET(request: Request) {
   const businessKey = searchParams.get('business')
   if (!businessKey) return NextResponse.json({ error: 'business param required' }, { status: 400 })
 
-  const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL!.trim()
   const state = Buffer.from(JSON.stringify({ businessKey })).toString('base64url')
 
   const params = new URLSearchParams({
-    client_id: process.env.GOOGLE_CLIENT_ID!,
+    client_id: process.env.GOOGLE_CLIENT_ID!.trim(),
     redirect_uri: `${APP_URL}/api/auth/youtube/callback`,
     response_type: 'code',
     scope: SCOPES,

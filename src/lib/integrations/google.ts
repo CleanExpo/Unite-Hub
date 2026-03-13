@@ -9,7 +9,7 @@ import { getCached, setCache, invalidateCache } from '@/lib/cache'
 const GOOGLE_CACHE_TTL_MS = 5 * 60 * 1_000
 
 export function isGoogleConfigured(): boolean {
-  return Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
+  return Boolean(process.env.GOOGLE_CLIENT_ID?.trim() && process.env.GOOGLE_CLIENT_SECRET?.trim())
 }
 
 export interface GmailThread {
@@ -49,14 +49,18 @@ async function refreshAccessToken(tokens: StoredTokens): Promise<string> {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
-      client_id: process.env.GOOGLE_CLIENT_ID!,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+      client_id: process.env.GOOGLE_CLIENT_ID!.trim(),
+      client_secret: process.env.GOOGLE_CLIENT_SECRET!.trim(),
       refresh_token: tokens.refresh_token,
       grant_type: 'refresh_token',
     }),
   })
 
-  if (!res.ok) throw new Error('Token refresh failed')
+  if (!res.ok) {
+    const errBody = await res.text()
+    console.error('[Google] Token refresh failed:', res.status, errBody)
+    throw new Error(`Token refresh failed: ${res.status}`)
+  }
   const refreshed = await res.json() as { access_token: string }
   return refreshed.access_token
 }
@@ -229,7 +233,8 @@ export async function fetchGmailThreads(founderId: string): Promise<GmailThread[
         const email = row.notes ?? ''
         const businessKey = (row.metadata as { businessKey?: string })?.businessKey ?? 'personal'
         return fetchThreadsForAccount(accessToken, email, businessKey)
-      } catch {
+      } catch (err) {
+        console.error('[Google] Gmail fetch failed for', row.notes, err)
         return []
       }
     })
@@ -269,7 +274,8 @@ export async function fetchCalendarEvents(founderId: string): Promise<CalendarEv
         const email = row.notes ?? ''
         const businessKey = (row.metadata as { businessKey?: string })?.businessKey ?? 'personal'
         return fetchEventsForAccount(accessToken, email, businessKey)
-      } catch {
+      } catch (err) {
+        console.error('[Google] Calendar fetch failed for', row.notes, err)
         return []
       }
     })
