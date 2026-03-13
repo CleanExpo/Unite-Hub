@@ -152,6 +152,7 @@
     "google-auth-library": "^10.5.0",
     "googleapis": "^166.0.0",
     "gray-matter": "^4.0.3",
+    "imapflow": "^1.2.13",
     "inquirer": "^13.2.0",
     "ioredis": "^5.8.2",
     "jsonwebtoken": "^9.0.2",
