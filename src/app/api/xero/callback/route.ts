@@ -27,7 +27,8 @@ export async function GET(request: Request) {
 
   try {
     // Exchange auth code for tokens — credentials routed by business account group
-    const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/xero/callback`
+    // .trim() guards against accidental trailing newlines in the env var
+    const redirectUri = `${(process.env.NEXT_PUBLIC_APP_URL ?? '').trim()}/api/xero/callback`
     const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
 
     const tokenRes = await fetch('https://identity.xero.com/connect/token', {
