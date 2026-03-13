@@ -51,7 +51,16 @@ export async function GET(request: Request) {
     state: businessKey,
   })
 
-  return NextResponse.redirect(
-    `https://login.xero.com/identity/connect/authorize?${params.toString()}`
-  )
+  const authUrl = `https://login.xero.com/identity/connect/authorize?${params.toString()}`
+
+  // Temporary debug — logs the exact redirect URI and auth URL so we can verify
+  // against Xero's registered URIs. Remove after confirming connection works.
+  console.log('[xero/connect] debug', JSON.stringify({
+    clientId,
+    redirectUri,
+    authUrl,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+  }))
+
+  return NextResponse.redirect(authUrl)
 }
