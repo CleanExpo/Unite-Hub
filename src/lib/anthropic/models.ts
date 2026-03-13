@@ -14,20 +14,20 @@ export const ANTHROPIC_MODELS = {
   
   // Claude Opus 4 — Deep thinking, complex reasoning, strategic analysis
   // Use for: Extended thinking, business strategy, complex code generation
-  OPUS: 'claude-opus-4-6-20250514',
-  OPUS_4: 'claude-opus-4-6-20250514',
-  
+  OPUS: 'claude-opus-4-5-20251101',
+  OPUS_4: 'claude-opus-4-5-20251101',
+
   // Claude Sonnet 4 — Balanced capability and speed
   // Use for: Content generation, chat, analysis, most AI features
-  SONNET: 'claude-sonnet-4-5-20250514',
-  SONNET_4: 'claude-sonnet-4-5-20250514',
-  
+  SONNET: 'claude-sonnet-4-5-20250929',
+  SONNET_4: 'claude-sonnet-4-5-20250929',
+
   // Claude Haiku 4 — Fast, cost-effective
   // Use for: Autocomplete, quick suggestions, classification, summarization
-  HAIKU: 'claude-haiku-4-5-20250514',
-  HAIKU_4: 'claude-haiku-4-5-20250514',
+  HAIKU: 'claude-haiku-4-5-20251001',
+  HAIKU_4: 'claude-haiku-4-5-20251001',
 
-  // ─── PREVIOUS GENERATION (kept for backwards compatibility) ────────
+  // ─── FULL MODEL IDs (for precise pinning) ──────────────────────────
   OPUS_4_5: 'claude-opus-4-5-20251101',
   SONNET_4_5: 'claude-sonnet-4-5-20250929',
   SONNET_3_5_V2: 'claude-3-5-sonnet-20241022',
@@ -78,9 +78,7 @@ export type AnthropicModelName = typeof ANTHROPIC_MODELS[keyof typeof ANTHROPIC_
  */
 export const MODEL_PRICING = {
   [ANTHROPIC_MODELS.OPUS_4_5]: { input: 15, output: 75, thinking: 7.5 },
-  [ANTHROPIC_MODELS.OPUS_4]: { input: 15, output: 75, thinking: 7.5 },
   [ANTHROPIC_MODELS.SONNET_4_5]: { input: 3, output: 15 },
-  [ANTHROPIC_MODELS.SONNET_4]: { input: 3, output: 15 },
   [ANTHROPIC_MODELS.SONNET_3_5_V2]: { input: 3, output: 15 },
   [ANTHROPIC_MODELS.SONNET_3_5_V1]: { input: 3, output: 15 },
   [ANTHROPIC_MODELS.HAIKU_4_5]: { input: 0.80, output: 4 },
@@ -100,21 +98,7 @@ export const MODEL_CAPABILITIES = {
     maxTokens: 200000,
     outputTokens: 16384,
   },
-  [ANTHROPIC_MODELS.OPUS_4]: {
-    extendedThinking: true,
-    promptCaching: true,
-    vision: true,
-    maxTokens: 200000,
-    outputTokens: 16384,
-  },
   [ANTHROPIC_MODELS.SONNET_4_5]: {
-    extendedThinking: false,
-    promptCaching: true,
-    vision: true,
-    maxTokens: 200000,
-    outputTokens: 16384,
-  },
-  [ANTHROPIC_MODELS.SONNET_4]: {
     extendedThinking: false,
     promptCaching: true,
     vision: true,
