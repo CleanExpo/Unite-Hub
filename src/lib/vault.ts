@@ -4,28 +4,28 @@
 
 import { randomBytes, createCipheriv, createDecipheriv, pbkdf2Sync } from 'crypto'
 
-const VAULT_KEY = process.env.VAULT_ENCRYPTION_KEY
-
-if (!VAULT_KEY) {
-  // In production: fatal — credentials would be unencrypted or use a known key.
-  // In development: warn loudly so devs know to set the env var.
-  if (process.env.NODE_ENV === 'production') {
+// Lazy-evaluated: checked at operation time, not at module load.
+// This allows the build to succeed in CI without vault secrets while
+// still guaranteeing no vault operation proceeds without the key.
+function getVaultKey(): string {
+  const key = process.env.VAULT_ENCRYPTION_KEY
+  if (!key) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'VAULT_ENCRYPTION_KEY is required in production. ' +
+        'Generate one with: openssl rand -hex 32'
+      )
+    }
     throw new Error(
-      'VAULT_ENCRYPTION_KEY is required in production. ' +
-      'Generate one with: openssl rand -hex 32'
+      'VAULT_ENCRYPTION_KEY not set — add it to .env.local ' +
+      '(generate with: openssl rand -hex 32)'
     )
   }
-  console.warn(
-    '⚠️  VAULT_ENCRYPTION_KEY not set — vault operations will fail. ' +
-    'Add it to .env.local (generate with: openssl rand -hex 32)'
-  )
+  return key
 }
 
 function deriveKey(salt: Buffer): Buffer {
-  if (!VAULT_KEY) {
-    throw new Error('VAULT_ENCRYPTION_KEY is not configured — cannot perform vault operations')
-  }
-  return pbkdf2Sync(VAULT_KEY, salt, 100_000, 32, 'sha256')
+  return pbkdf2Sync(getVaultKey(), salt, 100_000, 32, 'sha256')
 }
 
 export interface VaultPayload {
