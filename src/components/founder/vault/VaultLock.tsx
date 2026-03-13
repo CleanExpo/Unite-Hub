@@ -59,7 +59,7 @@ export function VaultLock({ onUnlock }: VaultLockProps) {
             ? <Lock size={32} strokeWidth={1.5} style={{ color: '#00F5FF' }} />
             : <KeyRound size={32} strokeWidth={1.5} style={{ color: '#00F5FF' }} />
           }
-          <p className="text-[14px] text-[#888] text-center">
+          <p className="text-[14px] text-center" style={{ color: 'var(--color-text-secondary)' }}>
             {mode === 'unlock'
               ? 'Enter your master password to access the Vault'
               : 'Set a new master password for the Vault'

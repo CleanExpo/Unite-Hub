@@ -4,6 +4,10 @@
 const LINEAR_API = 'https://api.linear.app/graphql'
 const API_KEY = process.env.LINEAR_API_KEY ?? ''
 
+function isLinearConfigured(): boolean {
+  return API_KEY.length > 0
+}
+
 async function gql<T>(query: string, variables?: Record<string, unknown>): Promise<T> {
   const res = await fetch(LINEAR_API, {
     method: 'POST',
@@ -81,6 +85,10 @@ export function teamKeyToBusiness(teamKey: string): string {
 // ─── Queries ─────────────────────────────────────────────────────────────────
 
 export async function fetchIssues(): Promise<LinearIssue[]> {
+  if (!isLinearConfigured()) {
+    console.warn('LINEAR_API_KEY is not configured — returning empty issues')
+    return []
+  }
   const data = await gql<{ issues: { nodes: LinearIssue[] } }>(`{
     issues(
       first: 100
@@ -101,6 +109,10 @@ export async function fetchIssues(): Promise<LinearIssue[]> {
 }
 
 export async function fetchTeamStates(): Promise<LinearTeamStates[]> {
+  if (!isLinearConfigured()) {
+    console.warn('LINEAR_API_KEY is not configured — returning empty team states')
+    return []
+  }
   const data = await gql<{ teams: { nodes: LinearTeamStates[] } }>(`{
     teams {
       nodes {
@@ -114,6 +126,10 @@ export async function fetchTeamStates(): Promise<LinearTeamStates[]> {
 }
 
 export async function updateIssueState(issueId: string, stateId: string): Promise<void> {
+  if (!isLinearConfigured()) {
+    console.warn('LINEAR_API_KEY is not configured — skipping issue state update')
+    return
+  }
   await gql(`
     mutation UpdateIssue($id: String!, $stateId: String!) {
       issueUpdate(id: $id, input: { stateId: $stateId }) {
@@ -134,6 +150,9 @@ export interface CreateIssueInput {
 }
 
 export async function resolveTeamId(teamKey: string): Promise<string> {
+  if (!isLinearConfigured()) {
+    throw new Error('LINEAR_API_KEY is not configured — cannot resolve team ID')
+  }
   const teams = await fetchTeamStates()
   const team = teams.find(t => t.key === teamKey)
   if (!team) throw new Error(`Linear team not found: ${teamKey}`)
@@ -141,6 +160,9 @@ export async function resolveTeamId(teamKey: string): Promise<string> {
 }
 
 export async function createIssue(input: CreateIssueInput): Promise<string> {
+  if (!isLinearConfigured()) {
+    throw new Error('LINEAR_API_KEY is not configured — cannot create issue')
+  }
   const teamId = await resolveTeamId(input.teamKey)
 
   const data = await gql<{ issueCreate: { issue: { id: string; identifier: string } } }>(`
@@ -165,6 +187,10 @@ export async function createIssue(input: CreateIssueInput): Promise<string> {
 }
 
 export async function fetchIssueCountByBusiness(): Promise<Record<string, number>> {
+  if (!isLinearConfigured()) {
+    console.warn('LINEAR_API_KEY is not configured — returning empty issue counts')
+    return {}
+  }
   const issues = await fetchIssues()
   const counts: Record<string, number> = {}
   for (const issue of issues) {
