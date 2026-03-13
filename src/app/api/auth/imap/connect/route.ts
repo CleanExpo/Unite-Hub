@@ -59,6 +59,7 @@ export async function POST(request: Request) {
   const payload = encrypt(JSON.stringify({
     host: imapCfg.host,
     port: imapCfg.port,
+    email,
     username: email,
     password,
   }))
