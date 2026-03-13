@@ -36,6 +36,11 @@
             "type": "command",
             "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"C:/Unite-Group/.claude/hooks/scripts/session-start-context.ps1\"",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "bash .superpowers/hooks/session-start",
+            "timeout": 30
           }
         ]
       }

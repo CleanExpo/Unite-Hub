@@ -253,3 +253,6 @@ EXECUTE_MIGRATIONS_NOW.sql
 
 # Claude Code worktrees
 .claude/worktrees/
+
+# Superpowers plugin
+.superpowers/
