@@ -81,10 +81,12 @@ export function MFAGate({ businessKey, businessName, onCancel }: MFAGateProps) {
     setBusy(true)
     const supabase = getSupabase()
 
-    // Unenroll ALL existing TOTP factors before re-enrolling (handles stuck
-    // unverified factors and duplicate friendly name errors from Supabase)
+    // Unenroll ALL existing TOTP factors before re-enrolling.
+    // Must use `data.all` — `data.totp` only contains VERIFIED factors;
+    // stuck unverified factors (enrollment started but never completed)
+    // only appear in the `all` array.
     const { data: existing } = await supabase.auth.mfa.listFactors()
-    const allTotp = existing?.totp ?? []
+    const allTotp = (existing?.all ?? []).filter(f => f.factor_type === 'totp')
     await Promise.allSettled(
       allTotp.map(f => supabase.auth.mfa.unenroll({ factorId: f.id }))
     )
