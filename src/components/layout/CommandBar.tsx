@@ -219,7 +219,7 @@ export function CommandBar() {
                   <CommandItem
                     key={p.id}
                     value={p.id}
-                    onSelect={() => { router.push(`/founder/pages/${p.id}`); toggleCommandBar() }}
+                    onSelect={() => { router.push(`/founder/notes`); toggleCommandBar() }}
                   >
                     <span>{p.title}</span>
                   </CommandItem>

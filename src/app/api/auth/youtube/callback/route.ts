@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: Request) {
   const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
   const user = await getUser()
-  if (!user) return NextResponse.redirect(`${APP_URL}/login`)
+  if (!user) return NextResponse.redirect(`${APP_URL}/auth/login`)
 
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')

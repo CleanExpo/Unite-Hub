@@ -20,7 +20,8 @@ export function KPIGrid() {
   return (
     <div data-testid="kpi-grid" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
       {DASHBOARD_DATA.map((data) => {
-        const business = BUSINESSES.find(b => b.key === data.key)!
+        const business = BUSINESSES.find(b => b.key === data.key)
+        if (!business) return null
         return (
           <KPICard
             key={data.key}

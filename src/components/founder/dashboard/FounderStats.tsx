@@ -28,13 +28,16 @@ export function FounderStats() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/dashboard/stats')
+    const controller = new AbortController()
+
+    fetch('/api/dashboard/stats', { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error('Failed')
         return res.json() as Promise<DashboardStats>
       })
       .then(setStats)
-      .catch(() => {
+      .catch((err) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return
         setStats({
           contacts: 0,
           vaultEntries: 0,
@@ -44,6 +47,8 @@ export function FounderStats() {
         })
       })
       .finally(() => setLoading(false))
+
+    return () => controller.abort()
   }, [])
 
   const bookkeeperLabel = stats?.lastBookkeeperRun
