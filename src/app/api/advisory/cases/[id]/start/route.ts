@@ -2,13 +2,13 @@
 // POST: Trigger the debate engine for a case.
 // The debate runs asynchronously — progress streams via Supabase Realtime.
 
-import { NextRequest, NextResponse, after } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { runDebate } from '@/lib/advisory/debate-engine'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300 // Vercel Pro: keep alive up to 5 minutes
+export const maxDuration = 300 // Vercel Pro: allow up to 5 minutes for full debate
 
 export async function POST(
   _request: NextRequest,
@@ -39,15 +39,18 @@ export async function POST(
     )
   }
 
-  // Use Next.js after() to run the debate after the HTTP response is sent.
-  // This is the correct way to run long async tasks in Next.js 15+ on Vercel.
-  after(
-    runDebateAsync(id, user.id).catch(err => {
-      console.error(`[advisory/start] Unhandled debate error for case ${id}:`, err)
-    })
-  )
+  // Run the debate synchronously within the request.
+  // maxDuration = 300 keeps this alive for up to 5 minutes on Vercel Pro.
+  // The debate engine writes proposals to the DB as it goes, so the
+  // frontend can poll progress even while this request is open.
+  try {
+    await runDebateAsync(id, user.id)
+  } catch (err) {
+    console.error(`[advisory/start] Debate error for case ${id}:`, err)
+    return NextResponse.json({ error: 'Debate failed — check logs' }, { status: 500 })
+  }
 
-  return NextResponse.json({ message: 'Debate started', caseId: id })
+  return NextResponse.json({ message: 'Debate complete', caseId: id })
 }
 
 /**
