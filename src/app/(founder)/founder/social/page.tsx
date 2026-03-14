@@ -6,14 +6,20 @@ import { redirect } from 'next/navigation'
 import { getChannels } from '@/lib/integrations/social/channels'
 import { createServiceClient } from '@/lib/supabase/service'
 import { SocialPageClient } from '@/components/founder/social/SocialPageClient'
-import type { SocialPost } from '@/lib/integrations/social/types'
+import type { SocialChannel, SocialPost } from '@/lib/integrations/social/types'
 
 export default async function SocialPage() {
   const user = await getUser()
   if (!user) redirect('/auth/login')
 
+  // Load channels and posts independently — either can fail without
+  // crashing the page (table may not exist yet or schema may differ)
+  let channels: SocialChannel[] = []
+  let posts: SocialPost[] = []
+
   const supabase = createServiceClient()
-  const [channels, { data: posts }] = await Promise.all([
+
+  const [channelsResult, postsResult] = await Promise.allSettled([
     getChannels(user.id),
     supabase
       .from('social_posts')
@@ -23,10 +29,22 @@ export default async function SocialPage() {
       .limit(100),
   ])
 
+  if (channelsResult.status === 'fulfilled') {
+    channels = channelsResult.value
+  } else {
+    console.error('[social] Failed to load channels:', channelsResult.reason)
+  }
+
+  if (postsResult.status === 'fulfilled') {
+    posts = (postsResult.value.data ?? []) as SocialPost[]
+  } else {
+    console.error('[social] Failed to load posts:', postsResult.reason)
+  }
+
   return (
     <SocialPageClient
       channels={channels}
-      posts={(posts ?? []) as SocialPost[]}
+      posts={posts}
     />
   )
 }

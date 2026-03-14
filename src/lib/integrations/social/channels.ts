@@ -26,7 +26,10 @@ export async function getChannels(founderId: string, businessKey?: string): Prom
   }
 
   const { data, error } = await query.order('platform')
-  if (error) throw error
+  if (error) {
+    console.error('[social/channels] Query failed:', error.message, error.details)
+    throw error
+  }
 
   return (data ?? []).map(row => ({
     id: row.id,
