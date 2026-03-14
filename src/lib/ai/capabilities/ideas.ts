@@ -6,7 +6,7 @@ import { createCapability } from '../types'
 
 export const ideasCapability = createCapability({
   id: 'ideas',
-  model: 'claude-sonnet-4-6',
+  model: 'claude-sonnet-4-5-20250929',
   maxTokens: 1024,
   systemPrompt: () => buildSystemPrompt(),
 })
