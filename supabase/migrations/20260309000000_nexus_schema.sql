@@ -192,6 +192,9 @@ BEGIN
   ]
   LOOP
     EXECUTE format(
+      'DROP TRIGGER IF EXISTS update_%I_updated_at ON %I;', tbl, tbl
+    );
+    EXECUTE format(
       'CREATE TRIGGER update_%I_updated_at
        BEFORE UPDATE ON %I
        FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();',
@@ -203,11 +206,11 @@ END $$;
 -- ============================================================
 -- INDEXES
 -- ============================================================
-CREATE INDEX idx_businesses_founder_id ON businesses(founder_id);
-CREATE INDEX idx_contacts_founder_id ON contacts(founder_id);
-CREATE INDEX idx_contacts_business_id ON contacts(business_id);
-CREATE INDEX idx_nexus_pages_founder_id ON nexus_pages(founder_id);
-CREATE INDEX idx_nexus_pages_parent_id ON nexus_pages(parent_id);
-CREATE INDEX idx_nexus_rows_database_id ON nexus_rows(database_id);
-CREATE INDEX idx_approval_queue_founder_status ON approval_queue(founder_id, status);
-CREATE INDEX idx_social_channels_business ON social_channels(business_id);
+CREATE INDEX IF NOT EXISTS idx_businesses_founder_id ON businesses(founder_id);
+CREATE INDEX IF NOT EXISTS idx_contacts_founder_id ON contacts(founder_id);
+CREATE INDEX IF NOT EXISTS idx_contacts_business_id ON contacts(business_id);
+CREATE INDEX IF NOT EXISTS idx_nexus_pages_founder_id ON nexus_pages(founder_id);
+CREATE INDEX IF NOT EXISTS idx_nexus_pages_parent_id ON nexus_pages(parent_id);
+CREATE INDEX IF NOT EXISTS idx_nexus_rows_database_id ON nexus_rows(database_id);
+CREATE INDEX IF NOT EXISTS idx_approval_queue_founder_status ON approval_queue(founder_id, status);
+CREATE INDEX IF NOT EXISTS idx_social_channels_business ON social_channels(business_id);

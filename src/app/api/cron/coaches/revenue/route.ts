@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server'
 import { runCoach } from '@/lib/coaches/runner'
 import { fetchRevenueData } from '@/lib/coaches/revenue'
 import { REVENUE_COACH_SYSTEM_PROMPT, buildRevenueUserMessage } from '@/lib/coaches/prompts/revenue'
+import { notify } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -49,6 +50,14 @@ export async function GET(request: Request) {
     const durationMs = Date.now() - startTime
     console.log(`[Revenue Coach CRON] Completed in ${durationMs}ms — status: ${result.status}`)
 
+    notify({
+      type: 'cron_complete',
+      title: 'Revenue Coach Complete',
+      body: `Status: ${result.status}. Tokens: ${result.inputTokens} in / ${result.outputTokens} out. Duration: ${durationMs}ms.`,
+      severity: result.status === 'completed' ? 'info' : 'warning',
+      metadata: { reportId: result.reportId, durationMs },
+    }).catch(() => {})
+
     return NextResponse.json({
       success: result.status === 'completed',
       reportId: result.reportId,
@@ -61,6 +70,15 @@ export async function GET(request: Request) {
   } catch (error) {
     const durationMs = Date.now() - startTime
     console.error('[Revenue Coach CRON] Fatal error:', error)
+
+    notify({
+      type: 'cron_complete',
+      title: 'Revenue Coach FAILED',
+      body: `Fatal error after ${durationMs}ms: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      severity: 'critical',
+      metadata: { durationMs },
+    }).catch(() => {})
+
     return NextResponse.json(
       { success: false, error: error instanceof Error ? error.message : 'Unknown error', durationMs },
       { status: 500 }

@@ -2,9 +2,10 @@
 -- RLS Policies — Nexus 2.0
 -- Pattern: founder_id = auth.uid() (single-tenant)
 -- Date: 09/03/2026
+-- Idempotent: DROP IF EXISTS before CREATE
 -- ============================================================
 
--- Enable RLS on all 9 tables
+-- Enable RLS on all 9 tables (safe to re-run)
 ALTER TABLE businesses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE nexus_pages ENABLE ROW LEVEL SECURITY;
@@ -15,56 +16,79 @@ ALTER TABLE approval_queue ENABLE ROW LEVEL SECURITY;
 ALTER TABLE social_channels ENABLE ROW LEVEL SECURITY;
 ALTER TABLE connected_projects ENABLE ROW LEVEL SECURITY;
 
--- BUSINESSES
-CREATE POLICY "businesses_select" ON businesses FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "businesses_insert" ON businesses FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "businesses_update" ON businesses FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "businesses_delete" ON businesses FOR DELETE USING (founder_id = auth.uid());
+-- ── Helper: idempotent policy creation via DO block ──────────
+DO $$
+DECLARE
+  policies TEXT[][] := ARRAY[
+    -- table, policy_suffix, operation, using_clause, check_clause
+    ['businesses',        'select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['businesses',        'insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['businesses',        'update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['businesses',        'delete',  'DELETE',  'founder_id = auth.uid()', ''],
 
--- CONTACTS
-CREATE POLICY "contacts_select" ON contacts FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "contacts_insert" ON contacts FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "contacts_update" ON contacts FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "contacts_delete" ON contacts FOR DELETE USING (founder_id = auth.uid());
+    ['contacts',          'select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['contacts',          'insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['contacts',          'update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['contacts',          'delete',  'DELETE',  'founder_id = auth.uid()', ''],
 
--- NEXUS_PAGES
-CREATE POLICY "nexus_pages_select" ON nexus_pages FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "nexus_pages_insert" ON nexus_pages FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "nexus_pages_update" ON nexus_pages FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "nexus_pages_delete" ON nexus_pages FOR DELETE USING (founder_id = auth.uid());
+    ['nexus_pages',       'select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['nexus_pages',       'insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['nexus_pages',       'update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['nexus_pages',       'delete',  'DELETE',  'founder_id = auth.uid()', ''],
 
--- NEXUS_DATABASES
-CREATE POLICY "nexus_databases_select" ON nexus_databases FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "nexus_databases_insert" ON nexus_databases FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "nexus_databases_update" ON nexus_databases FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "nexus_databases_delete" ON nexus_databases FOR DELETE USING (founder_id = auth.uid());
+    ['nexus_databases',   'select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['nexus_databases',   'insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['nexus_databases',   'update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['nexus_databases',   'delete',  'DELETE',  'founder_id = auth.uid()', ''],
 
--- NEXUS_ROWS
-CREATE POLICY "nexus_rows_select" ON nexus_rows FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "nexus_rows_insert" ON nexus_rows FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "nexus_rows_update" ON nexus_rows FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "nexus_rows_delete" ON nexus_rows FOR DELETE USING (founder_id = auth.uid());
+    ['nexus_rows',        'select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['nexus_rows',        'insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['nexus_rows',        'update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['nexus_rows',        'delete',  'DELETE',  'founder_id = auth.uid()', ''],
 
--- CREDENTIALS_VAULT
-CREATE POLICY "credentials_vault_select" ON credentials_vault FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "credentials_vault_insert" ON credentials_vault FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "credentials_vault_update" ON credentials_vault FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "credentials_vault_delete" ON credentials_vault FOR DELETE USING (founder_id = auth.uid());
+    ['credentials_vault', 'select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['credentials_vault', 'insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['credentials_vault', 'update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['credentials_vault', 'delete',  'DELETE',  'founder_id = auth.uid()', ''],
 
--- APPROVAL_QUEUE
-CREATE POLICY "approval_queue_select" ON approval_queue FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "approval_queue_insert" ON approval_queue FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "approval_queue_update" ON approval_queue FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "approval_queue_delete" ON approval_queue FOR DELETE USING (founder_id = auth.uid());
+    ['approval_queue',    'select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['approval_queue',    'insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['approval_queue',    'update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['approval_queue',    'delete',  'DELETE',  'founder_id = auth.uid()', ''],
 
--- SOCIAL_CHANNELS
-CREATE POLICY "social_channels_select" ON social_channels FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "social_channels_insert" ON social_channels FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "social_channels_update" ON social_channels FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "social_channels_delete" ON social_channels FOR DELETE USING (founder_id = auth.uid());
+    ['social_channels',   'select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['social_channels',   'insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['social_channels',   'update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['social_channels',   'delete',  'DELETE',  'founder_id = auth.uid()', ''],
 
--- CONNECTED_PROJECTS
-CREATE POLICY "connected_projects_select" ON connected_projects FOR SELECT USING (founder_id = auth.uid());
-CREATE POLICY "connected_projects_insert" ON connected_projects FOR INSERT WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "connected_projects_update" ON connected_projects FOR UPDATE USING (founder_id = auth.uid()) WITH CHECK (founder_id = auth.uid());
-CREATE POLICY "connected_projects_delete" ON connected_projects FOR DELETE USING (founder_id = auth.uid());
+    ['connected_projects','select',  'SELECT',  'founder_id = auth.uid()', ''],
+    ['connected_projects','insert',  'INSERT',  '',                        'founder_id = auth.uid()'],
+    ['connected_projects','update',  'UPDATE',  'founder_id = auth.uid()', 'founder_id = auth.uid()'],
+    ['connected_projects','delete',  'DELETE',  'founder_id = auth.uid()', '']
+  ];
+  p TEXT[];
+  policy_name TEXT;
+  sql TEXT;
+BEGIN
+  FOREACH p SLICE 1 IN ARRAY policies
+  LOOP
+    policy_name := p[1] || '_' || p[2];
+
+    -- Drop existing policy if present
+    EXECUTE format('DROP POLICY IF EXISTS %I ON %I;', policy_name, p[1]);
+
+    -- Build CREATE POLICY statement
+    IF p[3] = 'INSERT' THEN
+      sql := format('CREATE POLICY %I ON %I FOR %s WITH CHECK (%s);',
+                     policy_name, p[1], p[3], p[5]);
+    ELSIF p[3] IN ('SELECT', 'DELETE') THEN
+      sql := format('CREATE POLICY %I ON %I FOR %s USING (%s);',
+                     policy_name, p[1], p[3], p[4]);
+    ELSE -- UPDATE
+      sql := format('CREATE POLICY %I ON %I FOR %s USING (%s) WITH CHECK (%s);',
+                     policy_name, p[1], p[3], p[4], p[5]);
+    END IF;
+
+    EXECUTE sql;
+  END LOOP;
+END $$;

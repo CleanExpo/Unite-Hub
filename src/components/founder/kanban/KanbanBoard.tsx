@@ -14,6 +14,9 @@ import {
 import { arrayMove } from '@dnd-kit/sortable'
 import { KanbanColumn } from './KanbanColumn'
 import { KanbanCard } from './KanbanCard'
+import { BusinessFilter } from './BusinessFilter'
+import { IssueDetailPanel } from './IssueDetailPanel'
+import { CreateIssueModal } from './CreateIssueModal'
 
 interface Card {
   id: string
@@ -48,6 +51,9 @@ export function KanbanBoard() {
   const [stale, setStale] = useState(false)
   const [configured, setConfigured] = useState(true)
   const [lastSynced, setLastSynced] = useState<Date | null>(null)
+  const [createOpen, setCreateOpen] = useState(false)
+  const [businessFilter, setBusinessFilter] = useState<string | null>(null)
+  const [selectedIssueId, setSelectedIssueId] = useState<string | null>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
@@ -196,10 +202,20 @@ export function KanbanBoard() {
         </div>
       )}
       {lastSynced && !stale && configured && (
-        <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
-          Synced with Linear — {lastSynced.toLocaleTimeString('en-AU')}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+            Synced with Linear — {lastSynced.toLocaleTimeString('en-AU')}
+          </p>
+          <button
+            onClick={() => setCreateOpen(true)}
+            className="text-[11px] font-medium px-3 py-1 rounded-sm transition-opacity hover:opacity-80"
+            style={{ background: '#00F5FF', color: '#050505' }}
+          >
+            + New Issue
+          </button>
+        </div>
       )}
+      <BusinessFilter activeFilter={businessFilter} onFilterChange={setBusinessFilter} />
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -207,15 +223,21 @@ export function KanbanBoard() {
         onDragEnd={handleDragEnd}
       >
         <div className="flex gap-4 h-full">
-          {columns.map((col) => (
-            <KanbanColumn
-              key={col.id}
-              id={col.id}
-              title={col.title}
-              cards={col.cards}
-              isDone={col.id === 'done'}
-            />
-          ))}
+          {columns.map((col) => {
+            const filteredCards = businessFilter
+              ? col.cards.filter((c) => c.businessKey === businessFilter)
+              : col.cards
+            return (
+              <KanbanColumn
+                key={col.id}
+                id={col.id}
+                title={col.title}
+                cards={filteredCards}
+                isDone={col.id === 'done'}
+                onCardClick={setSelectedIssueId}
+              />
+            )
+          })}
         </div>
         <DragOverlay>
           {activeCard ? (
@@ -228,6 +250,17 @@ export function KanbanBoard() {
           ) : null}
         </DragOverlay>
       </DndContext>
+      <CreateIssueModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={() => { setCreateOpen(false); loadIssues() }}
+      />
+      {selectedIssueId && (
+        <IssueDetailPanel
+          issueId={selectedIssueId}
+          onClose={() => setSelectedIssueId(null)}
+        />
+      )}
     </div>
   )
 }

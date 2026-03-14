@@ -11,7 +11,18 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient()
   const body = await request.json()
 
-  const { timezone, locale, notification_digest, notification_alerts, notification_cases, google_drive_vault_folder_id } = body
+  const {
+    timezone,
+    locale,
+    notification_digest,
+    notification_alerts,
+    notification_cases,
+    notification_slack,
+    slack_channel,
+    slack_webhook_url,
+    notification_whatsapp,
+    google_drive_vault_folder_id,
+  } = body
 
   // Validate timezone
   const validTimezones = ['Australia/Sydney', 'Australia/Melbourne', 'UTC']
@@ -35,6 +46,10 @@ export async function POST(request: NextRequest) {
       notification_digest: notification_digest ?? true,
       notification_alerts: notification_alerts ?? true,
       notification_cases: notification_cases ?? true,
+      notification_slack: notification_slack ?? false,
+      slack_channel: slack_channel ?? '#nexus-alerts',
+      slack_webhook_url: slack_webhook_url ?? null,
+      notification_whatsapp: notification_whatsapp ?? false,
       google_drive_vault_folder_id,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'user_id' })
@@ -69,6 +84,10 @@ export async function GET(_request: NextRequest) {
       notification_digest: true,
       notification_alerts: true,
       notification_cases: true,
+      notification_slack: false,
+      slack_channel: '#nexus-alerts',
+      slack_webhook_url: null,
+      notification_whatsapp: false,
       google_drive_vault_folder_id: null,
     })
   }

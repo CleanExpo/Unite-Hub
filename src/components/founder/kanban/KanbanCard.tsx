@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { BUSINESSES } from '@/lib/businesses'
@@ -10,10 +11,12 @@ interface KanbanCardProps {
   businessKey: string
   businessColor: string
   isDone?: boolean
+  onClick?: (id: string) => void
 }
 
-export function KanbanCard({ id, title, businessKey, businessColor, isDone }: KanbanCardProps) {
+export function KanbanCard({ id, title, businessKey, businessColor, isDone, onClick }: KanbanCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
+  const didDrag = useRef(false)
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
@@ -23,12 +26,24 @@ export function KanbanCard({ id, title, businessKey, businessColor, isDone }: Ka
     border: '1px solid var(--color-border)',
   }
 
+  // Track whether a drag actually occurred so clicks don't fire after drags
+  const handlePointerDown = () => { didDrag.current = false }
+  const handlePointerMove = () => { didDrag.current = true }
+  const handleClick = () => {
+    if (!didDrag.current && onClick) {
+      onClick(id)
+    }
+  }
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onClick={handleClick}
       className="rounded-sm p-3 cursor-grab active:cursor-grabbing select-none hover:bg-[#161616] transition-colors duration-150"
     >
       <div className={`flex items-center gap-2 ${isDone ? 'opacity-50' : ''}`}>

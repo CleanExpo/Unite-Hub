@@ -70,28 +70,33 @@ ALTER TABLE public.bookkeeper_runs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bookkeeper_transactions ENABLE ROW LEVEL SECURITY;
 
 -- BOOKKEEPER_RUNS — Founder read access
+DROP POLICY IF EXISTS "bookkeeper_runs_select" ON public.bookkeeper_runs;
 CREATE POLICY "bookkeeper_runs_select"
   ON public.bookkeeper_runs FOR SELECT
   USING (founder_id = auth.uid());
 
 -- BOOKKEEPER_RUNS — Service role full access (CRON job)
+DROP POLICY IF EXISTS "bookkeeper_runs_service_role" ON public.bookkeeper_runs;
 CREATE POLICY "bookkeeper_runs_service_role"
   ON public.bookkeeper_runs FOR ALL
   USING (auth.role() = 'service_role')
   WITH CHECK (auth.role() = 'service_role');
 
 -- BOOKKEEPER_TRANSACTIONS — Founder read access
+DROP POLICY IF EXISTS "bookkeeper_transactions_select" ON public.bookkeeper_transactions;
 CREATE POLICY "bookkeeper_transactions_select"
   ON public.bookkeeper_transactions FOR SELECT
   USING (founder_id = auth.uid());
 
 -- BOOKKEEPER_TRANSACTIONS — Founder update (approval workflow)
+DROP POLICY IF EXISTS "bookkeeper_transactions_update" ON public.bookkeeper_transactions;
 CREATE POLICY "bookkeeper_transactions_update"
   ON public.bookkeeper_transactions FOR UPDATE
   USING (founder_id = auth.uid())
   WITH CHECK (founder_id = auth.uid());
 
 -- BOOKKEEPER_TRANSACTIONS — Service role full access (CRON job)
+DROP POLICY IF EXISTS "bookkeeper_transactions_service_role" ON public.bookkeeper_transactions;
 CREATE POLICY "bookkeeper_transactions_service_role"
   ON public.bookkeeper_transactions FOR ALL
   USING (auth.role() = 'service_role')
@@ -100,27 +105,28 @@ CREATE POLICY "bookkeeper_transactions_service_role"
 -- ============================================================
 -- INDEXES
 -- ============================================================
-CREATE INDEX idx_bookkeeper_runs_founder_status
+CREATE INDEX IF NOT EXISTS idx_bookkeeper_runs_founder_status
   ON public.bookkeeper_runs(founder_id, status);
 
-CREATE INDEX idx_bookkeeper_runs_started_at
+CREATE INDEX IF NOT EXISTS idx_bookkeeper_runs_started_at
   ON public.bookkeeper_runs(started_at DESC);
 
-CREATE INDEX idx_bookkeeper_txns_run_id
+CREATE INDEX IF NOT EXISTS idx_bookkeeper_txns_run_id
   ON public.bookkeeper_transactions(run_id);
 
-CREATE INDEX idx_bookkeeper_txns_founder_business
+CREATE INDEX IF NOT EXISTS idx_bookkeeper_txns_founder_business
   ON public.bookkeeper_transactions(founder_id, business_key);
 
-CREATE INDEX idx_bookkeeper_txns_status
+CREATE INDEX IF NOT EXISTS idx_bookkeeper_txns_status
   ON public.bookkeeper_transactions(reconciliation_status);
 
-CREATE INDEX idx_bookkeeper_txns_date
+CREATE INDEX IF NOT EXISTS idx_bookkeeper_txns_date
   ON public.bookkeeper_transactions(transaction_date DESC);
 
 -- ============================================================
 -- UPDATED_AT TRIGGER (reuses existing function)
 -- ============================================================
+DROP TRIGGER IF EXISTS update_bookkeeper_transactions_updated_at ON public.bookkeeper_transactions;
 CREATE TRIGGER update_bookkeeper_transactions_updated_at
   BEFORE UPDATE ON public.bookkeeper_transactions
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

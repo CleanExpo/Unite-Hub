@@ -69,13 +69,25 @@ export function stateToColumn(state: LinearState): string {
   return 'today'
 }
 
-// Linear team key → business key
+// Linear team key → primary business key (for display on Kanban cards)
 const TEAM_TO_BUSINESS: Record<string, string> = {
   SYN: 'synthex',
-  DR:  'dr',
-  GP:  'carsi',
+  DR:  'dr',       // DR-NRPG team covers dr, dr_qld, nrpg
+  GP:  'carsi',    // G-Pilot
   RA:  'restore',
-  UNI: 'ccw',
+  UNI: 'ccw',      // Unite-Group covers ccw + ato
+}
+
+// Business key → Linear team key (for issue creation)
+export const BUSINESS_TO_TEAM: Record<string, string> = {
+  synthex:  'SYN',
+  dr:       'DR',
+  dr_qld:   'DR',
+  nrpg:     'DR',
+  carsi:    'GP',
+  restore:  'RA',
+  ccw:      'UNI',
+  ato:      'UNI',
 }
 
 export function teamKeyToBusiness(teamKey: string): string {
@@ -89,23 +101,80 @@ export async function fetchIssues(): Promise<LinearIssue[]> {
     console.warn('LINEAR_API_KEY is not configured — returning empty issues')
     return []
   }
-  const data = await gql<{ issues: { nodes: LinearIssue[] } }>(`{
-    issues(
-      first: 100
-      filter: { state: { type: { nin: ["canceled"] } } }
-      orderBy: updatedAt
-    ) {
-      nodes {
+
+  const allIssues: LinearIssue[] = []
+  let cursor: string | null = null
+  const MAX_PAGES = 5 // Cap at 500 issues (5 × 100)
+
+  interface IssuesResponse {
+    issues: {
+      nodes: LinearIssue[]
+      pageInfo: { hasNextPage: boolean; endCursor: string }
+    }
+  }
+
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const afterClause: string = cursor ? `after: "${cursor}"` : ''
+    const data: IssuesResponse = await gql<IssuesResponse>(`{
+      issues(
+        first: 100
+        ${afterClause}
+        filter: { state: { type: { nin: ["canceled"] } } }
+        orderBy: updatedAt
+      ) {
+        nodes {
+          id
+          identifier
+          title
+          priority
+          team { id key name }
+          state { id name type }
+        }
+        pageInfo { hasNextPage endCursor }
+      }
+    }`)
+
+    allIssues.push(...data.issues.nodes)
+
+    if (!data.issues.pageInfo.hasNextPage) break
+    cursor = data.issues.pageInfo.endCursor
+  }
+
+  return allIssues
+}
+
+// ─── Single issue detail ──────────────────────────────────────────────────────
+
+export interface LinearIssueDetail extends LinearIssue {
+  description: string | null
+  url: string
+  createdAt: string
+  updatedAt: string
+  labels: { nodes: { id: string; name: string; color: string }[] }
+}
+
+export async function fetchIssue(id: string): Promise<LinearIssueDetail> {
+  if (!isLinearConfigured()) {
+    throw new Error('LINEAR_API_KEY is not configured — cannot fetch issue')
+  }
+  const data = await gql<{ issue: LinearIssueDetail }>(`
+    query GetIssue($id: String!) {
+      issue(id: $id) {
         id
         identifier
         title
+        description
         priority
+        url
+        createdAt
+        updatedAt
         team { id key name }
         state { id name type }
+        labels { nodes { id name color } }
       }
     }
-  }`)
-  return data.issues.nodes
+  `, { id })
+  return data.issue
 }
 
 export async function fetchTeamStates(): Promise<LinearTeamStates[]> {

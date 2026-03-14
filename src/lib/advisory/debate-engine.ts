@@ -20,6 +20,7 @@ import {
   callJudgeAgent,
 } from './agents'
 import { extractCitations } from './evidence-extractor'
+import { notify } from '@/lib/notifications'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -296,6 +297,18 @@ export async function* runDebate(
       .eq('id', caseId)
 
     yield { event: 'judge_complete', winner: scores.winner, scores: scores.scores }
+
+    // Fire-and-forget notification for debate completion
+    const winnerMeta = FIRM_META[scores.winner as FirmKey]
+    const winnerEntry = scores.scores.find(
+      (s: { firmKey: string }) => s.firmKey === scores.winner
+    )
+    notify({
+      type: 'advisory_update',
+      title: `Advisory case complete: ${advisoryCase.title}`,
+      body: `Winner: ${winnerMeta?.name ?? scores.winner} (${winnerEntry?.weightedTotal ?? '—'}/100). ${scores.summary}`,
+      severity: 'info',
+    }).catch(() => {})
   } catch (judgeError) {
     const msg = judgeError instanceof Error ? judgeError.message : 'Unknown judge failure'
     yield { event: 'error', message: `Judge failed: ${msg}` }

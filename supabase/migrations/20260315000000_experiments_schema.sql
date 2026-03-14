@@ -55,10 +55,19 @@ CREATE TABLE IF NOT EXISTS public.experiment_variants (
   UNIQUE(experiment_id, variant_key)
 );
 
--- Add winner FK now that experiment_variants exists
-ALTER TABLE public.experiments
-  ADD CONSTRAINT fk_winner_variant
-  FOREIGN KEY (winner_variant_id) REFERENCES public.experiment_variants(id) ON DELETE SET NULL;
+-- Add winner FK now that experiment_variants exists (idempotent)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE constraint_name = 'fk_winner_variant'
+      AND table_name = 'experiments'
+  ) THEN
+    ALTER TABLE public.experiments
+      ADD CONSTRAINT fk_winner_variant
+      FOREIGN KEY (winner_variant_id) REFERENCES public.experiment_variants(id) ON DELETE SET NULL;
+  END IF;
+END $$;
 
 -- ── EXPERIMENT RESULTS ──────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.experiment_results (
@@ -164,10 +173,12 @@ END $$;
 -- ============================================================
 -- UPDATED_AT TRIGGERS
 -- ============================================================
+DROP TRIGGER IF EXISTS update_experiments_updated_at ON public.experiments;
 CREATE TRIGGER update_experiments_updated_at
   BEFORE UPDATE ON public.experiments
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_experiment_variants_updated_at ON public.experiment_variants;
 CREATE TRIGGER update_experiment_variants_updated_at
   BEFORE UPDATE ON public.experiment_variants
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

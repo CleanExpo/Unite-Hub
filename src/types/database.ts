@@ -287,6 +287,10 @@ export type UserSettings = {
   notification_digest: boolean;
   notification_alerts: boolean;
   notification_cases: boolean;
+  notification_slack: boolean;
+  slack_channel: string | null;
+  slack_webhook_url: string | null;
+  notification_whatsapp: boolean;
   google_drive_vault_folder_id: string | null;
   created_at: string;
   updated_at: string;

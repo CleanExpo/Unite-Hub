@@ -8,6 +8,7 @@ import {
   fetchIssues,
   fetchTeamStates,
   updateIssueState,
+  createIssue,
   stateToColumn,
   teamKeyToBusiness,
   COLUMN_TO_STATE_NAME,
@@ -77,6 +78,45 @@ export async function GET() {
     }
 
     return NextResponse.json({ columns, stateMap, configured: true })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    return NextResponse.json({ error: message }, { status: 502 })
+  }
+}
+
+export async function POST(request: Request) {
+  const user = await getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
+
+  if (!process.env.LINEAR_API_KEY) {
+    return NextResponse.json({ error: 'Linear is not configured' }, { status: 503 })
+  }
+
+  try {
+    const body = await request.json() as {
+      title?: string
+      description?: string
+      teamKey?: string
+      priority?: number
+    }
+
+    if (!body.title?.trim() || !body.teamKey) {
+      return NextResponse.json(
+        { error: 'Missing required fields: title, teamKey' },
+        { status: 400 },
+      )
+    }
+
+    const identifier = await createIssue({
+      teamKey: body.teamKey,
+      title: body.title.trim(),
+      description: body.description ?? '',
+      priority: body.priority ?? 3,
+    })
+
+    return NextResponse.json({ identifier }, { status: 201 })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'
     return NextResponse.json({ error: message }, { status: 502 })

@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS advisory_judge_scores (
 -- ============================================================
 -- TRIGGERS (reuse existing update_updated_at_column function)
 -- ============================================================
+DROP TRIGGER IF EXISTS update_advisory_cases_updated_at ON advisory_cases;
 CREATE TRIGGER update_advisory_cases_updated_at
   BEFORE UPDATE ON advisory_cases
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -119,13 +120,13 @@ CREATE TRIGGER update_advisory_cases_updated_at
 -- ============================================================
 -- INDEXES
 -- ============================================================
-CREATE INDEX idx_advisory_cases_founder_status ON advisory_cases(founder_id, status);
-CREATE INDEX idx_advisory_cases_business ON advisory_cases(business_id);
-CREATE INDEX idx_advisory_proposals_case ON advisory_proposals(case_id);
-CREATE INDEX idx_advisory_proposals_case_firm_round ON advisory_proposals(case_id, firm_key, round);
-CREATE INDEX idx_advisory_evidence_proposal ON advisory_evidence(proposal_id);
-CREATE INDEX idx_advisory_evidence_case ON advisory_evidence(case_id);
-CREATE INDEX idx_advisory_judge_scores_case ON advisory_judge_scores(case_id);
+CREATE INDEX IF NOT EXISTS idx_advisory_cases_founder_status ON advisory_cases(founder_id, status);
+CREATE INDEX IF NOT EXISTS idx_advisory_cases_business ON advisory_cases(business_id);
+CREATE INDEX IF NOT EXISTS idx_advisory_proposals_case ON advisory_proposals(case_id);
+CREATE INDEX IF NOT EXISTS idx_advisory_proposals_case_firm_round ON advisory_proposals(case_id, firm_key, round);
+CREATE INDEX IF NOT EXISTS idx_advisory_evidence_proposal ON advisory_evidence(proposal_id);
+CREATE INDEX IF NOT EXISTS idx_advisory_evidence_case ON advisory_evidence(case_id);
+CREATE INDEX IF NOT EXISTS idx_advisory_judge_scores_case ON advisory_judge_scores(case_id);
 
 -- ============================================================
 -- RLS POLICIES (single-tenant: founder_id = auth.uid())
@@ -135,14 +136,18 @@ ALTER TABLE advisory_proposals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE advisory_evidence ENABLE ROW LEVEL SECURITY;
 ALTER TABLE advisory_judge_scores ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "founder_advisory_cases" ON advisory_cases;
 CREATE POLICY "founder_advisory_cases" ON advisory_cases
   FOR ALL USING (founder_id = auth.uid());
 
+DROP POLICY IF EXISTS "founder_advisory_proposals" ON advisory_proposals;
 CREATE POLICY "founder_advisory_proposals" ON advisory_proposals
   FOR ALL USING (founder_id = auth.uid());
 
+DROP POLICY IF EXISTS "founder_advisory_evidence" ON advisory_evidence;
 CREATE POLICY "founder_advisory_evidence" ON advisory_evidence
   FOR ALL USING (founder_id = auth.uid());
 
+DROP POLICY IF EXISTS "founder_advisory_judge_scores" ON advisory_judge_scores;
 CREATE POLICY "founder_advisory_judge_scores" ON advisory_judge_scores
   FOR ALL USING (founder_id = auth.uid());

@@ -53,20 +53,12 @@ create index if not exists social_posts_business_key_idx
   on public.social_posts(founder_id, business_key);
 
 -- ============================================================
--- UPDATED_AT TRIGGER
+-- UPDATED_AT TRIGGER (reuses standard function from nexus_schema)
 -- ============================================================
-create or replace function public.handle_updated_at()
-returns trigger language plpgsql as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$;
-
 drop trigger if exists social_posts_updated_at on public.social_posts;
 create trigger social_posts_updated_at
   before update on public.social_posts
-  for each row execute function public.handle_updated_at();
+  for each row execute function update_updated_at_column();
 
 -- ============================================================
 -- RLS: social_channels

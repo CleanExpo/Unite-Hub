@@ -16,9 +16,10 @@ interface KanbanColumnProps {
   title: string
   cards: Card[]
   isDone?: boolean
+  onCardClick?: (cardId: string) => void
 }
 
-export function KanbanColumn({ id, title, cards, isDone }: KanbanColumnProps) {
+export function KanbanColumn({ id, title, cards, isDone, onCardClick }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id })
 
   return (
@@ -53,6 +54,7 @@ export function KanbanColumn({ id, title, cards, isDone }: KanbanColumnProps) {
               businessKey={card.businessKey}
               businessColor={card.businessColor}
               isDone={isDone}
+              onClick={onCardClick}
             />
           ))}
         </div>

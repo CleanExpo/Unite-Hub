@@ -5,6 +5,7 @@
 
 import { NextResponse } from 'next/server'
 import { runBookkeeperForAllBusinesses } from '@/lib/bookkeeper/orchestrator'
+import { notify } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300 // 5 minutes — processing 8 businesses sequentially
@@ -42,6 +43,28 @@ export async function GET(request: Request) {
         `flagged: ${result.flaggedForReview}`
     )
 
+    // Fire-and-forget notification
+    const severity = result.flaggedForReview > 0 ? 'warning' as const : 'info' as const
+    notify({
+      type: 'bookkeeper_summary',
+      title: 'Bookkeeper Run Complete',
+      body:
+        `Processed ${result.totalTransactions} transactions in ${durationMs}ms. ` +
+        `Auto-reconciled: ${result.autoReconciled}. ` +
+        `Flagged for review: ${result.flaggedForReview}. ` +
+        `GST collected: $${(result.gstCollectedCents / 100).toFixed(2)}, ` +
+        `GST paid: $${(result.gstPaidCents / 100).toFixed(2)}, ` +
+        `Net GST: $${(result.netGstCents / 100).toFixed(2)}.`,
+      severity,
+      metadata: {
+        runId: result.runId,
+        totalTransactions: result.totalTransactions,
+        autoReconciled: result.autoReconciled,
+        flaggedForReview: result.flaggedForReview,
+        durationMs,
+      },
+    }).catch(() => {})
+
     return NextResponse.json({
       success: result.status !== 'failed',
       runId: result.runId,
@@ -63,6 +86,14 @@ export async function GET(request: Request) {
   } catch (error) {
     const durationMs = Date.now() - startTime
     console.error('[Bookkeeper CRON] Fatal error:', error)
+
+    notify({
+      type: 'bookkeeper_summary',
+      title: 'Bookkeeper Run FAILED',
+      body: `Fatal error after ${durationMs}ms: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      severity: 'critical',
+      metadata: { durationMs },
+    }).catch(() => {})
 
     return NextResponse.json(
       {
