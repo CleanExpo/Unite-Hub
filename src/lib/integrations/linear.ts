@@ -211,11 +211,12 @@ export async function updateIssueState(issueId: string, stateId: string): Promis
 // ─── Issue creation ───────────────────────────────────────────────────────────
 
 export interface CreateIssueInput {
-  teamKey: string
   title: string
-  description: string
-  priority: number
-  labels?: string[]
+  description?: string
+  teamKey: string       // e.g. 'SYN', 'DR', 'GP'
+  priority?: number     // 0=no priority, 1=urgent, 2=high, 3=medium, 4=low
+  labelNames?: string[] // Linear label names (best-effort — skip if label not found)
+  // TODO: wire labelNames into the GraphQL mutation once Linear label lookup is implemented
 }
 
 export async function resolveTeamId(teamKey: string): Promise<string> {
@@ -228,13 +229,13 @@ export async function resolveTeamId(teamKey: string): Promise<string> {
   return team.id
 }
 
-export async function createIssue(input: CreateIssueInput): Promise<string> {
+export async function createIssue(input: CreateIssueInput): Promise<{ id: string; url?: string }> {
   if (!isLinearConfigured()) {
     throw new Error('LINEAR_API_KEY is not configured — cannot create issue')
   }
   const teamId = await resolveTeamId(input.teamKey)
 
-  const data = await gql<{ issueCreate: { issue: { id: string; identifier: string } } }>(`
+  const data = await gql<{ issueCreate: { issue: { id: string; identifier: string; url: string } } }>(`
     mutation CreateIssue($teamId: String!, $title: String!, $description: String, $priority: Int) {
       issueCreate(input: {
         teamId: $teamId
@@ -242,7 +243,7 @@ export async function createIssue(input: CreateIssueInput): Promise<string> {
         description: $description
         priority: $priority
       }) {
-        issue { id identifier }
+        issue { id identifier url }
       }
     }
   `, {
@@ -252,7 +253,7 @@ export async function createIssue(input: CreateIssueInput): Promise<string> {
     priority: input.priority,
   })
 
-  return data.issueCreate.issue.identifier
+  return { id: data.issueCreate.issue.identifier, url: data.issueCreate.issue.url }
 }
 
 export async function fetchIssueCountByBusiness(): Promise<Record<string, number>> {

@@ -33,12 +33,12 @@ export async function POST(request: Request) {
     title: spec.title,
     description: spec.description + acceptanceBlock,
     priority: spec.priority,
-    labels: spec.labels,
+    labelNames: spec.labels,
   }
 
   try {
-    const identifier = await createIssue(input)
-    return NextResponse.json({ identifier })
+    const result = await createIssue(input)
+    return NextResponse.json({ identifier: result.id, url: result.url })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to create issue'
     return NextResponse.json({ error: message }, { status: 500 })
