@@ -1,9 +1,12 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Users } from 'lucide-react'
 import type { Contact } from '@/types/database'
 import { ContactsTable } from './ContactsTable'
 import { ContactFormModal } from './ContactFormModal'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 const STATUS_OPTIONS = ['all', 'lead', 'prospect', 'client', 'churned', 'archived'] as const
 
@@ -96,76 +99,97 @@ export function ContactsPageClient() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-[var(--color-text-primary)]">Contacts</h1>
-        <button
-          onClick={() => {
-            setEditingContact(null)
-            setShowModal(true)
-          }}
-          className="rounded-sm px-4 py-2 text-sm font-medium transition-colors"
-          style={{
-            background: '#00F5FF18',
-            color: '#00F5FF',
-            border: '1px solid #00F5FF30',
-          }}
-        >
-          Add Contact
-        </button>
-      </div>
-
-      {/* Summary stat badges */}
-      <div className="flex gap-3">
-        {([
-          { label: 'Leads', count: stats.lead, colour: '#3b82f6' },
-          { label: 'Prospects', count: stats.prospect, colour: '#f97316' },
-          { label: 'Clients', count: stats.client, colour: '#22c55e' },
-        ] as const).map(({ label, count, colour }) => (
-          <div
-            key={label}
-            className="rounded-sm px-3 py-1.5 text-xs font-medium"
+      <PageHeader
+        title="Contacts"
+        subtitle="Your CRM contacts across all businesses"
+        actions={
+          <button
+            onClick={() => {
+              setEditingContact(null)
+              setShowModal(true)
+            }}
+            className="rounded-sm px-4 py-2 text-sm font-medium transition-colors"
             style={{
-              background: `${colour}15`,
-              color: colour,
-              border: `1px solid ${colour}30`,
+              background: '#00F5FF18',
+              color: '#00F5FF',
+              border: '1px solid #00F5FF30',
             }}
           >
-            {label}: {count}
+            Add Contact
+          </button>
+        }
+      />
+
+      {!loading && contacts.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title="No contacts yet"
+          description="Add your first contact to start building your CRM across all businesses."
+          action={{
+            label: 'Add Contact',
+            href: '#',
+            onClick: () => {
+              setEditingContact(null)
+              setShowModal(true)
+            },
+          }}
+        />
+      ) : (
+        <>
+          {/* Summary stat badges */}
+          <div className="flex gap-3">
+            {([
+              { label: 'Leads', count: stats.lead, colour: '#3b82f6' },
+              { label: 'Prospects', count: stats.prospect, colour: '#f97316' },
+              { label: 'Clients', count: stats.client, colour: '#22c55e' },
+            ] as const).map(({ label, count, colour }) => (
+              <div
+                key={label}
+                className="rounded-sm px-3 py-1.5 text-xs font-medium"
+                style={{
+                  background: `${colour}15`,
+                  color: colour,
+                  border: `1px solid ${colour}30`,
+                }}
+              >
+                {label}: {count}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Filters */}
-      <div className="flex gap-3">
-        <input
-          type="text"
-          placeholder="Search by name, email, or company..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className={`${inputClass} flex-1`}
-        />
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className={inputClass}
-        >
-          {STATUS_OPTIONS.map((s) => (
-            <option key={s} value={s}>
-              {s === 'all' ? 'All statuses' : s.charAt(0).toUpperCase() + s.slice(1)}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* Filters */}
+          <div className="flex gap-3">
+            <input
+              type="text"
+              placeholder="Search by name, email, or company..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className={`${inputClass} flex-1`}
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className={inputClass}
+            >
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s} value={s}>
+                  {s === 'all' ? 'All statuses' : s.charAt(0).toUpperCase() + s.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      {/* Table */}
-      <div className="rounded-sm border border-[var(--color-border)] bg-[var(--surface-card)]">
-        <ContactsTable
-          contacts={filtered}
-          loading={loading}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      </div>
+          {/* Table */}
+          <div className="rounded-sm border border-[var(--color-border)] bg-[var(--surface-card)]">
+            <ContactsTable
+              contacts={filtered}
+              loading={loading}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </>
+      )}
 
       {/* Modal */}
       {showModal && (

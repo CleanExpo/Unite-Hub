@@ -88,8 +88,8 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
           <select
             value={businessKey}
             onChange={e => setBusinessKey(e.target.value)}
-            className="w-full bg-[#111] rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#00F5FF]/30"
-            style={{ borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+            className="w-full rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#00F5FF]/30"
+            style={{ background: 'var(--surface-elevated)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
           >
             {BUSINESSES.map(b => <option key={b.key} value={b.key}>{b.name}</option>)}
           </select>
@@ -103,8 +103,8 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
             onChange={e => setContent(e.target.value)}
             rows={4}
             placeholder="What do you want to share?"
-            className="w-full bg-[#111] rounded-sm px-3 py-2 text-sm placeholder:text-[#888888] focus:outline-none focus:border-[#00F5FF]/30 resize-none"
-            style={{ borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+            className="w-full rounded-sm px-3 py-2 text-sm placeholder:text-[#666666] focus:outline-none focus:border-[#00F5FF]/30 resize-none"
+            style={{ background: 'var(--surface-elevated)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
           />
           <p className="text-[10px] mt-1" style={{ color: 'var(--color-text-muted)' }}>{content.length} chars</p>
         </div>
@@ -122,9 +122,9 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
                 className={`px-3 py-1 text-[10px] rounded-sm border transition-colors ${
                   selectedPlatforms.includes(p)
                     ? 'border-[#00F5FF]/40 text-[#00F5FF] bg-[#00F5FF]/5'
-                    : ''
+                    : 'hover:border-[rgba(255,255,255,0.18)]'
                 }`}
-                style={selectedPlatforms.includes(p) ? undefined : { borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+                style={selectedPlatforms.includes(p) ? undefined : { background: 'var(--surface-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
               >
                 {PLATFORM_LABELS[p]}
               </button>
@@ -139,8 +139,8 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
             type="datetime-local"
             value={scheduledAt}
             onChange={e => setScheduledAt(e.target.value)}
-            className="bg-[#111] rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#00F5FF]/30"
-            style={{ borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+            className="w-full rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-[#00F5FF]/30"
+            style={{ background: 'var(--surface-elevated)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
           />
         </div>
 

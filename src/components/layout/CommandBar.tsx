@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import {
   LayoutDashboard, Users, Lock, ClipboardCheck,
   Scale, Share2, Settings, MessageSquare, Zap,
+  BookOpen, Receipt, Columns2, FileText, Mail,
+  CalendarDays, Brain,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import {
@@ -39,11 +41,18 @@ type Command = NavCommand | ActionCommand
 
 const NAV_COMMANDS: NavCommand[] = [
   { type: 'nav', label: 'Dashboard',  icon: LayoutDashboard, path: '/founder/dashboard' },
-  { type: 'nav', label: 'Contacts',   icon: Users,           path: '/founder/contacts' },
+  { type: 'nav', label: 'Bookkeeper', icon: BookOpen,        path: '/founder/bookkeeper' },
+  { type: 'nav', label: 'Xero',       icon: Receipt,         path: '/founder/xero' },
+  { type: 'nav', label: 'Kanban',     icon: Columns2,        path: '/founder/kanban' },
   { type: 'nav', label: 'Vault',      icon: Lock,            path: '/founder/vault' },
+  { type: 'nav', label: 'Notes',      icon: FileText,        path: '/founder/notes' },
   { type: 'nav', label: 'Approvals',  icon: ClipboardCheck,  path: '/founder/approvals' },
   { type: 'nav', label: 'Advisory',   icon: Scale,           path: '/founder/advisory' },
+  { type: 'nav', label: 'Strategy',   icon: Brain,           path: '/founder/strategy' },
   { type: 'nav', label: 'Social',     icon: Share2,          path: '/founder/social' },
+  { type: 'nav', label: 'Contacts',   icon: Users,           path: '/founder/contacts' },
+  { type: 'nav', label: 'Email',      icon: Mail,            path: '/founder/email' },
+  { type: 'nav', label: 'Calendar',   icon: CalendarDays,    path: '/founder/calendar' },
   { type: 'nav', label: 'Settings',   icon: Settings,        path: '/founder/settings' },
 ]
 

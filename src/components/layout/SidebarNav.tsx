@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, BookOpen, Columns2, Lock, FileText, ClipboardCheck, Scale, Share2, Users, Settings, Receipt } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Columns2, Lock, FileText, ClipboardCheck, Scale, Share2, Users, Settings, Receipt, Mail, CalendarDays, Brain } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -15,8 +15,11 @@ const NAV_ITEMS = [
   { href: '/founder/notes',     label: 'Notes',      icon: FileText },
   { href: '/founder/approvals', label: 'Approvals',  icon: ClipboardCheck },
   { href: '/founder/advisory',  label: 'Advisory',   icon: Scale },
+  { href: '/founder/strategy',  label: 'Strategy',   icon: Brain },
   { href: '/founder/social',    label: 'Social',     icon: Share2 },
-  { href: '/founder/contacts',  label: 'Contacts',  icon: Users },
+  { href: '/founder/contacts',  label: 'Contacts',   icon: Users },
+  { href: '/founder/email',     label: 'Email',      icon: Mail },
+  { href: '/founder/calendar',  label: 'Calendar',   icon: CalendarDays },
   { href: '/founder/settings',  label: 'Settings',   icon: Settings },
 ] as const
 

@@ -7,6 +7,7 @@ import {
   fetchCalendarEvents,
   getConnectedGoogleAccounts,
 } from '@/lib/integrations/google'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 export default async function CalendarPage() {
   const user = await getUser()
@@ -19,10 +20,11 @@ export default async function CalendarPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-xl font-light text-white/90">Calendar</h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>Events · colour-coded by business</p>
-      </div>
+      <PageHeader
+        title="Calendar"
+        subtitle="Events from connected Google Calendars"
+        tip="Connect a Google account via Email settings to see events here"
+      />
 
       {!configured && (
         <div className="border px-4 py-3 rounded-sm text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>

@@ -4,6 +4,7 @@
 import { Menu, HelpCircle, Zap, MessageSquare } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useUIStore } from '@/store/ui'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 
 const BREADCRUMB_MAP: Record<string, string> = {
   '/founder/dashboard': 'Dashboard',
@@ -83,13 +84,54 @@ export function Topbar() {
           <span className="font-mono text-[10px]">⌘K</span>
         </button>
 
-        <button
-          className="transition-colors"
-          style={{ color: 'var(--color-text-disabled)' }}
-          aria-label="Help"
-        >
-          <HelpCircle size={16} strokeWidth={1.75} />
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              className="transition-colors"
+              style={{ color: 'var(--color-text-disabled)' }}
+              aria-label="Help"
+            >
+              <HelpCircle size={16} strokeWidth={1.75} />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent
+            align="end"
+            className="w-56 rounded-sm p-3"
+            style={{
+              background: 'var(--surface-elevated)',
+              border: '1px solid var(--color-border)',
+            }}
+          >
+            <p
+              className="text-[10px] font-medium tracking-widest uppercase mb-2"
+              style={{ color: 'var(--color-text-disabled)' }}
+            >
+              Keyboard Shortcuts
+            </p>
+            <div className="flex flex-col gap-1.5">
+              {[
+                { label: 'Command Bar', keys: '⌘K' },
+                { label: 'Bron AI', keys: '⌘⇧B' },
+                { label: 'Capture Idea', keys: '⌘I' },
+                { label: 'Toggle Sidebar', keys: '⌘\\' },
+              ].map((s) => (
+                <div key={s.keys} className="flex items-center justify-between text-[12px]">
+                  <span style={{ color: 'var(--color-text-muted)' }}>{s.label}</span>
+                  <kbd
+                    className="font-mono text-[10px] px-1.5 py-0.5 rounded-sm"
+                    style={{
+                      background: 'var(--surface-card)',
+                      color: 'var(--color-text-disabled)',
+                      border: '1px solid var(--color-border)',
+                    }}
+                  >
+                    {s.keys}
+                  </kbd>
+                </div>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </header>
   )

@@ -2,7 +2,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Search } from 'lucide-react'
+import { Search, MessageSquare } from 'lucide-react'
 import { useUIStore } from '@/store/ui'
 import { BUSINESSES } from '@/lib/businesses'
 import { SidebarNav } from './SidebarNav'
@@ -10,6 +10,7 @@ import { SidebarBusinessItem } from './SidebarBusinessItem'
 
 export function Sidebar() {
   const sidebarOpen = useUIStore((s) => s.sidebarOpen)
+  const toggleBron = useUIStore((s) => s.toggleBron)
 
   return (
     <motion.aside
@@ -85,6 +86,27 @@ export function Sidebar() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Bron AI trigger */}
+      <div className="px-2 pb-1">
+        <button
+          onClick={toggleBron}
+          className="w-full flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors"
+          style={{
+            background: 'rgba(0, 245, 255, 0.05)',
+            border: '1px solid rgba(0, 245, 255, 0.2)',
+            color: 'var(--color-text-muted)',
+          }}
+        >
+          <MessageSquare size={16} strokeWidth={1.75} className="shrink-0" style={{ color: '#00F5FF' }} />
+          {sidebarOpen && <span>Ask Bron</span>}
+          {sidebarOpen && (
+            <span className="ml-auto font-mono text-[10px]" style={{ color: 'var(--color-text-disabled)' }}>
+              ⌘⇧B
+            </span>
+          )}
+        </button>
       </div>
 
       {/* Avatar footer */}

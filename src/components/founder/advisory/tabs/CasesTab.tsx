@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { Scale } from 'lucide-react'
 import type { AdvisoryCase } from '@/lib/advisory/types'
 import { CaseCard } from '../shared/CaseCard'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export function CasesTab() {
   const [cases, setCases] = useState<AdvisoryCase[]>([])
@@ -39,18 +41,16 @@ export function CasesTab() {
 
   if (cases.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3">
-        <span className="text-[13px]" style={{ color: 'var(--color-text-muted)' }}>
-          No advisory cases yet
-        </span>
-        <button
-          onClick={() => router.replace(pathname + '?tab=new', { scroll: false })}
-          className="text-[12px] font-medium px-3 py-1.5 rounded-sm transition-colors"
-          style={{ background: '#00F5FF18', color: '#00F5FF', border: '1px solid #00F5FF30' }}
-        >
-          Create your first case
-        </button>
-      </div>
+      <EmptyState
+        icon={Scale}
+        title="No advisory cases yet"
+        description="Create your first case to get competing analysis from 4 AI accounting firms, scored by a judge."
+        action={{
+          label: 'Create your first case',
+          href: '#',
+          onClick: () => router.replace(pathname + '?tab=new', { scroll: false }),
+        }}
+      />
     )
   }
 

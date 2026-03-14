@@ -11,6 +11,7 @@ import { getConnectedImapAccounts, fetchImapThreads } from '@/lib/integrations/i
 import { ImapConnectForm } from '@/components/founder/email/ImapConnectForm'
 import { EMAIL_ACCOUNTS } from '@/lib/email-accounts'
 import { BUSINESSES } from '@/lib/businesses'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 // Lookup map: businessKey → { name, color }
 const BUSINESS_INFO = Object.fromEntries(BUSINESSES.map((b) => [b.key, b]))
@@ -54,10 +55,10 @@ export default async function EmailPage({
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-xl font-light text-white/90">Email</h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>Business threads · grouped by portfolio company</p>
-      </div>
+      <PageHeader
+        title="Email"
+        subtitle="Gmail threads from connected Google accounts"
+      />
 
       {params.connected && (
         <div className="border border-[#00F5FF]/30 bg-[#00F5FF]/5 px-4 py-3 rounded-sm text-sm text-[#00F5FF]">

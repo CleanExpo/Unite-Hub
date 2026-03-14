@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useUIStore } from '@/store/ui'
 import { createClient } from '@/lib/supabase/client'
 import { VaultChangePassword } from '@/components/founder/vault/VaultChangePassword'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 export function SettingsPageClient() {
   const theme = useUIStore((s) => s.theme)
@@ -32,12 +33,11 @@ export function SettingsPageClient() {
 
   return (
     <div className="p-6 max-w-2xl">
-      <h1
-        className="text-xl font-semibold mb-6"
-        style={{ color: 'var(--color-text-primary)' }}
-      >
-        Settings
-      </h1>
+      <PageHeader
+        title="Settings"
+        subtitle="Appearance, security, and account management"
+        className="mb-6"
+      />
 
       <div className="flex flex-col gap-5">
 

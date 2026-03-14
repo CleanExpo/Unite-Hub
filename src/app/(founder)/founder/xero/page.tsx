@@ -6,6 +6,7 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { isXeroConfigured } from '@/lib/integrations/xero'
 import { ConnectCard } from '@/components/founder/integrations/ConnectCard'
 import { XeroConnectButton } from '@/components/founder/xero/XeroConnectButton'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 // ── Xero account groupings ────────────────────────────────────────────────
 // Each business connects to one of two Xero organisations.
@@ -68,14 +69,10 @@ export default async function XeroPage({
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-xl font-light" style={{ color: 'var(--color-text-primary)' }}>
-          Xero
-        </h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>
-          Financial data · Bank feeds · P&amp;L · BAS · GST
-        </p>
-      </div>
+      <PageHeader
+        title="Xero"
+        subtitle="Manage Xero connections for each business"
+      />
 
       {params.connected && (
         <div className="text-xs text-[#00F5FF]/80 border border-[#00F5FF]/20 bg-[#00F5FF]/5 px-4 py-2.5 rounded-sm">
