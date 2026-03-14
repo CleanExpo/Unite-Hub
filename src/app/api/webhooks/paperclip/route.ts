@@ -98,6 +98,7 @@ export async function POST(request: NextRequest) {
       status: 'processed',
       linearIssueId: issue.id,
       linearIssueUrl: issue.url,
+      ...(pkg.createPR && { prCreated: false, prNote: 'GitHub PR creation not yet implemented — Linear issue created only' }),
     })
   } catch (error) {
     await markEvent(

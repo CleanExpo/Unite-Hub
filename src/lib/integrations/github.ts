@@ -18,7 +18,7 @@ export function isGitHubConfigured(): boolean {
 }
 
 export interface CreatePRInput {
-  owner: string      // e.g. 'phill-mcgurk' — defaults to GITHUB_OWNER env var if set
+  owner?: string     // defaults to GITHUB_OWNER env var — e.g. 'phill-mcgurk'
   repo: string       // e.g. 'unite-group'
   title: string
   body: string
@@ -41,8 +41,11 @@ export async function createPullRequest(input: CreatePRInput): Promise<GitHubPR>
     throw new Error('GitHub not configured — GITHUB_TOKEN is missing')
   }
 
+  const owner = input.owner ?? process.env.GITHUB_OWNER
+  if (!owner) throw new Error('GitHub owner not configured — set GITHUB_OWNER env var or pass owner in CreatePRInput')
+
   const response = await fetch(
-    `${GITHUB_API}/repos/${input.owner}/${input.repo}/pulls`,
+    `${GITHUB_API}/repos/${owner}/${input.repo}/pulls`,
     {
       method: 'POST',
       headers: authHeaders(),

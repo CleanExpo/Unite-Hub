@@ -15,6 +15,9 @@ import { notify } from '@/lib/notifications'
  * construct a Linear deep-link from the identifier instead.
  */
 export async function checkSynthexProgress(): Promise<{ inReviewCount: number }> {
+  // TODO: Replace with a filtered Linear query (SYN team, In Review state only)
+  // Currently fetches all issues (up to 500) and filters in memory — acceptable
+  // for a single-tenant system with <500 total issues, but inefficient at scale.
   const issues = await fetchIssues()
 
   const inReview = issues.filter(
