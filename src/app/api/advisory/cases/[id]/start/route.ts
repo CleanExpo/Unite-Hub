@@ -59,21 +59,25 @@ async function runDebateAsync(caseId: string, founderId: string) {
   const supabase = createServiceClient()
   const channel = supabase.channel(`advisory:${caseId}`)
 
-  // Subscribe the channel so broadcasts work
-  await new Promise<void>((resolve) => {
-    channel.subscribe((status) => {
-      if (status === 'SUBSCRIBED') resolve()
-    })
-  })
+  // Subscribe with a 10s timeout — in serverless, Realtime subscription may
+  // take longer or fail silently. We proceed regardless so the debate runs.
+  await Promise.race([
+    new Promise<void>((resolve) => {
+      channel.subscribe((status) => {
+        if (status === 'SUBSCRIBED' || status === 'CHANNEL_ERROR') resolve()
+      })
+    }),
+    new Promise<void>((resolve) => setTimeout(resolve, 10_000)),
+  ])
 
   try {
     for await (const event of runDebate(caseId, founderId)) {
-      // Broadcast each event to any frontend subscribers
-      await channel.send({
+      // Best-effort broadcast — don't let send failures block the debate
+      channel.send({
         type: 'broadcast',
         event: 'debate_event',
         payload: event,
-      })
+      }).catch(() => { /* ignore broadcast errors */ })
     }
   } finally {
     supabase.removeChannel(channel)
