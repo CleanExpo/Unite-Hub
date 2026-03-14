@@ -75,6 +75,9 @@ export async function POST(request: NextRequest) {
   }
 
   const eventRowId = await insertEvent('whatsapp', messageId, 'text_message', body)
+  if (eventRowId === null) {
+    return NextResponse.json({ status: 'duplicate' })
+  }
 
   // ─── Process idea → Linear issue ────────────────────────────────────────────
   try {

@@ -57,6 +57,9 @@ export async function POST(request: NextRequest) {
     pkg.type ?? 'feature',
     pkg as unknown as Record<string, unknown>
   )
+  if (eventRowId === null) {
+    return NextResponse.json({ status: 'duplicate' })
+  }
 
   // ─── Process work package → Linear issue ─────────────────────────────────────
   try {

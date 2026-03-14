@@ -233,9 +233,8 @@ export async function createIssue(input: CreateIssueInput): Promise<{ id: string
   if (!isLinearConfigured()) {
     throw new Error('LINEAR_API_KEY is not configured — cannot create issue')
   }
-  if (input.labelNames?.length) {
-    console.warn('[Linear] labelNames not yet wired into mutation — labels will not be applied:', input.labelNames)
-  }
+  // TODO: Wire labelNames into the mutation once Linear label ID resolution is built
+  // Labels are accepted here but not yet applied — see issue tracker
   const teamId = await resolveTeamId(input.teamKey)
 
   const data = await gql<{ issueCreate: { issue: { id: string; identifier: string; url: string } } }>(`

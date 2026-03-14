@@ -20,14 +20,15 @@ export async function isDuplicate(provider: Provider, eventId: string): Promise<
 
 /**
  * Insert new webhook event record with status='processing'.
- * Returns the row id for later status updates.
+ * Returns the row id for later status updates, or null if a concurrent
+ * request already inserted the same event (PostgreSQL unique_violation 23505).
  */
 export async function insertEvent(
   provider: Provider,
   eventId: string,
   eventType: string,
   payload: Record<string, unknown>
-): Promise<string> {
+): Promise<string | null> {
   const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('webhook_events')
@@ -41,7 +42,12 @@ export async function insertEvent(
     })
     .select('id')
     .single()
-  if (error) throw error
+
+  if (error) {
+    // 23505 = unique_violation — concurrent request already inserted this event
+    if (error.code === '23505') return null
+    throw error
+  }
   return data.id
 }
 
