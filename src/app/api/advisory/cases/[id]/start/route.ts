@@ -3,11 +3,13 @@
 // The debate runs asynchronously — progress streams via Supabase Realtime.
 
 import { NextRequest, NextResponse } from 'next/server'
+import { waitUntil } from '@vercel/functions'
 import { getUser } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { runDebate } from '@/lib/advisory/debate-engine'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 300 // Vercel Pro: keep alive up to 5 minutes
 
 export async function POST(
   _request: NextRequest,
@@ -38,11 +40,13 @@ export async function POST(
     )
   }
 
-  // Start the debate asynchronously — don't await completion.
-  // The generator drives itself; we consume events and broadcast via Realtime.
-  runDebateAsync(id, user.id).catch(err => {
-    console.error(`[advisory/start] Unhandled debate error for case ${id}:`, err)
-  })
+  // Start the debate asynchronously — waitUntil keeps the Vercel function alive
+  // after the HTTP response is sent so the full debate can complete.
+  waitUntil(
+    runDebateAsync(id, user.id).catch(err => {
+      console.error(`[advisory/start] Unhandled debate error for case ${id}:`, err)
+    })
+  )
 
   return NextResponse.json({ message: 'Debate started', caseId: id })
 }
