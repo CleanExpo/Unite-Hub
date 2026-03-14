@@ -27,7 +27,10 @@ export async function register() {
     { name: 'Linear',  vars: ['LINEAR_API_KEY'] },
     { name: 'Slack',   vars: ['SLACK_WEBHOOK_URL'] },
     { name: 'Social',  vars: ['FACEBOOK_APP_ID'] },
-    { name: 'Sentry',  vars: ['SENTRY_AUTH_TOKEN'] },
+    { name: 'Sentry',    vars: ['SENTRY_AUTH_TOKEN'] },
+    { name: 'WhatsApp', vars: ['WHATSAPP_ACCESS_TOKEN', 'WHATSAPP_APP_SECRET'] },
+    { name: 'Paperclip', vars: ['PAPERCLIP_API_URL', 'PAPERCLIP_API_KEY'] },
+    { name: 'GitHub',    vars: ['GITHUB_TOKEN'] },
   ] as const
 
   // ─── Check required (always) ───────────────────────────────────────────────

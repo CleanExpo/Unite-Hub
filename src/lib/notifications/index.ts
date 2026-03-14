@@ -11,6 +11,8 @@ export type NotificationType =
   | 'approval_alert'
   | 'bookkeeper_summary'
   | 'experiment_update'
+  | 'whatsapp_idea_received'
+  | 'paperclip_task_received'
 
 export interface NotificationPayload {
   type: NotificationType
