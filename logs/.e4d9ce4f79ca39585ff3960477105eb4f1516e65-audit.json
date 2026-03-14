@@ -14,6 +14,16 @@
             "date": 1771080862617,
             "name": "C:\\Unite-Hub\\logs\\combined-2026-02-15.log",
             "hash": "ed63e4246d1550dcb776e8a1f3af052a3e034c4225149ead74523fcc98da382e"
+        },
+        {
+            "date": 1771200355386,
+            "name": "C:\\Unite-Hub\\logs\\combined-2026-02-16.log",
+            "hash": "2b8392c8ef4e238f3bd20df07e1c95c4cab0b8e2e0b863f5add3c3b8a57c5af6"
+        },
+        {
+            "date": 1771277605358,
+            "name": "C:\\Unite-Hub\\logs\\combined-2026-02-17.log",
+            "hash": "e04e74f6428480e60af1252d1c727d70f1ae282e5260a09e3995a779d91cc435"
         }
     ],
     "hashType": "sha256"

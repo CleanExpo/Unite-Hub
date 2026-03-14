@@ -14,6 +14,16 @@
             "date": 1771080862600,
             "name": "C:\\Unite-Hub\\logs\\error-2026-02-15.log",
             "hash": "0ea081ea8fdf2595a680d1f800972b2f87a92ff8953fd9deadb5650ed4ef5bac"
+        },
+        {
+            "date": 1771200355266,
+            "name": "C:\\Unite-Hub\\logs\\error-2026-02-16.log",
+            "hash": "14c24c318ab64073e1eff69e214be48b8aad2620e5832507b2f1cc3dd2bdb003"
+        },
+        {
+            "date": 1771277605318,
+            "name": "C:\\Unite-Hub\\logs\\error-2026-02-17.log",
+            "hash": "4862703c8b33fe94ecf1ffe5da7700b23d5e4376a6cf7849b08aa785f2d5fe23"
         }
     ],
     "hashType": "sha256"
