@@ -22,8 +22,30 @@ export async function GET() {
     .order('service')
 
   // Test the exact same function the bookkeeper uses
-  const drTokens = await loadXeroTokens(user.id, 'dr')
-  const carsiTokens = await loadXeroTokens(user.id, 'carsi')
+  let drTokens = null
+  let drError = null
+  let carsiTokens = null
+  let carsiError = null
+  try {
+    drTokens = await loadXeroTokens(user.id, 'dr')
+  } catch (e) {
+    drError = e instanceof Error ? e.message : String(e)
+  }
+  try {
+    carsiTokens = await loadXeroTokens(user.id, 'carsi')
+  } catch (e) {
+    carsiError = e instanceof Error ? e.message : String(e)
+  }
+
+  // Check if VAULT_ENCRYPTION_KEY has whitespace issues
+  const rawKey = process.env.VAULT_ENCRYPTION_KEY ?? ''
+  const keyDiag = {
+    length: rawKey.length,
+    trimmedLength: rawKey.trim().length,
+    hasTrailingWhitespace: rawKey !== rawKey.trim(),
+    endsWithNewline: rawKey.endsWith('\n'),
+    endsWithCR: rawKey.endsWith('\r'),
+  }
 
   return NextResponse.json({
     founderId: user.id,
@@ -31,8 +53,11 @@ export async function GET() {
     error: error?.message ?? null,
     count: data?.length ?? 0,
     loadXeroTokensResult: {
-      dr: drTokens ? 'FOUND (has access_token)' : 'NULL',
-      carsi: carsiTokens ? 'FOUND (has access_token)' : 'NULL',
+      dr: drTokens ? 'FOUND' : 'NULL',
+      drError,
+      carsi: carsiTokens ? 'FOUND' : 'NULL',
+      carsiError,
     },
+    vaultKeyDiagnostic: keyDiag,
   })
 }
