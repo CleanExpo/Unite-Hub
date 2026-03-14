@@ -21,7 +21,7 @@ function getVaultKey(): string {
       '(generate with: openssl rand -hex 32)'
     )
   }
-  return key.trim()
+  return key
 }
 
 function deriveKey(salt: Buffer): Buffer {
