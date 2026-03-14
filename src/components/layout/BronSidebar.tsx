@@ -1,13 +1,15 @@
 // src/components/layout/BronSidebar.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Send, MessageSquare } from 'lucide-react'
+import { X, Send, MessageSquare, MessageSquarePlus } from 'lucide-react'
 import { useUIStore } from '@/store/ui'
 import { usePathname } from 'next/navigation'
 
 interface Message { role: 'user' | 'assistant'; content: string }
+
+const STORAGE_KEY = 'bron-conversation'
 
 /** Context-aware suggestion chips keyed by route */
 const CONTEXT_SUGGESTIONS: Record<string, string[]> = {
@@ -73,6 +75,27 @@ export function BronSidebar() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
 
+  // Load saved conversation on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      try { setMessages(JSON.parse(saved)) } catch { /* corrupted data — ignore */ }
+    }
+  }, [])
+
+  // Persist messages to localStorage on change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages))
+    }
+  }, [messages])
+
+  const handleNewChat = useCallback(() => {
+    setMessages([])
+    setInput('')
+    localStorage.removeItem(STORAGE_KEY)
+  }, [])
+
   async function send() {
     if (!input.trim() || loading) return
     const userMsg: Message = { role: 'user', content: input }
@@ -110,10 +133,21 @@ export function BronSidebar() {
             <span className="text-[13px] font-medium" style={{ color: 'var(--color-text-primary)' }}>
               Bron
             </span>
-            <button onClick={toggleBron} className="ml-auto"
-              style={{ color: 'var(--color-text-disabled)' }}>
-              <X size={16} />
-            </button>
+            <div className="ml-auto flex items-center gap-2">
+              {messages.length > 0 && (
+                <button
+                  onClick={handleNewChat}
+                  className="flex items-center gap-1 text-[10px] uppercase tracking-[0.15em] text-[#00F5FF] border border-[#00F5FF]/30 rounded-sm px-2 py-1 hover:bg-[#00F5FF]/5 transition-colors"
+                >
+                  <MessageSquarePlus size={10} />
+                  New Chat
+                </button>
+              )}
+              <button onClick={toggleBron}
+                style={{ color: 'var(--color-text-disabled)' }}>
+                <X size={16} />
+              </button>
+            </div>
           </div>
 
           {/* Messages */}

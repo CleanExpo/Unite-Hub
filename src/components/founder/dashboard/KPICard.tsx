@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { type Business } from '@/lib/businesses'
 import { type XeroRevenueMTD } from '@/lib/integrations/xero'
+import type { BatchKPIEntry } from '@/app/api/dashboard/kpi/route'
 
 interface KPICardProps {
   business: Business
@@ -14,6 +15,8 @@ interface KPICardProps {
   secondary: string
   xeroBusinessKey?: string
   linearBusinessKey?: string
+  /** Pre-fetched data from batch endpoint — skips individual fetches when provided */
+  liveData?: BatchKPIEntry
 }
 
 function formatAUD(cents: number): string {
@@ -41,13 +44,37 @@ export function KPICard({
   secondary,
   xeroBusinessKey,
   linearBusinessKey,
+  liveData,
 }: KPICardProps) {
   const [live, setLive] = useState<LiveState>({
     metric: null, trend: null, secondary: null, source: null, loading: false,
   })
   const [linearCount, setLinearCount] = useState<number | null>(null)
 
+  // When batch liveData is provided, populate state directly — no individual fetch needed
   useEffect(() => {
+    if (liveData) {
+      if (liveData.revenueCents !== undefined) {
+        setLive({
+          metric: formatAUD(liveData.revenueCents),
+          trend: {
+            value: `${(liveData.growth ?? 0) >= 0 ? '+' : ''}${(liveData.growth ?? 0).toFixed(1)}% MoM`,
+            positive: (liveData.growth ?? 0) >= 0,
+          },
+          secondary: `${liveData.invoiceCount ?? 0} Invoices MTD`,
+          source: liveData.source ?? null,
+          loading: false,
+        })
+      }
+      if (liveData.activeIssues !== undefined) {
+        setLinearCount(liveData.activeIssues)
+      }
+    }
+  }, [liveData])
+
+  // Fallback: individual Xero fetch when no batch data provided
+  useEffect(() => {
+    if (liveData) return // Batch data takes precedence
     if (xeroBusinessKey) {
       setLive(prev => ({ ...prev, loading: true }))
       fetch(`/api/xero/revenue?business=${encodeURIComponent(xeroBusinessKey)}`)
@@ -69,15 +96,17 @@ export function KPICard({
           setLive({ metric: null, trend: null, secondary: null, source: null, loading: false })
         })
     }
-  }, [xeroBusinessKey])
+  }, [xeroBusinessKey, liveData])
 
+  // Fallback: individual Linear fetch when no batch data provided
   useEffect(() => {
+    if (liveData) return // Batch data takes precedence
     if (!linearBusinessKey) return
     fetch(`/api/linear/kpi?business=${encodeURIComponent(linearBusinessKey)}`)
       .then(res => res.json() as Promise<{ activeCount: number }>)
       .then(({ activeCount }) => { setLinearCount(activeCount) })
       .catch(() => {})
-  }, [linearBusinessKey])
+  }, [linearBusinessKey, liveData])
 
   const isLive = !!xeroBusinessKey
 

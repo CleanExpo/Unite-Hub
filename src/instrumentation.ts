@@ -13,6 +13,7 @@ export async function register() {
 
   // ─── Required (production only) ────────────────────────────────────────────
   const requiredProduction = [
+    'ANTHROPIC_API_KEY',
     'VAULT_ENCRYPTION_KEY',
     'SUPABASE_SERVICE_ROLE_KEY',
     'CRON_SECRET',

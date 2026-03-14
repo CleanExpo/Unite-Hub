@@ -45,3 +45,19 @@ spec-builder, deploy-guardian, orchestrator, and 14 others.
 - DB queries: always `.eq('workspace_id', workspaceId)` (current codebase)
 - Auth: Supabase PKCE server-side | FastAPI JWT middleware
 - Full context: `.claude/docs/CLAUDE-LEGACY.md` | `.claude/memory/CONSTITUTION.md`
+
+## Environment Variables (Vercel)
+NEVER delete or modify these without understanding the impact:
+- `ANTHROPIC_API_KEY` — Claude API. Powers Bron, Advisory, Strategy, Experiments. CRITICAL.
+- `VAULT_ENCRYPTION_KEY` — AES-256-GCM encryption for credentials vault. CRITICAL.
+- `SUPABASE_SERVICE_ROLE_KEY` — Bypasses RLS for server-side operations. CRITICAL.
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL. PUBLIC.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anonymous key. PUBLIC.
+- `CRON_SECRET` — Validates scheduled jobs (bookkeeper). CRITICAL.
+- `FOUNDER_USER_ID` — Founder's Supabase auth UUID. Used by CRON jobs.
+
+Integration keys (optional — features degrade gracefully):
+- `XERO_CLIENT_ID/SECRET` — Xero accounting OAuth
+- `GOOGLE_CLIENT_ID/SECRET` — Gmail + Calendar OAuth
+- `LINEAR_API_KEY` — Linear issue tracking sync
+- `FACEBOOK_APP_ID/SECRET`, `LINKEDIN_CLIENT_ID/SECRET`, `TIKTOK_CLIENT_KEY/SECRET` — Social OAuth

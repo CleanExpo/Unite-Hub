@@ -1,12 +1,24 @@
 'use client'
 
 import { useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Topbar } from '@/components/layout/Topbar'
-import { IdeaCapture } from './IdeaCapture'
-import { BronSidebar } from './BronSidebar'
-import { CommandBar } from './CommandBar'
 import { useUIStore } from '@/store/ui'
+
+// Lazy-load overlay components — defers JS bundle until first render
+const IdeaCapture = dynamic(
+  () => import('./IdeaCapture').then(m => ({ default: m.IdeaCapture })),
+  { ssr: false }
+)
+const BronSidebar = dynamic(
+  () => import('./BronSidebar').then(m => ({ default: m.BronSidebar })),
+  { ssr: false }
+)
+const CommandBar = dynamic(
+  () => import('./CommandBar').then(m => ({ default: m.CommandBar })),
+  { ssr: false }
+)
 
 export function FounderShell({ children }: { children: React.ReactNode }) {
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)

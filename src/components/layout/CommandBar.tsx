@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   LayoutDashboard, Users, Lock, ClipboardCheck,
@@ -67,8 +67,8 @@ export function CommandBar() {
   const [results, setResults] = useState<SearchResults | null>(null)
   const [loading, setLoading] = useState(false)
 
-  // ACTION_COMMANDS must stay inside component body — uses toggleBron/toggleCapture from hooks
-  const ACTION_COMMANDS: ActionCommand[] = [
+  // Memoised to avoid re-creating the array on every render — only rebuilds when toggle fns change
+  const ACTION_COMMANDS: ActionCommand[] = useMemo(() => [
     {
       type: 'action',
       label: 'Open Bron Chat',
@@ -83,7 +83,7 @@ export function CommandBar() {
       action: toggleCapture,
       shortcut: '\u2318I',
     },
-  ]
+  ], [toggleBron, toggleCapture])
 
   // Debounced search effect
   useEffect(() => {
