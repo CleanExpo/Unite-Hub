@@ -51,6 +51,9 @@ export async function POST() {
         transactionCount: b.transactionCount,
         autoReconciled: b.autoReconciled,
         flaggedForReview: b.flaggedForReview,
+        totalFetched: b.totalFetched,
+        alreadyReconciledInXero: b.alreadyReconciledInXero,
+        invoicesFetched: b.invoicesFetched,
         error: b.error,
       })),
     })

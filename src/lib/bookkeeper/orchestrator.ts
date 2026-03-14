@@ -45,11 +45,18 @@ export interface BusinessResult {
   businessName: string
   status: 'success' | 'skipped' | 'error'
   error?: string
+  /** New unreconciled transactions processed by this run */
   transactionCount: number
   autoReconciled: number
   flaggedForReview: number
   gstCollectedCents: number
   gstPaidCents: number
+  /** Total bank transactions fetched from Xero (including already-reconciled) */
+  totalFetched: number
+  /** Already reconciled in Xero before this run */
+  alreadyReconciledInXero: number
+  /** Invoices fetched from Xero */
+  invoicesFetched: number
 }
 
 // ---------------------------------------------------------------------------
@@ -150,6 +157,9 @@ export async function processOneBusiness(
       flaggedForReview: 0,
       gstCollectedCents: 0,
       gstPaidCents: 0,
+      totalFetched: 0,
+      alreadyReconciledInXero: 0,
+      invoicesFetched: 0,
     }
   }
 
@@ -160,12 +170,14 @@ export async function processOneBusiness(
   }
   const tenantId = validTokens.tenant_id
 
-  // Step 3: Fetch bank transactions (last 30 days)
+  // Step 3: Fetch bank transactions (last 90 days — wider than reconciliation
+  // window to capture recent activity even if already reconciled)
   const bankTxnFromDate = daysAgoISO(BANK_TXN_LOOKBACK_DAYS)
   const bankTxnResponse = await fetchBankTransactions(founderId, businessKey, {
     fromDate: bankTxnFromDate,
   })
   const bankTransactions: XeroBankTransaction[] = bankTxnResponse.items
+  const alreadyReconciledInXero = bankTransactions.filter(t => t.IsReconciled).length
 
   // Step 4: Fetch invoices (last 90 days)
   const invoiceFromDate = daysAgoISO(INVOICE_LOOKBACK_DAYS)
@@ -229,6 +241,9 @@ export async function processOneBusiness(
     flaggedForReview,
     gstCollectedCents: basResult.label1B_gstOnSalesCents,
     gstPaidCents: basResult.label9_gstOnPurchasesCents,
+    totalFetched: bankTransactions.length,
+    alreadyReconciledInXero,
+    invoicesFetched: invoices.length,
   }
 }
 
@@ -300,6 +315,9 @@ export async function runBookkeeperForAllBusinesses(
         flaggedForReview: 0,
         gstCollectedCents: 0,
         gstPaidCents: 0,
+        totalFetched: 0,
+        alreadyReconciledInXero: 0,
+        invoicesFetched: 0,
       })
       errorLog.push({ businessKey: business.key, error: errorMessage })
     }
