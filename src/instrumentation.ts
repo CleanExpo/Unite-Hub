@@ -21,9 +21,12 @@ export async function register() {
 
   // ─── Optional (warned when missing) ────────────────────────────────────────
   const optionalIntegrations = [
-    { name: 'Xero',   vars: ['XERO_CLIENT_ID', 'XERO_CLIENT_SECRET'] },
+    { name: 'Xero',    vars: ['XERO_CLIENT_ID', 'XERO_CLIENT_SECRET'] },
+    { name: 'Xero DR', vars: ['DR_CLIENT_ID', 'DR_CLIENT_SECRET'] },
     { name: 'Google',  vars: ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'] },
     { name: 'Linear',  vars: ['LINEAR_API_KEY'] },
+    { name: 'Slack',   vars: ['SLACK_WEBHOOK_URL'] },
+    { name: 'Social',  vars: ['FACEBOOK_APP_ID'] },
     { name: 'Sentry',  vars: ['SENTRY_AUTH_TOKEN'] },
   ] as const
 

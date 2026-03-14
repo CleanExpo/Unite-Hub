@@ -63,6 +63,8 @@ const INTEGRATION = [
   { name: 'SLACK_WEBHOOK_URL', hint: 'Slack incoming webhook URL', group: 'Slack' },
   // Monitoring
   { name: 'SENTRY_AUTH_TOKEN', hint: 'Sentry auth token', group: 'Monitoring' },
+  // App
+  { name: 'NEXT_PUBLIC_APP_URL', hint: 'App URL for OAuth callbacks (http://localhost:3000)', group: 'App' },
 ]
 
 // ─── Validation ─────────────────────────────────────────────────────────────

@@ -41,3 +41,9 @@ CREATE POLICY "Service role full access"
   ON user_settings FOR ALL
   USING (auth.role() = 'service_role')
   WITH CHECK (auth.role() = 'service_role');
+
+-- Auto-update updated_at on row changes
+DROP TRIGGER IF EXISTS user_settings_updated_at ON public.user_settings;
+CREATE TRIGGER user_settings_updated_at
+  BEFORE UPDATE ON public.user_settings
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

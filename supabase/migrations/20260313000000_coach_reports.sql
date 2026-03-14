@@ -38,3 +38,9 @@ create index if not exists idx_coach_reports_type on public.coach_reports(coach_
 create unique index if not exists idx_coach_reports_unique
   on public.coach_reports(coach_type, report_date, coalesce(business_key, '__all__'))
   where status != 'failed';
+
+-- Auto-update updated_at on row changes
+DROP TRIGGER IF EXISTS coach_reports_updated_at ON public.coach_reports;
+CREATE TRIGGER coach_reports_updated_at
+  BEFORE UPDATE ON public.coach_reports
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
