@@ -358,7 +358,7 @@ export async function runBookkeeperForAllBusinesses(
       gst_collected_cents: gstCollectedCents,
       gst_paid_cents: gstPaidCents,
       net_gst_cents: netGstCents,
-      error_log: errorLog.length > 0 ? errorLog : null,
+      error_log: errorLog.length > 0 ? errorLog : [],
     })
     .eq('id', runId)
 
