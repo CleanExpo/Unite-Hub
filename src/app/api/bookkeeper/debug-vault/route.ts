@@ -5,6 +5,7 @@
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import { loadXeroTokens } from '@/lib/integrations/xero/client'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,10 +21,18 @@ export async function GET() {
     .eq('founder_id', user.id)
     .order('service')
 
+  // Test the exact same function the bookkeeper uses
+  const drTokens = await loadXeroTokens(user.id, 'dr')
+  const carsiTokens = await loadXeroTokens(user.id, 'carsi')
+
   return NextResponse.json({
     founderId: user.id,
     vaultEntries: data ?? [],
     error: error?.message ?? null,
     count: data?.length ?? 0,
+    loadXeroTokensResult: {
+      dr: drTokens ? 'FOUND (has access_token)' : 'NULL',
+      carsi: carsiTokens ? 'FOUND (has access_token)' : 'NULL',
+    },
   })
 }
