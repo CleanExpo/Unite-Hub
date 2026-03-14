@@ -1,7 +1,7 @@
 // src/lib/webhooks/dedup.ts
 import { createServiceClient } from '@/lib/supabase/service'
 
-type Provider = 'whatsapp' | 'paperclip'
+export type Provider = 'whatsapp' | 'paperclip'
 
 /**
  * Returns true if this event has already been seen (duplicate).
@@ -54,7 +54,7 @@ export async function markEvent(
   error?: string
 ): Promise<void> {
   const supabase = createServiceClient()
-  await supabase
+  const { error: updateError } = await supabase
     .from('webhook_events')
     .update({
       status,
@@ -62,4 +62,5 @@ export async function markEvent(
       processed_at: status === 'processed' ? new Date().toISOString() : null,
     })
     .eq('id', id)
+  if (updateError) throw updateError
 }

@@ -31,7 +31,7 @@ export function verifyWhatsAppSignature(
       .update(rawBody)
       .digest('hex')
   try {
-    return timingSafeEqual(Buffer.from(signatureHeader), Buffer.from(expected))
+    return timingSafeEqual(Buffer.from(signatureHeader.trim()), Buffer.from(expected))
   } catch {
     return false
   }
