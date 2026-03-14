@@ -109,14 +109,14 @@ export async function POST(request: Request) {
       )
     }
 
-    const identifier = await createIssue({
+    const issue = await createIssue({
       teamKey: body.teamKey,
       title: body.title.trim(),
       description: body.description ?? '',
       priority: body.priority ?? 3,
     })
 
-    return NextResponse.json({ identifier }, { status: 201 })
+    return NextResponse.json({ identifier: issue.id, url: issue.url }, { status: 201 })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'
     return NextResponse.json({ error: message }, { status: 502 })
