@@ -49,9 +49,9 @@ const INTEGRATION = [
   // Xero — CARSI account
   { name: 'XERO_CLIENT_ID', hint: 'Xero OAuth client ID (CARSI account)', group: 'Xero' },
   { name: 'XERO_CLIENT_SECRET', hint: 'Xero OAuth client secret (CARSI account)', group: 'Xero' },
-  // Xero — DR account
-  { name: 'DR_XERO_CLIENT_ID', hint: 'Xero OAuth client ID (DR account)', group: 'Xero DR' },
-  { name: 'DR_XERO_CLIENT_SECRET', hint: 'Xero OAuth client secret (DR account)', group: 'Xero DR' },
+  // Xero — DR account (code reads DR_CLIENT_ID / DR_CLIENT_SECRET — see xero/client.ts)
+  { name: 'DR_CLIENT_ID', hint: 'Xero OAuth client ID (DR account)', group: 'Xero DR' },
+  { name: 'DR_CLIENT_SECRET', hint: 'Xero OAuth client secret (DR account)', group: 'Xero DR' },
   // Google
   { name: 'GOOGLE_CLIENT_ID', hint: 'Google OAuth client ID', group: 'Google' },
   { name: 'GOOGLE_CLIENT_SECRET', hint: 'Google OAuth client secret', group: 'Google' },
@@ -137,14 +137,14 @@ if (foundStale.length > 0) {
   console.log('│')
 }
 
-// Check naming mismatches
-if (process.env.DR_CLIENT_ID && !process.env.DR_XERO_CLIENT_ID) {
-  console.log('\u2502 \u26A0\uFE0F  NAMING MISMATCH: DR_CLIENT_ID found but code expects DR_XERO_CLIENT_ID')
-  console.log('\u2502   Rename in Vercel: DR_CLIENT_ID \u2192 DR_XERO_CLIENT_ID')
+// Check for incorrectly-named DR Xero vars (old wrong names that were never in the codebase)
+if (process.env.DR_XERO_CLIENT_ID && !process.env.DR_CLIENT_ID) {
+  console.log('\u2502 \u26A0\uFE0F  NAMING MISMATCH: DR_XERO_CLIENT_ID found but code expects DR_CLIENT_ID')
+  console.log('\u2502   Rename in Vercel: DR_XERO_CLIENT_ID \u2192 DR_CLIENT_ID')
 }
-if (process.env.DR_CLIENT_SECRET && !process.env.DR_XERO_CLIENT_SECRET) {
-  console.log('\u2502 \u26A0\uFE0F  NAMING MISMATCH: DR_CLIENT_SECRET found but code expects DR_XERO_CLIENT_SECRET')
-  console.log('\u2502   Rename in Vercel: DR_CLIENT_SECRET \u2192 DR_XERO_CLIENT_SECRET')
+if (process.env.DR_XERO_CLIENT_SECRET && !process.env.DR_CLIENT_SECRET) {
+  console.log('\u2502 \u26A0\uFE0F  NAMING MISMATCH: DR_XERO_CLIENT_SECRET found but code expects DR_CLIENT_SECRET')
+  console.log('\u2502   Rename in Vercel: DR_XERO_CLIENT_SECRET \u2192 DR_CLIENT_SECRET')
 }
 
 console.log('└─────────────────────────────────────────────────────────')
