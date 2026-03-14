@@ -23,6 +23,10 @@
     {
       "path": "/api/cron/coaches/marketing",
       "schedule": "0 22 * * *"
+    },
+    {
+      "path": "/api/cron/synthex-monitor",
+      "schedule": "*/15 * * * *"
     }
   ],
   "functions": {
