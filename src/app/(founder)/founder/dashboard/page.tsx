@@ -10,6 +10,7 @@ import { CoachBriefs } from '@/components/founder/dashboard/CoachBriefs'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { SetupChecklist } from '@/components/founder/dashboard/SetupChecklist'
 import { CapabilityMap } from '@/components/founder/dashboard/CapabilityMap'
+import { ExperimentsDashboardWidget } from '@/components/founder/dashboard/ExperimentsDashboardWidget'
 
 export default async function DashboardPage() {
   const user = await getUser()
@@ -29,6 +30,7 @@ export default async function DashboardPage() {
       <CapabilityMap />
       <FounderStats />
       <CoachBriefs />
+      <ExperimentsDashboardWidget />
       <KPIGrid />
       <IntegrationStatus />
     </div>

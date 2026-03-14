@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { BUSINESSES } from '@/lib/businesses'
 import { getUser } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
-import { FileText, Plus, Megaphone, Scale, BookOpen, UserPlus } from 'lucide-react'
+import { FileText, Plus, Megaphone, Scale, BookOpen, UserPlus, FlaskConical } from 'lucide-react'
 
 interface Props {
   params: Promise<{ businessKey: string }>
@@ -38,7 +38,7 @@ export default async function BusinessHubPage({ params }: Props) {
   const businessId = dbBusiness?.id
 
   // Fetch data in parallel — gracefully handle missing DB business
-  const [contactsResult, pagesResult, xeroResult] = await Promise.all([
+  const [contactsResult, pagesResult, xeroResult, experimentsResult] = await Promise.all([
     businessId
       ? supabase
           .from('contacts')
@@ -63,11 +63,20 @@ export default async function BusinessHubPage({ params }: Props) {
           .eq('service', 'xero')
           .eq('business_id', businessId)
       : Promise.resolve({ count: 0 }),
+    supabase
+      .from('experiments')
+      .select('id, title, status, experiment_type, created_at')
+      .eq('founder_id', user.id)
+      .eq('business_key', businessKey)
+      .in('status', ['draft', 'active', 'completed'])
+      .order('created_at', { ascending: false })
+      .limit(3),
   ])
 
   const contactCount = ('count' in contactsResult ? contactsResult.count : 0) ?? 0
   const pages = ('data' in pagesResult ? pagesResult.data : []) ?? []
   const xeroConnected = (('count' in xeroResult ? xeroResult.count : 0) ?? 0) > 0
+  const experiments = (('data' in experimentsResult ? experimentsResult.data : []) ?? []) as Array<{ id: string; title: string; status: string; experiment_type: string; created_at: string }>
 
   const quickActions = [
     { label: 'New Post', href: '/founder/social', icon: Megaphone },
@@ -140,6 +149,43 @@ export default async function BusinessHubPage({ params }: Props) {
             {pages.length}
           </p>
         </div>
+      </div>
+
+      {/* Active Experiments */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+            Experiments
+          </h2>
+          <Link href="/founder/experiments" className="text-[11px]" style={{ color: '#00F5FF' }}>
+            View all →
+          </Link>
+        </div>
+        {experiments.length === 0 ? (
+          <p className="text-[13px] py-4" style={{ color: 'var(--color-text-disabled)' }}>
+            No experiments yet. Generate one with Synthex AI.
+          </p>
+        ) : (
+          <div className="rounded-sm divide-y" style={{ background: 'var(--surface-card)', border: '1px solid var(--color-border)' }}>
+            {experiments.map(exp => (
+              <Link key={exp.id} href={`/founder/experiments/${exp.id}`}
+                className="flex items-center justify-between px-4 py-3 transition-colors hover:brightness-110"
+                style={{ color: 'var(--color-text-primary)' }}>
+                <div className="flex items-center gap-2">
+                  <FlaskConical size={14} strokeWidth={1.5} style={{ color: 'var(--color-text-disabled)' }} />
+                  <span className="text-[13px] truncate">{exp.title}</span>
+                </div>
+                <span className="text-[10px] px-2 py-0.5 rounded-sm font-medium uppercase tracking-wider"
+                  style={{
+                    background: exp.status === 'active' ? 'rgba(0, 245, 255, 0.08)' : exp.status === 'completed' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 255, 255, 0.05)',
+                    color: exp.status === 'active' ? '#00F5FF' : exp.status === 'completed' ? '#22c55e' : 'var(--color-text-muted)',
+                  }}>
+                  {exp.status}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Nexus Pages */}

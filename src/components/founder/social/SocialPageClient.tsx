@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { BarChart3 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { FlaskConical } from 'lucide-react'
+import Link from 'next/link'
 import { ConnectionStrip } from './ConnectionStrip'
 import { PostsList } from './PostsList'
 import { CalendarView } from './CalendarView'
@@ -10,7 +11,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { PageHeader } from '@/components/ui/PageHeader'
 import type { SocialChannel, SocialPost } from '@/lib/integrations/social/types'
 
-const TABS = ['Calendar', 'Posts', 'Analytics'] as const
+const TABS = ['Calendar', 'Posts', 'Analytics', 'Experiments'] as const
 type Tab = typeof TABS[number]
 
 interface Props {
@@ -59,11 +60,10 @@ export function SocialPageClient({ channels, posts }: Props) {
       {activeTab === 'Calendar' && <CalendarView posts={posts} />}
       {activeTab === 'Posts' && <PostsList posts={posts} />}
       {activeTab === 'Analytics' && (
-        <EmptyState
-          icon={BarChart3}
-          title="Analytics coming soon"
-          description="Connect social accounts and publish posts to see engagement analytics across all platforms."
-        />
+        <SocialAnalyticsPanel channels={channels} />
+      )}
+      {activeTab === 'Experiments' && (
+        <SocialExperimentsPanel channels={channels} />
       )}
 
       {composerOpen && (
@@ -73,6 +73,167 @@ export function SocialPageClient({ channels, posts }: Props) {
           onCreated={() => { setComposerOpen(false); window.location.reload() }}
         />
       )}
+    </div>
+  )
+}
+
+/* ── Analytics Panel ── */
+
+interface ExperimentSummary {
+  id: string
+  title: string
+  status: string
+  experiment_type: string
+  metrics?: { engagement_rate?: number }
+}
+
+function SocialAnalyticsPanel({ channels }: { channels: SocialChannel[] }) {
+  const [experiments, setExperiments] = useState<ExperimentSummary[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Derive business key from first connected channel if available
+    const businessKey = channels.length > 0 ? (channels[0] as SocialChannel & { businessKey?: string }).businessKey : undefined
+    const url = businessKey
+      ? `/api/experiments?business=${encodeURIComponent(businessKey)}`
+      : '/api/experiments'
+
+    fetch(url)
+      .then(res => res.json())
+      .then((data: ExperimentSummary[]) => setExperiments(Array.isArray(data) ? data : []))
+      .catch(() => setExperiments([]))
+      .finally(() => setLoading(false))
+  }, [channels])
+
+  const total = experiments.length
+  const active = experiments.filter(e => e.status === 'active').length
+  const completed = experiments.filter(e => e.status === 'completed').length
+  const completedWithRate = experiments.filter(e => e.status === 'completed' && e.metrics?.engagement_rate != null)
+  const avgEngagement = completedWithRate.length > 0
+    ? (completedWithRate.reduce((sum, e) => sum + (e.metrics?.engagement_rate ?? 0), 0) / completedWithRate.length).toFixed(1)
+    : '—'
+
+  if (loading) {
+    return (
+      <div className="py-12 text-center text-[13px]" style={{ color: 'var(--color-text-disabled)' }}>
+        Loading analytics...
+      </div>
+    )
+  }
+
+  const stats = [
+    { label: 'Total Experiments', value: String(total) },
+    { label: 'Active', value: String(active), highlight: true },
+    { label: 'Completed', value: String(completed) },
+    { label: 'Avg Engagement', value: avgEngagement === '—' ? '—' : `${avgEngagement}%` },
+  ]
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {stats.map(stat => (
+          <div
+            key={stat.label}
+            className="rounded-sm p-4"
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--color-border)' }}
+          >
+            <p className="text-[11px] uppercase tracking-wider mb-1" style={{ color: 'var(--color-text-disabled)' }}>
+              {stat.label}
+            </p>
+            <p
+              className="text-lg font-semibold"
+              style={{ color: stat.highlight ? '#00F5FF' : 'var(--color-text-primary)' }}
+            >
+              {stat.value}
+            </p>
+          </div>
+        ))}
+      </div>
+      {total === 0 && (
+        <p className="text-[13px] py-4" style={{ color: 'var(--color-text-disabled)' }}>
+          No experiments yet. Create one from the Experiments tab or use Synthex AI.
+        </p>
+      )}
+    </div>
+  )
+}
+
+/* ── Experiments Panel ── */
+
+function SocialExperimentsPanel({ channels }: { channels: SocialChannel[] }) {
+  const [experiments, setExperiments] = useState<ExperimentSummary[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const businessKey = channels.length > 0 ? (channels[0] as SocialChannel & { businessKey?: string }).businessKey : undefined
+    const url = businessKey
+      ? `/api/experiments?business=${encodeURIComponent(businessKey)}`
+      : '/api/experiments'
+
+    fetch(url)
+      .then(res => res.json())
+      .then((data: ExperimentSummary[]) => setExperiments(Array.isArray(data) ? data : []))
+      .catch(() => setExperiments([]))
+      .finally(() => setLoading(false))
+  }, [channels])
+
+  if (loading) {
+    return (
+      <div className="py-12 text-center text-[13px]" style={{ color: 'var(--color-text-disabled)' }}>
+        Loading experiments...
+      </div>
+    )
+  }
+
+  if (experiments.length === 0) {
+    return (
+      <EmptyState
+        icon={FlaskConical}
+        title="No experiments yet"
+        description="Create A/B tests from the Experiments page to optimise your social content."
+      />
+    )
+  }
+
+  return (
+    <div className="space-y-3">
+      <div
+        className="rounded-sm divide-y"
+        style={{ background: 'var(--surface-card)', border: '1px solid var(--color-border)' }}
+      >
+        {experiments.slice(0, 5).map(exp => (
+          <Link
+            key={exp.id}
+            href={`/founder/experiments/${exp.id}`}
+            className="flex items-center justify-between px-4 py-3 transition-colors hover:brightness-110"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            <div className="flex items-center gap-2">
+              <FlaskConical size={14} strokeWidth={1.5} style={{ color: 'var(--color-text-disabled)' }} />
+              <span className="text-[13px] truncate">{exp.title}</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-sm" style={{ color: 'var(--color-text-muted)', background: 'rgba(255,255,255,0.04)' }}>
+                {exp.experiment_type}
+              </span>
+            </div>
+            <span
+              className="text-[10px] px-2 py-0.5 rounded-sm font-medium uppercase tracking-wider"
+              style={{
+                background: exp.status === 'active' ? 'rgba(0, 245, 255, 0.08)' : exp.status === 'completed' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 255, 255, 0.05)',
+                color: exp.status === 'active' ? '#00F5FF' : exp.status === 'completed' ? '#22c55e' : 'var(--color-text-muted)',
+              }}
+            >
+              {exp.status}
+            </span>
+          </Link>
+        ))}
+      </div>
+      <Link
+        href="/founder/experiments"
+        className="inline-block text-[11px] font-medium"
+        style={{ color: '#00F5FF' }}
+      >
+        View all experiments →
+      </Link>
     </div>
   )
 }
