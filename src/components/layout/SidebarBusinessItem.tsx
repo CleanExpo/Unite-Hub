@@ -23,9 +23,7 @@ export function SidebarBusinessItem({ business, collapsed }: SidebarBusinessItem
 
   return (
     <div>
-      <button
-        onClick={() => toggleBusiness(business.key)}
-        aria-expanded={isExpanded}
+      <div
         className={cn(
           'nav-item-hover w-full flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors duration-100',
         )}
@@ -38,18 +36,36 @@ export function SidebarBusinessItem({ business, collapsed }: SidebarBusinessItem
           className="shrink-0 rounded-full"
           style={{ width: 6, height: 6, background: business.color }}
         />
-        {!collapsed && (
+        {!collapsed ? (
           <>
-            <span className="flex-1 text-left truncate">{business.name}</span>
-            <ChevronRight
-              size={12}
-              strokeWidth={2}
-              className={cn('shrink-0 transition-transform duration-150', isExpanded && 'rotate-90')}
+            <Link
+              href={`/founder/${business.key}`}
+              className="flex-1 text-left truncate hover:underline"
+            >
+              {business.name}
+            </Link>
+            <button
+              onClick={() => toggleBusiness(business.key)}
+              aria-expanded={isExpanded}
+              aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${business.name}`}
+              className="shrink-0 p-0.5 rounded-sm transition-colors duration-100"
               style={{ color: 'var(--color-text-disabled)' }}
-            />
+            >
+              <ChevronRight
+                size={12}
+                strokeWidth={2}
+                className={cn('transition-transform duration-150', isExpanded && 'rotate-90')}
+              />
+            </button>
           </>
+        ) : (
+          <Link
+            href={`/founder/${business.key}`}
+            className="absolute inset-0"
+            aria-label={business.name}
+          />
         )}
-      </button>
+      </div>
 
       <AnimatePresence initial={false}>
         {!collapsed && isExpanded && (

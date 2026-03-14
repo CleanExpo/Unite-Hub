@@ -9,6 +9,61 @@ import { usePathname } from 'next/navigation'
 
 interface Message { role: 'user' | 'assistant'; content: string }
 
+/** Context-aware suggestion chips keyed by route */
+const CONTEXT_SUGGESTIONS: Record<string, string[]> = {
+  '/founder/dashboard': [
+    'Summarise my business performance this week',
+    'What needs my attention today?',
+    'Give me a morning briefing across all businesses',
+  ],
+  '/founder/bookkeeper': [
+    'Explain the uncategorised transactions',
+    'Help me prepare for BAS this quarter',
+    'What deductions am I missing?',
+  ],
+  '/founder/advisory': [
+    'What tax strategies should I consider for DR?',
+    'Compare my business structures for tax efficiency',
+    'How should I handle FBT across my businesses?',
+  ],
+  '/founder/social': [
+    'Draft a LinkedIn post for Disaster Recovery',
+    'What should I post this week across platforms?',
+    'Suggest content ideas for CARSI',
+  ],
+  '/founder/contacts': [
+    'Who should I follow up with this week?',
+    'Show me leads that need attention',
+    'Summarise recent client interactions',
+  ],
+  '/founder/kanban': [
+    'What are the highest priority issues right now?',
+    'Summarise what was completed this week',
+    'What tasks are overdue?',
+  ],
+  '/founder/email': [
+    'Summarise my unread emails',
+    'Any urgent emails I should respond to?',
+    'Draft a follow-up for the last DR email',
+  ],
+  '/founder/strategy': [
+    'Compare the profitability of my businesses',
+    'What should my Q2 priorities be?',
+    'Analyse the growth potential of Synthex',
+  ],
+  '/founder/xero': [
+    'What is my total revenue this month?',
+    'Compare revenue across businesses',
+    'Are there any reconciliation issues?',
+  ],
+}
+
+const DEFAULT_SUGGESTIONS = [
+  'What can Nexus do for me?',
+  'Summarise my business performance',
+  'What needs my attention today?',
+]
+
 export function BronSidebar() {
   const bronOpen = useUIStore((s) => s.bronOpen)
   const toggleBron = useUIStore((s) => s.toggleBron)
@@ -64,9 +119,22 @@ export function BronSidebar() {
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 && (
-              <p className="text-[12px]" style={{ color: 'var(--color-text-disabled)' }}>
-                Ask me anything about your businesses, data, or strategy.
-              </p>
+              <div className="space-y-3">
+                <p className="text-[12px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                  What would you like to know?
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {(CONTEXT_SUGGESTIONS[pathname] ?? DEFAULT_SUGGESTIONS).map((suggestion) => (
+                    <button
+                      key={suggestion}
+                      onClick={() => { setInput(suggestion); }}
+                      className="rounded-sm border border-[var(--color-border)] bg-[var(--surface-card)] text-xs text-[var(--color-text-secondary)] hover:border-[#00F5FF]/30 hover:text-[#00F5FF] px-3 py-2 transition-colors text-left"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
