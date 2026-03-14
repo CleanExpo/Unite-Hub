@@ -76,14 +76,16 @@ export async function GET(request: Request) {
     results.bankTransactions = {
       count: txnRes.BankTransactions?.length ?? 0,
       pagination: txnRes.pagination,
-      sample: (txnRes.BankTransactions ?? []).slice(0, 3).map(t => ({
+      allTransactions: (txnRes.BankTransactions ?? []).map(t => ({
         id: t.BankTransactionID,
         type: t.Type,
         date: t.Date,
         total: t.Total,
         status: t.Status,
+        isReconciled: t.IsReconciled,
         reference: t.Reference,
         contact: t.Contact?.Name,
+        lineItems: t.LineItems?.length ?? 0,
       })),
     }
   } catch (e) {
