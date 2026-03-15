@@ -43,6 +43,10 @@
     {
       "path": "/api/cron/engagement-monitor",
       "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron/analytics-sync",
+      "schedule": "0 18 * * *"
     }
   ],
   "functions": {
@@ -77,6 +81,9 @@
       "maxDuration": 120
     },
     "src/app/api/email/campaigns/*/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/cron/analytics-sync/route.ts": {
       "maxDuration": 120
     }
   },

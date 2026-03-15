@@ -151,3 +151,48 @@ export const PLATFORM_CONSTRAINTS: Record<SocialPlatform, PlatformConstraint> = 
     description: 'Title + description + tags, searchable, thumbnail-driven',
   },
 }
+
+// ─── Analytics ──────────────────────────────────────────────────────────────────
+
+export interface PlatformAnalytics {
+  id: string
+  founderId: string
+  businessKey: string
+  platform: string
+  postExternalId: string
+  socialPostId: string | null
+  metricDate: string
+  impressions: number
+  reach: number
+  engagements: number
+  likes: number
+  comments: number
+  shares: number
+  saves: number
+  clicks: number
+  videoViews: number
+  videoWatchTimeSeconds: number
+  followerDelta: number
+  engagementRate: number
+  metadata: Record<string, unknown>
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AnalyticsSummary {
+  totalImpressions: number
+  totalReach: number
+  totalEngagements: number
+  totalClicks: number
+  totalVideoViews: number
+  averageEngagementRate: number
+  followerGrowth: number
+  topPosts: PlatformAnalytics[]
+  byPlatform: Record<string, {
+    impressions: number
+    engagements: number
+    reach: number
+    engagementRate: number
+    postCount: number
+  }>
+}
