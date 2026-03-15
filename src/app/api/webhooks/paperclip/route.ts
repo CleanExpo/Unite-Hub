@@ -46,23 +46,22 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // ─── Idempotency check ───────────────────────────────────────────────────────
-  if (await isDuplicate('paperclip', pkg.id)) {
-    return NextResponse.json({ status: 'duplicate' })
-  }
-
-  const eventRowId = await insertEvent(
-    'paperclip',
-    pkg.id,
-    pkg.type ?? 'feature',
-    pkg as unknown as Record<string, unknown>
-  )
-  if (eventRowId === null) {
-    return NextResponse.json({ status: 'duplicate' })
-  }
-
-  // ─── Process work package → Linear issue ─────────────────────────────────────
+  // ─── Dedup + process (single try so any Supabase/Linear error surfaces) ──────
+  let eventRowId: string | null = null
   try {
+    // Idempotency check
+    if (await isDuplicate('paperclip', pkg.id)) {
+      return NextResponse.json({ status: 'duplicate' })
+    }
+
+    eventRowId = await insertEvent(
+      'paperclip',
+      pkg.id,
+      pkg.type ?? 'feature',
+      pkg as unknown as Record<string, unknown>
+    )
+
+    // ─── Process work package → Linear issue ─────────────────────────────────
     let issueInput
     if (pkg.title?.trim()) {
       // Structured input — use directly, skip AI expansion
@@ -101,15 +100,12 @@ export async function POST(request: NextRequest) {
       ...(pkg.createPR && { prCreated: false, prNote: 'GitHub PR creation not yet implemented — Linear issue created only' }),
     })
   } catch (error) {
-    await markEvent(
-      eventRowId,
-      'failed',
-      error instanceof Error ? error.message : 'Unknown error'
-    )
+    const message = error instanceof Error ? error.message : 'Unknown error'
     console.error('[Paperclip Webhook] Processing failed:', error)
-    return NextResponse.json(
-      { status: 'error', error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    )
+    // Best-effort mark as failed — eventRowId may be null if insertEvent itself threw
+    if (eventRowId) {
+      await markEvent(eventRowId, 'failed', message).catch(() => {})
+    }
+    return NextResponse.json({ status: 'error', error: message }, { status: 500 })
   }
 }
