@@ -39,6 +39,10 @@
     {
       "path": "/api/cron/video-status",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/engagement-monitor",
+      "schedule": "*/30 * * * *"
     }
   ],
   "functions": {
@@ -68,6 +72,12 @@
     },
     "src/app/api/cron/video-status/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/cron/engagement-monitor/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/email/campaigns/*/route.ts": {
+      "maxDuration": 120
     }
   },
   "headers": [

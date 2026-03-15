@@ -32,6 +32,8 @@ export async function register() {
     { name: 'Paperclip', vars: ['PAPERCLIP_API_URL', 'PAPERCLIP_API_KEY'] },
     { name: 'GitHub',    vars: ['GITHUB_TOKEN'] },
     { name: 'HeyGen',   vars: ['HEYGEN_API_KEY'] },
+    { name: 'Reddit',   vars: ['REDDIT_CLIENT_ID', 'REDDIT_CLIENT_SECRET'] },
+    { name: 'SendGrid', vars: ['SENDGRID_API_KEY'] },
   ] as const
 
   // ─── Check required (always) ───────────────────────────────────────────────
