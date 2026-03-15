@@ -27,6 +27,14 @@
     {
       "path": "/api/cron/synthex-monitor",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/content-engine",
+      "schedule": "0 20 * * *"
+    },
+    {
+      "path": "/api/cron/social-publisher",
+      "schedule": "*/15 * * * *"
     }
   ],
   "functions": {
@@ -40,6 +48,15 @@
       "maxDuration": 300
     },
     "src/app/api/cron/coaches/*/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/cron/content-engine/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/cron/social-publisher/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/content/generate/route.ts": {
       "maxDuration": 60
     }
   },
