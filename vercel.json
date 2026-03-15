@@ -35,6 +35,10 @@
     {
       "path": "/api/cron/social-publisher",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/video-status",
+      "schedule": "*/5 * * * *"
     }
   ],
   "functions": {
@@ -57,6 +61,12 @@
       "maxDuration": 60
     },
     "src/app/api/content/generate/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/video/generate/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/cron/video-status/route.ts": {
       "maxDuration": 60
     }
   },

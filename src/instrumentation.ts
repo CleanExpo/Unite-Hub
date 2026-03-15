@@ -31,6 +31,7 @@ export async function register() {
     { name: 'WhatsApp', vars: ['WHATSAPP_ACCESS_TOKEN', 'WHATSAPP_APP_SECRET'] },
     { name: 'Paperclip', vars: ['PAPERCLIP_API_URL', 'PAPERCLIP_API_KEY'] },
     { name: 'GitHub',    vars: ['GITHUB_TOKEN'] },
+    { name: 'HeyGen',   vars: ['HEYGEN_API_KEY'] },
   ] as const
 
   // ─── Check required (always) ───────────────────────────────────────────────

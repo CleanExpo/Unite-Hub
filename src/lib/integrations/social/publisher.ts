@@ -5,6 +5,7 @@
 export interface PublishablePost {
   content: string
   media_urls: string[]
+  video_url?: string // For TikTok/YouTube — URL of the video to publish
 }
 
 export interface ChannelInfo {
@@ -100,11 +101,111 @@ export async function publishToPlatform(
       return data.id ?? 'ok'
     }
 
-    case 'youtube':
-      throw new Error('YouTube requires video content — text-only posts not supported')
+    case 'tiktok': {
+      // TikTok Content Posting API v2 — requires a video URL
+      if (!post.video_url) {
+        throw new Error('TikTok requires video content — set video_url on the post')
+      }
 
-    case 'tiktok':
-      throw new Error('TikTok requires video content')
+      // Step 1: Initialise upload via inbox method (pull from URL)
+      const initRes = await fetch(
+        'https://open.tiktokapis.com/v2/post/publish/inbox/video/init/',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: JSON.stringify({
+            post_info: {
+              title: post.content.slice(0, 150),
+              privacy_level: 'PUBLIC_TO_EVERYONE',
+              disable_duet: false,
+              disable_comment: false,
+              disable_stitch: false,
+            },
+            source_info: {
+              source: 'PULL_FROM_URL',
+              video_url: post.video_url,
+            },
+          }),
+        }
+      )
+      const initData = await initRes.json() as {
+        data?: { publish_id?: string }
+        error?: { code?: string; message?: string }
+      }
+      if (!initRes.ok || !initData.data?.publish_id) {
+        throw new Error(
+          initData.error?.message ?? `TikTok publish init failed (${initRes.status})`
+        )
+      }
+      return initData.data.publish_id
+    }
+
+    case 'youtube': {
+      // YouTube Data API v3 — requires a video URL to upload
+      if (!post.video_url) {
+        throw new Error('YouTube requires video content — set video_url on the post')
+      }
+
+      // Step 1: Download the video from the URL
+      const videoRes = await fetch(post.video_url)
+      if (!videoRes.ok) throw new Error(`Failed to fetch video from ${post.video_url}`)
+      const videoBuffer = await videoRes.arrayBuffer()
+
+      // Step 2: Parse title and description from content
+      const lines = post.content.split('\n')
+      const title = lines[0]?.slice(0, 100) ?? 'Unite-Group Video'
+      const description = post.content
+
+      // Step 3: Initiate resumable upload
+      const initiateRes = await fetch(
+        'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Upload-Content-Length': String(videoBuffer.byteLength),
+            'X-Upload-Content-Type': 'video/mp4',
+          },
+          body: JSON.stringify({
+            snippet: {
+              title,
+              description,
+              tags: post.content.match(/#(\w+)/g)?.map((t) => t.slice(1)) ?? [],
+              categoryId: '22', // People & Blogs
+            },
+            status: {
+              privacyStatus: 'public',
+              selfDeclaredMadeForKids: false,
+            },
+          }),
+        }
+      )
+
+      if (!initiateRes.ok) {
+        const errBody = await initiateRes.text()
+        throw new Error(`YouTube upload init failed: ${errBody.slice(0, 200)}`)
+      }
+
+      const uploadUrl = initiateRes.headers.get('location')
+      if (!uploadUrl) throw new Error('YouTube did not return an upload URL')
+
+      // Step 4: Upload the video bytes
+      const uploadRes = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'video/mp4' },
+        body: videoBuffer,
+      })
+
+      const uploadData = await uploadRes.json() as { id?: string; error?: { message: string } }
+      if (!uploadRes.ok || !uploadData.id) {
+        throw new Error(uploadData.error?.message ?? 'YouTube video upload failed')
+      }
+      return uploadData.id
+    }
 
     default:
       throw new Error(`Unknown platform: ${platform}`)
