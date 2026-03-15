@@ -100,7 +100,11 @@ export async function POST(request: NextRequest) {
       ...(pkg.createPR && { prCreated: false, prNote: 'GitHub PR creation not yet implemented — Linear issue created only' }),
     })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error'
+    const message = error instanceof Error
+      ? error.message
+      : (typeof error === 'object' && error !== null && 'message' in error)
+        ? String((error as { message: unknown }).message)
+        : JSON.stringify(error)
     console.error('[Paperclip Webhook] Processing failed:', error)
     // Best-effort mark as failed — eventRowId may be null if insertEvent itself threw
     if (eventRowId) {
