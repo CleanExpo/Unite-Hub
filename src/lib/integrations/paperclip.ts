@@ -1,12 +1,11 @@
 // src/lib/integrations/paperclip.ts
 // Unite-Group → Paperclip outbound client
-// Used to acknowledge received work packages and push deliverables back to Paperclip
 
 export function isPaperclipConfigured(): boolean {
   return !!(process.env.PAPERCLIP_API_URL && process.env.PAPERCLIP_API_KEY)
 }
 
-export interface PaperclipAck {
+interface PaperclipAck {
   taskId: string
   status: 'accepted' | 'rejected' | 'completed'
   linearIssueId?: string
@@ -16,12 +15,11 @@ export interface PaperclipAck {
 
 /**
  * Acknowledge a received work package back to Paperclip.
- * Call after successfully creating the Linear issue.
- * Silently no-ops if Paperclip is not configured.
+ * Called after successfully creating the Linear issue.
  */
 export async function acknowledgeTask(ack: PaperclipAck): Promise<void> {
   if (!isPaperclipConfigured()) {
-    console.warn('[Paperclip] Not configured — skipping acknowledgement for task:', ack.taskId)
+    console.warn('[Paperclip] Not configured — skipping acknowledgement')
     return
   }
 
@@ -44,7 +42,7 @@ export async function acknowledgeTask(ack: PaperclipAck): Promise<void> {
   }
 }
 
-export interface PaperclipDeliverable {
+interface PaperclipDeliverable {
   taskId: string
   type: 'pr_url' | 'linear_issue' | 'document' | 'code_snippet'
   payload: Record<string, unknown>
@@ -52,13 +50,11 @@ export interface PaperclipDeliverable {
 
 /**
  * Push a completed deliverable back to Paperclip.
- * Silently no-ops if Paperclip is not configured.
  */
-export async function sendDeliverable(deliverable: PaperclipDeliverable): Promise<void> {
-  if (!isPaperclipConfigured()) {
-    console.warn('[Paperclip] Not configured — skipping deliverable for task:', deliverable.taskId)
-    return
-  }
+export async function sendDeliverable(
+  deliverable: PaperclipDeliverable
+): Promise<void> {
+  if (!isPaperclipConfigured()) return
 
   const response = await fetch(
     `${process.env.PAPERCLIP_API_URL!.trim()}/api/deliverables`,
@@ -73,8 +69,6 @@ export async function sendDeliverable(deliverable: PaperclipDeliverable): Promis
   )
 
   if (!response.ok) {
-    throw new Error(
-      `Paperclip sendDeliverable failed: ${response.status} ${response.statusText}`
-    )
+    throw new Error(`Paperclip send deliverable failed: ${response.status}`)
   }
 }

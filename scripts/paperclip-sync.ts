@@ -18,7 +18,10 @@
  *   PAPERCLIP_API_KEY     — API key for both calling Paperclip AND the webhook
  *   NEXT_PUBLIC_APP_URL   — Unite-Group public URL (defaults to production URL)
  */
-import 'dotenv/config'
+import { config } from 'dotenv'
+// Load .env.local first (Next.js convention), then .env as fallback
+config({ path: '.env.local' })
+config()
 
 const PAPERCLIP_URL = process.env.PAPERCLIP_API_URL?.trim()
 const PAPERCLIP_KEY = process.env.PAPERCLIP_API_KEY?.trim()

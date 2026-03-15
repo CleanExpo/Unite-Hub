@@ -2,23 +2,9 @@
 import { createHmac, timingSafeEqual } from 'crypto'
 
 /**
- * Generic API key verifier — prevents timing-based side-channel attacks.
- * Use for any integration that authenticates via a static API key header.
- */
-export function verifyApiKey(header: string | null, envVarName: string): boolean {
-  const expected = process.env[envVarName]
-  if (!header || !expected) return false
-  try {
-    return timingSafeEqual(Buffer.from(header.trim()), Buffer.from(expected.trim()))
-  } catch {
-    return false
-  }
-}
-
-/**
  * Verify WhatsApp Cloud API webhook signature.
  * Meta sends: x-hub-signature-256: sha256=<hex>
- * Uses WHATSAPP_APP_SECRET as HMAC key.
+ * Uses WHATSAPP_APP_SECRET as key.
  */
 export function verifyWhatsAppSignature(
   rawBody: string,
@@ -31,14 +17,35 @@ export function verifyWhatsAppSignature(
       .update(rawBody)
       .digest('hex')
   try {
-    return timingSafeEqual(Buffer.from(signatureHeader.trim()), Buffer.from(expected))
+    return timingSafeEqual(Buffer.from(signatureHeader), Buffer.from(expected))
   } catch {
     return false
   }
 }
 
 /**
- * Verify Paperclip inbound webhook via API key header.
+ * Generic API key verification — timing-safe comparison.
+ * @param header  The x-api-key header value from the request
+ * @param envVarName  Name of the env var that holds the expected key
+ */
+export function verifyApiKey(
+  header: string | null,
+  envVarName: string
+): boolean {
+  const expected = process.env[envVarName]
+  if (!header || !expected) return false
+  try {
+    return timingSafeEqual(
+      Buffer.from(header.trim()),
+      Buffer.from(expected.trim())
+    )
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Verify Paperclip webhook via API key header.
  * Paperclip sends: x-api-key: <PAPERCLIP_API_KEY>
  */
 export function verifyPaperclipApiKey(apiKeyHeader: string | null): boolean {
