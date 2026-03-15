@@ -34,7 +34,6 @@ export async function insertEvent(
       event_type: eventType,
       payload,
       status: 'processing',
-      attempts: 1,
     })
     .select('id')
     .single()
