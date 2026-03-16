@@ -14,6 +14,9 @@ import type {
   XeroAccount,
   XeroTaxRate,
   XeroPaginatedResponse,
+    XeroBankStatement,
+    XeroBankStatementLine,
+    XeroBankStatementOptions,
 } from './types'
 
 // ── Constants ───────────────────────────────────────────────────────────────
@@ -492,4 +495,71 @@ export async function reconcileTransaction(
   if (!result) throw new Error(`Reconciliation failed for transaction ${transactionId}`)
 
   return result
+}
+
+    // ── Bank Statements (bank feed data) ──────────────────────────────────────
+// Bank feeds in Xero create BankStatements with StatementLines.
+// These are different from BankTransactions — bank feed data ONLY appears
+// here, not in /BankTransactions. This is critical for CARSI which uses
+// bank feeds exclusively.
+
+export async function fetchBankStatements(
+    founderId: string,
+    businessKey: string,
+    options?: XeroBankStatementOptions
+  ): Promise<XeroPaginatedResponse<XeroBankStatement>> {
+    const tokens = await getTokensForBusiness(founderId, businessKey)
+
+    const params = new URLSearchParams()
+    const whereClause = buildDateWhereClause(options?.fromDate, options?.toDate)
+    if (whereClause) params.set('where', whereClause)
+    params.set('page', String(options?.page ?? 1))
+
+    const queryStr = params.toString()
+    const response = await xeroApiFetch<{
+          Statements: XeroBankStatement[]
+          pagination?: { page: number; pageCount: number; pageSize: number; itemCount: number }
+    }>(tokens, `/BankStatements?${queryStr}`)
+
+    return {
+          items: response.Statements ?? [],
+          pagination: response.pagination,
+    }
+}
+
+/**
+ * Fetch ALL unreconciled bank statement lines across all statements.
+  * Flattens StatementLines from all BankStatements and filters to unreconciled only.
+   * Paginates through all pages automatically.
+    */
+export async function fetchAllUnreconciledStatementLines(
+    founderId: string,
+    businessKey: string,
+    options?: XeroBankStatementOptions
+  ): Promise<XeroBankStatementLine[]> {
+    const allLines: XeroBankStatementLine[] = []
+        let page = 1
+    let hasMore = true
+
+    while (hasMore) {
+          const response = await fetchBankStatements(founderId, businessKey, {
+                  ...options,
+                  page,
+          })
+
+          for (const statement of response.items) {
+                  const unreconciledLines = (statement.StatementLines ?? []).filter(
+                            (line) => !line.IsReconciled
+                          )
+                  allLines.push(...unreconciledLines)
+          }
+
+          if (response.pagination && response.pagination.page < response.pagination.pageCount) {
+                  page++
+          } else {
+                  hasMore = false
+          }
+    }
+
+    return allLines
 }
