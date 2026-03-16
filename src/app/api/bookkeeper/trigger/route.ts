@@ -54,6 +54,7 @@ export async function POST() {
         totalFetched: b.totalFetched,
         alreadyReconciledInXero: b.alreadyReconciledInXero,
         invoicesFetched: b.invoicesFetched,
+                  statementLinesFetched: b.statementLinesFetched,
         error: b.error,
       })),
     })
