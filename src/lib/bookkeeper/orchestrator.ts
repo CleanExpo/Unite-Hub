@@ -4,7 +4,7 @@
 // to stay within Xero's 60 calls/minute rate limit.
 
 import type { SupabaseClient } from '@supabase/supabase-js'
-import type { XeroBankTransaction, XeroInvoice, XeroContact } from '@/lib/integrations/xero/types'
+import type { XeroBankTransaction, XeroInvoice, XeroContact, XeroBankStatementLine } from '@/lib/integrations/xero/types'
 import { BUSINESSES } from '@/lib/businesses'
 import { createServiceClient } from '@/lib/supabase/service'
 import {
@@ -14,6 +14,8 @@ import {
   fetchBankTransactions,
   fetchInvoices,
   fetchContacts,
+    fetchBankStatements,
+    fetchAllUnreconciledStatementLines,
 } from '@/lib/integrations/xero/client'
 import { reconcileTransactions } from '@/lib/bookkeeper/reconciliation'
 import type { ReconciliationMatch } from '@/lib/bookkeeper/reconciliation'
@@ -57,6 +59,8 @@ export interface BusinessResult {
   alreadyReconciledInXero: number
   /** Invoices fetched from Xero */
   invoicesFetched: number
+    /** Bank statement lines fetched from bank feeds */
+    statementLinesFetched: number
 }
 
 // ---------------------------------------------------------------------------
@@ -64,7 +68,7 @@ export interface BusinessResult {
 // ---------------------------------------------------------------------------
 
 /** Default lookback window for bank transactions (days) */
-const BANK_TXN_LOOKBACK_DAYS = 30
+const BANK_TXN_LOOKBACK_DAYS = 365
 
 /** Default lookback window for invoices (days) — invoices may take longer to pay */
 const INVOICE_LOOKBACK_DAYS = 90
@@ -160,6 +164,7 @@ export async function processOneBusiness(
       totalFetched: 0,
       alreadyReconciledInXero: 0,
       invoicesFetched: 0,
+            statementLinesFetched: 0,
     }
   }
 
@@ -178,6 +183,19 @@ export async function processOneBusiness(
   })
   const bankTransactions: XeroBankTransaction[] = bankTxnResponse.items
   const alreadyReconciledInXero = bankTransactions.filter(t => t.IsReconciled).length
+
+      // Step 3b: Fetch bank statement lines (bank feed data)
+      // Bank feeds create BankStatements, not BankTransactions.
+      // This is critical for CARSI and any business using bank feeds.
+      let statementLines: XeroBankStatementLine[] = []
+      try {
+              statementLines = await fetchAllUnreconciledStatementLines(founderId, businessKey, {
+                        fromDate: bankTxnFromDate,
+              })
+      } catch (err) {
+              // Non-fatal: some businesses may not have bank feeds
+              console.warn(`[Bookkeeper] Bank statements fetch failed for ${businessKey}:`, err)
+      }
 
   // Step 4: Fetch invoices (last 90 days)
   const invoiceFromDate = daysAgoISO(INVOICE_LOOKBACK_DAYS)
@@ -244,6 +262,7 @@ export async function processOneBusiness(
     totalFetched: bankTransactions.length,
     alreadyReconciledInXero,
     invoicesFetched: invoices.length,
+        statementLinesFetched: statementLines.length,
   }
 }
 
@@ -318,6 +337,7 @@ export async function runBookkeeperForAllBusinesses(
         totalFetched: 0,
         alreadyReconciledInXero: 0,
         invoicesFetched: 0,
+                  statementLinesFetched: 0,
       })
       errorLog.push({ businessKey: business.key, error: errorMessage })
     }
