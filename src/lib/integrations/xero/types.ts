@@ -150,3 +150,37 @@ export interface XeroInvoiceOptions {
   type?: 'ACCREC' | 'ACCPAY'
   page?: number       // 1-indexed
 }
+
+// ── Bank Statements (bank feed data) ──────────────────────────────────────
+
+export interface XeroBankStatementLine {
+    StatementLineID: string
+    Date: string
+    Amount: number
+    ContactName?: string
+    Description?: string
+    Reference?: string
+    ChequeNumber?: string
+    IsReconciled: boolean
+    BankTransactionID?: string
+}
+
+export interface XeroBankStatement {
+    StatementID: string
+    BankAccountID: string
+    BankAccountNumber?: string
+    BankAccountName?: string
+    Status: 'DRAFT' | 'IMPORTED' | 'RECONCILED'
+    StartDate?: string
+    EndDate?: string
+    StartBalance?: number
+    EndBalance?: number
+    ImportedDateTimeUTC?: string
+    StatementLines: XeroBankStatementLine[]
+}
+
+export interface XeroBankStatementOptions {
+    fromDate?: string
+    toDate?: string
+    page?: number
+}
