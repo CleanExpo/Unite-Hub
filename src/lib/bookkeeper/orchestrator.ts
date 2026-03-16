@@ -14,8 +14,7 @@ import {
   fetchBankTransactions,
   fetchInvoices,
   fetchContacts,
-  fetchAllUnreconciledStatementLines,
-} from '@/lib/integrations/xero/client'
+  from '@/lib/integrations/xero/client'
 import { reconcileTransactions } from '@/lib/bookkeeper/reconciliation'
 import type { ReconciliationMatch } from '@/lib/bookkeeper/reconciliation'
 import { optimiseDeductions } from '@/lib/bookkeeper/deduction-optimiser'
@@ -63,28 +62,8 @@ export interface BusinessResult {
 }
 
 // ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-/** Default lookback window for bank transactions (days) */
-const BANK_TXN_LOOKBACK_DAYS = 365
-
-/** Default lookback window for invoices (days) — invoices may take longer to pay */
-const INVOICE_LOOKBACK_DAYS = 90
-
-// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-/**
- * Calculate an ISO date string N days ago from today.
- */
-function daysAgoISO(days: number): string {
-  const d = new Date()
-  d.setDate(d.getDate() - days)
-  return d.toISOString().slice(0, 10)
-}
-
 /**
  * Build transaction records for batch insertion into bookkeeper_transactions.
  */
