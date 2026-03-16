@@ -14,8 +14,7 @@ import {
   fetchBankTransactions,
   fetchInvoices,
   fetchContacts,
-    fetchBankStatements,
-    fetchAllUnreconciledStatementLines,
+  fetchAllUnreconciledStatementLines,
 } from '@/lib/integrations/xero/client'
 import { reconcileTransactions } from '@/lib/bookkeeper/reconciliation'
 import type { ReconciliationMatch } from '@/lib/bookkeeper/reconciliation'
