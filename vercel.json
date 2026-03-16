@@ -47,6 +47,10 @@
     {
       "path": "/api/cron/analytics-sync",
       "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/cron/campaign-engine",
+      "schedule": "0 20 * * 0"
     }
   ],
   "functions": {
@@ -84,6 +88,15 @@
       "maxDuration": 120
     },
     "src/app/api/cron/analytics-sync/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/cron/campaign-engine/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/campaigns/scan/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/campaigns/[id]/generate/route.ts": {
       "maxDuration": 120
     }
   },
