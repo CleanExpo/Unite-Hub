@@ -174,35 +174,52 @@ export async function processOneBusiness(
   }
   const tenantId = validTokens.tenant_id
 
-  // Step 3: Fetch bank transactions (last 90 days — wider than reconciliation
-  // window to capture recent activity even if already reconciled)
-  const bankTxnFromDate = daysAgoISO(BANK_TXN_LOOKBACK_DAYS)
-  const bankTxnResponse = await fetchBankTransactions(founderId, businessKey, {
-    fromDate: bankTxnFromDate,
-  })
-  const bankTransactions: XeroBankTransaction[] = bankTxnResponse.items
-  const alreadyReconciledInXero = bankTransactions.filter(t => t.IsReconciled).length
-
-      // Step 3b: Fetch bank statement lines (bank feed data)
-      // Bank feeds create BankStatements, not BankTransactions.
-      // This is critical for CARSI and any business using bank feeds.
-      let statementLines: XeroBankStatementLine[] = []
-      try {
-              statementLines = await fetchAllUnreconciledStatementLines(founderId, businessKey, {
-                        fromDate: bankTxnFromDate,
+    // Step 3: Fetch ALL bank transactions (no date filter — paginate through all pages)
+      // CARSI data dates back to 2022 and we need full history for tax overhaul
+      const allBankTransactions: XeroBankTransaction[] = []
+      let bankTxnPage = 1
+      let hasMoreBankTxns = true
+      while (hasMoreBankTxns) {
+              const bankTxnResponse = await fetchBankTransactions(founderId, businessKey, {
+                        page: bankTxnPage,
               })
-      } catch (err) {
-              // Non-fatal: some businesses may not have bank feeds
-              console.warn(`[Bookkeeper] Bank statements fetch failed for ${businessKey}:`, err)
+              allBankTransactions.push(...bankTxnResponse.items)
+              if (bankTxnResponse.pagination && bankTxnResponse.pagination.page < bankTxnResponse.pagination.pageCount) {
+                        bankTxnPage++
+              } else if (bankTxnResponse.items.length === 100) {
+                        // Xero returns max 100 per page — if we got 100, there might be more
+                        bankTxnPage++
+              } else {
+                        hasMoreBankTxns = false
+              }
       }
-
-  // Step 4: Fetch invoices (last 90 days)
-  const invoiceFromDate = daysAgoISO(INVOICE_LOOKBACK_DAYS)
-  const invoiceResponse = await fetchInvoices(founderId, businessKey, {
-    fromDate: invoiceFromDate,
-  })
-  const invoices: XeroInvoice[] = invoiceResponse.items
-
+      const bankTransactions = allBankTransactions
+      const alreadyReconciledInXero = bankTransactions.filter(t => t.IsReconciled).length
+  
+          // Step 3b: Bank statement lines — Xero /BankStatements returns 404
+      // Bank feed data in Xero actually appears as BankTransactions once imported.
+      // The unreconciled items are already captured above (IsReconciled === false).
+      const statementLines: XeroBankStatementLine[] = []
+  
+    // Step 4: Fetch ALL invoices (no date filter for full tax overhaul coverage)
+      const allInvoices: XeroInvoice[] = []
+      let invoicePage = 1
+      let hasMoreInvoices = true
+      while (hasMoreInvoices) {
+              const invoiceResponse = await fetchInvoices(founderId, businessKey, {
+                        page: invoicePage,
+              })
+              allInvoices.push(...invoiceResponse.items)
+              if (invoiceResponse.pagination && invoiceResponse.pagination.page < invoiceResponse.pagination.pageCount) {
+                        invoicePage++
+              } else if (invoiceResponse.items.length === 100) {
+                        invoicePage++
+              } else {
+                        hasMoreInvoices = false
+              }
+      }
+      const invoices = allInvoices
+  
   // Step 5: Fetch contacts
   const contacts: XeroContact[] = await fetchContacts(founderId, businessKey)
 
