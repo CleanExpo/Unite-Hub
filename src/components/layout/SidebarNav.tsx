@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, BookOpen, Columns2, Lock, FileText, ClipboardCheck, Scale, Share2, FlaskConical, Users, Settings, Receipt, Mail, CalendarDays, Brain, Sparkles, BarChart2 } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Columns2, Lock, FileText, ClipboardCheck, Scale, Share2, FlaskConical, Users, Settings, Receipt, Mail, CalendarDays, Brain, Sparkles, BarChart2, Megaphone } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -18,6 +18,7 @@ const NAV_ITEMS = [
   { href: '/founder/strategy',  label: 'Strategy',   icon: Brain },
   { href: '/founder/social',    label: 'Social',     icon: Share2 },
   { href: '/founder/analytics', label: 'Analytics',  icon: BarChart2 },
+  { href: '/founder/campaigns', label: 'Campaigns',  icon: Megaphone },
   { href: '/founder/experiments', label: 'Experiments', icon: FlaskConical },
   { href: '/founder/contacts',  label: 'Contacts',   icon: Users },
   { href: '/founder/email',     label: 'Email',      icon: Mail },
