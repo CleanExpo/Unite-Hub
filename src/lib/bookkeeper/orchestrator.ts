@@ -417,3 +417,131 @@ export async function runBookkeeperForAllBusinesses(
     netGstCents,
   }
 }
+
+    // ---------------------------------------------------------------------------
+// Single-business entry point (for targeted runs and timeout avoidance)
+// ---------------------------------------------------------------------------
+
+/**
+ * Run the bookkeeper pipeline for a single named business.
+  * Used by the manual trigger endpoint when { businessKey } is provided in the
+   * request body. This avoids Vercel function timeouts when running ALL businesses
+    * simultaneously with full pagination.
+     *
+      * @param founderId - The authenticated founder's user ID
+       * @param targetBusinessKey - The business key to process (e.g. 'carsi')
+        * @returns Same shape as runBookkeeperForAllBusinesses for API consistency
+         */
+export async function runBookkeeperForOneBusiness(
+    founderId: string,
+    targetBusinessKey: string,
+  ): Promise<BookkeeperRunResult> {
+    const startedAt = new Date()
+    const supabase = createServiceClient()
+
+    // Create run record
+    const { data: run, error: runError } = await supabase
+      .from('bookkeeper_runs')
+      .insert({
+              founder_id: founderId,
+              started_at: startedAt.toISOString(),
+              status: 'running',
+              businesses_processed: [],
+      })
+      .select('id')
+      .single()
+
+    if (runError || !run) {
+          throw new Error(`Failed to create bookkeeper run record: ${runError?.message ?? 'Unknown error'}`)
+    }
+
+    const runId: string = run.id
+
+    // Find the target business
+    const business = BUSINESSES.find(
+          (b) => b.key === targetBusinessKey && b.status === 'active'
+        )
+
+    if (!business) {
+          throw new Error(
+                  `Business '${targetBusinessKey}' not found or not active. ` +
+                  `Available active businesses: ${BUSINESSES.filter((b) => b.status === 'active').map((b) => b.key).join(', ')}`
+                )
+    }
+
+    const businessResults: BusinessResult[] = []
+
+        try {
+              const result = await processOneBusiness(
+                      founderId,
+                      business.key,
+                      business.name,
+                      runId,
+                      supabase,
+                    )
+              businessResults.push(result)
+        } catch (err: unknown) {
+              const errorMessage = err instanceof Error ? err.message : String(err)
+              businessResults.push({
+                      businessKey: business.key,
+                      businessName: business.name,
+                      status: 'error',
+                      error: errorMessage,
+                      transactionCount: 0,
+                      autoReconciled: 0,
+                      flaggedForReview: 0,
+                      gstCollectedCents: 0,
+                      gstPaidCents: 0,
+                      totalFetched: 0,
+                      alreadyReconciledInXero: 0,
+                      invoicesFetched: 0,
+                      statementLinesFetched: 0,
+              })
+        }
+
+    const completedAt = new Date()
+    const businessResult = businessResults[0]
+    const overallStatus: 'completed' | 'partial' | 'failed' =
+          businessResult.status === 'success' ? 'completed' :
+          businessResult.status === 'skipped' ? 'completed' : 'failed'
+
+    const totalTransactions = businessResult.transactionCount
+    const autoReconciled = businessResult.autoReconciled
+    const flaggedForReview = businessResult.flaggedForReview
+    const gstCollectedCents = businessResult.gstCollectedCents
+    const gstPaidCents = businessResult.gstPaidCents
+    const netGstCents = gstCollectedCents - gstPaidCents
+
+    // Update run record
+    await supabase
+      .from('bookkeeper_runs')
+      .update({
+              completed_at: completedAt.toISOString(),
+              status: overallStatus,
+              businesses_processed: businessResults,
+              total_transactions: totalTransactions,
+              auto_reconciled: autoReconciled,
+              flagged_for_review: flaggedForReview,
+              failed_count: businessResult.status === 'error' ? 1 : 0,
+              gst_collected_cents: gstCollectedCents,
+              gst_paid_cents: gstPaidCents,
+              net_gst_cents: netGstCents,
+              error_log: businessResult.error ? [{ businessKey: business.key, error: businessResult.error }] : [],
+      })
+      .eq('id', runId)
+
+    return {
+          runId,
+          status: overallStatus,
+          startedAt,
+          completedAt,
+          businessResults,
+          totalTransactions,
+          autoReconciled,
+          flaggedForReview,
+          failedCount: businessResult.status === 'error' ? 1 : 0,
+          gstCollectedCents,
+          gstPaidCents,
+          netGstCents,
+    }
+}
