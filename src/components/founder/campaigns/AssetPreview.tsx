@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import type { CampaignAsset } from '@/lib/campaigns/types'
+import type { CampaignAsset, VisualType } from '@/lib/campaigns/types'
 import type { SocialPlatform } from '@/lib/integrations/social/types'
 
 interface AssetPreviewProps {
   asset: CampaignAsset
   onPublished?: (postId: string) => void
   onRegenerateImage?: (assetId: string) => void
+  onApprove?: (assetId: string) => void
 }
 
 const PLATFORM_BADGE: Record<SocialPlatform, string> = {
@@ -30,6 +31,7 @@ const STATUS_BADGE: Record<CampaignAsset['status'], string> = {
   pending_image:    'bg-amber-500/20 text-amber-400',
   generating_image: 'bg-cyan-500/20 text-cyan-400 animate-pulse',
   ready:            'bg-green-500/20 text-green-400',
+  review:           'bg-amber-500/20 text-amber-400',
   published:        'bg-blue-500/20 text-blue-400',
 }
 
@@ -37,12 +39,41 @@ const STATUS_LABEL: Record<CampaignAsset['status'], string> = {
   pending_image:    'Pending Image',
   generating_image: 'Generating',
   ready:            'Ready',
+  review:           'Needs Review',
   published:        'Published',
 }
 
-export function AssetPreview({ asset, onPublished, onRegenerateImage }: AssetPreviewProps) {
+const VISUAL_TYPE_BADGE: Record<VisualType, string> = {
+  photo:        'bg-white/5 text-white/50',
+  infographic:  'bg-violet-500/20 text-violet-400',
+  diagram:      'bg-emerald-500/20 text-emerald-400',
+  data_viz:     'bg-sky-500/20 text-sky-400',
+  process_flow: 'bg-amber-500/20 text-amber-400',
+}
+
+const VISUAL_TYPE_LABEL: Record<VisualType, string> = {
+  photo:        'Photo',
+  infographic:  'Infographic',
+  diagram:      'Diagram',
+  data_viz:     'Data Viz',
+  process_flow: 'Process Flow',
+}
+
+function QualityScorePill({ score }: { score: number }) {
+  const colour = score >= 70
+    ? 'bg-green-500/20 text-green-400'
+    : 'bg-amber-500/20 text-amber-400'
+  return (
+    <span className={`text-xs font-mono px-1.5 py-0.5 rounded-sm ${colour}`}>
+      Q:{score}
+    </span>
+  )
+}
+
+export function AssetPreview({ asset, onPublished, onRegenerateImage, onApprove }: AssetPreviewProps) {
   const [expanded, setExpanded] = useState(false)
   const [publishing, setPublishing] = useState(false)
+  const [approving, setApproving] = useState(false)
   const [publishError, setPublishError] = useState<string | null>(null)
 
   const copyTruncated = asset.copy.length > 150 && !expanded
@@ -78,14 +109,29 @@ export function AssetPreview({ asset, onPublished, onRegenerateImage }: AssetPre
     }
   }
 
+  async function handleApprove() {
+    if (!onApprove) return
+    setApproving(true)
+    onApprove(asset.id)
+    setApproving(false)
+  }
+
   return (
     <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-sm p-4 flex flex-col gap-3">
-      {/* Header row — platform + status badges */}
-      <div className="flex items-center justify-between gap-2">
+      {/* Header row — platform + visual type + status badges */}
+      <div className="flex items-center gap-2 flex-wrap">
         <span className={`text-xs font-medium px-2 py-0.5 rounded-sm ${PLATFORM_BADGE[asset.platform]}`}>
           {PLATFORM_LABEL[asset.platform]}
         </span>
-        <span className={`text-xs font-medium px-2 py-0.5 rounded-sm ${STATUS_BADGE[asset.status]}`}>
+        {asset.visualType !== 'photo' && (
+          <span className={`text-xs font-medium px-2 py-0.5 rounded-sm ${VISUAL_TYPE_BADGE[asset.visualType]}`}>
+            {VISUAL_TYPE_LABEL[asset.visualType]}
+          </span>
+        )}
+        {asset.imageEngine === 'paper_banana' && asset.qualityScore !== null && (
+          <QualityScorePill score={asset.qualityScore} />
+        )}
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-sm ml-auto ${STATUS_BADGE[asset.status]}`}>
           {STATUS_LABEL[asset.status]}
         </span>
       </div>
@@ -100,7 +146,7 @@ export function AssetPreview({ asset, onPublished, onRegenerateImage }: AssetPre
       ) : (
         <div className="w-full aspect-square bg-white/[0.03] border border-white/[0.06] rounded-sm flex items-center justify-center">
           <span className="text-white/30 text-sm">
-            {asset.status === 'generating_image' ? 'Image generating…' : 'Image generating…'}
+            {asset.status === 'generating_image' ? 'Image generating…' : 'No image'}
           </span>
         </div>
       )}
@@ -148,19 +194,30 @@ export function AssetPreview({ asset, onPublished, onRegenerateImage }: AssetPre
         </div>
       )}
 
-      {/* Dimensions */}
+      {/* Dimensions + engine */}
       <p className="font-mono text-white/30 text-xs">
         {asset.width}×{asset.height}
+        {asset.imageEngine && ` · ${asset.imageEngine === 'paper_banana' ? 'PaperBanana' : 'Gemini'}`}
       </p>
 
       {/* Action buttons */}
       <div className="flex items-center gap-2 pt-1">
-        {asset.status === 'pending_image' && onRegenerateImage && (
+        {(asset.status === 'pending_image' || asset.status === 'review') && onRegenerateImage && (
           <button
             onClick={() => onRegenerateImage(asset.id)}
             className="border border-white/10 text-white/60 hover:border-white/20 hover:text-white/80 text-xs px-3 py-1.5 rounded-sm transition-colors"
           >
-            Regenerate Image
+            Regenerate
+          </button>
+        )}
+
+        {asset.status === 'review' && onApprove && (
+          <button
+            onClick={handleApprove}
+            disabled={approving}
+            className="bg-green-600 text-white text-xs font-medium rounded-sm px-3 py-1.5 hover:bg-green-500 disabled:opacity-50 transition-colors"
+          >
+            {approving ? 'Approving…' : 'Approve'}
           </button>
         )}
 

@@ -43,6 +43,10 @@ function mapAssetRow(row: Record<string, unknown>): CampaignAsset {
     variant: row['variant'] as number,
     socialPostId: row['social_post_id'] as string | null,
     status: row['status'] as CampaignAsset['status'],
+    visualType: (row['visual_type'] as CampaignAsset['visualType']) ?? 'photo',
+    imageEngine: (row['image_engine'] as CampaignAsset['imageEngine']) ?? null,
+    qualityScore: (row['quality_score'] as number | null) ?? null,
+    qualityStatus: (row['quality_status'] as CampaignAsset['qualityStatus']) ?? null,
     createdAt: row['created_at'] as string,
     updatedAt: row['updated_at'] as string,
   }

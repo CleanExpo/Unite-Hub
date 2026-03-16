@@ -8,6 +8,7 @@ import { buildCampaignCopySystemPrompt, buildCampaignCopyUserMessage } from './p
 import type { BrandDNA, CampaignCopyResult, CampaignObjective } from './types'
 import type { SocialPlatform } from '@/lib/integrations/social/types'
 import { PLATFORMS } from '@/lib/integrations/social/types'
+import { VISUAL_TYPES } from './types'
 
 const MODEL = 'claude-sonnet-4-5-20250929'
 const MAX_TOKENS = 8192
@@ -21,6 +22,7 @@ const CopyResultSchema = z.object({
   cta: z.string().nullable(),
   hashtags: z.array(z.string()),
   imagePrompt: z.string().min(10),
+  visualType: z.enum(VISUAL_TYPES).default('photo'),
   variant: z.number().int().min(1),
 })
 

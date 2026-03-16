@@ -9,12 +9,13 @@
 
 import { createServiceClient } from '@/lib/supabase/service'
 import { generateCampaignCopy } from './copy-generator'
-import { generateBrandedImage } from './image-generator'
+import { generateCampaignImage } from './image-generator'
 import type {
   BrandDNA,
   BrandColours,
   BrandFonts,
   CampaignObjective,
+  VisualType,
 } from './types'
 import { PLATFORM_DIMENSIONS as DIMS } from './types'
 import type { SocialPlatform } from '@/lib/integrations/social/types'
@@ -96,6 +97,7 @@ export interface OrchestrationResult {
   assetsCreated: number
   assetsWithImages: number
   assetsFailed: number
+  assetsForReview: number
 }
 
 /**
@@ -165,27 +167,32 @@ export async function generateCampaign(
     width: DIMS[copy.platform].width,
     height: DIMS[copy.platform].height,
     variant: copy.variant,
+    visual_type: copy.visualType ?? 'photo',
     status: 'generating_image' as const,
   }))
 
   const { data: insertedAssets, error: insertError } = await supabase
     .from('campaign_assets')
     .insert(assetInserts)
-    .select('id, platform, variant, headline, cta, image_prompt')
+    .select('id, platform, variant, headline, cta, image_prompt, visual_type')
 
   if (insertError || !insertedAssets) {
     throw new Error(`Failed to insert campaign assets: ${insertError?.message}`)
   }
 
-  // 5. Generate images in parallel (non-fatal failures)
+  // 5. Generate images in parallel via dual-engine router (non-fatal failures)
+  let reviewCount = 0
   const imageResults = await Promise.allSettled(
     insertedAssets.map(async (asset) => {
-      const result = await generateBrandedImage(
+      const visualType = (asset['visual_type'] as VisualType) ?? 'photo'
+
+      const result = await generateCampaignImage(
         asset['image_prompt'] as string,
         brandDNA,
         asset['platform'] as SocialPlatform,
         asset['headline'] as string | null,
-        asset['cta'] as string | null
+        asset['cta'] as string | null,
+        visualType
       )
 
       let imageUrl: string | null = null
@@ -199,12 +206,26 @@ export async function generateCampaign(
         )
       }
 
-      // Update asset with result
+      // Determine asset status based on quality gate
+      let assetStatus: string
+      if (!imageUrl) {
+        assetStatus = 'pending_image'
+      } else if (result.qualityStatus === 'review') {
+        assetStatus = 'review'
+        reviewCount++
+      } else {
+        assetStatus = 'ready'
+      }
+
+      // Update asset with image result + dual-engine metadata
       await supabase
         .from('campaign_assets')
         .update({
           image_url: imageUrl,
-          status: imageUrl ? 'ready' : 'pending_image',
+          status: assetStatus,
+          image_engine: result.imageEngine,
+          quality_score: result.qualityScore,
+          quality_status: result.qualityStatus,
         })
         .eq('id', asset['id'])
 
@@ -229,5 +250,6 @@ export async function generateCampaign(
     assetsCreated: insertedAssets.length,
     assetsWithImages,
     assetsFailed,
+    assetsForReview: reviewCount,
   }
 }

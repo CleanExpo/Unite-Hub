@@ -52,6 +52,15 @@ ${brand.tagline ? `**Tagline:** "${brand.tagline}"` : ''}
 - The imagePrompt must be detailed enough for an AI image generator to produce a professional marketing image
 - Include specific colour references (hex codes) and visual style in imagePrompts
 - Never mention competitor brands
+- For each post, classify the ideal visual type:
+  - "photo": Product shots, lifestyle imagery, people, marketing photography
+  - "infographic": Statistics, comparisons, numbered lists, key facts
+  - "diagram": Process flows, how-to steps, architecture, relationships
+  - "data_viz": Charts, graphs, trend lines, data comparisons
+  - "process_flow": Step-by-step workflows, timelines, journey maps
+- LinkedIn and educational content often benefit from infographics or diagrams
+- Instagram and lifestyle content benefits from photos
+- Choose the visualType based on what best serves the copy's message
 
 Respond ONLY with a valid JSON array — no markdown, no explanation.`
 }
@@ -86,6 +95,7 @@ Each item in the JSON array must have this exact structure:
   "cta": "call-to-action text (e.g. 'Book a free consult', 'Shop now', 'Learn more') or null",
   "hashtags": ["tag1", "tag2"] (within platform limit, no # prefix),
   "imagePrompt": "detailed image generation prompt describing a professional marketing visual. Include: subject/scene description, brand colours (${brand.colours.primary}, ${brand.colours.secondary}), photography style (${brand.imageryStyle}), mood, and any text overlay if needed. Be specific about composition, lighting, and visual elements.",
+  "visualType": "photo" (one of: photo, infographic, diagram, data_viz, process_flow — choose based on what best serves this post's message),
   "variant": 1
 }
 

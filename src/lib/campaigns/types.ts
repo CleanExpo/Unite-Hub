@@ -63,7 +63,15 @@ export interface BrandProfile {
 
 export type CampaignObjective = 'awareness' | 'engagement' | 'conversion' | 'retention'
 export type CampaignStatus = 'draft' | 'generating' | 'ready' | 'published'
-export type AssetStatus = 'pending_image' | 'generating_image' | 'ready' | 'published'
+export type AssetStatus = 'pending_image' | 'generating_image' | 'ready' | 'review' | 'published'
+
+// ─── PaperBanana Dual-Engine Types ─────────────────────────────────────────
+
+export type VisualType = 'photo' | 'infographic' | 'diagram' | 'data_viz' | 'process_flow'
+export type QualityStatus = 'approved' | 'review' | 'rejected'
+export type ImageEngine = 'gemini' | 'paper_banana'
+
+export const VISUAL_TYPES = ['photo', 'infographic', 'diagram', 'data_viz', 'process_flow'] as const
 
 export interface Campaign {
   id: string
@@ -97,6 +105,10 @@ export interface CampaignAsset {
   variant: number
   socialPostId: string | null
   status: AssetStatus
+  visualType: VisualType
+  imageEngine: ImageEngine | null
+  qualityScore: number | null
+  qualityStatus: QualityStatus | null
   createdAt: string
   updatedAt: string
 }
@@ -143,6 +155,7 @@ export interface CampaignCopyResult {
   cta: string | null
   hashtags: string[]
   imagePrompt: string
+  visualType: VisualType
   variant: number
 }
 
