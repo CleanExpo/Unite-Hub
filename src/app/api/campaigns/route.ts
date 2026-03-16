@@ -67,15 +67,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Brand profile not found or not ready' }, { status: 404 })
   }
 
-  // Suppress unused variable warnings for future use
-  void postCount
-  void dateRangeStart
-  void dateRangeEnd
+  const { data: newCampaign, error: createError } = await supabase
+    .from('campaigns')
+    .insert({
+      founder_id: user.id,
+      brand_profile_id: brandProfileId,
+      theme,
+      objective,
+      platforms,
+      post_count: postCount ?? 5,
+      date_range_start: dateRangeStart ?? null,
+      date_range_end: dateRangeEnd ?? null,
+      status: 'draft',
+    })
+    .select('id, theme, objective, status, created_at')
+    .single()
 
-  // NOTE: campaigns table is created in Task 29 (Phase 7 migration).
-  // For now return 501 until that migration is applied.
-  return NextResponse.json(
-    { error: 'Campaign creation requires the campaigns table (Phase 7 migration not yet applied)' },
-    { status: 501 }
-  )
+  if (createError || !newCampaign) {
+    console.error('[Campaigns] Failed to create campaign:', createError?.message)
+    return NextResponse.json({ error: 'Failed to create campaign' }, { status: 500 })
+  }
+
+  return NextResponse.json(newCampaign, { status: 201 })
 }
