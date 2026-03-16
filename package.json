@@ -136,6 +136,7 @@
     "@types/web-push": "^3.6.4",
     "@vercel/analytics": "^2.0.0",
     "@vercel/functions": "^3.4.3",
+    "apify-client": "^2.22.2",
     "axios": "^1.13.5",
     "bcryptjs": "^3.0.3",
     "brave-search": "^0.9.0",
