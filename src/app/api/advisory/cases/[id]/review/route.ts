@@ -74,17 +74,13 @@ export async function POST(
     return NextResponse.json({ error: 'Failed to update case' }, { status: 500 })
   }
 
-  // Update approval_queue if linked
+  // Update approval_queue if linked — include founder_id for defence-in-depth
   if (caseRow.approval_queue_id) {
     await supabase
       .from('approval_queue')
-      .update({
-        status: body.decision,
-        resolved_at: new Date().toISOString(),
-        resolved_by: body.reviewedBy.trim(),
-        notes: body.notes?.trim() || null,
-      })
+      .update({ status: body.decision })
       .eq('id', caseRow.approval_queue_id)
+      .eq('founder_id', user.id)
   }
 
   return NextResponse.json(updated)

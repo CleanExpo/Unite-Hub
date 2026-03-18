@@ -32,8 +32,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'websiteUrl and clientName are required' }, { status: 400 })
   }
 
-  // Normalise URL
-  const normalised = websiteUrl.startsWith('http') ? websiteUrl : `https://${websiteUrl}`
+  // Validate URL and block SSRF targets (private/link-local IPs)
+  let normalised: string
+  try {
+    const raw = websiteUrl.startsWith('http') ? websiteUrl : `https://${websiteUrl}`
+    const parsed = new URL(raw)
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      throw new Error('Invalid scheme')
+    }
+    const h = parsed.hostname.toLowerCase()
+    const PRIVATE = [
+      /^localhost$/,
+      /^127\./,
+      /^0\./,
+      /^10\./,
+      /^172\.(1[6-9]|2[0-9]|3[01])\./,
+      /^192\.168\./,
+      /^169\.254\./,   // link-local / AWS IMDS
+      /^\[?::1\]?$/,   // IPv6 loopback
+    ]
+    if (PRIVATE.some(r => r.test(h))) throw new Error('Private URLs not allowed')
+    normalised = parsed.toString()
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : 'Invalid websiteUrl' },
+      { status: 400 }
+    )
+  }
 
   const supabase = createServiceClient()
 
