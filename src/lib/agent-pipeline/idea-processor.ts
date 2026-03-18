@@ -1,5 +1,5 @@
 // src/lib/agent-pipeline/idea-processor.ts
-// Expands a raw text idea (from WhatsApp or Paperclip) into a structured Linear issue.
+// Expands a raw text idea (from WhatsApp) into a structured Linear issue.
 // Uses Claude Sonnet to classify business, write acceptance criteria, and set priority.
 
 import { getAIClient } from '@/lib/ai/client'
@@ -23,7 +23,7 @@ interface ProcessedIdea {
 
 /**
  * Expand a raw idea string into a structured Linear issue input.
- * @param rawText - The raw idea from WhatsApp message or Paperclip description
+ * @param rawText - The raw idea from a WhatsApp message
  * @param sourceBusinessHint - Optional business key hint (e.g. 'synthex') to guide classification
  */
 export async function processIdea(

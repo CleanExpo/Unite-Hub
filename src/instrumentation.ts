@@ -29,7 +29,6 @@ export async function register() {
     { name: 'Social',  vars: ['FACEBOOK_APP_ID'] },
     { name: 'Sentry',    vars: ['SENTRY_AUTH_TOKEN'] },
     { name: 'WhatsApp', vars: ['WHATSAPP_ACCESS_TOKEN', 'WHATSAPP_APP_SECRET'] },
-    { name: 'Paperclip', vars: ['PAPERCLIP_API_URL', 'PAPERCLIP_API_KEY'] },
     { name: 'GitHub',    vars: ['GITHUB_TOKEN'] },
     { name: 'HeyGen',   vars: ['HEYGEN_API_KEY'] },
     { name: 'Reddit',   vars: ['REDDIT_CLIENT_ID', 'REDDIT_CLIENT_SECRET'] },

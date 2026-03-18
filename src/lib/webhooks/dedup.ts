@@ -1,7 +1,7 @@
 // src/lib/webhooks/dedup.ts
 import { createServiceClient } from '@/lib/supabase/service'
 
-type Provider = 'whatsapp' | 'paperclip'
+type Provider = 'whatsapp'
 
 /** Returns true if this event has already been processed (duplicate). */
 export async function isDuplicate(

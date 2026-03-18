@@ -43,11 +43,3 @@ export function verifyApiKey(
     return false
   }
 }
-
-/**
- * Verify Paperclip webhook via API key header.
- * Paperclip sends: x-api-key: <PAPERCLIP_API_KEY>
- */
-export function verifyPaperclipApiKey(apiKeyHeader: string | null): boolean {
-  return verifyApiKey(apiKeyHeader, 'PAPERCLIP_API_KEY')
-}
