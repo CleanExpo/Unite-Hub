@@ -256,3 +256,13 @@ EXECUTE_MIGRATIONS_NOW.sql
 
 # Superpowers plugin
 .superpowers/
+
+# Archive directories (v1 legacy — not tracked)
+docs/_archive/
+scripts/_archive/
+
+# Prevent root-level diagnostic accumulation
+/*.txt
+/*.log
+/*.png
+!CHANGELOG.md

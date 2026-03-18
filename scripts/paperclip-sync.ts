@@ -14,7 +14,7 @@
  *   npx tsx scripts/paperclip-sync.ts
  *
  * Env vars (from .env.local):
- *   PAPERCLIP_API_URL     — Paperclip base URL, e.g. http://192.168.1.50:8080
+ *   PAPERCLIP_API_URL     — Paperclip base URL, e.g. http://192.168.2.37:3100
  *   PAPERCLIP_API_KEY     — API key for both calling Paperclip AND the webhook
  *   NEXT_PUBLIC_APP_URL   — Unite-Group public URL (defaults to production URL)
  */
@@ -26,7 +26,7 @@ config()
 const PAPERCLIP_URL = process.env.PAPERCLIP_API_URL?.trim()
 const PAPERCLIP_KEY = process.env.PAPERCLIP_API_KEY?.trim()
 const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL?.trim() ?? 'https://nexus.unite-group.com.au'
+  process.env.NEXT_PUBLIC_APP_URL?.trim() ?? 'https://unite-group.in'
 const WEBHOOK_URL = `${APP_URL}/api/webhooks/paperclip`
 
 // ─── Types ───────────────────────────────────────────────────────────────────
