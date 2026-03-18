@@ -8,14 +8,12 @@ DO $$
 BEGIN
   -- experiments — filtered by status on dashboard, sorted by created_at
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'experiments') THEN
-    CREATE INDEX IF NOT EXISTS idx_experiments_founder_status
-      ON public.experiments (founder_id, status, created_at DESC);
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_experiments_founder_status ON public.experiments (founder_id, status, created_at DESC)';
   END IF;
 
   -- experiment_results — analytics aggregations by period
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'experiment_results') THEN
-    CREATE INDEX IF NOT EXISTS idx_experiment_results_period
-      ON public.experiment_results (experiment_id, period_date DESC);
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_experiment_results_period ON public.experiment_results (experiment_id, period_date DESC)';
   END IF;
 
   -- credentials_vault — vault lookups by service name
