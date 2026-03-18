@@ -4,6 +4,14 @@ import { useState } from 'react'
 import { BUSINESSES } from '@/lib/businesses'
 import type { SocialChannel, SocialPlatform } from '@/lib/integrations/social/types'
 
+async function disconnectChannel(channelId: string): Promise<void> {
+  const res = await fetch(`/api/social/channels/${channelId}`, { method: 'DELETE' })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({})) as { error?: string }
+    throw new Error(body.error ?? `HTTP ${res.status}`)
+  }
+}
+
 const PLATFORM_META: Record<SocialPlatform, { label: string; colour: string; icon: string }> = {
   facebook:  { label: 'Facebook',  colour: '#1877F2', icon: 'f' },
   instagram: { label: 'Instagram', colour: '#E1306C', icon: '◈' },
@@ -23,9 +31,23 @@ interface Props {
   channels: SocialChannel[]
 }
 
-export function ConnectionStrip({ channels }: Props) {
+export function ConnectionStrip({ channels: initialChannels }: Props) {
   // Default to Synthex — social/AI content lives there
   const [selectedBusiness, setSelectedBusiness] = useState('synthex')
+  const [channels, setChannels] = useState<SocialChannel[]>(initialChannels)
+  const [disconnecting, setDisconnecting] = useState<string | null>(null)
+
+  async function handleDisconnect(channel: SocialChannel) {
+    setDisconnecting(channel.id)
+    try {
+      await disconnectChannel(channel.id)
+      setChannels(prev => prev.filter(c => c.id !== channel.id))
+    } catch (err) {
+      console.error('[ConnectionStrip] Disconnect failed:', err)
+    } finally {
+      setDisconnecting(null)
+    }
+  }
 
   // Build a map: platform → connected channel for the selected business
   const connectedByPlatform = new Map(
@@ -72,6 +94,15 @@ export function ConnectionStrip({ channels }: Props) {
               {channel.channelName && (
                 <span style={{ color: meta.colour, opacity: 0.7 }}>· {channel.channelName}</span>
               )}
+              <button
+                onClick={() => handleDisconnect(channel)}
+                disabled={disconnecting === channel.id}
+                title={`Disconnect ${meta.label}`}
+                className="ml-1 leading-none hover:opacity-100 disabled:cursor-not-allowed transition-opacity"
+                style={{ color: meta.colour, opacity: disconnecting === channel.id ? 0.4 : 0.6 }}
+              >
+                {disconnecting === channel.id ? '…' : '×'}
+              </button>
             </div>
           ) : (
             <a

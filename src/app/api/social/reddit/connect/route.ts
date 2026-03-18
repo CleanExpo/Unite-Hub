@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server'
+import { getUser } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
+  const user = await getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   const clientId = process.env.REDDIT_CLIENT_ID?.trim()
   const clientSecret = process.env.REDDIT_CLIENT_SECRET?.trim()
   const username = process.env.REDDIT_USERNAME?.trim()

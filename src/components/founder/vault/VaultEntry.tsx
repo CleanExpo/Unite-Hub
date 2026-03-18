@@ -7,19 +7,46 @@ interface VaultEntryProps {
   id: string
   label: string
   username: string
-  secret: string
   businessColor: string
   onDelete: (id: string) => void
 }
 
-export function VaultEntry({ id, label, username, secret, businessColor, onDelete }: VaultEntryProps) {
+export function VaultEntry({ id, label, username, businessColor, onDelete }: VaultEntryProps) {
   const [revealed, setRevealed] = useState(false)
+  const [secret, setSecret] = useState<string | null>(null)
+  const [revealing, setRevealing] = useState(false)
   const [copied, setCopied] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
-  async function handleCopy() {
+  async function handleReveal() {
+    if (revealed) {
+      setRevealed(false)
+      return
+    }
+    if (secret !== null) {
+      setRevealed(true)
+      return
+    }
+    setRevealing(true)
     try {
-      await navigator.clipboard.writeText(secret)
+      const res = await fetch(`/api/vault/entries/${id}`)
+      if (res.ok) {
+        const data = await res.json() as { secret: string }
+        setSecret(data.secret)
+        setRevealed(true)
+      }
+    } catch {
+      // fetch failed — stay hidden
+    } finally {
+      setRevealing(false)
+    }
+  }
+
+  async function handleCopy() {
+    const value = secret ?? ''
+    if (!value) return
+    try {
+      await navigator.clipboard.writeText(value)
       setCopied(true)
       setTimeout(() => setCopied(false), 800)
     } catch {
@@ -51,12 +78,13 @@ export function VaultEntry({ id, label, username, secret, businessColor, onDelet
       <span className="text-[13px] w-40 truncate" style={{ color: 'var(--color-text-secondary)' }}>{label}</span>
       <span className="text-[12px] w-32 truncate" style={{ color: 'var(--color-text-muted)' }}>{username}</span>
       <span className="flex-1 font-mono text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
-        {revealed ? secret : '··········'}
+        {revealed && secret !== null ? secret : '··········'}
       </span>
       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
-          onClick={() => setRevealed(!revealed)}
-          className="transition-colors hover:opacity-100"
+          onClick={handleReveal}
+          disabled={revealing}
+          className="transition-colors hover:opacity-100 disabled:opacity-40"
           style={{ color: 'var(--color-text-muted)' }}
           aria-label={revealed ? 'Hide' : 'Show'}
         >
@@ -64,7 +92,8 @@ export function VaultEntry({ id, label, username, secret, businessColor, onDelet
         </button>
         <button
           onClick={handleCopy}
-          className="transition-colors"
+          disabled={!revealed || secret === null}
+          className="transition-colors disabled:opacity-40"
           style={{ color: copied ? '#00F5FF' : 'var(--color-text-muted)' }}
           aria-label="Copy"
         >

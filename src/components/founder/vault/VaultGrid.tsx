@@ -12,7 +12,6 @@ interface Credential {
   label: string
   service: string
   username: string
-  secret: string
   notes: string
 }
 
@@ -99,7 +98,6 @@ export function VaultGrid({ unlocked }: VaultGridProps) {
                     id={cred.id}
                     label={cred.label}
                     username={cred.username}
-                    secret={cred.secret}
                     businessColor={business.color}
                     onDelete={handleDelete}
                   />

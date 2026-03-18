@@ -80,6 +80,64 @@ export async function upsertChannel(params: {
   )
 }
 
+/** Revoke the platform OAuth token (best-effort) and delete the channel row */
+export async function deleteChannel(founderId: string, channelId: string): Promise<void> {
+  const supabase = createServiceClient()
+
+  // Fetch the row first so we can attempt token revocation
+  const { data: row } = await supabase
+    .from('social_channels')
+    .select('platform, access_token_encrypted')
+    .eq('id', channelId)
+    .eq('founder_id', founderId)
+    .single()
+
+  // Best-effort token revocation — never throw, never block the delete
+  if (row?.access_token_encrypted) {
+    try {
+      const accessToken = decodeToken(row.access_token_encrypted)
+      const platform: string = row.platform
+
+      if (platform === 'facebook' || platform === 'instagram') {
+        // Meta: DELETE graph.facebook.com/me/permissions
+        await fetch(
+          `https://graph.facebook.com/me/permissions?access_token=${encodeURIComponent(accessToken)}`,
+          { method: 'DELETE' }
+        )
+      } else if (platform === 'tiktok') {
+        // TikTok: POST /v2/oauth/revoke/
+        await fetch('https://open.tiktokapis.com/v2/oauth/revoke/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ token: accessToken }),
+        })
+      } else if (platform === 'youtube') {
+        // Google/YouTube: POST oauth2.googleapis.com/revoke
+        await fetch(
+          `https://oauth2.googleapis.com/revoke?token=${encodeURIComponent(accessToken)}`,
+          { method: 'POST' }
+        )
+      }
+      // LinkedIn does not support programmatic token revocation — skip
+    } catch {
+      // Intentionally swallowed — revocation is best-effort
+      console.warn('[social/channels] Token revocation failed (non-blocking) for channel:', channelId)
+    }
+  }
+
+  // Delete the row — this is the authoritative operation
+  const { error } = await supabase
+    .from('social_channels')
+    .delete()
+    .eq('id', channelId)
+    .eq('founder_id', founderId)
+
+  if (error) {
+    console.error('[social/channels] Delete failed:', error.message)
+    throw error
+  }
+}
+
 /** @deprecated Synchronous stub — returns all platforms as disconnected. Use getChannels() for real data. */
 export function getConnections(businessKey: string): SocialConnection[] {
   return PLATFORMS.map((platform: SocialPlatform) => ({

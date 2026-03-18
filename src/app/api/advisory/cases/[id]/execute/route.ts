@@ -1,9 +1,12 @@
 // src/app/api/advisory/cases/[id]/execute/route.ts
 // POST: Execute the winning strategy after accountant approval.
-// Phase 6 will add Xero journal entries and bookkeeper operations.
+// Phase 6: Posts a Xero ManualJournal (DRAFT) when Xero is connected;
+//          falls back gracefully to advisory_only when it is not.
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getUser, createClient } from '@/lib/supabase/server'
+import { executeAdvisoryAction } from '@/lib/advisory/xero-bridge'
+import type { FirmProposalData } from '@/lib/advisory/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,10 +20,10 @@ export async function POST(
   const { id } = await params
   const supabase = await createClient()
 
-  // Verify case is approved
+  // Verify case is approved — also fetch financial_context for businessKey (Phase 6)
   const { data: caseRow, error: caseError } = await supabase
     .from('advisory_cases')
-    .select('id, status, winning_firm, approval_queue_id')
+    .select('id, status, winning_firm, approval_queue_id, financial_context')
     .eq('id', id)
     .eq('founder_id', user.id)
     .single()
@@ -57,15 +60,25 @@ export async function POST(
     )
   }
 
-  // TODO (Phase 6): Map strategy actions to bookkeeper operations:
-  // - Reclassify deductions via deduction-optimiser.ts rules
-  // - Create Xero journal entries via xeroApiFetch()
-  // - Update BAS positions
-  // For now, mark as executed with the strategy data preserved.
+  // Phase 6: Map winning strategies to a Xero ManualJournal entry.
+  // executeAdvisoryAction never throws — Xero not connected returns advisory_only (200).
+  const proposalData = winningProposal.structured_data as FirmProposalData
+  const financialContext = caseRow.financial_context as { businessKey?: string } | null
+  const businessKey: string = financialContext?.businessKey ?? 'unknown'
+
+  const xeroResult = await executeAdvisoryAction(
+    id,
+    proposalData.strategies ?? [],
+    businessKey,
+    user.id
+  )
 
   const { data: updated, error: updateError } = await supabase
     .from('advisory_cases')
-    .update({ status: 'executed' })
+    .update({
+      status: 'executed',
+      xero_entry_id: xeroResult.xeroEntryId,
+    })
     .eq('id', id)
     .eq('founder_id', user.id)
     .select('*')
@@ -88,5 +101,10 @@ export async function POST(
   return NextResponse.json({
     case: updated,
     executedStrategy: winningProposal.structured_data,
+    xero: {
+      status: xeroResult.status,
+      entryId: xeroResult.xeroEntryId,
+      message: xeroResult.message,
+    },
   })
 }

@@ -1,7 +1,7 @@
 // src/app/api/vault/entries/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { getUser, createClient } from '@/lib/supabase/server'
-import { encrypt, decrypt, type VaultPayload } from '@/lib/vault'
+import { encrypt } from '@/lib/vault'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,34 +12,21 @@ export async function GET() {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('credentials_vault')
-    .select('id, label, service, encrypted_value, iv, salt, notes, metadata, created_at')
+    .select('id, label, service, notes, metadata, created_at')
     .eq('founder_id', user.id)
     .order('created_at', { ascending: true })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  const entries = (data ?? []).map((row) => {
-    let secret = ''
-    try {
-      secret = decrypt({
-        encryptedValue: row.encrypted_value,
-        iv: row.iv,
-        salt: row.salt,
-      } as VaultPayload)
-    } catch {
-      secret = '[decryption failed]'
-    }
-    return {
-      id: row.id,
-      businessKey: (row.metadata as Record<string, string>)?.businessKey ?? '',
-      label: row.label,
-      service: row.service,
-      username: (row.metadata as Record<string, string>)?.username ?? '',
-      secret,
-      notes: row.notes ?? '',
-      createdAt: row.created_at,
-    }
-  })
+  const entries = (data ?? []).map((row) => ({
+    id: row.id,
+    businessKey: (row.metadata as Record<string, string>)?.businessKey ?? '',
+    label: row.label,
+    service: row.service,
+    username: (row.metadata as Record<string, string>)?.username ?? '',
+    notes: row.notes ?? '',
+    createdAt: row.created_at,
+  }))
 
   return NextResponse.json(entries)
 }

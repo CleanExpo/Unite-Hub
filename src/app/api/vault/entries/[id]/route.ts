@@ -1,9 +1,48 @@
 // src/app/api/vault/entries/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { getUser, createClient } from '@/lib/supabase/server'
-import { encrypt, type VaultPayload } from '@/lib/vault'
+import { encrypt, decrypt, type VaultPayload } from '@/lib/vault'
 
 export const dynamic = 'force-dynamic'
+
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const user = await getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+
+  const { id } = await params
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('credentials_vault')
+    .select('id, label, service, encrypted_value, iv, salt, notes, created_at')
+    .eq('id', id)
+    .eq('founder_id', user.id)
+    .single()
+
+  if (error || !data) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  let secret: string
+  try {
+    secret = decrypt({
+      encryptedValue: data.encrypted_value,
+      iv: data.iv,
+      salt: data.salt,
+    } as VaultPayload)
+  } catch {
+    return NextResponse.json({ error: 'Decryption failed' }, { status: 500 })
+  }
+
+  return NextResponse.json({
+    id: data.id,
+    label: data.label,
+    service: data.service,
+    secret,
+    notes: data.notes ?? '',
+    createdAt: data.created_at,
+  })
+}
 
 export async function DELETE(
   _req: NextRequest,
