@@ -24,15 +24,15 @@ BEGIN
       ON public.credentials_vault (founder_id, service);
   END IF;
 
-  -- nexus_databases — page database queries
+  -- nexus_databases — uses owner_id (v1 schema, not yet migrated to founder_id)
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'nexus_databases') THEN
-    CREATE INDEX IF NOT EXISTS idx_nexus_databases_page
-      ON public.nexus_databases (founder_id, page_id);
+    CREATE INDEX IF NOT EXISTS idx_nexus_databases_owner
+      ON public.nexus_databases (owner_id, business_id);
   END IF;
 
-  -- connected_projects — project sync queries
+  -- connected_projects — uses owner_id (v1 schema, not yet migrated to founder_id)
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'connected_projects') THEN
-    CREATE INDEX IF NOT EXISTS idx_connected_projects_founder
-      ON public.connected_projects (founder_id);
+    CREATE INDEX IF NOT EXISTS idx_connected_projects_owner
+      ON public.connected_projects (owner_id);
   END IF;
 END $$;
