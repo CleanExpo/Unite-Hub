@@ -2,6 +2,7 @@
 // Initiates Facebook Login OAuth — covers both Facebook Pages and Instagram Business
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
+import { signOAuthState } from '@/lib/oauth-state'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
   if (!businessKey) return NextResponse.json({ error: 'business param required' }, { status: 400 })
 
   const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
-  const state = Buffer.from(JSON.stringify({ businessKey })).toString('base64url')
+  const state = signOAuthState({ businessKey })
 
   const params = new URLSearchParams({
     client_id: process.env.FACEBOOK_APP_ID!,

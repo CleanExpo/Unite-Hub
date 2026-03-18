@@ -11,7 +11,9 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/founder/dashboard'
+  const rawNext = searchParams.get('next') ?? '/founder/dashboard'
+  // Prevent open redirect: only allow relative paths (must start with / but not //)
+  const next = /^\/(?!\/)/.test(rawNext) ? rawNext : '/founder/dashboard'
 
   if (code) {
     const cookieStore = await cookies()

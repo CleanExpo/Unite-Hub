@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import DOMPurify from 'dompurify'
 import type { FullThread } from '@/lib/integrations/google'
 import { ReplyComposer } from './ReplyComposer'
 
@@ -114,10 +115,10 @@ export function ThreadViewer({ threadId, account, onArchive, onDelete, onClose }
                   </div>
                   <span className="text-[10px] text-white/30 flex-shrink-0">{msg.date}</span>
                 </div>
-                {/* Message body — sandboxed iframe prevents XSS */}
+                {/* Message body — DOMPurify sanitises before iframe injection; sandbox="" blocks scripts */}
                 {msg.bodyHtml ? (
                   <iframe
-                    srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:sans-serif;font-size:14px;color:#ccc;background:#0a0a0a;margin:0;padding:12px}a{color:#00F5FF}</style></head><body>${msg.bodyHtml}</body></html>`}
+                    srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:sans-serif;font-size:14px;color:#ccc;background:#0a0a0a;margin:0;padding:12px}a{color:#00F5FF}</style></head><body>${DOMPurify.sanitize(msg.bodyHtml, { FORCE_BODY: true })}</body></html>`}
                     sandbox=""
                     className="w-full min-h-[200px] border-0 rounded-sm bg-zinc-900"
                     style={{ height: i === thread.messages.length - 1 ? '400px' : '200px' }}

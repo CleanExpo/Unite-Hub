@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
 import { upsertChannel } from '@/lib/integrations/social/channels'
+import { verifyOAuthState } from '@/lib/oauth-state'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,12 +16,12 @@ export async function GET(request: Request) {
   const state = searchParams.get('state')
   const error = searchParams.get('error')
 
-  if (error) return NextResponse.redirect(`${APP_URL}/founder/social?error=${error}`)
+  if (error) return NextResponse.redirect(`${APP_URL}/founder/social?error=${encodeURIComponent(error)}`)
   if (!code || !state) return NextResponse.redirect(`${APP_URL}/founder/social?error=missing_params`)
 
   let businessKey = ''
   try {
-    businessKey = JSON.parse(Buffer.from(state, 'base64url').toString()).businessKey
+    businessKey = verifyOAuthState(state).businessKey
   } catch {
     return NextResponse.redirect(`${APP_URL}/founder/social?error=invalid_state`)
   }

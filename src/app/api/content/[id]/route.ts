@@ -36,7 +36,11 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
-  const body = (await request.json()) as Record<string, unknown>
+  const rawBody = (await request.json()) as Record<string, unknown>
+
+  // Allowlist writable fields — prevents mass-assignment via unsanitised body
+  const ALLOWED: Array<keyof typeof rawBody> = ['status', 'title', 'body', 'metadata']
+  const body = Object.fromEntries(ALLOWED.filter(f => f in rawBody).map(f => [f, rawBody[f]]))
 
   const supabase = createServiceClient()
   const { data, error } = await supabase

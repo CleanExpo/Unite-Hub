@@ -57,7 +57,7 @@ export async function middleware(request: NextRequest) {
   // ------------------------------------------------------------------
   // 2. Supabase session refresh (PKCE token rotation)
   // ------------------------------------------------------------------
-  const { response, session } = await updateSession(request);
+  const { response, user } = await updateSession(request);
 
   // Attach rate-limit headers to successful responses so clients can
   // monitor their remaining budget.
@@ -70,7 +70,7 @@ export async function middleware(request: NextRequest) {
   // ------------------------------------------------------------------
   // 3. Auth guard — redirect unauthenticated users to login
   // ------------------------------------------------------------------
-  if (!session && !isPublicPath(pathname)) {
+  if (!user && !isPublicPath(pathname)) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = '/auth/login';
     loginUrl.searchParams.set('redirectTo', pathname);

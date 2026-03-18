@@ -78,8 +78,10 @@ export function createMiddlewareClient(request: NextRequest) {
 export async function updateSession(request: NextRequest) {
   const { supabase, response } = createMiddlewareClient(request);
 
-  // Refresh session if expired
-  const { data: { session } } = await supabase.auth.getSession();
+  // getUser() verifies the JWT server-side on every request.
+  // getSession() trusts the client cookie without server verification — revoked
+  // tokens would still pass. See Supabase security advisory (Nov 2023).
+  const { data: { user } } = await supabase.auth.getUser();
 
-  return { supabase, response, session };
+  return { supabase, response, user };
 }

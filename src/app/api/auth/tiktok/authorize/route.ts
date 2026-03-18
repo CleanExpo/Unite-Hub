@@ -1,7 +1,7 @@
 // GET /api/auth/tiktok/authorize?business={key}
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
-import { createHash } from 'crypto'
+import { signOAuthState } from '@/lib/oauth-state'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,8 +14,7 @@ export async function GET(request: Request) {
   if (!businessKey) return NextResponse.json({ error: 'business param required' }, { status: 400 })
 
   const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
-  const csrfState = createHash('sha256').update(`${user.id}:${businessKey}:${Date.now()}`).digest('hex').slice(0, 16)
-  const state = Buffer.from(JSON.stringify({ businessKey, csrfState })).toString('base64url')
+  const state = signOAuthState({ businessKey })
 
   const params = new URLSearchParams({
     client_key: process.env.TIKTOK_CLIENT_KEY!,

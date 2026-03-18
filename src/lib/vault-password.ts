@@ -4,7 +4,6 @@
 // The actual credential encryption is handled by VAULT_ENCRYPTION_KEY in vault.ts.
 
 const STORAGE_KEY = 'vault_pw_hash'
-const DEFAULT_PW = 'nexus2026'
 
 async function sha256hex(text: string): Promise<string> {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
@@ -13,18 +12,21 @@ async function sha256hex(text: string): Promise<string> {
     .join('')
 }
 
-/** Returns the stored hash, seeding from the default password on first use. */
-export async function getStoredHash(): Promise<string> {
-  const stored = localStorage.getItem(STORAGE_KEY)
-  if (stored) return stored
-  const defaultHash = await sha256hex(DEFAULT_PW)
-  localStorage.setItem(STORAGE_KEY, defaultHash)
-  return defaultHash
+/** Returns true if the vault password has been explicitly set by the user. */
+export function isVaultPasswordSet(): boolean {
+  return localStorage.getItem(STORAGE_KEY) !== null
 }
 
-/** Returns true if the given password matches the stored hash. */
+/** Returns the stored hash, or null if no password has been set yet. */
+export async function getStoredHash(): Promise<string | null> {
+  return localStorage.getItem(STORAGE_KEY)
+}
+
+/** Returns true if the given password matches the stored hash. Always false if no password set. */
 export async function verifyVaultPassword(input: string): Promise<boolean> {
-  const [inputHash, storedHash] = await Promise.all([sha256hex(input), getStoredHash()])
+  const storedHash = await getStoredHash()
+  if (!storedHash) return false
+  const inputHash = await sha256hex(input)
   return inputHash === storedHash
 }
 
@@ -41,8 +43,8 @@ export async function changeVaultPassword(currentPw: string, newPw: string): Pro
 }
 
 /**
- * Resets the master password without requiring the current password.
- * Safe to call — the vault_pw_hash is a UI gate only, not an encryption key.
+ * Sets or resets the master password without requiring the current password.
+ * Safe to call — vault_pw_hash is a UI gate only, not an encryption key.
  * Actual credential decryption uses the server-side VAULT_ENCRYPTION_KEY.
  */
 export async function resetVaultPassword(newPw: string): Promise<void> {

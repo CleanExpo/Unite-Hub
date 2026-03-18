@@ -681,11 +681,14 @@ export async function sendReply(
 ): Promise<{ messageId: string }> {
   const accessToken = await getAccessTokenForEmail(founderId, email)
 
+  // Strip CR/LF to prevent email header injection
+  const cleanTo = opts.to.replace(/[\r\n]/g, '')
+  const cleanSubject = opts.subject.replace(/[\r\n]/g, ' ')
   const replyTo = opts.inReplyToMessageId ? `\r\nIn-Reply-To: <${opts.inReplyToMessageId}>\r\nReferences: <${opts.inReplyToMessageId}>` : ''
   const mime = [
     `From: ${email}`,
-    `To: ${opts.to}`,
-    `Subject: ${opts.subject}${replyTo}`,
+    `To: ${cleanTo}`,
+    `Subject: ${cleanSubject}${replyTo}`,
     'Content-Type: text/html; charset=UTF-8',
     '',
     opts.body,

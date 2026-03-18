@@ -7,6 +7,7 @@ import { getUser } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { encrypt } from '@/lib/vault'
 import { accountByEmail } from '@/lib/email-accounts'
+import { verifyOAuthState } from '@/lib/oauth-state'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,17 +22,17 @@ export async function GET(request: Request) {
   const error = searchParams.get('error')
 
   if (error) {
-    return NextResponse.redirect(`${APP_URL}/founder/email?error=${error}`)
+    return NextResponse.redirect(`${APP_URL}/founder/email?error=${encodeURIComponent(error)}`)
   }
 
   if (!code || !state) {
     return NextResponse.redirect(`${APP_URL}/founder/email?error=missing_params`)
   }
 
-  // Decode state → { email }
+  // Verify HMAC-signed state → { email }
   let email = ''
   try {
-    const decoded = JSON.parse(Buffer.from(state, 'base64url').toString())
+    const decoded = verifyOAuthState(state)
     email = decoded.email
   } catch {
     return NextResponse.redirect(`${APP_URL}/founder/email?error=invalid_state`)

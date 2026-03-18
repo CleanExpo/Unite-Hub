@@ -4,6 +4,7 @@
 
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
+import { signOAuthState } from '@/lib/oauth-state'
 
 const SCOPES = [
   'https://www.googleapis.com/auth/gmail.readonly',
@@ -33,7 +34,7 @@ export async function GET(request: Request) {
     access_type: 'offline',
     prompt: 'consent',        // force refresh_token every time
     login_hint: email,
-    state: Buffer.from(JSON.stringify({ email })).toString('base64url'),
+    state: signOAuthState({ email }),
   })
 
   return NextResponse.redirect(
