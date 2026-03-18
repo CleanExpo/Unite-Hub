@@ -1,7 +1,7 @@
 # Unite-Group AI Architecture
 
 **Version:** 2.0.0
-**Project:** NodeJS-Starter-V1 Hybrid Architecture
+**Project:** Nexus 2.0 Hybrid Architecture
 **Strategy:** Australian-First, Truth-First, SEO-Dominant
 
 ---
@@ -23,7 +23,7 @@
 
 ## Overview
 
-The Unite-Group AI Architecture is a hybrid system that preserves the strengths of NodeJS-Starter-V1 while adding comprehensive Australian-first context, truth verification, and SEO intelligence.
+The Unite-Group AI Architecture is a hybrid system that preserves the strengths of Nexus 2.0 while adding comprehensive Australian-first context, truth verification, and SEO intelligence.
 
 ### Core Principles
 
@@ -113,7 +113,7 @@ Specialized agents handle specific domains. Each agent has:
 #### Stub Agents (Future Implementations)
 
 - `frontend-specialist` - React/Next.js/Tailwind development
-- `backend-specialist` - FastAPI/LangGraph/Agents development
+- `backend-specialist` - _Archived (v1 FastAPI agent — no longer active)_
 - `database-specialist` - Supabase/Migrations/RLS
 - `test-engineer` - E2E, unit, integration testing
 - `deploy-guardian` - Deployment safety and rollback
@@ -145,7 +145,7 @@ Reusable knowledge modules organized by category. All skills use `.skill.md` ext
   - Context partitioning strategies
   - Token optimization
 - `project-context.skill.md` (Priority 2)
-  - NodeJS-Starter-V1 specific knowledge
+  - Nexus 2.0 specific knowledge
   - Stack, migrations, conventions
 
 **Design (3 skills)**
@@ -185,20 +185,14 @@ Reusable knowledge modules organized by category. All skills use `.skill.md` ext
   - Real-time ranking checks
   - Alert configuration
 
-**Backend (3 skills)**
+**Backend (1 skill)**
 - `advanced-tool-use.skill.md` (Priority 2)
   - Context-efficient tool management (85% token savings)
   - Australian context tools (ABN validation)
-- `langgraph.skill.md` (Priority 3)
-  - LangGraph workflow patterns
-  - Multi-agent coordination
-- `fastapi.skill.md` (Priority 3)
-  - FastAPI patterns with Australian context
-  - Privacy Act 1988 compliance
 
 **Frontend (2 skills)**
 - `nextjs.skill.md` (Priority 3)
-  - Next.js 15 patterns with 2025-2026 design
+  - Next.js 16 patterns with 2025-2026 design
   - Australian context utilities
 - `components.skill.md` (Priority 4)
   - Component patterns and best practices
@@ -229,7 +223,7 @@ Reusable knowledge modules organized by category. All skills use `.skill.md` ext
 2. **On-demand** (Priority 2+): Load when agent dispatched or skill referenced
    - Orchestrator loads orchestration.skill.md
    - SEO tasks load search-dominance.skill.md, blue-ocean.skill.md
-   - Backend tasks load langgraph.skill.md, fastapi.skill.md
+   - API tasks load nextjs.skill.md
 
 3. **Dependencies**: Skills can require other skills via `requires:` in YAML frontmatter
    - post-skill-load.hook automatically loads dependencies
@@ -331,12 +325,10 @@ Agent Execution
 
 Path-specific auto-loading rules (preserved from original architecture):
 - `development/workflow.md` - Development commands and conventions
-- `frontend/nextjs.md` - Next.js 15 patterns and anti-patterns
-- `backend/fastapi.md` - FastAPI patterns
+- `frontend/nextjs.md` - Next.js 16 patterns and anti-patterns
 - `database/supabase.md` - Supabase and RLS patterns
-- `agents/langgraph.md` - LangGraph workflow patterns
 
-**Total**: 5 rules, 383 lines preserved
+**Total**: 3 rules
 
 ---
 
@@ -351,9 +343,9 @@ User Request
     ↓
 CLAUDE.md (Quick Routing)
     ↓
-    ├─ Frontend? → .claude/agents/frontend-specialist/
-    ├─ Backend? → .claude/agents/backend-specialist/
-    ├─ Database? → .claude/agents/database-specialist/
+    ├─ Frontend? → .claude/agents/frontend-designer/
+    ├─ Fullstack? → .claude/agents/senior-fullstack/
+    ├─ Database? → .claude/agents/database-architect/
     ├─ SEO? → .claude/agents/seo-intelligence/
     └─ Content? → .claude/agents/truth-finder/
     ↓
@@ -461,7 +453,7 @@ verification = await independent_verify(result)
 
 ### Australian Context Utilities
 
-Complete utility library in `apps/web/src/lib/australian-context.ts` (320 lines):
+Complete utility library in `src/lib/australian-context.ts` (320 lines):
 
 **Date Functions**
 - `formatDateAU(date)` → "08/01/2025"
@@ -715,18 +707,16 @@ Thresholds:
 ## File Structure
 
 ```
-NodeJS-Starter-V1/
-├── CLAUDE.md (48 lines) - Lean router
-├── PROGRESS.md - Implementation dashboard
+Nexus 2.0/
+├── CLAUDE.md - Lean router
 ├── .claude/
 │   ├── README.md (THIS FILE)
-│   ├── agents/ (19 agents)
+│   ├── agents/ (31 agents)
 │   │   ├── orchestrator/agent.md
-│   │   ├── standards/agent.md
-│   │   ├── verification/agent.md
-│   │   ├── truth-finder/agent.md
-│   │   ├── seo-intelligence/agent.md
-│   │   └── [14 more...]
+│   │   ├── senior-fullstack/agent.md
+│   │   ├── frontend-designer/agent.md
+│   │   ├── database-architect/agent.md
+│   │   └── [27 more...]
 │   ├── hooks/ (10 hooks)
 │   │   ├── pre-response.hook.md
 │   │   ├── pre-publish.hook.md ⚠️ BLOCKING
@@ -736,12 +726,10 @@ NodeJS-Starter-V1/
 │   │   ├── trusted-sources.yaml
 │   │   ├── design-tokens.json
 │   │   └── verified-claims.json
-│   ├── rules/ (5 rules)
+│   ├── rules/ (3 rules)
 │   │   ├── development/workflow.md
 │   │   ├── frontend/nextjs.md
-│   │   ├── backend/fastapi.md
-│   │   ├── database/supabase.md
-│   │   └── agents/langgraph.md
+│   │   └── database/supabase.md
 │   └── commands/ (5 commands)
 ├── skills/ (35+ skills)
 │   ├── INDEX.md
@@ -753,13 +741,16 @@ NodeJS-Starter-V1/
 │   │   ├── truth-finder.skill.md
 │   │   └── error-handling.skill.md
 │   └── [6 more categories...]
-└── apps/
-    ├── web/ (Next.js 15)
-    │   └── src/
-    │       ├── components/JobCard.tsx
-    │       ├── lib/australian-context.ts
-    │       └── styles/design-system.css
-    └── backend/ (FastAPI + LangGraph)
+├── src/                          # Next.js 16 app (single-tenant)
+│   ├── app/
+│   │   ├── (auth)/
+│   │   ├── (founder)/
+│   │   └── api/
+│   ├── components/
+│   ├── lib/
+│   └── middleware.ts
+└── supabase/
+    └── migrations/
 ```
 
 ---

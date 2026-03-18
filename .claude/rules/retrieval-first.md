@@ -8,7 +8,7 @@
 ## Priority Order
 
 1. **NotebookLM** — Project-specific knowledge (architecture, debug, security, onboarding)
-2. **Context7 MCP** — Library/framework documentation (Next.js, FastAPI, Playwright, SQLAlchemy, Tailwind)
+2. **Context7 MCP** — Library/framework documentation (Next.js, Playwright, Tailwind, Supabase)
 3. **Skills** — Pattern libraries (`.skills/custom/*/SKILL.md`) — load only the relevant section
 4. **Codebase search** — Grep/Glob for implementation details
 5. **Web search** — Last resort for external/current information
@@ -34,7 +34,7 @@ For library documentation, use the two-step pattern:
 1. `resolve-library-id` — find the library
 2. `get-library-docs` — fetch relevant docs with topic filter
 
-**Common libraries**: next, react, fastapi, sqlalchemy, playwright, tailwindcss, langchain, pydantic
+**Common libraries**: next, react, supabase, zod, playwright, tailwindcss, framer-motion, dnd-kit
 
 ---
 

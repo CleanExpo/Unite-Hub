@@ -1,72 +1,63 @@
 # Current State — Unite-Group Nexus 2.0
-> Last updated: 12/03/2026 (manual rebuild of memory files)
+> Last updated: 18/03/2026
 > Agent-editable sections: Active Task, In-Progress Work, Next Steps
 
 ## Active Phase
-**Phase 5 — AI Layer** (in progress)
+**Phase 10 Complete — Campaigns Live in Production** (unite-group.in)
 
-Phase 5 goal: wire up Anthropic AI capabilities (adaptive thinking, MCP, Files API, memory, web search, batch, citations, structured outputs, code sandbox) and build the orchestration layer (router, pipeline, macro coaches).
+All 10 rebuild phases shipped. The campaign engine (Brand DNA → Generation → Dashboard → SEO/CRON → PaperBanana visuals) is deployed and operational.
 
-## Shipped in Phase 5 (as of 12/03/2026)
+## Shipped Phases
 
-### MACAS — Multi-Agent Competitive Accounting System
+### Phase 1: Forensic Audit ✅
+- MASTER-AUDIT-REPORT.md — 822 routes, 455 migrations catalogued
+
+### Phase 2: Clean Foundation ✅
+- Stripped to skeleton, clean schema, RLS policies, Vercel deployment
+
+### Phase 3: Core UI Shell ✅
+- Sidebar, Dashboard, Kanban, Vault, Approvals, Block Editor — 12 tasks complete
+
+### Phase 4: Integration Layer ✅
+- Bookkeeper, Xero connections, social channels wired
+
+### Phase 5: AI Layer ✅
+- MACAS (4 AI firms debating), Command Bar, Unified Search
 - Commit: `65d90c25`
-- 4 AI accounting firms debate 5 rounds → Judge (Opus) scores → Accountant gate → Execute
-- Schema: `supabase/migrations/20260311000000_advisory_schema.sql` (4 tables + RLS)
-- Types: `src/lib/advisory/types.ts`
-- Agents + prompts: `src/lib/advisory/agents.ts`, `src/lib/advisory/prompts/*.ts`
-- Debate engine: `src/lib/advisory/debate-engine.ts` — `async function* runDebate()`
-- API: `src/app/api/advisory/cases/` (8 routes)
-- UI: `src/components/founder/advisory/` (AdvisoryWorkbench + 5 tabs + 4 shared)
-- Page: `src/app/(founder)/founder/advisory/page.tsx`
 
-### Command Bar (⌘K / Ctrl+K)
-- Full navigation + action command palette
-- File: `src/components/layout/CommandBar.tsx`
-- Wired into `Topbar` and `FounderShell` (`src/app/(founder)/layout.tsx`)
+### Phase 6: Brand DNA Extraction ✅
+- Brand identity extraction engine
+- Tasks 23-28, commit `1f86f1c0`
 
-### Unified Search
-- Real-time search across contacts, pages, approvals
-- API: `src/app/api/search/route.ts` (3 parallel ILIKE queries, AbortController)
-- UI: Extended `src/components/ui/command.tsx` with `shouldFilter` prop
-- Commits: `a2cccd2a` through `8c651fd0`
-- Key fixes: AbortController for race conditions, guard non-ok responses, PostgREST injection sanitisation
+### Phase 7: Campaign Generation ✅
+- Campaign generation engine from Brand DNA
+- Tasks 29-33, commit `67802e67`
 
-## Phase 5 Remaining — Integration Backlog
-| Linear Issue | Feature | Status |
-|-------------|---------|--------|
-| UNI-1499 | Enable Adaptive Thinking on Claude Opus 4.6 | Todo |
-| UNI-1500 | Implement MCP Connector Layer | Todo |
-| UNI-1501 | Implement Files API for Persistent Document Storage | Todo |
-| UNI-1502 | Implement Memory Tool for Cross-Session Persistence | Todo |
-| UNI-1503 | Enable Web Search and Web Fetch Server-Side Tools | Todo |
-| UNI-1504 | Enable Batch API for Cost Optimisation | Todo |
-| UNI-1505 | Enable Citations for Verifiable Agent Outputs | Todo |
-| UNI-1506 | Enable Structured Outputs for Type-Safe Agent Communication | Todo |
-| UNI-1507 | Enable Code Execution Sandbox | Todo |
-| UNI-1508 | Build AI Orchestration Router | Todo |
-| UNI-1509 | Build AI Pipeline Coordinator | Todo |
-| UNI-1510 | Build Macro Coaches | Todo |
+### Phase 8: Campaign Dashboard UI ✅
+- Campaign management dashboard
+- Tasks 34-38, commit `a71535d2`
+
+### Phase 9: SEO/Automation ✅
+- SEO enrichment, campaign CRON jobs, export API
+- Tasks 39-41, commit `f128f4cf`
+
+### Phase 10: PaperBanana Visuals ✅
+- Dual-engine visual generation system
+- Commit `0d01a4e0`
 
 ## Recent Key Commits
 ```
-86d18b8c chore: regenerate pnpm lockfile for veritas-kanban-mcp dependency sync
-8c651fd0 fix(test): exclude .claude/worktrees from Vitest glob to prevent cross-worktree test pollution
-fbe3bed3 fix(api): sanitise query input to prevent PostgREST or() filter metacharacter injection
-f90b997d fix(search): move setLoading(false) out of finally to preserve loading state on AbortError
-a8fbbdca fix(search): add AbortController for race condition, guard non-ok responses, use vi.spyOn for fetch mock
+0d01a4e0 feat(campaigns): add Phase 10 PaperBanana dual-engine visual system
+f128f4cf feat(campaigns): add Phase 9 SEO enrichment, campaign CRON, and export API
+a71535d2 feat(campaigns): add Phase 8 campaign dashboard UI
+67802e67 feat(campaigns): add Phase 7 campaign generation engine
+1f86f1c0 feat(campaigns): add Phase 6 Brand DNA extraction engine
 ```
 
-## Recent Key Files Changed
-- `src/app/api/search/route.ts` — new, unified search
-- `src/components/layout/CommandBar.tsx` — new, command palette
-- `src/components/ui/command.tsx` — extended with shouldFilter prop
-- `supabase/migrations/20260311000000_advisory_schema.sql` — MACAS schema
-- `src/lib/advisory/` — full MACAS implementation
-
 ## Next Steps
-1. Pick next Phase 5 item from backlog above (UNI-1499 through UNI-1510)
-2. After Phase 5 complete → Phase 6 Production Hardening
+1. Documentation alignment (removing stale FastAPI/workspace_id references)
+2. Production hardening — E2E tests, security audit, Lighthouse 90+
+3. Phase 5 AI integration backlog (UNI-1499 through UNI-1510)
 
 ## Active Task
 [Agent updates this field when picking up work]

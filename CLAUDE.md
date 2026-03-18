@@ -2,7 +2,7 @@
 
 ## Identity
 Private founder CRM for Phill McGurk. NOT a public SaaS. One user.
-Stack: Next.js 16, React 19, Supabase, Vercel, Tailwind CSS, pnpm monorepo.
+Stack: Next.js 16 App Router (src/ root), React 19, Supabase, Vercel, Tailwind CSS, pnpm monorepo. No FastAPI, no Python backend.
 Design: Scientific Luxury — OLED Black `#050505`, Cyan `#00F5FF`, `rounded-sm` only.
 Locale: en-AU | DD/MM/YYYY | AUD | AEST/AEDT
 
@@ -37,14 +37,14 @@ Every dispatch MUST include:
 - `qa-tester`          — E2E tests, smoke tests, verification gate
 
 ## Existing Specialist Agents (pre-rebuild)
-See `.claude/agents/` for: frontend-specialist, backend-specialist,
-database-specialist, security-auditor, test-engineer, verification,
-spec-builder, deploy-guardian, orchestrator, and 14 others.
+See `.claude/agents/` for: frontend-specialist, database-specialist,
+security-auditor, test-engineer, verification, spec-builder,
+deploy-guardian, orchestrator, and 23 others (31 total).
 
 ## Critical Rules
-- DB queries: always `.eq('workspace_id', workspaceId)` (current codebase)
-- Auth: Supabase PKCE server-side | FastAPI JWT middleware
-- Full context: `.claude/docs/CLAUDE-LEGACY.md` | `.claude/memory/CONSTITUTION.md`
+- DB queries: always `.eq('founder_id', founderId)` — NEVER workspace_id
+- Auth: Supabase PKCE server-side only. Single-tenant.
+- Source of truth: `.claude/memory/CONSTITUTION.md`
 
 ## Environment Variables (Vercel)
 NEVER delete or modify these without understanding the impact:

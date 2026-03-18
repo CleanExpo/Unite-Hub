@@ -12,7 +12,7 @@ The Replit Agent 3 Model (Atlas/Forge/Pixel/Grid/Quill) maps to Unite-Group's Cl
 | Replit Role | Unite-Group Agent | Directory | Responsibility |
 |-------------|-------------------|-----------|----------------|
 | **Atlas** (Orchestrator) | `orchestrator` + `project-manager` | `.claude/agents/orchestrator/` | Planning, delegation, Linear issue creation, roadmap management |
-| **Forge** (Code) | `senior-fullstack` + `backend-specialist` | `.claude/agents/senior-fullstack/` | Next.js, Supabase, FastAPI, API routes, business logic |
+| **Forge** (Code) | `senior-fullstack` | `.claude/agents/senior-fullstack/` | Next.js, Supabase, API routes, business logic |
 | **Pixel** (UI/UX) | `frontend-designer` + `frontend-specialist` | `.claude/agents/frontend-designer/` | Scientific Luxury UI, Framer Motion, Tailwind, component architecture |
 | **Grid** (Infra) | `devops-engineer` + `deploy-guardian` | `.claude/agents/devops-engineer/` | Vercel, CI/CD, env config, monitoring, branch protection |
 | **Quill** (Docs/Review) | `code-auditor` + `docs-writer` | `.claude/agents/code-auditor/` | Code review, audit trails, documentation, security scanning |
@@ -285,7 +285,7 @@ Full agent definitions in `.claude/agents/*/agent.md`.
 | project-manager | spec-builder |
 | senior-fullstack | frontend-specialist |
 | database-architect | database-specialist |
-| frontend-designer | backend-specialist |
+| frontend-designer | backend-specialist _(archived — v1 FastAPI)_ |
 | api-integrations | security-auditor |
 | code-auditor | test-engineer |
 | devops-engineer | verification |

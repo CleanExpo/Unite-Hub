@@ -41,8 +41,8 @@
 | Role | Context Budget | Strategy |
 |------|---------------|----------|
 | Orchestrator | < 80,000 tokens | Delegate file reads to subagents |
-| Frontend Specialist | < 60,000 tokens | Load only `apps/web/` relevant files |
-| Backend Specialist | < 60,000 tokens | Load only `apps/backend/` relevant files |
+| Frontend Specialist | < 60,000 tokens | Load only `src/components/` and `src/app/` relevant files |
+| Fullstack Specialist | < 60,000 tokens | Load only `src/` relevant files |
 | Database Specialist | < 40,000 tokens | Load schema + migration files only |
 | Test Engineer | < 50,000 tokens | Load test files + component under test |
 

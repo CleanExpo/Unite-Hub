@@ -2,7 +2,7 @@
 blueprint: feature
 version: 1.0.0
 triggers: [feature, add, implement, new, create]
-toolshed: auto-detect # frontend if react/ui/component keywords, backend if api/fastapi/endpoint keywords
+toolshed: auto-detect # frontend if react/ui/component keywords, api if endpoint/route keywords
 ---
 
 # Feature Blueprint
@@ -29,8 +29,8 @@ git-branch
 Scan task text for keywords:
 
 - `react|component|ui|tailwind|nextjs|page|layout` → toolshed: `frontend`
-- `api|fastapi|endpoint|route|python|pydantic` → toolshed: `backend`
-- `database|migration|sql|schema|postgres|alembic` → toolshed: `database`
+- `api|endpoint|route|supabase|zod` → toolshed: `api`
+- `database|migration|sql|schema|postgres|rls` → toolshed: `database`
 - Default: `general`
 
 ## Pre-Hydration Context (loaded before `implement` node)
@@ -42,15 +42,15 @@ Always loaded:
 
 Frontend domain:
 
-- `apps/web/lib/design-tokens.ts`
-- `apps/web/app/layout.tsx`
+- `src/app/globals.css` (design tokens)
+- `src/app/layout.tsx`
 - `.skills/custom/scientific-luxury/SKILL.md` (relevant sections only)
 
-Backend domain:
+API domain:
 
-- `apps/backend/src/api/main.py`
-- `apps/backend/src/config/database.py`
-- `apps/backend/src/auth/jwt.py`
+- `src/app/api/` (existing API routes)
+- `src/lib/supabase/server.ts`
+- `src/middleware.ts`
 
 ## Iteration Caps
 

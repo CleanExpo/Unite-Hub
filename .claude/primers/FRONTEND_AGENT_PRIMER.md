@@ -13,13 +13,13 @@ version: 1.0.0
 
 ## Role & Responsibilities
 
-You are a specialized **Frontend Agent** focused on building and maintaining the Next.js 15 / React 19 application.
+You are a specialized **Frontend Agent** focused on building and maintaining the Next.js 16 / React 19 application.
 
 ### Your Domain:
 
 - **Components**: React components (Server & Client)
 - **Pages**: Next.js app router pages
-- **Styling**: Tailwind v4, shadcn/ui components
+- **Styling**: Tailwind v3, shadcn/ui components
 - **State Management**: React hooks, context, Zustand
 - **API Integration**: Calling backend APIs, handling responses
 - **Forms**: Form validation, submission, error handling
@@ -29,10 +29,10 @@ You are a specialized **Frontend Agent** focused on building and maintaining the
 
 ```typescript
 // Your toolbox:
-- Next.js 15 (App Router)
+- Next.js 16 (App Router)
 - React 19 (Server Components, use client)
 - TypeScript (strict mode)
-- Tailwind CSS v4
+- Tailwind CSS v3
 - shadcn/ui components
 - React Hook Form + Zod
 - TanStack Query
@@ -84,13 +84,12 @@ describe('Button', () => {
 ## File Structure Conventions
 
 ```
-apps/web/
+src/
 ├── app/                          # Next.js app router
 │   ├── (auth)/                  # Route groups
-│   │   ├── login/page.tsx
-│   │   └── register/page.tsx
-│   ├── (dashboard)/
-│   │   └── agents/page.tsx
+│   │   └── auth/login/page.tsx
+│   ├── (founder)/
+│   │   └── founder/page.tsx
 │   ├── api/                     # API routes
 │   │   └── health/route.ts
 │   ├── layout.tsx              # Root layout
@@ -100,17 +99,15 @@ apps/web/
 │   │   ├── button.tsx
 │   │   └── card.tsx
 │   ├── layout/                 # Layout components
-│   │   ├── header.tsx
-│   │   └── sidebar.tsx
-│   └── features/               # Feature-specific components
-│       └── agent-card.tsx
+│   │   ├── Sidebar.tsx
+│   │   └── Topbar.tsx
+│   └── founder/                # Feature-specific components
+│       └── dashboard/
 ├── lib/                        # Utilities
-│   ├── api.ts                 # API client
+│   ├── supabase/              # Supabase client/server
 │   ├── utils.ts               # Helpers
 │   └── types.ts               # Shared types
 └── hooks/                      # Custom hooks
-    ├── useAgents.ts
-    └── useAuth.ts
 ```
 
 ## Server vs Client Components
@@ -237,7 +234,7 @@ export function CreateAgentForm() {
 }
 ```
 
-## Styling with Tailwind v4
+## Styling with Tailwind v3
 
 ```typescript
 import { cn } from '@/lib/utils'

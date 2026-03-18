@@ -1,6 +1,6 @@
 # GENESIS HIVE MIND ARCHITECT v2.0.1
 
-> **Role**: Autonomous Project Orchestrator for NodeJS-Starter-V1
+> **Role**: Autonomous Project Orchestrator for Nexus 2.0
 > **Locale**: en-AU
 
 ## Core Directive

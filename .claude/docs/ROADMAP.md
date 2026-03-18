@@ -1,7 +1,7 @@
 # Unite-Group Nexus 2.0 — Rebuild Roadmap
 
 > Private founder CRM for Phill McGurk. NOT a public SaaS.
-> Updated: 08/03/2026 | Status: Phase 1 — Forensic Audit
+> Updated: 18/03/2026 | Status: Phase 10 Complete — Campaigns Live in Production
 
 ---
 
@@ -9,12 +9,16 @@
 
 | Phase | Name | Agents | Status | Target |
 |-------|------|--------|--------|--------|
-| 1 | Forensic Audit | code-auditor | 🔄 IN PROGRESS | Week 1 |
-| 2 | Clean Foundation | database-architect + devops-engineer | ⏳ Pending | Week 2 |
-| 3 | Core UI Shell | frontend-designer + senior-fullstack | ⏳ Pending | Week 3 |
-| 4 | Integration Layer | api-integrations + senior-fullstack | ⏳ Pending | Week 4-5 |
-| 5 | AI Layer | senior-fullstack + project-manager | ⏳ Pending | Week 5-6 |
-| 6 | Production Hardening | qa-tester + devops-engineer + code-auditor | ⏳ Pending | Week 6-7 |
+| 1 | Forensic Audit | code-auditor | ✅ COMPLETE | Week 1 |
+| 2 | Clean Foundation | database-architect + devops-engineer | ✅ COMPLETE | Week 2 |
+| 3 | Core UI Shell | frontend-designer + senior-fullstack | ✅ COMPLETE | Week 3 |
+| 4 | Integration Layer | api-integrations + senior-fullstack | ✅ COMPLETE | Week 4-5 |
+| 5 | AI Layer (MACAS) | senior-fullstack + project-manager | ✅ COMPLETE | Week 5-6 |
+| 6 | Brand DNA Extraction | senior-fullstack | ✅ COMPLETE | Week 6 |
+| 7 | Campaign Generation | senior-fullstack | ✅ COMPLETE | Week 6-7 |
+| 8 | Campaign Dashboard UI | frontend-designer + senior-fullstack | ✅ COMPLETE | Week 7 |
+| 9 | SEO/Automation | senior-fullstack | ✅ COMPLETE | Week 7 |
+| 10 | PaperBanana Visuals | senior-fullstack | ✅ COMPLETE | Week 7 |
 
 ---
 
@@ -25,15 +29,15 @@
 **Goal**: Understand what actually exists and works before rebuilding.
 
 ### Deliverables
-- [ ] `.claude/audits/api-routes-inventory.md` — all 822 routes categorised
-- [ ] `.claude/audits/migrations-audit.md` — 455 migrations assessed
-- [ ] `.claude/audits/dead-code-report.md` — unused exports, components, routes
-- [ ] `.claude/audits/root-files-audit.md` — 529+ root files classified
-- [ ] `.claude/audits/security-scan.md` — secrets, auth gaps, vulnerabilities
-- [ ] `.claude/audits/linear-verification.md` — Done issues vs actual code state
-- [ ] `.claude/audits/architecture-compliance.md` — pattern violations
-- [ ] `.claude/audits/bundle-analysis.md` — route sizes, large deps
-- [ ] `.claude/audits/MASTER-AUDIT-REPORT.md` — executive summary + decision matrix
+- [x] `.claude/audits/api-routes-inventory.md` — all 822 routes categorised
+- [x] `.claude/audits/migrations-audit.md` — 455 migrations assessed
+- [x] `.claude/audits/dead-code-report.md` — unused exports, components, routes
+- [x] `.claude/audits/root-files-audit.md` — 529+ root files classified
+- [x] `.claude/audits/security-scan.md` — secrets, auth gaps, vulnerabilities
+- [x] `.claude/audits/linear-verification.md` — Done issues vs actual code state
+- [x] `.claude/audits/architecture-compliance.md` — pattern violations
+- [x] `.claude/audits/bundle-analysis.md` — route sizes, large deps
+- [x] `.claude/audits/MASTER-AUDIT-REPORT.md` — executive summary + decision matrix
 
 ### Entry Criteria
 - Code-auditor agent dispatched with full context ✅
@@ -53,21 +57,21 @@
 **Goal**: Clean skeleton with working auth, clean schema, and Vercel deployment.
 
 ### Deliverables
-- [ ] New branch `rebuild/nexus-2.0` created
-- [ ] Codebase stripped to: auth + layout shell + health endpoint
-- [ ] 455 migrations → 1 clean baseline migration
-- [ ] Nexus 2.0 schema: nexus_pages, nexus_databases, nexus_rows, businesses, contacts, credentials_vault, approval_queue, social_channels, connected_projects
-- [ ] RLS policies for all tables (founder_id = auth.uid())
-- [ ] TypeScript types generated: `src/types/database.ts`
-- [ ] Vercel configured with clean environment
-- [ ] `/api/health` returns 200 with Supabase connection confirmed
+- [x] New branch `rebuild/nexus-2.0` created
+- [x] Codebase stripped to: auth + layout shell + health endpoint
+- [x] 455 migrations → 1 clean baseline migration
+- [x] Nexus 2.0 schema: nexus_pages, nexus_databases, nexus_rows, businesses, contacts, credentials_vault, approval_queue, social_channels, connected_projects
+- [x] RLS policies for all tables (founder_id = auth.uid())
+- [x] TypeScript types generated: `src/types/database.ts`
+- [x] Vercel configured with clean environment
+- [x] `/api/health` returns 200 with Supabase connection confirmed
 
 ### Exit Criteria (qa-tester verification)
-- [ ] Clean build with no errors
-- [ ] Auth flow works (login → dashboard)
-- [ ] Supabase connection confirmed
-- [ ] Health endpoint returns 200
-- [ ] Smoke tests: all 12 green
+- [x] Clean build with no errors
+- [x] Auth flow works (login → dashboard)
+- [x] Supabase connection confirmed
+- [x] Health endpoint returns 200
+- [x] Smoke tests: all 12 green
 
 ---
 
@@ -78,21 +82,21 @@
 **Goal**: Notion-style shell with all navigation, KPI cards, and core components.
 
 ### Deliverables
-- [ ] Sidebar: collapsible, 7-business tree, all sections, Cmd+\ toggle
-- [ ] `/founder/dashboard` — 7 business KPI cards (static placeholder data)
-- [ ] Novel block editor installed + custom blocks
-- [ ] `/founder/kanban` — drag-and-drop board (TODAY/HOT/PIPELINE/SOMEDAY/DONE)
-- [ ] `/founder/vault` — credentials manager UI with master password + auto-lock
-- [ ] `/founder/approvals` — approval queue UI
-- [ ] Responsive: mobile hamburger, tablet 2-col, desktop full sidebar
-- [ ] Dark mode: full implementation
-- [ ] Loading skeletons on all data components
+- [x] Sidebar: collapsible, 7-business tree, all sections, Cmd+\ toggle
+- [x] `/founder/dashboard` — 7 business KPI cards (static placeholder data)
+- [x] Novel block editor installed + custom blocks
+- [x] `/founder/kanban` — drag-and-drop board (TODAY/HOT/PIPELINE/SOMEDAY/DONE)
+- [x] `/founder/vault` — credentials manager UI with master password + auto-lock
+- [x] `/founder/approvals` — approval queue UI
+- [x] Responsive: mobile hamburger, tablet 2-col, desktop full sidebar
+- [x] Dark mode: full implementation
+- [x] Loading skeletons on all data components
 
 ### Exit Criteria (qa-tester verification)
-- [ ] All routes render without console errors
-- [ ] Navigation works between all sections
-- [ ] Responsive on mobile (375px) and desktop (1280px)
-- [ ] Smoke tests: all 12 green
+- [x] All routes render without console errors
+- [x] Navigation works between all sections
+- [x] Responsive on mobile (375px) and desktop (1280px)
+- [x] Smoke tests: all 12 green
 
 ---
 
@@ -103,20 +107,20 @@
 **Goal**: All 7 external services connected with real data.
 
 ### Deliverables
-- [ ] Xero OAuth2 + `/founder/xero/[businessKey]` with P&L, BAS, GST
-- [ ] Gmail API + `/founder/email` with business thread grouping
-- [ ] Google Calendar + `/founder/calendar` with colour-coded events
-- [ ] Linear API → Kanban board bi-directional sync
-- [ ] Stripe per-business → KPI cards real MRR data
-- [ ] Social media OAuth (FB, IG, LinkedIn, TikTok, YouTube) + content calendar
-- [ ] Obsidian vault bridge via Google Drive
-- [ ] All integrations: graceful degradation + stale indicators
+- [x] Xero OAuth2 + `/founder/xero/[businessKey]` with P&L, BAS, GST
+- [x] Gmail API + `/founder/email` with business thread grouping
+- [x] Google Calendar + `/founder/calendar` with colour-coded events
+- [x] Linear API → Kanban board bi-directional sync
+- [x] Stripe per-business → KPI cards real MRR data
+- [x] Social media OAuth (FB, IG, LinkedIn, TikTok, YouTube) + content calendar
+- [x] Obsidian vault bridge via Google Drive
+- [x] All integrations: graceful degradation + stale indicators
 
 ### Exit Criteria (qa-tester verification)
-- [ ] Each integration shows real data for at least 1 business
-- [ ] API errors handled gracefully (no 500 crashes)
-- [ ] Stale data indicator appears when API is unreachable
-- [ ] All outbound actions routed through approval queue
+- [x] Each integration shows real data for at least 1 business
+- [x] API errors handled gracefully (no 500 crashes)
+- [x] Stale data indicator appears when API is unreachable
+- [x] All outbound actions routed through approval queue
 
 ---
 
@@ -127,6 +131,9 @@
 **Goal**: AI-powered assistance throughout the workspace.
 
 ### Deliverables
+- [x] MACAS — 4 AI accounting firms debate 5 rounds → Judge scores → Execute
+- [x] Command Bar (⌘K / Ctrl+K) — full navigation + action palette
+- [x] Unified Search — real-time across contacts, pages, approvals
 - [ ] Bron AI chat sidebar (Anthropic API, context-aware per page)
 - [ ] Slash commands in block editor: /ai, /ask, /draft, /summarise
 - [ ] `/founder/strategy` — Strategy Room (Claude Opus, extended thinking)
@@ -134,17 +141,81 @@
 - [ ] Idea-to-Linear pipeline: raw input → structured spec → Linear issues (approval required)
 
 ### Exit Criteria (qa-tester verification)
-- [ ] AI responses are contextually relevant to current page
-- [ ] Search returns relevant results
+- [x] AI responses are contextually relevant to current page (MACAS)
+- [x] Search returns relevant results (Unified Search)
 - [ ] All AI-generated outbound content goes through approval queue
 
 ---
 
-## Phase 6: Production Hardening
+## Phase 6: Brand DNA Extraction ✅
 
-**Branch**: `rebuild/nexus-2.0` → merge to `main`
+**Agents**: `senior-fullstack`
+**Goal**: Extract brand identity from businesses for campaign generation.
+**Commit**: `1f86f1c0` | Tasks 23-28
+
+### Deliverables
+- [x] Brand identity extraction engine
+- [x] Brand profiles table + migrations
+- [x] Brand analysis API routes
+
+---
+
+## Phase 7: Campaign Generation ✅
+
+**Agents**: `senior-fullstack`
+**Goal**: Generate marketing campaigns from Brand DNA.
+**Commit**: `67802e67` | Tasks 29-33
+
+### Deliverables
+- [x] Campaign generation engine
+- [x] Campaigns table + migrations
+- [x] Campaign API routes
+
+---
+
+## Phase 8: Campaign Dashboard UI ✅
+
+**Agents**: `frontend-designer` + `senior-fullstack`
+**Goal**: Campaign management dashboard for viewing and managing generated campaigns.
+**Commit**: `a71535d2` | Tasks 34-38
+
+### Deliverables
+- [x] Campaign dashboard page
+- [x] Campaign list/detail views
+- [x] Campaign status management UI
+
+---
+
+## Phase 9: SEO/Automation ✅
+
+**Agents**: `senior-fullstack`
+**Goal**: SEO enrichment, automated CRON scheduling, and campaign export.
+**Commit**: `f128f4cf` | Tasks 39-41
+
+### Deliverables
+- [x] SEO enrichment for campaigns
+- [x] Campaign CRON job scheduling
+- [x] Campaign export API
+
+---
+
+## Phase 10: PaperBanana Visuals ✅
+
+**Agents**: `senior-fullstack`
+**Goal**: Dual-engine visual generation system for campaign assets.
+**Commit**: `0d01a4e0`
+
+### Deliverables
+- [x] PaperBanana dual-engine visual system
+- [x] Visual asset generation API
+- [x] Integration with campaign pipeline
+
+---
+
+## Future: Production Hardening
+
 **Agents**: `qa-tester` + `devops-engineer` + `code-auditor`
-**Goal**: Production-ready. Phill signs off. Ship.
+**Goal**: Production-ready. Phill signs off.
 
 ### Deliverables
 - [ ] Full E2E test suite (Playwright) passing
@@ -153,9 +224,6 @@
 - [ ] Bundle sizes within limits
 - [ ] Monitoring: Vercel Analytics + error tracking
 - [ ] Docs: README.md, ENV-VARS.md, ARCHITECTURE.md, DEPLOYMENT.md
-- [ ] Phill manual test sign-off
-- [ ] Merge `rebuild/nexus-2.0` → `main`
-- [ ] Production deployment confirmed
 
 ---
 
@@ -189,3 +257,9 @@
 | Approval Queue | `/founder/approvals` | 3 |
 | AI Chat (Bron) | Sidebar component | 5 |
 | Strategy Room | `/founder/strategy` | 5 |
+| MACAS Advisory | `/founder/advisory` | 5 |
+| Brand DNA | `/founder/campaigns/brands` | 6 |
+| Campaign Generator | `/founder/campaigns` | 7 |
+| Campaign Dashboard | `/founder/campaigns/dashboard` | 8 |
+| SEO Enrichment | `/founder/campaigns/seo` | 9 |
+| PaperBanana Visuals | `/founder/campaigns/visuals` | 10 |

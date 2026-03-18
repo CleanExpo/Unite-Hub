@@ -40,7 +40,7 @@ requires:
 triggers: [react, component, ui, tailwind, nextjs]
 
 # Backend tasks → backend/*.md
-triggers: [api, agent, fastapi, langgraph]
+triggers: [api, agent, supabase, server-action]
 
 # Database tasks → database/*.md
 triggers: [migration, supabase, database, sql]

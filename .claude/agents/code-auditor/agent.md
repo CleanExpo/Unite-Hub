@@ -69,7 +69,7 @@ and what must be rebuilt. No code is written until this agent's reports are revi
 
 ### 7. Architecture Compliance
 - Server Components used correctly (no client-side Supabase calls in Server Components)
-- `workspace_id` filter present in all DB queries
+- `founder_id` filter present in all DB queries
 - No raw SQL in application code
 - Auth middleware on all protected routes
 - Output: `.claude/audits/architecture-compliance.md`

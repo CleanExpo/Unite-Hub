@@ -87,4 +87,4 @@ supabase start                    # Start local Supabase
 supabase db push                  # Apply migrations
 supabase db reset                 # Reset database (destructive)
 supabase migration new <name>     # Create new migration
-supabase gen types typescript --local > ../apps/web/types/database.ts  # Generate types
+supabase gen types typescript --local > src/types/database.ts  # Generate types

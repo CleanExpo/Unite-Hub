@@ -183,7 +183,7 @@ async def delegate_to_ralph(prd_path: str, max_iterations: int = 50):
 
 ### With Long-Running Harness
 
-Ralph follows the same patterns as `apps/backend/src/agents/long_running/`:
+Ralph follows long-running agent patterns:
 - Progress tracking via text file
 - JSON-based feature/task tracking
 - Session-by-session execution

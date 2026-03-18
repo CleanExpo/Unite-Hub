@@ -32,7 +32,7 @@ Zero placeholders. Zero TODO comments. Zero `console.log` in production. Zero `a
 - Server Components: `createServerClient` from `@/lib/supabase/server`
 - Client Components: `createBrowserClient`
 - NEVER expose `service_role` key to client
-- ALL queries: `.eq('workspace_id', workspaceId)` (current) or `.eq('founder_id', auth.uid())` (rebuild)
+- ALL queries: `.eq('founder_id', founderId)` — single-tenant, founder-only access
 - Use generated types from `src/types/database.ts`
 
 ### API Routes (`src/app/api/`)

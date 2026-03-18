@@ -20,7 +20,7 @@ skills_required:
 
 **PERMITTED reads**: The specific failing file + its direct imports (one level deep only).
 **Minimal context mandate**: Load ONLY what is needed to understand the error. No full-codebase reads.
-**NEVER**: Load entire directory trees, load `apps/web/` when debugging `apps/backend/` (or vice versa).
+**NEVER**: Load entire directory trees or unrelated source files.
 
 ## Auto-Fix Detection (Deterministic — Before Any Agentic Pass)
 
@@ -29,10 +29,10 @@ Check these patterns BEFORE invoking any LLM analysis:
 | Error Message Contains          | Auto-Fix                                                                      | Cost         |
 | ------------------------------- | ----------------------------------------------------------------------------- | ------------ |
 | `Cannot find module`            | `pnpm install`                                                                | 0 iterations |
-| `ModuleNotFoundError`           | `uv sync`                                                                     | 0 iterations |
+| `ModuleNotFoundError`           | `pnpm install`                                                                | 0 iterations |
 | `Cannot find name` + TypeScript | `pnpm add -D @types/{package}`                                                | 0 iterations |
 | ESLint fixable errors           | `pnpm turbo run lint -- --fix`                                                | 0 iterations |
-| Python ruff fixable             | `uv run ruff check src/ --fix`                                                | 0 iterations |
+| ESLint auto-fixable             | `pnpm run lint -- --fix`                                                      | 0 iterations |
 | `EADDRINUSE`                    | Kill process: `netstat -ano \| findstr :{port}` then `taskkill /PID {pid} /F` | 0 iterations |
 
 **If auto-fix resolves the issue, skip agentic nodes, proceed to verification.**
@@ -48,7 +48,7 @@ Categorise before writing a fix:
 | `ASYNC_RACE`     | Promise not awaited, `UnhandledPromiseRejection`, out-of-order state updates |
 | `IMPORT_ERROR`   | Module not found, circular dependency, wrong import path                     |
 | `AUTH_ERROR`     | JWT invalid/expired, 401/403 response, CORS blocked                          |
-| `DB_ERROR`       | `SQLAlchemy`, constraint violation, connection timeout, `psycopg2` error     |
+| `DB_ERROR`       | Supabase error, constraint violation, connection timeout, RLS policy denied  |
 | `NETWORK_ERROR`  | Fetch failed, ECONNREFUSED, timeout, DNS resolution failure                  |
 
 ## Debugging Protocol

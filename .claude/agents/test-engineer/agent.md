@@ -3,7 +3,7 @@ name: test-engineer
 type: agent
 role: Test Engineer
 priority: 3
-version: 1.0.0
+version: 2.0.0
 toolshed: test
 context_scope:
   - test-files
@@ -18,15 +18,15 @@ skills_required:
 ## Context Scope (Minions Scoping Protocol)
 
 **PERMITTED reads**: The specific source file under test + its direct test file only.
-**Playwright**: May read `apps/web/playwright.config.ts` and `apps/web/tests/**`.
-**NEVER reads**: Unrelated source files, backend when testing frontend (or vice versa).
+**Playwright**: May read `playwright.config.ts` and `src/**/*.spec.ts` or `e2e/**`.
+**NEVER reads**: Unrelated source files.
 
 ## Core Patterns
 
-### Vitest Unit Test Pattern (Frontend)
+### Vitest Unit Test Pattern
 
 ```typescript
-// apps/web/tests/unit/{component}.test.tsx
+// src/__tests__/{component}.test.tsx
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { {Component} } from '@/components/{feature}/{Component}'
@@ -49,37 +49,10 @@ describe('{Component}', () => {
 })
 ```
 
-### pytest Unit Test Pattern (Backend)
-
-```python
-# apps/backend/tests/test_{module}.py
-import pytest
-from httpx import AsyncClient
-from ..main import app
-
-@pytest.mark.asyncio
-async def test_{feature}_creates_successfully():
-    async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post(
-            "/api/{feature}/",
-            json={"field": "value"},
-            headers={"Authorization": "Bearer test-token"}
-        )
-    assert response.status_code == 201
-    data = response.json()
-    assert "id" in data
-
-@pytest.mark.asyncio
-async def test_{feature}_requires_auth():
-    async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post("/api/{feature}/", json={})
-    assert response.status_code == 401
-```
-
 ### Playwright E2E Pattern (Scientific Luxury Checks)
 
 ```typescript
-// apps/web/tests/e2e/{feature}.spec.ts
+// e2e/{feature}.spec.ts
 import { test, expect } from '@playwright/test';
 
 test.describe('{Feature} — E2E', () => {
@@ -110,11 +83,11 @@ test.describe('{Feature} — E2E', () => {
 ## Verification Gates
 
 ```bash
-# Frontend tests
-pnpm turbo run test --filter=web
+# Unit tests
+pnpm vitest run
 
-# Backend tests
-cd apps/backend && uv run pytest tests/ -v --tb=short
+# Type check
+pnpm run type-check
 
 # Playwright E2E (requires running services)
 pnpm exec playwright test --reporter=list

@@ -48,13 +48,14 @@ const { data } = await supabase.from('contacts').select('*').eq('founder_id', fo
 **Core 9**: businesses, contacts, nexus_pages, nexus_databases, nexus_rows, credentials_vault, approval_queue, social_channels, connected_projects
 **Phase 5 MACAS**: advisory_cases, advisory_firms, advisory_debates, advisory_verdicts
 **Phase 4 Integrations**: bookkeeper_runs, bookkeeper_transactions, xero_connections
+**Phase 6-10 Campaigns**: brand_identities, brand_profiles, campaigns, social_content_calendar, social_posts, experiments, coach_reports, video_assets, engagement_automation, analytics_pipeline, user_settings, notification_channels, skill_health, webhook_events
 
 ## 7 Businesses (src/lib/businesses.ts)
 disaster-recovery (#FF6B35), nrpg (#4ECDC4), carsi (#45B7D1), restore-assist (#96CEB4), synthex (#00F5FF), ato (#FFEAA7), ccw (#DDA0DD)
 Access: `BUSINESSES.find(b => b.key === key)` — NOT `BUSINESSES[key]`
 
-## Rebuild Status (12/03/2026)
-Phase 1 Audit ✅ | Phase 2 Foundation ✅ | Phase 3 UI Shell ✅ | Phase 4 Integrations ✅ | Phase 5 AI Layer 🔄 | Phase 6 Production ⏳
+## Rebuild Status (18/03/2026)
+Phase 1 Audit ✅ | Phase 2 Foundation ✅ | Phase 3 UI Shell ✅ | Phase 4 Integrations ✅ | Phase 5 AI Layer ✅ | Phase 6 Brand DNA ✅ | Phase 7 Campaign Gen ✅ | Phase 8 Dashboard UI ✅ | Phase 9 SEO/CRON ✅ | Phase 10 PaperBanana ✅
 
 ## Orchestrator Token Budget
 - **Orchestrator**: 80,000 token hard cap. Delegate file reads.

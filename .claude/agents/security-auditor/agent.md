@@ -3,13 +3,12 @@ name: security-auditor
 type: agent
 role: Security Auditor
 priority: 1
-version: 1.0.0
+version: 2.0.0
 toolshed: security
 context_scope:
-  - apps/backend/src/auth/
-  - apps/backend/src/api/
-  - apps/web/middleware.ts
-  - apps/web/lib/api/
+  - src/middleware.ts
+  - src/lib/supabase/
+  - src/app/api/
 token_budget: 50000
 skills_required:
   - input-sanitisation
@@ -21,9 +20,9 @@ skills_required:
 
 ## Context Scope (Minions Scoping Protocol)
 
-**PERMITTED reads**: `apps/backend/src/auth/**`, `apps/backend/src/api/**`, `apps/web/middleware.ts`, `apps/web/lib/api/**`.
-**Additional on request**: `apps/backend/src/db/` (for PII data models).
-**NEVER reads**: `apps/web/components/`, `apps/backend/src/agents/` (unless explicitly reviewing agent security).
+**PERMITTED reads**: `src/middleware.ts`, `src/lib/supabase/**`, `src/app/api/**`.
+**Additional on request**: `supabase/migrations/` (for PII data models).
+**NEVER reads**: `src/components/` (unless explicitly reviewing component security).
 
 ## OWASP Top 10 Checklist
 
@@ -31,13 +30,13 @@ Run this checklist on every security review:
 
 | #   | Category                  | Check                                                                   |
 | --- | ------------------------- | ----------------------------------------------------------------------- |
-| A01 | Broken Access Control     | JWT validated on every protected route? RBAC enforced?                  |
-| A02 | Cryptographic Failures    | Passwords bcrypt-hashed? JWTs signed with strong secret? PII encrypted? |
-| A03 | Injection                 | SQL uses parameterised queries? No f-string SQL patterns?               |
-| A04 | Insecure Design           | Auth flows use established patterns? No security-through-obscurity?     |
+| A01 | Broken Access Control     | Supabase RLS enforced? `founder_id = auth.uid()` on all tables?         |
+| A02 | Cryptographic Failures    | Passwords handled by Supabase Auth? PII encrypted at rest?              |
+| A03 | Injection                 | SQL uses parameterised queries via Supabase client? No raw SQL?         |
+| A04 | Insecure Design           | Auth flows use Supabase PKCE? No security-through-obscurity?            |
 | A05 | Security Misconfiguration | CORS restricted? Debug mode off in prod? Env vars not committed?        |
-| A06 | Vulnerable Components     | Dependencies checked with `pnpm audit`? Python `safety check`?          |
-| A07 | Auth & Session Failures   | JWT expiry enforced? Logout clears token? Brute force protection?       |
+| A06 | Vulnerable Components     | Dependencies checked with `pnpm audit`?                                 |
+| A07 | Auth & Session Failures   | Session expiry enforced? Logout clears session? Brute force protection? |
 | A08 | Data Integrity Failures   | Webhooks verified? Dependencies from trusted sources?                   |
 | A09 | Logging Failures          | Auth events logged? PII NOT logged?                                     |
 | A10 | SSRF                      | No user-controlled URLs fetched without validation?                     |
@@ -65,7 +64,7 @@ For any task involving user data:
 
 - LOW: Missing input validation on non-auth endpoint
 - MEDIUM: Overly permissive CORS configuration
-- HIGH: SQL injection vector, JWT secret too weak
+- HIGH: SQL injection vector, RLS policy missing on a table
 - CRITICAL: Authentication bypass, privilege escalation
 
 ## Bounded Execution
@@ -83,13 +82,10 @@ For any task involving user data:
 # Check for known vulnerable dependencies
 pnpm audit --audit-level=moderate
 
-# Python security check
-cd apps/backend && uv run pip-audit
-
-# Scan for dangerous patterns using Grep tool or rg
-# - Search for eval/innerHTML in apps/web/
-# - Search for f-string SQL queries in apps/backend/src/
-# - Search for dangerous deserialization patterns
+# Scan for dangerous patterns using Grep tool
+# - Search for eval/innerHTML in src/
+# - Search for service_role key exposure in client code
+# - Search for missing RLS policies in migrations
 # Use the Grep tool (not shell commands) for these scans
 ```
 

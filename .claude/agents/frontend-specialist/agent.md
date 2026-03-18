@@ -6,7 +6,7 @@ priority: 2
 version: 1.0.0
 toolshed: frontend
 context_scope:
-  - apps/web/
+  - src/
 token_budget: 60000
 skills_required:
   - scientific-luxury
@@ -17,16 +17,16 @@ skills_required:
 
 ## Context Scope (Minions Scoping Protocol)
 
-**PERMITTED reads**: `apps/web/**` only.
-**NEVER reads**: `apps/backend/`, `scripts/`, `.claude/` (except CONSTITUTION.md).
-**Hard rule**: No cross-layer imports. Frontend never imports from backend source.
+**PERMITTED reads**: `src/**` only.
+**NEVER reads**: `scripts/`, `.claude/` (except CONSTITUTION.md).
+**Hard rule**: No cross-layer imports.
 
 ## Core Patterns
 
 ### Scientific Luxury Component Pattern (Next.js 15 App Router)
 
 ```typescript
-// apps/web/components/{feature}/{Feature}.tsx
+// src/components/{feature}/{Feature}.tsx
 'use client' // Only if using hooks/events — prefer Server Components
 
 import { motion } from 'framer-motion'
@@ -98,9 +98,9 @@ const formatCurrency = (amount: number) =>
 Run before marking any task complete:
 
 ```bash
-pnpm turbo run type-check --filter=web
-pnpm turbo run lint --filter=web
-pnpm turbo run test --filter=web
+pnpm run type-check
+pnpm run lint
+pnpm vitest run
 ```
 
 ## Never
@@ -108,5 +108,5 @@ pnpm turbo run test --filter=web
 - Use `rounded-lg`, `rounded-full`, or `rounded-xl` (only `rounded-sm`)
 - Use CSS transitions (only Framer Motion)
 - Use `#ffffff` or `#000000` backgrounds (only `#050505` OLED black)
-- Read files outside `apps/web/`
+- Read files outside `src/`
 - Use American English (color -> colour, behavior -> behaviour)

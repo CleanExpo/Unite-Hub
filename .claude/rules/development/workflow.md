@@ -4,9 +4,7 @@
 
 ```bash
 # Development
-pnpm dev                          # All services
-pnpm dev --filter=web             # Frontend only
-cd apps/backend && uv run uvicorn src.api.main:app --reload  # Backend only
+pnpm dev                          # Start dev server
 
 # Database (Docker)
 pnpm run docker:up                # Start PostgreSQL + Redis
@@ -14,12 +12,11 @@ pnpm run docker:down              # Stop services
 pnpm run docker:reset             # Reset database (destructive)
 
 # Testing
-pnpm turbo run test               # All tests
-pnpm test --filter=web            # Frontend unit tests
-cd apps/backend && uv run pytest  # Backend unit tests
+pnpm vitest run                   # Unit tests (Vitest)
 
 # Quality Checks
-pnpm turbo run type-check lint    # All checks
+pnpm run type-check               # TypeScript strict check
+pnpm run lint                     # ESLint
 .\scripts\health-check.ps1        # Comprehensive system health check
 ```
 
@@ -28,7 +25,6 @@ pnpm turbo run type-check lint    # All checks
 ### Naming
 - React: `PascalCase.tsx`
 - Utils: `kebab-case.ts`
-- Python: `snake_case.py`
 - Skills: `SCREAMING-KEBAB.md`
 
 ### Commits
@@ -54,7 +50,6 @@ pnpm turbo run type-check lint test && echo "Ready for PR"
 
 ```
 Frontend: Components → Hooks → API Routes → Services
-Backend:  API → Agents → Tools → Graphs → State
 Database: Tables → Functions → Triggers
 ```
 
