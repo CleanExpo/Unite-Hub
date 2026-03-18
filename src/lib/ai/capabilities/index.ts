@@ -7,12 +7,14 @@ import { analyzeCapability } from './analyze'
 import { ideasCapability } from './ideas'
 import { debateCapability } from './debate'
 import { contentGenerateCapability } from './content-generate'
+import { emailTriageCapability } from './email-triage'
 
 export { chatCapability } from './chat'
 export { analyzeCapability } from './analyze'
 export { ideasCapability } from './ideas'
 export { debateCapability } from './debate'
 export { contentGenerateCapability } from './content-generate'
+export { emailTriageCapability } from './email-triage'
 
 let _registered = false
 
@@ -25,6 +27,7 @@ export function registerAllCapabilities(): void {
   registerCapability(ideasCapability)
   registerCapability(debateCapability)
   registerCapability(contentGenerateCapability)
+  registerCapability(emailTriageCapability)
 
   _registered = true
 }

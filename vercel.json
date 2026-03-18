@@ -51,6 +51,10 @@
     {
       "path": "/api/cron/campaign-engine",
       "schedule": "0 20 * * 0"
+    },
+    {
+      "path": "/api/cron/email-triage",
+      "schedule": "0 19 * * *"
     }
   ],
   "functions": {
@@ -91,6 +95,9 @@
       "maxDuration": 120
     },
     "src/app/api/cron/campaign-engine/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/cron/email-triage/route.ts": {
       "maxDuration": 300
     },
     "src/app/api/campaigns/scan/route.ts": {

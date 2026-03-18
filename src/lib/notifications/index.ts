@@ -12,6 +12,7 @@ export type NotificationType =
   | 'bookkeeper_summary'
   | 'experiment_update'
   | 'whatsapp_idea_received'
+  | 'email_triage_result'
 
 export interface NotificationPayload {
   type: NotificationType

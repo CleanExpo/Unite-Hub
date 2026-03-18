@@ -3,18 +3,10 @@ export const dynamic = 'force-dynamic'
 import { getUser } from '@/lib/supabase/server'
 import {
   isGoogleConfigured,
-  fetchGmailThreads,
-  getConnectedGoogleAccounts,
-  type GmailThread,
+  getConnectedGoogleAccountsWithScopeStatus,
 } from '@/lib/integrations/google'
-import { getConnectedImapAccounts, fetchImapThreads } from '@/lib/integrations/imap'
-import { ImapConnectForm } from '@/components/founder/email/ImapConnectForm'
-import { EMAIL_ACCOUNTS } from '@/lib/email-accounts'
-import { BUSINESSES } from '@/lib/businesses'
+import { EmailWorkbench } from '@/components/founder/email/EmailWorkbench'
 import { PageHeader } from '@/components/ui/PageHeader'
-
-// Lookup map: businessKey → { name, color }
-const BUSINESS_INFO = Object.fromEntries(BUSINESSES.map((b) => [b.key, b]))
 
 export default async function EmailPage({
   searchParams,
@@ -25,39 +17,13 @@ export default async function EmailPage({
   const user = await getUser()
   const configured = isGoogleConfigured()
 
-  const connectedAccounts = user ? await getConnectedGoogleAccounts(user.id) : []
-  const connectedEmails = new Set(connectedAccounts.map((a) => a.email))
-
-  const imapAccounts = user ? await getConnectedImapAccounts(user.id) : []
-  const imapConnectedEmails = new Set(imapAccounts.map((a) => a.email))
-
-  // Fetch Gmail + IMAP threads in parallel to reduce page load latency
-  const [gmailThreads, imapThreads] = await Promise.all([
-    user && connectedAccounts.length > 0 ? fetchGmailThreads(user.id) : Promise.resolve([]),
-    user && imapAccounts.length > 0 ? fetchImapThreads(user.id) : Promise.resolve([]),
-  ])
-
-  const threads = [...gmailThreads, ...imapThreads]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-  // Group threads by businessKey, then sort groups by BUSINESSES config order
-  const grouped = new Map<string, GmailThread[]>()
-  for (const thread of threads) {
-    const group = grouped.get(thread.businessKey) ?? []
-    group.push(thread)
-    grouped.set(thread.businessKey, group)
-  }
-  // Widen to string[] so indexOf() accepts runtime thread.businessKey values
-  const businessOrder: string[] = BUSINESSES.map((b) => b.key)
-  const sortedGroups = [...grouped.entries()].sort(
-    ([a], [b]) => businessOrder.indexOf(a) - businessOrder.indexOf(b),
-  )
+  const accounts = user ? await getConnectedGoogleAccountsWithScopeStatus(user.id) : []
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4 flex flex-col" style={{ height: 'calc(100vh - 4rem)' }}>
       <PageHeader
         title="Email"
-        subtitle="Gmail threads from connected Google accounts"
+        subtitle="Gmail workbench — read, act, and triage across all connected accounts"
       />
 
       {params.connected && (
@@ -78,121 +44,19 @@ export default async function EmailPage({
         </div>
       )}
 
-      {/* Account grid */}
-      <div>
-        <h2 className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>Email Accounts</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {EMAIL_ACCOUNTS.map((account) => {
-            const isConnected = connectedEmails.has(account.email)
-            return (
-              <div
-                key={account.email}
-                className="border border-white/[0.08] px-4 py-3 rounded-sm flex items-center justify-between gap-4"
-              >
-                <div className="min-w-0">
-                  <p className="text-sm text-white/80 truncate">{account.email}</p>
-                  <p className="text-[10px] uppercase tracking-wider mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                    {account.label} · {account.businessKey}
-                    {account.provider !== 'google' && ` · ${account.provider}`}
-                  </p>
-                </div>
-                {isConnected ? (
-                  <span className="text-[10px] uppercase tracking-wider text-[#00F5FF] flex-shrink-0">
-                    Connected
-                  </span>
-                ) : account.provider === 'google' && configured ? (
-                  <a
-                    href={`/api/auth/google/authorize?email=${encodeURIComponent(account.email)}`}
-                    className="text-[10px] uppercase tracking-wider hover:text-white/70 transition-colors flex-shrink-0"
-                    style={{ color: 'var(--color-text-secondary)' }}
-                  >
-                    Connect →
-                  </a>
-                ) : account.provider === 'microsoft' ? (
-                  <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
-                    Microsoft · TBD
-                  </span>
-                ) : account.provider === 'siteground' && imapConnectedEmails.has(account.email) ? (
-                  <span className="text-[10px] uppercase tracking-wider text-[#00F5FF] flex-shrink-0">
-                    Connected
-                  </span>
-                ) : account.provider === 'siteground' ? (
-                  <ImapConnectForm email={account.email} label={account.label} />
-                ) : (
-                  <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
-                    Not available
-                  </span>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Grouped thread list — one section per business */}
-      {sortedGroups.length > 0 && (
-        <div className="space-y-6">
-          {sortedGroups.map(([businessKey, bThreads]) => {
-            const biz = BUSINESS_INFO[businessKey] ?? { name: businessKey, color: '#6B7280' }
-            const unreadCount = bThreads.filter((t) => t.unread).length
-            return (
-              <div key={businessKey}>
-                {/* Business section header */}
-                <div className="flex items-center gap-2 mb-2">
-                  <span
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: biz.color }}
-                  />
-                  <h2 className="text-xs uppercase tracking-widest text-white/50">{biz.name}</h2>
-                  <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-                    {bThreads.length} thread{bThreads.length !== 1 ? 's' : ''}
-                    {unreadCount > 0 && ` · ${unreadCount} unread`}
-                  </span>
-                </div>
-
-                {/* Thread rows */}
-                <div className="space-y-1">
-                  {bThreads.map((thread) => (
-                    <div
-                      key={`${thread.email}-${thread.id}`}
-                      className="border border-white/[0.08] px-4 py-3 rounded-sm flex items-start gap-4 hover:border-white/[0.15] transition-colors"
-                    >
-                      {/* Unread indicator */}
-                      <div
-                        className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                        style={{
-                          backgroundColor: thread.unread ? '#00F5FF' : 'transparent',
-                          border: thread.unread ? 'none' : '1px solid rgba(255,255,255,0.2)',
-                        }}
-                      />
-                      <div className="min-w-0 flex-1">
-                        <p
-                          className={`text-sm truncate ${
-                            thread.unread ? 'text-white/90 font-medium' : 'text-white/60'
-                          }`}
-                        >
-                          {thread.subject}
-                        </p>
-                        <p className="text-xs truncate mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
-                          {thread.from} · {thread.snippet}
-                        </p>
-                      </div>
-                      <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
-                        {thread.email.split('@')[1]}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )
-          })}
+      {configured && accounts.length === 0 && (
+        <div className="border border-white/[0.06] px-4 py-8 rounded-sm text-center">
+          <p className="text-sm text-white/30 mb-3">No Gmail accounts connected</p>
+          <p className="text-xs text-white/20">
+            Connect accounts via Settings → Integrations → Google
+          </p>
         </div>
       )}
 
-      {connectedAccounts.length === 0 && imapAccounts.length === 0 && configured && (
-        <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
-          Connect an account above to see your threads here.
-        </p>
+      {configured && accounts.length > 0 && (
+        <div className="flex-1 min-h-0">
+          <EmailWorkbench accounts={accounts} />
+        </div>
       )}
     </div>
   )

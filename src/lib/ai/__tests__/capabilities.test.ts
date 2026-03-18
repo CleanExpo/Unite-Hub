@@ -121,10 +121,10 @@ describe('registerAllCapabilities', () => {
     // We test idempotency by calling twice
   })
 
-  it('registers all 5 capabilities', () => {
+  it('registers all 6 capabilities', () => {
     registerAllCapabilities()
 
-    expect(registerCapability).toHaveBeenCalledTimes(5)
+    expect(registerCapability).toHaveBeenCalledTimes(6)
     const registeredIds = vi.mocked(registerCapability).mock.calls.map(
       (call) => call[0].id
     )
@@ -133,5 +133,6 @@ describe('registerAllCapabilities', () => {
     expect(registeredIds).toContain('ideas')
     expect(registeredIds).toContain('debate')
     expect(registeredIds).toContain('content-generate')
+    expect(registeredIds).toContain('email-triage')
   })
 })
