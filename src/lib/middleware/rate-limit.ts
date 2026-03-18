@@ -108,18 +108,24 @@ function classifyTier(pathname: string): Tier | null {
 // ---------------------------------------------------------------------------
 
 function getClientIp(request: NextRequest): string {
-  // x-forwarded-for may contain a comma-separated list; take the first
+  // x-vercel-forwarded-for is set by Vercel infrastructure and cannot be
+  // spoofed by clients (unlike x-forwarded-for, which clients can prepend to).
+  const vercelForwarded = request.headers.get('x-vercel-forwarded-for');
+  if (vercelForwarded) {
+    const first = vercelForwarded.split(',')[0].trim();
+    if (first) return first;
+  }
+
+  // x-forwarded-for fallback (dev / non-Vercel environments)
   const forwarded = request.headers.get('x-forwarded-for');
   if (forwarded) {
     const first = forwarded.split(',')[0].trim();
     if (first) return first;
   }
 
-  // Vercel-specific header
   const realIp = request.headers.get('x-real-ip');
   if (realIp) return realIp;
 
-  // Fallback — should rarely happen behind a proxy
   return '127.0.0.1';
 }
 
