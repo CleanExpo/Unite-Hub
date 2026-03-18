@@ -11,6 +11,41 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 import { checkRateLimit } from '@/lib/middleware/rate-limit';
 
+const isDev = process.env.NODE_ENV === 'development';
+
+function generateNonce(): string {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Buffer.from(bytes).toString('base64');
+}
+
+function buildCSP(nonce: string): string {
+  return [
+    "default-src 'self'",
+    // nonce replaces unsafe-inline; strict-dynamic trusts scripts loaded by trusted scripts.
+    // unsafe-eval kept in dev only (Turbopack source maps).
+    [
+      "script-src 'self'",
+      `'nonce-${nonce}'`,
+      "'strict-dynamic'",
+      isDev ? "'unsafe-eval'" : null,
+      'https://accounts.google.com',
+      'https://va.vercel-scripts.com',  // Vercel Analytics
+    ].filter(Boolean).join(' '),
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "img-src 'self' data: blob: https: http:",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    // wss: required for Supabase Realtime; o*.ingest.sentry.io for error reporting
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.anthropic.com https://accounts.google.com https://o*.ingest.sentry.io",
+    "frame-src 'self' https://accounts.google.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "upgrade-insecure-requests",
+  ].filter(Boolean).join('; ');
+}
+
 // ---------------------------------------------------------------------------
 // Routes that do NOT require authentication
 // ---------------------------------------------------------------------------
@@ -56,8 +91,11 @@ export async function middleware(request: NextRequest) {
 
   // ------------------------------------------------------------------
   // 2. Supabase session refresh (PKCE token rotation)
+  //    Nonce is threaded via forwarded request headers so Server Components
+  //    can read it via headers() from next/headers.
   // ------------------------------------------------------------------
-  const { response, user } = await updateSession(request);
+  const nonce = generateNonce();
+  const { response, user } = await updateSession(request, { 'x-nonce': nonce });
 
   // Attach rate-limit headers to successful responses so clients can
   // monitor their remaining budget.
@@ -66,6 +104,9 @@ export async function middleware(request: NextRequest) {
     response.headers.set('X-RateLimit-Remaining', String(rateLimitResult.remaining));
     response.headers.set('X-RateLimit-Reset', String(rateLimitResult.reset));
   }
+
+  // Set CSP with per-request nonce on the response (enforced by browser)
+  response.headers.set('Content-Security-Policy', buildCSP(nonce));
 
   // ------------------------------------------------------------------
   // 3. Auth guard — redirect unauthenticated users to login

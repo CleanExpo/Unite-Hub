@@ -12,11 +12,20 @@ import { NextResponse, type NextRequest } from 'next/server';
  * Create a Supabase client for middleware
  * Handles cookie read/write during request processing
  */
-export function createMiddlewareClient(request: NextRequest) {
+export function createMiddlewareClient(request: NextRequest, extraRequestHeaders?: Record<string, string>) {
+  // Merge any extra headers (e.g. nonce) into the forwarded request headers
+  // so Server Components can read them via headers() from next/headers.
+  const requestHeaders = new Headers(request.headers);
+  if (extraRequestHeaders) {
+    for (const [key, value] of Object.entries(extraRequestHeaders)) {
+      requestHeaders.set(key, value);
+    }
+  }
+
   // Create response that we'll modify with cookies
   let response = NextResponse.next({
     request: {
-      headers: request.headers,
+      headers: requestHeaders,
     },
   });
 
@@ -35,10 +44,10 @@ export function createMiddlewareClient(request: NextRequest) {
             value,
             ...options,
           });
-          // Set cookie on response (for browser)
+          // Set cookie on response (for browser), preserving extra headers
           response = NextResponse.next({
             request: {
-              headers: request.headers,
+              headers: requestHeaders,
             },
           });
           response.cookies.set({
@@ -55,7 +64,7 @@ export function createMiddlewareClient(request: NextRequest) {
           });
           response = NextResponse.next({
             request: {
-              headers: request.headers,
+              headers: requestHeaders,
             },
           });
           response.cookies.set({
@@ -75,8 +84,8 @@ export function createMiddlewareClient(request: NextRequest) {
  * Update session in middleware
  * Call this to refresh tokens and maintain session
  */
-export async function updateSession(request: NextRequest) {
-  const { supabase, response } = createMiddlewareClient(request);
+export async function updateSession(request: NextRequest, extraRequestHeaders?: Record<string, string>) {
+  const { supabase, response } = createMiddlewareClient(request, extraRequestHeaders);
 
   // getUser() verifies the JWT server-side on every request.
   // getSession() trusts the client cookie without server verification — revoked
