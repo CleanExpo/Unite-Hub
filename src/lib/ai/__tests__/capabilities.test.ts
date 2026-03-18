@@ -105,7 +105,7 @@ describe('ideasCapability', () => {
 describe('debateCapability', () => {
   it('has correct id, model, and maxTokens', () => {
     expect(debateCapability.id).toBe('debate')
-    expect(debateCapability.model).toBe('claude-sonnet-4-5-20250929')
+    expect(debateCapability.model).toBe('claude-sonnet-4-6')
     expect(debateCapability.maxTokens).toBe(4096)
   })
 
@@ -121,10 +121,10 @@ describe('registerAllCapabilities', () => {
     // We test idempotency by calling twice
   })
 
-  it('registers all 4 capabilities', () => {
+  it('registers all 5 capabilities', () => {
     registerAllCapabilities()
 
-    expect(registerCapability).toHaveBeenCalledTimes(4)
+    expect(registerCapability).toHaveBeenCalledTimes(5)
     const registeredIds = vi.mocked(registerCapability).mock.calls.map(
       (call) => call[0].id
     )
@@ -132,5 +132,6 @@ describe('registerAllCapabilities', () => {
     expect(registeredIds).toContain('analyze')
     expect(registeredIds).toContain('ideas')
     expect(registeredIds).toContain('debate')
+    expect(registeredIds).toContain('content-generate')
   })
 })

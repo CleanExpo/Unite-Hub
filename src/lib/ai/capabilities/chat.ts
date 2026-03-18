@@ -5,7 +5,7 @@ import { createCapability } from '../types'
 
 export const chatCapability = createCapability({
   id: 'chat',
-  model: 'claude-sonnet-4-5-20250929',
+  model: 'claude-sonnet-4-6',
   maxTokens: 2048,
   systemPrompt: (ctx) => {
     const parts: string[] = [

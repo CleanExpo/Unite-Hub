@@ -5,7 +5,7 @@ import { createCapability } from '../types'
 
 export const contentGenerateCapability = createCapability({
   id: 'content-generate',
-  model: 'claude-sonnet-4-5-20250929',
+  model: 'claude-sonnet-4-6',
   maxTokens: 4096,
   systemPrompt: (ctx) => {
     const parts: string[] = [

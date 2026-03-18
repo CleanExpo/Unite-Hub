@@ -5,7 +5,7 @@ import { createCapability } from '../types'
 
 export const analyzeCapability = createCapability({
   id: 'analyze',
-  model: 'claude-opus-4-5-20250514',
+  model: 'claude-opus-4-6',
   maxTokens: 16000,
   features: {
     thinking: { budgetTokens: 10000 },
