@@ -19,20 +19,18 @@ BEGIN
   END IF;
 
   -- credentials_vault — vault lookups by service name
+  -- EXECUTE used: CREATE INDEX IF NOT EXISTS contains IF keyword which confuses PL/pgSQL parser
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'credentials_vault') THEN
-    CREATE INDEX IF NOT EXISTS idx_credentials_vault_service
-      ON public.credentials_vault (founder_id, service);
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_credentials_vault_service ON public.credentials_vault (founder_id, service)';
   END IF;
 
   -- nexus_databases — uses owner_id (v1 schema, not yet migrated to founder_id)
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'nexus_databases') THEN
-    CREATE INDEX IF NOT EXISTS idx_nexus_databases_owner
-      ON public.nexus_databases (owner_id, business_id);
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_nexus_databases_owner ON public.nexus_databases (owner_id, business_id)';
   END IF;
 
   -- connected_projects — uses owner_id (v1 schema, not yet migrated to founder_id)
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'connected_projects') THEN
-    CREATE INDEX IF NOT EXISTS idx_connected_projects_owner
-      ON public.connected_projects (owner_id);
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_connected_projects_owner ON public.connected_projects (owner_id)';
   END IF;
 END $$;
