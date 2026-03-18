@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { captureApiError } from "@/lib/error-reporting";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,8 @@ export async function GET() {
 
     connections.supabase =
       !error || error.code === "PGRST116" ? "ok" : "error";
-  } catch {
+  } catch (error) {
+    captureApiError(error, { route: '/api/health', method: 'GET' });
     connections.supabase = "error";
   }
 

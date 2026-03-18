@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
 import { execute } from '@/lib/ai/router'
 import { registerAllCapabilities } from '@/lib/ai/capabilities'
+import { captureApiError } from '@/lib/error-reporting'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ content: result.content })
   } catch (error) {
+    captureApiError(error, { route: '/api/bron/chat', method: 'POST', founderId: user.id })
     const message = error instanceof Error ? error.message : 'AI unavailable'
     return NextResponse.json({ error: message }, { status: 500 })
   }

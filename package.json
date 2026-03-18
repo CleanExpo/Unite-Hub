@@ -42,7 +42,8 @@
     "seo:full": "node scripts/seo-intelligence.mjs comprehensive",
     "stripe:audit": "node scripts/run-stripe-agent.mjs audit",
     "integrity:check": "node scripts/run-integrity-check.mjs",
-    "linear": "node scripts/linear-update.mjs"
+    "linear": "node scripts/linear-update.mjs",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.1.6",

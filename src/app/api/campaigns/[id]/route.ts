@@ -4,6 +4,7 @@
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import { captureApiError } from '@/lib/error-reporting'
 import type { Campaign, CampaignAsset } from '@/lib/campaigns/types'
 
 export const dynamic = 'force-dynamic'
@@ -103,6 +104,7 @@ export async function DELETE(
     .eq('founder_id', user.id)
 
   if (error) {
+    captureApiError(error, { route: '/api/campaigns/[id]', method: 'DELETE', founderId: user.id, campaignId: id })
     return NextResponse.json({ error: 'Failed to delete campaign' }, { status: 500 })
   }
 

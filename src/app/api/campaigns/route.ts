@@ -4,6 +4,7 @@
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import { captureApiError } from '@/lib/error-reporting'
 import type { CreateCampaignRequest } from '@/lib/campaigns/types'
 
 export const dynamic = 'force-dynamic'
@@ -24,7 +25,7 @@ export async function GET() {
     .order('created_at', { ascending: false })
 
   if (error) {
-    console.error('[Campaigns] Failed to list brand profiles:', error.message)
+    captureApiError(error, { route: '/api/campaigns', method: 'GET', founderId: user.id })
     return NextResponse.json({ error: 'Failed to fetch brand profiles' }, { status: 500 })
   }
 
@@ -84,7 +85,12 @@ export async function POST(request: Request) {
     .single()
 
   if (createError || !newCampaign) {
-    console.error('[Campaigns] Failed to create campaign:', createError?.message)
+    captureApiError(createError ?? new Error('Campaign insert returned null'), {
+      route: '/api/campaigns',
+      method: 'POST',
+      founderId: user.id,
+      brandProfileId,
+    })
     return NextResponse.json({ error: 'Failed to create campaign' }, { status: 500 })
   }
 

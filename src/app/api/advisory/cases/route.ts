@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getUser, createClient } from '@/lib/supabase/server'
 import { collectFinancialContext } from '@/lib/advisory/financial-context'
+import { captureApiError } from '@/lib/error-reporting'
 import type { CreateCaseRequest, CaseStatus } from '@/lib/advisory/types'
 import { CASE_STATUSES } from '@/lib/advisory/types'
 import { BUSINESSES, type BusinessKey } from '@/lib/businesses'
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
   const { data, count, error } = await query
 
   if (error) {
-    console.error('[advisory/cases] GET failed:', error.message)
+    captureApiError(error, { route: '/api/advisory/cases', method: 'GET', founderId: user.id })
     return NextResponse.json({ error: 'Failed to fetch cases' }, { status: 500 })
   }
 
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest) {
     .single()
 
   if (error) {
-    console.error('[advisory/cases] POST failed:', error.message)
+    captureApiError(error, { route: '/api/advisory/cases', method: 'POST', founderId: user.id })
     return NextResponse.json({ error: 'Failed to create case' }, { status: 500 })
   }
 

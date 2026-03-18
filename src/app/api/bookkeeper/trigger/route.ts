@@ -11,6 +11,7 @@ import {
     runBookkeeperForAllBusinesses,
     runBookkeeperForOneBusiness,
 } from '@/lib/bookkeeper/orchestrator'
+import { captureApiError } from '@/lib/error-reporting'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 800 // 13 min — Vercel Pro max, needed for full paginated sync
@@ -115,8 +116,9 @@ export async function POST(req: NextRequest) {
           })
         }
   } catch (error) {
-        const durationMs = Date.now() - startTime
-        console.error('[Bookkeeper] Manual trigger fatal error:', error)
+    const durationMs = Date.now() - startTime
+    console.error('[Bookkeeper] Manual trigger fatal error:', error)
+    captureApiError(error, { route: '/api/bookkeeper/trigger', method: 'POST', founderId: user.id, durationMs })
 
       return NextResponse.json(
         {
