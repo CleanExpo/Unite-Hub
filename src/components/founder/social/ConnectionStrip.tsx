@@ -60,7 +60,7 @@ export function ConnectionStrip({ channels: initialChannels }: Props) {
     <div className="space-y-2">
       {/* Business selector */}
       <div className="flex items-center gap-3">
-        <span className="text-[10px] uppercase tracking-[0.12em]" style={{ color: 'var(--color-text-disabled)' }}>
+        <span className="text-[10px] uppercase tracking-[0.12em]" style={{ color: 'var(--color-text-secondary)' }}>
           Connecting for
         </span>
         <select
@@ -92,14 +92,14 @@ export function ConnectionStrip({ channels: initialChannels }: Props) {
               <span style={{ color: meta.colour }}>{meta.icon}</span>
               <span style={{ color: meta.colour }}>{meta.label}</span>
               {channel.channelName && (
-                <span style={{ color: meta.colour, opacity: 0.7 }}>· {channel.channelName}</span>
+                <span style={{ color: meta.colour, opacity: 0.85 }}>· {channel.channelName}</span>
               )}
               <button
                 onClick={() => handleDisconnect(channel)}
                 disabled={disconnecting === channel.id}
                 title={`Disconnect ${meta.label}`}
                 className="ml-1 leading-none hover:opacity-100 disabled:cursor-not-allowed transition-opacity"
-                style={{ color: meta.colour, opacity: disconnecting === channel.id ? 0.4 : 0.6 }}
+                style={{ color: meta.colour, opacity: disconnecting === channel.id ? 0.4 : 0.8 }}
               >
                 {disconnecting === channel.id ? '…' : '×'}
               </button>

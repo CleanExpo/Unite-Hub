@@ -190,20 +190,20 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
             <div className="px-3 py-3 space-y-3" style={{ background: 'var(--surface-card)' }}>
               {/* Topic input */}
               <div>
-                <label className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'var(--color-text-muted)' }}>Topic (optional)</label>
+                <label className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'var(--color-text-secondary)' }}>Topic (optional)</label>
                 <input
                   type="text"
                   value={aiTopic}
                   onChange={e => setAiTopic(e.target.value)}
                   placeholder="e.g. Summer road safety tips"
-                  className="w-full rounded-sm px-3 py-1.5 text-xs placeholder:text-[#555555] focus:outline-none focus:border-[#00F5FF]/30"
+                  className="w-full rounded-sm px-3 py-1.5 text-xs placeholder:text-[#888888] focus:outline-none focus:border-[#00F5FF]/30"
                   style={{ background: 'var(--surface-elevated)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                 />
               </div>
 
               {/* Character selector */}
               <div>
-                <label className="text-[10px] uppercase tracking-wider block mb-1.5" style={{ color: 'var(--color-text-muted)' }}>Character</label>
+                <label className="text-[10px] uppercase tracking-wider block mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>Character</label>
                 <div className="flex gap-2">
                   {CHARACTER_OPTIONS.map(c => (
                     <button
@@ -217,7 +217,7 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
                       style={aiCharacter === c.key ? undefined : { background: 'var(--surface-elevated)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
                     >
                       <span className="block font-medium">{c.label}</span>
-                      <span className="block opacity-50 text-[9px]">{c.description}</span>
+                      <span className="block opacity-70 text-[10px]">{c.description}</span>
                     </button>
                   ))}
                 </div>
@@ -225,7 +225,7 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
 
               {/* Platform focus */}
               <div>
-                <label className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'var(--color-text-muted)' }}>Platform Focus</label>
+                <label className="text-[10px] uppercase tracking-wider block mb-1" style={{ color: 'var(--color-text-secondary)' }}>Platform Focus</label>
                 <select
                   value={aiPlatform}
                   onChange={e => setAiPlatform(e.target.value)}
@@ -264,7 +264,7 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
               {/* Variant cards */}
               {variants.length > 0 && (
                 <div className="space-y-2 pt-1">
-                  <label className="text-[10px] uppercase tracking-wider block" style={{ color: 'var(--color-text-muted)' }}>Select a variant</label>
+                  <label className="text-[10px] uppercase tracking-wider block" style={{ color: 'var(--color-text-secondary)' }}>Select a variant</label>
                   {variants.map((v, i) => (
                     <button
                       key={i}
@@ -289,7 +289,7 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
                         <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-primary)' }}>
                           {v.title}
                         </span>
-                        <span className="text-[9px] uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
+                        <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
                           {v.platform ? PLATFORM_LABELS[v.platform as SocialPlatform] ?? v.platform : 'Multi'}
                         </span>
                       </div>
@@ -297,7 +297,7 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
                         {v.body.length > 100 ? v.body.slice(0, 100) + '...' : v.body}
                       </p>
                       {v.hashtags.length > 0 && (
-                        <p className="text-[9px] mt-1 opacity-50" style={{ color: '#00F5FF' }}>
+                        <p className="text-[10px] mt-1 opacity-80" style={{ color: '#00F5FF' }}>
                           {v.hashtags.slice(0, 4).map(h => h.startsWith('#') ? h : `#${h}`).join(' ')}
                         </p>
                       )}
@@ -317,10 +317,10 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
             onChange={e => setContent(e.target.value)}
             rows={4}
             placeholder="What do you want to share?"
-            className="w-full rounded-sm px-3 py-2 text-sm placeholder:text-[#666666] focus:outline-none focus:border-[#00F5FF]/30 resize-none"
+            className="w-full rounded-sm px-3 py-2 text-sm placeholder:text-[#888888] focus:outline-none focus:border-[#00F5FF]/30 resize-none"
             style={{ background: 'var(--surface-elevated)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
           />
-          <p className="text-[10px] mt-1" style={{ color: 'var(--color-text-muted)' }}>{content.length} chars</p>
+          <p className="text-[10px] mt-1" style={{ color: 'var(--color-text-secondary)' }}>{content.length} chars</p>
         </div>
 
         {/* Platform selector */}
@@ -342,7 +342,7 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
                   style={isSelected ? undefined : { background: 'var(--surface-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
                   title={isConnected ? undefined : 'Not connected — post will be saved as draft only'}
                 >
-                  {PLATFORM_LABELS[p]}{!isConnected && <span className="ml-1 opacity-40">·</span>}
+                  {PLATFORM_LABELS[p]}{!isConnected && <span className="ml-1 opacity-70">·</span>}
                 </button>
               )
             })}

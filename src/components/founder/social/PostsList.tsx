@@ -47,7 +47,7 @@ export function PostsList({ posts }: Props) {
                 </p>
               )}
               {post.errorMessage && (
-                <p className="text-[11px] text-red-400/70 mt-1">{post.errorMessage}</p>
+                <p className="text-[11px] text-red-400 mt-1">{post.errorMessage}</p>
               )}
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
@@ -55,14 +55,14 @@ export function PostsList({ posts }: Props) {
                 {(post.platforms as SocialPlatform[]).map(p => (
                   <span
                     key={p}
-                    className="w-4 h-4 rounded-sm text-[8px] flex items-center justify-center"
+                    className="w-5 h-5 rounded-sm text-[10px] flex items-center justify-center"
                     style={{ backgroundColor: `${PLATFORM_COLOURS[p]}20`, color: PLATFORM_COLOURS[p] }}
                   >
                     {p[0].toUpperCase()}
                   </span>
                 ))}
               </div>
-              <span className={`text-[9px] uppercase tracking-wider border px-1.5 py-0.5 rounded-sm ${STATUS_COLOURS[post.status] ?? ''}`}>
+              <span className={`text-[10px] uppercase tracking-wider border px-1.5 py-0.5 rounded-sm ${STATUS_COLOURS[post.status] ?? ''}`}>
                 {post.status}
               </span>
             </div>

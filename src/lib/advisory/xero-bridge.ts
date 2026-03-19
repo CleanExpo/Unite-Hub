@@ -98,7 +98,7 @@ function resolveAccountCode(strategy: Strategy): string {
 }
 
 /** Convert cents to dollars (Xero API uses dollars, not cents). */
-function centsToDollars(cents: number): number {
+function _centsToDollars(cents: number): number {
   return Math.round(cents) / 100
 }
 

@@ -61,7 +61,7 @@ export function CalendarView({ posts }: Props) {
 
       <div className="grid grid-cols-7 gap-px">
         {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => (
-          <div key={d} className="text-[9px] uppercase tracking-wider text-center py-1" style={{ color: 'var(--color-text-muted)' }}>{d}</div>
+          <div key={d} className="text-[10px] uppercase tracking-wider text-center py-1" style={{ color: 'var(--color-text-secondary)' }}>{d}</div>
         ))}
         {cells.map((day, i) => (
           <div
@@ -75,12 +75,12 @@ export function CalendarView({ posts }: Props) {
           >
             {day && (
               <>
-                <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>{day}</span>
+                <span className="text-[10px]" style={{ color: 'var(--color-text-secondary)' }}>{day}</span>
                 <div className="mt-1 space-y-0.5">
                   {(postsByDay[day] ?? []).slice(0, 3).map(post => (
                     <div
                       key={post.id}
-                      className="text-[8px] px-1 py-0.5 rounded-sm truncate"
+                      className="text-[10px] px-1 py-0.5 rounded-sm truncate"
                       style={{
                         backgroundColor: `${PLATFORM_COLOURS[(post.platforms as SocialPlatform[])[0]]}20`,
                         color: PLATFORM_COLOURS[(post.platforms as SocialPlatform[])[0]],

@@ -7,11 +7,12 @@ import { ConnectionStrip } from './ConnectionStrip'
 import { PostsList } from './PostsList'
 import { CalendarView } from './CalendarView'
 import { PostComposer } from './PostComposer'
+import { BrandPersonas } from './BrandPersonas'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { PageHeader } from '@/components/ui/PageHeader'
 import type { SocialChannel, SocialPost } from '@/lib/integrations/social/types'
 
-const TABS = ['Calendar', 'Posts', 'Analytics', 'Experiments'] as const
+const TABS = ['Calendar', 'Posts', 'Analytics', 'Experiments', 'Personas'] as const
 type Tab = typeof TABS[number]
 
 interface Props {
@@ -65,6 +66,7 @@ export function SocialPageClient({ channels, posts }: Props) {
       {activeTab === 'Experiments' && (
         <SocialExperimentsPanel channels={channels} />
       )}
+      {activeTab === 'Personas' && <BrandPersonas />}
 
       {composerOpen && (
         <PostComposer
@@ -115,7 +117,7 @@ function SocialAnalyticsPanel({ channels }: { channels: SocialChannel[] }) {
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-[13px]" style={{ color: 'var(--color-text-disabled)' }}>
+      <div className="py-12 text-center text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
         Loading analytics...
       </div>
     )
@@ -137,7 +139,7 @@ function SocialAnalyticsPanel({ channels }: { channels: SocialChannel[] }) {
             className="rounded-sm p-4"
             style={{ background: 'var(--surface-card)', border: '1px solid var(--color-border)' }}
           >
-            <p className="text-[11px] uppercase tracking-wider mb-1" style={{ color: 'var(--color-text-disabled)' }}>
+            <p className="text-[11px] uppercase tracking-wider mb-1" style={{ color: 'var(--color-text-secondary)' }}>
               {stat.label}
             </p>
             <p
@@ -150,7 +152,7 @@ function SocialAnalyticsPanel({ channels }: { channels: SocialChannel[] }) {
         ))}
       </div>
       {total === 0 && (
-        <p className="text-[13px] py-4" style={{ color: 'var(--color-text-disabled)' }}>
+        <p className="text-[13px] py-4" style={{ color: 'var(--color-text-secondary)' }}>
           No experiments yet. Create one from the Experiments tab or use Synthex AI.
         </p>
       )}
@@ -179,7 +181,7 @@ function SocialExperimentsPanel({ channels }: { channels: SocialChannel[] }) {
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-[13px]" style={{ color: 'var(--color-text-disabled)' }}>
+      <div className="py-12 text-center text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
         Loading experiments...
       </div>
     )
@@ -209,9 +211,9 @@ function SocialExperimentsPanel({ channels }: { channels: SocialChannel[] }) {
             style={{ color: 'var(--color-text-primary)' }}
           >
             <div className="flex items-center gap-2">
-              <FlaskConical size={14} strokeWidth={1.5} style={{ color: 'var(--color-text-disabled)' }} />
+              <FlaskConical size={14} strokeWidth={1.5} style={{ color: 'var(--color-text-secondary)' }} />
               <span className="text-[13px] truncate">{exp.title}</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-sm" style={{ color: 'var(--color-text-muted)', background: 'rgba(255,255,255,0.04)' }}>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-sm" style={{ color: 'var(--color-text-secondary)', background: 'rgba(255,255,255,0.06)' }}>
                 {exp.experiment_type}
               </span>
             </div>
@@ -219,7 +221,7 @@ function SocialExperimentsPanel({ channels }: { channels: SocialChannel[] }) {
               className="text-[10px] px-2 py-0.5 rounded-sm font-medium uppercase tracking-wider"
               style={{
                 background: exp.status === 'active' ? 'rgba(0, 245, 255, 0.08)' : exp.status === 'completed' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 255, 255, 0.05)',
-                color: exp.status === 'active' ? '#00F5FF' : exp.status === 'completed' ? '#22c55e' : 'var(--color-text-muted)',
+                color: exp.status === 'active' ? '#00F5FF' : exp.status === 'completed' ? '#22c55e' : 'var(--color-text-secondary)',
               }}
             >
               {exp.status}
