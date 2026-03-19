@@ -26,6 +26,8 @@ interface Props {
 
 export function PostComposer({ channels, onClose, onCreated }: Props) {
   const connectedPlatforms = [...new Set(channels.filter(c => c.isConnected).map(c => c.platform))] as SocialPlatform[]
+  const allPlatforms = [...new Set(channels.map(c => c.platform))] as SocialPlatform[]
+  const displayPlatforms = allPlatforms.length > 0 ? allPlatforms : (Object.keys(PLATFORM_LABELS) as SocialPlatform[])
 
   const [content, setContent] = useState('')
   const [selectedPlatforms, setSelectedPlatforms] = useState<SocialPlatform[]>(connectedPlatforms)
@@ -94,7 +96,7 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
 
   async function handleSubmit(action: 'draft' | 'schedule' | 'publish') {
     if (!content.trim()) { setError('Content is required'); return }
-    if (!selectedPlatforms.length) { setError('Select at least one platform'); return }
+    if (action !== 'draft' && !selectedPlatforms.length) { setError('Select at least one platform'); return }
     if (action === 'schedule' && !scheduledAt) { setError('Schedule date/time required'); return }
 
     setSaving(true)
@@ -325,22 +327,25 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
         <div>
           <label className="text-[10px] uppercase tracking-wider block mb-2" style={{ color: 'var(--color-text-secondary)' }}>Platforms</label>
           <div className="flex flex-wrap gap-2">
-            {connectedPlatforms.length === 0 ? (
-              <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>No platforms connected yet</p>
-            ) : connectedPlatforms.map(p => (
-              <button
-                key={p}
-                onClick={() => togglePlatform(p)}
-                className={`px-3 py-1 text-[10px] rounded-sm border transition-colors ${
-                  selectedPlatforms.includes(p)
-                    ? 'border-[#00F5FF]/40 text-[#00F5FF] bg-[#00F5FF]/5'
-                    : 'hover:border-[rgba(255,255,255,0.18)]'
-                }`}
-                style={selectedPlatforms.includes(p) ? undefined : { background: 'var(--surface-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
-              >
-                {PLATFORM_LABELS[p]}
-              </button>
-            ))}
+            {displayPlatforms.map(p => {
+              const isConnected = connectedPlatforms.includes(p)
+              const isSelected = selectedPlatforms.includes(p)
+              return (
+                <button
+                  key={p}
+                  onClick={() => togglePlatform(p)}
+                  className={`px-3 py-1 text-[10px] rounded-sm border transition-colors ${
+                    isSelected
+                      ? 'border-[#00F5FF]/40 text-[#00F5FF] bg-[#00F5FF]/5'
+                      : 'hover:border-[rgba(255,255,255,0.18)]'
+                  }`}
+                  style={isSelected ? undefined : { background: 'var(--surface-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+                  title={isConnected ? undefined : 'Not connected — post will be saved as draft only'}
+                >
+                  {PLATFORM_LABELS[p]}{!isConnected && <span className="ml-1 opacity-40">·</span>}
+                </button>
+              )
+            })}
           </div>
         </div>
 
