@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   LayoutDashboard, Users, Lock, ClipboardCheck,
-  Scale, Share2, Settings, MessageSquare, Zap,
+  Scale, Share2, Settings, Zap,
   BookOpen, Receipt, Columns2, FileText, Mail,
   CalendarDays, Brain,
 } from 'lucide-react'
@@ -60,7 +60,6 @@ export function CommandBar() {
   const router = useRouter()
   const commandBarOpen = useUIStore((s) => s.commandBarOpen)
   const toggleCommandBar = useUIStore((s) => s.toggleCommandBar)
-  const toggleBron = useUIStore((s) => s.toggleBron)
   const toggleCapture = useUIStore((s) => s.toggleCapture)
 
   const [query, setQuery]     = useState('')
@@ -71,19 +70,12 @@ export function CommandBar() {
   const ACTION_COMMANDS: ActionCommand[] = useMemo(() => [
     {
       type: 'action',
-      label: 'Open Bron Chat',
-      icon: MessageSquare,
-      action: toggleBron,
-      shortcut: '\u2318\u21E7B',
-    },
-    {
-      type: 'action',
       label: 'Capture Idea',
       icon: Zap,
       action: toggleCapture,
       shortcut: '\u2318I',
     },
-  ], [toggleBron, toggleCapture])
+  ], [toggleCapture])
 
   // Debounced search effect
   useEffect(() => {

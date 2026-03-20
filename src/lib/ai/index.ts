@@ -6,7 +6,6 @@ export { getAIClient, resetAIClient } from './client'
 export { registerCapability, getCapability, listCapabilities, execute, resetRegistry } from './router'
 export type { ExecuteInput } from './router'
 export {
-  chatCapability,
   analyzeCapability,
   ideasCapability,
   debateCapability,

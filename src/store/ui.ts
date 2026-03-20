@@ -9,13 +9,11 @@ interface UIStore {
   expandedBusinesses: string[]
   theme: Theme
   captureOpen: boolean
-  bronOpen: boolean
   commandBarOpen: boolean
   toggleSidebar: () => void
   toggleBusiness: (key: string) => void
   setTheme: (theme: Theme) => void
   toggleCapture: () => void
-  toggleBron: () => void
   toggleCommandBar: () => void
 }
 
@@ -26,7 +24,6 @@ export const useUIStore = create<UIStore>()(
       expandedBusinesses: [],
       theme: 'dark',
       captureOpen: false,
-      bronOpen: false,
       commandBarOpen: false,
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
       toggleBusiness: (key) =>
@@ -37,7 +34,6 @@ export const useUIStore = create<UIStore>()(
         })),
       setTheme: (theme) => set({ theme }),
       toggleCapture: () => set((s) => ({ captureOpen: !s.captureOpen })),
-      toggleBron: () => set((s) => ({ bronOpen: !s.bronOpen })),
       toggleCommandBar: () => set((s) => ({ commandBarOpen: !s.commandBarOpen })),
     }),
     {

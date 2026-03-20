@@ -27,7 +27,6 @@ import {
   execute,
   resetRegistry,
   // Capabilities
-  chatCapability,
   registerAllCapabilities,
   // Types
   createCapability,
@@ -72,11 +71,10 @@ describe('AI Service Layer Integration', () => {
     resetUsage()
   })
 
-  it('full flow: register capabilities, execute chat, verify response shape', async () => {
+  it('full flow: register capabilities, execute ideas, verify response shape', async () => {
     registerAllCapabilities()
-    registerCapability(chatCapability)
 
-    const response = await execute('chat', {
+    const response = await execute('ideas', {
       messages: [{ role: 'user', content: 'Hello from integration test' }],
       context: { userId: 'test-user' },
     })

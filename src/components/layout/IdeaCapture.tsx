@@ -137,7 +137,7 @@ export function IdeaCapture() {
               {state === 'input' && (
                 <div className="space-y-3">
                   <p className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
-                    Type your idea in plain language. Bron will ask a few questions, then create the Linear issue.
+                    Type your idea in plain language. Claude will ask a few questions, then create the Linear issue.
                   </p>
                   <textarea
                     ref={textareaRef}
@@ -178,7 +178,7 @@ export function IdeaCapture() {
                   {loading && (
                     <div className="flex justify-start">
                       <div className="px-3 py-2 text-[12px]" style={{ color: 'var(--color-text-disabled)' }}>
-                        Bron is thinking…
+                        Thinking…
                       </div>
                     </div>
                   )}
@@ -254,7 +254,7 @@ export function IdeaCapture() {
                   style={{ background: '#00F5FF', color: '#050505' }}
                 >
                   <Send size={12} />
-                  Send to Bron
+                  Send to Claude
                 </button>
               )}
 

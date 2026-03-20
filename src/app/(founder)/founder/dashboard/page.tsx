@@ -24,7 +24,7 @@ export default async function DashboardPage() {
       <PageHeader
         title="Dashboard"
         subtitle="Your founder command centre"
-        tip="Try ⌘K to jump anywhere, or ask Bron (⌘⇧B) for help"
+        tip="Try ⌘K to jump anywhere, or ⌘I to capture an idea"
       />
       <SetupChecklist founderId={user.id} />
       <CapabilityMap />

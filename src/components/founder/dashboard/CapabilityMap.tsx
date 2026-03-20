@@ -89,9 +89,9 @@ const CATEGORIES: Category[] = [
     icon: <Sparkles className="h-4 w-4" />,
     features: [
       {
-        name: 'Bron AI',
-        description: 'Your AI business assistant',
-        hint: '\u2318\u21e7B',
+        name: 'Strategy',
+        description: 'Deep analysis with Claude',
+        href: '/founder/strategy',
       },
       {
         name: 'Idea Capture',

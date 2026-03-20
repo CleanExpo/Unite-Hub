@@ -1,5 +1,5 @@
 // src/app/api/ideas/capture/route.ts
-// POST: Run one turn of the Bron qualifying conversation
+// POST: Run one turn of the idea qualifying conversation
 // Body: { messages: ConversationMessage[], rawIdea: string }
 // Returns: { type: 'question', question: string } | { type: 'spec', spec: IdeaSpec }
 

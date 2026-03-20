@@ -15,7 +15,7 @@ const mockProps = {
   businessColor: '#a855f7',
   action: 'Post to LinkedIn',
   detail: 'Monthly performance update',
-  requestedBy: 'Bron AI',
+  requestedBy: 'Nexus AI',
   requestedAt: '09/03/2026 09:00',
   onApprove: vi.fn(),
   onReject: vi.fn(),

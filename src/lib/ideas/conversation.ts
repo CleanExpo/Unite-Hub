@@ -34,7 +34,7 @@ export type ClaudeResponse =
 export function buildSystemPrompt(): string {
   const businessList = BUSINESSES.map(b => `- ${b.key}: ${b.name} → team key: ${BUSINESS_TO_TEAM_KEY[b.key]}`).join('\n')
 
-  return `You are Bron, a concise AI assistant for Phill McGurk's founder CRM.
+  return `You are a concise AI assistant for Phill McGurk's founder CRM.
 
 Your job: turn raw ideas into structured Linear issues through a short qualifying conversation.
 

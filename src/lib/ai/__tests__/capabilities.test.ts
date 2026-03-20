@@ -14,50 +14,11 @@ vi.mock('@/lib/ideas/conversation', () => ({
   buildSystemPrompt: vi.fn(() => 'Mocked ideas system prompt'),
 }))
 
-import { chatCapability } from '../capabilities/chat'
 import { analyzeCapability } from '../capabilities/analyze'
 import { ideasCapability } from '../capabilities/ideas'
 import { debateCapability } from '../capabilities/debate'
 import { registerAllCapabilities } from '../capabilities/index'
 import { registerCapability } from '../router'
-
-describe('chatCapability', () => {
-  it('has correct id, model, and maxTokens', () => {
-    expect(chatCapability.id).toBe('chat')
-    expect(chatCapability.model).toBe('claude-sonnet-4-6')
-    expect(chatCapability.maxTokens).toBe(2048)
-  })
-
-  it('has a dynamic systemPrompt function', () => {
-    expect(typeof chatCapability.systemPrompt).toBe('function')
-  })
-
-  it('builds system prompt with page context and business key', () => {
-    if (typeof chatCapability.systemPrompt === 'function') {
-      const prompt = chatCapability.systemPrompt({
-        userId: 'phill',
-        pageContext: '/dashboard',
-        businessKey: 'dr',
-      })
-      expect(prompt).toContain('Bron')
-      expect(prompt).toContain('/dashboard')
-      expect(prompt).toContain('dr')
-    }
-  })
-
-  it('handles missing optional context gracefully', () => {
-    if (typeof chatCapability.systemPrompt === 'function') {
-      const prompt = chatCapability.systemPrompt({ userId: 'phill' })
-      expect(prompt).toContain('Bron')
-      // Should not throw or produce undefined fragments
-      expect(prompt).not.toContain('undefined')
-    }
-  })
-
-  it('has empty features (no thinking, no web search)', () => {
-    expect(chatCapability.features).toEqual({})
-  })
-})
 
 describe('analyzeCapability', () => {
   it('has correct id, model, and maxTokens', () => {
@@ -121,14 +82,13 @@ describe('registerAllCapabilities', () => {
     // We test idempotency by calling twice
   })
 
-  it('registers all 6 capabilities', () => {
+  it('registers all 5 capabilities', () => {
     registerAllCapabilities()
 
-    expect(registerCapability).toHaveBeenCalledTimes(6)
+    expect(registerCapability).toHaveBeenCalledTimes(5)
     const registeredIds = vi.mocked(registerCapability).mock.calls.map(
       (call) => call[0].id
     )
-    expect(registeredIds).toContain('chat')
     expect(registeredIds).toContain('analyze')
     expect(registeredIds).toContain('ideas')
     expect(registeredIds).toContain('debate')

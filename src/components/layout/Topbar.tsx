@@ -1,7 +1,7 @@
 // src/components/layout/Topbar.tsx
 'use client'
 
-import { Menu, HelpCircle, Zap, MessageSquare } from 'lucide-react'
+import { Menu, HelpCircle, Zap } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useUIStore } from '@/store/ui'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
@@ -26,7 +26,6 @@ export function Topbar() {
   const pathname = usePathname()
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)
   const toggleCapture = useUIStore((s) => s.toggleCapture)
-  const toggleBron = useUIStore((s) => s.toggleBron)
   const toggleCommandBar = useUIStore((s) => s.toggleCommandBar)
   const breadcrumb = getBreadcrumb(pathname)
 
@@ -63,11 +62,6 @@ export function Topbar() {
           title="Capture idea (send to Linear)"
         >
           <Zap size={16} strokeWidth={1.75} />
-        </button>
-
-        <button onClick={toggleBron} className="transition-colors"
-          style={{ color: 'var(--color-text-disabled)' }} aria-label="Bron AI">
-          <MessageSquare size={16} strokeWidth={1.75} />
         </button>
 
         <button
@@ -111,7 +105,6 @@ export function Topbar() {
             <div className="flex flex-col gap-1.5">
               {[
                 { label: 'Command Bar', keys: '⌘K' },
-                { label: 'Bron AI', keys: '⌘⇧B' },
                 { label: 'Capture Idea', keys: '⌘I' },
                 { label: 'Toggle Sidebar', keys: '⌘\\' },
               ].map((s) => (

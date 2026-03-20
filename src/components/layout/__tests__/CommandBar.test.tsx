@@ -30,7 +30,6 @@ vi.mock('next/navigation', () => ({
 }))
 
 const mockToggleCommandBar = vi.fn()
-const mockToggleBron = vi.fn()
 const mockToggleCapture = vi.fn()
 
 vi.mock('@/store/ui', () => ({
@@ -38,7 +37,6 @@ vi.mock('@/store/ui', () => ({
     const state = {
       commandBarOpen: true,
       toggleCommandBar: mockToggleCommandBar,
-      toggleBron: mockToggleBron,
       toggleCapture: mockToggleCapture,
     }
     return selector ? selector(state) : state
@@ -50,7 +48,6 @@ function mockStoreOpen(open: boolean) {
     const state = {
       commandBarOpen: open,
       toggleCommandBar: mockToggleCommandBar,
-      toggleBron: mockToggleBron,
       toggleCapture: mockToggleCapture,
     }
     return selector ? selector(state) : state
@@ -61,7 +58,6 @@ describe('CommandBar', () => {
   beforeEach(() => {
     mockPush.mockClear()
     mockToggleCommandBar.mockClear()
-    mockToggleBron.mockClear()
     mockToggleCapture.mockClear()
     mockStoreOpen(true)
   })
@@ -90,7 +86,6 @@ describe('CommandBar', () => {
 
   it('shows action items', () => {
     render(<CommandBar />)
-    expect(screen.getByText('Open Bron Chat')).toBeInTheDocument()
     expect(screen.getByText('Capture Idea')).toBeInTheDocument()
   })
 
@@ -100,15 +95,6 @@ describe('CommandBar', () => {
     const dashboardItem = screen.getByText('Dashboard').closest('[data-testid="command-item"]')!
     await user.click(dashboardItem)
     expect(mockPush).toHaveBeenCalledWith('/founder/dashboard')
-    expect(mockToggleCommandBar).toHaveBeenCalled()
-  })
-
-  it('executes action command and closes on action item select', async () => {
-    const user = userEvent.setup()
-    render(<CommandBar />)
-    const bronItem = screen.getByText('Open Bron Chat').closest('[data-testid="command-item"]')!
-    await user.click(bronItem)
-    expect(mockToggleBron).toHaveBeenCalled()
     expect(mockToggleCommandBar).toHaveBeenCalled()
   })
 

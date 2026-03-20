@@ -11,10 +11,6 @@ const IdeaCapture = dynamic(
   () => import('./IdeaCapture').then(m => ({ default: m.IdeaCapture })),
   { ssr: false }
 )
-const BronSidebar = dynamic(
-  () => import('./BronSidebar').then(m => ({ default: m.BronSidebar })),
-  { ssr: false }
-)
 const CommandBar = dynamic(
   () => import('./CommandBar').then(m => ({ default: m.CommandBar })),
   { ssr: false }
@@ -24,7 +20,6 @@ export function FounderShell({ children }: { children: React.ReactNode }) {
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)
   const sidebarOpen = useUIStore((s) => s.sidebarOpen)
   const toggleCommandBar = useUIStore((s) => s.toggleCommandBar)
-  const toggleBron = useUIStore((s) => s.toggleBron)
   const toggleCapture = useUIStore((s) => s.toggleCapture)
 
   useEffect(() => {
@@ -34,12 +29,11 @@ export function FounderShell({ children }: { children: React.ReactNode }) {
 
       if (e.key === '\\') { e.preventDefault(); toggleSidebar(); return }
       if (e.key === 'k')  { e.preventDefault(); toggleCommandBar(); return }
-      if (e.key === 'B' && e.shiftKey) { e.preventDefault(); toggleBron(); return }
       if (e.key === 'i')  { e.preventDefault(); toggleCapture(); return }
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [toggleSidebar, toggleCommandBar, toggleBron, toggleCapture])
+  }, [toggleSidebar, toggleCommandBar, toggleCapture])
 
   return (
     <div
@@ -60,7 +54,6 @@ export function FounderShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <IdeaCapture />
-      <BronSidebar />
       <CommandBar />
     </div>
   )

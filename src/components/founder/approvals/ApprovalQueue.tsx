@@ -7,10 +7,10 @@ import { BUSINESSES } from '@/lib/businesses'
 const bizColor = (key: string) => BUSINESSES.find(b => b.key === key)?.color ?? '#555555'
 
 const INITIAL_QUEUE = [
-  { id: '1', businessKey: 'synthex', action: 'Post to LinkedIn',       detail: 'Monthly performance update — 847 words',  requestedBy: 'Bron AI', requestedAt: '09/03/2026 09:00' },
-  { id: '2', businessKey: 'dr',      action: 'Send claim update email', detail: 'To 12 pending claimants — batch send',    requestedBy: 'Bron AI', requestedAt: '09/03/2026 08:30' },
-  { id: '3', businessKey: 'nrpg',    action: 'Post to Facebook',        detail: 'NRPG member spotlight — Sarah T.',        requestedBy: 'Bron AI', requestedAt: '09/03/2026 08:00' },
-  { id: '4', businessKey: 'restore', action: 'Create Linear issue',     detail: 'Bug: login timeout on mobile — P2',       requestedBy: 'Bron AI', requestedAt: '08/03/2026 17:00' },
+  { id: '1', businessKey: 'synthex', action: 'Post to LinkedIn',       detail: 'Monthly performance update — 847 words',  requestedBy: 'Nexus AI', requestedAt: '09/03/2026 09:00' },
+  { id: '2', businessKey: 'dr',      action: 'Send claim update email', detail: 'To 12 pending claimants — batch send',    requestedBy: 'Nexus AI', requestedAt: '09/03/2026 08:30' },
+  { id: '3', businessKey: 'nrpg',    action: 'Post to Facebook',        detail: 'NRPG member spotlight — Sarah T.',        requestedBy: 'Nexus AI', requestedAt: '09/03/2026 08:00' },
+  { id: '4', businessKey: 'restore', action: 'Create Linear issue',     detail: 'Bug: login timeout on mobile — P2',       requestedBy: 'Nexus AI', requestedAt: '08/03/2026 17:00' },
 ]
 
 export function ApprovalQueue() {
