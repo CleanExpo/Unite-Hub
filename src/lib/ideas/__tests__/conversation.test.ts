@@ -23,7 +23,6 @@ describe('buildSystemPrompt', () => {
   it('includes all business keys', () => {
     const prompt = buildSystemPrompt()
     expect(prompt).toContain('dr')
-    expect(prompt).toContain('dr_qld')
     expect(prompt).toContain('nrpg')
     expect(prompt).toContain('carsi')
     expect(prompt).toContain('restore')

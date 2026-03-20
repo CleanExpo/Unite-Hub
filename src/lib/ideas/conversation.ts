@@ -4,7 +4,6 @@ import { BUSINESSES, BusinessKey } from '@/lib/businesses'
 // Business key → Linear team key mapping
 export const BUSINESS_TO_TEAM_KEY: Record<BusinessKey, string> = {
   dr:       'DR',
-  dr_qld:   'DR',
   nrpg:     'DR',
   carsi:    'GP',
   restore:  'RA',

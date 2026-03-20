@@ -1,7 +1,6 @@
 // src/lib/businesses.ts
 export const BUSINESSES = [
   { key: 'dr',      name: 'Disaster Recovery',     color: '#ef4444', status: 'active'   },
-  { key: 'dr_qld',  name: 'Disaster Recovery Qld', color: '#f87171', status: 'active'   },
   { key: 'nrpg',   name: 'NRPG',                  color: '#f97316', status: 'active'   },
   { key: 'carsi',  name: 'CARSI',              color: '#eab308', status: 'active'   },
   { key: 'restore', name: 'RestoreAssist',      color: '#22c55e', status: 'active'   },

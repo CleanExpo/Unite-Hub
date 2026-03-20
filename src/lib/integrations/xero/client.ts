@@ -28,10 +28,10 @@ const XERO_IDENTITY_URL = 'https://identity.xero.com/connect/token'
 const RATE_LIMIT_DELAY_MS = 1_000
 
 // ── Multi-account credential routing ────────────────────────────────────────
-// DR Xero Account:   businesses dr, nrpg, dr_qld → DR_CLIENT_ID / DR_CLIENT_SECRET
-// CARSI Xero Account: all other businesses       → XERO_CLIENT_ID / XERO_CLIENT_SECRET
+// DR Xero Account:   businesses dr, nrpg → DR_CLIENT_ID / DR_CLIENT_SECRET
+// CARSI Xero Account: all other businesses  → XERO_CLIENT_ID / XERO_CLIENT_SECRET
 
-const DR_BUSINESS_KEYS = new Set(['dr', 'nrpg', 'dr_qld'])
+const DR_BUSINESS_KEYS = new Set(['dr', 'nrpg'])
 
 export function getXeroCredentials(businessKey: string): {
   clientId: string

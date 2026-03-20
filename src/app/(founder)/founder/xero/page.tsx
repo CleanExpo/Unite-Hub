@@ -29,14 +29,7 @@ const XERO_ACCOUNTS = [
       { key: 'restore', name: 'RestoreAssist',       color: '#22c55e' },
       { key: 'ato',     name: 'ATO App',             color: '#3b82f6' },
       { key: 'synthex', name: 'SYNTHEX',             color: '#a855f7' },
-    ],
-  },
-  {
-    label: 'Other',
-    description: 'Additional connected entities',
-    businesses: [
-      { key: 'dr_qld', name: 'Disaster Recovery Qld', color: '#f87171' },
-      { key: 'ccw',    name: 'CCW-ERP/CRM',            color: '#06b6d4' },
+      { key: 'ccw',     name: 'CCW-ERP/CRM',         color: '#06b6d4' },
     ],
   },
 ]

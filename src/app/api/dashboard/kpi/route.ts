@@ -11,9 +11,9 @@ import { fetchIssueCountByBusiness } from '@/lib/integrations/linear'
 export const dynamic = 'force-dynamic'
 
 /** Business keys that have Xero connections */
-const XERO_KEYS = ['dr', 'dr_qld', 'nrpg', 'carsi', 'restore', 'synthex', 'ccw'] as const
+const XERO_KEYS = ['dr', 'nrpg', 'carsi', 'restore', 'synthex', 'ccw'] as const
 /** All business keys tracked in Linear */
-const LINEAR_KEYS = ['dr', 'dr_qld', 'nrpg', 'carsi', 'restore', 'synthex', 'ato', 'ccw'] as const
+const LINEAR_KEYS = ['dr', 'nrpg', 'carsi', 'restore', 'synthex', 'ato', 'ccw'] as const
 
 export interface BatchKPIEntry {
   revenueCents?: number

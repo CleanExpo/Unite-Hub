@@ -72,7 +72,7 @@ export function stateToColumn(state: LinearState): string {
 // Linear team key → primary business key (for display on Kanban cards)
 const TEAM_TO_BUSINESS: Record<string, string> = {
   SYN: 'synthex',
-  DR:  'dr',       // DR-NRPG team covers dr, dr_qld, nrpg
+  DR:  'dr',       // DR-NRPG team covers dr, nrpg
   GP:  'carsi',    // G-Pilot
   RA:  'restore',
   UNI: 'ccw',      // Unite-Group covers ccw + ato
@@ -82,7 +82,6 @@ const TEAM_TO_BUSINESS: Record<string, string> = {
 export const BUSINESS_TO_TEAM: Record<string, string> = {
   synthex:  'SYN',
   dr:       'DR',
-  dr_qld:   'DR',
   nrpg:     'DR',
   carsi:    'GP',
   restore:  'RA',

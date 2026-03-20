@@ -411,7 +411,6 @@ describe('runBookkeeperForAllBusinesses', () => {
     await runBookkeeperForAllBusinesses(FOUNDER_ID)
 
     expect(processedKeys).toContain('dr')
-    expect(processedKeys).toContain('dr_qld')
     expect(processedKeys).toContain('nrpg')
     expect(processedKeys).toContain('carsi')
     expect(processedKeys).toContain('restore')

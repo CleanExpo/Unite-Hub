@@ -11,7 +11,6 @@ import type { BatchKPIResponse, BatchKPIEntry } from '@/app/api/dashboard/kpi/ro
 // Fallback values are neutral placeholders — live data replaces them via batch fetch
 const DASHBOARD_DATA = [
   { key: 'dr',      metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'dr',      linearBusinessKey: 'dr'      },
-  { key: 'dr_qld',  metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'dr_qld',  linearBusinessKey: 'dr_qld'  },
   { key: 'nrpg',    metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'nrpg',    linearBusinessKey: 'nrpg'    },
   { key: 'carsi',   metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'carsi',   linearBusinessKey: 'carsi'   },
   { key: 'restore', metric: '—', metricLabel: 'Revenue MTD', trend: { value: '—', positive: true  }, secondary: 'Loading...', xeroBusinessKey: 'restore', linearBusinessKey: 'restore' },

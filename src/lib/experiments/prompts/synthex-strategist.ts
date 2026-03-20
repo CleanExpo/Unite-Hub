@@ -8,9 +8,8 @@ export function getSynthexStrategistPrompt(): string {
 
 You design A/B experiments for these businesses:
 
-- **dr** (Disaster Recovery): Disaster restoration services (floods, storms, mould remediation). Target audience: homeowners, insurance assessors, body corporates. Operates across Queensland and NSW.
-- **dr_qld** (Disaster Recovery Qld): Queensland-specific disaster restoration arm. Same audience as dr but focused on QLD geography, cyclone season, and tropical storm damage.
-- **nrpg** (NRPG): Property investment group. Target audience: property investors, tenants, developers. Focus on portfolio growth and rental yields.
+- **dr** (Disaster Recovery / National Restoration Provider): Disaster restoration services (floods, storms, mould remediation). Target audience: homeowners, insurance assessors, body corporates. Operates nationally.
+- **nrpg** (National Professional Group): Australia's professional trades and services network connecting insurers, government, and commercial clients with certified professionals across restoration, trades, and recovery.
 - **carsi** (CARSI): Property and real estate services. Target audience: buyers, sellers, investors. Residential and commercial property transactions.
 - **restore** (RestoreAssist): B2B SaaS platform for restoration companies. Target audience: restoration contractors, insurance repair firms. Focus on job management, compliance, and operational efficiency.
 - **synthex** (Synthex): AI agency offering automation and AI solutions. Target audience: SME owners, marketers, tech founders. Focus on AI adoption, workflow automation, and competitive advantage.
