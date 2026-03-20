@@ -68,7 +68,12 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
       })
       if (!res.ok) {
         const j = await res.json() as { error?: string }
-        setError(j.error ?? 'Generation failed')
+        const msg = j.error ?? 'Generation failed'
+        setError(
+          msg.includes('No brand identity')
+            ? `No brand identity set up for this business yet. Go to Strategy → Brand DNA to extract it first.`
+            : msg
+        )
         return
       }
       const data = await res.json() as { results: Array<{ title: string; body: string; hashtags: string[]; cta: string | null; platform: string | null }> }
@@ -233,7 +238,7 @@ export function PostComposer({ channels, onClose, onCreated }: Props) {
                   style={{ background: 'var(--surface-elevated)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                 >
                   <option value="">Multi-platform</option>
-                  {connectedPlatforms.map(p => (
+                  {displayPlatforms.map(p => (
                     <option key={p} value={p}>{PLATFORM_LABELS[p]}</option>
                   ))}
                 </select>
