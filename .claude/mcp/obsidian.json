@@ -1,0 +1,20 @@
+{
+  "description": "Obsidian MCP integration for wiki-link resolution and vault knowledge access",
+  "transport": "websocket",
+  "url": "ws://localhost:22360",
+  "options": {
+    "read_only": true,
+    "fuzzy_matching": true,
+    "fuzzy_threshold": 0.8,
+    "resolve_wiki_links": true,
+    "vault_path": ".claude",
+    "index_file": ".claude/VAULT-INDEX.md"
+  },
+  "capabilities": [
+    "resolve_wiki_links",
+    "fuzzy_search",
+    "asset_lookup",
+    "cross_reference"
+  ],
+  "notes": "WebSocket transport on port 22360. Read-only — no write access to vault files. Fuzzy matching threshold 0.8 handles plurals, case, and hyphen variation."
+}

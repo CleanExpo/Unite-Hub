@@ -846,3 +846,115 @@ pnpm turbo run type-check lint    # All checks
 🦘 **Australian-first. Truth-first. SEO-dominant. Design-forward.**
 
 *Complete Unite-Group AI Architecture documentation.*
+
+---
+
+## Framework Upgrade — NodeJS-Starter-V1 (20/03/2026)
+
+The following enhancements were merged from NodeJS-Starter-V1 template. All additions are additive — no existing files were replaced.
+
+### Vault Index System
+
+**File**: `.claude/VAULT-INDEX.md`
+
+Comprehensive asset catalogue with wiki-link support for O(1) asset discovery.
+
+- **Resolution**: `[[orchestrator]]` → `.claude/agents/orchestrator/agent.md`
+- **Fuzzy threshold**: 0.8 (handles plurals, case, hyphens)
+- **Scope**: 34 agents, 13 rules, 14 commands, 4 blueprints, 11 scripts, 59 skills, 6 memory, 5 primers, 4 data, 4 knowledge, 3 templates, 3 schemas
+- **Regenerate**: Run `/vault-init` after adding any new asset
+
+### Agent Harness Protocol
+
+**File**: `.claude/AGENT_HARNESS.md`
+
+8-phase convergence protocol for complex multi-agent tasks (3+ agents).
+
+```
+Intake → Discovery → Decomposition → Execution → Aggregation → Verification → Iteration (max 2) → Production
+```
+
+**Decision logic** (orchestrator chooses):
+- Simple, 1–2 agents → `/minion` (Blueprint DAG)
+- Complex, 3+ agents → Agent Harness
+
+### New Agents (4)
+
+| Agent | Priority | Role |
+|-------|----------|------|
+| `product-strategist` | 3 | Feature prioritisation, competitive positioning |
+| `technical-architect` | 2 | Architecture decisions, ADR authoring |
+| `design-reviewer` | 3 | UI/UX review vs Scientific Luxury standards (read-only) |
+| `delivery-manager` | 3 | Sprint coordination, KANBAN, milestone tracking |
+
+**Total agents**: 34 (was 30)
+
+### New Commands (3)
+
+| Command | Purpose |
+|---------|---------|
+| `/vault-init` | Regenerate VAULT-INDEX.md from filesystem scan |
+| `/done` | Completion verification: type-check + lint + test + committed |
+| `/discuss` | Architecture discussion in PLAN mode with ADR output |
+
+**Total commands**: 14 (was 11)
+
+### Foundation Rules (3)
+
+| Rule | Purpose |
+|------|---------|
+| `rules/core.md` | Constitutional governance layer, intent-driven workflow mapping, anti-hallucination protocol |
+| `rules/slop-prevention.md` | Output quality gates, Australian English enforcement, filler elimination |
+| `rules/audit-mode-classifier.md` | Structured response templates per mode (extends cli-control-plane.md) |
+
+**Total rules**: 13 (was 10)
+
+### Skills Index
+
+**File**: `.claude/skills/SKILLS-INDEX.md`
+
+Priority classification of all 59 skills:
+- **P1 Critical** (auto-loaded): scientific-luxury, execution-guardian, council-of-logic, system-supervisor
+- **P2 High** (on-demand): api-contract, api-client, error-taxonomy, oauth-flow, and 6 more
+- **P3 Standard**: 40+ domain-specific skills
+- **P4 Optional**: Utility skills
+
+### Schemas Directory
+
+**Path**: `.claude/schemas/`
+
+Frontmatter validation schemas for the three primary asset types:
+- `agent-frontmatter.schema.md` — Required YAML for agent files
+- `skill-frontmatter.schema.md` — Required YAML for skill files
+- `blueprint-frontmatter.schema.md` — Required YAML + DAG structure for blueprints
+
+### Updated Metrics
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Agents | 30 | **34** |
+| Rules | 10 | **13** |
+| Commands | 11 | **14** |
+| Blueprints | 4 | 4 |
+| Hook Scripts | 11 | 11 |
+| Skills | 59 | 59 |
+| Schemas | 0 | **3** |
+
+### Toolsheds Fixed
+
+`.claude/data/toolsheds.json` corrected stale Python/FastAPI paths to Next.js equivalents:
+
+| Toolshed | Change |
+|----------|--------|
+| `backend` | `apps/backend/src/` → `src/app/api/`, `src/lib/` |
+| `backend` agent | `backend-specialist` → `senior-fullstack` |
+| `database` | `apps/backend/src/db/` → `supabase/migrations/`, `src/lib/supabase/` |
+| `security` | `apps/backend/src/auth/` → `src/middleware.ts`, `src/lib/supabase/server.ts` |
+| `frontend` | `apps/web/` → `src/` |
+| All descriptions | FastAPI/SQLAlchemy → Next.js/Supabase |
+
+### Obsidian MCP
+
+**Files**: `.claude/mcp/obsidian.json`, `.mcp.json`
+
+WebSocket MCP server for wiki-link resolution (port 22360, read-only). Complements Context7 for project-internal asset lookup.

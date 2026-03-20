@@ -393,3 +393,62 @@ The minion pathway is **additive** — it does not replace multi-turn orchestrat
 - Use American defaults unless explicitly requested
 - Proceed without verification evidence
 - Merge a PR created by `/minion` (human review gate is mandatory)
+
+---
+
+## Agent Harness Integration
+
+For complex tasks requiring 3+ agents or cross-domain coordination, use the **Agent Harness** instead of the standard Minion protocol.
+
+**Full protocol**: `.claude/AGENT_HARNESS.md`
+
+### Decision Logic
+
+```
+task.agent_count <= 2 AND task.domain == 1
+  → /minion (Blueprint DAG, one-shot)
+
+task.agent_count >= 3 OR task.cross_domain == true
+  → Agent Harness (8-phase convergence)
+
+task.type == "architecture_decision"
+  → /discuss command → [[technical-architect]]
+
+HARNESS_ESCALATION received
+  → Surface to human — do not retry
+```
+
+### Routing Entries for New Agents
+
+```python
+# Product strategy, feature prioritisation, competitive positioning
+if self.is_product_strategy_task(task):
+    return self.get_agent('product-strategist')
+
+# Architecture decisions, system design, ADR authoring
+if self.is_architecture_task(task):
+    return self.get_agent('technical-architect')
+
+# UI/UX review against Scientific Luxury standards (READ ONLY)
+if self.is_design_review_task(task):
+    return self.get_agent('design-reviewer')
+
+# Sprint coordination, KANBAN updates, milestone tracking
+if self.is_delivery_management_task(task):
+    return self.get_agent('delivery-manager')
+```
+
+### Vault Index Reference
+
+Before any asset lookup, check `.claude/VAULT-INDEX.md`:
+
+```python
+def resolve_asset(self, wiki_link: str) -> str:
+    """O(1) asset lookup via Vault Index."""
+    # [[orchestrator]] → .claude/agents/orchestrator/agent.md
+    # [[rules/core]]   → .claude/rules/core.md
+    # [[skills/x]]     → .skills/custom/x/SKILL.md
+    return self.vault_index.resolve(wiki_link, fuzzy_threshold=0.8)
+```
+
+**Spot-check links**: `[[orchestrator]]`, `[[rules/core]]`, `[[senior-fullstack]]`, `[[technical-architect]]`, `[[commands/minion]]`

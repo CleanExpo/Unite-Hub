@@ -3,6 +3,12 @@
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "obsidian": {
+      "transport": "websocket",
+      "url": "ws://localhost:22360",
+      "config": ".claude/mcp/obsidian.json",
+      "description": "Vault wiki-link resolution and fuzzy asset lookup (read-only)"
     }
   }
 }

@@ -12,11 +12,11 @@
         "error-boundary",
         "i18n-patterns"
       ],
-      "context_scope": ["apps/web/"],
-      "description": "React 19, Next.js 15 App Router, Tailwind v4, Framer Motion, Scientific Luxury design system"
+      "context_scope": ["src/"],
+      "description": "React 19, Next.js 16 App Router, Tailwind v4, Framer Motion, Scientific Luxury design system"
     },
     "backend": {
-      "agent": "backend-specialist",
+      "agent": "senior-fullstack",
       "token_budget": 60000,
       "skills": [
         "api-contract",
@@ -26,20 +26,18 @@
         "structured-logging",
         "resilience-patterns"
       ],
-      "context_scope": ["apps/backend/src/", "apps/backend/tests/"],
-      "description": "FastAPI, LangGraph, SQLAlchemy 2.0, Pydantic v2, async Python"
+      "context_scope": ["src/app/api/", "src/lib/"],
+      "description": "Next.js API routes, Supabase, server actions, TypeScript strict mode"
     },
     "database": {
       "agent": "database-specialist",
       "token_budget": 40000,
       "skills": ["vector-search", "data-validation", "data-transform", "audit-trail"],
       "context_scope": [
-        "apps/backend/src/db/",
-        "apps/backend/src/state/",
-        "scripts/init-db.sql",
-        "apps/backend/alembic/"
+        "supabase/migrations/",
+        "src/lib/supabase/"
       ],
-      "description": "PostgreSQL, SQLAlchemy 2.0 mapped_column, Alembic migrations, pgvector"
+      "description": "Supabase PostgreSQL, SQL migrations, RLS, founder_id isolation"
     },
     "security": {
       "agent": "security-auditor",
@@ -52,12 +50,11 @@
         "secret-management"
       ],
       "context_scope": [
-        "apps/backend/src/auth/",
-        "apps/backend/src/api/",
-        "apps/web/middleware.ts",
-        "apps/web/lib/api/"
+        "src/middleware.ts",
+        "src/lib/supabase/server.ts",
+        "src/app/api/"
       ],
-      "description": "JWT auth, OWASP Top 10, Australian Privacy Act 1988, RBAC"
+      "description": "Supabase PKCE auth, OWASP Top 10, Australian Privacy Act 1988, RBAC"
     },
     "infra": {
       "agent": "deploy-guardian",
@@ -70,7 +67,7 @@
         "graceful-shutdown"
       ],
       "context_scope": ["docker-compose.yml", ".github/workflows/", "scripts/"],
-      "description": "Docker Compose, GitHub Actions CI/CD, health checks, deployment"
+      "description": "Docker Compose (dev only), GitHub Actions CI/CD, Vercel deployment, health checks"
     },
     "debug": {
       "agent": "bug-hunter",
@@ -90,7 +87,7 @@
       "token_budget": 50000,
       "skills": ["playwright-browser"],
       "context_scope": ["test-files", "source-file-under-test"],
-      "description": "Vitest, pytest, Playwright E2E, Scientific Luxury visual assertions"
+      "description": "Vitest, Playwright E2E, Scientific Luxury visual assertions"
     },
     "general": {
       "agent": "orchestrator",

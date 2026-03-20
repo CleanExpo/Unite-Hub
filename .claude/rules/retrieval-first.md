@@ -7,6 +7,7 @@
 
 ## Priority Order
 
+0. **Vault Index** — `.claude/VAULT-INDEX.md` for O(1) asset lookup (wiki-links, agents, rules, commands, skills)
 1. **NotebookLM** — Project-specific knowledge (architecture, debug, security, onboarding)
 2. **Context7 MCP** — Library/framework documentation (Next.js, Playwright, Tailwind, Supabase)
 3. **Skills** — Pattern libraries (`.skills/custom/*/SKILL.md`) — load only the relevant section

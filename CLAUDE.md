@@ -61,3 +61,37 @@ Integration keys (optional — features degrade gracefully):
 - `GOOGLE_CLIENT_ID/SECRET` — Gmail + Calendar OAuth
 - `LINEAR_API_KEY` — Linear issue tracking sync
 - `FACEBOOK_APP_ID/SECRET`, `LINKEDIN_CLIENT_ID/SECRET`, `TIKTOK_CLIENT_KEY/SECRET` — Social OAuth
+
+## Vault Index
+
+Wiki-link syntax for O(1) asset discovery. Canonical index: `.claude/VAULT-INDEX.md`
+
+**Resolution rules**:
+- `[[orchestrator]]` → `.claude/agents/orchestrator/agent.md`
+- `[[type/id]]` → `.claude/{type}/{id}` (e.g., `[[rules/core]]` → `.claude/rules/core.md`)
+- `[[id#section]]` → Asset file, specific heading (e.g., `[[orchestrator#routing]]`)
+- Fuzzy threshold: 0.8 (handles plurals, case variation)
+
+**When to use**: Before searching the codebase, check the Vault Index for known assets.
+
+## Human Goal Translation
+
+Map common outcome phrases to concrete checklists:
+
+| Phrase | Translates To |
+|--------|--------------|
+| "Make it work" | Type-check passes + tests pass + no runtime errors |
+| "Ship it" | Verify → commit → push → create PR → deploy |
+| "Clean this up" | Lint + format + remove dead code + simplify |
+| "Is this safe?" | Security audit + RLS check + env var audit + OWASP scan |
+| "Make it fast" | Lighthouse audit + bundle analysis + query optimisation |
+| "Make it pretty" | Design tokens compliance + Scientific Luxury review + responsive check |
+
+## Blueprint-First Protocol
+
+For structured task execution, use the Blueprint DAG system:
+
+- **Blueprints**: `.claude/blueprints/` — DAGs for feature, bugfix, migration, refactor
+- **Minion command**: `/minion` — One-shot execution with hard iteration caps
+- **Harness protocol**: `.claude/AGENT_HARNESS.md` — Multi-agent convergence for complex tasks (3+ agents)
+- **Routing**: Orchestrator decides — simple tasks → Minion, complex tasks → Harness
