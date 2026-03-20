@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import type { CampaignAsset, VisualType } from '@/lib/campaigns/types'
 import type { SocialPlatform } from '@/lib/integrations/social/types'
 
@@ -138,9 +139,11 @@ export function AssetPreview({ asset, onPublished, onRegenerateImage, onApprove 
 
       {/* Image area */}
       {asset.imageUrl ? (
-        <img
+        <Image
           src={asset.imageUrl}
           alt={asset.headline ?? 'Campaign asset'}
+          width={400}
+          height={400}
           className="w-full aspect-square object-cover rounded-sm"
         />
       ) : (

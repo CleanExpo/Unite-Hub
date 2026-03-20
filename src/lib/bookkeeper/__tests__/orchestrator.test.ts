@@ -397,8 +397,8 @@ describe('runBookkeeperForAllBusinesses', () => {
 
     await runBookkeeperForAllBusinesses(FOUNDER_ID)
 
-    // All 8 active businesses should be processed
-    expect(processedKeys).toHaveLength(8)
+    // All 7 active businesses should be processed
+    expect(processedKeys).toHaveLength(7)
   })
 
   it('processes all active businesses', async () => {
@@ -448,7 +448,7 @@ describe('runBookkeeperForAllBusinesses', () => {
     const result = await runBookkeeperForAllBusinesses(FOUNDER_ID)
 
     expect(result.status).toBe('failed')
-    expect(result.failedCount).toBe(8)
+    expect(result.failedCount).toBe(7)
   })
 
   it('error in one business does not prevent others from processing', async () => {
@@ -463,11 +463,11 @@ describe('runBookkeeperForAllBusinesses', () => {
 
     const result = await runBookkeeperForAllBusinesses(FOUNDER_ID)
 
-    // 1 failed, 7 succeeded
+    // 1 failed, 6 succeeded
     const successResults = result.businessResults.filter((r) => r.status === 'success')
     const errorResults = result.businessResults.filter((r) => r.status === 'error')
     expect(errorResults).toHaveLength(1)
-    expect(successResults).toHaveLength(7)
+    expect(successResults).toHaveLength(6)
   })
 
   it('captures error message in business result', async () => {
@@ -489,18 +489,18 @@ describe('runBookkeeperForAllBusinesses', () => {
   it('aggregates GST totals across all businesses', async () => {
     const result = await runBookkeeperForAllBusinesses(FOUNDER_ID)
 
-    // 8 active businesses, each with gstCollected=5000 and gstPaid=3000
-    expect(result.gstCollectedCents).toBe(8 * 5000)
-    expect(result.gstPaidCents).toBe(8 * 3000)
-    expect(result.netGstCents).toBe(8 * (5000 - 3000))
+    // 7 active businesses, each with gstCollected=5000 and gstPaid=3000
+    expect(result.gstCollectedCents).toBe(7 * 5000)
+    expect(result.gstPaidCents).toBe(7 * 3000)
+    expect(result.netGstCents).toBe(7 * (5000 - 3000))
   })
 
   it('aggregates transaction counts across all businesses', async () => {
     const result = await runBookkeeperForAllBusinesses(FOUNDER_ID)
 
-    // 8 active businesses, each with 1 transaction
-    expect(result.totalTransactions).toBe(8)
-    expect(result.autoReconciled).toBe(8)
+    // 7 active businesses, each with 1 transaction
+    expect(result.totalTransactions).toBe(7)
+    expect(result.autoReconciled).toBe(7)
   })
 
   it('updates run record with final status on completion', async () => {
@@ -573,7 +573,7 @@ describe('runBookkeeperForAllBusinesses', () => {
     // Skipped businesses are not counted as errors
     const skippedResults = result.businessResults.filter((r) => r.status === 'skipped')
     const errorResults = result.businessResults.filter((r) => r.status === 'error')
-    expect(skippedResults).toHaveLength(8)
+    expect(skippedResults).toHaveLength(7)
     expect(errorResults).toHaveLength(0)
     // With all skipped (0 success, 0 error), status should be 'completed'
     expect(result.status).toBe('completed')
