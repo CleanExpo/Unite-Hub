@@ -2,7 +2,7 @@
 
 > **Purpose**: O(1) asset discovery for all `.claude/` and `.skills/` resources.
 > **Regenerate**: Run `/vault-init` to rebuild from filesystem scan.
-> **Last updated**: 20/03/2026
+> **Last updated**: 20/03/2026 (v2 — manifest-first skills added)
 
 ---
 
@@ -163,18 +163,20 @@
 
 ---
 
-## Skills (59)
+## Skills (62)
 
 > Path prefix: `.skills/custom/{id}/SKILL.md`
 > Priority classification: See `.claude/skills/SKILLS-INDEX.md`
 
 ### P1 — Critical (Auto-Loaded)
 
-`[[skills/scientific-luxury]]` `[[skills/execution-guardian]]` `[[skills/council-of-logic]]` `[[skills/system-supervisor]]`
+`[[skills/scientific-luxury]]` `[[skills/execution-guardian]]` `[[skills/council-of-logic]]` `[[skills/system-supervisor]]` `[[skills/context-partitioning]]` `[[skills/verification-first]]`
+
+> Custom P1 skills: `.claude/skills/custom/{id}/SKILL.md`
 
 ### P2 — High (On-Demand)
 
-`[[skills/api-contract]]` `[[skills/api-client]]` `[[skills/error-taxonomy]]` `[[skills/retry-strategy]]` `[[skills/structured-logging]]` `[[skills/resilience-patterns]]` `[[skills/oauth-flow]]` `[[skills/rbac-patterns]]` `[[skills/input-sanitisation]]` `[[skills/playwright-browser]]`
+`[[skills/api-contract]]` `[[skills/api-client]]` `[[skills/error-taxonomy]]` `[[skills/retry-strategy]]` `[[skills/structured-logging]]` `[[skills/resilience-patterns]]` `[[skills/oauth-flow]]` `[[skills/rbac-patterns]]` `[[skills/input-sanitisation]]` `[[skills/playwright-browser]]` `[[skills/ralph-wiggum]]`
 
 ### P3 — Standard
 
