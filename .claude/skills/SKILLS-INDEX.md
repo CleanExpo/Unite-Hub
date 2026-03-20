@@ -17,6 +17,11 @@ These skills load on every response via `pre-response.hook`. They are always act
 | `execution-guardian` | Execution safety — validates before destructive actions |
 | `council-of-logic` | Multi-perspective reasoning (Turing, Shannon, Von Neumann, Gödel) |
 | `system-supervisor` | Architecture drift detection, complexity monitoring |
+| `context-partitioning` | **NEW** Manifest-first dispatch — orchestrator produces typed manifest before any Agent tool call |
+| `verification-first` | **NEW** Hard verification gate — no task complete without proof (Tier A–D) |
+
+> **Custom skill location**: `.claude/skills/custom/{id}/SKILL.md`
+> **P1 cap**: Do not add more than 8 P1 skills — each one costs tokens on every response.
 
 ---
 
@@ -51,6 +56,12 @@ Load when the task domain matches. Orchestrator loads based on task classificati
 | Skill ID | Trigger |
 |----------|---------|
 | `playwright-browser` | E2E test implementation |
+
+### Workflow
+
+| Skill ID | Trigger |
+|----------|---------|
+| `ralph-wiggum` | **NEW** Autonomous task loop — `/ralph`, overnight runs, PRD-driven multi-iteration work |
 
 ---
 

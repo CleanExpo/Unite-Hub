@@ -77,16 +77,36 @@ parallel_tracks:
 
 ### Phase 4 — Execution
 
-**Orchestrator action**: Dispatch subtasks to specialist agents.
+**Orchestrator action**: Produce a typed context manifest for each subtask, then dispatch.
 
-Protocol per subtask:
-1. Load relevant toolshed skills (max 5–6 per agent)
-2. Provide **only** the files in that agent's scope
-3. Include Australian context (always)
-4. Set clear success criteria and output format
-5. Monitor for `BLUEPRINT_ESCALATION` signals
+#### Manifest-First Protocol (REQUIRED before any Agent tool call)
 
-**Context partitioning**: Each agent gets its own isolated context. No agent sees another's working files unless they are explicit inputs.
+```json
+{
+  "agent": "{agent-type}",
+  "task": "{subtask description}",
+  "toolshed": "{frontend|backend|database|security|test|debug}",
+  "token_budget": 60000,
+  "files": {
+    "must_read": ["path/to/file.ts"],
+    "reference_only": ["path/to/globals.css"],
+    "must_not_touch": ["supabase/migrations/", "src/lib/supabase/"]
+  },
+  "skills": ["skill-a", "skill-b"],
+  "constraints": ["founder_id isolation", "Scientific Luxury tokens"],
+  "success_criteria": "verifiable completion statement",
+  "output_format": "edited_files_list + verification_tier_A_result"
+}
+```
+
+**Rules**:
+1. **Manifest before dispatch** — no Agent tool call without a complete manifest
+2. **Max 5–6 skills per agent** — load from toolshed only (`.claude/data/toolsheds.json`)
+3. **Australian context always** — included in every manifest constraints array
+4. **Structured return only** — subagent returns file list + verification output, NOT full file contents
+5. **Monitor for `BLUEPRINT_ESCALATION`** — halt and surface to human if received
+
+**Context partitioning**: Each agent operates in an isolated context. No agent sees another's working files unless they are explicit manifest inputs. Reference: `.claude/skills/custom/context-partitioning/SKILL.md`
 
 ---
 

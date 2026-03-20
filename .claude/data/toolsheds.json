@@ -95,6 +95,35 @@
       "skills": ["council-of-logic", "execution-guardian", "system-supervisor"],
       "context_scope": ["task-specific"],
       "description": "Cross-domain coordination, refactoring, architectural tasks"
+    },
+    "verification": {
+      "agent": "verification",
+      "token_budget": 30000,
+      "skills": ["verification-first"],
+      "context_scope": ["verification-output-only"],
+      "description": "Independent verification — never reads source files, only receives structured result + runs commands"
+    },
+    "content": {
+      "agent": "truth-finder",
+      "token_budget": 40000,
+      "skills": ["truth-finder", "australian-context"],
+      "context_scope": ["content-file-only"],
+      "description": "Content verification, truth-checking, citation sourcing — Australian market"
+    },
+    "seo": {
+      "agent": "seo-intelligence",
+      "token_budget": 50000,
+      "skills": ["seo-geo-architect", "geo-australian", "australian-context"],
+      "context_scope": ["src/app/", "public/"],
+      "description": "SEO/GEO strategy, keyword research, AI citation optimisation — AUS/NZ market"
+    },
+    "orchestration": {
+      "agent": "orchestrator",
+      "token_budget": 80000,
+      "skills": ["context-partitioning", "council-of-logic", "execution-guardian"],
+      "context_scope": ["glob-and-grep-only"],
+      "description": "Orchestrator planning mode — Glob/Grep discovery only, produces manifests, never reads full files",
+      "dispatch_rule": "manifest-first — produce manifest before any Agent tool call"
     }
   }
 }
