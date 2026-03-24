@@ -3,8 +3,8 @@
 // Import from '@/lib/ai' to access all AI infrastructure.
 
 export { getAIClient, resetAIClient } from './client'
-export { registerCapability, getCapability, listCapabilities, execute, resetRegistry } from './router'
-export type { ExecuteInput } from './router'
+export { registerCapability, getCapability, listCapabilities, execute, batchExecute, resetRegistry } from './router'
+export type { ExecuteInput, BatchExecuteResult } from './router'
 export {
   analyzeCapability,
   ideasCapability,
