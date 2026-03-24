@@ -1,6 +1,6 @@
 # KANBAN — Unite-Group Nexus 2.0
 > Work tracking board. Updated manually or by agents at phase boundaries.
-> Last updated: 24/03/2026
+> Last updated: 25/03/2026
 
 ---
 
@@ -111,7 +111,7 @@
 - [ ] UNI-1503: Enable Web Search and Web Fetch Server-Side Tools
 - [ ] UNI-1504: Enable Batch API for Cost Optimisation
 - [ ] UNI-1505: Enable Citations for Verifiable Agent Outputs
-- [ ] UNI-1506: Enable Structured Outputs for Type-Safe Agent Communication
+- [x] UNI-1506: Enable Structured Outputs for Type-Safe Agent Communication ✅ (25/03/2026)
 - [ ] UNI-1507: Enable Code Execution Sandbox
 - [ ] UNI-1508: Build AI Orchestration Router
 - [ ] UNI-1509: Build AI Pipeline Coordinator

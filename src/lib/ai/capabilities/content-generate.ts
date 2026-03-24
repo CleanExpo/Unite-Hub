@@ -1,12 +1,17 @@
 // src/lib/ai/capabilities/content-generate.ts
 // Content generation capability — AI-powered social post, blog intro, and video script generation.
+// Uses structuredOutput so the router forces tool_use and returns validated ContentGenerateOutput.
 
 import { createCapability } from '../types'
+import { ContentGenerateOutputSchema } from '@/lib/content/schemas'
 
 export const contentGenerateCapability = createCapability({
   id: 'content-generate',
-  model: 'claude-sonnet-4-6',
+  model: 'claude-sonnet-4-5-20250929',
   maxTokens: 4096,
+  features: {
+    structuredOutput: ContentGenerateOutputSchema,
+  },
   systemPrompt: (ctx) => {
     const parts: string[] = [
       'You are an expert content creator for Unite-Group, a network of Australian businesses.',
