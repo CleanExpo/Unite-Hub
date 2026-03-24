@@ -7,7 +7,8 @@ import type Anthropic from '@anthropic-ai/sdk'
 import { getAIClient } from '@/lib/ai/client'
 import type { FirmKey, FirmAgentConfig, JudgeAgentConfig, FirmProposalData, JudgeScoreSummary, RoundType, FinancialContext } from './types'
 import { FIRM_META, ROUND_LABELS } from './types'
-import { parseFirmProposal, parseJudgeOutput } from './structured-output'
+import { FirmProposalSchema, JudgeOutputSchema } from './structured-output'
+import { zodToToolSchema, parseStructuredResponse } from '@/lib/ai/features/structured'
 import { getTaxStrategyPrompt } from './prompts/tax-strategy'
 import { getGrantsIncentivesPrompt } from './prompts/grants-incentives'
 import { getCashflowOptimisationPrompt } from './prompts/cashflow-optimisation'
@@ -20,6 +21,21 @@ const FIRM_MODEL = 'claude-sonnet-4-5-20250929'
 const JUDGE_MODEL = 'claude-opus-4-5-20250514'
 const DEFAULT_MAX_OUTPUT_TOKENS = 4096
 const JUDGE_MAX_OUTPUT_TOKENS = 8192
+
+// Tool schemas — computed once at module load, reused across all calls.
+// Forces Claude to return structured JSON conforming to the Zod schema
+// via tool_use rather than free-form text that requires regex extraction.
+const FIRM_PROPOSAL_TOOL = zodToToolSchema(
+  'firm_proposal',
+  FirmProposalSchema,
+  'Submit your structured firm proposal with strategies, confidence score, risk flags, and ATO citations.'
+) as unknown as Anthropic.Tool
+
+const JUDGE_OUTPUT_TOOL = zodToToolSchema(
+  'judge_output',
+  JudgeOutputSchema,
+  'Submit your structured scoring decision with per-firm scores, weighted totals, winner, and summary.'
+) as unknown as Anthropic.Tool
 
 // ── Anthropic client — delegated to centralised singleton ────────────────────
 
@@ -158,14 +174,13 @@ export async function callFirmAgent(
     max_tokens: config.maxOutputTokens,
     system: config.systemPrompt,
     messages: [{ role: 'user', content: userMessage }],
+    tools: [FIRM_PROPOSAL_TOOL],
+    tool_choice: { type: 'tool', name: 'firm_proposal' },
   })
 
-  const rawContent = response.content
-    .filter((block): block is Anthropic.TextBlock => block.type === 'text')
-    .map(block => block.text)
-    .join('\n')
-
-  const proposal = parseFirmProposal(rawContent)
+  const proposal = parseStructuredResponse(response.content, 'firm_proposal', FirmProposalSchema)
+  // Serialise to clean JSON for context injection in later rounds
+  const rawContent = JSON.stringify(proposal, null, 2)
 
   return {
     proposal,
@@ -226,14 +241,11 @@ export async function callJudgeAgent(userMessage: string): Promise<JudgeCallResu
     max_tokens: config.maxOutputTokens,
     system: config.systemPrompt,
     messages: [{ role: 'user', content: userMessage }],
+    tools: [JUDGE_OUTPUT_TOOL],
+    tool_choice: { type: 'tool', name: 'judge_output' },
   })
 
-  const rawContent = response.content
-    .filter((block): block is Anthropic.TextBlock => block.type === 'text')
-    .map(block => block.text)
-    .join('\n')
-
-  const judgeOutput = parseJudgeOutput(rawContent)
+  const judgeOutput = parseStructuredResponse(response.content, 'judge_output', JudgeOutputSchema)
 
   // Calculate weighted totals
   const scores = judgeOutput.scores.map(s => ({
@@ -246,6 +258,8 @@ export async function callJudgeAgent(userMessage: string): Promise<JudgeCallResu
        s.ethics * 0.05) * 100
     ) / 100,
   }))
+
+  const rawContent = JSON.stringify(judgeOutput, null, 2)
 
   return {
     scores: {

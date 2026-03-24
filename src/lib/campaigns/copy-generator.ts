@@ -2,8 +2,10 @@
 // Generates platform-specific campaign copy + image prompts from Brand DNA using Claude Sonnet.
 // Follows the same Zod validation + no-retry pattern as src/lib/content/generator.ts.
 
+import type Anthropic from '@anthropic-ai/sdk'
 import { z } from 'zod'
 import { getAIClient } from '@/lib/ai/client'
+import { zodToToolSchema, parseStructuredResponse } from '@/lib/ai/features/structured'
 import { buildCampaignCopySystemPrompt, buildCampaignCopyUserMessage } from './prompts/campaign-copy'
 import type { BrandDNA, CampaignCopyResult, CampaignObjective } from './types'
 import type { SocialPlatform } from '@/lib/integrations/social/types'
@@ -26,18 +28,16 @@ const CopyResultSchema = z.object({
   variant: z.number().int().min(1),
 })
 
-const CopyResultsSchema = z.array(CopyResultSchema).min(1)
+// tool_use requires a root ZodObject — wrap the array in a container.
+const CopyResponseSchema = z.object({
+  results: z.array(CopyResultSchema).min(1),
+})
 
-// ─── JSON Extractor ───────────────────────────────────────────────────────────
-
-function extractJson(text: string): string {
-  const fenceMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
-  if (fenceMatch) return fenceMatch[1].trim()
-  const startIdx = text.indexOf('[')
-  const endIdx = text.lastIndexOf(']')
-  if (startIdx !== -1 && endIdx > startIdx) return text.slice(startIdx, endIdx + 1)
-  return text
-}
+const COPY_TOOL = zodToToolSchema(
+  'generate_copy',
+  CopyResponseSchema,
+  'Return all platform copy variants as a structured results array.'
+) as unknown as Anthropic.Tool
 
 // ─── Main Generator ───────────────────────────────────────────────────────────
 
@@ -66,22 +66,10 @@ export async function generateCampaignCopy(
     max_tokens: MAX_TOKENS,
     system: systemPrompt,
     messages: [{ role: 'user', content: userMessage }],
+    tools: [COPY_TOOL],
+    tool_choice: { type: 'tool', name: 'generate_copy' },
   })
 
-  const rawText = response.content
-    .filter(b => b.type === 'text')
-    .map(b => (b as { type: 'text'; text: string }).text)
-    .join('\n')
-
-  const jsonStr = extractJson(rawText)
-
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(jsonStr)
-  } catch (err) {
-    throw new Error(`Failed to parse campaign copy response as JSON: ${err instanceof Error ? err.message : String(err)}`)
-  }
-
-  const results = CopyResultsSchema.parse(parsed)
+  const { results } = parseStructuredResponse(response.content, 'generate_copy', CopyResponseSchema)
   return results as CampaignCopyResult[]
 }
