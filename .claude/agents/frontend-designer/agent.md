@@ -32,7 +32,7 @@ Scientific Luxury design system — STRICTLY enforced.
 | Text | `gray-100` on dark surfaces | |
 | Corners | `rounded-sm` ONLY | Never `rounded-lg`, `rounded-xl` etc |
 | Animation | Framer Motion ONLY | Never CSS transitions |
-| Icons | Lucide React ONLY | 20px nav, 16px inline |
+| Icons | AI-generated custom icons ONLY | No Lucide (deprecated per standards agent), no generic icon libraries |
 
 **NO custom hex values.** Use Tailwind palette + CSS variables for the above.
 
@@ -120,4 +120,4 @@ src/components/
 - Use `rounded-lg`, `rounded-xl`, `rounded-full` (only `rounded-sm`)
 - Use custom hex values (use design system tokens)
 - Use emoji in UI navigation (only in business card context)
-- Use any icon library except Lucide React
+- Use Lucide React or any generic icon library (AI-generated custom icons only — enforced by standards agent)

@@ -50,23 +50,35 @@ async def test_api_key(service: str, key: str) -> bool:
 
 ### 4. WRITE
 
-```python
-def create_env_file(keys: dict):
-    """Create .env file with validated keys."""
+Write to `.env.local` (Next.js convention — automatically gitignored by Next.js scaffold):
 
-    # Write .env
-    with open('.env', 'w') as f:
-        for key, value in keys.items():
-            f.write(f"{key}={value}\n")
+```bash
+# Create or update .env.local (never commit)
+echo "SUPABASE_URL=https://..." >> .env.local
+echo "SUPABASE_ANON_KEY=..." >> .env.local
 
-    # Update .gitignore
-    ensure_in_gitignore('.env')
-
-    # Create .env.example (no secrets)
-    with open('.env.example', 'w') as f:
-        for key in keys.keys():
-            f.write(f"{key}=your_{key.lower()}_here\n")
+# Create .env.example with placeholder values only (safe to commit)
+cp .env.local .env.example
+sed -i 's/=.*/=your_value_here/' .env.example
 ```
+
+**NEVER log env var values.** Even in debug output. Use `***` or `[REDACTED]`.
+
+### Vercel Env Sync
+
+After setting local `.env.local`, sync to Vercel:
+
+```bash
+# Push all env vars to Vercel (replaces existing)
+vercel env pull .env.local           # pull from Vercel → local (if Vercel is source of truth)
+vercel env add VARIABLE_NAME         # add a new var interactively
+
+# Or via CLI with project link
+vercel link                          # link to Vercel project first
+vercel env ls                        # verify all vars are set in Vercel
+```
+
+Required Vercel environments: `production`, `preview`, `development` (set separately per env).
 
 ### 5. VERIFY
 
@@ -176,9 +188,21 @@ def check_key_age(service: str, created_date: datetime) -> str:
     return "✅ OK"
 ```
 
+## Execution Guardian Integration
+
+Before writing any env changes, check with the `execution-guardian` skill if:
+- The change affects a production key (`SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `STRIPE_SECRET_KEY`)
+- The change touches the Vercel production environment
+
+Guardian will assess blast radius. If confidence < 80%, escalate to human review before proceeding.
+
+Reference: `.skills/custom/execution-guardian/SKILL.md`
+
 ## Never
 
 - Skip validation
 - Write keys without testing
-- Forget .gitignore update
+- Forget `.gitignore` / `.env.local` gitignore entry
 - Use same keys for dev/prod
+- Log API key values in any output (use `***` mask)
+- Store `SUPABASE_SERVICE_ROLE_KEY` in client-accessible env vars (must be server-only)

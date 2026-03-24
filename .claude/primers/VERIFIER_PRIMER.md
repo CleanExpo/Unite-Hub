@@ -474,7 +474,29 @@ def generate_report(self, result: VerificationResult) -> str:
     return report
 ```
 
+## Truth Finder Integration Gate
+
+Before verifying any claim that involves external data (statistics, regulatory requirements, API behaviour, or factual assertions):
+
+1. Check `.claude/VAULT-INDEX.md` for an existing verified entry
+2. If found and < 12 months old → use that confidence score; skip re-verification
+3. If not found → delegate to the **truth-finder agent** for source verification before proceeding
+4. Never verify factual claims yourself — that is the Truth Finder's exclusive role
+
+```python
+async def verify_factual_claim(self, claim: str) -> VerificationResult:
+    # ALWAYS delegate factual claims to truth-finder
+    vault_entry = self.check_vault_index(claim)
+    if vault_entry and vault_entry.age_months < 12:
+        return VerificationResult(verified=True, confidence=vault_entry.confidence)
+
+    # Escalate to truth-finder — do not self-verify
+    raise DelegateTo("truth-finder", claim=claim, context="Factual verification required")
+```
+
 ## Escalation Threshold
+
+After **3 consecutive failures** on the same task, escalate to human review. Do not attempt a 4th approach.
 
 ```python
 class VerificationTracker:

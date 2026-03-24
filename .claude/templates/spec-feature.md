@@ -95,6 +95,15 @@ interface [FeatureName] {
 - External packages: [package@version, ...]
 - Internal modules: [module, ...]
 
+### Skill Dependencies
+
+| Skill | Path | Used For |
+|-------|------|----------|
+| [skill-name] | `.skills/custom/[skill]/SKILL.md` | [what this feature delegates to it] |
+| [skill-name] | `.skills/custom/[skill]/SKILL.md` | [what this feature delegates to it] |
+
+> Identify all `.skills/custom/` entries that agents will invoke during implementation. Skills without a matching SKILL.md file will silently fail at runtime.
+
 ---
 
 ## 4. Design Requirements
@@ -206,9 +215,20 @@ interface [FeatureName] {
 
 ## 7. Related Documentation
 
-**Skills**: [.claude/skills/skill-name.md]
 **Design Tokens**: `.claude/data/design-tokens.json`
 **Related Features**: [Links to related specs]
+
+### Agent Capability Mapping
+
+| Agent | Role in This Feature | Authority Level |
+|-------|---------------------|-----------------|
+| `senior-fullstack` | API routes, service layer, hooks | Primary implementor |
+| `frontend-designer` | Component design, animations | Design gate |
+| `database-architect` | Schema changes, RLS policies | Required for DB changes |
+| `verification` | Independent test/build verification | Gate before merge |
+| [additional-agent] | [specific responsibility] | [level] |
+
+> Remove unused agents. Every agent listed must have a clearly scoped responsibility — no overlapping ownership.
 
 ---
 

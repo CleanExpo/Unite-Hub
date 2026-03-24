@@ -100,8 +100,27 @@ feature/*     — Feature branches (Vercel preview)
 fix/*         — Bug fixes (Vercel preview)
 ```
 
+## Merge Gate Checklist
+
+Every PR to `main` must pass ALL of the following before merge is allowed:
+
+```
+[ ] lint       — pnpm turbo run lint           (0 errors)
+[ ] type-check — pnpm turbo run type-check      (0 errors)
+[ ] tests      — pnpm turbo run test            (all pass)
+[ ] build      — pnpm build                     (success, no warnings)
+[ ] bundle     — First Load JS < 250KB per route
+[ ] supabase   — Migrations applied, RLS exists on all new tables
+[ ] types      — src/types/database.ts regenerated after migrations
+[ ] env vars   — .env.example updated if new vars added
+[ ] Phill      — Human approval gate (production deploys only)
+```
+
+Block merge if any item fails. CI enforces lint/type-check/tests. Bundle and Supabase checks are manual pre-PR steps.
+
 ## Never
 - Commit actual secret values
 - Deploy to production without CI passing
 - Bypass human approval gate for production deploys
 - Force-push to main or the rebuild branch
+- Merge a PR with failing checks (even "minor" lint warnings)

@@ -87,6 +87,56 @@ supabase/seeds/config.sql       -- App configuration
 # NEVER seed: credentials, real API keys, PII
 ```
 
+### RLS Policy Template (copy-paste per table)
+
+```sql
+ALTER TABLE public.{table_name} ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.{table_name} FORCE ROW LEVEL SECURITY;
+
+CREATE POLICY "{table_name}_select" ON public.{table_name}
+  FOR SELECT USING (founder_id = auth.uid());
+
+CREATE POLICY "{table_name}_insert" ON public.{table_name}
+  FOR INSERT WITH CHECK (founder_id = auth.uid());
+
+CREATE POLICY "{table_name}_update" ON public.{table_name}
+  FOR UPDATE USING (founder_id = auth.uid())
+  WITH CHECK (founder_id = auth.uid());
+
+CREATE POLICY "{table_name}_delete" ON public.{table_name}
+  FOR DELETE USING (founder_id = auth.uid());
+```
+
+### Migration Consolidation Strategy
+
+With 455 legacy migrations:
+
+1. **Audit**: Run `ls supabase/migrations/ | wc -l` → count. Output report to `.claude/audits/migrations-audit.md`
+2. **Classify**: KEEP (active schema), DUPLICATE (same seq number), ORPHANED (references removed tables)
+3. **Baseline**: Create one clean `YYYYMMDDHHMMSS_nexus_2_0_baseline.sql` with all current tables, indexes, RLS
+4. **Archive**: Move obsolete migrations to `supabase/migrations/_archived/`
+5. **Verify**: `supabase db reset` on local passes clean with baseline only
+
+Rule: Never delete migrations that have been applied to production. Archive ≠ delete.
+
+### pgsodium Vault Pattern (ADR-006)
+
+Use `vault.secrets` via SECURITY DEFINER RPCs. No direct vault reads from application code.
+
+```sql
+-- Store a credential (server-side only)
+SELECT vault.create_secret(
+  'secret-value',        -- the actual secret
+  'credential_name',     -- unique name for lookup
+  'Description of what this is used for'
+);
+
+-- Application reads via RPC wrapper (enforces founder check)
+-- See src/lib/vault/encryption.ts for the TypeScript interface
+```
+
+Reference: `ADR-006` in `.claude/memory/architectural-decisions.md`
+
 ## Audit Output Format
 When auditing migrations, output to `.claude/audits/migrations-audit.md`:
 - Total count by status (keep/remove/consolidate)

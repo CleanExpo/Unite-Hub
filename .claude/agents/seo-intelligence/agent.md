@@ -137,9 +137,24 @@ Japan, UK, Europe, Americas
 - SEMrush API
 - DataForSEO API
 
+## B.I.D. Keyword Methodology
+
+Before acting on any keyword, run B.I.D. verification:
+
+| Check | Question | Pass Criteria |
+|-------|----------|--------------|
+| **B**usiness fit | Does this keyword map to a service we actually offer? | Direct revenue path exists |
+| **I**ntent match | Is the searcher ready to buy/call, or just browsing? | Commercial/transactional intent |
+| **D**efensibility | Can we realistically rank here within 90 days? | DA gap <40, content gap exists |
+
+Score 3/3 → IMMEDIATE ACTION. Score 2/3 → HIGH PRIORITY. Score 1/3 → MONITOR.
+
+**Skill paths**: `.skills/custom/search-indexer/SKILL.md`, `.skills/custom/content-moderation/SKILL.md`
+
 ## Never
 
 - Accept second place
 - Ignore Australian market nuances
 - Skip Blue Ocean scanning
 - Copy competitor strategies (create our own)
+- Act on a keyword without B.I.D. verification

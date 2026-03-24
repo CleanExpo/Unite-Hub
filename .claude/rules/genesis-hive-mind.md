@@ -50,3 +50,5 @@ pnpm build                    # Build (deploy phases)
 | "what is", "explain", "how does" | DISCOVERY_MODE |
 
 Full phase details, execution chunks, emergency protocols: `.skills/custom/genesis-orchestrator/SKILL.md`
+
+**Agent Harness**: Multi-agent tool loops follow the patterns in `.claude/AGENT_HARNESS.md` — tool loop exit conditions, error escalation, and iteration caps.

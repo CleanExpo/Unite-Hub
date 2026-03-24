@@ -9,7 +9,7 @@ design_tokens_version: 1.0.0
 
 # Phase X: [Phase Name] Specification
 
-## 1. Vision (Phase 1 of 6)
+## 1. Vision (Spec Interview Phase 1 of 6)
 
 ### Problem Statement
 
@@ -29,7 +29,7 @@ design_tokens_version: 1.0.0
 
 ---
 
-## 2. Users (Phase 2 of 6)
+## 2. Users (Spec Interview Phase 2 of 6)
 
 ### Primary User Personas
 
@@ -59,7 +59,7 @@ design_tokens_version: 1.0.0
 
 ---
 
-## 3. Technical Approach (Phase 3 of 6)
+## 3. Technical Approach (Spec Interview Phase 3 of 6)
 
 ### Architecture Overview
 
@@ -95,7 +95,7 @@ design_tokens_version: 1.0.0
 
 ---
 
-## 4. Design Requirements (Phase 4 of 6)
+## 4. Design Requirements (Spec Interview Phase 4 of 6)
 
 ### Australian Context ✅ REQUIRED
 
@@ -141,7 +141,7 @@ design_tokens_version: 1.0.0
 
 ---
 
-## 5. Business Context (Phase 5 of 6)
+## 5. Business Context (Spec Interview Phase 5 of 6)
 
 **Priority**: [🔴 High / 🟡 Medium / 🟢 Low]
 
@@ -172,7 +172,7 @@ design_tokens_version: 1.0.0
 
 ---
 
-## 6. Implementation Plan (Phase 6 of 6)
+## 6. Implementation Plan (Spec Interview Phase 6 of 6)
 
 ### Build Order (Sequential Steps)
 
@@ -246,10 +246,17 @@ design_tokens_version: 1.0.0
 - [Agent 1]: Responsible for [task]
 - [Agent 2]: Responsible for [task]
 
-### Hooks Triggered
+### Hook Integration
 
-- [Hook name]: When [condition], executes [action]
-- [Hook name]: When [condition], executes [action]
+List every `.claude/hooks/` entry that fires during this phase's implementation:
+
+| Hook | Trigger Event | What It Enforces |
+|------|--------------|------------------|
+| `pre-tool-use` | Before any file write | Immutable file guard (CONSTITUTION, compass, design-tokens) |
+| `post-tool-use` | After bash commands | Log capture for verification evidence |
+| [custom-hook] | [condition] | [what it enforces for this phase] |
+
+> Review `.claude/settings.json` hooks section to confirm which hooks are active. A hook that blocks a tool call will surface in the PostToolUse output — treat it as a hard gate, not a warning.
 
 ### Design Tokens
 

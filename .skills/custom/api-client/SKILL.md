@@ -1,3 +1,12 @@
+---
+name: api-client
+type: skill
+version: 1.0.0
+priority: 2
+domain: backend
+description: Type-safe fetch wrapper with interceptors, retry, and error normalisation for Next.js API clients
+---
+
 # API Client
 
 > Type-safe fetch wrapper with interceptors, request/response transforms, and automatic retry for NodeJS-Starter-V1.

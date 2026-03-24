@@ -161,9 +161,26 @@ async def verify_before_publish(content: Content) -> Result:
     )
 ```
 
+## Vault Index Integration
+
+Previously verified claims are stored in `.claude/VAULT-INDEX.md`. Before re-verifying a claim:
+
+1. Search VAULT-INDEX for an existing verified entry
+2. If found and < 12 months old → reuse the confidence score and citation
+3. If found but outdated → re-verify and update the entry
+4. If not found → run the full verification pipeline, then add to VAULT-INDEX
+
+Format for VAULT-INDEX entries:
+```
+| Claim | Confidence | Source | Verified Date | Tier |
+|-------|-----------|--------|---------------|------|
+| "X is required by Privacy Act 1988 s.XX" | 97% | legislation.gov.au | 15/01/2026 | T1 |
+```
+
 ## Never
 
 - Publish without verification
 - Use Tier 6 sources
 - Skip confidence scoring
 - Accept <40% confidence
+- Re-verify a claim that already has a current VAULT-INDEX entry

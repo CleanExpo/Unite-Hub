@@ -22,11 +22,11 @@ Parse the user's input into the 7-field template. If any field is missing, ask O
 ```
 WHAT:       [One sentence — what is being built or changed]
 WHERE:      [Which page, URL, or area of the app]
-WHO:        [Which user role — admin, student, instructor, public, all]
+WHO:        [Which user role — Phill/founder, admin, public]
 WHEN:       [What triggers this — click, page load, form submit, schedule]
 SHOULD SEE: [What the user sees when it works — be specific and visual]
 DON'T DO:   [What to avoid — features to preserve, patterns to skip]
-SUCCESS:    [Observable outcomes — how Phil will know it's right]
+SUCCESS:    [Observable outcomes — how Phill will know it's right]
 ```
 
 ---
@@ -46,8 +46,9 @@ Files I'll create or modify:
 
 Integration points:
 - [ ] Navigation link added to [location]
-- [ ] API route mounted in [router file]
-- [ ] Auth gate: [role] only
+- [ ] API route created at src/app/api/[path]/route.ts
+- [ ] Auth gate: founder_id isolation via Supabase RLS
+- [ ] Component created at src/components/features/[name]/
 - [ ] Documentation updated
 
 Does this match what you had in mind? Say "go" to proceed.
@@ -61,18 +62,19 @@ Does this match what you had in mind? Say "go" to proceed.
 
 Before writing code:
 
-1. **Read `ROUTE_REFERENCE.md`** (if it exists) — find the section for the page/feature being changed
-2. **Read `CLAUDE.md`** — check architecture routing for correct file locations
-3. **Read relevant existing files** — understand what already exists before adding to it
-4. **Check for existing implementations** — search before creating (anti-duplication)
+1. **Read `CLAUDE.md`** — check architecture routing for correct file locations
+2. **Read relevant existing files** — understand what already exists before adding to it
+3. **Check for existing implementations** — search before creating (anti-duplication)
+4. **Verify the layer** — components go in `src/components/`, API routes in `src/app/api/`, services in `src/server/services/`, repositories in `src/server/repositories/`
 
 Announce what you found:
 ```
 CONTEXT:
-  PAGE: /student/credentials
-  FILE: apps/web/app/(dashboard)/student/credentials/page.tsx
-  BACKEND: apps/backend/src/api/routes/lms_credentials.py
-  TABLES: lms_credentials, lms_enrollments
+  PAGE: /contacts
+  COMPONENT FILE: src/components/features/contacts/
+  API ROUTE: src/app/api/contacts/route.ts
+  SERVICE: src/server/services/contacts.service.ts
+  TABLES: contacts (with founder_id RLS)
   KNOWN ISSUES: (none listed)
 ```
 
@@ -80,7 +82,12 @@ CONTEXT:
 
 ## STEP 4: BUILD
 
-Execute the implementation. Follow project rules, design system, and testing discipline.
+Execute the implementation. Follow project rules:
+- Scientific Luxury design system (OLED Black `#050505`, Cyan `#00F5FF`, `rounded-sm`)
+- `founder_id` isolation on every Supabase query
+- `handleApiError` on every API route
+- `pnpm` not npm
+- TypeScript strict mode throughout
 
 ---
 
@@ -88,13 +95,14 @@ Execute the implementation. Follow project rules, design system, and testing dis
 
 Before claiming completion, verify all integration points:
 
-- [ ] **Navigation**: Can the user get to this page/feature from the existing app? (sidebar link, menu item, breadcrumb)
-- [ ] **Route mounting**: Is the backend endpoint registered in the main router?
-- [ ] **Auth protection**: Is the page/endpoint behind the correct auth gate?
-- [ ] **API client**: Does the frontend actually call the backend endpoint?
+- [ ] **Navigation**: Can the user get to this page/feature from the existing app? (sidebar link, menu item)
+- [ ] **Route mounting**: Is the API endpoint registered and accessible?
+- [ ] **Auth protection**: Is the page/endpoint behind Supabase auth + founder_id isolation?
+- [ ] **API client**: Does the frontend actually call the API endpoint?
 - [ ] **Design system**: Are colours, corners, typography from design tokens (not hardcoded)?
 - [ ] **Error states**: What happens when the API fails? Empty state shown?
-- [ ] **Documentation**: Updated ROUTE_REFERENCE.md if routes changed?
+- [ ] **Loading states**: Does the page have `loading.tsx` and `error.tsx`?
+- [ ] **Type safety**: Does `pnpm run type-check` pass?
 
 ---
 

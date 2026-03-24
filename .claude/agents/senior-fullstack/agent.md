@@ -75,6 +75,53 @@ Zero placeholders. Zero TODO comments. Zero `console.log` in production. Zero `a
 - Animation: Framer Motion only — no CSS transitions
 - Typography: JetBrains Mono (data), Editorial (labels)
 
+## API Error Handling
+
+All API route handlers follow this pattern — no raw errors exposed to clients:
+
+```typescript
+// src/app/api/[resource]/route.ts
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  try {
+    const body: unknown = await request.json()
+    const validated = resourceSchema.parse(body)   // throws ZodError on invalid
+    const result = await resourceService.create(validated, founderId)
+    return NextResponse.json({ data: result }, { status: 201 })
+  } catch (error) {
+    return handleApiError(error)  // from src/server/errors/index.ts
+  }
+}
+```
+
+`handleApiError` maps: `ZodError` → 400, `NotFoundError` → 404, `ForbiddenError` → 403, unknown → 500.
+Never return raw Supabase errors or stack traces to the client.
+
+## Test Coverage Expectations
+
+| Tier | Coverage Target | What to test |
+|------|----------------|-------------|
+| API routes (`src/app/api/`) | 80%+ | Happy path, validation failure, auth failure |
+| Services (`src/server/services/`) | 90%+ | Business logic, edge cases |
+| Hooks (`src/hooks/`) | 70%+ | Loading, error, success states |
+| UI components | Snapshot + interaction | Critical paths only |
+
+Run: `pnpm vitest run --coverage`
+
+## Bundle Size Budget
+
+- Total JS budget: **<250KB** (First Load JS)
+- Per-route limit: **<100KB** additional JS
+- Heavy components (editor, charts, kanban): dynamic import with `React.lazy`
+- Check: `pnpm build` outputs First Load JS per route — flag anything >100KB
+
+```typescript
+// Heavy components must be lazy-loaded
+const NovelEditor = dynamic(() => import('@/components/founder/editor/NovelEditor'), {
+  loading: () => <EditorSkeleton />,
+  ssr: false,
+})
+```
+
 ## Never
 - Use `any` TypeScript type
 - Leave TODO comments in merged code
@@ -82,3 +129,5 @@ Zero placeholders. Zero TODO comments. Zero `console.log` in production. Zero `a
 - Write placeholder or mock implementations
 - Use CSS transitions (Framer Motion only)
 - Use `rounded-lg` or other border radius values
+- Expose raw Supabase or database errors to clients
+- Ship a route without a `loading.tsx` and `error.tsx`

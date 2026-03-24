@@ -89,3 +89,26 @@
 **Decision**: Each search request creates an AbortController. Previous controller is aborted before issuing a new request. `AbortError` is caught and loading state preserved (not set to false on abort).
 **Reason**: Rapid typing causes multiple in-flight requests. Without cancellation, a slow early response can overwrite a fast later response (race condition). `setLoading(false)` in `finally` block incorrectly cleared the spinner on abort.
 **Alternatives rejected**: Debounce-only without abort (race condition persists for fast typists), request deduplication middleware (more complex)
+
+### ADR-R11: NodeJS-Starter-V1 Framework Upgrade — `.claude/` Strengthening (24/03/2026)
+**Decision**: Full sweep of all `.claude/` files to resolve conflicts, remove stale references, and add cross-references across agents, rules, commands, primers, and templates. ~30 file edits + 1 new file (`rules/database/supabase.md`).
+**Reason**: Post-upgrade audit (Phases 1–5 of NodeJS-Starter-V1 template) revealed critical conflicts (Lucide deprecation mismatch, stale Python/FastAPI refs in a Next.js-only project), missing machine-readable YAML frontmatter on skills, and significant gaps in cross-agent documentation (no Supabase rules file, no TanStack Query patterns in `/new-feature`, no en-AU defaults in BASE_PRIMER).
+**Key changes**:
+- `frontend-designer/agent.md`: Lucide → AI-generated custom icons (matches `standards/agent.md`)
+- `rules/database/supabase.md`: Created — covers `createServerClient` vs `createBrowserClient`, founder_id isolation, RLS templates, pgsodium vault (ADR-006), audit logging, connection pooling
+- YAML frontmatter: Added to `api-client`, `oauth-flow`, `audit-trail` skills for auto-discovery
+- `verification/agent.md`: Python verification commands removed; Next.js only
+- Primers: `BASE_PRIMER.md` now has en-AU locale defaults table; `VERIFIER_PRIMER.md` now has Truth Finder delegation gate + 3-failure escalation threshold
+- Commands: All `npm` → `pnpm`; Supabase tier added to `/verify`; TanStack Query + RLS policy template added to `/new-feature`
+**Alternatives rejected**: Piecemeal fixes per session (compounds drift), automated migration script (too blunt — risks overwriting intentional content)
+
+### ADR-R12: NodeJS-Starter-V1 Upstream Integration — CEO Board + PI Workspace (24/03/2026)
+**Decision**: Integrate three major capability upgrades from NodeJS-Starter-V1 (commits eead87e + 64fdcd5, 23/03/2026): CEO Board Deliberation System, Agent Orchestrator Swarm, and PI Agent Workspace (`.pi/`). 17 new skills added, 5 new commands, 13 `.pi/` workspace files. Python/FastAPI-specific skills (docker-patterns, infrastructure-as-code, graphql-patterns, saga-pattern, cron-scheduler) skipped as Unite-Group runs on Next.js/Vercel exclusively.
+**Reason**: CEO Board provides 9-persona strategic deliberation with persistent expertise memory — directly applicable to governing MACAS expansion decisions and 7-business strategy. PI Workspace creates a structured runtime home for multi-agent reasoning artefacts separate from the `.claude/` configuration layer. Agent Orchestrator formalises existing swarm patterns.
+**Key adaptations**:
+- `/generate-route-reference`: FastAPI route scanning → Next.js `src/app/api/**/*.ts` App Router
+- `custom-oracle.md`: Pre-seeded with Unite-Group context (7 businesses, MACAS, Synthex, Brisbane/QLD, Privacy Act 1988, ATO 7-year rule)
+- `_EXAMPLE-macas-expansion.md`: Created Unite-Group-specific golden example (MACAS tax filing expansion) using AUD, pgsodium vault, ATO compliance pathway
+- `agent-orchestrator/SKILL.md`: Engineering domain restricted to TypeScript/Next.js (no Python backend references)
+- Brief template: Added "Affects Businesses" field; constraints reference Privacy Act/ATO/ASIC
+**Alternatives rejected**: Selective cherry-pick of CEO Board only (misses compounding value of swarm + PI memory), full upstream sync without adaptation (would introduce Python/FastAPI stale refs)

@@ -77,10 +77,27 @@ Location: `.skills/custom/`
 | **system-supervisor** | Architecture drift detection, silent failure scanning, hallucination prevention, and feature completeness audit | "drift", "dead code", "completeness", "audit", "integrity", "silent failure" |
 | **playwright-browser** | Playwright CLI and MCP tools for headless browser automation, E2E testing, screenshots, and web scraping | "playwright", "E2E", "browser test", "screenshot", "headless", "automation" |
 | **claude-browser** | Claude Chrome extension tools for personal browser automation in logged-in sessions | "chrome", "personal browser", "form fill", "logged in", "tab management" |
+| **ceo-board** | 9-persona CEO board deliberation with persistent expertise files and DD/MM/YYYY memos | "CEO board", "strategic decision", "board deliberation", "ceo-begin", "deliberate" |
+| **agent-orchestrator** | Swarm routing — hub-and-spoke, chain, fan-out, single agent across 8 specialist domains | "orchestrate agents", "swarm", "route task", "dispatch agents", "fan-out", "chain agents" |
+| **brand-ambassador** | Brand voice, platform content, A/B caption variants for Synthex AI social pipeline | "brand voice", "brand post", "social content", "caption", "Instagram", "TikTok", "LinkedIn" |
+| **senior-saas-pm** | Full SaaS lifecycle — Discovery → Architecture → Build → Launch → Optimisation with AUS compliance | "product roadmap", "feature spec", "PM process", "discovery", "sprint", "user story" |
+| **dispatching-parallel-agents** | Parallel agent dispatch — sub-task decomposition, `Promise.allSettled`, independent failure isolation | "parallel agents", "fan-out", "concurrent", "dispatch subagents", "independent tasks" |
+| **delegation-planner** | Orchestrator task planning — decompose work packages, assign to specialist agents | "delegation plan", "task breakdown", "orchestrator plan", "work package", "assign agent" |
+| **model-currency-checker** | Validates model IDs are current — prevents stale Sonnet/Opus/Haiku references | "model ID", "model version", "claude model", "stale model", "current model" |
+| **evidence-verifier** | 4-tier evidence verification — T1 Official → T2 Trusted → T3 Community → T4 Unverified | "verify claim", "evidence", "source check", "fact check", "verification tier" |
+| **systematic-debugging** | Root cause analysis — hypothesis tree, isolation, minimal reproduction, fix, regression guard | "debug", "root cause", "systematic debug", "diagnose", "bug investigation", "isolate" |
+| **tdd** | Test-driven development — red/green/refactor cycle, test-first patterns, Vitest/Playwright | "TDD", "test-driven", "test first", "write tests first", "red green refactor" |
+| **finishing-branch** | Branch completion checklist — types pass, tests pass, lint clean, PR ready for review | "finish branch", "branch ready", "PR checklist", "complete feature", "close branch" |
+| **finished-audit** | Done-ness gate — verify task is truly complete, no silent gaps, acceptance criteria met | "audit complete", "done check", "finished audit", "completeness check", "done gate" |
+| **visual-excellence-enforcer** | Design quality gate — enforces Scientific Luxury standards on all UI output | "visual quality", "design gate", "UI audit", "Scientific Luxury", "design excellence" |
+| **definition-of-done-builder** | Task completion standards — acceptance criteria, test coverage, review requirements | "definition of done", "DoD", "acceptance criteria", "completion standards", "done criteria" |
+| **idea-to-production** | Idea pipeline — capture → validate → spec → build → launch across Unite-Group's 7 businesses | "idea pipeline", "idea to prod", "new idea", "validate idea", "feature pipeline" |
+| **outcome-translator** | Business value translation — converts technical changes to outcomes in AUD | "business value", "ROI", "outcome", "business case", "value translation", "AUD impact" |
+| **git-worktrees** | Git worktree patterns for parallel feature branches without context switching | "worktree", "git worktree", "parallel branches", "branch isolation", "git parallel" |
 
 ### Identified Gaps
 
-No gaps identified. All **59 skills** are installed. Use `/skill-manager analyse` to run automated gap analysis across all installed skills and detect missing capabilities.
+No gaps identified. All **76 skills** are installed (59 original + 17 added 24/03/2026 — NodeJS-Starter-V1 upstream integration). Use `/skill-manager analyse` to run automated gap analysis across all installed skills and detect missing capabilities.
 
 ## Skill Priority
 
@@ -145,6 +162,23 @@ When multiple skills could apply, use this priority order:
 57. **web-design-guidelines** - For accessibility and UX audits
 58. **playwright-browser** - For headless browser automation and E2E testing
 59. **claude-browser** - For personal Chrome browser automation
+60. **ceo-board** - For CEO board deliberations and strategic decisions
+61. **agent-orchestrator** - For swarm routing and multi-agent dispatch patterns
+62. **brand-ambassador** - For brand voice, social content, and A/B caption variants
+63. **senior-saas-pm** - For SaaS product lifecycle management
+64. **dispatching-parallel-agents** - For parallel agent task decomposition and dispatch
+65. **delegation-planner** - For orchestrator task planning and work package assignment
+66. **model-currency-checker** - For validating current Claude model IDs
+67. **evidence-verifier** - For 4-tier evidence verification and source checking
+68. **systematic-debugging** - For root cause analysis and structured debugging
+69. **tdd** - For test-driven development and test-first patterns
+70. **finishing-branch** - For branch completion and PR readiness checks
+71. **finished-audit** - For done-ness gate verification
+72. **visual-excellence-enforcer** - For Scientific Luxury design quality gate
+73. **definition-of-done-builder** - For acceptance criteria and completion standards
+74. **idea-to-production** - For idea pipeline across 7 businesses
+75. **outcome-translator** - For business value translation in AUD
+76. **git-worktrees** - For parallel feature branches
 
 ## Skill Activation
 

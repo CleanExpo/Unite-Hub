@@ -64,6 +64,21 @@ export function useExample() {
 - Import with `@/` prefix: `import { Button } from "@/components/ui/button"`
 - Server Components by default, add `"use client"` only when needed
 - Every async component needs loading/error/empty states
+- **Icons**: AI-generated custom SVGs only. NO Lucide React. NO Hero Icons. (Deprecated per `standards/agent.md`)
+- **Border radius**: `rounded-sm` only. Never `rounded-lg`, `rounded-xl`, `rounded-full`
+- **Bundle budget**: First Load JS < 250KB per route. Dynamic import heavy components.
+
+## Route Segment Requirements
+
+Every route segment directory MUST contain:
+```
+src/app/[segment]/
+  page.tsx       # Main content (Server Component)
+  loading.tsx    # Skeleton/spinner shown during streaming
+  error.tsx      # Error boundary (Client Component with 'use client')
+```
+
+`loading.tsx` and `error.tsx` are not optional — blank screens and unhandled errors are not acceptable.
 
 ## Anti-Patterns
 

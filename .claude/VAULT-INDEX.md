@@ -2,7 +2,7 @@
 
 > **Purpose**: O(1) asset discovery for all `.claude/` and `.skills/` resources.
 > **Regenerate**: Run `/vault-init` to rebuild from filesystem scan.
-> **Last updated**: 20/03/2026 (v2 — manifest-first skills added)
+> **Last updated**: 24/03/2026 (v3 — upstream integration: 17 new skills, 5 commands, .pi/ workspace)
 
 ---
 
@@ -105,7 +105,7 @@
 
 ---
 
-## Commands (14)
+## Commands (19)
 
 > Path prefix: `.claude/commands/`
 
@@ -125,6 +125,11 @@
 | `[[commands/vault-init]]` | `/vault-init` | Regenerate Vault Index ⭐ NEW |
 | `[[commands/done]]` | `/done` | Completion verification gate ⭐ NEW |
 | `[[commands/discuss]]` | `/discuss` | Architecture discussion in PLAN mode ⭐ NEW |
+| `[[commands/ceo-begin]]` | `/ceo-begin` | Launch CEO board deliberation from a `.pi/ceo-agents/briefs/` file |
+| `[[commands/swarm-audit]]` | `/swarm-audit` | Audit swarm architecture health — agents, skills, toolsheds |
+| `[[commands/build]]` | `/build` | Full-stack feature build — WHO/WHAT/HOW/WHERE/DONE checklist |
+| `[[commands/hey-claude]]` | `/hey-claude` | Context load confirmation — lists all active Unite-Group context |
+| `[[commands/generate-route-reference]]` | `/generate-route-reference` | Scan `src/app/api/**/*.ts` and generate typed route reference |
 
 ---
 
@@ -163,7 +168,7 @@
 
 ---
 
-## Skills (62)
+## Skills (79)
 
 > Path prefix: `.skills/custom/{id}/SKILL.md`
 > Priority classification: See `.claude/skills/SKILLS-INDEX.md`
@@ -176,15 +181,15 @@
 
 ### P2 — High (On-Demand)
 
-`[[skills/api-contract]]` `[[skills/api-client]]` `[[skills/error-taxonomy]]` `[[skills/retry-strategy]]` `[[skills/structured-logging]]` `[[skills/resilience-patterns]]` `[[skills/oauth-flow]]` `[[skills/rbac-patterns]]` `[[skills/input-sanitisation]]` `[[skills/playwright-browser]]` `[[skills/ralph-wiggum]]`
+`[[skills/api-contract]]` `[[skills/api-client]]` `[[skills/error-taxonomy]]` `[[skills/retry-strategy]]` `[[skills/structured-logging]]` `[[skills/resilience-patterns]]` `[[skills/oauth-flow]]` `[[skills/rbac-patterns]]` `[[skills/input-sanitisation]]` `[[skills/playwright-browser]]` `[[skills/ralph-wiggum]]` `[[skills/dispatching-parallel-agents]]` `[[skills/delegation-planner]]` `[[skills/evidence-verifier]]` `[[skills/model-currency-checker]]`
 
 ### P3 — Standard
 
-`[[skills/audit-trail]]` `[[skills/api-versioning]]` `[[skills/blueprint-engine]]` `[[skills/cache-strategy]]` `[[skills/changelog-generator]]` `[[skills/ci-cd-patterns]]` `[[skills/claude-browser]]` `[[skills/content-moderation]]` `[[skills/cron-scheduler]]` `[[skills/csrf-protection]]` `[[skills/csv-processor]]` `[[skills/dashboard-patterns]]` `[[skills/data-transform]]` `[[skills/data-validation]]` `[[skills/docker-patterns]]` `[[skills/email-template]]` `[[skills/error-boundary]]` `[[skills/feature-flag]]` `[[skills/genesis-orchestrator]]` `[[skills/graceful-shutdown]]` `[[skills/graphql-patterns]]` `[[skills/health-check]]` `[[skills/i18n-patterns]]` `[[skills/infrastructure-as-code]]` `[[skills/markdown-processor]]` `[[skills/metrics-collector]]` `[[skills/notification-system]]` `[[skills/pdf-generator]]` `[[skills/pipeline-builder]]` `[[skills/queue-worker]]` `[[skills/rate-limiter]]` `[[skills/report-generator]]` `[[skills/saga-pattern]]` `[[skills/search-indexer]]` `[[skills/secret-management]]` `[[skills/skill-manager]]` `[[skills/slack-integration]]` `[[skills/state-machine]]` `[[skills/status-page]]` `[[skills/tracing-patterns]]` `[[skills/vector-search]]` `[[skills/webhook-handler]]` `[[skills/workflow-engine]]`
+`[[skills/audit-trail]]` `[[skills/api-versioning]]` `[[skills/blueprint-engine]]` `[[skills/cache-strategy]]` `[[skills/changelog-generator]]` `[[skills/ci-cd-patterns]]` `[[skills/claude-browser]]` `[[skills/content-moderation]]` `[[skills/cron-scheduler]]` `[[skills/csrf-protection]]` `[[skills/csv-processor]]` `[[skills/dashboard-patterns]]` `[[skills/data-transform]]` `[[skills/data-validation]]` `[[skills/docker-patterns]]` `[[skills/email-template]]` `[[skills/error-boundary]]` `[[skills/feature-flag]]` `[[skills/genesis-orchestrator]]` `[[skills/graceful-shutdown]]` `[[skills/graphql-patterns]]` `[[skills/health-check]]` `[[skills/i18n-patterns]]` `[[skills/infrastructure-as-code]]` `[[skills/markdown-processor]]` `[[skills/metrics-collector]]` `[[skills/notification-system]]` `[[skills/pdf-generator]]` `[[skills/pipeline-builder]]` `[[skills/queue-worker]]` `[[skills/rate-limiter]]` `[[skills/report-generator]]` `[[skills/saga-pattern]]` `[[skills/search-indexer]]` `[[skills/secret-management]]` `[[skills/skill-manager]]` `[[skills/slack-integration]]` `[[skills/state-machine]]` `[[skills/status-page]]` `[[skills/tracing-patterns]]` `[[skills/vector-search]]` `[[skills/webhook-handler]]` `[[skills/workflow-engine]]` `[[skills/systematic-debugging]]` `[[skills/tdd]]` `[[skills/finishing-branch]]` `[[skills/finished-audit]]` `[[skills/definition-of-done-builder]]`
 
 ### P4 — Optional
 
-`[[skills/notebooklm-second-brain]]` `[[skills/xaem-theme-ui]]` `[[skills/react-best-practices]]` `[[skills/genesis-orchestrator]]`
+`[[skills/notebooklm-second-brain]]` `[[skills/xaem-theme-ui]]` `[[skills/react-best-practices]]` `[[skills/genesis-orchestrator]]` `[[skills/visual-excellence-enforcer]]` `[[skills/brand-ambassador]]` `[[skills/agent-orchestrator]]` `[[skills/ceo-board]]` `[[skills/idea-to-production]]` `[[skills/outcome-translator]]` `[[skills/senior-saas-pm]]` `[[skills/git-worktrees]]`
 
 ---
 
@@ -263,6 +268,48 @@
 | `[[schemas/agent-frontmatter]]` | `agent-frontmatter.schema.md` | Required YAML fields for agent files ⭐ NEW |
 | `[[schemas/skill-frontmatter]]` | `skill-frontmatter.schema.md` | Required YAML fields for skill files ⭐ NEW |
 | `[[schemas/blueprint-frontmatter]]` | `blueprint-frontmatter.schema.md` | Required YAML fields for blueprint files ⭐ NEW |
+
+---
+
+## PI Agent Workspace (13)
+
+> Path prefix: `.pi/`
+> Purpose: Persistent Inference — living documentation, deliberation transcripts, agent expertise, decision memos, SVG artefacts
+> **Not inside `.claude/`** — sibling directory at repo root
+
+### CEO Board Workspace
+
+| Path | Purpose |
+|------|---------|
+| `.pi/README.md` | PI workspace overview and usage guide |
+| `.pi/ceo-agents/briefs/_TEMPLATE.md` | Brief template for strategic decisions (Affects Businesses field, AUD, Privacy Act/ATO/ASIC) |
+| `.pi/ceo-agents/briefs/_EXAMPLE-macas-expansion.md` | **Golden example brief**: MACAS tax filing expansion — ATO compliance pathway, pgsodium, AUD |
+| `.pi/ceo-agents/deliberations/` | Board deliberation transcripts (runtime output — `/ceo-begin`) |
+| `.pi/ceo-agents/memos/` | Decision memos (runtime output — DD/MM/YYYY naming) |
+| `.pi/ceo-agents/conversations/` | Agent conversation logs (runtime output) |
+| `.pi/ceo-agents/artifacts/` | SVG diagrams and data artefacts (runtime output) |
+
+### Board Member Expertise Files
+
+> Path prefix: `.pi/ceo-agents/expertise/`
+
+| File | Persona |
+|------|---------|
+| `ceo.md` | CEO — integrated thinking, execution-focused |
+| `revenue.md` | Revenue — growth levers, unit economics |
+| `product-strategist.md` | Product Strategist — user value, roadmap |
+| `technical-architect.md` | Technical Architect — systems, constraints |
+| `contrarian.md` | Contrarian — devil's advocate, risk identification |
+| `compounder.md` | Compounder — long-term compounding, delayed gratification |
+| `custom-oracle.md` | **Unite-Group Oracle** — 7 businesses, MACAS, Synthex, Brisbane/QLD, Privacy Act 1988 |
+| `market-strategist.md` | Market Strategist — positioning, competition |
+| `moonshot.md` | Moonshot — 10x thinking, exponential opportunity |
+
+### Shared Context
+
+| Path | Purpose |
+|------|---------|
+| `.pi/shared/context/_TEMPLATE.md` | Shared context template pre-filled with Unite-Group state (7 businesses table, AUS compliance) |
 
 ---
 

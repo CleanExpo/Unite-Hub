@@ -1,10 +1,13 @@
 ---
 name: api-contract
+type: skill
+version: 1.0.0
+priority: 2
+domain: backend
 description: >-
-  Typed API contract patterns enforcing consistency between FastAPI backend
-  (Pydantic response models) and Next.js frontend (Zod response schemas).
-  Covers schema location conventions, OpenAPI documentation, error response
-  contracts, and versioning strategy.
+  Typed API contract patterns enforcing consistency between Next.js API routes
+  (Zod request/response schemas) and frontend consumers. Covers schema location
+  conventions, error response contracts, and versioning strategy.
 license: MIT
 metadata:
   author: NodeJS-Starter-V1

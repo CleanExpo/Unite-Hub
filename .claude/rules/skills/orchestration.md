@@ -53,9 +53,30 @@ triggers: [migration, supabase, database, sql]
 - **Long Running** (`backend/LONG-RUNNING-AGENTS.md`): Multi-session agents
 - **Tool Use** (`backend/ADVANCED-TOOL-USE.md`): Tool calling patterns
 
+## Skills Index
+
+All available skills are indexed in `.claude/skills/SKILLS-INDEX.md`.
+Before creating a new skill, check the index to avoid duplication.
+
+## Skill Versioning & Deprecation Protocol
+
+```yaml
+# In skill frontmatter:
+version: 1.0.0           # Increment MINOR for additions, MAJOR for breaking changes
+deprecated: false         # Set true when superseded
+superseded_by: null       # Point to replacement skill name
+```
+
+**Deprecation steps**:
+1. Set `deprecated: true` and `superseded_by: new-skill-name` in frontmatter
+2. Add deprecation notice at top of skill body: `> ⚠️ DEPRECATED — use [new-skill-name] instead.`
+3. Update SKILLS-INDEX.md to move entry to Deprecated section
+4. Keep deprecated skill for 2 milestones before deletion (transition period)
+
 ## Critical Rules
 
 - Always require `core/VERIFICATION.md`
 - Use specific triggers, avoid generic ones
 - Include verification criteria in all skills
 - Chain dependencies correctly
+- Check SKILLS-INDEX before creating new skills (avoid duplicates)

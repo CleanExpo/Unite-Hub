@@ -70,7 +70,15 @@ cat .claude/memory/CONSTITUTION.md          # Re-read immutable rules
 cat .claude/memory/current-state.md         # Check last saved state
 cat .claude/memory/architectural-decisions.md  # Review decisions log
 cat .claude/rules/retrieval-first.md        # Re-read knowledge retrieval order
+cat .claude/VAULT-INDEX.md                  # Verified facts and prior decisions
 ```
+
+**Compass format** (injected per-message via `user-prompt-compass.ps1`):
+```
+[STACK: Next.js 16 + Supabase + TypeScript | DESIGN: Scientific Luxury | TENANT: founder_id only | ICONS: custom AI only | BORDER: rounded-sm only]
+```
+
+If the compass is missing from context, re-read `.claude/memory/compass.md` immediately.
 
 ---
 

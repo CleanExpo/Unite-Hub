@@ -122,13 +122,6 @@ pnpm build
 pnpm test
 ```
 
-### Backend (Python)
-```bash
-uv run mypy src/
-uv run ruff check src/
-uv run pytest
-```
-
 ### Full Stack
 ```bash
 pnpm turbo run type-check lint test

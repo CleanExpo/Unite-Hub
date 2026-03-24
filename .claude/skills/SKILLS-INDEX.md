@@ -1,6 +1,6 @@
 # Skills Index — Priority Classification
 
-> **Purpose**: Priority map for all 59 skills in `.skills/custom/`.
+> **Purpose**: Priority map for all 76 skills in `.skills/custom/`.
 > **Usage**: Load P1 skills automatically. Load P2+ on-demand based on task domain.
 > **Implementation location**: `.skills/custom/{id}/SKILL.md`
 > **Cross-reference**: `[[data/toolsheds]]` for domain-specific skill subsets (max 5–6 per agent).
@@ -62,6 +62,15 @@ Load when the task domain matches. Orchestrator loads based on task classificati
 | Skill ID | Trigger |
 |----------|---------|
 | `ralph-wiggum` | **NEW** Autonomous task loop — `/ralph`, overnight runs, PRD-driven multi-iteration work |
+
+### Agent Orchestration
+
+| Skill ID | Trigger |
+|----------|---------|
+| `dispatching-parallel-agents` | Multi-agent decomposition and parallel dispatch |
+| `delegation-planner` | Task planning and work package assignment |
+| `evidence-verifier` | Verification pipeline, 4-tier source hierarchy |
+| `model-currency-checker` | Validating current Claude model IDs |
 
 ---
 
@@ -141,6 +150,16 @@ Load when working within the specific domain.
 | `report-generator` | Report generation and formatting |
 | `search-indexer` | Search index patterns |
 
+### Quality Gates
+
+| Skill ID | Domain |
+|----------|--------|
+| `systematic-debugging` | Root cause analysis and structured debugging |
+| `tdd` | Test-driven development patterns |
+| `finishing-branch` | Branch completion and PR readiness |
+| `finished-audit` | Done-ness gate verification |
+| `definition-of-done-builder` | Acceptance criteria and completion standards |
+
 ---
 
 ## P4 — Optional (Utility)
@@ -153,6 +172,14 @@ Load only when explicitly needed for a specific task.
 | `graphql-patterns` | GraphQL (not currently in use — reference only) |
 | `skill-manager` | Skill ecosystem management meta-skill |
 | `status-page` | Status page patterns |
+| `visual-excellence-enforcer` | Scientific Luxury design quality gate |
+| `brand-ambassador` | Brand voice and social content for Synthex AI pipeline |
+| `agent-orchestrator` | Swarm routing patterns (hub-and-spoke, chain, fan-out) |
+| `ceo-board` | 9-persona CEO board deliberation and strategic decisions |
+| `idea-to-production` | Idea pipeline across Unite-Group's 7 businesses |
+| `outcome-translator` | Business value translation in AUD |
+| `senior-saas-pm` | SaaS product lifecycle management |
+| `git-worktrees` | Parallel feature branch isolation |
 
 ---
 
