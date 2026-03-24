@@ -12,6 +12,7 @@ import {
     runBookkeeperForOneBusiness,
 } from '@/lib/bookkeeper/orchestrator'
 import { captureApiError } from '@/lib/error-reporting'
+import { triggerMacasAdvisory } from '@/lib/advisory/auto-trigger'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 800 // 13 min — Vercel Pro max, needed for full paginated sync
@@ -46,6 +47,25 @@ export async function POST(req: NextRequest) {
                           `[Bookkeeper] Single-business run completed in ${durationMs}ms — ` +
                           `businessKey: ${businessKey}, status: ${result.status}`
                         )
+
+          // Fire-and-forget: auto-create MACAS advisory case if data passes readiness gate
+          if (result.status !== 'failed') {
+            void triggerMacasAdvisory({
+              founderId: user.id,
+              runId: result.runId,
+              runCompletedAt: new Date().toISOString(),
+              businessResults: result.businessResults.map(b => ({
+                businessKey: b.businessKey,
+                businessName: b.businessName,
+                status: b.status,
+                transactionCount: b.transactionCount,
+                autoReconciled: b.autoReconciled,
+                flaggedForReview: b.flaggedForReview,
+              })),
+            }).catch(err =>
+              captureApiError(err, { route: '/api/bookkeeper/trigger', method: 'POST', founderId: user.id, context: 'macas-auto-trigger' })
+            )
+          }
 
           return NextResponse.json({
                     success: result.status !== 'failed',
@@ -87,6 +107,25 @@ export async function POST(req: NextRequest) {
                           `auto-reconciled: ${result.autoReconciled}, ` +
                           `flagged: ${result.flaggedForReview}`
                         )
+
+          // Fire-and-forget: auto-create MACAS advisory cases for qualifying businesses
+          if (result.status !== 'failed') {
+            void triggerMacasAdvisory({
+              founderId: user.id,
+              runId: result.runId,
+              runCompletedAt: new Date().toISOString(),
+              businessResults: result.businessResults.map(b => ({
+                businessKey: b.businessKey,
+                businessName: b.businessName,
+                status: b.status,
+                transactionCount: b.transactionCount,
+                autoReconciled: b.autoReconciled,
+                flaggedForReview: b.flaggedForReview,
+              })),
+            }).catch(err =>
+              captureApiError(err, { route: '/api/bookkeeper/trigger', method: 'POST', founderId: user.id, context: 'macas-auto-trigger' })
+            )
+          }
 
           return NextResponse.json({
                     success: result.status !== 'failed',

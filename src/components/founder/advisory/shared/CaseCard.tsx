@@ -58,6 +58,21 @@ export function CaseCard({ case_, onClick }: CaseCardProps) {
         </span>
       </div>
 
+      {(case_.source ?? 'manual') === 'auto-bookkeeper' && (
+        <div
+          className="flex items-center gap-1.5 mt-2 px-2 py-1 rounded-sm"
+          style={{
+            background: '#f59e0b14',
+            border: '1px solid #f59e0b30',
+          }}
+        >
+          <span style={{ color: '#f59e0b', fontSize: 10 }}>⚠</span>
+          <span className="text-[10px]" style={{ color: '#f59e0b' }}>
+            Auto-triggered from bookkeeper run — verify input data before acting on verdict
+          </span>
+        </div>
+      )}
+
       <div className="flex items-center gap-2 mt-3">
         <span className="text-[10px]" style={{ color: 'var(--color-text-disabled)' }}>
           Round {case_.current_round}/{case_.total_rounds}

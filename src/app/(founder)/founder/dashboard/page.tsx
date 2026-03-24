@@ -11,6 +11,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { SetupChecklist } from '@/components/founder/dashboard/SetupChecklist'
 import { CapabilityMap } from '@/components/founder/dashboard/CapabilityMap'
 import { ExperimentsDashboardWidget } from '@/components/founder/dashboard/ExperimentsDashboardWidget'
+import { HubStatusWidget } from '@/components/founder/dashboard/HubStatusWidget'
 
 export default async function DashboardPage() {
   const user = await getUser()
@@ -29,6 +30,7 @@ export default async function DashboardPage() {
       <SetupChecklist founderId={user.id} />
       <CapabilityMap />
       <FounderStats />
+      <HubStatusWidget />
       <CoachBriefs />
       <ExperimentsDashboardWidget />
       <KPIGrid />

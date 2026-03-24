@@ -6,6 +6,7 @@
 import { NextResponse } from 'next/server'
 import { runBookkeeperForAllBusinesses } from '@/lib/bookkeeper/orchestrator'
 import { notify } from '@/lib/notifications'
+import { triggerMacasAdvisory } from '@/lib/advisory/auto-trigger'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300 // 5 minutes — processing 8 businesses sequentially
@@ -42,6 +43,25 @@ export async function GET(request: Request) {
         `auto-reconciled: ${result.autoReconciled}, ` +
         `flagged: ${result.flaggedForReview}`
     )
+
+    // Fire-and-forget: auto-create MACAS advisory cases for qualifying businesses
+    if (result.status !== 'failed') {
+      void triggerMacasAdvisory({
+        founderId,
+        runId: result.runId,
+        runCompletedAt: new Date().toISOString(),
+        businessResults: result.businessResults.map(b => ({
+          businessKey: b.businessKey,
+          businessName: b.businessName,
+          status: b.status,
+          transactionCount: b.transactionCount,
+          autoReconciled: b.autoReconciled,
+          flaggedForReview: b.flaggedForReview,
+        })),
+      }).catch(err =>
+        console.error('[Bookkeeper CRON] MACAS auto-trigger error:', err)
+      )
+    }
 
     // Fire-and-forget notification
     const severity = result.flaggedForReview > 0 ? 'warning' as const : 'info' as const

@@ -65,6 +65,7 @@ export interface AdvisoryCase {
   title: string
   scenario: string
   financial_context: FinancialContext
+  source: 'manual' | 'auto-bookkeeper'
   status: CaseStatus
   current_round: number
   total_rounds: number
