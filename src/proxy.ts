@@ -54,6 +54,10 @@ const PUBLIC_PATHS = [
   '/api/health',
   '/api/cron',
   '/monitoring',  // Sentry tunnel
+  '/robots.txt',
+  '/sitemap.xml',
+  '/site.webmanifest',
+  '/founder-os-manifest.json',
 ] as const;
 
 function isPublicPath(pathname: string): boolean {
