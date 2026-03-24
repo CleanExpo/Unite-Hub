@@ -33,14 +33,20 @@
 | Best Practices | **93** | ≥ 90 | ✅ Pass |
 | SEO | **92** | ≥ 90 | ✅ Pass |
 
-### Post-fix estimates (pending Vercel deploy)
+### Post-fix confirmed scores (25/03/2026, 4 deploys)
 
-| Category | Expected | Fixes Applied |
-|----------|----------|---------------|
-| Performance | **96–98** | Google Fonts CDN removed, modern browserslist |
-| Accessibility | **98–100** | 4 contrast failures fixed, 5 font-size failures fixed, form labels |
-| Best Practices | **100** | CSP `o*.ingest.sentry.io` → `*.ingest.sentry.io` |
-| SEO | **100** | `robots.txt` rewritten for `unite-group.in` |
+| Category | Score | Status | Notes |
+|----------|-------|--------|-------|
+| Performance | **90** | ✅ Pass | FCP 1.5s (was 2.0s), CLS 0 (was 0.004). TBT/SI vary with server load. |
+| Accessibility | **100** | ✅ Perfect | All contrast, font-size, label issues resolved |
+| Best Practices | **100** | ✅ Perfect | CSP wildcard fixed, no console errors |
+| SEO | **100** | ✅ Perfect | robots.txt returning correctly (proxy bypass fixed) |
+
+**Performance ceiling:** Remaining ~10 points held by render-blocking CSS (150ms, Tailwind JIT
+generates a single global chunk — not splittable without CSS architecture refactor), unused JS
+from the app router bundle (~30 KiB), and LCP element (auth layout logo, 2.9s). These are
+inherent to the Next.js+Tailwind architecture for a complex CRM; not addressable without
+significant bundle splitting work.
 
 ---
 
