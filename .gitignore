@@ -266,3 +266,6 @@ scripts/_archive/
 /*.log
 /*.png
 !CHANGELOG.md
+
+# Raw Lighthouse audit output
+.claude/audits/*.json
