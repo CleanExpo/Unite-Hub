@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             priority
             className="object-contain mb-3"
           />
-          <p className="text-white/40 text-sm font-mono">Unite-Group Nexus</p>
+          <p className="text-white/60 text-sm font-mono">Unite-Group Nexus</p>
         </div>
 
         {/* Auth Card */}
@@ -27,8 +27,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* Footer */}
-        <p className="text-center text-white/30 text-sm mt-6 font-mono">
-          © 2025 Unite-Group. All rights reserved.
+        <p className="text-center text-white/50 text-sm mt-6 font-mono">
+          © 2026 Unite-Group. All rights reserved.
         </p>
       </div>
     </div>

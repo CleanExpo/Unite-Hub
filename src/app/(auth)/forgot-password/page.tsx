@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen bg-[#050505] flex items-center justify-center px-4">
       <div className="w-full max-w-sm border border-white/[0.06] p-8">
-        <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-6">
+        <p className="text-xs uppercase tracking-[0.4em] text-white/60 mb-6">
           Nexus — Unite Group
         </p>
         <h1 className="text-2xl font-extralight text-white/90 mb-8">Reset password</h1>
@@ -58,10 +58,11 @@ export default function ForgotPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">
+              <label htmlFor="forgot-email" className="block text-xs uppercase tracking-[0.15em] text-white/60 mb-2">
                 Email
               </label>
               <input
+                id="forgot-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -72,7 +73,7 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-2.5 bg-[#00F5FF]/10 border border-[#00F5FF]/30 text-[#00F5FF] text-[11px] uppercase tracking-[0.2em] hover:bg-[#00F5FF]/20 disabled:opacity-50 rounded-sm transition-colors"
+              className="w-full mt-2 py-2.5 bg-[#00F5FF]/10 border border-[#00F5FF]/30 text-[#00F5FF] text-xs uppercase tracking-[0.2em] hover:bg-[#00F5FF]/20 disabled:opacity-50 rounded-sm transition-colors"
             >
               {loading ? "Sending…" : "Send reset link"}
             </button>
@@ -81,7 +82,7 @@ export default function ForgotPasswordPage() {
 
         <Link
           href="/auth/login"
-          className="mt-6 block text-center text-[11px] uppercase tracking-[0.15em] text-white/30 hover:text-white/60 transition-colors"
+          className="mt-6 block text-center text-xs uppercase tracking-[0.15em] text-white/50 hover:text-white/70 transition-colors"
         >
           Back to sign in
         </Link>

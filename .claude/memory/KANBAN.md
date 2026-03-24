@@ -1,6 +1,6 @@
 # KANBAN — Unite-Group Nexus 2.0
 > Work tracking board. Updated manually or by agents at phase boundaries.
-> Last updated: 12/03/2026
+> Last updated: 24/03/2026
 
 ---
 
@@ -44,7 +44,7 @@
 - [x] Stripe integration
 - [x] bookkeeper_runs, bookkeeper_transactions, xero_connections tables
 
-### Phase 5 — AI Layer (Partial) ✅
+### Phase 5 — AI Layer ✅
 - [x] MACAS — Multi-Agent Competitive Accounting System (commit `65d90c25`)
   - 4 AI firms, 5 debate rounds, Judge (Opus), Accountant gate
   - Schema: `supabase/migrations/20260311000000_advisory_schema.sql`
@@ -53,11 +53,57 @@
 - [x] Unified Search — real-time across contacts, pages, approvals (`src/app/api/search/route.ts`)
 - [x] Search bug fixes: AbortController, race condition, PostgREST injection sanitisation
 
+### Phase 6 — Production Hardening ✅ (25/03/2026)
+- [x] E2E test suite (Playwright) — confirmed complete
+- [x] Error monitoring (Sentry) — confirmed complete
+- [x] Social UI — confirmed complete
+- [x] Rate limiting on API routes — `src/lib/middleware/rate-limit.ts` (sliding window, tiered)
+- [x] Secrets rotation runbook — `.claude/runbooks/secrets-rotation.md`
+- [x] CCW marked as `type: 'client'` in `src/lib/businesses.ts`
+- [x] **6.2** Lighthouse baseline — `.claude/audits/lighthouse-baseline-25-03-2026.md` (Perf 92, A11y 91, BP 93, SEO 92)
+- [x] **6.2** Performance fixes — removed duplicate Google Fonts `@import` (`globals.css`), added `display:"swap"` to Inter, `htmlFor` labels on login form, footer contrast `white/30→white/50`, `robots.txt` updated for `unite-group.in`
+
+### Phase 7 — Hub Connectivity ✅ (24/03/2026)
+
+#### Sprint 7.1: MACAS Auto-Trigger from Bookkeeper Run ✅
+- [x] Migration: `advisory_cases.source` column (`20260324000000`)
+- [x] Data readiness gate — `src/lib/advisory/readiness-gate.ts`
+- [x] `src/lib/advisory/auto-trigger.ts` — auto case creation
+- [x] Wire bookkeeper trigger + cron → auto-create MACAS cases
+- [x] Auto-triggered badge in advisory cases UI (`CaseCard.tsx`)
+- [x] Tests: `readiness-gate.test.ts` + `auto-trigger.test.ts`
+
+#### Sprint 7.2: Connected Projects API + Hub Dashboard Widget ✅
+- [x] Migration: `hub_satellites` table (`20260324000001`)
+- [x] `src/app/api/connected-projects/route.ts` (GET + POST/upsert)
+- [x] `src/app/api/connected-projects/[id]/route.ts` (PATCH)
+- [x] `src/components/founder/dashboard/HubStatusWidget.tsx`
+- [x] HubStatusWidget added to dashboard page (above CoachBriefs)
+
+#### Sprint 7.3: Nightly Intelligence Sweep Cron ✅
+- [x] `src/lib/integrations/github.ts` — `fetchLastCommit`, `parseRepoUrl` added
+- [x] `src/app/api/cron/hub-sweep/route.ts` — nightly sweep (11pm AEST)
+- [x] `vercel.json` — `"0 13 * * *"` cron entry + `maxDuration: 60`
+- [x] Tests: `hub-sweep/route.test.ts`
+
 ---
 
 ## IN PROGRESS
 
-### Phase 5 — AI Layer INTEGRATION Backlog
+*(nothing — Phase 6 and 7 both closed)*
+
+---
+
+## TODO
+
+### Phase 6 — Deferred Backlog
+- [ ] MACAS Phase 6: Xero journal entries + BAS updates in `/execute` route (via `xeroApiFetch()`)
+- [ ] Backup and recovery runbook
+- [ ] Production deployment checklist
+
+### Phase 8 — AI Integration Depth (after Phase 7 complete)
+> UNI-1499–1510. Sequence: Structured Outputs → AI Router → Batch API → Memory Tool → Adaptive Thinking.
+
 - [ ] UNI-1499: Enable Adaptive Thinking on Claude Opus 4.6
 - [ ] UNI-1500: Implement MCP Connector Layer
 - [ ] UNI-1501: Implement Files API for Persistent Document Storage
@@ -71,30 +117,14 @@
 - [ ] UNI-1509: Build AI Pipeline Coordinator
 - [ ] UNI-1510: Build Macro Coaches
 
----
-
-## TODO
-
 ### Other Active Linear Issues
-- [ ] UNI-1478: WhatsApp bridge integration
-- [ ] UNI-173: Invoicing module
-
-### Phase 6 — Production Hardening ⏳
-- [ ] E2E test suite (Playwright)
-- [ ] Performance audit (Core Web Vitals)
-- [ ] Security audit (OWASP top 10)
-- [ ] Error monitoring (Sentry or Vercel)
-- [ ] Rate limiting on API routes
-- [ ] MACAS Phase 6: Xero journal entries + BAS updates in `/execute` route (via `xeroApiFetch()`)
-- [ ] Secrets rotation procedure
-- [ ] Backup and recovery runbook
-- [ ] Production deployment checklist
+- [ ] UNI-1478: WhatsApp bridge integration (backlog — after Phase 7)
+- [ ] UNI-173: Invoicing module (backlog — after Phase 7)
 
 ---
 
 ## BACKLOG (Future / Unscheduled)
 - [ ] Mobile responsive pass (Nexus is currently desktop-first)
 - [ ] Offline support / PWA
-- [ ] Social media scheduling UI (`social_channels` table populated, UI pending)
 - [ ] Full `nexus_databases` / `nexus_rows` Notion-like database views
 - [ ] Expanded contacts CRM features (pipeline, tags, notes)

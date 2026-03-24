@@ -58,7 +58,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#050505] flex items-center justify-center px-4">
       <div className="w-full max-w-sm border border-white/[0.12] p-8">
-        <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-6">
+        <p className="text-xs uppercase tracking-[0.4em] text-white/60 mb-6">
           Nexus — Unite Group
         </p>
         <h1 className="text-2xl font-extralight text-white/90 mb-8">Sign in</h1>
@@ -73,7 +73,7 @@ export default function LoginPage() {
         <button
           onClick={handleGoogleSignIn}
           disabled={googleLoading || loading}
-          className="w-full mb-6 py-2.5 bg-white/[0.05] border border-white/[0.15] text-white/70 text-[11px] uppercase tracking-[0.2em] hover:bg-white/[0.08] hover:border-white/25 disabled:opacity-50 rounded-sm transition-colors flex items-center justify-center gap-3"
+          className="w-full mb-6 py-2.5 bg-white/[0.05] border border-white/[0.15] text-white/70 text-xs uppercase tracking-[0.2em] hover:bg-white/[0.08] hover:border-white/25 disabled:opacity-50 rounded-sm transition-colors flex items-center justify-center gap-3"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -89,16 +89,17 @@ export default function LoginPage() {
             <div className="w-full border-t border-white/[0.08]" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-[#050505] px-3 text-[10px] uppercase tracking-widest text-white/20">or</span>
+            <span className="bg-[#050505] px-3 text-xs uppercase tracking-widest text-white/50">or</span>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[11px] uppercase tracking-[0.15em] text-white/60 mb-2">
+            <label htmlFor="login-email" className="block text-xs uppercase tracking-[0.15em] text-white/60 mb-2">
               Email
             </label>
             <input
+              id="login-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -107,10 +108,11 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="block text-[11px] uppercase tracking-[0.15em] text-white/60 mb-2">
+            <label htmlFor="login-password" className="block text-xs uppercase tracking-[0.15em] text-white/60 mb-2">
               Password
             </label>
             <input
+              id="login-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -121,7 +123,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading || googleLoading}
-            className="w-full mt-2 py-2.5 bg-[#00F5FF]/10 border border-[#00F5FF]/30 text-[#00F5FF] text-[11px] uppercase tracking-[0.2em] hover:bg-[#00F5FF]/20 disabled:opacity-50 rounded-sm transition-colors"
+            className="w-full mt-2 py-2.5 bg-[#00F5FF]/10 border border-[#00F5FF]/30 text-[#00F5FF] text-xs uppercase tracking-[0.2em] hover:bg-[#00F5FF]/20 disabled:opacity-50 rounded-sm transition-colors"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>

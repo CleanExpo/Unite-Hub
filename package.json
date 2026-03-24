@@ -161,5 +161,16 @@
     "*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
+  },
+  "browserslist": {
+    "production": [
+      "chrome >= 95",
+      "firefox >= 95",
+      "safari >= 15",
+      "edge >= 95"
+    ],
+    "development": [
+      "last 1 chrome version"
+    ]
   }
 }
