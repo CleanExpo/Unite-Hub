@@ -41,7 +41,11 @@ export async function POST(request: Request) {
       context: { userId: user.id, businessKey: businessContext },
     })
 
-    return NextResponse.json({ output: result.content })
+    return NextResponse.json({
+      output: result.content,
+      citations: result.citations ?? [],
+      ...(result.thinkingBudget !== undefined ? { thinkingBudget: result.thinkingBudget } : {}),
+    })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'AI unavailable'
     return NextResponse.json({ error: message }, { status: 500 })

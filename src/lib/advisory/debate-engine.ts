@@ -21,6 +21,7 @@ import {
 } from './agents'
 import { extractCitations } from './evidence-extractor'
 import { notify } from '@/lib/notifications'
+import { recallAdvisoryContext, storeAdvisoryOutcome } from './session-memory'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -227,12 +228,20 @@ export async function* runDebate(
     return
   }
 
+  // Recall founder's advisory memory to give the judge cross-session context.
+  // Runs concurrently — does not block if the memory store is slow or empty.
+  const memoryContext = await recallAdvisoryContext(founderId)
+
   try {
-    const judgeMessage = buildJudgeUserMessage(
+    const judgeMessageBase = buildJudgeUserMessage(
       scenario,
       financialContext,
       finalRoundProposals
     )
+    // Append memory context after the structured case content if available.
+    const judgeMessage = memoryContext
+      ? `${judgeMessageBase}\n\n${memoryContext}`
+      : judgeMessageBase
 
     const judgeResult = await callJudgeAgentWithRetry(judgeMessage)
     const { scores } = judgeResult
@@ -309,6 +318,18 @@ export async function* runDebate(
       body: `Winner: ${winnerMeta?.name ?? scores.winner} (${winnerEntry?.weightedTotal ?? '—'}/100). ${scores.summary}`,
       severity: 'info',
     }).catch(() => {})
+
+    // Persist debate outcome to memory — fire-and-forget so a storage failure
+    // never delays the case_complete event emitted below.
+    storeAdvisoryOutcome(
+      founderId,
+      advisoryCase.title,
+      caseId,
+      judgeResult.scores,
+      financialContext
+    ).catch(err => {
+      console.error('[debate-engine] Failed to store advisory memory:', err instanceof Error ? err.message : err)
+    })
   } catch (judgeError) {
     const msg = judgeError instanceof Error ? judgeError.message : 'Unknown judge failure'
     yield { event: 'error', message: `Judge failed: ${msg}` }

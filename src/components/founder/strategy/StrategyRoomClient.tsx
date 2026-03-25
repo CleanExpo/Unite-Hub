@@ -2,14 +2,44 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Brain } from 'lucide-react'
+import { Brain, Globe } from 'lucide-react'
+import { Switch } from '@/components/ui/switch'
 import { BUSINESSES } from '@/lib/businesses'
+
+interface Citation {
+  type: string
+  title: string
+  url?: string
+  content?: string
+}
+
+interface PipelineStep {
+  capabilityId: string
+  content: string
+  citations: Citation[]
+}
 
 export function StrategyRoomClient() {
   const [prompt, setPrompt] = useState('')
   const [business, setBusiness] = useState<string>('')
+  const [researchMode, setResearchMode] = useState(false)
+  const [phase, setPhase] = useState<'idle' | 'researching' | 'analysing'>('idle')
+
+  // Direct mode output
   const [output, setOutput] = useState<string | null>(null)
+
+  // Pipeline mode output
+  const [steps, setSteps] = useState<PipelineStep[] | null>(null)
+  const [finalOutput, setFinalOutput] = useState<{ content: string; citations: Citation[] } | null>(null)
+
   const [loading, setLoading] = useState(false)
+
+  function resetOutputs() {
+    setOutput(null)
+    setSteps(null)
+    setFinalOutput(null)
+    setPhase('idle')
+  }
 
   async function analyze() {
     if (!prompt.trim() || loading) return
@@ -20,31 +50,81 @@ export function StrategyRoomClient() {
     }
 
     setLoading(true)
-    setOutput(null)
+    resetOutputs()
+
+    const bizContext = business
+      ? `Business: ${BUSINESSES.find(b => b.key === business)?.name}`
+      : undefined
 
     try {
-      const bizContext = business
-        ? `Business: ${BUSINESSES.find(b => b.key === business)?.name}`
-        : undefined
+      if (!researchMode) {
+        // Direct Opus analysis
+        const res = await fetch('/api/strategy/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, businessContext: bizContext }),
+        })
 
-      const res = await fetch('/api/strategy/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, businessContext: bizContext }),
-      })
+        if (!res.ok) {
+          const errData = await res.json() as { error?: string }
+          setOutput(`Analysis failed: ${errData.error ?? 'Please try again.'}`)
+          return
+        }
 
-      if (!res.ok) {
-        const errData = await res.json() as { error?: string }
-        setOutput(`Analysis failed: ${errData.error ?? 'Please try again.'}`)
-        return
+        const data = await res.json() as { output: string }
+        setOutput(data.output)
+      } else {
+        // Research-first pipeline
+        setPhase('researching')
+        // After ~8 s (average web-search time), optimistically flip phase label
+        const timer = setTimeout(() => setPhase('analysing'), 8000)
+
+        try {
+          const res = await fetch('/api/pipeline/run', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              pipelineId: 'research-to-brief',
+              seed: prompt,
+              businessContext: bizContext,
+            }),
+          })
+
+          clearTimeout(timer)
+
+          if (!res.ok) {
+            const errData = await res.json() as { error?: string }
+            setOutput(`Pipeline failed: ${errData.error ?? 'Please try again.'}`)
+            return
+          }
+
+          const data = await res.json() as {
+            steps: PipelineStep[]
+            finalOutput: { content: string; citations: Citation[]; model: string; usage: unknown }
+          }
+          setSteps(data.steps)
+          setFinalOutput(data.finalOutput)
+        } finally {
+          clearTimeout(timer)
+        }
       }
-
-      const data = await res.json() as { output: string }
-      setOutput(data.output)
     } finally {
       setLoading(false)
+      setPhase('idle')
     }
   }
+
+  const buttonLabel = loading
+    ? researchMode
+      ? phase === 'researching' ? 'Researching…' : 'Analysing…'
+      : 'Analysing…'
+    : researchMode
+      ? 'Research + Analyse'
+      : 'Analyse with Opus'
+
+  const hintText = researchMode
+    ? 'Step 1: Web research. Step 2: Deep analysis. Typically 25–45 seconds.'
+    : 'Opus is thinking. Extended analysis takes 15–30 seconds.'
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -65,6 +145,24 @@ export function StrategyRoomClient() {
             <option key={b.key} value={b.key}>{b.name}</option>
           ))}
         </select>
+      </div>
+
+      {/* Research mode toggle */}
+      <div className="flex items-center gap-3">
+        <Switch
+          checked={researchMode}
+          onCheckedChange={(v) => { setResearchMode(v); resetOutputs() }}
+          className="data-[state=checked]:bg-[#00F5FF]"
+        />
+        <span className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+          Research first
+        </span>
+        {researchMode && (
+          <span className="text-[11px] px-2 py-0.5 rounded-sm border"
+            style={{ color: '#00F5FF', borderColor: 'rgba(0,245,255,0.2)', background: 'rgba(0,245,255,0.06)' }}>
+            Research + Analysis pipeline
+          </span>
+        )}
       </div>
 
       {/* Prompt */}
@@ -89,16 +187,17 @@ export function StrategyRoomClient() {
         className="flex items-center gap-2 px-4 h-9 rounded-sm text-[13px] font-medium transition-colors disabled:opacity-40"
         style={{ background: '#00F5FF', color: '#050505' }}
       >
-        <Brain size={14} />
-        {loading ? 'Analysing\u2026' : 'Analyse with Opus'}
+        {researchMode ? <Globe size={14} /> : <Brain size={14} />}
+        {buttonLabel}
       </button>
 
       {loading && (
         <p className="text-[12px]" style={{ color: 'var(--color-text-disabled)' }}>
-          Opus is thinking. Extended analysis takes 15–30 seconds.
+          {hintText}
         </p>
       )}
 
+      {/* Direct mode output */}
       {output && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -111,6 +210,69 @@ export function StrategyRoomClient() {
             {output}
           </div>
         </motion.div>
+      )}
+
+      {/* Pipeline mode output */}
+      {steps && finalOutput && (
+        <div className="space-y-4">
+          {/* Step 1 — Research */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-sm border p-5"
+            style={{ borderColor: 'var(--color-border)', background: 'var(--surface-card)' }}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Globe size={13} style={{ color: 'var(--color-text-muted)' }} />
+              <span className="text-[11px] uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
+                Web Research
+              </span>
+            </div>
+            <div className="text-[13px] leading-relaxed whitespace-pre-wrap"
+              style={{ color: 'var(--color-text-primary)' }}>
+              {steps[0]?.content}
+            </div>
+            {steps[0]?.citations?.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-white/5">
+                <p className="text-[11px] uppercase tracking-widest mb-1" style={{ color: 'var(--color-text-disabled)' }}>Sources</p>
+                <ul className="space-y-0.5">
+                  {steps[0].citations.map((c, i) => (
+                    <li key={i}>
+                      {c.url ? (
+                        <a href={c.url} target="_blank" rel="noopener noreferrer"
+                          className="text-[11px] underline" style={{ color: 'var(--color-text-muted)' }}>
+                          {c.title}
+                        </a>
+                      ) : (
+                        <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{c.title}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Step 2 — Analysis */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="rounded-sm border p-5"
+            style={{ borderColor: 'rgba(0,245,255,0.2)', background: 'var(--surface-card)' }}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Brain size={13} style={{ color: 'rgba(0,245,255,0.6)' }} />
+              <span className="text-[11px] uppercase tracking-widest" style={{ color: 'rgba(0,245,255,0.6)' }}>
+                Strategic Analysis
+              </span>
+            </div>
+            <div className="text-[13px] leading-relaxed whitespace-pre-wrap"
+              style={{ color: 'var(--color-text-primary)' }}>
+              {finalOutput.content}
+            </div>
+          </motion.div>
+        </div>
       )}
     </div>
   )

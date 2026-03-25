@@ -7,6 +7,14 @@ import { getAIClient } from './client'
 import type { AICapability, AIResponse, RequestContext } from './types'
 import { zodToToolSchema, parseStructuredResponse } from './features/structured'
 import { createBatch, pollBatchUntilDone, buildBatchRequest, type BatchItemResult } from './features/batch'
+import { recallMemories, formatMemoriesForContext } from './features/memory-store'
+import { calculateThinkingBudget } from './features/thinking'
+import { buildWebSearchTool, parseWebSearchResults } from './features/web-search'
+import { extractCitations as extractTextCitations } from './features/citations'
+import { buildFileReference } from './features/files'
+import { buildSandboxTool, parseSandboxResult } from './features/sandbox'
+import { buildMcpServers } from './features/mcp'
+import type { Citation } from './types'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -62,11 +70,22 @@ export async function execute(
   // Resolve system prompt — caller override takes precedence over capability config.
   // This allows call-time data (brand identity, platform context) to shape the prompt
   // without baking dynamic data into the capability definition.
-  const systemPrompt =
+  let systemPrompt =
     input.systemPrompt ??
     (typeof cap.systemPrompt === 'function'
       ? cap.systemPrompt(input.context ?? { userId: '' })
       : cap.systemPrompt)
+
+  // Memory injection — recalled memories are prepended to the system prompt.
+  // Opt-in per capability via features.memory.enabled; requires context.userId.
+  // Not applied in batch paths (fire-and-forget — no per-call recall makes sense there).
+  if (cap.features.memory?.enabled && input.context?.userId) {
+    const memories = await recallMemories(input.context.userId, cap.id)
+    const block = formatMemoriesForContext(memories)
+    if (block) {
+      systemPrompt = `${systemPrompt}\n\n${block}`
+    }
+  }
 
   // Build Anthropic API params
   const params: Anthropic.MessageCreateParamsNonStreaming = {
@@ -76,18 +95,30 @@ export async function execute(
     messages: input.messages,
   }
 
-  // Temperature — omit if not set (Anthropic default is 1.0)
-  if (cap.temperature !== undefined) {
+  // Temperature — omit when thinking is enabled (Anthropic requires temperature = 1.0 for thinking;
+  // omitting it lets the API apply the correct default automatically).
+  if (cap.temperature !== undefined && !cap.features.thinking) {
     params.temperature = cap.temperature
   }
 
-  // Thinking feature
+  // Thinking feature — adaptive or static budget.
+  let thinkingBudget: number | undefined
   if (cap.features.thinking) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(params as any).thinking = {
-      type: 'enabled',
-      budget_tokens: cap.features.thinking.budgetTokens,
+    const t = cap.features.thinking
+    if (t.adaptive) {
+      // Derive budget from actual user message complexity at call-time.
+      const userContent = input.messages
+        .filter(m => m.role === 'user')
+        .map(m => (typeof m.content === 'string' ? m.content : JSON.stringify(m.content)))
+        .join('\n')
+      thinkingBudget = calculateThinkingBudget(userContent)
+      if (t.minBudget !== undefined) thinkingBudget = Math.max(thinkingBudget, t.minBudget)
+      if (t.maxBudget !== undefined) thinkingBudget = Math.min(thinkingBudget, t.maxBudget)
+    } else {
+      thinkingBudget = t.budgetTokens ?? 10000
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(params as any).thinking = { type: 'enabled', budget_tokens: thinkingBudget }
   }
 
   // Structured output — force tool_use so Claude returns schema-conformant JSON.
@@ -104,13 +135,48 @@ export async function execute(
     params.tool_choice = { type: 'tool', name: structuredToolName }
   }
 
-  // Web search tool (server-side tool — not a standard Tool type).
-  // Note: incompatible with structuredOutput; webSearch takes precedence if both set.
+  // Web search tool — Anthropic server-side tool injected as a special tools entry.
+  // Incompatible with structuredOutput (tool_choice cannot be forced alongside web search).
   if (cap.features.webSearch && !cap.features.structuredOutput) {
+    const wsConfig = typeof cap.features.webSearch === 'object' ? cap.features.webSearch : {}
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(params as any).tools = [
-      { type: 'web_search_20250305', name: 'web_search' },
-    ]
+    ;(params as any).tools = [buildWebSearchTool(wsConfig)]
+  }
+
+  // Code execution sandbox — inject alongside any existing tools.
+  if (cap.features.codeExecution) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const p = params as any
+    p.tools = [...(p.tools ?? []), buildSandboxTool()]
+  }
+
+  // File attachments — prepend document blocks to the first user message.
+  // Files must be pre-uploaded via uploadAndCacheFile(); only IDs are passed here.
+  if (cap.features.fileIds?.length) {
+    const fileBlocks = cap.features.fileIds.map(id => buildFileReference(id))
+    const msgs = [...params.messages]
+    const firstUserIdx = msgs.findIndex(m => m.role === 'user')
+    if (firstUserIdx >= 0) {
+      const orig = msgs[firstUserIdx]
+      const origContent = typeof orig.content === 'string'
+        ? [{ type: 'text' as const, text: orig.content }]
+        : [...(orig.content as object[])]
+      msgs[firstUserIdx] = {
+        ...orig,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        content: [...(fileBlocks as any[]), ...origContent],
+      }
+    }
+    params.messages = msgs
+  }
+
+  // MCP servers — resolved from registry and injected for server-side tool access.
+  if (cap.features.mcpServers?.length) {
+    const servers = buildMcpServers(cap.features.mcpServers)
+    if (servers.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(params as any).mcp_servers = servers
+    }
   }
 
   const client = getAIClient()
@@ -138,10 +204,45 @@ export async function execute(
     )
   }
 
+  // Parse code execution sandbox result
+  let sandboxResult: AIResponse['sandboxResult'] | undefined
+  if (cap.features.codeExecution) {
+    const sr = parseSandboxResult(response.content as unknown[])
+    if (sr) sandboxResult = sr
+  }
+
+  // ── Citation extraction ────────────────────────────────────────────────────
+
+  let citations: Citation[] | undefined
+
+  // 1. Web search citations — parsed from web_search_tool_result blocks in the response.
+  if (cap.features.webSearch) {
+    const webCitations = parseWebSearchResults(response.content as unknown[])
+    if (webCitations.length > 0) {
+      citations = webCitations
+    }
+  }
+
+  // 2. Text citations — ATO rulings, legislation, case law extracted from the response text.
+  if (cap.features.citations && textContent) {
+    const textCitations = extractTextCitations(textContent).map(c => ({
+      type: c.type,
+      title: c.title,
+      url: c.url,
+      content: c.reference,
+    }))
+    if (textCitations.length > 0) {
+      citations = [...(citations ?? []), ...textCitations]
+    }
+  }
+
   return {
     content: textContent,
     thinking: thinkingContent,
     structuredData,
+    ...(citations?.length ? { citations } : {}),
+    ...(sandboxResult ? { sandboxResult } : {}),
+    ...(thinkingBudget !== undefined ? { thinkingBudget } : {}),
     usage: {
       inputTokens: response.usage.input_tokens,
       outputTokens: response.usage.output_tokens,

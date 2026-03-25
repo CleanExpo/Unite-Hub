@@ -3,6 +3,8 @@
 // Import from '@/lib/ai' to access all AI infrastructure.
 
 export { getAIClient, resetAIClient } from './client'
+export { runPipeline, registerPipeline, getPipeline, listPipelines } from './pipeline'
+export type { Pipeline, PipelineStep, PipelineStepResult, PipelineResult } from './pipeline'
 export { registerCapability, getCapability, listCapabilities, execute, batchExecute, resetRegistry } from './router'
 export type { ExecuteInput, BatchExecuteResult } from './router'
 export {

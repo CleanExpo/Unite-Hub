@@ -7,6 +7,7 @@
 import type Anthropic from '@anthropic-ai/sdk'
 import { getAIClient } from '@/lib/ai/client'
 import { createServiceClient } from '@/lib/supabase/service'
+import { recallMemories, formatMemoriesForContext, storeMemory } from '@/lib/ai/features/memory-store'
 import type { CoachType, CoachContext, CoachResult, CoachDataFetcher } from './types'
 import { COACH_CONFIGS } from './types'
 
@@ -72,13 +73,20 @@ export async function runCoach({
     // 3. Build the user message
     const userMessage = buildUserMessage(context)
 
+    // 3a. Memory injection — recall prior insights and prepend to system prompt
+    const memories = await recallMemories(founderId, coachType)
+    const memoryBlock = formatMemoriesForContext(memories)
+    const effectiveSystemPrompt = memoryBlock
+      ? `${systemPrompt}\n\n${memoryBlock}`
+      : systemPrompt
+
     // 4. Call Claude via the Anthropic SDK (mirrors advisory/agents.ts pattern)
     const client = getAIClient()
     const response = await client.messages.create({
       model: config.model,
       max_tokens: config.maxTokens,
       temperature: config.temperature,
-      system: systemPrompt,
+      system: effectiveSystemPrompt,
       messages: [{ role: 'user', content: userMessage }],
     })
 
@@ -91,6 +99,15 @@ export async function runCoach({
     const inputTokens = response.usage.input_tokens
     const outputTokens = response.usage.output_tokens
     const durationMs = Date.now() - startTime
+
+    // 4a. Persist key outcome to memory (fire-and-forget — never block the response)
+    storeMemory({
+      founderId,
+      capabilityId: coachType,
+      key: `last_brief_${new Date().toISOString().slice(0, 10)}`,
+      memoryType: 'outcome',
+      value: briefMarkdown.slice(0, 1000), // store first 1k chars as summary
+    }).catch(() => {})
 
     // 5. Extract any numeric metrics from the context data for quick access
     const metrics = extractMetrics(context)

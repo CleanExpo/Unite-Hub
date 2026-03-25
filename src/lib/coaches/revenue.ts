@@ -3,25 +3,19 @@
 
 import type { CoachContext, CoachDataFetcher } from './types'
 import { BUSINESSES } from '@/lib/businesses'
-import { isXeroConfigured, getMockRevenueMTD } from '@/lib/integrations/xero/client'
+import { fetchRevenueMTD, getMockRevenueMTD } from '@/lib/integrations/xero/client'
 
-export const fetchRevenueData: CoachDataFetcher = async (_founderId: string): Promise<CoachContext> => {
+export const fetchRevenueData: CoachDataFetcher = async (founderId: string): Promise<CoachContext> => {
   const reportDate = new Date().toISOString().split('T')[0]
 
-  // Fetch MTD revenue for each active business
-  // Note: Real Xero data requires tenant IDs from stored OAuth tokens.
-  // When Xero is not configured, we use mock data for development.
+  // Fetch MTD revenue for each active business.
+  // fetchRevenueMTD() handles token loading, P&L API call, and mock fallback
+  // — so a missing/expired token for one business won't fail the entire run.
   const businessData = await Promise.all(
     BUSINESSES.map(async (biz) => {
       try {
-        if (isXeroConfigured()) {
-          // TODO: Fetch real Xero data when tenant IDs are available in vault
-          // const tokens = await loadXeroTokens(founderId, biz.key)
-          // const data = await fetchRevenueMTD(biz.key, tokens.tenantId)
-          // For now, fall back to mock data
-          return { ...getMockRevenueMTD(biz.key), name: biz.name }
-        }
-        return { ...getMockRevenueMTD(biz.key), name: biz.name }
+        const { data } = await fetchRevenueMTD(founderId, biz.key)
+        return { ...data, name: biz.name }
       } catch (err) {
         console.warn(`[Revenue Coach] Failed to fetch data for ${biz.key}:`, err)
         return { ...getMockRevenueMTD(biz.key), name: biz.name }

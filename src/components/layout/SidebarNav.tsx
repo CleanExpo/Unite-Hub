@@ -3,13 +3,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, BookOpen, Columns2, Lock, FileText, ClipboardCheck, Scale, Share2, FlaskConical, Users, Settings, Receipt, Mail, CalendarDays, Brain, Sparkles, BarChart2, Megaphone } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Columns2, Lock, FileText, ClipboardCheck, Scale, Share2, FlaskConical, Users, Settings, Receipt, Mail, CalendarDays, Brain, Sparkles, BarChart2, Megaphone, ScrollText } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/founder/dashboard',   label: 'Dashboard',  icon: LayoutDashboard },
   { href: '/founder/bookkeeper', label: 'Bookkeeper', icon: BookOpen },
   { href: '/founder/xero',      label: 'Xero',       icon: Receipt },
+  { href: '/founder/invoices',  label: 'Invoices',   icon: ScrollText },
   { href: '/founder/kanban',     label: 'Kanban',     icon: Columns2 },
   { href: '/founder/vault',     label: 'Vault',      icon: Lock },
   { href: '/founder/notes',     label: 'Notes',      icon: FileText },

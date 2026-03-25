@@ -18,6 +18,7 @@ import {
   Clock,
   AlertCircle,
   Loader2,
+  Send,
 } from 'lucide-react'
 import type { CoachType, CoachReport } from '@/lib/coaches/types'
 import { COACH_CONFIGS } from '@/lib/coaches/types'
@@ -78,9 +79,47 @@ function CoachCard({
   report: CoachReport | undefined
 }) {
   const [expanded, setExpanded] = useState(false)
+  const [question, setQuestion] = useState('')
+  const [asking, setAsking] = useState(false)
+  const [answer, setAnswer] = useState<string | null>(null)
+  const [askError, setAskError] = useState<string | null>(null)
+
   const Icon = COACH_ICONS[type]
   const colour = COACH_COLOURS[type]
   const config = COACH_CONFIGS[type]
+
+  async function askCoach() {
+    if (!question.trim() || asking) return
+    setAsking(true)
+    setAnswer(null)
+    setAskError(null)
+
+    try {
+      const res = await fetch('/api/coaches/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ coachType: type, question: question.trim() }),
+      })
+
+      if (res.status === 429) {
+        setAskError('Rate limit reached — wait a moment and try again.')
+        return
+      }
+      if (!res.ok) {
+        const err = await res.json() as { error?: string }
+        setAskError(err.error ?? 'Ask failed — please try again.')
+        return
+      }
+
+      const data = await res.json() as { brief: string }
+      setAnswer(data.brief)
+      setQuestion('')
+    } catch {
+      setAskError('Network error — please try again.')
+    } finally {
+      setAsking(false)
+    }
+  }
 
   return (
     <div
@@ -111,6 +150,7 @@ function CoachCard({
 
       {expanded && (
         <div className="px-4 pb-4 border-t border-white/5">
+          {/* Daily brief */}
           {report?.status === 'completed' && report.brief_markdown ? (
             <MarkdownBrief content={report.brief_markdown} />
           ) : report?.status === 'failed' ? (
@@ -127,6 +167,51 @@ function CoachCard({
               No brief available yet. The {config.name.toLowerCase()} runs daily at its scheduled time.
             </p>
           )}
+
+          {/* Ask panel */}
+          <div className="mt-4 pt-3 border-t border-white/5">
+            <p className="text-[11px] uppercase tracking-widest mb-2" style={{ color: 'var(--color-text-disabled)' }}>
+              Ask this coach
+            </p>
+            <textarea
+              value={question}
+              onChange={e => setQuestion(e.target.value)}
+              placeholder={`Ask the ${config.name.toLowerCase()} anything…`}
+              rows={3}
+              maxLength={2000}
+              className="w-full resize-none rounded-sm border bg-transparent px-3 py-2 text-[13px] outline-none"
+              style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+            />
+            <div className="flex items-center justify-between mt-2">
+              <button
+                onClick={askCoach}
+                disabled={!question.trim() || asking}
+                className="flex items-center gap-2 px-3 h-8 rounded-sm text-[12px] font-medium transition-colors disabled:opacity-40"
+                style={{ background: '#00F5FF', color: '#050505' }}
+              >
+                {asking ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                {asking ? 'Asking…' : 'Ask Coach'}
+              </button>
+              <span className="text-[11px]" style={{ color: 'var(--color-text-disabled)' }}>
+                {question.length} / 2000
+              </span>
+            </div>
+
+            {/* Answer */}
+            {answer && (
+              <div className="mt-3 pt-3 border-t border-white/5">
+                <p className="text-[11px] uppercase tracking-widest mb-1" style={{ color: 'var(--color-text-disabled)' }}>
+                  Response
+                </p>
+                <MarkdownBrief content={answer} />
+              </div>
+            )}
+
+            {/* Error */}
+            {askError && (
+              <p className="mt-2 text-[12px] text-red-400/80">{askError}</p>
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -10,6 +10,7 @@ import { PayablesTab } from './tabs/PayablesTab'
 import { ExpensesTab } from './tabs/ExpensesTab'
 import { BASTab } from './tabs/BASTab'
 import { PLTab } from './tabs/PLTab'
+import { AIAnalysisTab } from './tabs/AIAnalysisTab'
 
 const TABS = [
   { key: 'overview', label: 'Overview' },
@@ -20,6 +21,7 @@ const TABS = [
   { key: 'expenses', label: 'Expenses' },
   { key: 'bas', label: 'BAS' },
   { key: 'pl', label: 'P&L' },
+  { key: 'ai-analysis', label: 'AI Analysis' },
 ] as const
 
 type TabKey = (typeof TABS)[number]['key']
@@ -42,6 +44,8 @@ function renderTab(key: string) {
       return <BASTab />
     case 'pl':
       return <PLTab />
+    case 'ai-analysis':
+      return <AIAnalysisTab />
     default:
       return <OverviewTab />
   }

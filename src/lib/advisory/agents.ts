@@ -14,13 +14,15 @@ import { getGrantsIncentivesPrompt } from './prompts/grants-incentives'
 import { getCashflowOptimisationPrompt } from './prompts/cashflow-optimisation'
 import { getCompliancePrompt } from './prompts/compliance'
 import { getJudgePrompt } from './prompts/judge'
+import { calculateThinkingBudget } from '@/lib/ai/features/thinking'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const FIRM_MODEL = 'claude-sonnet-4-5-20250929'
-const JUDGE_MODEL = 'claude-opus-4-5-20250514'
+const JUDGE_MODEL = 'claude-opus-4-6'
 const DEFAULT_MAX_OUTPUT_TOKENS = 4096
-const JUDGE_MAX_OUTPUT_TOKENS = 8192
+// Judge max_tokens includes adaptive thinking budget (up to 8 000) + structured output (~2 000).
+const JUDGE_MAX_OUTPUT_TOKENS = 10000
 
 // Tool schemas — computed once at module load, reused across all calls.
 // Forces Claude to return structured JSON conforming to the Zod schema
@@ -236,14 +238,22 @@ export async function callJudgeAgent(userMessage: string): Promise<JudgeCallResu
   const client = getAIClient()
   const config = getJudgeAgentConfig()
 
-  const response = await client.messages.create({
+  // Adaptive thinking: judge deliberates on complex 5-round debates —
+  // budget scales with actual message complexity (4 000–8 000 tokens).
+  const thinkingBudget = Math.min(Math.max(calculateThinkingBudget(userMessage), 4000), 8000)
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const judgeParams: any = {
     model: config.model,
     max_tokens: config.maxOutputTokens,
     system: config.systemPrompt,
     messages: [{ role: 'user', content: userMessage }],
     tools: [JUDGE_OUTPUT_TOOL],
     tool_choice: { type: 'tool', name: 'judge_output' },
-  })
+    thinking: { type: 'enabled', budget_tokens: thinkingBudget },
+  }
+
+  const response = await client.messages.create(judgeParams)
 
   const judgeOutput = parseStructuredResponse(response.content, 'judge_output', JudgeOutputSchema)
 

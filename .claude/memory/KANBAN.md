@@ -88,9 +88,16 @@
 
 ---
 
+### Phase 9 — AI Surface Layer ✅ (25/03/2026)
+- [x] UNI-1601: Interactive Coach Ask Panel — "Ask this coach" inline panel on each CoachBriefs card (Opus 4.6 + memory)
+- [x] UNI-1602: Bookkeeper AI Analysis Tab — 9th tab with Direct Analysis + Full Advisory Pipeline modes, financial snapshot attachment
+- [x] UNI-1603: Strategy Research Mode — "Research first" toggle on Strategy Room, research-to-brief pipeline with two-panel output
+
+---
+
 ## IN PROGRESS
 
-*(nothing — Phase 6 and 7 both closed)*
+*(nothing — Phase 9 closed)*
 
 ---
 
@@ -104,18 +111,18 @@
 ### Phase 8 — AI Integration Depth (after Phase 7 complete)
 > UNI-1499–1510. Sequence: Structured Outputs → AI Router → Batch API → Memory Tool → Adaptive Thinking.
 
-- [ ] UNI-1499: Enable Adaptive Thinking on Claude Opus 4.6
-- [ ] UNI-1500: Implement MCP Connector Layer
-- [ ] UNI-1501: Implement Files API for Persistent Document Storage
-- [ ] UNI-1502: Implement Memory Tool for Cross-Session Persistence
-- [ ] UNI-1503: Enable Web Search and Web Fetch Server-Side Tools
-- [ ] UNI-1504: Enable Batch API for Cost Optimisation
-- [ ] UNI-1505: Enable Citations for Verifiable Agent Outputs
+- [x] UNI-1499: Enable Adaptive Thinking on Claude Opus 4.6 ✅ (25/03/2026)
+- [x] UNI-1500: Implement MCP Connector Layer ✅ (25/03/2026)
+- [x] UNI-1501: Implement Files API for Persistent Document Storage ✅ (25/03/2026)
+- [x] UNI-1502: Implement Memory Tool for Cross-Session Persistence ✅ (25/03/2026)
+- [x] UNI-1503: Enable Web Search and Web Fetch Server-Side Tools ✅ (25/03/2026)
+- [x] UNI-1504: Enable Batch API for Cost Optimisation ✅ (25/03/2026)
+- [x] UNI-1505: Enable Citations for Verifiable Agent Outputs ✅ (25/03/2026)
 - [x] UNI-1506: Enable Structured Outputs for Type-Safe Agent Communication ✅ (25/03/2026)
-- [ ] UNI-1507: Enable Code Execution Sandbox
-- [ ] UNI-1508: Build AI Orchestration Router
-- [ ] UNI-1509: Build AI Pipeline Coordinator
-- [ ] UNI-1510: Build Macro Coaches
+- [x] UNI-1507: Enable Code Execution Sandbox ✅ (25/03/2026)
+- [x] UNI-1508: Build AI Orchestration Router ✅ (25/03/2026)
+- [x] UNI-1509: Build AI Pipeline Coordinator ✅ (25/03/2026)
+- [x] UNI-1510: Build Macro Coaches ✅ (25/03/2026)
 
 ### Other Active Linear Issues
 - [ ] UNI-1478: WhatsApp bridge integration (backlog — after Phase 7)

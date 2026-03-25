@@ -467,6 +467,85 @@ export async function fetchTaxRates(
   return response.TaxRates ?? []
 }
 
+// ── Create invoice ───────────────────────────────────────────────────────────
+
+export interface XeroInvoiceLineItemInput {
+  description: string
+  quantity: number
+  unitAmount: number     // AUD dollars (not cents)
+  accountCode?: string   // default "200" (generic sales revenue)
+  taxType?: string       // default "OUTPUT2" (10% GST)
+}
+
+export interface XeroCreateInvoiceInput {
+  contactName: string
+  dueDate: string        // YYYY-MM-DD
+  lineItems: XeroInvoiceLineItemInput[]
+  reference?: string
+}
+
+export async function createInvoice(
+  founderId: string,
+  businessKey: string,
+  input: XeroCreateInvoiceInput
+): Promise<XeroInvoice> {
+  const tokens = await getTokensForBusiness(founderId, businessKey)
+
+  const body = {
+    Invoices: [{
+      Type: 'ACCREC',
+      Contact: { Name: input.contactName },
+      Date: new Date().toISOString().slice(0, 10),
+      DueDate: input.dueDate,
+      Status: 'DRAFT',
+      LineAmountTypes: 'INCLUSIVE',
+      Reference: input.reference ?? '',
+      LineItems: input.lineItems.map((li) => ({
+        Description: li.description,
+        Quantity: li.quantity,
+        UnitAmount: li.unitAmount,
+        AccountCode: li.accountCode ?? '200',
+        TaxType: li.taxType ?? 'OUTPUT2',
+      })),
+    }],
+  }
+
+  const response = await xeroApiFetch<{ Invoices: XeroInvoice[] }>(
+    tokens,
+    '/Invoices',
+    { method: 'POST', body }
+  )
+
+  const created = response.Invoices?.[0]
+  if (!created) throw new Error('Xero returned no invoice in response')
+  return created
+}
+
+// ── Update invoice status ────────────────────────────────────────────────────
+
+export async function updateInvoiceStatus(
+  founderId: string,
+  businessKey: string,
+  invoiceId: string,
+  status: 'AUTHORISED' | 'VOIDED'
+): Promise<XeroInvoice> {
+  const tokens = await getTokensForBusiness(founderId, businessKey)
+
+  const body = {
+    Invoices: [{ InvoiceID: invoiceId, Status: status }],
+  }
+
+  const response = await xeroApiFetch<{ Invoices: XeroInvoice[] }>(
+    tokens,
+    '/Invoices',
+    { method: 'POST', body }
+  )
+
+  const updated = response.Invoices?.[0]
+  if (!updated) throw new Error('Xero returned no invoice in status update response')
+  return updated
+}
+
 // ── Reconcile a bank transaction ────────────────────────────────────────────
 
 export async function reconcileTransaction(
