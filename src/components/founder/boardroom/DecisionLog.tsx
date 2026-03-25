@@ -28,7 +28,7 @@ const STATUS_ICONS = {
   open: <Circle size={12} style={{ color: '#f97316' }} />,
   decided: <Circle size={12} style={{ color: '#00F5FF' }} />,
   completed: <CheckCircle2 size={12} style={{ color: '#22c55e' }} />,
-  cancelled: <XCircle size={12} style={{ color: '#6b7280' }} />,
+  cancelled: <XCircle size={12} style={{ color: 'var(--color-text-disabled)' }} />,
 }
 
 const NEXT_STATUS: Record<string, string> = {
@@ -218,13 +218,29 @@ export function DecisionLog() {
       )}
 
       {/* Decision list */}
-      {loading && <p className="text-[12px]" style={{ color: 'var(--color-text-disabled)' }}>Loading…</p>}
+      {loading && (
+        <div className="space-y-2 animate-pulse" aria-label="Loading decisions">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="rounded-sm border px-4 py-3 flex items-start gap-3" style={{ borderColor: 'var(--color-border)', background: 'var(--surface-card)', borderLeft: '3px solid var(--surface-elevated)' }}>
+              <div className="w-3 h-3 rounded-sm mt-0.5 flex-shrink-0" style={{ background: 'var(--surface-elevated)' }} />
+              <div className="flex-1 space-y-2">
+                <div className="h-3 rounded-sm w-56" style={{ background: 'var(--surface-elevated)' }} />
+                <div className="flex gap-2">
+                  <div className="h-2.5 rounded-sm w-16" style={{ background: 'var(--surface-elevated)' }} />
+                  <div className="h-2.5 rounded-sm w-24" style={{ background: 'var(--surface-elevated)' }} />
+                </div>
+              </div>
+              <div className="h-6 w-20 rounded-sm flex-shrink-0" style={{ background: 'var(--surface-elevated)' }} />
+            </div>
+          ))}
+        </div>
+      )}
       {!loading && visible.length === 0 && (
         <p className="text-[12px] py-6 text-center" style={{ color: 'var(--color-text-disabled)' }}>No decisions yet. Record your first strategic decision.</p>
       )}
       <div className="space-y-2">
         {visible.map((d) => {
-          const typeColor = TYPE_COLORS[d.type] ?? '#6b7280'
+          const typeColor = TYPE_COLORS[d.type] ?? 'var(--color-text-disabled)'
           const biz = BUSINESSES.find((b) => b.key === d.business_key)
           return (
             <div

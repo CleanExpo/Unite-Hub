@@ -37,7 +37,7 @@ const STATUS_COLORS: Record<string, string> = {
   new: '#00F5FF',
   reviewing: '#f97316',
   acted: '#22c55e',
-  archived: '#6b7280',
+  archived: 'var(--color-text-disabled)',
 }
 
 const AGENDA_ORDER = ['shipped', 'linear', 'github', 'financials', 'strategy', 'decisions', 'gantt']
@@ -204,6 +204,7 @@ export function MeetingCard({ meeting, onStatusChange }: MeetingCardProps) {
                 disabled={!noteText.trim() || submittingNote}
                 className="px-3 rounded-sm flex items-center transition-colors disabled:opacity-40"
                 style={{ background: '#00F5FF', color: '#050505' }}
+                aria-label="Submit board note"
               >
                 {submittingNote ? <Plus size={12} className="animate-spin" /> : <Send size={12} />}
               </button>

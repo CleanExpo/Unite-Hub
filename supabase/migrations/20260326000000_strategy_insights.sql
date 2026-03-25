@@ -40,3 +40,12 @@ CREATE POLICY "founder owns comments" ON strategy_insight_comments
   FOR ALL USING (
     insight_id IN (SELECT id FROM strategy_insights WHERE founder_id = auth.uid())
   );
+
+-- ROLLBACK
+-- Run in this order to respect foreign-key dependencies (child tables first):
+--
+-- DROP POLICY IF EXISTS "founder owns comments" ON strategy_insight_comments;
+-- DROP POLICY IF EXISTS "founder owns insights" ON strategy_insights;
+--
+-- DROP TABLE IF EXISTS strategy_insight_comments;
+-- DROP TABLE IF EXISTS strategy_insights;

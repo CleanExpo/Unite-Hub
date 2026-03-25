@@ -17,7 +17,7 @@ function StatusDot({ connected, label, detail, href }: IntegrationDot) {
   const inner = (
     <div className="flex items-center gap-2">
       <span
-        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+        className="w-1.5 h-1.5 rounded-sm flex-shrink-0"
         style={{ background: connected ? '#00F5FF' : '#4a5568' }}
       />
       <span className="text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>

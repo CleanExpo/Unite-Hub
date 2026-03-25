@@ -76,3 +76,21 @@ CREATE POLICY "founder owns ceo_decisions" ON ceo_decisions
 
 CREATE POLICY "founder owns team_members" ON team_members
   FOR ALL USING (founder_id = auth.uid());
+
+-- ROLLBACK
+-- Run in this order to respect foreign-key dependencies (child tables first):
+--
+-- DROP POLICY IF EXISTS "founder owns board_meeting_notes" ON board_meeting_notes;
+-- DROP POLICY IF EXISTS "founder owns board_meetings" ON board_meetings;
+-- DROP POLICY IF EXISTS "founder owns ceo_decisions" ON ceo_decisions;
+-- DROP POLICY IF EXISTS "founder owns team_members" ON team_members;
+--
+-- DROP INDEX IF EXISTS board_meeting_notes_meeting_id_created_at_idx;
+-- DROP INDEX IF EXISTS board_meetings_founder_id_meeting_date_idx;
+-- DROP INDEX IF EXISTS ceo_decisions_founder_id_status_deadline_idx;
+-- DROP INDEX IF EXISTS team_members_founder_id_active_idx;
+--
+-- DROP TABLE IF EXISTS board_meeting_notes;
+-- DROP TABLE IF EXISTS board_meetings;
+-- DROP TABLE IF EXISTS ceo_decisions;
+-- DROP TABLE IF EXISTS team_members;

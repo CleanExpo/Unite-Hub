@@ -2030,6 +2030,80 @@ export type Database = {
           },
         ]
       }
+      board_meeting_notes: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          meeting_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          meeting_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          meeting_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "board_meeting_notes_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "board_meetings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      board_meetings: {
+        Row: {
+          agenda: Json
+          brief_md: string
+          created_at: string | null
+          founder_id: string
+          github_data: Json | null
+          id: string
+          linear_data: Json | null
+          meeting_date: string
+          metrics: Json | null
+          status: string
+          updated_at: string | null
+          xero_data: Json | null
+        }
+        Insert: {
+          agenda?: Json
+          brief_md?: string
+          created_at?: string | null
+          founder_id: string
+          github_data?: Json | null
+          id?: string
+          linear_data?: Json | null
+          meeting_date?: string
+          metrics?: Json | null
+          status?: string
+          updated_at?: string | null
+          xero_data?: Json | null
+        }
+        Update: {
+          agenda?: Json
+          brief_md?: string
+          created_at?: string | null
+          founder_id?: string
+          github_data?: Json | null
+          id?: string
+          linear_data?: Json | null
+          meeting_date?: string
+          metrics?: Json | null
+          status?: string
+          updated_at?: string | null
+          xero_data?: Json | null
+        }
+        Relationships: []
+      }
       brand_guidelines: {
         Row: {
           approved_words: string[] | null
@@ -2299,6 +2373,51 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           website_url?: string | null
+        }
+        Relationships: []
+      }
+      ceo_decisions: {
+        Row: {
+          amount_aud: number | null
+          business_key: string | null
+          created_at: string | null
+          deadline: string | null
+          founder_id: string
+          id: string
+          metadata: Json | null
+          rationale: string | null
+          status: string
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          amount_aud?: number | null
+          business_key?: string | null
+          created_at?: string | null
+          deadline?: string | null
+          founder_id: string
+          id?: string
+          metadata?: Json | null
+          rationale?: string | null
+          status?: string
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          amount_aud?: number | null
+          business_key?: string | null
+          created_at?: string | null
+          deadline?: string | null
+          founder_id?: string
+          id?: string
+          metadata?: Json | null
+          rationale?: string | null
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -11198,6 +11317,83 @@ export type Database = {
           },
         ]
       }
+      strategy_insight_comments: {
+        Row: {
+          author: string
+          content: string
+          created_at: string | null
+          id: string
+          insight_id: string
+        }
+        Insert: {
+          author?: string
+          content: string
+          created_at?: string | null
+          id?: string
+          insight_id: string
+        }
+        Update: {
+          author?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          insight_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategy_insight_comments_insight_id_fkey"
+            columns: ["insight_id"]
+            isOneToOne: false
+            referencedRelation: "strategy_insights"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategy_insights: {
+        Row: {
+          body: string
+          business_key: string
+          created_at: string | null
+          founder_id: string
+          id: string
+          metadata: Json | null
+          priority: string
+          run_date: string
+          status: string
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          body: string
+          business_key: string
+          created_at?: string | null
+          founder_id: string
+          id?: string
+          metadata?: Json | null
+          priority?: string
+          run_date?: string
+          status?: string
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          body?: string
+          business_key?: string
+          created_at?: string | null
+          founder_id?: string
+          id?: string
+          metadata?: Json | null
+          priority?: string
+          run_date?: string
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       submission_notes: {
         Row: {
           content: string
@@ -11403,6 +11599,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      team_members: {
+        Row: {
+          active: boolean
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          founder_id: string
+          github_login: string | null
+          id: string
+          linear_user_id: string | null
+          metadata: Json | null
+          name: string
+          role: string
+        }
+        Insert: {
+          active?: boolean
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          founder_id: string
+          github_login?: string | null
+          id?: string
+          linear_user_id?: string | null
+          metadata?: Json | null
+          name: string
+          role: string
+        }
+        Update: {
+          active?: boolean
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          founder_id?: string
+          github_login?: string | null
+          id?: string
+          linear_user_id?: string | null
+          metadata?: Json | null
+          name?: string
+          role?: string
+        }
+        Relationships: []
       }
       test_failure_patterns: {
         Row: {

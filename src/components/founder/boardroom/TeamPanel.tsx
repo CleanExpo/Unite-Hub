@@ -155,11 +155,26 @@ export function TeamPanel() {
         </div>
       )}
 
-      {loading && <p className="text-[12px]" style={{ color: 'var(--color-text-disabled)' }}>Loading…</p>}
+      {loading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 animate-pulse" aria-label="Loading team members">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="rounded-sm border p-4" style={{ borderColor: 'var(--color-border)', background: 'var(--surface-card)', borderLeft: '3px solid var(--surface-elevated)' }}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-sm flex-shrink-0" style={{ background: 'var(--surface-elevated)' }} />
+                <div className="space-y-1.5 flex-1">
+                  <div className="h-3 rounded-sm w-28" style={{ background: 'var(--surface-elevated)' }} />
+                  <div className="h-2.5 rounded-sm w-16" style={{ background: 'var(--surface-elevated)' }} />
+                </div>
+              </div>
+              <div className="h-2 rounded-sm w-40 mt-2" style={{ background: 'var(--surface-elevated)' }} />
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
         {members.map((m) => {
-          const roleColor = ROLE_COLORS[m.role] ?? '#6b7280'
+          const roleColor = ROLE_COLORS[m.role] ?? 'var(--color-text-disabled)'
           const isAI = m.role === 'ai-agent'
           return (
             <div

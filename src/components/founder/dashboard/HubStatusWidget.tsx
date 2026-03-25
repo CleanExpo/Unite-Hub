@@ -29,7 +29,7 @@ const HEALTH_COLOURS: Record<string, string> = {
   green:   '#22c55e',
   yellow:  '#f59e0b',
   red:     '#ef4444',
-  unknown: '#6b7280',
+  unknown: 'var(--color-text-disabled)',
 }
 
 const HEALTH_LABELS: Record<string, string> = {
@@ -53,7 +53,7 @@ function formatRelative(isoDate: string | null): string {
 }
 
 function getBusinessColour(key: string): string {
-  return BUSINESSES.find(b => b.key === key)?.color ?? '#6b7280'
+  return BUSINESSES.find(b => b.key === key)?.color ?? 'var(--color-text-disabled)'
 }
 
 // ---------------------------------------------------------------------------
@@ -61,7 +61,7 @@ function getBusinessColour(key: string): string {
 // ---------------------------------------------------------------------------
 
 function SatelliteCard({ satellite }: { satellite: HubSatellite }) {
-  const healthColor = HEALTH_COLOURS[satellite.health_status] ?? '#6b7280'
+  const healthColor = HEALTH_COLOURS[satellite.health_status] ?? 'var(--color-text-disabled)'
   const bizColor = getBusinessColour(satellite.business_key)
 
   return (
@@ -77,7 +77,7 @@ function SatelliteCard({ satellite }: { satellite: HubSatellite }) {
       {/* Header: business dot + name + health chip */}
       <div className="flex items-center gap-2">
         <span
-          className="rounded-full shrink-0"
+          className="rounded-sm shrink-0"
           style={{ width: 8, height: 8, background: bizColor }}
         />
         <span

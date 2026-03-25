@@ -130,7 +130,7 @@ export function KPICard({
       {/* Business header */}
       <div className="flex items-center gap-2">
         <span
-          className="rounded-full shrink-0"
+          className="rounded-sm shrink-0"
           style={{ width: 8, height: 8, background: business.color }}
         />
         <span className="text-[13px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>{business.name}</span>
@@ -142,7 +142,7 @@ export function KPICard({
             ) : live.source === 'xero' ? (
               <>
                 <span
-                  className="rounded-full shrink-0"
+                  className="rounded-sm shrink-0"
                   style={{
                     width: 6,
                     height: 6,
@@ -157,7 +157,7 @@ export function KPICard({
             ) : (
               <>
                 <span
-                  className="rounded-full shrink-0"
+                  className="rounded-sm shrink-0"
                   style={{ width: 6, height: 6, background: '#555' }}
                 />
                 <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'var(--color-text-disabled)' }}>

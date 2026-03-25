@@ -53,7 +53,23 @@ export function GanttChart() {
     return () => window.removeEventListener('resize', measure)
   }, [])
 
-  if (loading) return <p className="text-[12px] py-8 text-center" style={{ color: 'var(--color-text-disabled)' }}>Loading Gantt…</p>
+  if (loading) return (
+    <div className="space-y-2 py-4 animate-pulse" aria-label="Loading Gantt chart">
+      {/* Month header bar */}
+      <div className="flex gap-2 mb-3">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="h-2.5 rounded-sm w-12" style={{ background: 'var(--surface-elevated)' }} />
+        ))}
+      </div>
+      {/* Skeleton rows */}
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <div className="h-3 rounded-sm w-40 flex-shrink-0" style={{ background: 'var(--surface-elevated)' }} />
+          <div className="h-4 rounded-sm flex-1" style={{ background: 'var(--surface-elevated)', maxWidth: `${40 + (i % 3) * 20}%` }} />
+        </div>
+      ))}
+    </div>
+  )
   if (!data || data.items.length === 0) {
     return (
       <div className="py-12 text-center space-y-2">
@@ -125,7 +141,7 @@ export function GanttChart() {
             if (row.type === 'divider') {
               return (
                 <div key={`div-${i}`} className="flex items-center gap-1.5 h-5 mb-0.5 px-2">
-                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: row.color }} />
+                  <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: row.color }} />
                   <span className="text-[10px] font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-disabled)' }}>
                     {row.label}
                   </span>
