@@ -8,7 +8,11 @@ import { BUSINESSES } from '@/lib/businesses'
 import { SidebarNav } from './SidebarNav'
 import { SidebarBusinessItem } from './SidebarBusinessItem'
 
-export function Sidebar() {
+interface SidebarProps {
+  user: { name: string; email: string }
+}
+
+export function Sidebar({ user }: SidebarProps) {
   const sidebarOpen = useUIStore((s) => s.sidebarOpen)
 
   return (
@@ -26,7 +30,7 @@ export function Sidebar() {
         className="flex items-center h-11 px-3 shrink-0 border-b"
         style={{ borderColor: 'var(--color-border)' }}
       >
-        <span className="text-[15px] font-semibold select-none" style={{ color: '#00F5FF' }}>
+        <span className="text-[15px] font-semibold select-none" style={{ color: 'var(--color-accent)' }}>
           ◈
         </span>
         {sidebarOpen && (
@@ -94,16 +98,16 @@ export function Sidebar() {
       >
         <div
           className="w-6 h-6 rounded-sm flex items-center justify-center text-[10px] font-semibold shrink-0"
-          style={{ background: '#00F5FF', color: '#050505' }}
+          style={{ background: 'var(--color-accent)', color: 'var(--surface-canvas)' }}
         >
-          P
+          {user.name.charAt(0).toUpperCase()}
         </div>
         {sidebarOpen && (
           <span
             className="ml-2 text-[12px] truncate"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            Phill McGurk
+            {user.name}
           </span>
         )}
       </div>

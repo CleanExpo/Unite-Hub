@@ -37,7 +37,7 @@ export default function Input({
           className="block text-sm font-medium text-white/60 mb-2"
         >
           {label}
-          {props.required && <span className="text-[#FF4444] ml-1">*</span>}
+          {props.required && <span className="text-[var(--color-danger)] ml-1">*</span>}
         </label>
       )}
 
@@ -51,8 +51,8 @@ export default function Input({
         <input
           id={inputId}
           className={`
-            block w-full rounded-sm border-[0.5px] bg-white/[0.02] text-white/90 placeholder-white/30 focus:outline-none focus:border-[#00F5FF]/40 disabled:opacity-50 disabled:cursor-not-allowed
-            ${hasError ? 'border-[#FF4444]/40 focus:border-[#FF4444]/60' : 'border-white/[0.06]'}
+            block w-full rounded-sm border-[0.5px] bg-white/[0.02] text-white/90 placeholder-white/30 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed
+            ${hasError ? 'input-focus-error' : 'input-focus'}
             ${leftIcon ? 'pl-10' : 'pl-4'}
             ${rightIcon ? 'pr-10' : 'pr-4'}
             py-2.5
@@ -75,7 +75,7 @@ export default function Input({
       {error && (
         <p
           id={`${inputId}-error`}
-          className="mt-2 text-sm text-[#FF4444]"
+          className="mt-2 text-sm text-[var(--color-danger)]"
           role="alert"
         >
           {error}

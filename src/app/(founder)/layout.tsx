@@ -12,5 +12,10 @@ export default async function FounderLayout({ children }: { children: React.Reac
     redirect('/auth/login')
   }
 
-  return <FounderShell>{children}</FounderShell>
+  const name = user.user_metadata?.full_name
+    ?? user.email?.split('@')[0]
+    ?? 'Founder'
+  const email = user.email ?? ''
+
+  return <FounderShell user={{ name, email }}>{children}</FounderShell>
 }

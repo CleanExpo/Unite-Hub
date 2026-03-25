@@ -16,7 +16,12 @@ const CommandBar = dynamic(
   { ssr: false }
 )
 
-export function FounderShell({ children }: { children: React.ReactNode }) {
+interface FounderShellProps {
+  children: React.ReactNode
+  user: { name: string; email: string }
+}
+
+export function FounderShell({ children, user }: FounderShellProps) {
   const toggleSidebar = useUIStore((s) => s.toggleSidebar)
   const sidebarOpen = useUIStore((s) => s.sidebarOpen)
   const toggleCommandBar = useUIStore((s) => s.toggleCommandBar)
@@ -46,7 +51,7 @@ export function FounderShell({ children }: { children: React.ReactNode }) {
           onClick={toggleSidebar}
         />
       )}
-      <Sidebar />
+      <Sidebar user={user} />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <Topbar />
         <main className="flex-1 overflow-auto">

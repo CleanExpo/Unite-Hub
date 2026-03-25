@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createBrowserClient } from "@supabase/ssr";
+import Input from "@/components/ui/input";
+import Button from "@/components/ui/button";
 
 function getSupabase() {
   return createBrowserClient(
@@ -53,74 +55,62 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm border border-white/[0.06] p-8">
-        <p className="text-xs uppercase tracking-[0.4em] text-white/60 mb-6">
-          Nexus — Unite Group
+    <>
+      <h1 className="text-2xl font-extralight text-white/90 mb-8">Set new password</h1>
+
+      {error && (
+        <p className="text-sm text-[var(--color-danger)] mb-4 border border-[var(--color-danger)]/20 bg-[var(--color-danger-dim)] px-3 py-2 rounded-sm">
+          {error}
         </p>
-        <h1 className="text-2xl font-extralight text-white/90 mb-8">
-          Set new password
-        </h1>
+      )}
 
-        {error && (
-          <p className="text-sm text-red-400 mb-4 border border-red-400/20 bg-red-400/5 px-3 py-2 rounded-sm">
-            {error}
-          </p>
-        )}
+      {success ? (
+        <p className="text-sm mb-4" style={{ color: 'var(--color-accent)' }}>
+          Password updated. Redirecting to dashboard…
+        </p>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            id="reset-new-password"
+            label="New password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={8}
+            autoComplete="new-password"
+          />
+          <Input
+            id="reset-confirm-password"
+            label="Confirm password"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            minLength={8}
+            autoComplete="new-password"
+          />
+          <Button
+            type="submit"
+            variant="primary"
+            size="md"
+            fullWidth
+            loading={loading}
+            className="mt-2 text-xs uppercase tracking-[0.2em]"
+          >
+            Update password
+          </Button>
+        </form>
+      )}
 
-        {success ? (
-          <div>
-            <p className="text-sm text-[#00F5FF]/80 mb-4">
-              Password updated successfully. Redirecting to dashboard…
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="reset-new-password" className="block text-xs uppercase tracking-[0.15em] text-white/60 mb-2">
-                New password
-              </label>
-              <input
-                id="reset-new-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={8}
-                className="w-full bg-white/[0.03] border border-white/[0.08] px-3 py-2.5 text-sm text-white/90 outline-none focus:border-[#00F5FF]/40 rounded-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="reset-confirm-password" className="block text-xs uppercase tracking-[0.15em] text-white/60 mb-2">
-                Confirm password
-              </label>
-              <input
-                id="reset-confirm-password"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                minLength={8}
-                className="w-full bg-white/[0.03] border border-white/[0.08] px-3 py-2.5 text-sm text-white/90 outline-none focus:border-[#00F5FF]/40 rounded-sm"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full mt-2 py-2.5 bg-[#00F5FF]/10 border border-[#00F5FF]/30 text-[#00F5FF] text-xs uppercase tracking-[0.2em] hover:bg-[#00F5FF]/20 disabled:opacity-50 rounded-sm transition-colors"
-            >
-              {loading ? "Updating…" : "Update password"}
-            </button>
-          </form>
-        )}
-
+      <div className="mt-6 text-center">
         <Link
           href="/auth/login"
-          className="mt-6 block text-center text-xs uppercase tracking-[0.15em] text-white/50 hover:text-white/70 transition-colors"
+          className="text-[11px] font-mono tracking-wider text-white/35 hover:text-white/55 transition-colors"
         >
           Back to sign in
         </Link>
       </div>
-    </div>
+    </>
   );
 }

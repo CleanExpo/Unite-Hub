@@ -7,18 +7,36 @@ import { useUIStore } from '@/store/ui'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 
 const BREADCRUMB_MAP: Record<string, string> = {
-  '/founder/dashboard': 'Dashboard',
-  '/founder/kanban':    'Kanban',
-  '/founder/vault':     'Vault',
-  '/founder/approvals': 'Approvals',
-  '/founder/settings':  'Settings',
-  '/founder/strategy':  'Strategy Room',
+  '/founder/dashboard':   'Dashboard',
+  '/founder/bookkeeper':  'Bookkeeper',
+  '/founder/xero':        'Xero',
+  '/founder/invoices':    'Invoices',
+  '/founder/kanban':      'Kanban',
+  '/founder/vault':       'Vault',
+  '/founder/notes':       'Notes',
+  '/founder/approvals':   'Approvals',
+  '/founder/advisory':    'Advisory',
+  '/founder/strategy':    'Strategy Room',
+  '/founder/social':      'Social',
+  '/founder/analytics':   'Analytics',
+  '/founder/campaigns':   'Campaigns',
+  '/founder/experiments': 'Experiments',
+  '/founder/contacts':    'Contacts',
+  '/founder/email':       'Email',
+  '/founder/calendar':    'Calendar',
+  '/founder/skills':      'Skills',
+  '/founder/settings':    'Settings',
 }
 
 function getBreadcrumb(pathname: string): string {
   if (BREADCRUMB_MAP[pathname]) return BREADCRUMB_MAP[pathname]
   const parts = pathname.split('/').filter(Boolean)
-  if (parts.length >= 3) return parts.slice(1).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' / ')
+  if (parts[0] === 'founder' && parts.length >= 2) {
+    const seg = parts[1]
+    const sub = parts[2]
+    const label = seg.charAt(0).toUpperCase() + seg.slice(1)
+    return sub ? `${label} / ${sub.charAt(0).toUpperCase() + sub.slice(1)}` : label
+  }
   return 'Nexus'
 }
 
@@ -104,8 +122,8 @@ export function Topbar() {
             </p>
             <div className="flex flex-col gap-1.5">
               {[
-                { label: 'Command Bar', keys: '⌘K' },
-                { label: 'Capture Idea', keys: '⌘I' },
+                { label: 'Command Bar',    keys: '⌘K' },
+                { label: 'Capture Idea',   keys: '⌘I' },
                 { label: 'Toggle Sidebar', keys: '⌘\\' },
               ].map((s) => (
                 <div key={s.keys} className="flex items-center justify-between text-[12px]">

@@ -44,7 +44,7 @@ export function SidebarNav({ collapsed }: SidebarNavProps) {
             className={cn(
               'nav-item-hover relative flex items-center gap-2 px-2 h-8 rounded-sm text-[13px] font-medium transition-colors duration-100',
               active
-                ? 'before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:bg-[#00F5FF] before:rounded-r-sm'
+                ? 'before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[2px] before:bg-[var(--color-accent)] before:rounded-r-sm'
                 : ''
             )}
             style={active
