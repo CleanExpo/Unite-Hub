@@ -57,7 +57,7 @@ export function Topbar() {
       <button
         onClick={toggleSidebar}
         className="md:hidden transition-colors"
-        style={{ color: 'var(--color-text-disabled)' }}
+        style={{ color: 'var(--color-text-muted)' }}
         aria-label="Toggle sidebar"
       >
         <Menu size={16} strokeWidth={1.75} />
@@ -76,7 +76,7 @@ export function Topbar() {
         <button
           onClick={toggleCapture}
           className="transition-colors"
-          style={{ color: 'var(--color-text-disabled)' }}
+          style={{ color: 'var(--color-text-muted)' }}
           aria-label="Capture idea"
           title="Capture idea (send to Linear)"
         >
@@ -89,7 +89,7 @@ export function Topbar() {
           style={{
             borderColor: 'var(--color-border)',
             background: 'var(--surface-card)',
-            color: 'var(--color-text-disabled)',
+            color: 'var(--color-text-muted)',
           }}
           aria-label="Command palette"
         >
@@ -101,7 +101,7 @@ export function Topbar() {
           <PopoverTrigger asChild>
             <button
               className="transition-colors"
-              style={{ color: 'var(--color-text-disabled)' }}
+              style={{ color: 'var(--color-text-muted)' }}
               aria-label="Help"
             >
               <HelpCircle size={16} strokeWidth={1.75} />
@@ -117,7 +117,7 @@ export function Topbar() {
           >
             <p
               className="text-[10px] font-medium tracking-widest uppercase mb-2"
-              style={{ color: 'var(--color-text-disabled)' }}
+              style={{ color: 'var(--color-text-muted)' }}
             >
               Keyboard Shortcuts
             </p>
@@ -133,7 +133,7 @@ export function Topbar() {
                     className="font-mono text-[10px] px-1.5 py-0.5 rounded-sm"
                     style={{
                       background: 'var(--surface-card)',
-                      color: 'var(--color-text-disabled)',
+                      color: 'var(--color-text-muted)',
                       border: '1px solid var(--color-border)',
                     }}
                   >

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { ApprovalItem } from './ApprovalItem'
 import { BUSINESSES } from '@/lib/businesses'
 
-const bizColor = (key: string) => BUSINESSES.find(b => b.key === key)?.color ?? '#555555'
+const bizColor = (key: string) => BUSINESSES.find(b => b.key === key)?.color ?? '#808080'
 
 const INITIAL_QUEUE = [
   { id: '1', businessKey: 'synthex', action: 'Post to LinkedIn',       detail: 'Monthly performance update — 847 words',  requestedBy: 'Nexus AI', requestedAt: '09/03/2026 09:00' },

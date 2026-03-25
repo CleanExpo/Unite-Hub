@@ -75,7 +75,7 @@
     --color-text-primary:   #f0f0f0;
     --color-text-secondary: #999999;
     --color-text-muted:     #888888;
-    --color-text-disabled:  #555555;
+    --color-text-disabled:  #808080;
     --color-border:         rgba(255, 255, 255, 0.10);
     --color-border-strong:  rgba(255, 255, 255, 0.18);
     --color-success:        #22c55e;
@@ -143,7 +143,7 @@
     --color-text-primary:   #0A0A0A;
     --color-text-secondary: #52525B;
     --color-text-muted:     #71717A;
-    --color-text-disabled:  #A1A1AA;
+    --color-text-disabled:  #767676;
 
     /* Borders */
     --color-border:        rgba(0, 0, 0, 0.08);

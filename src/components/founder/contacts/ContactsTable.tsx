@@ -7,7 +7,7 @@ const STATUS_COLOURS: Record<Contact['status'], string> = {
   prospect: '#f97316',
   client: '#22c55e',
   churned: '#ef4444',
-  archived: '#555555',
+  archived: '#808080',
 }
 
 interface ContactsTableProps {
