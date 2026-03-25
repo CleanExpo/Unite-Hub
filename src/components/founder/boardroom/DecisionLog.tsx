@@ -56,7 +56,11 @@ export function DecisionLog() {
     try {
       const params = filterStatus ? `?status=${filterStatus}` : ''
       const res = await fetch(`/api/boardroom/decisions${params}`)
-      const d = await res.json() as { decisions: Decision[] }
+      const d = await res.json() as { decisions?: Decision[]; error?: string }
+      if (!res.ok) {
+        console.error('[DecisionLog] load error:', d.error)
+        return
+      }
       setDecisions(d.decisions ?? [])
     } finally {
       setLoading(false)
@@ -80,14 +84,18 @@ export function DecisionLog() {
           business_key: form.business_key || undefined,
         }),
       })
+      const body = await res.json() as { decision?: Decision; error?: string }
       if (!res.ok) {
-        const d = await res.json() as { error?: string }
-        setFormError(d.error ?? `Save failed (${res.status})`)
+        setFormError(body.error ?? `Save failed (${res.status})`)
         return
       }
+      // Prepend directly from response so the decision appears immediately
+      if (body.decision) {
+        setDecisions((prev) => [body.decision!, ...prev])
+      }
+      setFilterStatus(null)  // reset filter so the new 'open' decision is visible
       setForm({ title: '', type: 'strategic', rationale: '', amount_aud: '', deadline: '', business_key: '' })
       setShowForm(false)
-      await load()
     } finally {
       setSubmitting(false)
     }
