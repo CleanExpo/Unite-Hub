@@ -59,6 +59,34 @@
     {
       "path": "/api/cron/hub-sweep",
       "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=dr",
+      "schedule": "0 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=nrpg",
+      "schedule": "5 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=carsi",
+      "schedule": "10 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=restore",
+      "schedule": "15 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=synthex",
+      "schedule": "20 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=ato",
+      "schedule": "25 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=ccw",
+      "schedule": "30 16 * * *"
     }
   ],
   "functions": {
@@ -106,6 +134,9 @@
     },
     "src/app/api/cron/hub-sweep/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/cron/strategy-daily/route.ts": {
+      "maxDuration": 120
     },
     "src/app/api/campaigns/scan/route.ts": {
       "maxDuration": 120

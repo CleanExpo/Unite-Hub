@@ -2,9 +2,12 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Brain, Globe } from 'lucide-react'
+import { Brain, Globe, Layers } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { BUSINESSES } from '@/lib/businesses'
+import { InsightsBoard } from './InsightsBoard'
+
+type Tab = 'insights' | 'analysis'
 
 interface Citation {
   type: string
@@ -20,6 +23,7 @@ interface PipelineStep {
 }
 
 export function StrategyRoomClient() {
+  const [activeTab, setActiveTab] = useState<Tab>('insights')
   const [prompt, setPrompt] = useState('')
   const [business, setBusiness] = useState<string>('')
   const [researchMode, setResearchMode] = useState(false)
@@ -127,6 +131,31 @@ export function StrategyRoomClient() {
     : 'Opus is thinking. Extended analysis takes 15–30 seconds.'
 
   return (
+    <div className="space-y-6">
+      {/* Tab switcher */}
+      <div className="flex gap-1 p-0.5 rounded-sm border w-fit" style={{ borderColor: 'var(--color-border)', background: 'var(--surface-canvas)' }}>
+        {([
+          { id: 'insights', label: 'AI Insights Board', icon: <Layers size={13} /> },
+          { id: 'analysis', label: 'Deep Analysis', icon: <Brain size={13} /> },
+        ] as const).map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[12px] transition-colors"
+            style={{
+              background: activeTab === tab.id ? 'var(--surface-card)' : 'transparent',
+              color: activeTab === tab.id ? 'var(--color-text-primary)' : 'var(--color-text-disabled)',
+            }}
+          >
+            {tab.icon}
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'insights' && <InsightsBoard />}
+
+      {activeTab === 'analysis' && (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Business selector */}
       <div className="space-y-2">
@@ -273,6 +302,8 @@ export function StrategyRoomClient() {
             </div>
           </motion.div>
         </div>
+      )}
+    </div>
       )}
     </div>
   )
