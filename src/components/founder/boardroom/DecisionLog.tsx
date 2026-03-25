@@ -62,11 +62,14 @@ export function DecisionLog() {
     }
   }
 
+  const [formError, setFormError] = useState<string | null>(null)
+
   async function createDecision() {
     if (!form.title.trim() || submitting) return
     setSubmitting(true)
+    setFormError(null)
     try {
-      await fetch('/api/boardroom/decisions', {
+      const res = await fetch('/api/boardroom/decisions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -78,6 +81,11 @@ export function DecisionLog() {
           business_key: form.business_key || undefined,
         }),
       })
+      if (!res.ok) {
+        const d = await res.json() as { error?: string }
+        setFormError(d.error ?? `Save failed (${res.status})`)
+        return
+      }
       setForm({ title: '', type: 'strategic', rationale: '', amount_aud: '', deadline: '', business_key: '' })
       setShowForm(false)
       await load()
@@ -183,6 +191,9 @@ export function DecisionLog() {
             className="w-full resize-none rounded-sm border px-3 py-2 text-[12px] outline-none"
             style={{ borderColor: 'var(--color-border)', background: 'var(--surface-canvas)', color: 'var(--color-text-primary)' }}
           />
+          {formError && (
+            <p className="text-[11px] px-2 py-1 rounded-sm" style={{ color: '#ef4444', background: 'rgba(239,68,68,0.1)' }}>{formError}</p>
+          )}
           <div className="flex gap-2">
             <button
               onClick={() => void createDecision()}
