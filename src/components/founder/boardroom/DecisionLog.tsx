@@ -45,6 +45,7 @@ export function DecisionLog() {
   // Form state
   const [form, setForm] = useState({ title: '', type: 'strategic', rationale: '', amount_aud: '', deadline: '', business_key: '' })
   const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
 
   useEffect(() => {
     void load()
@@ -61,8 +62,6 @@ export function DecisionLog() {
       setLoading(false)
     }
   }
-
-  const [formError, setFormError] = useState<string | null>(null)
 
   async function createDecision() {
     if (!form.title.trim() || submitting) return

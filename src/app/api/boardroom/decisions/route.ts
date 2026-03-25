@@ -19,6 +19,7 @@ export async function GET(request: Request) {
   let query = supabase
     .from('ceo_decisions')
     .select('*')
+    .eq('founder_id', user.id)
     .order('created_at', { ascending: false })
 
   if (type) query = query.eq('type', type)
@@ -57,6 +58,9 @@ export async function POST(request: Request) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[CEO Decisions] insert error:', error.code, error.message, error.details)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
   return NextResponse.json({ decision: data }, { status: 201 })
 }
