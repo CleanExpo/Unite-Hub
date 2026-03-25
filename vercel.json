@@ -61,6 +61,10 @@
       "schedule": "0 13 * * *"
     },
     {
+      "path": "/api/cron/ceo-board-meeting",
+      "schedule": "50 1 * * *"
+    },
+    {
       "path": "/api/cron/strategy-daily?business=dr",
       "schedule": "0 16 * * *"
     },
@@ -136,6 +140,9 @@
       "maxDuration": 60
     },
     "src/app/api/cron/strategy-daily/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/cron/ceo-board-meeting/route.ts": {
       "maxDuration": 120
     },
     "src/app/api/campaigns/scan/route.ts": {
