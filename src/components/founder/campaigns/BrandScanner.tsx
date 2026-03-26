@@ -38,7 +38,7 @@ interface ScanResponse {
 type ScanState = 'idle' | 'scanning' | 'complete' | 'error'
 
 interface BrandScannerProps {
-  onScanComplete: (profileId: string) => void
+  onScanComplete: (profileId: string, clientName: string) => void
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -212,7 +212,7 @@ export function BrandScanner({ onScanComplete }: BrandScannerProps) {
 
   const handleCreateCampaign = useCallback(() => {
     if (result) {
-      onScanComplete(result.profileId)
+      onScanComplete(result.profileId, result.clientName)
     }
   }, [result, onScanComplete])
 

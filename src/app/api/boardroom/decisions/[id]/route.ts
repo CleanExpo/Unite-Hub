@@ -17,12 +17,21 @@ export async function PATCH(
     rationale?: string
     amount_aud?: number
     deadline?: string
+    business_key?: string
   }
+
+  // Only allow explicit fields — never spread body directly to prevent field injection
+  const patch: Record<string, unknown> = { updated_at: new Date().toISOString() }
+  if (body.status       !== undefined) patch.status       = body.status
+  if (body.rationale    !== undefined) patch.rationale    = body.rationale
+  if (body.amount_aud   !== undefined) patch.amount_aud   = body.amount_aud
+  if (body.deadline     !== undefined) patch.deadline     = body.deadline
+  if (body.business_key !== undefined) patch.business_key = body.business_key
 
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('ceo_decisions')
-    .update({ ...body, updated_at: new Date().toISOString() })
+    .update(patch)
     .eq('id', id)
     .select()
     .single()

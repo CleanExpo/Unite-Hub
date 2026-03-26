@@ -83,7 +83,7 @@ export default function NewCampaignPage() {
 
       {/* Step content */}
       {step === 'scan' && (
-        <BrandScanner onScanComplete={(profileId) => handleScanComplete(profileId)} />
+        <BrandScanner onScanComplete={(profileId, clientName) => handleScanComplete(profileId, clientName)} />
       )}
 
       {step === 'generate' && scan && (

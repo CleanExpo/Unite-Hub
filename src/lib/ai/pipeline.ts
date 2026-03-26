@@ -16,9 +16,26 @@ export interface PipelineStepResult {
   output: AIResponse
 }
 
+/**
+ * Sprint contract — Anthropic harness pattern.
+ * Declares what a step will produce and success criteria.
+ * Injected into the step's prompt to constrain output shape without over-specifying implementation.
+ */
+export interface PipelineStepContract {
+  /** What this step produces (e.g. "JSON with fields: threats[], counterMoves[]") */
+  produces: string
+  /** Optional explicit success criteria for this step's output */
+  successCriteria?: string
+}
+
 export interface PipelineStep {
   /** Registered capability id to invoke. */
   capabilityId: string
+  /**
+   * Optional sprint contract — declares expected output shape.
+   * When present, the contract is appended to the step's user message.
+   */
+  contract?: PipelineStepContract
   /**
    * Build the ExecuteInput for this step.
    * Receives all prior step results so downstream steps can incorporate upstream findings.
@@ -55,10 +72,28 @@ export async function runPipeline(
 
   for (const step of pipeline.steps) {
     const input = step.buildInput(results)
+
+    // Inject sprint contract into the last user message if defined (harness pattern B3)
+    const contractedInput: ExecuteInput = step.contract
+      ? {
+          ...input,
+          messages: input.messages.map((msg, i) =>
+            i === input.messages.length - 1 && msg.role === 'user'
+              ? {
+                  ...msg,
+                  content: typeof msg.content === 'string'
+                    ? `${msg.content}\n\nOutput contract: ${step.contract!.produces}${step.contract!.successCriteria ? `\nSuccess criteria: ${step.contract!.successCriteria}` : ''}`
+                    : msg.content,
+                }
+              : msg
+          ),
+        }
+      : input
+
     // Merge caller context into each step's input context
     const mergedInput: ExecuteInput = {
-      ...input,
-      context: { ...context, ...(input.context ?? {}) },
+      ...contractedInput,
+      context: { ...context, ...(contractedInput.context ?? {}) },
     }
 
     const output = await execute(step.capabilityId, mergedInput)

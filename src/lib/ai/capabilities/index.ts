@@ -1,6 +1,9 @@
 // src/lib/ai/capabilities/index.ts
 // Barrel export for all capability configs + idempotent registration helper
 
+// src/lib/ai/capabilities/index.ts
+// Barrel export for all capability configs + idempotent registration helper
+
 import { registerCapability } from '../router'
 import { analyzeCapability } from './analyze'
 import { ideasCapability } from './ideas'
@@ -10,6 +13,7 @@ import { emailTriageCapability } from './email-triage'
 import { researchCapability } from './research'
 import { dataAnalystCapability } from './data-analyst'
 import { coachCapability } from './coach'
+import { insightEvaluatorCapability } from './insight-evaluator'
 
 export { analyzeCapability } from './analyze'
 export { ideasCapability } from './ideas'
@@ -19,6 +23,7 @@ export { emailTriageCapability } from './email-triage'
 export { researchCapability } from './research'
 export { dataAnalystCapability } from './data-analyst'
 export { coachCapability } from './coach'
+export { insightEvaluatorCapability } from './insight-evaluator'
 
 let _registered = false
 
@@ -34,6 +39,7 @@ export function registerAllCapabilities(): void {
   registerCapability(researchCapability)
   registerCapability(dataAnalystCapability)
   registerCapability(coachCapability)
+  registerCapability(insightEvaluatorCapability)
 
   _registered = true
 }

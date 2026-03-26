@@ -110,7 +110,17 @@ export async function POST(request: Request) {
       })
       .eq('id', profileId)
 
-    return NextResponse.json({ id: profileId, status: 'ready', brandDNA })
+    return NextResponse.json({
+      profileId,
+      clientName,
+      status: 'ready' as const,
+      industry:        brandDNA.industry ?? null,
+      toneOfVoice:     brandDNA.toneOfVoice ?? null,
+      targetAudience:  brandDNA.targetAudience ?? null,
+      colours:         brandDNA.colours,
+      referenceImages: brandDNA.referenceImages ?? [],
+      brandDNA,
+    })
 
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

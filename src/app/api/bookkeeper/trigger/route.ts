@@ -15,7 +15,7 @@ import { captureApiError } from '@/lib/error-reporting'
 import { triggerMacasAdvisory } from '@/lib/advisory/auto-trigger'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 800 // 13 min — Vercel Pro max, needed for full paginated sync
+export const maxDuration = 300 // 5 min — Vercel Pro limit
 
 export async function POST(req: NextRequest) {
     const startTime = Date.now()

@@ -18,6 +18,7 @@ import { strategyToDecisionPipeline } from '@/lib/ai/pipelines/strategy-to-decis
 import { synthexContentPipeline } from '@/lib/ai/pipelines/synthex-content'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 120
 
 // Register capabilities + pipelines (idempotent)
 registerAllCapabilities()

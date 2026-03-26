@@ -1,6 +1,9 @@
 // src/lib/ceo-board/daily-briefing.ts
 // AI synthesis engine for the daily CEO Board Meeting.
-// Takes pre-fetched structured data and produces board minutes via Sonnet 4.6.
+// Applies Anthropic harness pattern: context reset + structured handoff.
+// Phase 1 (parallel Haiku): Each data source → compact artifact (max 200 tokens each).
+// Phase 2 (Sonnet, clean context): Receives only the compact artifacts → full board minutes.
+// This prevents context anxiety as data volume grows, per the harness design doc.
 
 import { getAIClient } from '@/lib/ai/client'
 import type { GitHubCommitSummary, GitHubPRSummary } from '@/lib/integrations/github-board'
@@ -88,13 +91,50 @@ Return ONLY the JSON. No preamble, no markdown fences.`
 export async function runDailyBriefing(input: BriefingInput): Promise<BoardMeetingResult> {
   const ai = getAIClient()
 
-  const userMessage = buildUserMessage(input)
+  // ── Phase 1: Summarise each data source in parallel (Haiku, clean context per source) ──
+  // Each source produces a compact artifact (max 200 tokens) to prevent context bloat.
+  const [linearSummary, githubSummary, xeroSummary, coachSummary] = await Promise.all([
+    summariseSection(ai, 'Linear', buildLinearBlock(input)),
+    summariseSection(ai, 'GitHub', buildGitHubBlock(input)),
+    summariseSection(ai, 'Xero Financials', buildXeroBlock(input)),
+    summariseSection(ai, 'Coach Reports', buildCoachBlock(input)),
+  ])
+
+  // ── Phase 2: Synthesise — clean context, compact artifacts only ──
+  const handoffMessage = [
+    `## Board Meeting — ${input.meetingDate}`,
+    '',
+    '### Linear (shipped · in-flight · overdue)',
+    linearSummary,
+    '',
+    '### GitHub',
+    githubSummary,
+    '',
+    '### Xero MTD Financials',
+    xeroSummary,
+    '',
+    '### Coach Reports',
+    coachSummary,
+    '',
+    '### Strategy Insights',
+    input.strategyInsights.length === 0
+      ? 'None being actioned.'
+      : input.strategyInsights
+          .filter((s) => s.status !== 'new')
+          .slice(0, 5)
+          .map((s) => `- [${s.type}] ${s.title} (${s.priority} · ${s.status})`)
+          .join('\n'),
+    '',
+    `### Open CEO Decisions: ${input.openDecisions} awaiting resolution`,
+    '',
+    'Generate the board meeting briefing for the CEO.',
+  ].join('\n')
 
   const response = await ai.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 4000,
     system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: userMessage }],
+    messages: [{ role: 'user', content: handoffMessage }],
   })
 
   const text = response.content
@@ -115,71 +155,79 @@ export async function runDailyBriefing(input: BriefingInput): Promise<BoardMeeti
 }
 
 // ---------------------------------------------------------------------------
-// Build user message from structured data
+// Phase 1 helper: summarise a section via Haiku (clean context per call)
 // ---------------------------------------------------------------------------
 
-function buildUserMessage(input: BriefingInput): string {
-  const lines: string[] = [
-    `## Board Meeting — ${input.meetingDate}`,
-    '',
-    '### COACH REPORTS (yesterday)',
-    ...input.coachReports.map((r) =>
-      `- ${r.coach_type.toUpperCase()} (${r.status}): ${r.brief_markdown.slice(0, 200)}…`
-    ),
-    '',
-    '### LINEAR — Completed Yesterday',
-    input.linearCompleted.length === 0
-      ? '- Nothing completed yesterday'
-      : input.linearCompleted.map((i) => `- [${i.team.key}] ${i.identifier}: ${i.title}`).join('\n'),
-    '',
-    '### LINEAR — In Flight',
-    input.linearInFlight.length === 0
-      ? '- No issues in progress'
-      : input.linearInFlight.map((i) =>
-          `- [${i.team.key}] ${i.identifier}: ${i.title} (${i.state.name}${i.assignee ? ` · ${i.assignee.name}` : ''})`
-        ).join('\n'),
-    '',
-    '### LINEAR — Overdue Issues',
-    input.linearOverdue.length === 0
-      ? '- No overdue issues'
-      : input.linearOverdue.map((i) =>
-          `- [${i.team.key}] ${i.identifier}: ${i.title} (due ${i.dueDate})`
-        ).join('\n'),
-    '',
-    '### GITHUB',
-  ]
+async function summariseSection(
+  ai: ReturnType<typeof getAIClient>,
+  sectionName: string,
+  rawData: string
+): Promise<string> {
+  try {
+    const response = await ai.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 250,
+      system: 'You are a concise data summariser. Produce a 3–5 bullet point summary of the provided data. Be specific about numbers and names. Output plain text only.',
+      messages: [{ role: 'user', content: `Summarise this ${sectionName} data:\n\n${rawData}` }],
+    })
+    return response.content
+      .filter((b) => b.type === 'text')
+      .map((b) => (b as { type: 'text'; text: string }).text)
+      .join('')
+      .trim()
+  } catch {
+    return rawData.slice(0, 400) // fallback to raw data if Haiku fails
+  }
+}
 
-  if (!input.githubConfigured) {
-    lines.push('- GitHub not configured (GITHUB_TOKEN not set)')
+// ---------------------------------------------------------------------------
+// Phase 1 block builders — raw data per section for Haiku summarisation
+// ---------------------------------------------------------------------------
+
+function buildLinearBlock(input: BriefingInput): string {
+  const lines: string[] = []
+  lines.push('Completed yesterday:')
+  if (input.linearCompleted.length === 0) {
+    lines.push('  None')
   } else {
-    lines.push(
-      `Commits yesterday: ${input.githubCommits.length}`,
-      ...input.githubCommits.slice(0, 10).map((c) => `- [${c.repo}] ${c.sha} ${c.message} (${c.author})`),
-      `Open PRs: ${input.githubPRs.length}`,
-      ...input.githubPRs.map((pr) => `- [${pr.repo}] #${pr.number}: ${pr.title} (${pr.user})${pr.draft ? ' [DRAFT]' : ''}`)
+    input.linearCompleted.forEach((i) => lines.push(`  [${i.team.key}] ${i.identifier}: ${i.title}`))
+  }
+  lines.push('In-flight:')
+  if (input.linearInFlight.length === 0) {
+    lines.push('  None')
+  } else {
+    input.linearInFlight.forEach((i) =>
+      lines.push(`  [${i.team.key}] ${i.identifier}: ${i.title} (${i.state.name}${i.assignee ? ` · ${i.assignee.name}` : ''})`)
     )
   }
-
-  lines.push(
-    '',
-    '### XERO — MTD Revenue',
-    ...input.xeroSummary.map((x) =>
-      `- ${x.businessKey.toUpperCase()}: Revenue AUD $${(x.revenueAud / 100).toLocaleString('en-AU')} | Expenses AUD $${(x.expensesAud / 100).toLocaleString('en-AU')} | Growth ${x.growth > 0 ? '+' : ''}${x.growth}% MoM`
-    ),
-    '',
-    '### STRATEGY INSIGHTS (actioned/reviewing)',
-    input.strategyInsights.length === 0
-      ? '- No insights being actioned'
-      : input.strategyInsights
-          .filter((s) => s.status !== 'new')
-          .slice(0, 5)
-          .map((s) => `- [${s.type}] ${s.title} (${s.priority} priority · ${s.status})`)
-          .join('\n'),
-    '',
-    `### OPEN CEO DECISIONS: ${input.openDecisions} awaiting resolution`,
-    '',
-    'Generate the board meeting briefing for the CEO.'
-  )
-
+  lines.push('Overdue:')
+  if (input.linearOverdue.length === 0) {
+    lines.push('  None')
+  } else {
+    input.linearOverdue.forEach((i) => lines.push(`  [${i.team.key}] ${i.identifier}: ${i.title} (due ${i.dueDate})`))
+  }
   return lines.join('\n')
+}
+
+function buildGitHubBlock(input: BriefingInput): string {
+  if (!input.githubConfigured) return 'GitHub not configured (GITHUB_TOKEN not set)'
+  const lines: string[] = [`Commits yesterday: ${input.githubCommits.length}`]
+  input.githubCommits.slice(0, 10).forEach((c) => lines.push(`  [${c.repo}] ${c.message} (${c.author})`))
+  lines.push(`Open PRs: ${input.githubPRs.length}`)
+  input.githubPRs.forEach((pr) => lines.push(`  [${pr.repo}] #${pr.number}: ${pr.title}${pr.draft ? ' [DRAFT]' : ''}`))
+  return lines.join('\n')
+}
+
+function buildXeroBlock(input: BriefingInput): string {
+  if (input.xeroSummary.length === 0) return 'No Xero data available'
+  return input.xeroSummary
+    .map((x) => `${x.businessKey.toUpperCase()}: Revenue AUD $${(x.revenueAud / 100).toLocaleString('en-AU')} | Expenses AUD $${(x.expensesAud / 100).toLocaleString('en-AU')} | Growth ${x.growth > 0 ? '+' : ''}${x.growth}% MoM`)
+    .join('\n')
+}
+
+function buildCoachBlock(input: BriefingInput): string {
+  if (input.coachReports.length === 0) return 'No coach reports'
+  return input.coachReports
+    .map((r) => `${r.coach_type.toUpperCase()} (${r.status}): ${r.brief_markdown.slice(0, 300)}`)
+    .join('\n')
 }
