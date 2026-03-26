@@ -102,7 +102,7 @@ function SocialAnalyticsPanel({ channels }: { channels: SocialChannel[] }) {
 
     fetch(url)
       .then(res => res.json())
-      .then((data: ExperimentSummary[]) => setExperiments(Array.isArray(data) ? data : []))
+      .then((data: { experiments: ExperimentSummary[] }) => setExperiments(data.experiments ?? []))
       .catch(() => setExperiments([]))
       .finally(() => setLoading(false))
   }, [channels])
@@ -174,7 +174,7 @@ function SocialExperimentsPanel({ channels }: { channels: SocialChannel[] }) {
 
     fetch(url)
       .then(res => res.json())
-      .then((data: ExperimentSummary[]) => setExperiments(Array.isArray(data) ? data : []))
+      .then((data: { experiments: ExperimentSummary[] }) => setExperiments(data.experiments ?? []))
       .catch(() => setExperiments([]))
       .finally(() => setLoading(false))
   }, [channels])

@@ -2,12 +2,19 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Brain, Globe, Layers } from 'lucide-react'
+import { Brain, Globe, Layers, Shield, Zap } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { BUSINESSES } from '@/lib/businesses'
 import { InsightsBoard } from './InsightsBoard'
 
 type Tab = 'insights' | 'analysis'
+
+const PIPELINE_OPTIONS = [
+  { id: 'research-to-brief',   label: 'Research + Brief',      hint: 'Web search → strategic brief. 25–45s.', icon: <Globe size={12} /> },
+  { id: 'strategy-to-decision',label: 'Decision Support',       hint: 'Debate + structured CEO decision brief. 30–60s.', icon: <Brain size={12} /> },
+  { id: 'competitor-intel',    label: 'Competitor Intel',       hint: 'Research competitor → threat assessment. 25–45s.', icon: <Shield size={12} /> },
+  { id: 'synthex-content',     label: 'Synthex Content Batch',  hint: 'Research → LinkedIn, email hooks, blog outline. 20–40s.', icon: <Zap size={12} /> },
+]
 
 interface Citation {
   type: string
@@ -27,6 +34,7 @@ export function StrategyRoomClient() {
   const [prompt, setPrompt] = useState('')
   const [business, setBusiness] = useState<string>('')
   const [researchMode, setResearchMode] = useState(false)
+  const [pipelineId, setPipelineId] = useState('research-to-brief')
   const [phase, setPhase] = useState<'idle' | 'researching' | 'analysing'>('idle')
 
   // Direct mode output
@@ -88,7 +96,7 @@ export function StrategyRoomClient() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              pipelineId: 'research-to-brief',
+              pipelineId,
               seed: prompt,
               businessContext: bizContext,
             }),
@@ -118,16 +126,17 @@ export function StrategyRoomClient() {
     }
   }
 
+  const activePipeline = PIPELINE_OPTIONS.find(p => p.id === pipelineId) ?? PIPELINE_OPTIONS[0]!
   const buttonLabel = loading
     ? researchMode
       ? phase === 'researching' ? 'Researching…' : 'Analysing…'
       : 'Analysing…'
     : researchMode
-      ? 'Research + Analyse'
+      ? `Run: ${activePipeline.label}`
       : 'Analyse with Opus'
 
   const hintText = researchMode
-    ? 'Step 1: Web research. Step 2: Deep analysis. Typically 25–45 seconds.'
+    ? activePipeline.hint
     : 'Opus is thinking. Extended analysis takes 15–30 seconds.'
 
   return (
@@ -176,21 +185,37 @@ export function StrategyRoomClient() {
         </select>
       </div>
 
-      {/* Research mode toggle */}
-      <div className="flex items-center gap-3">
-        <Switch
-          checked={researchMode}
-          onCheckedChange={(v) => { setResearchMode(v); resetOutputs() }}
-          className="data-[state=checked]:bg-[#00F5FF]"
-        />
-        <span className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
-          Research first
-        </span>
-        {researchMode && (
-          <span className="text-[11px] px-2 py-0.5 rounded-sm border"
-            style={{ color: '#00F5FF', borderColor: 'rgba(0,245,255,0.2)', background: 'rgba(0,245,255,0.06)' }}>
-            Research + Analysis pipeline
+      {/* Pipeline mode toggle + selector */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Switch
+            checked={researchMode}
+            onCheckedChange={(v) => { setResearchMode(v); resetOutputs() }}
+            className="data-[state=checked]:bg-[#00F5FF]"
+          />
+          <span className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+            Pipeline mode
           </span>
+        </div>
+        {researchMode && (
+          <div className="flex flex-wrap gap-1.5">
+            {PIPELINE_OPTIONS.map(p => (
+              <button
+                key={p.id}
+                onClick={() => { setPipelineId(p.id); resetOutputs() }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border text-[11px] transition-colors"
+                style={{
+                  borderColor: pipelineId === p.id ? '#00F5FF' : 'var(--color-border)',
+                  background: pipelineId === p.id ? 'rgba(0,245,255,0.06)' : 'var(--surface-card)',
+                  color: pipelineId === p.id ? '#00F5FF' : 'var(--color-text-muted)',
+                }}
+                title={p.hint}
+              >
+                {p.icon}
+                {p.label}
+              </button>
+            ))}
+          </div>
         )}
       </div>
 

@@ -13,6 +13,9 @@ import { runPipeline, getPipeline, registerPipeline } from '@/lib/ai/pipeline'
 import { registerAllCapabilities } from '@/lib/ai/capabilities'
 import { researchToBriefPipeline } from '@/lib/ai/pipelines/research-to-brief'
 import { bookkeeperToAdvisoryPipeline } from '@/lib/ai/pipelines/bookkeeper-to-advisory'
+import { competitorIntelPipeline } from '@/lib/ai/pipelines/competitor-intel'
+import { strategyToDecisionPipeline } from '@/lib/ai/pipelines/strategy-to-decision'
+import { synthexContentPipeline } from '@/lib/ai/pipelines/synthex-content'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,6 +23,9 @@ export const dynamic = 'force-dynamic'
 registerAllCapabilities()
 registerPipeline(researchToBriefPipeline)
 registerPipeline(bookkeeperToAdvisoryPipeline)
+registerPipeline(competitorIntelPipeline)
+registerPipeline(strategyToDecisionPipeline)
+registerPipeline(synthexContentPipeline)
 
 export async function POST(request: Request) {
   const user = await getUser()
@@ -55,7 +61,7 @@ export async function POST(request: Request) {
   const pipeline = getPipeline(pipelineId)
   if (!pipeline) {
     return NextResponse.json(
-      { error: `Pipeline '${pipelineId}' not found. Available: research-to-brief, bookkeeper-to-advisory` },
+      { error: `Pipeline '${pipelineId}' not found. Available: research-to-brief, bookkeeper-to-advisory, competitor-intel, strategy-to-decision, synthex-content` },
       { status: 404 }
     )
   }

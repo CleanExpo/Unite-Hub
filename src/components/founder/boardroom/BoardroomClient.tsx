@@ -1,19 +1,21 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Building2, GitBranch, Target, Users, RefreshCw } from 'lucide-react'
+import { Building2, GitBranch, Target, Users, RefreshCw, Send } from 'lucide-react'
 import { MeetingCard, type BoardMeeting } from './MeetingCard'
 import { GanttChart } from './GanttChart'
 import { DecisionLog } from './DecisionLog'
 import { TeamPanel } from './TeamPanel'
+import { DispatchPanel } from './DispatchPanel'
 
-type Tab = 'meeting' | 'gantt' | 'decisions' | 'team'
+type Tab = 'meeting' | 'gantt' | 'decisions' | 'team' | 'dispatch'
 
 const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   { id: 'meeting',   label: "Today's Meeting", icon: <Building2 size={13} /> },
   { id: 'gantt',     label: 'Gantt',           icon: <GitBranch size={13} /> },
   { id: 'decisions', label: 'Decisions',        icon: <Target size={13} /> },
   { id: 'team',      label: 'Team',             icon: <Users size={13} /> },
+  { id: 'dispatch',  label: 'Dispatch',         icon: <Send size={13} /> },
 ]
 
 export function BoardroomClient() {
@@ -121,6 +123,7 @@ export function BoardroomClient() {
       {tab === 'gantt' && <GanttChart />}
       {tab === 'decisions' && <DecisionLog />}
       {tab === 'team' && <TeamPanel />}
+      {tab === 'dispatch' && <DispatchPanel />}
     </div>
   )
 }

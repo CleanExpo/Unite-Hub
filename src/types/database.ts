@@ -2421,6 +2421,57 @@ export type Database = {
         }
         Relationships: []
       }
+      satellite_dispatches: {
+        Row: {
+          id: string
+          founder_id: string
+          business_key: string
+          title: string
+          description: string | null
+          priority: number
+          type: string
+          deadline: string | null
+          linear_issue_id: string | null
+          linear_issue_url: string | null
+          status: string
+          metadata: Json | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          founder_id: string
+          business_key: string
+          title: string
+          description?: string | null
+          priority?: number
+          type?: string
+          deadline?: string | null
+          linear_issue_id?: string | null
+          linear_issue_url?: string | null
+          status?: string
+          metadata?: Json | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          founder_id?: string
+          business_key?: string
+          title?: string
+          description?: string | null
+          priority?: number
+          type?: string
+          deadline?: string | null
+          linear_issue_id?: string | null
+          linear_issue_url?: string | null
+          status?: string
+          metadata?: Json | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       campaign_assets: {
         Row: {
           campaign_id: string
