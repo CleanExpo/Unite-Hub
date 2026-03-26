@@ -18,81 +18,38 @@ ALTER TABLE email_campaigns ADD CONSTRAINT email_campaigns_status_check
   CHECK (status IN ('draft','scheduled','sending','partial','sent','failed','cancelled'));
 
 -- ── service_role RLS bypass policies ─────────────────────────────────────────
--- Cron routes use createServiceClient() which authenticates as service_role.
--- Without TO service_role policies, writes are silently blocked by RLS.
--- Only add if the table exists and doesn't already have a service_role policy.
+-- Only add policy if: (1) the table exists, AND (2) the policy doesn't already exist.
+-- This makes the migration safe to run even when boardroom tables aren't yet applied.
 
 DO $$
+DECLARE
+  tbl TEXT;
+  tables TEXT[] := ARRAY[
+    'strategy_insights',
+    'board_meetings',
+    'board_meeting_notes',
+    'ceo_decisions',
+    'satellite_dispatches',
+    'hub_satellites',
+    'coach_reports',
+    'social_engagements',
+    'email_campaigns'
+  ];
 BEGIN
-  -- strategy_insights
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'strategy_insights' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON strategy_insights TO service_role USING (true) WITH CHECK (true)';
-  END IF;
-
-  -- board_meetings
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'board_meetings' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON board_meetings TO service_role USING (true) WITH CHECK (true)';
-  END IF;
-
-  -- board_meeting_notes
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'board_meeting_notes' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON board_meeting_notes TO service_role USING (true) WITH CHECK (true)';
-  END IF;
-
-  -- ceo_decisions
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'ceo_decisions' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON ceo_decisions TO service_role USING (true) WITH CHECK (true)';
-  END IF;
-
-  -- satellite_dispatches
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'satellite_dispatches' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON satellite_dispatches TO service_role USING (true) WITH CHECK (true)';
-  END IF;
-
-  -- hub_satellites
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'hub_satellites' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON hub_satellites TO service_role USING (true) WITH CHECK (true)';
-  END IF;
-
-  -- coach_reports
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'coach_reports' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON coach_reports TO service_role USING (true) WITH CHECK (true)';
-  END IF;
-
-  -- social_engagements
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'social_engagements' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON social_engagements TO service_role USING (true) WITH CHECK (true)';
-  END IF;
-
-  -- email_campaigns
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE tablename = 'email_campaigns' AND policyname = 'service_role bypass'
-  ) THEN
-    EXECUTE 'CREATE POLICY "service_role bypass" ON email_campaigns TO service_role USING (true) WITH CHECK (true)';
-  END IF;
+  FOREACH tbl IN ARRAY tables LOOP
+    -- Check table exists before attempting to create policy
+    IF EXISTS (
+      SELECT 1 FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = tbl
+    ) AND NOT EXISTS (
+      SELECT 1 FROM pg_policies
+      WHERE schemaname = 'public' AND tablename = tbl AND policyname = 'service_role bypass'
+    ) THEN
+      EXECUTE format(
+        'CREATE POLICY "service_role bypass" ON %I TO service_role USING (true) WITH CHECK (true)',
+        tbl
+      );
+      RAISE NOTICE 'Added service_role bypass policy to %', tbl;
+    END IF;
+  END LOOP;
 END $$;
