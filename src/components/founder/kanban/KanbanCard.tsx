@@ -48,14 +48,14 @@ export function KanbanCard({ id, title, businessKey, businessColor, isDone, onCl
     >
       <div className={`flex items-center gap-2 ${isDone ? 'opacity-50' : ''}`}>
         <span
-          className="w-2 h-2 rounded-full flex-shrink-0"
+          className="w-2 h-2 rounded-sm flex-shrink-0"
           style={{ background: businessColor }}
           aria-label={BUSINESSES.find((b) => b.key === businessKey)?.name ?? businessKey}
         />
         <span
-          className="text-sm"
+          className="text-[13px]"
           style={{
-            color: isDone ? '#888888' : 'var(--color-text-primary)',
+            color: isDone ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
             textDecoration: isDone ? 'line-through' : 'none',
           }}
         >

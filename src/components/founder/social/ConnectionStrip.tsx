@@ -108,7 +108,8 @@ export function ConnectionStrip({ channels: initialChannels }: Props) {
             <a
               key={platform}
               href={`/api/auth/${authPath(platform)}/authorize?business=${selectedBusiness}`}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] border border-[rgba(255,255,255,0.06)] text-[#888888] hover:border-[rgba(255,255,255,0.12)] hover:text-[#999999] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] border border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)] transition-colors"
+              style={{ color: 'var(--color-text-muted)' }}
             >
               <span>{meta.icon}</span>
               <span>Connect {meta.label}</span>

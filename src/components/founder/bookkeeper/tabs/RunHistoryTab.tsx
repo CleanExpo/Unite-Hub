@@ -10,7 +10,7 @@ const PAGE_SIZE = 20
 
 const RUN_STATUS_CONFIG: Record<string, { color: string; bg: string; border: string; pulse?: boolean }> = {
   completed: { color: '#00F5FF', bg: 'rgba(0,245,255,0.08)', border: 'rgba(0,245,255,0.2)' },
-  partial:   { color: '#eab308', bg: 'rgba(234,179,8,0.08)', border: 'rgba(234,179,8,0.2)' },
+  partial:   { color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
   failed:    { color: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
   running:   { color: '#00F5FF', bg: 'rgba(0,245,255,0.08)', border: 'rgba(0,245,255,0.2)', pulse: true },
 }
@@ -182,7 +182,7 @@ function RunRow({ run, expanded, onToggle }: { run: BookkeeperRun; expanded: boo
         <td className="px-3 py-2.5 text-right tabular-nums" style={{ color: '#00F5FF' }}>
           {run.autoReconciled}
         </td>
-        <td className="px-3 py-2.5 text-right tabular-nums" style={{ color: run.flaggedForReview > 0 ? '#eab308' : 'var(--color-text-disabled)' }}>
+        <td className="px-3 py-2.5 text-right tabular-nums" style={{ color: run.flaggedForReview > 0 ? '#f59e0b' : 'var(--color-text-disabled)' }}>
           {run.flaggedForReview}
         </td>
         <td className="px-3 py-2.5 text-right tabular-nums" style={{ color: isRefund ? 'var(--color-success)' : 'var(--color-danger)' }}>
