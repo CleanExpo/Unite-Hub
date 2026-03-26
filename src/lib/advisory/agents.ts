@@ -19,7 +19,7 @@ import { calculateThinkingBudget } from '@/lib/ai/features/thinking'
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const FIRM_MODEL = 'claude-sonnet-4-5-20250929'
-const JUDGE_MODEL = 'claude-opus-4-6'
+const JUDGE_MODEL = 'claude-opus-4-5-20251101'
 const DEFAULT_MAX_OUTPUT_TOKENS = 4096
 // Judge max_tokens includes adaptive thinking budget (up to 8 000) + structured output (~2 000).
 const JUDGE_MAX_OUTPUT_TOKENS = 10000

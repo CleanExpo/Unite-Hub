@@ -18,8 +18,8 @@ import {
 describe('MODEL_IDS', () => {
   it('contains all supported model identifiers', () => {
     expect(MODEL_IDS).toEqual([
-      'claude-opus-4-6',
-      'claude-sonnet-4-6',
+      'claude-opus-4-5-20251101',
+      'claude-sonnet-4-5-20250929',
       'claude-sonnet-4-5-20250929',
       'claude-opus-4-5-20250514',
       'claude-haiku-3',
@@ -34,7 +34,7 @@ describe('MODEL_IDS', () => {
 
 describe('Type contracts', () => {
   it('ModelId accepts valid model strings', () => {
-    const id: ModelId = 'claude-sonnet-4-6'
+    const id: ModelId = 'claude-sonnet-4-5-20250929'
     expect(MODEL_IDS).toContain(id)
   })
 
@@ -77,7 +77,7 @@ describe('Type contracts', () => {
   it('AICapability supports static systemPrompt', () => {
     const cap: AICapability = {
       id: 'test',
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-4-5-20250929',
       maxTokens: 1024,
       features: {},
       systemPrompt: 'You are a test assistant.',
@@ -88,7 +88,7 @@ describe('Type contracts', () => {
   it('AICapability supports dynamic systemPrompt function', () => {
     const cap: AICapability = {
       id: 'test',
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-4-5-20250929',
       maxTokens: 1024,
       features: {},
       systemPrompt: (ctx) => `Hello ${ctx.userId}`,
@@ -103,7 +103,7 @@ describe('Type contracts', () => {
     const response: AIResponse = {
       content: 'Hello world',
       usage: { inputTokens: 100, outputTokens: 50 },
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-4-5-20250929',
     }
     expect(response.content).toBe('Hello world')
     expect(response.usage.inputTokens).toBe(100)
@@ -121,7 +121,7 @@ describe('Type contracts', () => {
       thinking: 'Internal reasoning here',
       citations: [citation],
       usage: { inputTokens: 200, outputTokens: 300 },
-      model: 'claude-opus-4-6',
+      model: 'claude-opus-4-5-20251101',
     }
     expect(response.thinking).toBe('Internal reasoning here')
     expect(response.citations).toHaveLength(1)
@@ -148,7 +148,7 @@ describe('createCapability', () => {
   it('preserves explicit features when provided', () => {
     const cap = createCapability({
       id: 'thinking-cap',
-      model: 'claude-opus-4-6',
+      model: 'claude-opus-4-5-20251101',
       maxTokens: 8000,
       features: { thinking: { budgetTokens: 5000 } },
       systemPrompt: 'Think deeply.',
@@ -160,7 +160,7 @@ describe('createCapability', () => {
   it('supports dynamic systemPrompt via function', () => {
     const cap = createCapability({
       id: 'dynamic-cap',
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-4-5-20250929',
       maxTokens: 1024,
       systemPrompt: (ctx) => `User: ${ctx.userId}`,
     })

@@ -13,10 +13,10 @@ These skills load on every response via `pre-response.hook`. They are always act
 
 | Skill ID | Purpose |
 |----------|---------|
-| `scientific-luxury` | Scientific Luxury design system enforcement (OLED Black, Cyan, `rounded-sm`) |
-| `execution-guardian` | Execution safety — validates before destructive actions |
-| `council-of-logic` | Multi-perspective reasoning (Turing, Shannon, Von Neumann, Gödel) |
-| `system-supervisor` | Architecture drift detection, complexity monitoring |
+| `scientific-luxury-design` | Scientific Luxury design system — full token set, component patterns, typography, spacing. See `.claude/skills/custom/scientific-luxury-design/` |
+| `execution-guardian` | Blocks destructive operation defaults — confirms before rm/DROP/git push --force/db reset. Retry ceiling. Requirement validation gate. See `.claude/skills/custom/execution-guardian/` |
+| `council-of-logic` | Multi-perspective reasoning — 4 advisors (Turing/correctness, Shannon/information, Von Neumann/systems, Gödel/completeness). Overrides first-answer bias. See `.claude/skills/custom/council-of-logic/` |
+| `system-supervisor` | Architecture drift detection — pre-creation check, duplicate detection, complexity budget, pattern consistency. See `.claude/skills/custom/system-supervisor/` |
 | `context-partitioning` | **NEW** Manifest-first dispatch — orchestrator produces typed manifest before any Agent tool call |
 | `verification-first` | **NEW** Hard verification gate — no task complete without proof (Tier A–D) |
 

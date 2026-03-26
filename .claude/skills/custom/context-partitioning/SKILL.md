@@ -10,6 +10,7 @@ triggers:
   - any_dispatch
   - spawn_subagent
   - agent_harness
+context: fork
 ---
 
 # Context Partitioning — Manifest-First Dispatch

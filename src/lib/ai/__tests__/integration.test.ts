@@ -12,7 +12,7 @@ vi.mock('@anthropic-ai/sdk', () => ({
       create: vi.fn().mockResolvedValue({
         content: [{ type: 'text', text: 'Integration test response' }],
         usage: { input_tokens: 10, output_tokens: 5 },
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-4-5-20250929',
       }),
     },
   })),
@@ -82,7 +82,7 @@ describe('AI Service Layer Integration', () => {
     expect(response.content).toBe('Integration test response')
     expect(response.usage.inputTokens).toBe(10)
     expect(response.usage.outputTokens).toBe(5)
-    expect(response.model).toBe('claude-sonnet-4-6')
+    expect(response.model).toBe('claude-sonnet-4-5-20250929')
   })
 
   it('all feature module exports are accessible', () => {

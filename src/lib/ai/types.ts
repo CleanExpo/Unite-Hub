@@ -7,10 +7,9 @@ import type { ZodObject, ZodRawShape } from 'zod'
 // ── Model registry ──────────────────────────────────────────────────────────
 
 export const MODEL_IDS = [
-  'claude-opus-4-6',
-  'claude-sonnet-4-6',
-  'claude-sonnet-4-5-20250929',
+  'claude-opus-4-5-20251101',
   'claude-opus-4-5-20250514',
+  'claude-sonnet-4-5-20250929',
   'claude-haiku-4-5-20251001',
 ] as const
 

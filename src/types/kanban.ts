@@ -45,15 +45,15 @@ export const COLUMNS: { id: TaskStatus; label: string }[] = [
 ];
 
 export const PRIORITY_COLOURS: Record<TaskPriority, string> = {
-  urgent: '#FF4444',
-  high: '#FFB800',
+  urgent: '#ef4444',
+  high: '#f59e0b',
   medium: '#00F5FF',
   low: '#666666',
 };
 
 export const ASSIGNEE_COLOURS: Record<AssigneeType, string> = {
   agent: '#00F5FF',
-  staff: '#00FF88',
-  client: '#FF00FF',
+  staff: '#22c55e',
+  client: '#a855f7',
   self: '#FFFFFF',
 };

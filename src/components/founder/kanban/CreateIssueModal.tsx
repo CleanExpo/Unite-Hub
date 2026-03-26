@@ -247,7 +247,7 @@ export function CreateIssueModal({ open, onClose, onCreated }: CreateIssueModalP
                   disabled={submitting}
                   className="px-4 py-1.5 text-[11px] rounded-sm transition-colors"
                   style={{
-                    color: '#94a3b8',
+                    color: 'var(--color-text-muted)',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                   }}
                 >

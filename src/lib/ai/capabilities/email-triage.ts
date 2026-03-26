@@ -33,7 +33,7 @@ type TriageOutput = z.infer<typeof TriageOutputSchema>
 
 export const emailTriageCapability = createCapability({
   id: 'email-triage',
-  model: 'claude-sonnet-4-6',
+  model: 'claude-sonnet-4-5-20250929',
   maxTokens: 1024,
   features: {
     structuredOutput: TriageOutputSchema,

@@ -182,19 +182,19 @@ export function KanbanBoard() {
     <div className="flex flex-col gap-3 h-full">
       {!configured && (
         <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs"
-          style={{ background: '#0a1020', border: '1px solid #334155', color: '#94a3b8' }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-[12px]"
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-muted)' }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#334155]" />
+          <span className="w-1.5 h-1.5 rounded-sm" style={{ background: 'var(--color-border)' }} />
           Demo — connect Linear via Settings to see live issues
         </div>
       )}
       {stale && configured && (
         <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs"
-          style={{ background: '#1a1000', border: '1px solid #FFB800', color: '#FFB800' }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-[12px]"
+          style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.30)', color: '#f59e0b' }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-sm bg-[#f59e0b] animate-pulse" />
           Linear unreachable — showing cached data
           <button onClick={loadIssues} className="ml-auto underline opacity-70 hover:opacity-100">
             Retry

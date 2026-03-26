@@ -19,9 +19,9 @@ export function Toaster() {
         return (
           <div
             key={toast.id}
-            className={`group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-sm border p-6 pr-8 shadow-lg transition-all ${
+            className={`group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-sm border p-6 pr-8 transition-all ${
               toast.variant === "destructive"
-                ? "border-[#FF4444]/50 bg-[#FF4444]/10 text-[#FF4444]"
+                ? "border-[#ef4444]/50 bg-[#ef4444]/10 text-[#ef4444]"
                 : "border-white/[0.08] bg-[#050505] text-white/90"
             }`}
           >
@@ -29,16 +29,16 @@ export function Toaster() {
               <Icon
                 className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
                   toast.variant === "destructive"
-                    ? "text-[#FF4444]"
-                    : "text-[#00FF88]"
+                    ? "text-[#ef4444]"
+                    : "text-[#22c55e]"
                 }`}
               />
               <div className="grid gap-1 flex-1">
                 {toast.title && (
-                  <div className="text-sm font-semibold">{toast.title}</div>
+                  <div className="text-[13px] font-semibold">{toast.title}</div>
                 )}
                 {toast.description && (
-                  <div className="text-sm opacity-90">{toast.description}</div>
+                  <div className="text-[13px] opacity-90">{toast.description}</div>
                 )}
               </div>
             </div>

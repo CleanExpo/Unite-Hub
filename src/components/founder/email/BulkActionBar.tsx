@@ -13,7 +13,7 @@ export function BulkActionBar({ selectedCount, onArchive, onDelete, onMarkRead, 
   if (selectedCount === 0) return null
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-zinc-900 border border-white/20 px-4 py-3 rounded-sm shadow-2xl">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-zinc-900 border border-white/20 px-4 py-3 rounded-sm">
       <span className="text-sm text-white/60 mr-1">
         {selectedCount} thread{selectedCount !== 1 ? 's' : ''} selected
       </span>

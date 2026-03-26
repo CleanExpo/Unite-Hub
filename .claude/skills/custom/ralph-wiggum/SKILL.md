@@ -15,6 +15,7 @@ triggers:
 requires:
   - verification-first
   - context-partitioning
+context: fork
 ---
 
 # Ralph Wiggum Technique

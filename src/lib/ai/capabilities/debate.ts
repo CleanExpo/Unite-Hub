@@ -7,7 +7,7 @@ import { createCapability } from '../types'
 
 export const debateCapability = createCapability({
   id: 'debate',
-  model: 'claude-sonnet-4-6',
+  model: 'claude-sonnet-4-5-20250929',
   maxTokens: 4096,
   systemPrompt:
     'You are a specialist accounting firm agent participating in a multi-agent debate. Follow the debate protocol and respond with structured JSON proposals.',

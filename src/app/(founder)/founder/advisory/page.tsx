@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 
 export default function AdvisoryPage() {
   return (
-    <div className="p-4 md:p-6 max-w-7xl mx-auto">
+    <div className="p-6 max-w-7xl mx-auto">
       <PageHeader
         title="Advisory"
         subtitle="4 AI accounting firms debate your tax and finance questions"

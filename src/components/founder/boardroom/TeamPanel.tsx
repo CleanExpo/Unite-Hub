@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Zap, Code2, Palette, Lightbulb, Plus, ExternalLink } from 'lucide-react'
 
 interface TeamMember {
@@ -197,8 +198,7 @@ export function TeamPanel() {
                   }}
                 >
                   {m.avatar_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={m.avatar_url} alt={m.name} className="w-full h-full rounded-sm object-cover" />
+                    <Image src={m.avatar_url} alt={m.name} width={36} height={36} className="w-full h-full rounded-sm object-cover" />
                   ) : (
                     getInitials(m.name)
                   )}

@@ -46,7 +46,7 @@ export default function Spinner({
 export function SpinnerOverlay({ message }: { message?: string }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-[#050505] border border-white/[0.08] rounded-sm shadow-2xl p-8 text-center">
+      <div className="bg-[#050505] border border-white/[0.08] rounded-sm p-8 text-center">
         <Spinner size="xl" />
         {message && (
           <p className="mt-4 text-white/50 font-medium">

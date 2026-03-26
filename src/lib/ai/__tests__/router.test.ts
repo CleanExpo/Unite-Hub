@@ -7,7 +7,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 const mockCreate = vi.fn().mockResolvedValue({
   content: [{ type: 'text', text: 'Mock response' }],
   usage: { input_tokens: 100, output_tokens: 50 },
-  model: 'claude-sonnet-4-6',
+  model: 'claude-sonnet-4-5-20250929',
 })
 
 const mockClient = { messages: { create: mockCreate } }
@@ -27,7 +27,7 @@ import type { AICapability } from '../types'
 
 const baseCap: AICapability = {
   id: 'test-cap',
-  model: 'claude-sonnet-4-6',
+  model: 'claude-sonnet-4-5-20250929',
   maxTokens: 1024,
   features: {},
   systemPrompt: 'You are a test assistant.',
@@ -87,7 +87,7 @@ describe('execute', () => {
     mockCreate.mockResolvedValue({
       content: [{ type: 'text', text: 'Mock response' }],
       usage: { input_tokens: 100, output_tokens: 50 },
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-4-5-20250929',
     })
   })
 
@@ -107,11 +107,11 @@ describe('execute', () => {
     expect(result.content).toBe('Mock response')
     expect(result.usage.inputTokens).toBe(100)
     expect(result.usage.outputTokens).toBe(50)
-    expect(result.model).toBe('claude-sonnet-4-6')
+    expect(result.model).toBe('claude-sonnet-4-5-20250929')
 
     expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-4-5-20250929',
         max_tokens: 1024,
         system: 'You are a test assistant.',
         messages: [{ role: 'user', content: 'Hello' }],
@@ -184,7 +184,7 @@ describe('execute', () => {
         { type: 'text', text: 'Final answer' },
       ],
       usage: { input_tokens: 200, output_tokens: 300 },
-      model: 'claude-opus-4-6',
+      model: 'claude-opus-4-5-20251101',
     })
 
     registerCapability({ ...baseCap, id: 'think-extract' })

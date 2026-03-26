@@ -39,16 +39,9 @@ export function ExperimentCard({ experiment, variantCount }: Props) {
   return (
     <Link href={`/founder/experiments/${experiment.id}`} className="block group">
       <div
-        className="border rounded-sm p-4 transition-colors"
+        className="border rounded-sm p-4 transition-colors bg-[var(--surface-card)] group-hover:bg-[var(--surface-elevated)]"
         style={{
-          background: 'var(--surface-card)',
           borderColor: 'var(--color-border)',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'var(--surface-elevated)'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'var(--surface-card)'
         }}
       >
         <div className="flex items-start justify-between gap-4">
@@ -58,7 +51,7 @@ export function ExperimentCard({ experiment, variantCount }: Props) {
               {business && (
                 <>
                   <span
-                    className="rounded-full shrink-0"
+                    className="rounded-sm shrink-0"
                     style={{ width: 8, height: 8, background: business.color }}
                   />
                   <span

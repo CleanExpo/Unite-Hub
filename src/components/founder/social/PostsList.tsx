@@ -5,9 +5,9 @@ import type { SocialPost, SocialPlatform } from '@/lib/integrations/social/types
 const STATUS_COLOURS: Record<string, string> = {
   draft: 'text-[#999999] border-[#999999]/30',
   scheduled: 'text-[#00F5FF] border-[#00F5FF]/30',
-  publishing: 'text-yellow-400 border-yellow-400/30',
-  published: 'text-green-400 border-green-400/30',
-  failed: 'text-red-400 border-red-400/30',
+  publishing: 'text-[#f59e0b] border-[#f59e0b]/30',
+  published: 'text-[#22c55e] border-[#22c55e]/30',
+  failed: 'text-[#ef4444] border-[#ef4444]/30',
 }
 
 const PLATFORM_COLOURS: Record<SocialPlatform, string> = {
@@ -25,7 +25,7 @@ interface Props {
 export function PostsList({ posts }: Props) {
   if (posts.length === 0) {
     return (
-      <div className="text-sm py-12 text-center" style={{ color: 'var(--color-text-secondary)' }}>
+      <div className="text-[13px] py-12 text-center" style={{ color: 'var(--color-text-secondary)' }}>
         No posts yet — click <span className="text-[#00F5FF]">+ New Post</span> to get started
       </div>
     )
@@ -40,14 +40,14 @@ export function PostsList({ posts }: Props) {
         >
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <p className="text-sm line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{post.content}</p>
+              <p className="text-[13px] line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{post.content}</p>
               {post.scheduledAt && (
                 <p className="text-[11px] mt-1" style={{ color: 'var(--color-text-secondary)' }}>
                   Scheduled: {new Date(post.scheduledAt).toLocaleString('en-AU')}
                 </p>
               )}
               {post.errorMessage && (
-                <p className="text-[11px] text-red-400 mt-1">{post.errorMessage}</p>
+                <p className="text-[11px] mt-1" style={{ color: '#ef4444' }}>{post.errorMessage}</p>
               )}
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">

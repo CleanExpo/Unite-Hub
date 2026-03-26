@@ -143,7 +143,7 @@ function SocialAnalyticsPanel({ channels }: { channels: SocialChannel[] }) {
               {stat.label}
             </p>
             <p
-              className="text-lg font-semibold"
+              className="text-[18px] font-semibold"
               style={{ color: stat.highlight ? '#00F5FF' : 'var(--color-text-primary)' }}
             >
               {stat.value}

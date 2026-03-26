@@ -131,7 +131,7 @@ export async function runDailyBriefing(input: BriefingInput): Promise<BoardMeeti
   ].join('\n')
 
   const response = await ai.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: 'claude-sonnet-4-5-20250929',
     max_tokens: 4000,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: handoffMessage }],

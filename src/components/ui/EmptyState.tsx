@@ -21,13 +21,13 @@ export function EmptyState({ icon: Icon, title, description, action, hint }: Emp
       />
       <div className="flex flex-col items-center gap-1.5">
         <h3
-          className="text-base font-medium"
+          className="text-[14px] font-medium"
           style={{ color: 'var(--color-text-primary)' }}
         >
           {title}
         </h3>
         <p
-          className="text-sm text-center max-w-sm"
+          className="text-[13px] text-center max-w-sm"
           style={{ color: 'var(--color-text-secondary)' }}
         >
           {description}
@@ -62,7 +62,7 @@ export function EmptyState({ icon: Icon, title, description, action, hint }: Emp
       )}
       {hint && (
         <span
-          className="text-xs"
+          className="text-[10px]"
           style={{ color: 'var(--color-text-disabled)' }}
         >
           {hint}

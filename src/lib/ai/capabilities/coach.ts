@@ -39,7 +39,7 @@ const COACH_PERSONAS: Record<CoachType, string> = {
 
 export const coachCapability = createCapability({
   id: 'coach',
-  model: 'claude-opus-4-6',
+  model: 'claude-opus-4-5-20251101',
   // Opus 4.6 + adaptive thinking 2k–8k + response tokens = needs headroom
   maxTokens: 12000,
   features: {

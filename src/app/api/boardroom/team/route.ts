@@ -31,7 +31,7 @@ export async function GET() {
         github_login: null,
         metadata: {
           description: 'AI programmer agent. Assigned tasks from the Boardroom, ships via GitHub and Linear.',
-          model: 'claude-sonnet-4-6',
+          model: 'claude-sonnet-4-5-20250929',
         },
       })
       .select()

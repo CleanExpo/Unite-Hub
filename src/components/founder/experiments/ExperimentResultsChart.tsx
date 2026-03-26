@@ -121,7 +121,7 @@ export function ExperimentResultsChart({ results, variants, metricKey }: Props) 
                 y={y + 3}
                 textAnchor="end"
                 fill="var(--color-text-disabled)"
-                fontSize={9}
+                fontSize={10}
               >
                 {val}
               </text>
@@ -141,7 +141,7 @@ export function ExperimentResultsChart({ results, variants, metricKey }: Props) 
               y={H - 5}
               textAnchor="middle"
               fill="var(--color-text-disabled)"
-              fontSize={9}
+              fontSize={10}
             >
               {label}
             </text>

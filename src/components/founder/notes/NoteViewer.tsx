@@ -36,7 +36,7 @@ export function NoteViewer({ fileId }: NoteViewerProps) {
 
   if (!fileId) {
     return (
-      <div className="flex-1 flex items-center justify-center text-color-text-muted">
+      <div className="flex-1 flex items-center justify-center" style={{ color: 'var(--color-text-muted)' }}>
         Select a note to view
       </div>
     )
@@ -45,14 +45,14 @@ export function NoteViewer({ fileId }: NoteViewerProps) {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="animate-pulse text-color-text-muted">Loading…</div>
+        <div className="animate-pulse" style={{ color: 'var(--color-text-muted)' }}>Loading…</div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex-1 flex items-center justify-center text-red-500">
+      <div className="flex-1 flex items-center justify-center" style={{ color: 'var(--color-danger)' }}>
         {error}
       </div>
     )
@@ -62,11 +62,11 @@ export function NoteViewer({ fileId }: NoteViewerProps) {
     <div className="flex-1 overflow-y-auto prose prose-invert max-w-none px-4">
       <ReactMarkdown
         components={{
-          h1: ({ children }) => <h1 className="text-2xl font-bold text-color-text-primary mt-6 mb-4">{children}</h1>,
-          h2: ({ children }) => <h2 className="text-xl font-bold text-color-text-primary mt-5 mb-3">{children}</h2>,
-          h3: ({ children }) => <h3 className="text-lg font-semibold text-color-text-primary mt-4 mb-2">{children}</h3>,
-          code: ({ children }) => <code className="bg-surface-elevated text-color-text-primary px-2 py-1 rounded-sm text-sm">{children}</code>,
-          a: ({ href, children }) => <a href={href} className="text-cyan-400 hover:underline">{children}</a>,
+          h1: ({ children }) => <h1 className="text-[24px] font-bold mt-6 mb-4" style={{ color: 'var(--color-text-primary)' }}>{children}</h1>,
+          h2: ({ children }) => <h2 className="text-[20px] font-bold mt-5 mb-3" style={{ color: 'var(--color-text-primary)' }}>{children}</h2>,
+          h3: ({ children }) => <h3 className="text-[16px] font-semibold mt-4 mb-2" style={{ color: 'var(--color-text-primary)' }}>{children}</h3>,
+          code: ({ children }) => <code className="text-[12px] px-2 py-1 rounded-sm" style={{ background: 'var(--surface-elevated)', color: 'var(--color-text-primary)' }}>{children}</code>,
+          a: ({ href, children }) => <a href={href} className="text-[#00F5FF] hover:underline">{children}</a>,
         }}
       >
         {content}

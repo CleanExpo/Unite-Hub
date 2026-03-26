@@ -13,6 +13,7 @@ skills_required:
   - api-contract
   - error-taxonomy
   - structured-logging
+context: fork
 ---
 
 # Backend Specialist Agent

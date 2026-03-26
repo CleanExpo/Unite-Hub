@@ -10,6 +10,7 @@ triggers:
   - any_code_change
   - post-implementation
   - pre-commit
+context: fork
 ---
 
 # Verification-First Development
