@@ -10,20 +10,21 @@ import {
   Bot,
   Lightbulb,
   Building2,
-  CheckSquare,
   ChevronRight,
+  Database,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SearchDialog } from "@/components/nexus/SearchDialog";
 
 const founderNavItems = [
   { label: "Dashboard", href: "/founder/dashboard", icon: LayoutDashboard },
+  { label: "Workspace", href: "/founder/workspace", icon: Database },
+  { label: "Phill OS", href: "/founder/os", icon: Zap },
   { label: "Agents", href: "/founder/agents", icon: Bot },
   { label: "AI Phill", href: "/founder/ai-phill", icon: Brain },
   { label: "Businesses", href: "/founder/businesses", icon: Building2 },
   { label: "Analytics", href: "/founder/analytics", icon: LineChart },
   { label: "Insights", href: "/founder/insights", icon: Lightbulb },
-  { label: "Approvals", href: "/founder/approvals", icon: CheckSquare },
 ];
 
 export default function FounderLayout({
@@ -43,7 +44,7 @@ export default function FounderLayout({
               href="/dashboard/overview"
               className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
             >
-              Unite-Group
+              Unite-Hub
             </Link>
             <ChevronRight className="w-4 h-4 text-slate-600" />
             <span className="text-sm font-medium text-slate-300">Founder OS</span>
@@ -83,13 +84,14 @@ export default function FounderLayout({
         <Breadcrumbs />
       </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      {/* Main Content — workspace uses full bleed */}
+      <main className={cn(
+        pathname.startsWith("/founder/workspace")
+          ? "h-[calc(100vh-57px)]"
+          : "max-w-7xl mx-auto px-4 sm:px-6 py-6"
+      )}>
         {children}
       </main>
-
-      {/* Global Search (Cmd+K / Ctrl+K) */}
-      <SearchDialog />
     </div>
   );
 }

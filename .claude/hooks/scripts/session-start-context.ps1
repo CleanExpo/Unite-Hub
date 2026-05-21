@@ -83,10 +83,13 @@ if (Test-Path $beadsReadyPath) {
     $contextParts += "BLUEPRINT:$blueprintType"
 }
 
-# 8. Check for pending type errors
-$typeCheckResult = pnpm turbo run type-check --dry-run 2>&1
-if ($LASTEXITCODE -ne 0) {
-    $contextParts += "WARNING: Type check may have errors"
+# 8. Check for pending type errors (lightweight check — no build required)
+$tscExists = Get-Command tsc -ErrorAction SilentlyContinue
+if ($tscExists) {
+    $typeCheckResult = tsc --noEmit --pretty false 2>&1 | Select-Object -First 1
+    if ($LASTEXITCODE -ne 0) {
+        $contextParts += "WARNING: Type check may have errors"
+    }
 }
 
 # Build final context string

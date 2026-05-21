@@ -1,7 +1,7 @@
 # Unite-Group AI Architecture
 
 **Version:** 2.0.0
-**Project:** NodeJS-Starter-V1 Hybrid Architecture
+**Project:** Nexus 2.0 Hybrid Architecture
 **Strategy:** Australian-First, Truth-First, SEO-Dominant
 
 ---
@@ -23,7 +23,7 @@
 
 ## Overview
 
-The Unite-Group AI Architecture is a hybrid system that preserves the strengths of NodeJS-Starter-V1 while adding comprehensive Australian-first context, truth verification, and SEO intelligence.
+The Unite-Group AI Architecture is a hybrid system that preserves the strengths of Nexus 2.0 while adding comprehensive Australian-first context, truth verification, and SEO intelligence.
 
 ### Core Principles
 
@@ -113,7 +113,7 @@ Specialized agents handle specific domains. Each agent has:
 #### Stub Agents (Future Implementations)
 
 - `frontend-specialist` - React/Next.js/Tailwind development
-- `backend-specialist` - FastAPI/LangGraph/Agents development
+- `backend-specialist` - _Archived (v1 FastAPI agent — no longer active)_
 - `database-specialist` - Supabase/Migrations/RLS
 - `test-engineer` - E2E, unit, integration testing
 - `deploy-guardian` - Deployment safety and rollback
@@ -145,7 +145,7 @@ Reusable knowledge modules organized by category. All skills use `.skill.md` ext
   - Context partitioning strategies
   - Token optimization
 - `project-context.skill.md` (Priority 2)
-  - NodeJS-Starter-V1 specific knowledge
+  - Nexus 2.0 specific knowledge
   - Stack, migrations, conventions
 
 **Design (3 skills)**
@@ -185,20 +185,14 @@ Reusable knowledge modules organized by category. All skills use `.skill.md` ext
   - Real-time ranking checks
   - Alert configuration
 
-**Backend (3 skills)**
+**Backend (1 skill)**
 - `advanced-tool-use.skill.md` (Priority 2)
   - Context-efficient tool management (85% token savings)
   - Australian context tools (ABN validation)
-- `langgraph.skill.md` (Priority 3)
-  - LangGraph workflow patterns
-  - Multi-agent coordination
-- `fastapi.skill.md` (Priority 3)
-  - FastAPI patterns with Australian context
-  - Privacy Act 1988 compliance
 
 **Frontend (2 skills)**
 - `nextjs.skill.md` (Priority 3)
-  - Next.js 15 patterns with 2025-2026 design
+  - Next.js 16 patterns with 2025-2026 design
   - Australian context utilities
 - `components.skill.md` (Priority 4)
   - Component patterns and best practices
@@ -229,7 +223,7 @@ Reusable knowledge modules organized by category. All skills use `.skill.md` ext
 2. **On-demand** (Priority 2+): Load when agent dispatched or skill referenced
    - Orchestrator loads orchestration.skill.md
    - SEO tasks load search-dominance.skill.md, blue-ocean.skill.md
-   - Backend tasks load langgraph.skill.md, fastapi.skill.md
+   - API tasks load nextjs.skill.md
 
 3. **Dependencies**: Skills can require other skills via `requires:` in YAML frontmatter
    - post-skill-load.hook automatically loads dependencies
@@ -331,12 +325,10 @@ Agent Execution
 
 Path-specific auto-loading rules (preserved from original architecture):
 - `development/workflow.md` - Development commands and conventions
-- `frontend/nextjs.md` - Next.js 15 patterns and anti-patterns
-- `backend/fastapi.md` - FastAPI patterns
+- `frontend/nextjs.md` - Next.js 16 patterns and anti-patterns
 - `database/supabase.md` - Supabase and RLS patterns
-- `agents/langgraph.md` - LangGraph workflow patterns
 
-**Total**: 5 rules, 383 lines preserved
+**Total**: 3 rules
 
 ---
 
@@ -351,9 +343,9 @@ User Request
     ↓
 CLAUDE.md (Quick Routing)
     ↓
-    ├─ Frontend? → .claude/agents/frontend-specialist/
-    ├─ Backend? → .claude/agents/backend-specialist/
-    ├─ Database? → .claude/agents/database-specialist/
+    ├─ Frontend? → .claude/agents/frontend-designer/
+    ├─ Fullstack? → .claude/agents/senior-fullstack/
+    ├─ Database? → .claude/agents/database-architect/
     ├─ SEO? → .claude/agents/seo-intelligence/
     └─ Content? → .claude/agents/truth-finder/
     ↓
@@ -461,7 +453,7 @@ verification = await independent_verify(result)
 
 ### Australian Context Utilities
 
-Complete utility library in `apps/web/src/lib/australian-context.ts` (320 lines):
+Complete utility library in `src/lib/australian-context.ts` (320 lines):
 
 **Date Functions**
 - `formatDateAU(date)` → "08/01/2025"
@@ -715,18 +707,16 @@ Thresholds:
 ## File Structure
 
 ```
-NodeJS-Starter-V1/
-├── CLAUDE.md (48 lines) - Lean router
-├── PROGRESS.md - Implementation dashboard
+Nexus 2.0/
+├── CLAUDE.md - Lean router
 ├── .claude/
 │   ├── README.md (THIS FILE)
-│   ├── agents/ (19 agents)
+│   ├── agents/ (31 agents)
 │   │   ├── orchestrator/agent.md
-│   │   ├── standards/agent.md
-│   │   ├── verification/agent.md
-│   │   ├── truth-finder/agent.md
-│   │   ├── seo-intelligence/agent.md
-│   │   └── [14 more...]
+│   │   ├── senior-fullstack/agent.md
+│   │   ├── frontend-designer/agent.md
+│   │   ├── database-architect/agent.md
+│   │   └── [27 more...]
 │   ├── hooks/ (10 hooks)
 │   │   ├── pre-response.hook.md
 │   │   ├── pre-publish.hook.md ⚠️ BLOCKING
@@ -736,12 +726,10 @@ NodeJS-Starter-V1/
 │   │   ├── trusted-sources.yaml
 │   │   ├── design-tokens.json
 │   │   └── verified-claims.json
-│   ├── rules/ (5 rules)
+│   ├── rules/ (3 rules)
 │   │   ├── development/workflow.md
 │   │   ├── frontend/nextjs.md
-│   │   ├── backend/fastapi.md
-│   │   ├── database/supabase.md
-│   │   └── agents/langgraph.md
+│   │   └── database/supabase.md
 │   └── commands/ (5 commands)
 ├── skills/ (35+ skills)
 │   ├── INDEX.md
@@ -753,13 +741,16 @@ NodeJS-Starter-V1/
 │   │   ├── truth-finder.skill.md
 │   │   └── error-handling.skill.md
 │   └── [6 more categories...]
-└── apps/
-    ├── web/ (Next.js 15)
-    │   └── src/
-    │       ├── components/JobCard.tsx
-    │       ├── lib/australian-context.ts
-    │       └── styles/design-system.css
-    └── backend/ (FastAPI + LangGraph)
+├── src/                          # Next.js 16 app (single-tenant)
+│   ├── app/
+│   │   ├── (auth)/
+│   │   ├── (founder)/
+│   │   └── api/
+│   ├── components/
+│   ├── lib/
+│   └── middleware.ts
+└── supabase/
+    └── migrations/
 ```
 
 ---
@@ -855,3 +846,115 @@ pnpm turbo run type-check lint    # All checks
 🦘 **Australian-first. Truth-first. SEO-dominant. Design-forward.**
 
 *Complete Unite-Group AI Architecture documentation.*
+
+---
+
+## Framework Upgrade — NodeJS-Starter-V1 (20/03/2026)
+
+The following enhancements were merged from NodeJS-Starter-V1 template. All additions are additive — no existing files were replaced.
+
+### Vault Index System
+
+**File**: `.claude/VAULT-INDEX.md`
+
+Comprehensive asset catalogue with wiki-link support for O(1) asset discovery.
+
+- **Resolution**: `[[orchestrator]]` → `.claude/agents/orchestrator/agent.md`
+- **Fuzzy threshold**: 0.8 (handles plurals, case, hyphens)
+- **Scope**: 34 agents, 13 rules, 14 commands, 4 blueprints, 11 scripts, 59 skills, 6 memory, 5 primers, 4 data, 4 knowledge, 3 templates, 3 schemas
+- **Regenerate**: Run `/vault-init` after adding any new asset
+
+### Agent Harness Protocol
+
+**File**: `.claude/AGENT_HARNESS.md`
+
+8-phase convergence protocol for complex multi-agent tasks (3+ agents).
+
+```
+Intake → Discovery → Decomposition → Execution → Aggregation → Verification → Iteration (max 2) → Production
+```
+
+**Decision logic** (orchestrator chooses):
+- Simple, 1–2 agents → `/minion` (Blueprint DAG)
+- Complex, 3+ agents → Agent Harness
+
+### New Agents (4)
+
+| Agent | Priority | Role |
+|-------|----------|------|
+| `product-strategist` | 3 | Feature prioritisation, competitive positioning |
+| `technical-architect` | 2 | Architecture decisions, ADR authoring |
+| `design-reviewer` | 3 | UI/UX review vs Scientific Luxury standards (read-only) |
+| `delivery-manager` | 3 | Sprint coordination, KANBAN, milestone tracking |
+
+**Total agents**: 34 (was 30)
+
+### New Commands (3)
+
+| Command | Purpose |
+|---------|---------|
+| `/vault-init` | Regenerate VAULT-INDEX.md from filesystem scan |
+| `/done` | Completion verification: type-check + lint + test + committed |
+| `/discuss` | Architecture discussion in PLAN mode with ADR output |
+
+**Total commands**: 14 (was 11)
+
+### Foundation Rules (3)
+
+| Rule | Purpose |
+|------|---------|
+| `rules/core.md` | Constitutional governance layer, intent-driven workflow mapping, anti-hallucination protocol |
+| `rules/slop-prevention.md` | Output quality gates, Australian English enforcement, filler elimination |
+| `rules/audit-mode-classifier.md` | Structured response templates per mode (extends cli-control-plane.md) |
+
+**Total rules**: 13 (was 10)
+
+### Skills Index
+
+**File**: `.claude/skills/SKILLS-INDEX.md`
+
+Priority classification of all 59 skills:
+- **P1 Critical** (auto-loaded): scientific-luxury, execution-guardian, council-of-logic, system-supervisor
+- **P2 High** (on-demand): api-contract, api-client, error-taxonomy, oauth-flow, and 6 more
+- **P3 Standard**: 40+ domain-specific skills
+- **P4 Optional**: Utility skills
+
+### Schemas Directory
+
+**Path**: `.claude/schemas/`
+
+Frontmatter validation schemas for the three primary asset types:
+- `agent-frontmatter.schema.md` — Required YAML for agent files
+- `skill-frontmatter.schema.md` — Required YAML for skill files
+- `blueprint-frontmatter.schema.md` — Required YAML + DAG structure for blueprints
+
+### Updated Metrics
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Agents | 30 | **34** |
+| Rules | 10 | **13** |
+| Commands | 11 | **14** |
+| Blueprints | 4 | 4 |
+| Hook Scripts | 11 | 11 |
+| Skills | 59 | 59 |
+| Schemas | 0 | **3** |
+
+### Toolsheds Fixed
+
+`.claude/data/toolsheds.json` corrected stale Python/FastAPI paths to Next.js equivalents:
+
+| Toolshed | Change |
+|----------|--------|
+| `backend` | `apps/backend/src/` → `src/app/api/`, `src/lib/` |
+| `backend` agent | `backend-specialist` → `senior-fullstack` |
+| `database` | `apps/backend/src/db/` → `supabase/migrations/`, `src/lib/supabase/` |
+| `security` | `apps/backend/src/auth/` → `src/middleware.ts`, `src/lib/supabase/server.ts` |
+| `frontend` | `apps/web/` → `src/` |
+| All descriptions | FastAPI/SQLAlchemy → Next.js/Supabase |
+
+### Obsidian MCP
+
+**Files**: `.claude/mcp/obsidian.json`, `.mcp.json`
+
+WebSocket MCP server for wiki-link resolution (port 22360, read-only). Complements Context7 for project-internal asset lookup.

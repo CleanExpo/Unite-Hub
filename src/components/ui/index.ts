@@ -13,9 +13,6 @@ export * from './avatar';
 // Badge - default export
 export { default as Badge } from './badge';
 
-// Breadcrumbs - PascalCase file
-export { default as Breadcrumbs } from './Breadcrumbs';
-
 // Button - default export
 export { default as Button } from './button';
 
@@ -42,9 +39,6 @@ export { default as Input } from './input';
 
 // Label
 export * from './label';
-
-// Modal - PascalCase file
-export { default as Modal } from './Modal';
 
 // Popover
 export * from './popover';
@@ -78,9 +72,6 @@ export * from './tabs';
 
 // Textarea
 export * from './textarea';
-
-// Toast - PascalCase file
-export { default as Toast } from './Toast';
 
 // Toaster
 export * from './toaster';

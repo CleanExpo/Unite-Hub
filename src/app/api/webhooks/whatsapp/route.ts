@@ -1,291 +1,111 @@
-/**
- * WhatsApp Business Webhook Endpoint
- * Receives incoming messages, status updates, and other events from WhatsApp
- */
+// src/app/api/webhooks/whatsapp/route.ts
+// WhatsApp Cloud API (Meta Business) inbound webhook handler.
+// GET: Meta webhook verification handshake (one-time setup)
+// POST: Receives inbound messages, verifies signature, processes idea into Linear issue
 
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { WhatsAppService } from '@/lib/services/whatsapp';
-import { processIncomingWhatsAppMessage } from '@/lib/agents/whatsapp-intelligence';
-import { publicRateLimit } from "@/lib/rate-limit";
+import { NextRequest, NextResponse } from 'next/server'
+import { verifyWhatsAppSignature } from '@/lib/webhooks/verify'
+import { isDuplicate, insertEvent, markEvent } from '@/lib/webhooks/dedup'
+import { processIdea } from '@/lib/agent-pipeline/idea-processor'
+import { createIssue } from '@/lib/integrations/linear'
+import { notify } from '@/lib/notifications'
 
-const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'your-verify-token';
+export const dynamic = 'force-dynamic'
 
-/**
- * GET - WhatsApp webhook verification
- * This is called by WhatsApp to verify your webhook endpoint
- */
-export async function GET(req: NextRequest) {
-  try {
-  // Apply rate limiting
-  const rateLimitResult = await publicRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
+// ─── GET — Meta Verification Handshake ────────────────────────────────────────
+// Meta calls this once when you configure the webhook in the Business Manager.
+// It sends hub.mode=subscribe, hub.verify_token (matches WHATSAPP_VERIFY_TOKEN),
+// and hub.challenge. We echo back the challenge to confirm ownership.
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const mode = searchParams.get('hub.mode')
+  const token = searchParams.get('hub.verify_token')
+  const challenge = searchParams.get('hub.challenge')
+
+  if (mode === 'subscribe' && token === process.env.WHATSAPP_VERIFY_TOKEN?.trim()) {
+    console.log('[WhatsApp Webhook] Verification handshake successful')
+    return new NextResponse(challenge, { status: 200 })
   }
 
-    const searchParams = req.nextUrl.searchParams;
-    const mode = searchParams.get('hub.mode');
-    const token = searchParams.get('hub.verify_token');
-    const challenge = searchParams.get('hub.challenge');
-
-    console.log('📞 WhatsApp webhook verification request:', { mode, token });
-
-    // Check if mode and token are correct
-    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
-      console.log('✅ Webhook verified successfully');
-      return new Response(challenge, { status: 200 });
-    }
-
-    console.log('❌ Webhook verification failed');
-    return new Response('Forbidden', { status: 403 });
-  } catch (error) {
-    console.error('Error verifying webhook:', error);
-    return new Response('Internal Server Error', { status: 500 });
-  }
+  console.warn('[WhatsApp Webhook] Verification failed — token mismatch')
+  return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 }
 
-/**
- * POST - Receive WhatsApp webhook events
- * Handles incoming messages, status updates, and other events
- */
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
+// ─── POST — Inbound Messages ──────────────────────────────────────────────────
+export async function POST(request: NextRequest) {
+  // Read raw body before any parsing (needed for HMAC signature verification)
+  const rawBody = await request.text()
+  const signature = request.headers.get('x-hub-signature-256')
 
-    console.log('📞 WhatsApp webhook received:', JSON.stringify(body, null, 2));
-
-    // Verify webhook signature (optional but recommended)
-    const signature = req.headers.get('x-hub-signature-256');
-    if (signature && process.env.WHATSAPP_APP_SECRET) {
-      const rawBody = JSON.stringify(body);
-      const isValid = WhatsAppService.verifyWebhookSignature(
-        rawBody,
-        signature,
-        process.env.WHATSAPP_APP_SECRET
-      );
-
-      if (!isValid) {
-        console.error('❌ Invalid webhook signature');
-        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
-      }
-    }
-
-    // WhatsApp sends events in this format
-    if (body.object === 'whatsapp_business_account') {
-      for (const entry of body.entry || []) {
-        const businessAccountId = entry.id;
-
-        for (const change of entry.changes || []) {
-          if (change.field === 'messages') {
-            await handleMessagesChange(change.value, businessAccountId);
-          }
-        }
-      }
-    }
-
-    // Return 200 OK immediately (WhatsApp requires fast response)
-    return NextResponse.json({ success: true }, { status: 200 });
-  } catch (error) {
-    console.error('❌ Error processing WhatsApp webhook:', error);
-    // Still return 200 to prevent WhatsApp from retrying
-    return NextResponse.json({ success: true }, { status: 200 });
+  if (!verifyWhatsAppSignature(rawBody, signature)) {
+    console.warn('[WhatsApp Webhook] Invalid signature — rejected')
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
   }
-}
 
-/**
- * Handle incoming messages and status updates
- */
-async function handleMessagesChange(value: any, businessAccountId: string) {
+  let body: Record<string, unknown>
   try {
-    const metadata = value.metadata;
-    const phoneNumberId = metadata.phone_number_id;
-
-    // TODO: Map business account to workspace
-    // For now, use a default workspace or environment variable
-    const workspaceId = process.env.DEFAULT_WORKSPACE_ID || 'default-workspace';
-
-    // Store webhook for debugging
-    await db.whatsappWebhooks.create({
-      workspace_id: workspaceId,
-      event_type: 'messages',
-      payload: value,
-      processed: false
-    });
-
-    // Handle messages
-    if (value.messages) {
-      for (const message of value.messages) {
-        await handleIncomingMessage(message, phoneNumberId, workspaceId);
-      }
-    }
-
-    // Handle statuses (delivery receipts, read receipts)
-    if (value.statuses) {
-      for (const status of value.statuses) {
-        await handleMessageStatus(status, workspaceId);
-      }
-    }
-  } catch (error) {
-    console.error('Error handling messages change:', error);
+    body = JSON.parse(rawBody) as Record<string, unknown>
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
-}
 
-/**
- * Handle a single incoming message
- */
-async function handleIncomingMessage(
-  message: any,
-  phoneNumberId: string,
-  workspaceId: string
-) {
-  try {
-    const phoneNumber = message.from;
-    const messageType = message.type;
-    const whatsappMessageId = message.id;
+  // Navigate WhatsApp Cloud API payload structure
+  // body.entry[0].changes[0].value.messages[0]
+  const entry = (body.entry as unknown[])?.[0] as Record<string, unknown> | undefined
+  const change = (entry?.changes as unknown[])?.[0] as Record<string, unknown> | undefined
+  const value = change?.value as Record<string, unknown> | undefined
+  const messages = value?.messages as unknown[] | undefined
+  const message = messages?.[0] as Record<string, unknown> | undefined
 
-    console.log(`📨 Incoming ${messageType} message from ${phoneNumber}`);
-
-    // Extract message content based on type
-    let content = '';
-    let mediaUrl = null;
-    let mediaType = null;
-    let caption = null;
-
-    switch (messageType) {
-      case 'text':
-        content = message.text.body;
-        break;
-      case 'image':
-        content = message.image.caption || '[Image]';
-        caption = message.image.caption;
-        mediaUrl = message.image.id; // We'll need to fetch the actual URL later
-        mediaType = 'image';
-        break;
-      case 'video':
-        content = message.video.caption || '[Video]';
-        caption = message.video.caption;
-        mediaUrl = message.video.id;
-        mediaType = 'video';
-        break;
-      case 'document':
-        content = message.document.caption || `[Document: ${message.document.filename || 'file'}]`;
-        caption = message.document.caption;
-        mediaUrl = message.document.id;
-        mediaType = 'document';
-        break;
-      case 'audio':
-        content = '[Audio message]';
-        mediaUrl = message.audio.id;
-        mediaType = 'audio';
-        break;
-      case 'location':
-        content = `[Location: ${message.location.latitude}, ${message.location.longitude}]`;
-        break;
-      case 'interactive':
-        // Button reply or list reply
-        if (message.interactive.type === 'button_reply') {
-          content = message.interactive.button_reply.title;
-        } else if (message.interactive.type === 'list_reply') {
-          content = message.interactive.list_reply.title;
-        }
-        break;
-      default:
-        content = `[${messageType} message]`;
-    }
-
-    // Find or create contact
-    let contact = await db.contacts.getByEmail(phoneNumber, workspaceId);
-    if (!contact) {
-      // Try to find contact by phone number in the contacts table
-      // For now, we'll create a new contact
-      contact = await db.contacts.create({
-        workspace_id: workspaceId,
-        email: `${phoneNumber}@whatsapp.contact`, // Temporary email
-        name: phoneNumber,
-        phone: phoneNumber,
-        source: 'whatsapp',
-        status: 'contact',
-        ai_score: 0.5,
-        tags: ['whatsapp']
-      });
-    }
-
-    // Create message in database
-    const dbMessage = await db.whatsappMessages.create({
-      workspace_id: workspaceId,
-      contact_id: contact.id,
-      phone_number: phoneNumber,
-      direction: 'inbound',
-      message_type: messageType,
-      content,
-      media_url: mediaUrl,
-      media_type: mediaType,
-      caption,
-      status: 'received',
-      whatsapp_message_id: whatsappMessageId,
-      created_at: new Date(parseInt(message.timestamp) * 1000)
-    });
-
-    // Create or update conversation
-    let conversation = await db.whatsappConversations.getByPhone(phoneNumber, workspaceId);
-    if (!conversation) {
-      conversation = await db.whatsappConversations.create({
-        workspace_id: workspaceId,
-        contact_id: contact.id,
-        phone_number: phoneNumber,
-        status: 'open',
-        last_message_at: new Date(),
-        last_message_direction: 'inbound',
-        unread_count: 1
-      });
-    } else {
-      await db.whatsappConversations.updateLastMessage(phoneNumber, workspaceId, 'inbound');
-    }
-
-    // Mark message as read (optional - you might want to do this only when user reads it)
-    const whatsappService = new WhatsAppService(phoneNumberId);
-    await whatsappService.markMessageAsRead(whatsappMessageId);
-
-    // Process message with AI (async, don't wait)
-    processIncomingWhatsAppMessage(dbMessage.id, workspaceId).catch(error => {
-      console.error('Error processing message with AI:', error);
-    });
-
-    console.log(`✅ Saved incoming message: ${dbMessage.id}`);
-  } catch (error) {
-    console.error('Error handling incoming message:', error);
-    throw error;
+  // Only process text messages — ignore images, audio, reactions etc.
+  if (!message || message.type !== 'text') {
+    return NextResponse.json({ status: 'ignored', reason: 'not a text message' })
   }
-}
 
-/**
- * Handle message status updates (sent, delivered, read)
- */
-async function handleMessageStatus(status: any, workspaceId: string) {
+  const messageId = message.id as string
+  const messageText = (message.text as Record<string, unknown>)?.body as string ?? ''
+
+  if (!messageId || !messageText.trim()) {
+    return NextResponse.json({ status: 'ignored', reason: 'empty message' })
+  }
+
+  // ─── Idempotency check ───────────────────────────────────────────────────────
+  if (await isDuplicate('whatsapp', messageId)) {
+    return NextResponse.json({ status: 'duplicate' })
+  }
+
+  const eventRowId = await insertEvent('whatsapp', messageId, 'text_message', body)
+  if (eventRowId === null) {
+    return NextResponse.json({ status: 'duplicate' })
+  }
+
+  // ─── Process idea → Linear issue ────────────────────────────────────────────
   try {
-    const whatsappMessageId = status.id;
-    const statusType = status.status; // sent, delivered, read, failed
+    const issueInput = await processIdea(messageText)
+    const issue = await createIssue(issueInput)
 
-    console.log(`📊 Status update for ${whatsappMessageId}: ${statusType}`);
+    await markEvent(eventRowId, 'processed')
 
-    // Find message in database
-    const { data: messages } = await db.supabase
-      .from('whatsapp_messages')
-      .select('*')
-      .eq('whatsapp_message_id', whatsappMessageId)
-      .eq('workspace_id', workspaceId);
+    notify({
+      type: 'whatsapp_idea_received',
+      title: '💡 WhatsApp Idea → Linear',
+      body: `Idea processed: "${issueInput.title}" — ${issue.url ?? issue.id}`,
+      severity: 'info',
+      metadata: { messageId, linearIssueId: issue.id, linearUrl: issue.url },
+    }).catch(() => {})
 
-    if (messages && messages.length > 0) {
-      const message = messages[0];
-
-      // Update message status
-      await db.whatsappMessages.updateStatus(message.id, statusType, {
-        error_message: status.errors ? JSON.stringify(status.errors) : null
-      });
-
-      console.log(`✅ Updated message status: ${message.id} -> ${statusType}`);
-    }
+    return NextResponse.json({
+      status: 'processed',
+      linearIssueId: issue.id,
+      linearIssueUrl: issue.url,
+    })
   } catch (error) {
-    console.error('Error handling message status:', error);
+    await markEvent(eventRowId, 'failed', error instanceof Error ? error.message : 'Unknown error')
+    console.error('[WhatsApp Webhook] Processing failed:', error)
+    // Return 200 to stop Meta from retrying (our error is in markEvent, not Meta's fault)
+    return NextResponse.json({
+      status: 'error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
   }
 }

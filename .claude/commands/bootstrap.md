@@ -74,21 +74,21 @@ Create `tsconfig.json` with these strict options:
 ## 4. Install Dependencies
 
 ```bash
-npm install -D typescript @types/node @types/react @types/react-dom eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-import prettier husky lint-staged madge
-npm install zod
+pnpm add -D typescript @types/node @types/react @types/react-dom eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-import prettier husky lint-staged madge
+pnpm add zod
 ```
 
 ## 5. Setup Husky Pre-commit Hook
 
 ```bash
-npx husky init
+pnpm exec husky init
 ```
 
 Create `.husky/pre-commit`:
 ```bash
 #!/bin/sh
-npm run typecheck || exit 1
-npx lint-staged || exit 1
+pnpm run type-check || exit 1
+pnpm exec lint-staged || exit 1
 ```
 
 ## 6. Create Error Handling Module
@@ -170,7 +170,21 @@ Create index.ts files with export comments in:
 - `src/hooks/index.ts`
 - `src/types/index.ts`
 
-## 8. Create CI Workflow
+## 8. Initialise Supabase
+
+```bash
+supabase init                          # creates supabase/ directory
+supabase start                         # start local Supabase stack
+
+# Create first migration
+supabase migration new nexus_baseline
+
+# After writing migration SQL:
+supabase db push                       # apply to local
+supabase gen types typescript --local > src/types/database.ts
+```
+
+## 9. Create CI Workflow
 
 Create `.github/workflows/ci.yml`:
 
@@ -188,25 +202,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run check:circular
-      - run: npm test --if-present
-      - run: npm run build
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run type-check
+      - run: pnpm run lint
+      - run: pnpm vitest run
+      - run: pnpm build
 ```
 
-## 9. Update package.json Scripts
+## 10. Update package.json Scripts
 
 Add these scripts:
-- `typecheck`: `tsc --noEmit`
+- `type-check`: `tsc --noEmit`
 - `lint`: `eslint . --ext .ts,.tsx`
 - `lint:fix`: `eslint . --ext .ts,.tsx --fix`
-- `validate`: `npm run typecheck && npm run lint`
+- `validate`: `pnpm run type-check && pnpm run lint`
 - `check:circular`: `madge --circular --extensions ts,tsx src/`
 - `db:types`: `supabase gen types typescript --local > src/types/database.ts`
 - `prepare`: `husky`
@@ -219,10 +235,10 @@ Add lint-staged config:
 }
 ```
 
-## 10. Verify Setup
+## 11. Verify Setup
 
 ```bash
-npm run typecheck
+pnpm run type-check
 ```
 
-Report success or any issues found.
+Then run `/verify` to confirm the full foundation is intact. Report success or any issues found.

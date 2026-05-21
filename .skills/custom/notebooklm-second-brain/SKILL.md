@@ -1,8 +1,11 @@
 ---
+id: notebooklm-second-brain
 name: notebooklm-second-brain
-description: 'Notebook First retrieval policy — query NotebookLM notebooks before web search or context dumping'
+type: skill
 version: 1.0.0
-locale: en-AU
+created: 20/03/2026
+modified: 20/03/2026
+status: active
 category: meta-orchestration
 tags:
   - retrieval
@@ -15,7 +18,10 @@ triggers:
   - architecture
   - security
   - post-build
+description: >
+  Notebook First retrieval policy — query NotebookLM notebooks before web search or context dumping
 ---
+
 
 # NotebookLM Second Brain
 

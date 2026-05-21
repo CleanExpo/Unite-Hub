@@ -32,6 +32,28 @@ Shannon:     Compression strategy = ?
 --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
 ```
 
+## Mandatory Pre-Code Checklist
+
+**STOP. Answer all four before writing a single line of implementation code:**
+
+```
+□ Turing:      What is the time complexity? O(?) — is O(n²) or worse acceptable here?
+□ Von Neumann: Which architecture pattern? (service/hook/component/API route) — is it the right layer?
+□ Bezier:      Does this involve animation/transition? If yes, which approved easing function?
+□ Shannon:     Can this be expressed more simply? Remove all redundancy before coding.
+```
+
+If any answer is "I don't know" → consult the relevant member's rules in `.skills/custom/council-of-logic/SKILL.md` before proceeding.
+
+## Execution Guardian Link
+
+The Council's complexity score feeds directly into the Execution Guardian's confidence gate:
+- O(n³) or worse → Guardian confidence drops ≥20 points
+- Non-optimal architecture pattern → blast radius assessment escalates
+- Shannon compression ratio < 0.5 → output flagged as verbose
+
+Reference: `.skills/custom/execution-guardian/SKILL.md` — the Guardian blocks execution if Council raises a veto.
+
 ## Integration
 
 - **Execution Guardian**: Council complexity scoring feeds into Guardian's confidence assessment

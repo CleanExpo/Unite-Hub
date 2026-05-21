@@ -1,0 +1,153 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-03-19",
+  "entries": [
+    {
+      "id": "competitive-001",
+      "title": "Founder OS / Multi-Business Tool — Customer Review Intelligence",
+      "category": "competitive-intelligence",
+      "file": "domains/competitive-intelligence/competitive-001-founder-os-review-intelligence.md",
+      "aggregate_confidence": 0.78,
+      "verification_tier": "V2",
+      "products_covered": [
+        "Notion",
+        "HubSpot",
+        "Zoho One",
+        "Superhuman",
+        "Pilot",
+        "Day.ai",
+        "Folk CRM",
+        "Height"
+      ],
+      "sources": [
+        "G2",
+        "Capterra",
+        "Trustpilot",
+        "Product Hunt",
+        "BBB",
+        "Reddit (aggregated)",
+        "Independent review sites"
+      ],
+      "created": "2026-03-19",
+      "expires": "2026-06-18",
+      "tags": [
+        "competitive-intelligence",
+        "user-complaints",
+        "churn-reasons",
+        "pricing",
+        "AI-features",
+        "multi-entity",
+        "onboarding",
+        "performance",
+        "founder-os"
+      ]
+    },
+    {
+      "id": "market-research-001",
+      "title": "Founder Tool Frustrations — Reddit & Community Intelligence",
+      "file": "domains/market-research/market-research-001-founder-tool-frustrations-reddit.md",
+      "category": "market-research",
+      "tags": [
+        "reddit",
+        "founder-pain-points",
+        "tool-fragmentation",
+        "bookkeeping",
+        "multi-business",
+        "xero",
+        "quickbooks",
+        "notion",
+        "australia",
+        "subscription-fatigue",
+        "ai-advisory",
+        "jtbd"
+      ],
+      "aggregate_confidence": 0.74,
+      "verification_tier": "V2",
+      "researched": "2026-03-19",
+      "expires": "2026-06-17",
+      "summary": "Reddit and community intelligence on founder frustrations with productivity tools, CRM, multi-business bookkeeping, and AI advisors. Surfaces 7 pain themes with verbatim user quotes and JTBD language. Australian Xero pricing crisis confirmed as active churn window."
+    },
+    {
+      "id": "competitive-002",
+      "title": "Technical Founder Voice — Business Management Tool Frustrations (HN / IH / GitHub)",
+      "category": "competitive-intelligence",
+      "file": "domains/competitive-intelligence/competitive-001-founder-tool-voice-of-customer.md",
+      "aggregate_confidence": 0.78,
+      "verification_tier": "V2",
+      "sources": [
+        "Hacker News (Ask HN, Show HN, comment threads)",
+        "IndieHackers posts",
+        "GitHub issues (Monica CRM, AppFlowy, AFFiNE)",
+        "QuickBooks Community forums",
+        "The Bootstrapped Founder",
+        "Reddit pain point synthesis"
+      ],
+      "created": "2026-03-19",
+      "expires": "2026-06-18",
+      "tags": [
+        "voice-of-customer",
+        "founder-tools",
+        "CRM",
+        "bookkeeping",
+        "Notion",
+        "QuickBooks",
+        "email",
+        "JTBD",
+        "positioning",
+        "verbatim-quotes",
+        "hacker-news",
+        "indiehackers",
+        "github-issues"
+      ],
+      "summary": "Verbatim quote corpus from HN, IndieHackers, GitHub issues, and community forums documenting 8 dominant frustrations technical founders express about business management tools. Includes JTBD language extraction, 26 sourced findings, and Nexus positioning recommendations."
+    },
+    {
+      "id": "market-research-002",
+      "title": "Australian Founder Customer Voice — Multi-Business Management Pain Points",
+      "file": "domains/market-research/market-research-001-au-founder-voice.md",
+      "category": "market-research",
+      "aggregate_confidence": 0.74,
+      "verification_tier": "V2",
+      "sources": [
+        "COSBOA / CommBank 2024 Small Business Perspectives Report",
+        "CPA Australia Business Technology Survey 2024",
+        "ASBFEO Small Business Pulse 2024",
+        "Small Business Australia Big Small Business Survey 2024",
+        "HubSpot Australia Business Growth Report 2025",
+        "Xero AU pricing documentation",
+        "MYOB Trustpilot AU reviews",
+        "GoGravity / Mayday / IT Brief (Xero multi-entity analysis)",
+        "SmartCompany AU (Canva pricing coverage)",
+        "Smiling Mind / Startup Daily (AU founder mental health)",
+        "AccountingWEB (multi-entity Xero forum)",
+        "ATO / ASIC official documentation"
+      ],
+      "created": "2026-03-19",
+      "expires": "2026-06-19",
+      "tags": [
+        "australia",
+        "voice-of-customer",
+        "multi-entity",
+        "xero",
+        "myob",
+        "GST",
+        "BAS",
+        "ASIC",
+        "ABN",
+        "STP",
+        "superannuation",
+        "founder-mental-health",
+        "data-sovereignty",
+        "USD-pricing",
+        "AEST",
+        "timezone",
+        "compliance-calendar",
+        "tool-fragmentation",
+        "subscription-cost",
+        "JTBD",
+        "au-specific"
+      ],
+      "summary": "Deep investigation into Australian-specific founder pain points for multi-business management. 10 findings across Xero/MYOB multi-entity friction, AU regulatory complexity (BAS, ASIC, STP, super), US tool pricing backlash, founder mental health crisis, and data sovereignty concerns. Includes JTBD table and US tool failure matrix. 30 sources across T1-T3. Key gap: direct verbatim community quotes inaccessible due to platform restrictions — primary research interviews recommended."
+    }
+  ]
+}

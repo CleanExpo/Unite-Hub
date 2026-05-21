@@ -73,14 +73,36 @@ npx madge --circular --extensions ts,tsx src/
 
 Report any circular dependencies found.
 
-### 6. Type Check
+### 6. Supabase Tier
+
+Verify database layer is intact:
+
+```bash
+# Check migrations have been applied
+supabase migration list
+
+# Verify RLS is enabled on all user-data tables
+# (Run via Supabase MCP or dashboard)
+SELECT tablename, rowsecurity
+FROM pg_tables
+WHERE schemaname = 'public' AND rowsecurity = false;
+# Expected: 0 rows (all tables have RLS)
+
+# Verify types are current
+diff <(supabase gen types typescript --local) src/types/database.ts
+# Expected: no diff (types are up to date)
+```
+
+### 7. Type Check
 
 Run:
 ```bash
-npm run typecheck
+pnpm run type-check
 ```
 
 Report any type errors.
+
+See also: `/audit` for a full architecture audit.
 
 ## Report Format
 

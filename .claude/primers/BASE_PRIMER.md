@@ -378,6 +378,31 @@ Escalate to human review when:
 - Examples for complex APIs
 - Keep docs in sync with code
 
+## Australian Context Defaults (en-AU)
+
+All agents inherit these defaults unless explicitly overridden:
+
+| Setting | Default | Notes |
+|---------|---------|-------|
+| Language | Australian English (en-AU) | colour, behaviour, organise, licence, authorisation |
+| Date format | DD/MM/YYYY | e.g., 24/03/2026 |
+| Currency | AUD ($) | Include GST context where relevant |
+| Timezone | AEST / AEDT (Australia/Brisbane) | Store UTC, display AEST |
+| Compliance | Privacy Act 1988, WCAG 2.1 AA | Mandatory for all user-facing features |
+| Phone format | 04XX XXX XXX (mobile), (0X) XXXX XXXX (landline) | |
+| Primary location | Brisbane, QLD | Secondary: Sydney, Melbourne |
+
+**Never default to US formats** (MM/DD/YYYY, USD, US spelling) unless the task explicitly requires it.
+
+## Agent Harness Patterns
+
+Multi-agent tool loops follow the patterns in `.claude/AGENT_HARNESS.md`:
+
+- **Tool loop exit conditions**: Every tool loop must have a defined termination condition (max iterations, success state, or error escalation)
+- **Delegation pattern**: Orchestrator → specialist agents via Task tool. Specialists do NOT delegate further.
+- **Error escalation**: 3 failures → escalate to human. Never retry the same approach indefinitely.
+- **Context budget**: Each agent type has a token budget (see `rules/context-drift.md`). Respect the budget — delegate file reads to subagents when approaching limits.
+
 ## Performance Considerations
 
 - **Context Efficiency**: Load only what you need

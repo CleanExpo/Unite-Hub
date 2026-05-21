@@ -19,11 +19,8 @@ Sentry.init({
   // Performance monitoring (lower sample rate for server)
   tracesSampleRate: ENVIRONMENT === 'production' ? 0.05 : 1.0,
   
-  // Server-specific integrations
-  integrations: [
-    new Sentry.Integrations.Http({ tracing: true }),
-    new Sentry.Integrations.Prisma({ client: undefined }), // If using Prisma
-  ],
+  // Server-specific integrations (Http tracing is auto-configured in v10)
+  integrations: [],
   
   // Error filtering
   ignoreErrors: [

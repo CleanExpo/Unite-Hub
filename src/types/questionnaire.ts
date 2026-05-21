@@ -21,7 +21,7 @@ export interface Question {
     message?: string
   }
   conditionalNext?: {
-    condition: (value: any, allAnswers: Record<string, any>) => boolean
+    condition: (value: unknown, allAnswers: Record<string, unknown>) => boolean
     nextQuestionId: string
   }[]
   defaultNext?: string
@@ -44,7 +44,7 @@ export interface QuestionnaireData {
 
 export interface QuestionnaireResponse {
   questionId: string
-  value: any
+  value: unknown
   timestamp: Date
 }
 
@@ -61,5 +61,5 @@ export interface ClientProfile {
   contactName: string
   contactEmail: string
   contactPhone: string
-  additionalInfo?: Record<string, any>
+  additionalInfo?: Record<string, unknown>
 }

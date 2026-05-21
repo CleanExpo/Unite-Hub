@@ -135,6 +135,75 @@ Add exports to:
 - `src/server/validators/index.ts`
 - `src/components/features/index.ts`
 
-## 8. Verify
+## 8. Test File Scaffold
 
-Run `npm run typecheck` to verify all types are correct.
+Create `src/components/features/$ARGUMENTS/$ARGUMENTS.test.tsx`:
+
+```typescript
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { $ARGUMENTS } from './$ARGUMENTS'
+
+describe('$ARGUMENTS', () => {
+  it('renders loading state', () => {
+    render(<$ARGUMENTS loading />)
+    expect(screen.getByRole('progressbar')).toBeInTheDocument()
+  })
+
+  it('renders data when loaded', () => {
+    render(<$ARGUMENTS data={mockData} />)
+    expect(screen.getByRole('main')).toBeInTheDocument()
+  })
+
+  it('renders error state', () => {
+    render(<$ARGUMENTS error={new Error('Test error')} />)
+    expect(screen.getByRole('alert')).toBeInTheDocument()
+  })
+})
+```
+
+## 9. RLS Policy (if new table created)
+
+Add to the migration file:
+
+```sql
+ALTER TABLE public.$ARGUMENTS ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.$ARGUMENTS FORCE ROW LEVEL SECURITY;
+
+CREATE POLICY "$ARGUMENTS_all" ON public.$ARGUMENTS
+  FOR ALL USING (founder_id = auth.uid())
+  WITH CHECK (founder_id = auth.uid());
+```
+
+Then regenerate types: `pnpm run db:types`
+
+## 10. TanStack Query Hook Pattern
+
+For features that fetch data, use TanStack Query in the hook file:
+
+```typescript
+// $ARGUMENTS.hooks.ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+
+export function use$ARGUMENTS(id?: string) {
+  return useQuery({
+    queryKey: ['$ARGUMENTS', id],
+    queryFn: () => fetch(`/api/$ARGUMENTS/${id}`).then(r => r.json()),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,  // 5 minutes
+  })
+}
+
+export function useCreate$ARGUMENTS() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Create$ARGUMENTSInput) =>
+      fetch('/api/$ARGUMENTS', { method: 'POST', body: JSON.stringify(data) }).then(r => r.json()),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['$ARGUMENTS'] }),
+  })
+}
+```
+
+## 11. Verify
+
+Run `pnpm run type-check` to verify all types are correct. Then run `/verify` for full foundation check.

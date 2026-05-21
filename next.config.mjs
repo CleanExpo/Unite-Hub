@@ -4,18 +4,10 @@ import path from 'node:path';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  typescript: {
-    // Temporarily ignore TypeScript errors during build (legacy Convex code)
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    // Ignore ESLint errors during production build — lint in CI separately
-    ignoreDuringBuilds: true,
-  },
-  transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
 
-  // Next.js 16: Move serverComponentsExternalPackages to top level
-  serverExternalPackages: ['zustand', '@clerk/nextjs'],
+  // Note: zustand and @clerk/nextjs removed from serverExternalPackages.
+  // zustand MUST be bundled to share React instance (prevents useRef null errors during SSG).
+  // @clerk/nextjs is unused (v1 cruft — Nexus 2.0 uses Supabase auth).
 
   experimental: {
     // Enable optimized compilation
@@ -27,7 +19,7 @@ const nextConfig = {
       '@anthropic-ai/sdk',
       'recharts',
       'date-fns',
-      'lodash',
+
       'framer-motion',
       '@radix-ui/react-icons',
       'zod',
@@ -41,8 +33,9 @@ const nextConfig = {
     root: path.resolve(process.cwd()),
   },
 
-  // Enable standalone output for Docker
-  output: 'standalone',
+  // standalone output disabled — Vercel deployment does not require it
+  // (also incompatible with Windows NTFS due to colon in chunk filenames)
+  // output: 'standalone',
 
   // Compression
   compress: true,
@@ -83,26 +76,8 @@ const nextConfig = {
     qualities: [75, 85],
   },
 
-  redirects: async () => [
-    {
-      source: '/dashboard',
-      destination: '/dashboard/overview',
-      permanent: false,
-    },
-  ],
-
   // Security and caching headers
   headers: async () => [
-    // Aggressive caching for static assets (JavaScript, CSS, fonts)
-    {
-      source: '/_next/static/:path*',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=31536000, immutable',
-        },
-      ],
-    },
     // Aggressive caching for public static files
     {
       source: '/static/:path*',
@@ -165,23 +140,8 @@ const nextConfig = {
           key: 'Permissions-Policy',
           value: 'camera=(), microphone=(), geolocation=()',
         },
-        {
-          key: 'Content-Security-Policy',
-          value: [
-            "default-src 'self'",
-            "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://unpkg.com",
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-            "img-src 'self' data: blob: https: http:",
-            "font-src 'self' data: https://fonts.gstatic.com",
-            "connect-src 'self' https://*.supabase.co https://api.anthropic.com https://accounts.google.com",
-            "frame-src 'self' https://accounts.google.com",
-            "object-src 'none'",
-            "base-uri 'self'",
-            "form-action 'self'",
-            "frame-ancestors 'none'",
-            "upgrade-insecure-requests",
-          ].join('; '),
-        },
+        // Content-Security-Policy is set dynamically in middleware.ts
+        // with a per-request nonce. A static CSP here would conflict.
       ],
     },
   ],

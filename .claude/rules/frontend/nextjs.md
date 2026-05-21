@@ -1,14 +1,14 @@
 ---
-paths: apps/web/**/*.{ts,tsx}
+paths: src/**/*.{ts,tsx}
 ---
 
 # Next.js Frontend Rules
 
 ## Framework Configuration
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **UI Library**: React 19, shadcn/ui (new-york style)
-- **Styling**: Tailwind CSS v4, CSS Variables
+- **Styling**: Tailwind CSS v3, CSS Variables
 - **State**: React hooks, Server Components
 
 ## Component Patterns
@@ -64,6 +64,21 @@ export function useExample() {
 - Import with `@/` prefix: `import { Button } from "@/components/ui/button"`
 - Server Components by default, add `"use client"` only when needed
 - Every async component needs loading/error/empty states
+- **Icons**: AI-generated custom SVGs only. NO Lucide React. NO Hero Icons. (Deprecated per `standards/agent.md`)
+- **Border radius**: `rounded-sm` only. Never `rounded-lg`, `rounded-xl`, `rounded-full`
+- **Bundle budget**: First Load JS < 250KB per route. Dynamic import heavy components.
+
+## Route Segment Requirements
+
+Every route segment directory MUST contain:
+```
+src/app/[segment]/
+  page.tsx       # Main content (Server Component)
+  loading.tsx    # Skeleton/spinner shown during streaming
+  error.tsx      # Error boundary (Client Component with 'use client')
+```
+
+`loading.tsx` and `error.tsx` are not optional — blank screens and unhandled errors are not acceptable.
 
 ## Anti-Patterns
 
@@ -72,7 +87,7 @@ export function useExample() {
 ## Key Commands
 
 ```bash
-pnpm dev --filter=web              # Development server
-pnpm turbo run type-check --filter=web  # Type checking
-pnpm turbo run lint --filter=web   # Linting
-pnpm build --filter=web           # Build for production
+pnpm dev                          # Development server
+pnpm run type-check               # Type checking
+pnpm run lint                     # Linting
+pnpm build                       # Build for production

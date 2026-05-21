@@ -19,23 +19,23 @@ export default function Badge({
   ...props
 }: BadgeProps) {
   const variantClasses = {
-    default: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
-    success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    danger: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    outline: 'bg-transparent border-2 border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-300',
+    default: 'bg-white/[0.06] text-white/70 border border-white/[0.1]',
+    success: 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30',
+    warning: 'bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/30',
+    danger: 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/30',
+    info: 'bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/30',
+    outline: 'bg-transparent border border-white/[0.1] text-white/50',
   };
 
   const sizeClasses = {
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-2.5 py-1 text-sm',
-    lg: 'px-3 py-1.5 text-base',
+    sm: 'px-2 py-0.5 text-[10px]',
+    md: 'px-2.5 py-1 text-[11px]',
+    lg: 'px-3 py-1.5 text-[13px]',
   };
 
   return (
     <span
-      className={`inline-flex items-center font-medium rounded-full ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center font-medium rounded-sm ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
       {children}

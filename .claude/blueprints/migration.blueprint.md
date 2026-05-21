@@ -45,9 +45,9 @@ Map task keywords to risk level — no LLM involved:
 
 Before `implement-migration`:
 
-1. Verify `downgrade()` function will be present in any Alembic migration
+1. Verify the migration SQL is reversible (include a rollback comment or separate down migration)
 2. Verify git is clean (no uncommitted work to lose)
-3. If Docker is running, verify database is accessible
+3. Verify Supabase project is accessible (local or remote)
 
 ## Pre-Hydration Context (loaded before `implement-migration` node)
 
@@ -58,10 +58,9 @@ Always loaded:
 
 Database domain:
 
-- `scripts/init-db.sql`
-- `apps/backend/src/config/database.py`
-- `apps/backend/src/db/` (all model files)
-- `apps/backend/alembic/` (existing migrations for context)
+- `supabase/migrations/` (existing migrations for context)
+- `supabase/config.toml`
+- `src/lib/supabase/server.ts`
 
 ## Iteration Caps (Reduced for Migrations — Higher Risk)
 
@@ -80,10 +79,10 @@ Database domain:
 
 ## Migration Safety Checklist
 
-- [ ] `downgrade()` function included (can roll back)
+- [ ] Rollback SQL documented (can revert the migration)
 - [ ] No DROP without explicit instruction
 - [ ] No data loss (only additive changes, or data preserved)
-- [ ] Tested against local Docker database
+- [ ] Tested against local Supabase or linked project
 - [ ] Backward compatible (existing code still works before deploy)
 
 ## Blueprint Metadata
@@ -97,12 +96,12 @@ Database domain:
 
 ## Rollback Plan
 
-{describe how to revert — Alembic downgrade command or git revert}
+{describe how to revert — Supabase migration revert or git revert}
 
 ## Test Plan
 
 - [ ] Migration applies cleanly on fresh database
-- [ ] Migration rolls back cleanly (`alembic downgrade -1`)
+- [ ] Migration rolls back cleanly (rollback SQL tested)
 - [ ] All existing tests pass after migration
 - [ ] Type check passes
 
@@ -115,6 +114,6 @@ Warning: Migrations require careful human review before merging.
 ## Escalation Conditions
 
 - `execution-guardian-check` returns HIGH risk → immediate escalation (no git branch created)
-- `backup-check` fails (no downgrade in migration) → escalation
+- `backup-check` fails (no rollback SQL in migration) → escalation
 - `implement-migration` produces no migration file → escalation
 - `fix-ci` reaches 1 round with failures → escalation (reduced tolerance)

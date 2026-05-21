@@ -33,6 +33,42 @@ constraining the search space to domain-relevant patterns only.
 
 ---
 
+## Blueprint Manifest YAML Schema
+
+Every blueprint consumed by `/minion` MUST have a manifest in its frontmatter:
+
+```yaml
+---
+name: blueprint-name                    # kebab-case, matches filename
+version: 1.0.0
+dag:
+  - id: implement
+    type: agentic                       # agentic | deterministic
+    agent: senior-fullstack
+    cap: 1                              # max iterations for this node
+  - id: fix-ci
+    type: agentic
+    agent: verification
+    cap: 2
+    depends_on: [implement]
+  - id: fix-lint
+    type: deterministic                 # deterministic nodes have no cap
+    depends_on: [fix-ci]
+  - id: create-pr
+    type: deterministic
+    depends_on: [fix-lint]
+manifest:
+  always:
+    - .claude/memory/CONSTITUTION.md
+    - .claude/memory/compass.md
+  domain:
+    - src/app/api/[relevant]/**
+    - .claude/agents/[relevant]/agent.md
+---
+```
+
+The `manifest.always` block defines **context injection** — these files are loaded before execution starts. The `manifest.domain` block scopes file access (Minions Protocol context isolation rule).
+
 ## Iteration Counting Requirement
 
 Every agentic node execution MUST:
@@ -40,6 +76,13 @@ Every agentic node execution MUST:
 1. Increment `iterations.total` in `.claude/data/minion-state.json`
 2. Increment the node-specific counter (`implement`, `fix_ci`, `fix_lint`)
 3. Check total against the cap (3) before proceeding
+
+**Initialisation**: At the start of each `/minion` run, reset `minion-state.json`:
+```json
+{ "blueprint": "name", "started_at": "DD/MM/YYYY HH:MM", "iterations": { "total": 0, "implement": 0, "fix_ci": 0, "fix_lint": 0 } }
+```
+
+**Reset**: After a successful `create-pr` node, the state file is archived to `.claude/data/minion-archive/` and reset for the next run.
 
 The `iteration-counter.py` PreToolUse hook enforces this automatically for `Task` tool calls.
 For direct agentic work (non-Task), the agent must self-report counts.

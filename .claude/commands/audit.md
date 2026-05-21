@@ -49,6 +49,32 @@ For each component in `src/components/features/`:
 - **API routes not validating input**: POST/PUT/PATCH handlers not using Zod
 - **Missing validator files**: Features without corresponding validators
 
+### 7. SLOP DETECTION (Medium)
+
+Scan for common quality antipatterns:
+
+```bash
+# Type slop
+rg ": any" src/ --type ts
+rg "as any" src/ --type ts
+
+# TODO debt
+rg "TODO|FIXME|HACK|XXX" src/ --type ts
+
+# Debug leftovers
+rg "console\.log" src/ --type ts --ignore-file .gitignore
+
+# Generic naming (flags for review, not auto-fail)
+rg "\b(data|item|thing|stuff|temp|foo|bar)\b" src/ --type ts -l
+
+# Placeholder text
+rg "lorem ipsum|placeholder|coming soon|TODO:" src/ -i --type tsx
+```
+
+### 8. VAULT INDEX GAPS
+
+Check `.claude/VAULT-INDEX.md` for any claims in agent files that reference external data (statistics, regulatory requirements, API specs) without a vault entry. Flag for Truth Finder verification.
+
 ## Report Format
 
 ```

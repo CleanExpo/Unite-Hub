@@ -1,174 +1,97 @@
-# CLAUDE.md — Unite Hub
+# Unite-Group Nexus
 
-> AI-Powered CRM & Marketing Automation Platform.
-> **Stack**: Next.js 16 (root) + FastAPI/LangGraph (`apps/backend/`) + Supabase PostgreSQL + Redis
-> **Monorepo**: Turbo + pnpm workspaces | **Design**: Scientific Luxury
+## Identity
+Private founder CRM for Phill McGurk. NOT a public SaaS. One user.
+Stack: Next.js 16 App Router (src/ root), React 19, Supabase, Vercel, Tailwind CSS, pnpm monorepo. No FastAPI, no Python backend.
+Design: Scientific Luxury — OLED Black `#050505`, Cyan `#00F5FF`, `rounded-sm` only.
+Locale: en-AU | DD/MM/YYYY | AUD | AEST/AEDT
 
----
+## Agent Routing Rules
+ALWAYS delegate to subagents. Never do the work yourself.
 
-## Quick Commands
+### Parallel dispatch (ALL conditions met):
+- 3+ unrelated tasks across different domains
+- No shared state between tasks
+- Clear file boundaries with no overlap
 
-```bash
-# Setup
-pnpm run setup              # Unix/macOS
-pnpm run setup:windows      # Windows PowerShell
+### Sequential dispatch (ANY condition triggers):
+- Tasks have dependencies (B needs output from A)
+- Shared files or state (merge conflict risk)
+- Unclear scope (need to understand before proceeding)
 
-# Development
-pnpm dev                    # Start ALL services via Turbo
-pnpm run docker:up          # PostgreSQL + Redis (required)
-pnpm run verify             # System health check
+## Subagent Invocation Protocol
+Every dispatch MUST include:
+1. Exact scope (which files, which routes)
+2. Success criteria (what done looks like)
+3. Relevant file references
+4. Constraints (what NOT to touch)
 
-# Quality
-pnpm turbo run test         # All tests (frontend + backend)
-pnpm turbo run lint         # All linting
-pnpm turbo run type-check   # TypeScript strict check
+## Available Agents — Nexus Rebuild Team
+- `project-manager`    — planning, specs, Linear issues, roadmap
+- `senior-fullstack`   — Next.js/React/Supabase implementation
+- `database-architect` — schema, migrations, RLS, type generation
+- `frontend-designer`  — UI components, Notion sidebar, layouts
+- `api-integrations`   — Xero, Gmail, Calendar, Stripe, Linear, social
+- `code-auditor`       — forensic audit, dead code, security scan (READ ONLY)
+- `devops-engineer`    — Vercel, CI/CD, env config, monitoring
+- `qa-tester`          — E2E tests, smoke tests, verification gate
 
-# Unite Hub Agents
-pnpm run email-agent        # Process emails
-pnpm run content-agent      # Generate content (Extended Thinking)
-pnpm run orchestrator       # Coordinate multi-agent workflows
-pnpm run analyze-contacts   # AI contact scoring
+## Existing Specialist Agents (pre-rebuild)
+See `.claude/agents/` for: frontend-specialist, database-specialist,
+security-auditor, test-engineer, verification, spec-builder,
+deploy-guardian, orchestrator, and 23 others (31 total).
 
-# SEO
-pnpm run seo:research       # Perplexity SEO research
-pnpm run seo:full           # Comprehensive SEO report
+## Critical Rules
+- DB queries: always `.eq('founder_id', founderId)` — NEVER workspace_id
+- Auth: Supabase PKCE server-side only. Single-tenant.
+- Source of truth: `.claude/memory/CONSTITUTION.md`
 
-# Docker
-pnpm run docker:up          # Start services
-pnpm run docker:reset       # Reset + restart
+## Environment Variables (Vercel)
+NEVER delete or modify these without understanding the impact:
+- `ANTHROPIC_API_KEY` — Claude API. Powers Bron, Advisory, Strategy, Experiments. CRITICAL.
+- `VAULT_ENCRYPTION_KEY` — AES-256-GCM encryption for credentials vault. CRITICAL.
+- `SUPABASE_SERVICE_ROLE_KEY` — Bypasses RLS for server-side operations. CRITICAL.
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL. PUBLIC.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anonymous key. PUBLIC.
+- `CRON_SECRET` — Validates scheduled jobs (bookkeeper). CRITICAL.
+- `FOUNDER_USER_ID` — Founder's Supabase auth UUID. Used by CRON jobs.
 
-# Skill Manager
-/skill-manager analyse      # Analyse skill gaps
-/skill-manager generate X   # Generate new skill
-```
+Integration keys (optional — features degrade gracefully):
+- `XERO_CLIENT_ID/SECRET` — Xero accounting OAuth
+- `GOOGLE_CLIENT_ID/SECRET` — Gmail + Calendar OAuth
+- `LINEAR_API_KEY` — Linear issue tracking sync
+- `FACEBOOK_APP_ID/SECRET`, `LINKEDIN_CLIENT_ID/SECRET`, `TIKTOK_CLIENT_KEY/SECRET` — Social OAuth
 
----
+## Vault Index
 
-## Architecture Routing
+Wiki-link syntax for O(1) asset discovery. Canonical index: `.claude/VAULT-INDEX.md`
 
-| Domain | Location |
-|--------|---------|
-| **Unite Hub Next.js app** | `src/` (root) |
-| **FastAPI AI backend** | `apps/backend/src/` |
-| **Starter web template** | `apps/web/` |
-| **Shared types** | `packages/shared/src/` |
-| **Shared ESLint/TS config** | `packages/config/` |
-| **AI Agents (Python)** | `apps/backend/src/agents/` |
-| **FastAPI routes** | `apps/backend/src/api/routes/` |
-| **AI provider selector** | `apps/backend/src/models/selector.py` |
-| **LangGraph state** | `apps/backend/src/state/` |
-| **Next.js agents (TS)** | `src/agents/` |
-| **Next.js AGI layer** | `src/agi/` |
-| **Next.js API routes** | `src/app/api/` (~104 routes) |
-| **Database** | Supabase PostgreSQL (13 tables, full RLS) |
-| **Design tokens** | `apps/web/lib/design-tokens.ts` |
+**Resolution rules**:
+- `[[orchestrator]]` → `.claude/agents/orchestrator/agent.md`
+- `[[type/id]]` → `.claude/{type}/{id}` (e.g., `[[rules/core]]` → `.claude/rules/core.md`)
+- `[[id#section]]` → Asset file, specific heading (e.g., `[[orchestrator#routing]]`)
+- Fuzzy threshold: 0.8 (handles plurals, case variation)
 
----
+**When to use**: Before searching the codebase, check the Vault Index for known assets.
 
-## Knowledge Retrieval (Retrieval-First Rule)
+## Human Goal Translation
 
-Query before loading docs. See `.claude/rules/retrieval-first.md`.
+Map common outcome phrases to concrete checklists:
 
-| Source | Use For |
-|--------|---------|
-| **Context7 MCP** | Next.js, FastAPI, Playwright, Supabase docs |
-| **59 Skills** | Pattern libraries (`.skills/custom/*/SKILL.md`) |
-| **`.claude/` docs** | Architecture, RLS, auth, agent patterns |
-| **Jina Reader** | Web content → `https://r.jina.ai/{url}` |
+| Phrase | Translates To |
+|--------|--------------|
+| "Make it work" | Type-check passes + tests pass + no runtime errors |
+| "Ship it" | Verify → commit → push → create PR → deploy |
+| "Clean this up" | Lint + format + remove dead code + simplify |
+| "Is this safe?" | Security audit + RLS check + env var audit + OWASP scan |
+| "Make it fast" | Lighthouse audit + bundle analysis + query optimisation |
+| "Make it pretty" | Design tokens compliance + Scientific Luxury review + responsive check |
 
----
+## Blueprint-First Protocol
 
-## Authentication (PKCE + JWT)
+For structured task execution, use the Blueprint DAG system:
 
-**Next.js (Supabase)**: PKCE flow, server-side sessions, JWT in cookies
-- Server: `createClient()` from `@/lib/supabase/server`
-- Never expose tokens in client code
-- ALL queries must include `.eq('workspace_id', workspaceId)`
-
-**FastAPI**: JWT auth middleware
-- Login: `POST /api/auth/login` → bcrypt → JWT → cookie
-- `apps/backend/src/auth/jwt.py`
-
----
-
-## AI Provider System
-
-```bash
-# Default: Ollama (local, free, FastAPI backend)
-AI_PROVIDER=ollama
-OLLAMA_MODEL=llama3.1:8b
-
-# Production: Claude (Next.js + FastAPI)
-ANTHROPIC_API_KEY=sk-ant-xxx
-```
-
-**Claude Models**: Opus 4.5 (Extended Thinking), Sonnet 4.5, Haiku 4.5
-**Provider selector**: `apps/backend/src/models/selector.py`
-
----
-
-## Database (Workspace Isolation — CRITICAL)
-
-ALL Supabase queries MUST filter by `workspace_id`:
-```typescript
-// ALWAYS do this:
-const { data } = await supabase.from('contacts').select('*').eq('workspace_id', workspaceId);
-```
-
-Tables: contacts, emails, campaigns, campaign_steps, content_drafts, email_accounts,
-        workspaces, users, lead_scores, email_events, multimedia_uploads, alerts, agent_runs
-
----
-
-## Design System — Scientific Luxury
-
-| Element | Spec |
-|---------|------|
-| Background | OLED Black `#050505` |
-| Primary | Cyan `#00F5FF` |
-| Success | Emerald `#00FF88` |
-| Warning | Amber `#FFB800` |
-| Error | Red `#FF4444` |
-| Escalation | Magenta `#FF00FF` |
-| Corners | Sharp only (`rounded-sm`) |
-| Animation | Framer Motion only (no CSS transitions) |
-| Typography | JetBrains Mono (data), Editorial (labels) |
-
-Full system: `docs/DESIGN_SYSTEM.md` | Skill: `.skills/custom/scientific-luxury/SKILL.md`
-
----
-
-## Context Drift Prevention (4-Pillar Defence)
-
-| Pillar | Mechanism | File |
-|--------|-----------|------|
-| Immutable rules | CONSTITUTION.md | `.claude/memory/CONSTITUTION.md` |
-| Session injection | SessionStart hook | `.claude/hooks/` |
-| Per-message compass | UserPromptSubmit hook | `.claude/memory/compass.md` |
-| Pre-compaction save | PreCompact hook | `.claude/hooks/` |
-
-If drift detected: `cat .claude/memory/CONSTITUTION.md`
-
----
-
-## Agents & Skills
-
-- **23 subagents**: `.claude/agents/*/agent.md`
-- **59 skills**: `.skills/AGENTS.md`
-- **10 commands**: `.claude/commands/*.md`
-- **10 hooks**: `.claude/hooks/*.md`
-- **Orchestrator**: `.claude/agents/orchestrator/agent.md`
-
----
-
-## Key Documentation
-
-| Doc | Purpose |
-|-----|---------|
-| `.claude/README.md` | Full architecture guide (857 lines) |
-| `.claude/memory/CONSTITUTION.md` | Immutable rules |
-| `docs/DESIGN_SYSTEM.md` | Scientific Luxury system |
-| `docs/LOCAL_SETUP.md` | Dev environment setup |
-| `docs/AI_PROVIDERS.md` | Ollama vs Claude comparison |
-| `docs/MULTI_AGENT_ARCHITECTURE.md` | Agent coordination |
-| `.claude/architecture/` | Unite-Hub specific architecture |
+- **Blueprints**: `.claude/blueprints/` — DAGs for feature, bugfix, migration, refactor
+- **Minion command**: `/minion` — One-shot execution with hard iteration caps
+- **Harness protocol**: `.claude/AGENT_HARNESS.md` — Multi-agent convergence for complex tasks (3+ agents)
+- **Routing**: Orchestrator decides — simple tasks → Minion, complex tasks → Harness

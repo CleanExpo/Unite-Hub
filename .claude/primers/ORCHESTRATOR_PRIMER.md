@@ -101,7 +101,7 @@ async def delegate_to_specialist(self, task: Task):
     domain = self.categorize_task(task)
 
     # Select specialist
-    agent = self.get_specialist(domain)  # frontend/backend/database
+    agent = self.get_specialist(domain)  # frontend/api/database
 
     # Load relevant skills and context
     skills = await self.load_relevant_skills(domain, task)
@@ -129,7 +129,7 @@ async def delegate_to_specialist(self, task: Task):
 ```python
 async def spawn_subagent(
     self,
-    agent_type: str,  # frontend|backend|database|test|review
+    agent_type: str,  # frontend|api|database|test|review
     task: SubTask,
     context_partition: dict  # Only relevant context
 ) -> Agent:
@@ -219,8 +219,8 @@ def categorize_task(self, description: str) -> str:
             "tailwind", "css", "design", "responsive"
         ],
         "backend": [
-            "api", "endpoint", "fastapi", "agent", "langgraph",
-            "python", "service", "business logic"
+            "api", "endpoint", "route", "agent",
+            "service", "business logic"
         ],
         "database": [
             "migration", "schema", "query", "supabase",
@@ -334,16 +334,16 @@ def partition_context(self, subtask: SubTask) -> dict:
 
     partitions = {
         "frontend": {
-            "files": ["apps/web/**/*.tsx", "apps/web/**/*.ts"],
+            "files": ["src/components/**/*.tsx", "src/app/**/*.tsx"],
             "docs": ["Next.js patterns", "React best practices"],
             "skills": ["NEXTJS.md", "COMPONENTS.md", "TAILWIND.md"],
             "memory_domain": "frontend"
         },
-        "backend": {
-            "files": ["apps/backend/src/**/*.py"],
-            "docs": ["FastAPI patterns", "Agent patterns"],
-            "skills": ["FASTAPI.md", "LANGGRAPH.md", "AGENTS.md"],
-            "memory_domain": "backend"
+        "api": {
+            "files": ["src/app/api/**/*.ts", "src/lib/**/*.ts"],
+            "docs": ["Next.js API route patterns"],
+            "skills": ["NEXTJS.md"],
+            "memory_domain": "api"
         },
         "database": {
             "files": ["supabase/migrations/**/*.sql"],
@@ -412,7 +412,7 @@ async def optimize_context(self, context: dict) -> dict:
 
 3. **Parallel Execution**
    - Spawn frontend agent for UI
-   - Spawn backend agent for API
+   - Spawn fullstack agent for Next.js API routes
    - Spawn database agent for schema changes
    - All work in parallel where possible
 

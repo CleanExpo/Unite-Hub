@@ -19,17 +19,17 @@ module.exports = [
     ],
   },
 
-  // Base config for web app
+  // Base config for web app (apps/web/ legacy path + src/ rebuild path)
   ...compat
     .extends("next/core-web-vitals", "plugin:@typescript-eslint/recommended")
     .map((config) => ({
       ...config,
-      files: ["apps/web/**/*.{js,jsx,ts,tsx}"],
+      files: ["apps/web/**/*.{js,jsx,ts,tsx}", "src/**/*.{js,jsx,ts,tsx}"],
     })),
 
   // Production code overrides
   {
-    files: ["apps/web/**/*.{js,jsx,ts,tsx}"],
+    files: ["apps/web/**/*.{js,jsx,ts,tsx}", "src/**/*.{js,jsx,ts,tsx}"],
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-unused-vars": [
@@ -52,6 +52,9 @@ module.exports = [
       "apps/web/**/*.spec.{js,jsx,ts,tsx}",
       "apps/web/**/tests/**/*.{js,jsx,ts,tsx}",
       "apps/web/**/e2e/**/*.{js,jsx,ts,tsx}",
+      "src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "src/**/*.test.{js,jsx,ts,tsx}",
+      "src/**/*.spec.{js,jsx,ts,tsx}",
     ],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",

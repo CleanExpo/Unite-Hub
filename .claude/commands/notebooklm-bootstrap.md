@@ -45,10 +45,10 @@ If auth fails, ask the user to log in to NotebookLM in their browser first, then
 Create all 4 project notebooks:
 
 ```bash
-nlm notebook create "NodeJS-Starter-V1 — Source of Truth"
-nlm notebook create "NodeJS-Starter-V1 — Debug KB"
-nlm notebook create "NodeJS-Starter-V1 — Security Handbook"
-nlm notebook create "NodeJS-Starter-V1 — Repo Atlas"
+nlm notebook create "Nexus 2.0 — Source of Truth"
+nlm notebook create "Nexus 2.0 — Debug KB"
+nlm notebook create "Nexus 2.0 — Security Handbook"
+nlm notebook create "Nexus 2.0 — Repo Atlas"
 ```
 
 Capture the notebook ID from each command's output.
@@ -85,7 +85,7 @@ nlm source add <project_sot_id> --file docs/MULTI_AGENT_ARCHITECTURE.md
 nlm source add <debug_kb_id> --file docs/guides/TESTING_GUIDE.md
 ```
 
-Also add any key error-pattern files from `apps/backend/src/` if they exist.
+Also add any key error-pattern files from `src/lib/` if they exist.
 
 **security_handbook** (Security Handbook):
 

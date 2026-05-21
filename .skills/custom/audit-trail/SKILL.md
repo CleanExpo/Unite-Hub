@@ -1,3 +1,12 @@
+---
+name: audit-trail
+type: skill
+version: 1.0.0
+priority: 2
+domain: security
+description: Structured audit event logging for compliance, forensics, and activity tracking — 7-year retention per Privacy Act 1988
+---
+
 # Audit Trail
 
 > Structured audit event logging for compliance, forensics, and activity tracking in NodeJS-Starter-V1.

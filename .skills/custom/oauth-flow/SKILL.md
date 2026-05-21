@@ -1,3 +1,12 @@
+---
+name: oauth-flow
+type: skill
+version: 1.0.0
+priority: 2
+domain: security
+description: OAuth 2.0 and OIDC integration with PKCE, Supabase Auth providers, and redirect URI validation
+---
+
 # OAuth Flow
 
 > OAuth 2.0 and OIDC integration patterns with PKCE, provider configuration, and session management for NodeJS-Starter-V1.

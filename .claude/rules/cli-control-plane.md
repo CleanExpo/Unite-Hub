@@ -29,7 +29,7 @@ Detect mode from user intent. Mode determines governance intensity.
 - Check for cross-repo references before modifying shared schemas, UI components, or utils
 - Verify import paths when moving or renaming files
 - Anti-duplication: search for existing implementations before creating new ones
-- Respect monorepo boundaries (`apps/web/`, `apps/backend/`)
+- Respect monorepo boundaries (`src/`, `supabase/`)
 
 ---
 

@@ -25,11 +25,11 @@ Sentry.init({
   
   // Integrations
   integrations: [
-    new Sentry.BrowserTracing({
+    Sentry.browserTracingIntegration({
       // Performance monitoring for navigation and HTTP requests
       tracePropagationTargets: ['localhost', /^https:\/\/[^/]*\.unite-hub\.com/],
     }),
-    new Sentry.Replay({
+    Sentry.replayIntegration({
       // Mask all text content for privacy
       maskAllText: true,
       blockAllMedia: true,
