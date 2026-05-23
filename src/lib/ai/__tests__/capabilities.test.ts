@@ -24,12 +24,14 @@ describe('analyzeCapability', () => {
   it('has correct id, model, and maxTokens', () => {
     expect(analyzeCapability.id).toBe('analyze')
     expect(analyzeCapability.model).toBe('claude-opus-4-5-20251101')
-    expect(analyzeCapability.maxTokens).toBe(16000)
+    expect(analyzeCapability.maxTokens).toBe(20000)
   })
 
-  it('has thinking feature enabled with 10000 budget tokens', () => {
+  it('has adaptive thinking enabled with bounded budget tokens', () => {
     expect(analyzeCapability.features.thinking).toEqual({
-      budgetTokens: 10000,
+      adaptive: true,
+      minBudget: 4000,
+      maxBudget: 16000,
     })
   })
 
@@ -82,10 +84,10 @@ describe('registerAllCapabilities', () => {
     // We test idempotency by calling twice
   })
 
-  it('registers all 5 capabilities', () => {
+  it('registers all capabilities', () => {
     registerAllCapabilities()
 
-    expect(registerCapability).toHaveBeenCalledTimes(5)
+    expect(registerCapability).toHaveBeenCalledTimes(9)
     const registeredIds = vi.mocked(registerCapability).mock.calls.map(
       (call) => call[0].id
     )
@@ -94,5 +96,9 @@ describe('registerAllCapabilities', () => {
     expect(registeredIds).toContain('debate')
     expect(registeredIds).toContain('content-generate')
     expect(registeredIds).toContain('email-triage')
+    expect(registeredIds).toContain('research')
+    expect(registeredIds).toContain('data-analyst')
+    expect(registeredIds).toContain('coach')
+    expect(registeredIds).toContain('insight-evaluator')
   })
 })

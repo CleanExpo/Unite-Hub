@@ -59,7 +59,7 @@ Priority: 1=urgent, 2=high, 3=medium, 4=low`,
 export async function triageThreadBatch(
   threads: Array<{ threadId: string; subject: string; from: string; snippet: string }>
 ): Promise<TriageResult[]> {
-  const { batchExecute, registerCapability } = await import('../router')
+  const { batchExecute } = await import('../router')
   const { registerAllCapabilities } = await import('./index')
   registerAllCapabilities()
 

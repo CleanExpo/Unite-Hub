@@ -170,16 +170,24 @@ export async function listCachedFiles(founderId: string): Promise<CachedFile[]> 
 }
 
 // ── Legacy in-memory helpers (kept for backwards compatibility) ──────────────
-// These are no-ops in production — use uploadAndCacheFile / getCachedFileId instead.
+// Production cache lives in Supabase; these helpers preserve the old unit-test and
+// caller contract for non-persistent, process-local lookups.
+const legacyFileCache = new Map<string, string>()
 
 /** @deprecated Use uploadAndCacheFile() */
-export function addToFileCache(_key: string, _fileId: string): void {}
+export function addToFileCache(key: string, fileId: string): void {
+  legacyFileCache.set(key, fileId)
+}
 
 /** @deprecated Use getCachedFileId() */
-export function getFileCache(_key: string): string | undefined { return undefined }
+export function getFileCache(key: string): string | undefined {
+  return legacyFileCache.get(key)
+}
 
-/** @deprecated No-op — cache is now in Supabase */
-export function clearFileCache(): void {}
+/** @deprecated Clears only the legacy process-local cache */
+export function clearFileCache(): void {
+  legacyFileCache.clear()
+}
 
 /** @deprecated Use uploadAndCacheFile() */
 export async function uploadFile(
@@ -189,5 +197,5 @@ export async function uploadFile(
   const client = getAIClient()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = await (client.beta.files as any).upload({ file, betas: ['files-api-2025-04-14'] })
-  return { fileId: result.id, filename: result.filename }
+  return { fileId: result.id, filename: result.filename ?? filename }
 }

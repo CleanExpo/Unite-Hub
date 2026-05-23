@@ -281,7 +281,7 @@ export function DispatchPanel() {
 
       {!loading && dispatches.length === 0 && (
         <p className="text-[12px] py-8 text-center" style={{ color: 'var(--color-text-disabled)' }}>
-          No work packages dispatched yet. Use "Dispatch Work" to push a task to a satellite business via Linear.
+          No work packages dispatched yet. Use &quot;Dispatch Work&quot; to push a task to a satellite business via Linear.
         </p>
       )}
 

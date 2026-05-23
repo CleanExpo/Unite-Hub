@@ -1,6 +1,8 @@
 // src/components/layout/__tests__/Sidebar.test.tsx
 import { render, screen } from '@testing-library/react'
 import { Sidebar } from '../Sidebar'
+
+const testUser = { name: 'Phill McGurk', email: 'phill@example.com' }
 import { useUIStore } from '@/store/ui'
 
 vi.mock('framer-motion', () => ({
@@ -33,12 +35,12 @@ vi.mock('next/navigation', () => ({
 
 describe('Sidebar', () => {
   it('renders NEXUS wordmark', () => {
-    render(<Sidebar />)
+    render(<Sidebar user={testUser} />)
     expect(screen.getByText('NEXUS')).toBeInTheDocument()
   })
 
   it('renders all global nav items', () => {
-    render(<Sidebar />)
+    render(<Sidebar user={testUser} />)
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
     expect(screen.getByText('Kanban')).toBeInTheDocument()
     expect(screen.getByText('Vault')).toBeInTheDocument()
@@ -46,12 +48,12 @@ describe('Sidebar', () => {
   })
 
   it('renders MY BUSINESSES section label', () => {
-    render(<Sidebar />)
+    render(<Sidebar user={testUser} />)
     expect(screen.getByText(/my businesses/i)).toBeInTheDocument()
   })
 
   it('renders all 7 business names', () => {
-    render(<Sidebar />)
+    render(<Sidebar user={testUser} />)
     expect(screen.getByText('Disaster Recovery')).toBeInTheDocument()
     expect(screen.getByText('Synthex')).toBeInTheDocument()
     expect(screen.getByText('ATO Tax Optimizer')).toBeInTheDocument()
@@ -67,7 +69,7 @@ describe('Sidebar', () => {
       }
       return selector ? selector(state) : state
     })
-    render(<Sidebar />)
+    render(<Sidebar user={testUser} />)
     expect(screen.queryByText('NEXUS')).not.toBeInTheDocument()
     expect(screen.queryByText('Dashboard')).not.toBeInTheDocument()
   })

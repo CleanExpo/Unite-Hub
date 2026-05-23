@@ -80,7 +80,6 @@ export function GanttChart() {
   }
 
   const chartW = Math.max(containerWidth - LABEL_W - 32, 300)
-  const svgH = PADDING.top + data.items.length * ROW_H + PADDING.bottom
 
   const today = new Date(data.today + 'T00:00:00')
   const windowStart = new Date(today)
@@ -130,7 +129,6 @@ export function GanttChart() {
   const totalRows = rowIndex
   const svgHeight = PADDING.top + totalRows * ROW_H + PADDING.bottom + rows.filter((r) => r.type === 'divider').length * 20
 
-  let yOffset = PADDING.top
 
   return (
     <div id="gantt-container" className="w-full overflow-x-auto" style={{ scrollbarWidth: 'thin' }}>
@@ -177,7 +175,7 @@ export function GanttChart() {
             let currentY = PADDING.top
             const elements: React.ReactNode[] = []
 
-            rows.forEach((row, i) => {
+            rows.forEach((row) => {
               if (row.type === 'divider') {
                 currentY += 20
                 return
@@ -226,8 +224,6 @@ export function GanttChart() {
               currentY += ROW_H
             })
 
-            // Update yOffset for today line
-            yOffset = currentY
             return elements
           })()}
 

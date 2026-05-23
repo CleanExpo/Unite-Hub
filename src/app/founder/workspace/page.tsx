@@ -1,19 +1,18 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   LayoutGrid, Table2, CalendarDays, Kanban, GalleryHorizontalEnd,
-  Plus, Search, Filter, SortAsc, ChevronDown, ChevronRight,
-  MoreHorizontal, Star, StarOff, Clock, Tag, User,
-  Building2, FileText, Database, Settings, Sparkles,
-  TrendingUp, AlertCircle, CheckCircle2, Circle,
-  ArrowUpRight, DollarSign, Briefcase, Zap,
-  Eye, EyeOff, Pencil, Trash2, Copy, Link2,
-  BarChart3, Target, Flame, Rocket, Brain,
+  Plus, Search, Filter, SortAsc, ChevronRight,
+  MoreHorizontal, Star, StarOff, User,
+  Building2, FileText, CheckCircle2, Circle,
+  ArrowUpRight, DollarSign, Zap,
+  Target, Flame, Rocket, Brain,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -31,7 +30,7 @@ interface DatabaseColumn {
 
 interface DatabaseRow {
   id: string;
-  cells: Record<string, any>;
+  cells: Record<string, unknown>;
   starred?: boolean;
 }
 
@@ -159,7 +158,7 @@ const databases: DatabaseConfig[] = [
   },
   {
     id: "tasks",
-    name: "Today's Tasks",
+    name: "Today&apos;s Tasks",
     icon: <CheckCircle2 className="w-4 h-4" />,
     description: "What needs to happen right now",
     defaultView: "board",
@@ -327,7 +326,7 @@ const databases: DatabaseConfig[] = [
 
 // ─── Cell Renderer ───────────────────────────────────────────────────────────
 
-function CellValue({ column, value }: { column: DatabaseColumn; value: any }) {
+function CellValue({ column, value }: { column: DatabaseColumn; value: unknown }) {
   if (value === undefined || value === null || value === "") {
     return <span className="text-zinc-600">—</span>;
   }
@@ -335,16 +334,16 @@ function CellValue({ column, value }: { column: DatabaseColumn; value: any }) {
   switch (column.type) {
     case "select":
       return (
-        <Badge variant="outline" className={`text-xs font-medium border ${statusColors[value] || "bg-zinc-700/50 text-zinc-300 border-zinc-600"}`}>
-          {priorityIcons[value] && <span className="mr-1">{priorityIcons[value]}</span>}
-          {value}
+        <Badge variant="outline" className={`text-xs font-medium border ${statusColors[String(value)] || "bg-zinc-700/50 text-zinc-300 border-zinc-600"}`}>
+          {priorityIcons[String(value)] && <span className="mr-1">{priorityIcons[String(value)]}</span>}
+          {String(value)}
         </Badge>
       );
     case "multi-select":
       return (
         <div className="flex gap-1 flex-wrap">
           {(Array.isArray(value) ? value : [value]).map((v: string) => (
-            <Badge key={v} variant="outline" className="text-[10px] border-zinc-700 text-zinc-400">{v}</Badge>
+            <Badge key={v} variant="outline" className="text-[10px] border-zinc-700 text-zinc-400">{String(v)}</Badge>
           ))}
         </div>
       );
@@ -360,7 +359,7 @@ function CellValue({ column, value }: { column: DatabaseColumn; value: any }) {
           <div className="w-20 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
             <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: `${Math.min(100, Number(value))}%` }} />
           </div>
-          <span className="text-xs text-zinc-500 font-mono">{value}%</span>
+          <span className="text-xs text-zinc-500 font-mono">{String(value)}%</span>
         </div>
       );
     case "checkbox":
@@ -371,7 +370,7 @@ function CellValue({ column, value }: { column: DatabaseColumn; value: any }) {
       );
     case "date":
       if (!value) return <span className="text-zinc-600">—</span>;
-      return <span className="text-xs text-zinc-400">{value}</span>;
+      return <span className="text-xs text-zinc-400">{String(value)}</span>;
     case "person":
       const personColors: Record<string, string> = {
         "Phill": "bg-blue-500", "Bron": "bg-red-500", "Forge": "bg-amber-500",
@@ -380,10 +379,10 @@ function CellValue({ column, value }: { column: DatabaseColumn; value: any }) {
       };
       return (
         <div className="flex items-center gap-1.5">
-          <div className={`w-5 h-5 rounded-full ${personColors[value] || "bg-zinc-600"} flex items-center justify-center text-[10px] font-bold text-white`}>
-            {value?.[0]}
+          <div className={`w-5 h-5 rounded-full ${personColors[String(value)] || "bg-zinc-600"} flex items-center justify-center text-[10px] font-bold text-white`}>
+            {String(value).charAt(0)}
           </div>
-          <span className="text-xs text-zinc-300">{value}</span>
+          <span className="text-xs text-zinc-300">{String(value)}</span>
         </div>
       );
     case "number":
@@ -465,7 +464,7 @@ function BoardView({ db }: { db: DatabaseConfig }) {
           <div className="space-y-2">
             {group.rows.map((row) => (
               <Card key={row.id} className="bg-zinc-900/80 border-zinc-800 hover:border-zinc-700 p-3 cursor-pointer transition-colors">
-                <div className="text-sm text-zinc-200 font-medium mb-2">{row.cells[titleCol.id]}</div>
+                <div className="text-sm text-zinc-200 font-medium mb-2">{String(row.cells[titleCol.id])}</div>
                 <div className="flex flex-wrap gap-1.5">
                   {db.columns.slice(1).filter(c => c.id !== groupCol.id).map((col) => {
                     const val = row.cells[col.id];
@@ -497,7 +496,7 @@ function GalleryView({ db }: { db: DatabaseConfig }) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-1">
       {db.rows.map((row) => (
         <Card key={row.id} className="bg-zinc-900/80 border-zinc-800 hover:border-zinc-700 p-4 cursor-pointer transition-colors">
-          <div className="text-sm font-semibold text-zinc-200 mb-3">{row.cells[titleCol.id]}</div>
+          <div className="text-sm font-semibold text-zinc-200 mb-3">{String(row.cells[titleCol.id])}</div>
           <div className="space-y-2">
             {db.columns.slice(1).map((col) => {
               const val = row.cells[col.id];
@@ -555,7 +554,7 @@ function CalendarView({ db }: { db: DatabaseConfig }) {
                   <div className={`text-[11px] mb-1 ${isToday ? "text-blue-400 font-bold" : "text-zinc-500"}`}>{day}</div>
                   {items.slice(0, 2).map((item) => (
                     <div key={item.id} className="text-[10px] text-zinc-300 bg-zinc-800 rounded px-1 py-0.5 mb-0.5 truncate cursor-pointer hover:bg-zinc-700">
-                      {item.cells[db.columns[0].id]}
+                      {String(item.cells[db.columns[0].id])}
                     </div>
                   ))}
                   {items.length > 2 && <div className="text-[9px] text-zinc-600">+{items.length - 2} more</div>}
@@ -617,7 +616,7 @@ export default function FounderWorkspacePage() {
           {!sidebarCollapsed && (
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center text-[10px] font-bold">P</div>
-              <span className="text-sm font-semibold">Phill's Workspace</span>
+              <span className="text-sm font-semibold">Phill&apos;s Workspace</span>
             </div>
           )}
           <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="p-1 hover:bg-zinc-800 rounded">
@@ -638,7 +637,7 @@ export default function FounderWorkspacePage() {
                 <span className="text-zinc-300 font-mono">{totalIssues}</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-zinc-500">Today's Tasks</span>
+                <span className="text-zinc-500">Today&apos;s Tasks</span>
                 <span className="text-amber-400 font-mono">{todoTasks} todo</span>
               </div>
             </div>
@@ -663,18 +662,18 @@ export default function FounderWorkspacePage() {
               ))}
 
               <div className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider px-2 py-1.5 mt-4">Quick Links</div>
-              <a href="/founder/os" className="w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200">
+              <Link href="/founder/os" className="w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200">
                 <Zap className="w-4 h-4" />
                 <span>Phill OS</span>
-              </a>
-              <a href="/founder" className="w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200">
+              </Link>
+              <Link href="/founder" className="w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200">
                 <LayoutGrid className="w-4 h-4" />
                 <span>Founder Dashboard</span>
-              </a>
-              <a href="/founder/businesses" className="w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200">
+              </Link>
+              <Link href="/founder/businesses" className="w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200">
                 <Building2 className="w-4 h-4" />
                 <span>God Mode</span>
-              </a>
+              </Link>
             </nav>
           </>
         )}
