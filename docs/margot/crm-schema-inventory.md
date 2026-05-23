@@ -118,7 +118,7 @@ The local CRM code path and documented schema are therefore ready for:
 
 The CRM is not yet complete for:
 
-- lead qualification and conversion,
+- tested lead qualification helper exists locally (`src/lib/crm/qualify-lead.ts`), but it remains recommendation-only and is not yet wired into lead capture, command-center UI, conversion, assignment, or outreach,
 - canonical contacts,
 - opportunities,
 - durable approvals,
@@ -128,8 +128,9 @@ The CRM is not yet complete for:
 ## 4. Known gaps queue ordered for next build lanes
 
 1. Lead qualification helper
-   - Add deterministic local helper with no external calls.
-   - Suggested output: score 0-100, band (`needs_review`, `qualified`, `nurture`, `spam_risk`), reasons array, and operator notes.
+   - Local deterministic helper now exists at `src/lib/crm/qualify-lead.ts` with Vitest coverage in `src/lib/crm/__tests__/qualify-lead.test.ts`.
+   - It returns score, band, transparent reasons, and `recommendationOnly: true` without AI, external calls, DB reads, DB writes, assignment, conversion, or outreach authority.
+   - Next: wire it into a mocked read/list or digest lane only after command-center visibility is in place.
    - Recommendation-only until Board approves auto-assignment/conversion rules.
 
 2. Conversion plan/tests
