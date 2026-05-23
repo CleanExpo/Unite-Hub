@@ -94,7 +94,10 @@ jobs:
     name: Dependency Review
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.event_name == 'pull_request'
+    # Dependency Review requires GitHub dependency graph to be enabled for the
+    # repository. Keep it opt-in so PRs are not hard-blocked when that repo
+    # setting is unavailable.
+    if: github.event_name == 'pull_request' && vars.DEPENDENCY_REVIEW_ENABLED == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

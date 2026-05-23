@@ -109,15 +109,18 @@ jobs:
       - name: Build application
         run: pnpm run build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # CI build should verify compile/static generation even when repo
+          # secrets have not been wired yet; production deploys still use real
+          # Vercel env vars.
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'ci-placeholder-anon-key' }}
           NEXT_PUBLIC_APP_URL: https://nexus.unite-group.com.au
           # Server-side env vars — real values not needed for build (all pages are force-dynamic)
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          VAULT_ENCRYPTION_KEY: ${{ secrets.VAULT_ENCRYPTION_KEY }}
-          CRON_SECRET: ${{ secrets.CRON_SECRET }}
-          FOUNDER_USER_ID: ${{ secrets.FOUNDER_USER_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY || 'ci-placeholder-anthropic-key' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'ci-placeholder-service-role-key' }}
+          VAULT_ENCRYPTION_KEY: ${{ secrets.VAULT_ENCRYPTION_KEY || '12345678901234567890123456789012' }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET || 'ci-placeholder-cron-secret' }}
+          FOUNDER_USER_ID: ${{ secrets.FOUNDER_USER_ID || '00000000-0000-0000-0000-000000000000' }}
 
   e2e:
     name: Playwright E2E Tests
