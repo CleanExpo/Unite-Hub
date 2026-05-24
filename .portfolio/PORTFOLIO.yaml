@@ -39,29 +39,31 @@ products:
       - { canonical_name: Hermes, relationship: "consumes wiki via WIKI_PATH" }
 
   - canonical_name: Authority-Site
-    aliases: ["Empire Command Center", "CEO Dashboard", "Synthex Authority Hub", "Unite-Group Dashboard"]
-    purpose: "CEO dashboard surfacing portfolio health + Pi-CEO agent activity (being merged into Unite-Hub)"
+    aliases: ["Empire Command Center", "CEO Dashboard", "Synthex Authority Hub", "Unite-Group Dashboard", "Empire", "Authority Site"]
+    purpose: "Standalone authority/landing site with CEO dashboard, Pi-CEO integration, Remotion video pipeline, brand guardian, i18n (en/es/fr), and RBAC. NOT a sub-app of Unite-Hub — they are separate products that share the parent company name."
     status: active
-    note: "Will flip to status:archived after Phase 2B merge completes"
     owner: phill
     github:
       org: CleanExpo
       repo: Unite-Group
       url: https://github.com/CleanExpo/Unite-Group
       default_branch: main
+      sandbox_branch: sandbox
     local:
-      canonical_path: 'D:\Unite-Group\Authority-Site'
+      canonical_path: 'D:\Authority-Site'
+      access_via: 'D:\Unite-Group\Authority-Site'
       do_not_clone_to:
         - 'D:\Unite-Group Agency\Unite-Group'
         - 'D:\Unite-Group Agency\Unite-Group-Main'
     vercel:
       team_id: team_KMZACI5rIltoCRhAtGCXlxUf
-      production: { project_id: TBD, project_name: TBD, domain: unite-group.vercel.app }
-      sandbox:    { project_id: null, project_name: null, domain: null }
-    workflow: { sandbox_first: true, pr_required_for_prod: true, ci_required_checks: [typecheck, build] }
-    stack: { framework: "next@14", runtime: "react@18", package_manager: pnpm, dev_port: 3000 }
+      production: { project_id: prj_IfUuJNLjXTE8VXqEGwLAleIGhiA0, project_name: unite-group, domain: unite-group.vercel.app }
+      sandbox:    { project_id: null, project_name: unite-group-sandbox, domain: unite-group-sandbox.vercel.app }
+    workflow: { sandbox_first: true, pr_required_for_prod: true, ci_required_checks: [typecheck, lint, build] }
+    stack: { framework: "next@14", runtime: "react@18", package_manager: npm, dev_port: 3000, supabase_project_id: uqfgdezadpkiadugufbs }
     dependencies:
-      - { canonical_name: Pi-CEO, relationship: "consumes via PI_CEO_API_URL" }
+      - { canonical_name: Pi-CEO, relationship: "consumes via PI_CEO_API_URL (Railway)" }
+      - { canonical_name: Hermes, relationship: "consumes wiki via WIKI_PATH" }
 
   - canonical_name: RestoreAssist
     aliases: ["Restore Assist", "RA"]
@@ -205,3 +207,17 @@ renamed_repos:
     new_name: SC-Generator
     renamed_at: "2026-05-24"
     reason: "Broken name (URL pasted as repo name)"
+
+disambiguation:
+  - ambiguous_term: "Unite-Group"
+    likely_canonical: Unite-Hub
+    reason: "GitHub repo CleanExpo/Unite-Hub is described as 'Unite Group CRM'. Most casual uses of 'Unite-Group' by the user mean the CRM (Unite-Hub), not the standalone Authority-Site product. If unsure, check if the request involves CRM/contacts/marketing -> Unite-Hub; or executive dashboard/Pi-CEO/portfolio metrics -> Authority-Site."
+    secondary_canonical: Authority-Site
+  - ambiguous_term: "Unite Group"
+    likely_canonical: Unite-Hub
+    reason: "Same as above (spelled with space instead of hyphen)"
+    secondary_canonical: Authority-Site
+  - ambiguous_term: "the Unite-Group repo"
+    likely_canonical: Unite-Hub
+    reason: "Despite the literal GitHub repo CleanExpo/Unite-Group existing for Authority-Site, when the user says 'the Unite-Group repo' they usually mean Unite-Hub (the CRM). Ask if context is unclear."
+    secondary_canonical: Authority-Site

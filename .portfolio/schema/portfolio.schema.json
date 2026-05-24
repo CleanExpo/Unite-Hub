@@ -225,6 +225,19 @@
           "reason":      { "type": "string" }
         }
       }
+    },
+    "disambiguation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ambiguous_term", "likely_canonical", "reason"],
+        "properties": {
+          "ambiguous_term":      { "type": "string" },
+          "likely_canonical":    { "type": "string" },
+          "reason":              { "type": "string" },
+          "secondary_canonical": { "type": "string" }
+        }
+      }
     }
   }
 }
