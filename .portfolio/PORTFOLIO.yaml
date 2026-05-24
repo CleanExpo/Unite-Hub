@@ -449,3 +449,77 @@ disambiguation:
     likely_canonical: Unite-Hub
     reason: Despite the literal GitHub repo CleanExpo/Unite-Group existing for Authority-Site, when the user says 'the Unite-Group repo' they usually mean Unite-Hub (the CRM). Ask if context is unclear.
     secondary_canonical: Authority-Site
+
+retired_vercel_projects:
+  - team: unite-group
+    name: _archive_brave-colden_2026-05-24
+    original_name: brave-colden
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name (vercel deploy without project name); 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_infallible-poincare_2026-05-24
+    original_name: infallible-poincare
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_infallible-pasteur_2026-05-24
+    original_name: infallible-pasteur
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_cool-moser_2026-05-24
+    original_name: cool-moser
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_keen-hellman_2026-05-24
+    original_name: keen-hellman
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_modest-saha_2026-05-24
+    original_name: modest-saha
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_dashboard_2026-05-24
+    original_name: dashboard
+    archived_at: "2026-05-24"
+    reason: "Generic name; linked to Pi-Dev-Ops repo but had only auto-generated domain (dashboard-two-orpin-90.vercel.app). pi-dev-ops project retains canonical role."
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_web_2026-05-24
+    original_name: web
+    archived_at: "2026-05-24"
+    reason: "Generic name; 5 env vars but no deploy in 2 months, only auto-generated domain"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_tmp_2026-05-24
+    original_name: tmp
+    archived_at: "2026-05-24"
+    reason: "Generic name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_v0-hotel-dashboard_2026-05-24
+    original_name: v0-hotel-dashboard
+    archived_at: "2026-05-24"
+    reason: "v0.dev experiment; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_unite-group-ops_2026-05-24
+    original_name: unite-group-ops
+    archived_at: "2026-05-24"
+    reason: "Colliding name; only auto-generated domain (unite-group-ops.vercel.app), 12 envs, last deploy 2026-04-29"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_unite-group-in_2026-05-24
+    original_name: unite-group.in
+    archived_at: "2026-05-24"
+    reason: "Colliding name with the unite-group.in custom domain (which actually lives on the 'unite-group' project, not this one). 0 envs, no deploys."
+    hard_delete_at: "2026-05-31"

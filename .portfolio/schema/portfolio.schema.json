@@ -238,6 +238,21 @@
           "secondary_canonical": { "type": "string" }
         }
       }
+    },
+    "retired_vercel_projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["team", "name", "original_name", "archived_at", "reason"],
+        "properties": {
+          "team":            { "type": "string" },
+          "name":            { "type": "string" },
+          "original_name":   { "type": "string" },
+          "archived_at":     { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "reason":          { "type": "string" },
+          "hard_delete_at":  { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+        }
+      }
     }
   }
 }
