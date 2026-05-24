@@ -26,6 +26,9 @@ products:
         - 'D:\Unite-Group CRM'
         - 'D:\unite-group-app'
         - 'D:\Unite-Hub Marketing Update'
+        - 'D:\Unite Group Businesses'
+        - 'D:\Unite Trade Group Directory'
+        - 'D:\Unite-Group Agency'
     vercel:
       team_id: team_KMZACI5rIltoCRhAtGCXlxUf
       production: { project_id: TBD, project_name: TBD, domain: unite-hub.vercel.app }
