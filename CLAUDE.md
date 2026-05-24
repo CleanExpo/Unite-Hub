@@ -1,4 +1,19 @@
-# CLAUDE.md - Unite-Hub Core Guide
+﻿# CLAUDE.md - Unite-Hub Core Guide
+
+@.portfolio/PORTFOLIO.yaml
+
+## Identity (SSOT)
+**Canonical name:** Unite-Hub
+**Aliases this project answers to:** "Unite Group", "Unite-Group", "Unite-Group CRM", "the CRM", "Marketing CRM"
+**Canonical local path:** `D:\Unite-Hub`
+**Access via:** `D:\Unite-Group\Unite-Hub` (junction)
+**GitHub:** `CleanExpo/Unite-Hub`
+
+> If the user uses any alias, this is what they mean.
+> Do NOT create new repos or clones. Do NOT create folders matching
+> `local.do_not_clone_to[]` in `.portfolio/PORTFOLIO.yaml`.
+
+---
 
 **Version**: 2.0.0 (Modular)
 **Last Updated**: 2026-01-15
@@ -16,10 +31,10 @@ Unite-Hub is an **AI-first CRM and marketing automation platform** built with:
 - **Backend**: Next.js API Routes (104 endpoints) + Supabase PostgreSQL
 - **AI Layer**: Anthropic Claude API (Opus 4.5, Sonnet 4.5, Haiku 4.5) with Extended Thinking
 - **Auth**: Supabase Auth (PKCE flow - server-side session validation)
-- **Email**: Multi-provider system (SendGrid → Resend → Gmail SMTP with automatic failover)
+- **Email**: Multi-provider system (SendGrid â†’ Resend â†’ Gmail SMTP with automatic failover)
 - **Real-Time**: WebSocket streaming, Redis caching, Bull job queues, node-cron scheduling
 
-### Phase 5 Status: ✅ COMPLETE - PRODUCTION READY
+### Phase 5 Status: âœ… COMPLETE - PRODUCTION READY
 - **Total LOC**: 16,116 lines of production code (Weeks 1-4)
 - **Database**: 13 tables with full RLS enforcement
 - **Tests**: 235+ integration tests (100% pass rate)
@@ -67,7 +82,7 @@ npm run seo:usage                   # View usage stats and costs
 ### Database
 ```bash
 npm run check:db         # Verify schema
-# Migrations: Supabase Dashboard → SQL Editor
+# Migrations: Supabase Dashboard â†’ SQL Editor
 ```
 
 **Complete command reference**: `.claude/commands/` (organized by category)
@@ -97,10 +112,10 @@ npm run check:db         # Verify schema
 **CRITICAL**: ALL queries must filter by `workspace_id`
 
 ```typescript
-// ❌ WRONG - Returns data from all workspaces
+// âŒ WRONG - Returns data from all workspaces
 const { data } = await supabase.from("contacts").select("*");
 
-// ✅ CORRECT - Scoped to user's workspace
+// âœ… CORRECT - Scoped to user's workspace
 const { data } = await supabase
   .from("contacts")
   .select("*")
@@ -112,13 +127,13 @@ const { data } = await supabase
 ### AI Agent Architecture
 
 ```
-User Request → Orchestrator
-    ├─→ Email Agent (email processing)
-    ├─→ Content Agent (content with Extended Thinking)
-    ├─→ Frontend Specialist (UI/component work)
-    ├─→ Backend Specialist (API/database work)
-    ├─→ SEO Intelligence (SEO research, optimization)
-    └─→ Founder OS (founder intelligence system)
+User Request â†’ Orchestrator
+    â”œâ”€â†’ Email Agent (email processing)
+    â”œâ”€â†’ Content Agent (content with Extended Thinking)
+    â”œâ”€â†’ Frontend Specialist (UI/component work)
+    â”œâ”€â†’ Backend Specialist (API/database work)
+    â”œâ”€â†’ SEO Intelligence (SEO research, optimization)
+    â””â”€â†’ Founder OS (founder intelligence system)
 ```
 
 **Model selection**:
@@ -151,40 +166,40 @@ User Request → Orchestrator
 ## Critical Reminders
 
 ### 1. Workspace Isolation (MANDATORY)
-✅ **ALWAYS** filter queries by `workspace_id`
-✅ Validate `workspaceId` is UUID, not string
-✅ RLS policies enforce isolation in database
+âœ… **ALWAYS** filter queries by `workspace_id`
+âœ… Validate `workspaceId` is UUID, not string
+âœ… RLS policies enforce isolation in database
 
 **Pattern**: `.claude/architecture/database.md`
 
 ### 2. Authentication (PKCE Flow)
-✅ Use `createClient()` from `@/lib/supabase/server` for server-side
-✅ Use `createClient()` from `@/lib/supabase/client` for client-side
-✅ Validate with `getUser()` not just cookies
-✅ Never expose service role key in client
+âœ… Use `createClient()` from `@/lib/supabase/server` for server-side
+âœ… Use `createClient()` from `@/lib/supabase/client` for client-side
+âœ… Validate with `getUser()` not just cookies
+âœ… Never expose service role key in client
 
 **Implementation**: `.claude/architecture/authentication.md`
 
 ### 3. Database Migrations
-✅ **BEFORE ANY RLS WORK**: Run diagnostics (`.claude/rules/database/rls-workflow.md`)
-✅ Check `.claude/SCHEMA_REFERENCE.md` before writing SQL
-✅ Use idempotent patterns (DO $$ IF NOT EXISTS)
-✅ Supabase caches schema - wait 1-5 min or force refresh
+âœ… **BEFORE ANY RLS WORK**: Run diagnostics (`.claude/rules/database/rls-workflow.md`)
+âœ… Check `.claude/SCHEMA_REFERENCE.md` before writing SQL
+âœ… Use idempotent patterns (DO $$ IF NOT EXISTS)
+âœ… Supabase caches schema - wait 1-5 min or force refresh
 
 **Workflow**: `.claude/rules/database/migrations.md`, `.claude/rules/database/rls-workflow.md`
 
 ### 4. Anthropic API Best Practices
-✅ Use retry logic with exponential backoff (`.claude/rules/ai/anthropic.md`)
-✅ Apply prompt caching for 90% cost savings (`.claude/rules/ai/prompt-caching.md`)
-✅ Extended Thinking only for complex tasks (costs 27x more)
-✅ Rate limit: Handle 429 errors gracefully
+âœ… Use retry logic with exponential backoff (`.claude/rules/ai/anthropic.md`)
+âœ… Apply prompt caching for 90% cost savings (`.claude/rules/ai/prompt-caching.md`)
+âœ… Extended Thinking only for complex tasks (costs 27x more)
+âœ… Rate limit: Handle 429 errors gracefully
 
 **Patterns**: `.claude/rules/ai/anthropic.md`
 
 ### 5. Email Service
-✅ Multi-provider fallback: SendGrid → Resend → Gmail SMTP
-✅ At least one provider required
-✅ Test with: `node scripts/test-email-config.mjs`
+âœ… Multi-provider fallback: SendGrid â†’ Resend â†’ Gmail SMTP
+âœ… At least one provider required
+âœ… Test with: `node scripts/test-email-config.mjs`
 
 **Architecture**: `.claude/architecture/email-service.md`
 
@@ -314,10 +329,10 @@ Configured in `package.json`:
 
 1. **Always load**: This core file (400 lines)
 2. **Load specific modules** based on task:
-   - Email task → `.claude/agents/email-agent/` + `.claude/architecture/email-service.md`
-   - Frontend task → `.claude/agents/frontend-specialist/` + `.claude/rules/frontend/nextjs.md`
-   - Database task → `.claude/agents/backend-specialist/` + `.claude/rules/database/`
-   - SEO task → `.claude/agents/seo-intelligence/` + `.claude/architecture/seo-enhancement.md`
+   - Email task â†’ `.claude/agents/email-agent/` + `.claude/architecture/email-service.md`
+   - Frontend task â†’ `.claude/agents/frontend-specialist/` + `.claude/rules/frontend/nextjs.md`
+   - Database task â†’ `.claude/agents/backend-specialist/` + `.claude/rules/database/`
+   - SEO task â†’ `.claude/agents/seo-intelligence/` + `.claude/architecture/seo-enhancement.md`
 
 **Typical load**: 400 (core) + 200 (agent) + 300 (architecture) = **900 lines vs 1,890 lines**
 
@@ -355,7 +370,7 @@ Configured in `package.json`:
 **v2.0.0** (2026-01-15):
 - **Major**: Modularized documentation system
 - **Change**: Split 1,255-line CLAUDE.md into 50+ modular files
-- **Benefit**: 78% context reduction (1,890 → 400 lines core)
+- **Benefit**: 78% context reduction (1,890 â†’ 400 lines core)
 - **Migration**: Old CLAUDE.md archived as CLAUDE.md.backup-20260115
 
 **v1.0.0** (2025-11-28):
