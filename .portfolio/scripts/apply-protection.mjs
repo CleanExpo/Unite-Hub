@@ -15,8 +15,7 @@ const only = onlyArg ? onlyArg.split("=")[1] : null;
 const registry = YAML.parse(readFileSync("D:/Unite-Hub/.portfolio/PORTFOLIO.yaml", "utf8"));
 const targets = registry.products.filter(p =>
   p.status === "active" &&
-  p.github?.repo &&
-  p.canonical_name !== "Authority-Site"   // skip — merging in Plan 03
+  p.github?.repo
 );
 
 const tmpDir = "D:/_archive/_tmp";
