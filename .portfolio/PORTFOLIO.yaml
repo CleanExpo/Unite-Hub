@@ -179,3 +179,29 @@ products:
       production: { project_id: prj_oOqmFFnJGCp2pvrZkNgpcg8qk6rD, project_name: live-nexus, domain: TBD }
       sandbox:    { project_id: null, project_name: live-nexus-sandbox, domain: TBD }
     workflow: { sandbox_first: true, pr_required_for_prod: true, ci_required_checks: [typecheck, build] }
+
+retired_repos:
+  - org: CleanExpo
+    repo: _archived_Downunder-Miles_2026-05-24
+    archived_at: "2026-05-24"
+    reason: "Empty repo; namespace freed for real Downunder-Miles content (renamed from https-github.com-CleanExpo-Downunder-Miles)"
+    rollback: "gh api -X PATCH repos/CleanExpo/_archived_Downunder-Miles_2026-05-24 -F archived=false"
+    hard_delete_at: "2026-05-31"
+  - org: CleanExpo
+    repo: _archived_abacus_crypto_intelligence_2026-05-24
+    archived_at: "2026-05-24"
+    reason: "snake_case duplicate of Abacus-Crypto-Intelligence (which is canonical)"
+    rollback: "gh api -X PATCH repos/CleanExpo/_archived_abacus_crypto_intelligence_2026-05-24 -F archived=false"
+    hard_delete_at: "2026-05-31"
+
+renamed_repos:
+  - org: CleanExpo
+    old_name: https-github.com-CleanExpo-Downunder-Miles
+    new_name: Downunder-Miles
+    renamed_at: "2026-05-24"
+    reason: "Broken name (URL pasted as repo name); had real Travel Buddy App content while the good name was empty"
+  - org: CleanExpo
+    old_name: https-github.com-CleanExpo-SC-Generator
+    new_name: SC-Generator
+    renamed_at: "2026-05-24"
+    reason: "Broken name (URL pasted as repo name)"

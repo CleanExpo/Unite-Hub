@@ -196,6 +196,35 @@
           }
         }
       }
+    },
+    "retired_repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["org", "repo", "archived_at", "reason"],
+        "properties": {
+          "org":            { "type": "string" },
+          "repo":           { "type": "string" },
+          "archived_at":    { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "reason":         { "type": "string" },
+          "rollback":       { "type": "string" },
+          "hard_delete_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+        }
+      }
+    },
+    "renamed_repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["org", "old_name", "new_name", "renamed_at"],
+        "properties": {
+          "org":         { "type": "string" },
+          "old_name":    { "type": "string" },
+          "new_name":    { "type": "string" },
+          "renamed_at":  { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "reason":      { "type": "string" }
+        }
+      }
     }
   }
 }
