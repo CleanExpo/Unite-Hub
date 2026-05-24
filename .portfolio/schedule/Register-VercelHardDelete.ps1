@@ -25,20 +25,14 @@ Write-Output "Registered: $taskName (fires 2026-05-31 03:45)"
 Write-Output "Will run: $actionScript"
 Write-Output ""
 Write-Output "Currently archived projects that will be deleted:"
+$listJson = & curl.exe -s --insecure -H ("Authorization: Bearer " + $env:VERCEL_TOKEN) "https://api.vercel.com/v9/projects?teamId=team_KMZACI5rIltoCRhAtGCXlxUf&limit=100" 2>&1
 try {
-  [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
-  [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-  $resp = Invoke-WebRequest `
-    -Uri 'https://api.vercel.com/v9/projects?teamId=team_KMZACI5rIltoCRhAtGCXlxUf&limit=100' `
-    -Headers @{ Authorization = 'Bearer ' + $env:VERCEL_TOKEN } `
-    -UseBasicParsing
-  $projects = ($resp.Content | ConvertFrom-Json).projects |
-    Where-Object { $_.name -like '_archive_*_2026-05-24' }
+  $projects = ($listJson | ConvertFrom-Json).projects | Where-Object { $_.name -like '_archive_*_2026-05-24' }
   $projects | ForEach-Object { Write-Output ("  - " + $_.name) }
   Write-Output ""
-  Write-Output ("Total: " + $projects.Count)
+  Write-Output ("Total: " + @($projects).Count)
 } catch {
-  Write-Warning "Could not list archived projects: $_"
+  Write-Warning ("Could not list archived projects: " + $_)
 }
 
 Write-Output ""
