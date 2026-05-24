@@ -22,10 +22,10 @@ export default function Card({
   ...props
 }: CardProps) {
   const variantClasses = {
-    default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm',
-    bordered: 'bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600',
-    elevated: 'bg-white dark:bg-gray-800 shadow-lg border border-gray-100 dark:border-gray-700',
-    flat: 'bg-gray-50 dark:bg-gray-900',
+    default: 'bg-white/[0.02] border-[0.5px] border-white/[0.06] rounded-sm',
+    bordered: 'bg-white/[0.02] border border-white/[0.1] rounded-sm',
+    elevated: 'bg-white/[0.03] border-[0.5px] border-white/[0.08] rounded-sm',
+    flat: 'bg-white/[0.01] rounded-sm',
   };
 
   const paddingClasses = {
@@ -37,11 +37,11 @@ export default function Card({
 
   return (
     <div
-      className={`rounded-xl ${variantClasses[variant]} ${className}`}
+      className={`${variantClasses[variant]} ${className}`}
       {...props}
     >
       {header && (
-        <div className={`border-b border-gray-200 dark:border-gray-700 ${paddingClasses[padding]} pb-4`}>
+        <div className={`border-b border-white/[0.06] ${paddingClasses[padding]} pb-4`}>
           {header}
         </div>
       )}
@@ -51,7 +51,7 @@ export default function Card({
       </div>
 
       {footer && (
-        <div className={`border-t border-gray-200 dark:border-gray-700 ${paddingClasses[padding]} pt-4`}>
+        <div className={`border-t border-white/[0.06] ${paddingClasses[padding]} pt-4`}>
           {footer}
         </div>
       )}
@@ -64,7 +64,7 @@ export default function Card({
  */
 export function CardHeader({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`text-lg font-semibold text-gray-900 dark:text-gray-100 ${className}`}>
+    <div className={`text-lg font-semibold text-white/90 ${className}`}>
       {children}
     </div>
   );
@@ -75,7 +75,7 @@ export function CardHeader({ children, className = '' }: { children: React.React
  */
 export function CardTitle({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <h3 className={`text-xl font-bold text-gray-900 dark:text-gray-100 ${className}`}>
+    <h3 className={`text-xl font-bold text-white/90 ${className}`}>
       {children}
     </h3>
   );
@@ -86,7 +86,7 @@ export function CardTitle({ children, className = '' }: { children: React.ReactN
  */
 export function CardDescription({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <p className={`text-sm text-gray-600 dark:text-gray-400 ${className}`}>
+    <p className={`text-sm text-white/50 ${className}`}>
       {children}
     </p>
   );

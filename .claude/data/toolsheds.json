@@ -1,0 +1,129 @@
+{
+  "version": "1.0.0",
+  "description": "Curated skill subsets per domain. Each toolshed loads max 5-6 skills to eliminate decision paralysis.",
+  "toolsheds": {
+    "frontend": {
+      "agent": "frontend-specialist",
+      "token_budget": 60000,
+      "skills": [
+        "scientific-luxury",
+        "xaem-theme-ui",
+        "react-best-practices",
+        "error-boundary",
+        "i18n-patterns"
+      ],
+      "context_scope": ["src/"],
+      "description": "React 19, Next.js 16 App Router, Tailwind v4, Framer Motion, Scientific Luxury design system"
+    },
+    "backend": {
+      "agent": "senior-fullstack",
+      "token_budget": 60000,
+      "skills": [
+        "api-contract",
+        "api-client",
+        "error-taxonomy",
+        "retry-strategy",
+        "structured-logging",
+        "resilience-patterns"
+      ],
+      "context_scope": ["src/app/api/", "src/lib/"],
+      "description": "Next.js API routes, Supabase, server actions, TypeScript strict mode"
+    },
+    "database": {
+      "agent": "database-specialist",
+      "token_budget": 40000,
+      "skills": ["vector-search", "data-validation", "data-transform", "audit-trail"],
+      "context_scope": [
+        "supabase/migrations/",
+        "src/lib/supabase/"
+      ],
+      "description": "Supabase PostgreSQL, SQL migrations, RLS, founder_id isolation"
+    },
+    "security": {
+      "agent": "security-auditor",
+      "token_budget": 50000,
+      "skills": [
+        "input-sanitisation",
+        "oauth-flow",
+        "rbac-patterns",
+        "csrf-protection",
+        "secret-management"
+      ],
+      "context_scope": [
+        "src/middleware.ts",
+        "src/lib/supabase/server.ts",
+        "src/app/api/"
+      ],
+      "description": "Supabase PKCE auth, OWASP Top 10, Australian Privacy Act 1988, RBAC"
+    },
+    "infra": {
+      "agent": "deploy-guardian",
+      "token_budget": 50000,
+      "skills": [
+        "docker-patterns",
+        "ci-cd-patterns",
+        "infrastructure-as-code",
+        "health-check",
+        "graceful-shutdown"
+      ],
+      "context_scope": ["docker-compose.yml", ".github/workflows/", "scripts/"],
+      "description": "Docker Compose (dev only), GitHub Actions CI/CD, Vercel deployment, health checks"
+    },
+    "debug": {
+      "agent": "bug-hunter",
+      "token_budget": 40000,
+      "skills": [
+        "error-taxonomy",
+        "structured-logging",
+        "tracing-patterns",
+        "metrics-collector",
+        "resilience-patterns"
+      ],
+      "context_scope": ["failing-file-only", "direct-imports-one-level"],
+      "description": "Error taxonomy, stack trace analysis, minimal context debugging"
+    },
+    "test": {
+      "agent": "test-engineer",
+      "token_budget": 50000,
+      "skills": ["playwright-browser"],
+      "context_scope": ["test-files", "source-file-under-test"],
+      "description": "Vitest, Playwright E2E, Scientific Luxury visual assertions"
+    },
+    "general": {
+      "agent": "orchestrator",
+      "token_budget": 80000,
+      "skills": ["council-of-logic", "execution-guardian", "system-supervisor"],
+      "context_scope": ["task-specific"],
+      "description": "Cross-domain coordination, refactoring, architectural tasks"
+    },
+    "verification": {
+      "agent": "verification",
+      "token_budget": 30000,
+      "skills": ["verification-first"],
+      "context_scope": ["verification-output-only"],
+      "description": "Independent verification — never reads source files, only receives structured result + runs commands"
+    },
+    "content": {
+      "agent": "truth-finder",
+      "token_budget": 40000,
+      "skills": ["truth-finder", "australian-context"],
+      "context_scope": ["content-file-only"],
+      "description": "Content verification, truth-checking, citation sourcing — Australian market"
+    },
+    "seo": {
+      "agent": "seo-intelligence",
+      "token_budget": 50000,
+      "skills": ["seo-geo-architect", "geo-australian", "australian-context"],
+      "context_scope": ["src/app/", "public/"],
+      "description": "SEO/GEO strategy, keyword research, AI citation optimisation — AUS/NZ market"
+    },
+    "orchestration": {
+      "agent": "orchestrator",
+      "token_budget": 80000,
+      "skills": ["context-partitioning", "council-of-logic", "execution-guardian"],
+      "context_scope": ["glob-and-grep-only"],
+      "description": "Orchestrator planning mode — Glob/Grep discovery only, produces manifests, never reads full files",
+      "dispatch_rule": "manifest-first — produce manifest before any Agent tool call"
+    }
+  }
+}

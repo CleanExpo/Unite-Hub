@@ -60,7 +60,7 @@ export default function GlobalError({
               marginBottom: '2rem',
               color: '#9ca3af',
             }}>
-              We're sorry, but an unexpected error occurred. Our team has been notified and will look into it.
+              We&apos;re sorry, but an unexpected error occurred. Our team has been notified and will look into it.
             </p>
             <button
               onClick={() => window.location.reload()}

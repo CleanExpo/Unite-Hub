@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NotebookLM Notebooks Configuration",
+  "description": "Maps project notebooks to their NotebookLM IDs for the Second Brain system.",
+  "type": "object",
+  "required": ["project", "notebooks"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string",
+      "description": "Project name this configuration belongs to."
+    },
+    "notebooks": {
+      "type": "object",
+      "description": "Named notebook entries. Each key is a logical notebook role.",
+      "required": ["project_sot", "debug_kb", "security_handbook", "repo_onboarding"],
+      "properties": {
+        "project_sot": { "$ref": "#/$defs/notebook" },
+        "debug_kb": { "$ref": "#/$defs/notebook" },
+        "security_handbook": { "$ref": "#/$defs/notebook" },
+        "repo_onboarding": { "$ref": "#/$defs/notebook" }
+      },
+      "additionalProperties": { "$ref": "#/$defs/notebook" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "notebook": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "NotebookLM notebook ID. Empty string until bootstrap populates it."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable notebook name used during creation."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

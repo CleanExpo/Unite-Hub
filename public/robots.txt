@@ -1,34 +1,12 @@
-# https://www.robotstxt.org/robotstxt.html
+# Unite-Group Nexus 2.0 — https://unite-group.in
+# Private founder CRM — authenticated routes are blocked
+
 User-agent: *
 Allow: /
-
-# Crawl-delay for politeness
-Crawl-delay: 10
-
-# Block API and admin routes
+Disallow: /founder/
 Disallow: /api/
-Disallow: /admin/
-Disallow: /auth/
-Disallow: /dashboard/
 
-# Allow public pages
-Allow: /
-Allow: /synthex/
-Allow: /pricing
-Allow: /features
-Allow: /about
-Allow: /contact
-
-# Sitemap location
-Sitemap: https://synthex.social/sitemap.xml
-
-# Additional search engine specific rules
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
+# Block AI training crawlers from private business data
 User-agent: GPTBot
 Disallow: /
 
@@ -37,3 +15,11 @@ Disallow: /
 
 User-agent: CCBot
 Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+Sitemap: https://unite-group.in/sitemap.xml

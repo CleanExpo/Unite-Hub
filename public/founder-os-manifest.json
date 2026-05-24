@@ -1,0 +1,23 @@
+{
+  "name": "Phill OS",
+  "short_name": "Phill OS",
+  "description": "Founder mobile command centre — Unite-Hub",
+  "start_url": "/founder/os",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#00d4ff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

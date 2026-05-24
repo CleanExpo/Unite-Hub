@@ -1,0 +1,16 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react/no-unescaped-entities": "off",
+    "import/no-anonymous-default-export": "warn",
+    "@next/next/no-img-element": "warn"
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    ".next/",
+    "NodeJS-Starter-V1/",
+    "_disabled/",
+    "logs/",
+    "scripts/"
+  ]
+}

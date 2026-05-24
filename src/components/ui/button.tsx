@@ -3,26 +3,29 @@
  * Production-ready button with variants, sizes, and accessibility
  */
 
+'use client';
 import React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+  'inline-flex items-center justify-center rounded-sm font-medium focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
-        primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600',
-        secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600',
-        danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600',
-        success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 dark:bg-green-500 dark:hover:bg-green-600',
-        outline: 'border-2 border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 focus:ring-gray-500 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800',
-        ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-300 dark:hover:bg-gray-800',
+        primary: 'bg-[var(--color-accent-10)] border border-[var(--color-accent-border)] text-[var(--color-accent)] hover:bg-[var(--color-accent-20)]',
+        secondary: 'bg-white/[0.04] border border-white/[0.1] text-white/70 hover:bg-white/[0.06] hover:text-white/90',
+        danger: 'bg-[var(--color-danger-dim)] border border-[var(--color-danger)]/40 text-[var(--color-danger)] hover:bg-[var(--color-danger)]/20',
+        success: 'bg-[var(--color-success-dim)] border border-[var(--color-success)]/40 text-[var(--color-success)] hover:bg-[var(--color-success)]/20',
+        outline: 'bg-transparent border border-white/[0.1] text-white/70 hover:border-white/[0.2] hover:text-white/90',
+        ghost: 'bg-transparent text-white/50 hover:bg-white/[0.03] hover:text-white/70',
       },
       size: {
         sm: 'px-3 py-1.5 text-sm',
         md: 'px-4 py-2 text-base',
         lg: 'px-6 py-3 text-lg',
         xl: 'px-8 py-4 text-xl',
+        icon: 'h-9 w-9 p-0',
       },
       fullWidth: {
         true: 'w-full',
@@ -43,6 +46,7 @@ export interface ButtonProps
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  asChild?: boolean;
 }
 
 export default function Button({
@@ -55,13 +59,15 @@ export default function Button({
   rightIcon,
   disabled,
   className,
+  asChild = false,
   ...props
 }: ButtonProps) {
+  const Comp = asChild ? Slot : 'button';
   return (
-    <button
+    <Comp
       className={buttonVariants({ variant, size, fullWidth, className })}
-      disabled={disabled || loading}
-      aria-busy={loading}
+      disabled={!asChild ? (disabled || loading) : undefined}
+      aria-busy={!asChild ? loading : undefined}
       {...props}
     >
       {loading && (
@@ -89,7 +95,7 @@ export default function Button({
       {!loading && leftIcon && <span className="mr-2">{leftIcon}</span>}
       {children}
       {!loading && rightIcon && <span className="ml-2">{rightIcon}</span>}
-    </button>
+    </Comp>
   );
 }
 

@@ -1,29 +1,163 @@
 {
-  "buildCommand": "pnpm build",
-  "devCommand": "pnpm dev",
-  "installCommand": "pnpm install --frozen-lockfile",
   "framework": "nextjs",
+  "buildCommand": "pnpm build",
   "outputDirectory": ".next",
+  "installCommand": "pnpm install",
   "crons": [
     {
-      "path": "/api/agents/continuous-intelligence",
-      "schedule": "*/30 * * * *"
+      "path": "/api/cron/bookkeeper",
+      "schedule": "0 16 * * *"
     },
     {
-      "path": "/api/aido/google-curve/monitor",
-      "schedule": "0 */6 * * *"
+      "path": "/api/cron/coaches/life",
+      "schedule": "15 21 * * *"
     },
     {
-      "path": "/api/cron/health-check",
+      "path": "/api/cron/coaches/revenue",
+      "schedule": "30 21 * * *"
+    },
+    {
+      "path": "/api/cron/coaches/build",
+      "schedule": "45 21 * * *"
+    },
+    {
+      "path": "/api/cron/coaches/marketing",
+      "schedule": "0 22 * * *"
+    },
+    {
+      "path": "/api/cron/synthex-monitor",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/content-engine",
+      "schedule": "0 20 * * *"
+    },
+    {
+      "path": "/api/cron/social-publisher",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/video-status",
       "schedule": "*/5 * * * *"
     },
     {
-      "path": "/api/seo/sync-rankings",
-      "schedule": "0 6 * * *"
+      "path": "/api/cron/engagement-monitor",
+      "schedule": "*/30 * * * *"
     },
     {
-      "path": "/api/managed/scheduler/weekly",
-      "schedule": "0 9 * * 1"
+      "path": "/api/cron/analytics-sync",
+      "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/cron/campaign-engine",
+      "schedule": "0 20 * * 0"
+    },
+    {
+      "path": "/api/cron/email-triage",
+      "schedule": "0 19 * * *"
+    },
+    {
+      "path": "/api/cron/hub-sweep",
+      "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron/ceo-board-meeting",
+      "schedule": "50 1 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=dr",
+      "schedule": "0 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=nrpg",
+      "schedule": "5 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=carsi",
+      "schedule": "10 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=restore",
+      "schedule": "15 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=synthex",
+      "schedule": "20 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=ato",
+      "schedule": "25 16 * * *"
+    },
+    {
+      "path": "/api/cron/strategy-daily?business=ccw",
+      "schedule": "30 16 * * *"
+    }
+  ],
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/ai/**/*.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/cron/bookkeeper/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/cron/coaches/*/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/cron/content-engine/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/cron/social-publisher/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/content/generate/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/video/generate/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/cron/video-status/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/cron/engagement-monitor/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/email/campaigns/*/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/cron/analytics-sync/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/cron/campaign-engine/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/cron/email-triage/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/cron/hub-sweep/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/cron/strategy-daily/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/cron/ceo-board-meeting/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/campaigns/scan/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/campaigns/[id]/generate/route.ts": {
+      "maxDuration": 120
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
+      ]
     }
   ]
 }

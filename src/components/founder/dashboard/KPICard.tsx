@@ -1,0 +1,201 @@
+// src/components/founder/dashboard/KPICard.tsx
+'use client'
+
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { type Business } from '@/lib/businesses'
+import { type XeroRevenueMTD } from '@/lib/integrations/xero'
+import type { BatchKPIEntry } from '@/app/api/dashboard/kpi/route'
+
+interface KPICardProps {
+  business: Business
+  metric: string
+  metricLabel: string
+  trend: { value: string; positive: boolean }
+  secondary: string
+  xeroBusinessKey?: string
+  linearBusinessKey?: string
+  /** Pre-fetched data from batch endpoint — skips individual fetches when provided */
+  liveData?: BatchKPIEntry
+}
+
+function formatAUD(cents: number): string {
+  return new Intl.NumberFormat('en-AU', {
+    style: 'currency',
+    currency: 'AUD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(cents / 100)
+}
+
+interface LiveState {
+  metric: string | null
+  trend: { value: string; positive: boolean } | null
+  secondary: string | null
+  source: 'xero' | 'mock' | null
+  loading: boolean
+}
+
+export function KPICard({
+  business,
+  metric,
+  metricLabel,
+  trend,
+  secondary,
+  xeroBusinessKey,
+  linearBusinessKey,
+  liveData,
+}: KPICardProps) {
+  const [live, setLive] = useState<LiveState>({
+    metric: null, trend: null, secondary: null, source: null, loading: false,
+  })
+  const [linearCount, setLinearCount] = useState<number | null>(null)
+
+  // When batch liveData is provided, populate state directly — no individual fetch needed
+  useEffect(() => {
+    if (liveData) {
+      if (liveData.revenueCents !== undefined) {
+        setLive({
+          metric: formatAUD(liveData.revenueCents),
+          trend: {
+            value: `${(liveData.growth ?? 0) >= 0 ? '+' : ''}${(liveData.growth ?? 0).toFixed(1)}% MoM`,
+            positive: (liveData.growth ?? 0) >= 0,
+          },
+          secondary: `${liveData.invoiceCount ?? 0} Invoices MTD`,
+          source: liveData.source ?? null,
+          loading: false,
+        })
+      }
+      if (liveData.activeIssues !== undefined) {
+        setLinearCount(liveData.activeIssues)
+      }
+    }
+  }, [liveData])
+
+  // Fallback: individual Xero fetch when no batch data provided
+  useEffect(() => {
+    if (liveData) return // Batch data takes precedence
+    if (xeroBusinessKey) {
+      setLive(prev => ({ ...prev, loading: true }))
+      fetch(`/api/xero/revenue?business=${encodeURIComponent(xeroBusinessKey)}`)
+        .then(res => res.json() as Promise<{ data: XeroRevenueMTD; source: 'xero' | 'mock' }>)
+        .then(({ data, source }) => {
+          setLive({
+            metric: formatAUD(data.revenueCents),
+            trend: {
+              value: `${data.growth >= 0 ? '+' : ''}${data.growth.toFixed(1)}% MoM`,
+              positive: data.growth >= 0,
+            },
+            secondary: `${data.invoiceCount} Invoices MTD`,
+            source,
+            loading: false,
+          })
+        })
+        .catch((error) => {
+          console.error(`[kpi] Xero fetch failed for ${xeroBusinessKey}:`, error)
+          setLive({ metric: null, trend: null, secondary: null, source: null, loading: false })
+        })
+    }
+  }, [xeroBusinessKey, liveData])
+
+  // Fallback: individual Linear fetch when no batch data provided
+  useEffect(() => {
+    if (liveData) return // Batch data takes precedence
+    if (!linearBusinessKey) return
+    fetch(`/api/linear/kpi?business=${encodeURIComponent(linearBusinessKey)}`)
+      .then(res => res.json() as Promise<{ activeCount: number }>)
+      .then(({ activeCount }) => { setLinearCount(activeCount) })
+      .catch(() => {})
+  }, [linearBusinessKey, liveData])
+
+  const isLive = !!xeroBusinessKey
+
+  // Fall back to static props when live data hasn't loaded
+  const displayMetric = live.metric ?? metric
+  const displayTrend = live.trend ?? trend
+  const displaySecondary = linearCount !== null
+    ? `${linearCount} active issue${linearCount !== 1 ? 's' : ''}`
+    : (live.secondary ?? secondary)
+
+  return (
+    <motion.div
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+      className="relative rounded-sm border p-5 flex flex-col gap-3"
+      style={{
+        background: 'var(--surface-card)',
+        borderColor: 'var(--color-border)',
+      }}
+    >
+      {/* Business header */}
+      <div className="flex items-center gap-2">
+        <span
+          className="rounded-sm shrink-0"
+          style={{ width: 8, height: 8, background: business.color }}
+        />
+        <span className="text-[13px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>{business.name}</span>
+        {/* Live / Demo badge */}
+        {isLive && (
+          <span className="ml-auto flex items-center gap-1">
+            {live.loading ? (
+              <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>—</span>
+            ) : live.source === 'xero' ? (
+              <>
+                <span
+                  className="rounded-sm shrink-0"
+                  style={{
+                    width: 6,
+                    height: 6,
+                    background: '#00F5FF',
+                    boxShadow: '0 0 4px #00F5FF',
+                  }}
+                />
+                <span className="text-[10px] font-medium tracking-widest uppercase text-[#00F5FF]">
+                  Live
+                </span>
+              </>
+            ) : (
+              <>
+                <span
+                  className="rounded-sm shrink-0"
+                  style={{ width: 6, height: 6, background: '#555' }}
+                />
+                <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'var(--color-text-disabled)' }}>
+                  Demo
+                </span>
+              </>
+            )}
+          </span>
+        )}
+      </div>
+
+      {/* Primary metric */}
+      <div>
+        <div className="text-[30px] font-semibold text-[#f0f0f0] leading-none tracking-tight">
+          {live.loading ? (
+            <span style={{ color: 'var(--color-text-muted)' }}>—</span>
+          ) : (
+            displayMetric
+          )}
+        </div>
+        <div className="mt-1 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{metricLabel}</div>
+      </div>
+
+      {/* Trend */}
+      <div
+        className="text-[12px] font-medium"
+        style={{
+          color: displayTrend.positive ? 'var(--color-success)' : 'var(--color-danger)',
+        }}
+      >
+        {displayTrend.positive ? '▲' : '▼'} {displayTrend.value}
+      </div>
+
+      {/* Divider + secondary */}
+      <div className="border-t pt-3" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+        <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{displaySecondary}</span>
+      </div>
+
+    </motion.div>
+  )
+}

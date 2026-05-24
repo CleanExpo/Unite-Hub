@@ -50,6 +50,13 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Nexus semantic tokens
+        danger: {
+          DEFAULT: 'var(--color-danger)',
+        },
+        success: {
+          DEFAULT: 'var(--color-success)',
+        },
         // Unite-Hub Brand Colors (from logo)
         'unite': {
           'teal': '#3b9ba8',      // Primary teal from logo circle

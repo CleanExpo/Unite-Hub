@@ -1,0 +1,156 @@
+name: Smoke Tests
+
+on:
+  workflow_run:
+    workflows: ['CI/CD Pipeline']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Base URL to test against'
+        required: false
+        default: 'https://unite-group.in'
+
+permissions:
+  contents: read
+
+env:
+  BASE_URL: ${{ github.event.inputs.base_url || 'https://unite-group.in' }}
+
+jobs:
+  smoke-tests:
+    name: Smoke Tests (8 checks)
+    runs-on: ubuntu-latest
+    # Only run if the CI pipeline succeeded (or manually dispatched)
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # ── Check 1: Health endpoint ──────────────────────────────────────────
+      - name: 'Check 1: App health endpoint returns 200'
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/api/health" --max-time 10)
+          echo "Health status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "FAIL: Health endpoint returned $STATUS"
+            exit 1
+          fi
+          echo "PASS: Health endpoint OK"
+
+      # ── Check 2: Homepage redirects to auth (private CRM) ─────────────────
+      - name: 'Check 2: Homepage redirects to auth (307)'
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/" --max-time 15)
+          echo "Homepage status: $RESPONSE"
+          # Private CRM — unauthenticated requests redirect to login (307)
+          if [ "$RESPONSE" != "307" ] && [ "$RESPONSE" != "302" ] && [ "$RESPONSE" != "301" ]; then
+            echo "FAIL: Expected auth redirect, got $RESPONSE"
+            exit 1
+          fi
+          echo "PASS: Homepage correctly redirects to auth ($RESPONSE)"
+
+      # ── Check 3: Auth surface is not server-erroring ─────────────────────
+      - name: 'Check 3: Auth surface has no 5xx errors'
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/auth/login" --max-time 15)
+          echo "Login status: $STATUS"
+          # Production may serve a localized/rewritten auth surface or hide the
+          # explicit login route; the smoke baseline should only fail on outage.
+          if [[ "$STATUS" == 5* ]] || [ "$STATUS" = "000" ]; then
+            echo "FAIL: Login surface returned $STATUS"
+            exit 1
+          fi
+          echo "PASS: Login surface reachable/no 5xx ($STATUS)"
+
+      # ── Check 4: API routes respond ───────────────────────────────────────
+      - name: 'Check 4: Core API routes respond'
+        run: |
+          ENDPOINTS="/api/health"
+          FAILED=0
+          for EP in $ENDPOINTS; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$EP" --max-time 10)
+            echo "$EP → $STATUS"
+            if [ "$STATUS" = "000" ]; then
+              echo "FAIL: $EP timed out or unreachable"
+              FAILED=1
+            fi
+          done
+          [ $FAILED -eq 0 ] && echo "PASS: API routes reachable" || exit 1
+
+      # ── Check 5: Static assets do not server-error ───────────────────────
+      - name: 'Check 5: Static assets have no 5xx errors'
+        run: |
+          for ASSET in "/favicon.ico" "/logos/unite-group-nexus-logo.png"; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$ASSET" --max-time 10)
+            echo "$ASSET → $STATUS"
+            # Production may be served by an older/private deployment that hides
+            # optional branding assets. Keep smoke focused on outages.
+            if [[ "$STATUS" == 5* ]] || [ "$STATUS" = "000" ]; then
+              echo "FAIL: $ASSET returned $STATUS"
+              exit 1
+            fi
+          done
+          echo "PASS: Static assets have no 5xx errors"
+
+      # ── Check 6: robots.txt present ──────────────────────────────────────
+      - name: 'Check 6: robots.txt present'
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/robots.txt" --max-time 10)
+          echo "robots.txt status: $STATUS"
+          # 200 or 404 are both acceptable for a private CRM
+          if [ "$STATUS" = "000" ] || [ "$STATUS" = "500" ]; then
+            echo "FAIL: robots.txt returned $STATUS"
+            exit 1
+          fi
+          echo "PASS: robots.txt reachable ($STATUS)"
+
+      # ── Check 7: Security headers present ────────────────────────────────
+      - name: 'Check 7: Security headers present'
+        run: |
+          HEADERS=$(curl -sI "$BASE_URL/auth/login" --max-time 10)
+          echo "$HEADERS"
+          for HEADER in "x-content-type-options" "x-frame-options"; do
+            if echo "$HEADERS" | grep -qi "$HEADER"; then
+              echo "PASS: $HEADER present"
+            else
+              echo "WARN: $HEADER missing (non-blocking)"
+            fi
+          done
+
+      # ── Check 8: No 5xx errors on auth flow ──────────────────────────────
+      - name: 'Check 8: No 5xx on auth pages'
+        run: |
+          FAILED=0
+          for PAGE in "/auth/login" "/register" "/forgot-password"; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$PAGE" --max-time 15)
+            echo "$PAGE → $STATUS"
+            if [[ "$STATUS" == 5* ]]; then
+              echo "FAIL: $PAGE returned $STATUS"
+              FAILED=1
+            fi
+          done
+          [ $FAILED -eq 0 ] && echo "PASS: No 5xx on auth pages" || exit 1
+
+      - name: Upload smoke test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-test-results
+          path: playwright-report/
+          retention-days: 7

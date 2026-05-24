@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f23"/>
+      <stop offset="50%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+    <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#68a063"/>
+      <stop offset="100%" style="stop-color:#3c873a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="400" fill="url(#bgGradient)"/>
+
+  <!-- Animated grid pattern -->
+  <g opacity="0.1">
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#667eea" stroke-width="0.5"/>
+    </pattern>
+    <rect width="1200" height="400" fill="url(#grid)"/>
+  </g>
+
+  <!-- Decorative circles -->
+  <circle cx="100" cy="350" r="150" fill="#667eea" opacity="0.05">
+    <animate attributeName="r" values="150;170;150" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1100" cy="50" r="120" fill="#764ba2" opacity="0.05">
+    <animate attributeName="r" values="120;140;120" dur="3s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Node.js icon representation -->
+  <g transform="translate(150, 160)">
+    <polygon points="40,0 80,23 80,69 40,92 0,69 0,23" fill="url(#nodeGradient)" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+    </polygon>
+    <text x="40" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">JS</text>
+  </g>
+
+  <!-- Main title -->
+  <text x="600" y="150" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="56" font-weight="bold" filter="url(#glow)">
+    NodeJS-Starter-V1
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="200" text-anchor="middle" fill="#a0aec0" font-family="Arial, sans-serif" font-size="24">
+    Self-Contained AI Application Template
+  </text>
+
+  <!-- Accent line -->
+  <rect x="400" y="220" width="400" height="3" rx="2" fill="url(#accentGradient)">
+    <animate attributeName="width" values="0;400" dur="1s" fill="freeze"/>
+  </rect>
+
+  <!-- Tech stack icons row -->
+  <g transform="translate(300, 270)">
+    <!-- Next.js -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="80" height="32" rx="4" fill="#000000"/>
+      <text x="40" y="22" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Next.js</text>
+    </g>
+    <!-- FastAPI -->
+    <g transform="translate(100, 0)">
+      <rect x="0" y="0" width="80" height="32" rx="4" fill="#009688"/>
+      <text x="40" y="22" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">FastAPI</text>
+    </g>
+    <!-- TypeScript -->
+    <g transform="translate(200, 0)">
+      <rect x="0" y="0" width="80" height="32" rx="4" fill="#3178c6"/>
+      <text x="40" y="22" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11" font-weight="bold">TypeScript</text>
+    </g>
+    <!-- Python -->
+    <g transform="translate(300, 0)">
+      <rect x="0" y="0" width="80" height="32" rx="4" fill="#3776ab"/>
+      <text x="40" y="22" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Python</text>
+    </g>
+    <!-- PostgreSQL -->
+    <g transform="translate(400, 0)">
+      <rect x="0" y="0" width="80" height="32" rx="4" fill="#4169e1"/>
+      <text x="40" y="22" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11" font-weight="bold">PostgreSQL</text>
+    </g>
+    <!-- AI -->
+    <g transform="translate(500, 0)">
+      <rect x="0" y="0" width="80" height="32" rx="4" fill="url(#accentGradient)"/>
+      <text x="40" y="22" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">AI Ready</text>
+    </g>
+  </g>
+
+  <!-- Tagline -->
+  <text x="600" y="350" text-anchor="middle" fill="#718096" font-family="Arial, sans-serif" font-size="16">
+    Production-ready | Offline-first | No API keys required
+  </text>
+
+  <!-- Animated particles -->
+  <circle cx="200" cy="100" r="2" fill="#667eea">
+    <animate attributeName="cy" values="100;80;100" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1000" cy="300" r="2" fill="#764ba2">
+    <animate attributeName="cy" values="300;320;300" dur="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="800" cy="80" r="1.5" fill="#667eea">
+    <animate attributeName="cx" values="800;820;800" dur="4s" repeatCount="indefinite"/>
+  </circle>
+</svg>
