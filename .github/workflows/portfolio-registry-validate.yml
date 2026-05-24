@@ -1,0 +1,33 @@
+name: Portfolio Registry Validation
+
+on:
+  pull_request:
+    paths:
+      - '.portfolio/**'
+  push:
+    branches: [main]
+    paths:
+      - '.portfolio/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install registry deps
+        working-directory: .portfolio
+        run: npm install --no-audit --no-fund
+
+      - name: Validate registry
+        run: node .portfolio/scripts/validate-registry.mjs
+
+      - name: Cooling-off warning for registry-edit PRs
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "::warning::This PR modifies the portfolio registry (.portfolio/PORTFOLIO.yaml). Per Plan 05 governance, registry edits should observe a 24h cooling-off period before merge to prevent accidental drift between machines/agents."

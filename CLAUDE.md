@@ -1,5 +1,26 @@
 # Unite-Group Nexus
 
+@.portfolio/PORTFOLIO.yaml
+
+## Identity (Portfolio SSOT)
+**Canonical name:** Unite-Hub
+**Aliases this project answers to:** "Unite Group", "Unite-Group", "Unite-Group CRM", "the CRM", "Marketing CRM", "Unite-Group Nexus"
+**Canonical local path:** `D:\Unite-Hub`
+**Access via:** `D:\Unite-Group\Unite-Hub` (junction)
+**GitHub:** `CleanExpo/Unite-Hub`
+
+> If the user uses any alias, this is what they mean.
+> Do NOT create new repos or clones. Do NOT create folders matching
+> `local.do_not_clone_to[]` in `.portfolio/PORTFOLIO.yaml`.
+
+> **Sibling product:** Authority-Site (at `D:\Authority-Site`, repo `CleanExpo/Unite-Group`) is a SEPARATE product.
+> Despite the repo name `Unite-Group`, that's the EMPIRE COMMAND CENTER, not this CRM.
+> If the user asks about Empire / CEO dashboard / Pi-CEO / portfolio metrics → switch to that project.
+> Otherwise (CRM / contacts / drip campaigns / email AI / marketing) → stay here.
+
+---
+
+
 ## Identity
 Private founder CRM for Phill McGurk. NOT a public SaaS. One user.
 Stack: Next.js 16 App Router (src/ root), React 19, Supabase, Vercel, Tailwind CSS, pnpm monorepo. No FastAPI, no Python backend.

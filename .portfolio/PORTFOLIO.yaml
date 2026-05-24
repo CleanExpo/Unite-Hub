@@ -1,0 +1,525 @@
+# Unite-Group Portfolio Registry — SSOT
+# Spec: docs/superpowers/specs/2026-05-24-unite-ecosystem-cleanup-design.md
+# Edit here only. Hermes mirror is auto-generated.
+
+schema_version: 1
+generated_at: 2026-05-24
+parent_company: Unite-Group Nexus Pty Ltd
+products:
+  - canonical_name: Unite-Hub
+    aliases:
+      - Unite Hub
+      - Unite-Group
+      - Unite Group
+      - Unite-Group CRM
+      - the CRM
+      - Marketing CRM
+    purpose: AI-first marketing CRM and email automation platform
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: Unite-Hub
+      url: https://github.com/CleanExpo/Unite-Hub
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: D:\Unite-Hub
+      access_via: D:\Unite-Group\Unite-Hub
+      do_not_clone_to:
+        - D:\Unite Group
+        - D:\Unite-Group CRM
+        - D:\unite-group-app
+        - D:\Unite-Hub Marketing Update
+        - D:\Unite Group Businesses
+        - D:\Unite Trade Group Directory
+        - D:\Unite-Group Agency
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: TBD
+        project_name: TBD
+        domain: unite-hub.vercel.app
+      sandbox:
+        project_id: prj_tNqIsHGY3kvw7zdO2bXVxFWTPIk0
+        project_name: unite-hub-sandbox
+        domain: unite-hub-sandbox.vercel.app
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - lint
+        - test
+        - build
+    stack:
+      framework: next@16
+      runtime: react@19
+      package_manager: npm
+      dev_port: 3008
+    dependencies:
+      - canonical_name: Hermes
+        relationship: consumes wiki via WIKI_PATH
+  - canonical_name: Authority-Site
+    aliases:
+      - Empire Command Center
+      - CEO Dashboard
+      - Synthex Authority Hub
+      - Unite-Group Dashboard
+      - Empire
+      - Authority Site
+    purpose: Standalone authority/landing site with CEO dashboard, Pi-CEO integration, Remotion video pipeline, brand guardian, i18n (en/es/fr), and RBAC. NOT a sub-app of Unite-Hub — they are separate products that share the parent company name.
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: Unite-Group
+      url: https://github.com/CleanExpo/Unite-Group
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: D:\Authority-Site
+      access_via: D:\Unite-Group\Authority-Site
+      do_not_clone_to:
+        - D:\Unite-Group Agency\Unite-Group
+        - D:\Unite-Group Agency\Unite-Group-Main
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_IfUuJNLjXTE8VXqEGwLAleIGhiA0
+        project_name: unite-group
+        domain: unite-group.vercel.app
+      sandbox:
+        project_id: prj_NigC5gA17UvX46n7YBUYSxM1vOh9
+        project_name: unite-group-sandbox
+        domain: unite-group-sandbox.vercel.app
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - lint
+        - build
+    stack:
+      framework: next@14
+      runtime: react@18
+      package_manager: npm
+      dev_port: 3000
+      supabase_project_id: uqfgdezadpkiadugufbs
+    dependencies:
+      - canonical_name: Pi-CEO
+        relationship: consumes via PI_CEO_API_URL (Railway)
+      - canonical_name: Hermes
+        relationship: consumes wiki via WIKI_PATH
+  - canonical_name: RestoreAssist
+    aliases:
+      - Restore Assist
+      - RA
+    purpose: Restoration product
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: RestoreAssist
+      url: https://github.com/CleanExpo/RestoreAssist
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: D:\RestoreAssist
+      access_via: D:\Unite-Group\RestoreAssist
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_Aw90JJ2x7mTMatTxa3ymgcU7WPV2
+        project_name: restoreassist
+        domain: TBD
+      sandbox:
+        project_id: prj_i9clta3fzdpQwNhVmf9BMMddpG3k
+        project_name: restoreassist-sandbox
+        domain: TBD
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - lint
+        - build
+  - canonical_name: Disaster-Recovery
+    aliases:
+      - DR
+      - Disaster Recovery
+    purpose: DR consumer product
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: Disaster-Recovery
+      url: https://github.com/CleanExpo/Disaster-Recovery
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: D:\Disaster-Recovery
+      access_via: D:\Unite-Group\Disaster-Recovery
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_dvNqTXXZxYENjFozhFnqIO72ABhW
+        project_name: disaster-recovery
+        domain: TBD
+      sandbox:
+        project_id: prj_hi5XYbVqqOHR20MIZpYMaU4lkKDU
+        project_name: disaster-recovery-sandbox
+        domain: disaster-recovery-sandbox.vercel.app
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - lint
+        - build
+  - canonical_name: DR-NRPG
+    aliases:
+      - NRPG
+      - Disaster Recovery NRP
+    purpose: NRPG contractor platform
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: DR-NRPG
+      url: https://github.com/CleanExpo/DR-NRPG
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: D:\Disaster Recovery - NRP
+      access_via: D:\Unite-Group\DR-NRPG
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_15zLJSeVhpqXcWf1s2U1fHdIHOtw
+        project_name: dr-nrpg-platform
+        domain: TBD
+      sandbox:
+        project_id: prj_RacaZ1ye4Fo27SF0CuaDPzRpDwC7
+        project_name: dr-nrpg-sandbox
+        domain: dr-nrpg-sandbox.vercel.app
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - lint
+        - build
+  - canonical_name: CCW-CRM
+    aliases:
+      - CCW
+      - CCW CRM
+    purpose: CCW client CRM product
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: CCW-CRM
+      url: https://github.com/CleanExpo/CCW-CRM
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: D:\CCW-CRM
+      access_via: D:\Unite-Group\CCW-CRM
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_oTCifkMVqP1NFoTJFBv6u82JmBYd
+        project_name: ccw-crm-web
+        domain: TBD
+      sandbox:
+        project_id: prj_8fNWSeOAy2mlSfkjllpWlb4TCQmM
+        project_name: ccw-crm-sandbox
+        domain: TBD
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - lint
+        - build
+  - canonical_name: Synthex
+    aliases:
+      - Marketing Made Easy
+      - Synthex Marketing
+    purpose: Marketing platform
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: Synthex
+      url: https://github.com/CleanExpo/Synthex
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: D:\Synthex
+      access_via: D:\Unite-Group\Synthex
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_gbQmHn6quoHgG3AswRrDoUlYaF40
+        project_name: synthex
+        domain: TBD
+      sandbox:
+        project_id: prj_aqX9iatkxcEfnjPdvH2ceEsDNMI9
+        project_name: synthex-sandbox
+        domain: synthex-sandbox.vercel.app
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - lint
+        - build
+  - canonical_name: ATO-APP
+    aliases:
+      - ATO
+      - ato-app
+      - Tax App
+    purpose: Tax/accountant app
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: ATO
+      url: https://github.com/CleanExpo/ATO
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: D:\ATO
+      access_via: D:\Unite-Group\ATO-APP
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_vP8AEIPZmIu1Q3eB6y3qUAUQ20EJ
+        project_name: ato-app
+        domain: TBD
+      sandbox:
+        project_id: prj_SRWTP5jxsXkRePQTveq44Y0BgQSG
+        project_name: ato-app-sandbox
+        domain: ato-app-sandbox.vercel.app
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - lint
+        - build
+  - canonical_name: CARSI
+    aliases:
+      - Online Training LMS
+    purpose: Online training LMS
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: CARSI
+      url: https://github.com/CleanExpo/CARSI
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: null
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_hIQAdXiHQGGec6nNKEGzn7SyMh9p
+        project_name: carsi-web
+        domain: TBD
+      sandbox:
+        project_id: prj_Mraqucm5kTHqrkXWeJLTjc3uMKwc
+        project_name: carsi-web-sandbox
+        domain: carsi-web-sandbox.vercel.app
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - build
+  - canonical_name: Pi-Dev-Ops
+    aliases:
+      - Pi DevOps
+      - Pi-CEO Dev Ops
+    purpose: Pi-CEO DevOps tooling
+    status: active
+    owner: phill
+    github:
+      org: CleanExpo
+      repo: Pi-Dev-Ops
+      url: https://github.com/CleanExpo/Pi-Dev-Ops
+      default_branch: main
+      sandbox_branch: sandbox
+    local:
+      canonical_path: null
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_I5sYqNTlL51DlvyzSFjiHX6FrLAX
+        project_name: pi-dev-ops
+        domain: TBD
+      sandbox:
+        project_id: prj_QTE4TmM8vBd18lQ63jNw3oJAAPqX
+        project_name: pi-dev-ops-sandbox
+        domain: pi-dev-ops-sandbox.vercel.app
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - build
+  - canonical_name: Hermes
+    aliases:
+      - Nexus-Hub
+      - Live-Nexus
+      - Hermes Agent
+    purpose: Operator command center (wiki SSOT, agent runtime)
+    status: active
+    owner: phill
+    github:
+      org: null
+      repo: null
+      url: null
+      default_branch: null
+    local:
+      canonical_path: D:\Hermes
+      access_via: D:\Unite-Group\Nexus-Hub
+      do_not_clone_to: []
+    vercel:
+      team_id: team_KMZACI5rIltoCRhAtGCXlxUf
+      production:
+        project_id: prj_oOqmFFnJGCp2pvrZkNgpcg8qk6rD
+        project_name: live-nexus
+        domain: TBD
+      sandbox:
+        project_id: null
+        project_name: live-nexus-sandbox
+        domain: TBD
+    workflow:
+      sandbox_first: true
+      pr_required_for_prod: true
+      ci_required_checks:
+        - typecheck
+        - build
+retired_repos:
+  - org: CleanExpo
+    repo: _archived_Downunder-Miles_2026-05-24
+    archived_at: 2026-05-24
+    reason: Empty repo; namespace freed for real Downunder-Miles content (renamed from https-github.com-CleanExpo-Downunder-Miles)
+    rollback: gh api -X PATCH repos/CleanExpo/_archived_Downunder-Miles_2026-05-24 -F archived=false
+    hard_delete_at: 2026-05-31
+  - org: CleanExpo
+    repo: _archived_abacus_crypto_intelligence_2026-05-24
+    archived_at: 2026-05-24
+    reason: snake_case duplicate of Abacus-Crypto-Intelligence (which is canonical)
+    rollback: gh api -X PATCH repos/CleanExpo/_archived_abacus_crypto_intelligence_2026-05-24 -F archived=false
+    hard_delete_at: 2026-05-31
+renamed_repos:
+  - org: CleanExpo
+    old_name: https-github.com-CleanExpo-Downunder-Miles
+    new_name: Downunder-Miles
+    renamed_at: 2026-05-24
+    reason: Broken name (URL pasted as repo name); had real Travel Buddy App content while the good name was empty
+  - org: CleanExpo
+    old_name: https-github.com-CleanExpo-SC-Generator
+    new_name: SC-Generator
+    renamed_at: 2026-05-24
+    reason: Broken name (URL pasted as repo name)
+disambiguation:
+  - ambiguous_term: Unite-Group
+    likely_canonical: Unite-Hub
+    reason: GitHub repo CleanExpo/Unite-Hub is described as 'Unite Group CRM'. Most casual uses of 'Unite-Group' by the user mean the CRM (Unite-Hub), not the standalone Authority-Site product. If unsure, check if the request involves CRM/contacts/marketing -> Unite-Hub; or executive dashboard/Pi-CEO/portfolio metrics -> Authority-Site.
+    secondary_canonical: Authority-Site
+  - ambiguous_term: Unite Group
+    likely_canonical: Unite-Hub
+    reason: Same as above (spelled with space instead of hyphen)
+    secondary_canonical: Authority-Site
+  - ambiguous_term: the Unite-Group repo
+    likely_canonical: Unite-Hub
+    reason: Despite the literal GitHub repo CleanExpo/Unite-Group existing for Authority-Site, when the user says 'the Unite-Group repo' they usually mean Unite-Hub (the CRM). Ask if context is unclear.
+    secondary_canonical: Authority-Site
+
+retired_vercel_projects:
+  - team: unite-group
+    name: _archive_brave-colden_2026-05-24
+    original_name: brave-colden
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name (vercel deploy without project name); 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_infallible-poincare_2026-05-24
+    original_name: infallible-poincare
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_infallible-pasteur_2026-05-24
+    original_name: infallible-pasteur
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_cool-moser_2026-05-24
+    original_name: cool-moser
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_keen-hellman_2026-05-24
+    original_name: keen-hellman
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_modest-saha_2026-05-24
+    original_name: modest-saha
+    archived_at: "2026-05-24"
+    reason: "Vercel auto-generated name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_dashboard_2026-05-24
+    original_name: dashboard
+    archived_at: "2026-05-24"
+    reason: "Generic name; linked to Pi-Dev-Ops repo but had only auto-generated domain (dashboard-two-orpin-90.vercel.app). pi-dev-ops project retains canonical role."
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_web_2026-05-24
+    original_name: web
+    archived_at: "2026-05-24"
+    reason: "Generic name; 5 env vars but no deploy in 2 months, only auto-generated domain"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_tmp_2026-05-24
+    original_name: tmp
+    archived_at: "2026-05-24"
+    reason: "Generic name; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_v0-hotel-dashboard_2026-05-24
+    original_name: v0-hotel-dashboard
+    archived_at: "2026-05-24"
+    reason: "v0.dev experiment; 0 envs, no deploys"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_unite-group-ops_2026-05-24
+    original_name: unite-group-ops
+    archived_at: "2026-05-24"
+    reason: "Colliding name; only auto-generated domain (unite-group-ops.vercel.app), 12 envs, last deploy 2026-04-29"
+    hard_delete_at: "2026-05-31"
+  - team: unite-group
+    name: _archive_unite-group-in_2026-05-24
+    original_name: unite-group.in
+    archived_at: "2026-05-24"
+    reason: "Colliding name with the unite-group.in custom domain (which actually lives on the 'unite-group' project, not this one). 0 envs, no deploys."
+    hard_delete_at: "2026-05-31"

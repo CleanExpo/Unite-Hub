@@ -1,0 +1,17 @@
+{
+  "name": "@unite-hub/.portfolio",
+  "version": "1.0.0",
+  "description": "This directory is the **single source of truth** mapping each product in the Unite-Group portfolio to its canonical name, aliases, GitHub repo, local canonical path, Vercel projects, and workflow rules.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "yaml": "^2.9.0"
+  }
+}
