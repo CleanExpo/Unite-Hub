@@ -13,6 +13,11 @@
 > Do NOT create new repos or clones. Do NOT create folders matching
 > `local.do_not_clone_to[]` in `.portfolio/PORTFOLIO.yaml`.
 
+> **Sibling product:** Authority-Site (at `D:\Authority-Site`, repo `CleanExpo/Unite-Group`) is a SEPARATE product.
+> Despite the repo name `Unite-Group`, that's the EMPIRE COMMAND CENTER, not this CRM.
+> If the user asks about Empire / CEO dashboard / Pi-CEO / portfolio metrics → switch to that project.
+> Otherwise (CRM / contacts / drip campaigns / email AI / marketing) → stay here.
+
 ---
 
 **Version**: 2.0.0 (Modular)
