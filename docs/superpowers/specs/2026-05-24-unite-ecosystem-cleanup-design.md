@@ -290,7 +290,11 @@ This clone is **kept** through Phase 2 because it is the working copy used to pe
 
 All three: hard-delete on Day 7 (same gate as disk).
 
-### Workstream B · Unite-Group → Unite-Hub merge (7 steps)
+> **⚠️ SUPERSEDED (2026-05-24):** Inspection during Plan 03 revealed Unite-Group is a 135,587 LOC standalone product with 154 routes, separate Supabase project (`uqfgdezadpkiadugufbs`), Remotion video pipeline, multi-language i18n (en/es/fr), and full RBAC — not a small dashboard suitable for subtree merge. The actual goal (registry recognizes both names map to non-confusing canonicals) is solved by Plan 01's alias system alone. Phase 2B (the merge) is REPLACED by Plan 03's canonicalization-only approach: keep both repos, give Authority-Site the same workflow protections as other products, add an explicit `disambiguation:` block to the registry, and document why they remain separate. See `docs/superpowers/plans/2026-05-24-cleanup-03-authority-site-canonicalize.md`. The content below is retained for audit-trail purposes only.
+
+---
+
+### Workstream B · Unite-Group → Unite-Hub merge (7 steps) — SUPERSEDED
 
 #### Step 1 · Snapshot Unite-Group
 ```
