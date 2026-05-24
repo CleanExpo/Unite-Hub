@@ -61,4 +61,32 @@ module.exports = [
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
+
+  // Service-role key placement guard. process.env.SUPABASE_SERVICE_ROLE_KEY
+  // may only be accessed from:
+  //   - src/lib/supabase/service.ts (the canonical centralized client)
+  //   - src/instrumentation.ts (env-var validation only, not client construction)
+  //   - src/lib/ai/features/mcp.ts (MCP server authToken — separate concern)
+  //   - src/app/api/** (API routes are server-only by design)
+  // See .claude/audits/REFRESHED-AUDIT-2026-05-24.md § Service-Role Usage.
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: [
+      "src/lib/supabase/service.ts",
+      "src/instrumentation.ts",
+      "src/lib/ai/features/mcp.ts",
+      "src/app/api/**/*",
+    ],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "MemberExpression[object.object.name='process'][object.property.name='env'][property.name='SUPABASE_SERVICE_ROLE_KEY']",
+          message:
+            "SUPABASE_SERVICE_ROLE_KEY must only be accessed via src/lib/supabase/service.ts (or the three documented exception files / API routes). See .claude/audits/REFRESHED-AUDIT-2026-05-24.md § Service-Role Usage.",
+        },
+      ],
+    },
+  },
 ];
