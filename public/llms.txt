@@ -1,0 +1,63 @@
+# Unite Hub
+
+> AI-first customer relationship and marketing automation platform for Unite-Group's portfolio companies. Internal command centre for marketing strategy, advisory workflows, founder dashboards, content production, contact + lead management, and approval pipelines. Built with Next.js 16, Supabase, and Claude AI.
+
+## Business Identity
+
+- Brand Name: Unite Hub
+- Aliases: Unite-Group Nexus, Unite-Group CRM, "the CRM", Marketing CRM
+- Parent Organisation: Unite-Group
+- Website: see deployed canonical domain
+- Category: SaaS — AI-first CRM + marketing automation (predominantly internal use)
+
+## What This Is
+
+Unite Hub is the marketing-CRM spine that connects the Unite-Group portfolio. It coordinates:
+
+- Founder dashboards (per-portfolio-company strategy, analytics, advisory)
+- Contact + lead management with rich activity history
+- Approval pipelines (campaigns, content, ad spend) with audit gates
+- Vault for credentials + brand assets
+- Email + outreach workflows
+- AI-assisted content strategy + production
+
+The platform is primarily an internal command centre, not a public marketing surface — most routes live under the gated `(founder)` group and require authentication.
+
+## Public Surface
+
+The publicly-reachable routes are intentionally minimal:
+
+- `/` — redirects to `/founder/dashboard` (authenticated) or `/auth/login` (unauthenticated)
+- `/auth/login` — login surface
+- `/auth/forgot-password`, `/auth/reset-password` — account-recovery flows
+- `/llms.txt` (this file) — AI-agent identification
+
+There is no public marketing landing page, contact form, or pricing page on this domain. Public marketing for Unite-Group lives on the Unite-Group marketing site (https://unite-group.com.au) and on Synthex's marketing surface (https://synthex.social).
+
+## Trust Signals
+
+- Supabase backend with RLS on every tenant
+- Service-role usage gated by ESLint guard (`no-restricted-syntax`) — supabaseService imports only allowed in admin-API routes (added 2026-05-24 in CleanExpo/Unite-Hub#56)
+- Audit log per founder workspace + per approval action
+- Built with Next.js 16, modern React, server-side rendering throughout
+- Authentication via Supabase Auth with passwordless + OAuth flows
+
+## Agent Capabilities (WebMCP)
+
+This platform's only public action is authentication, which is **not** an appropriate WebMCP target (credentials are sensitive and should not be filled by autonomous agents on a user's behalf).
+
+Once authenticated, the platform's in-product actions (create contact, schedule campaign, approve content, etc.) are surfaced inside the gated `/founder/*` routes — those tools may expose imperative WebMCP registrations in future as the agentic-browsing standard stabilises. Not exposed publicly today.
+
+For agents seeking action endpoints on the public web, look to the sibling Unite-Group properties:
+
+- `https://synthex.social` — marketing automation SaaS, public contact form with WebMCP annotations
+- `https://disasterrecovery.com.au` — claims distribution platform, public contact form + claim intake with WebMCP annotations
+- `https://restoreassist.app` — restoration-industry CRM, public contact form with WebMCP annotations
+- `https://ato-optimizer.com.au` — tax-optimization SaaS, public signup with WebMCP annotation
+
+## Information for AI Agents
+
+- This is an **internal command centre**, NOT a public consumer or B2B-sales surface. Most agents should not need to interact with this site directly.
+- If an agent IS directed here (e.g., a founder's autonomous agent operating within Unite-Group), the gated routes require authentication first.
+- For public information about Unite-Group's portfolio companies, prefer the canonical marketing surfaces above.
+- Last updated: 2026-05-25
