@@ -1,0 +1,86 @@
+name: Lighthouse Agentic Browsing
+
+# Phase 2 GEO rollout — internal command centre variant.
+# Most routes are gated behind /auth, so the audit focuses on the small
+# public surface (login + llms.txt) rather than a full marketing pass.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/app/**'
+      - 'src/components/**'
+      - 'public/llms.txt'
+      - 'next.config.*'
+      - '.github/workflows/lighthouse-agentic.yml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: lighthouse-agentic-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  agentic-audit:
+    name: Agentic Browsing audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+      deployments: read
+      statuses: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine target URL
+        id: target
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            URL=""
+            for i in {1..15}; do
+              URL=$(gh api "repos/${{ github.repository }}/deployments?ref=${{ github.head_ref }}&per_page=5" \
+                --jq '.[0].payload.web_url // empty' 2>/dev/null || true)
+              if [ -n "$URL" ]; then echo "Found: $URL"; break; fi
+              sleep 20
+            done
+            if [ -z "$URL" ]; then
+              echo "::warning::Could not resolve Vercel preview URL — informational only"
+              echo "url=" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          else
+            URL="https://unite-hub.vercel.app"
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Lighthouse CI
+        if: steps.target.outputs.url != ''
+        continue-on-error: true
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ steps.target.outputs.url }}/auth/login
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: ./.lighthouseagenticrc.json
+
+      - name: Probe llms.txt presence
+        if: steps.target.outputs.url != ''
+        run: |
+          URL="${{ steps.target.outputs.url }}"
+          echo "## Agentic Browsing pre-checks" >> $GITHUB_STEP_SUMMARY
+          LLMS_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/llms.txt")
+          LLMS_SIZE=$(curl -sI "$URL/llms.txt" | awk '/[Cc]ontent-[Ll]ength:/ {print $2}' | tr -d '\r')
+          if [ "$LLMS_STATUS" = "200" ] && [ "${LLMS_SIZE:-0}" -gt 1000 ]; then
+            echo "- ✅ \`llms.txt\` ${LLMS_SIZE} bytes" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ \`llms.txt\` HTTP $LLMS_STATUS, size=${LLMS_SIZE:-0}" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "- ℹ️ This is an internal command centre — JSON-LD + WebMCP not applicable to gated routes" >> $GITHUB_STEP_SUMMARY
