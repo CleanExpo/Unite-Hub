@@ -337,3 +337,46 @@ To speed approvals, Hermes should post every high-impact recommendation with inl
 - Keep `requiresHumanApproval=true` and `applyState=pending_human_gate` until a separate apply phase is approved.
 - Reject unknown actions or missing request IDs (fail-closed).
 
+
+### Telegram payload contract (implementation-ready)
+
+Use a compact callback payload format to stay within Telegram limits:
+
+- `callback_data` format: `h1|<action>|<request>|<nonce>|<sig>`
+- Action codes:
+  - `A` = Approve
+  - `R` = Reject
+  - `D` = Defer
+  - `C` = Request Changes
+  - `V` = View Evidence
+
+Example:
+
+```text
+h1|A|9x2k1m7q|k3f82p|Qm1x9aZp2R
+```
+
+### Anti-tamper + replay protection
+
+- Sign payloads with `HMAC-SHA256` using a server-side `TELEGRAM_DECISION_SIGNING_KEY`.
+- Sign input should include: `version|action|request|nonce|chat_id|user_id|time_bucket`.
+- Verify signatures with constant-time comparison and allow only a small clock skew window.
+- Store idempotency key: `<request>:<action>:<user_id>:<nonce>`.
+- Reject bad signatures, unknown actions, stale/replayed nonces, and missing request IDs.
+
+### Decision state rules
+
+- Terminal: `Approve`, `Reject` (cannot be silently overridden).
+- Non-terminal: `Defer`, `Request Changes`.
+- Informational: `View Evidence` (no state mutation).
+
+Every accepted callback must write a local Phase 1I decision record with:
+
+- `decision_id`
+- `apply_request_id`
+- `action`
+- `actor_telegram_user_id`
+- `source=telegram-inline`
+- `timestamp`
+- `result_state` (`terminal` | `non_terminal` | `info_only`)
+
