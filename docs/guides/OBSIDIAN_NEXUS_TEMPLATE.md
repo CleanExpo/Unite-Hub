@@ -308,3 +308,32 @@ If these improve consistently, your system is becoming truly agentic.
 - [ ] Score and calibrate autonomy levels
 
 When complete, Hermes becomes your autonomous senior operating layer rather than a reactive assistant.
+
+---
+
+## 13) Telegram quick-decision boxes (recommended)
+
+To speed approvals, Hermes should post every high-impact recommendation with inline Telegram decision buttons.
+
+### Decision buttons
+
+- ✅ Approve
+- ❌ Reject
+- ⏸ Defer
+- 📝 Request Changes
+- 🔍 View Evidence
+
+### Minimum behavior contract
+
+- Every button click writes a local decision record to the approval ledger.
+- `Approve` and `Reject` are terminal decisions.
+- `Defer` and `Request Changes` are non-terminal decisions.
+- `View Evidence` returns supporting links/notes without changing state.
+- Repeated clicks on terminal items should be idempotent (no conflicting final state).
+
+### Safety constraints
+
+- Keep this lane approval-only; no direct execution from Telegram clicks.
+- Keep `requiresHumanApproval=true` and `applyState=pending_human_gate` until a separate apply phase is approved.
+- Reject unknown actions or missing request IDs (fail-closed).
+
