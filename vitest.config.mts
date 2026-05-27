@@ -24,6 +24,7 @@ export default defineConfig({
       '**/dist/**',
       '**/.next/**',
       '**/coverage/**',
+      'external/**',
       '**/tests/**',                          // v1 legacy test suite — references deleted modules
       '**/*.spec.ts',                         // Playwright E2E — use `pnpm playwright test` instead
       '**/e2e/**',

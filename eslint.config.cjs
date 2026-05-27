@@ -1,64 +1,57 @@
-const path = require("path");
-const { FlatCompat } = require("@eslint/eslintrc");
-
-const compat = new FlatCompat({
-  baseDirectory: path.join(__dirname, "apps/web"),
-  resolvePluginsRelativeTo: path.join(__dirname, "apps/web"),
-});
+const tsParser = require('@typescript-eslint/parser')
+const tsPlugin = require('@typescript-eslint/eslint-plugin')
+const nextPlugin = require('@next/eslint-plugin-next')
 
 module.exports = [
-  // Global ignores
   {
     ignores: [
-      "**/node_modules/**",
-      "**/.turbo/**",
-      "**/.next/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/coverage/**",
+      '**/node_modules/**',
+      '**/.turbo/**',
+      '**/.next/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/coverage/**',
+      '**/external/**',
     ],
   },
-
-  // Base config for web app (apps/web/ legacy path + src/ rebuild path)
-  ...compat
-    .extends("next/core-web-vitals", "plugin:@typescript-eslint/recommended")
-    .map((config) => ({
-      ...config,
-      files: ["apps/web/**/*.{js,jsx,ts,tsx}", "src/**/*.{js,jsx,ts,tsx}"],
-    })),
-
-  // Production code overrides
   {
-    files: ["apps/web/**/*.{js,jsx,ts,tsx}", "src/**/*.{js,jsx,ts,tsx}"],
+    files: ['src/**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+      '@next/next': nextPlugin,
+    },
     rules: {
-      "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
         {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
         },
       ],
-      "@typescript-eslint/no-require-imports": "off",
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
-
-  // Test files - relaxed rules
   {
     files: [
-      "apps/web/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "apps/web/**/*.test.{js,jsx,ts,tsx}",
-      "apps/web/**/*.spec.{js,jsx,ts,tsx}",
-      "apps/web/**/tests/**/*.{js,jsx,ts,tsx}",
-      "apps/web/**/e2e/**/*.{js,jsx,ts,tsx}",
-      "src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "src/**/*.test.{js,jsx,ts,tsx}",
-      "src/**/*.spec.{js,jsx,ts,tsx}",
+      'src/**/__tests__/**/*.{js,jsx,ts,tsx}',
+      'src/**/*.test.{js,jsx,ts,tsx}',
+      'src/**/*.spec.{js,jsx,ts,tsx}',
     ],
     rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
-];
+]

@@ -15,6 +15,18 @@ This model carries forward:
 - `docs/margot/SECOND-BRAIN-CARRY-FORWARD.md`
 - `docs/margot/high-level-crm-25-step-forecast.md`
 - `docs/margot/access-and-data-requirements.md`
+- `docs/margot/operating-brain-integration.md`
+
+## Operating Brain Layer
+
+Unite-Hub is the founder CRM and command cockpit. Hermes, Pi-Dev-Ops, Margot, and the 2nd Brain now sit behind it as the Operating Brain:
+
+- Hermes runs the continuous operator loop: read memory, inspect project health, propose next actions, delegate agents, verify results, and record progress.
+- Pi-Dev-Ops owns delivery intelligence across GitHub, Linear, Vercel, CI, deploy health, issue routing, and agent improvement loops.
+- The 2nd Brain stores durable operating memory: decisions, project context, playbooks, progress logs, Senior PM rationale, and Board rationale.
+- Margot is the assistant/operator interface that turns signals into safe tasks, blocked approvals, daily digest items, command-center visibility, and 2nd Brain updates.
+
+The canonical integration plan and source-of-truth matrix live in `docs/margot/operating-brain-integration.md`.
 
 ## Desired End State
 

@@ -10,6 +10,10 @@ vi.mock('next/headers', () => ({
   cookies: vi.fn(),
 }));
 
+vi.mock('@/lib/error-reporting', () => ({
+  captureApiError: vi.fn(),
+}));
+
 // ── Static imports (resolved AFTER vi.mock() hoisting) ───────────────────────
 
 import { createServerClient } from '@supabase/ssr';

@@ -279,7 +279,6 @@ export function MFAGate({ businessKey, businessName, onCancel }: MFAGateProps) {
               Then enter the 6-digit code below to complete setup.
             </p>
             <div className="flex justify-center mb-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={enrollData.qrCode}
                 alt="TOTP QR Code"
