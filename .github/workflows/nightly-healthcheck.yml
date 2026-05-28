@@ -16,7 +16,7 @@ jobs:
     name: System Health Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Check API Health
         id: health
@@ -53,7 +53,7 @@ jobs:
           fi
 
       - name: Upload Health Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: health-report-${{ github.run_number }}
@@ -86,7 +86,7 @@ jobs:
           echo "{\"health\": $HEALTH_TIME, \"homepage\": $HOME_TIME, \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > performance-metrics.json
 
       - name: Upload Performance Metrics
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: performance-metrics-${{ github.run_number }}
           path: performance-metrics.json

@@ -36,7 +36,7 @@ jobs:
       statuses: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Determine target URL
         id: target
