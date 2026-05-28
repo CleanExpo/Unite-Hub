@@ -22,8 +22,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             style={{ filter: 'drop-shadow(0 0 20px rgba(0, 245, 255, 0.10))' }}
           >
             <Image
-              src="/logos/unite-group-nexus-logo.png"
-              alt="Unite-Group Nexus"
+              src="/logos/unite-hub-logo.png"
+              alt="Unite-Hub"
               width={96}
               height={96}
               priority
@@ -31,7 +31,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             />
           </div>
           <p className="text-white/40 text-[11px] font-mono tracking-[0.3em] uppercase">
-            Unite-Group Nexus
+            Unite-Hub
           </p>
         </div>
 
@@ -51,7 +51,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         {/* Footer */}
         <p className="text-center text-white/25 text-[11px] mt-6 font-mono tracking-wider">
-          © 2026 Unite-Group. All rights reserved.
+          © 2026 Unite-Hub. All rights reserved.
         </p>
       </div>
     </div>

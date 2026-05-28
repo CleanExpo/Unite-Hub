@@ -59,7 +59,6 @@ const PUBLIC_PATHS = [
   '/robots.txt',
   '/sitemap.xml',
   '/site.webmanifest',
-  '/founder-os-manifest.json',
 ] as const;
 
 function isPublicPath(pathname: string): boolean {

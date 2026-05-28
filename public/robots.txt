@@ -1,4 +1,4 @@
-# Unite-Group Nexus 2.0 — https://unite-group.in
+# Unite-Hub — private founder CRM
 # Private founder CRM — authenticated routes are blocked
 
 User-agent: *
@@ -22,4 +22,4 @@ Disallow: /
 User-agent: Claude-Web
 Disallow: /
 
-Sitemap: https://unite-group.in/sitemap.xml
+Sitemap: https://unite-hub-sandbox.vercel.app/sitemap.xml

@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
-  title: "Nexus — Unite Group",
-  description: "Private founder CRM",
+  title: 'Unite-Hub',
+  description: 'Private founder CRM and operating cockpit',
 };
 
 export default async function RootLayout({
