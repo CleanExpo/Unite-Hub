@@ -5,6 +5,7 @@
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
 import { signOAuthState } from '@/lib/oauth-state'
+import { isGoogleConfigured } from '@/lib/integrations/google-oauth'
 
 const SCOPES = [
   'https://www.googleapis.com/auth/gmail.readonly',
@@ -25,6 +26,16 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const email = searchParams.get('email')
   if (!email) return NextResponse.json({ error: 'email param required' }, { status: 400 })
+
+  if (!isGoogleConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          'Google OAuth is not configured on this deployment. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Vercel (not placeholder values).',
+      },
+      { status: 503 },
+    )
+  }
 
   const params = new URLSearchParams({
     client_id: process.env.GOOGLE_CLIENT_ID!.trim(),
