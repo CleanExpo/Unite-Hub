@@ -78,6 +78,17 @@ const nextConfig = {
 
   // Security and caching headers
   headers: async () => [
+    // Retired Founder OS service worker must always revalidate so old clients
+    // can fetch the tombstone worker that clears caches and unregisters itself.
+    {
+      source: '/founder-os-sw.js',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'no-store, must-revalidate',
+        },
+      ],
+    },
     // Aggressive caching for public static files
     {
       source: '/static/:path*',

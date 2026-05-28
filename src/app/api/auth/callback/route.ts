@@ -11,9 +11,18 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  const providerError = searchParams.get('error')
+  const providerErrorDescription = searchParams.get('error_description')
   const rawNext = searchParams.get('next') ?? '/founder/dashboard'
   // Prevent open redirect: only allow relative paths (must start with / but not //)
   const next = /^\/(?!\/)/.test(rawNext) ? rawNext : '/founder/dashboard'
+
+  if (providerError) {
+    const loginUrl = new URL('/auth/login', origin)
+    loginUrl.searchParams.set('error', providerErrorDescription || providerError)
+    loginUrl.searchParams.set('redirectTo', next)
+    return NextResponse.redirect(loginUrl)
+  }
 
   if (code) {
     const cookieStore = await cookies()
@@ -36,7 +45,12 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`)
     }
+
+    console.error('[Supabase OAuth] Code exchange failed:', error.message)
   }
 
-  return NextResponse.redirect(`${origin}/auth/login?error=oauth_failed`)
+  const loginUrl = new URL('/auth/login', origin)
+  loginUrl.searchParams.set('error', 'oauth_failed')
+  loginUrl.searchParams.set('redirectTo', next)
+  return NextResponse.redirect(loginUrl)
 }

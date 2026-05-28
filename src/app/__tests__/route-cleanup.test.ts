@@ -23,4 +23,11 @@ describe('route cleanup', () => {
     expect(serviceWorker).not.toContain('cache.addAll')
     expect(serviceWorker).not.toContain('/api/founder-os/')
   })
+
+  it('forces the retired service worker URL to revalidate', () => {
+    const nextConfig = readFileSync(join(root, 'next.config.mjs'), 'utf8')
+
+    expect(nextConfig).toContain("source: '/founder-os-sw.js'")
+    expect(nextConfig).toContain("value: 'no-store, must-revalidate'")
+  })
 })

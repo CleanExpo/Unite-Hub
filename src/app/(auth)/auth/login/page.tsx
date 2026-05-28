@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createBrowserClient } from "@supabase/ssr";
@@ -23,6 +23,25 @@ const GoogleIcon = () => (
   </svg>
 );
 
+function normaliseRedirectPath(value: string | null): string {
+  if (!value || !/^\/(?!\/)/.test(value)) {
+    return "/founder/dashboard";
+  }
+
+  return value;
+}
+
+function oauthErrorMessage(value: string | null): string {
+  switch (value) {
+    case "oauth_failed":
+      return "Google sign-in did not complete. Try again, or use email and password.";
+    case "access_denied":
+      return "Google sign-in was cancelled before access was granted.";
+    default:
+      return value ? `Google sign-in failed: ${value}` : "";
+  }
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -30,6 +49,22 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
+  const [queryString, setQueryString] = useState("");
+
+  useEffect(() => {
+    setQueryString(window.location.search);
+  }, []);
+
+  const redirectPath = useMemo(() => {
+    const params = new URLSearchParams(queryString);
+    return normaliseRedirectPath(params.get("redirectTo"));
+  }, [queryString]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(queryString);
+    const message = oauthErrorMessage(params.get("error"));
+    if (message) setError(message);
+  }, [queryString]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,7 +80,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/founder/dashboard");
+    router.push(redirectPath);
   }
 
   async function handleGoogleSignIn() {
@@ -53,10 +88,13 @@ export default function LoginPage() {
     setError("");
 
     const supabase = getSupabase();
+    const callbackUrl = new URL("/api/auth/callback", window.location.origin);
+    callbackUrl.searchParams.set("next", redirectPath);
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
+        redirectTo: callbackUrl.toString(),
       },
     });
 
