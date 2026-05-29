@@ -116,6 +116,12 @@ logs/
 logs/*.log
 logs/*.log.*
 
+# Turbo build cache (per-machine, never commit)
+.turbo/
+
+# Generated health-check artifacts
+health-check-reports/
+
 # Test summary files (keep in docs/test-reports/)
 /*TESTING*.md
 /*TEST*.md
