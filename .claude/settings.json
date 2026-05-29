@@ -12,7 +12,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"D:/Unite-Hub/.claude/hooks/scripts/user-prompt-compass.ps1\"",
+            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/user-prompt-compass.ps1\"",
             "timeout": 5
           }
         ]
@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"D:/Unite-Hub/.claude/hooks/scripts/pre-compact-save.py\"",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/pre-compact-save.py\"",
             "timeout": 30
           }
         ]
@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"D:/Unite-Hub/.claude/hooks/scripts/session-start-context.ps1\"",
+            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/session-start-context.ps1\"",
             "timeout": 30
           }
         ]
@@ -46,7 +46,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"D:/Unite-Hub/.claude/hooks/scripts/post-edit-format.ps1\"",
+            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/post-edit-format.ps1\"",
             "timeout": 60
           }
         ]
@@ -56,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"D:/Unite-Hub/.claude/hooks/scripts/notebooklm-sync.ps1\"",
+            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/notebooklm-sync.ps1\"",
             "timeout": 30
           }
         ]
@@ -68,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"D:/Unite-Hub/.claude/hooks/scripts/pre-bash-validate.py\"",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/pre-bash-validate.py\"",
             "timeout": 10
           }
         ]
@@ -78,7 +78,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"D:/Unite-Hub/.claude/hooks/scripts/iteration-counter.py\"",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/iteration-counter.py\"",
             "timeout": 5
           }
         ]
@@ -90,7 +90,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"D:/Unite-Hub/.claude/hooks/scripts/notification-alert.ps1\"",
+            "command": "powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/notification-alert.ps1\"",
             "timeout": 15
           }
         ]
@@ -101,7 +101,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"D:/Unite-Hub/.claude/hooks/scripts/stop-verify-todos.py\"",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/stop-verify-todos.py\"",
             "timeout": 15
           }
         ]
