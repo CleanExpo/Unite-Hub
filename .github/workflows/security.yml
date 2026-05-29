@@ -15,15 +15,17 @@ permissions:
 
 env:
   NODE_VERSION: "24"
-  PYTHON_VERSION: "3.12"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  snyk-frontend:
-    name: Snyk Frontend Security Scan (Optional)
+  snyk:
+    name: Snyk Security Scan
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: ${{ vars.SNYK_ENABLED == 'true' }}
+    # Single Next.js app at the repo root — scans the root package.json.
+    # Only runs when a real SNYK_TOKEN secret is configured; otherwise it is
+    # skipped honestly rather than gated on an unset variable.
+    if: ${{ secrets.SNYK_TOKEN != '' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -44,49 +46,13 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high --file=apps/web/package.json
+          args: --severity-threshold=high --file=package.json
 
       - name: Upload Snyk report
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: snyk-frontend-report
-          path: snyk-report.json
-          retention-days: 30
-
-  snyk-backend:
-    name: Snyk Backend Security Scan (Optional)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    if: ${{ vars.SNYK_ENABLED == 'true' }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v4
-        with:
-          version: "latest"
-
-      - name: Set up Python
-        run: uv python install ${{ env.PYTHON_VERSION }}
-
-      - name: Install dependencies
-        working-directory: apps/backend
-        run: uv sync
-
-      - name: Run Snyk to check Python dependencies
-        uses: snyk/actions/python@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high --file=apps/backend/pyproject.toml
-
-      - name: Upload Snyk report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: snyk-backend-report
+          name: snyk-report
           path: snyk-report.json
           retention-days: 30
 
@@ -127,10 +93,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit
-        run: pnpm audit --audit-level=critical || true
+      - name: Run pnpm audit (production deps, fail on critical)
+        # Real gate: fails the job on any critical advisory. --prod excludes
+        # dev-only tooling advisories that do not ship to production. No
+        # `|| true` — a green tick here means "no critical prod advisories".
+        run: pnpm audit --audit-level=critical --prod
 
       - name: Generate audit report
+        # Report generation must never fail the job — the gate above owns
+        # pass/fail. `|| true` is intentional and scoped to artifact output only.
         if: always()
         run: pnpm audit --json > npm-audit-report.json || true
 
@@ -181,15 +152,12 @@ jobs:
         uses: actions/download-artifact@v7
 
       - name: Display security scan results
+        # Reports the real job outcomes so the summary cannot show a false PASS.
         run: |
           echo "# Security Scan Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Required Scans Completed:" >> $GITHUB_STEP_SUMMARY
-          echo "- [PASS] NPM Audit (no token required)" >> $GITHUB_STEP_SUMMARY
-          echo "- [PASS] Trivy Container Scan (no token required)" >> $GITHUB_STEP_SUMMARY
+          echo "## Required Scans:" >> $GITHUB_STEP_SUMMARY
+          echo "- NPM Audit: ${{ needs.npm-audit.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Trivy Filesystem Scan: ${{ needs.trivy-scan.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Optional Scans:" >> $GITHUB_STEP_SUMMARY
-          echo "- [OPT] Snyk Security Scans (requires SNYK_TOKEN secret)" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "All required security scans completed successfully." >> $GITHUB_STEP_SUMMARY
-          echo "Please review the artifact reports for detailed findings." >> $GITHUB_STEP_SUMMARY
+          echo "Review the uploaded artifact reports for detailed findings." >> $GITHUB_STEP_SUMMARY

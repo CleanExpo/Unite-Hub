@@ -47,6 +47,11 @@ export interface ThreadPage {
   nextPageToken?: string
 }
 
+export interface GmailThreadsResult {
+  data: GmailThread[]
+  source: 'gmail' | 'not_connected'
+}
+
 // ─── Internal types ──────────────────────────────────────────────────────────
 
 interface GmailApiThread {
@@ -178,12 +183,12 @@ async function fetchThreadsForAccount(
 
 // ─── Public fetchers ─────────────────────────────────────────────────────────
 
-export async function fetchGmailThreads(founderId: string): Promise<GmailThread[]> {
-  if (!isGoogleConfigured()) return getMockThreads()
+export async function fetchGmailThreads(founderId: string): Promise<GmailThreadsResult> {
+  if (!isGoogleConfigured()) return { data: [], source: 'not_connected' }
 
   const cacheKey = `gmail:${founderId}`
   const cached = getCached<GmailThread[]>(cacheKey)
-  if (cached) return cached
+  if (cached) return { data: cached, source: 'gmail' }
 
   const { createServiceClient } = await import('@/lib/supabase/service')
   const { decrypt } = await import('@/lib/vault')
@@ -195,7 +200,7 @@ export async function fetchGmailThreads(founderId: string): Promise<GmailThread[
     .eq('founder_id', founderId)
     .eq('service', 'google')
 
-  if (!vaultRows?.length) return getMockThreads()
+  if (!vaultRows?.length) return { data: [], source: 'not_connected' }
 
   const allThreads = await Promise.all(
     vaultRows.map(async (row) => {
@@ -216,7 +221,7 @@ export async function fetchGmailThreads(founderId: string): Promise<GmailThread[
 
   const threads = allThreads.flat().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   setCache(cacheKey, threads, GOOGLE_CACHE_TTL_MS)
-  return threads
+  return { data: threads, source: 'gmail' }
 }
 
 export async function fetchFullThread(

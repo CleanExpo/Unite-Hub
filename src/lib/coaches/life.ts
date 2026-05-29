@@ -19,10 +19,12 @@ export const fetchLifeData: CoachDataFetcher = async (founderId: string): Promis
 
   if (isGoogleConfigured()) {
     try {
-      ;[events, threads] = await Promise.all([
+      const [eventsResult, threadsResult] = await Promise.all([
         fetchCalendarEvents(founderId),
         fetchGmailThreads(founderId),
       ])
+      events = eventsResult.source === 'not_connected' ? getMockEvents() : eventsResult.data
+      threads = threadsResult.source === 'not_connected' ? getMockThreads() : threadsResult.data
     } catch (err) {
       console.warn('[Life Coach] Google API error, falling back to mocks:', err)
       events = getMockEvents()

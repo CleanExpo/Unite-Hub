@@ -15,8 +15,11 @@ export default async function CalendarPage() {
 
   const connectedAccounts = user ? await getConnectedGoogleAccounts(user.id) : []
 
-  // Fetch real calendar events when accounts are connected; falls back to mocks
-  const events = user ? await fetchCalendarEvents(user.id) : []
+  // Fetch real calendar events when accounts are connected.
+  // Never show fabricated mock data — surface "not connected" instead.
+  const result = user ? await fetchCalendarEvents(user.id) : null
+  const events = result?.data ?? []
+  const notConnected = !result || result.source === 'not_connected'
 
   return (
     <div className="p-6 space-y-6">
@@ -39,6 +42,16 @@ export default async function CalendarPage() {
             Email settings
           </Link>{' '}
           to connect.
+        </div>
+      )}
+
+      {configured && connectedAccounts.length > 0 && notConnected && (
+        <div className="border px-4 py-3 rounded-sm text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
+          Google Calendar not connected — reconnect via{' '}
+          <Link href="/founder/email" className="text-[#00F5FF] hover:underline">
+            Email settings
+          </Link>{' '}
+          to see events.
         </div>
       )}
 
@@ -76,7 +89,7 @@ export default async function CalendarPage() {
           ))}
         </div>
       ) : (
-        configured && connectedAccounts.length > 0 && (
+        configured && connectedAccounts.length > 0 && !notConnected && (
           <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
             No upcoming events across your connected calendars.
           </p>

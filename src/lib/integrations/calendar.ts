@@ -16,6 +16,11 @@ export interface CalendarEvent {
   email: string
 }
 
+export interface CalendarEventsResult {
+  data: CalendarEvent[]
+  source: 'google' | 'not_connected'
+}
+
 const BUSINESS_COLOURS: Record<string, string> = {
   dr:       '#EF4444',
   restore:  '#3B82F6',
@@ -57,12 +62,12 @@ async function fetchEventsForAccount(
   }))
 }
 
-export async function fetchCalendarEvents(founderId: string): Promise<CalendarEvent[]> {
-  if (!isGoogleConfigured()) return getMockEvents()
+export async function fetchCalendarEvents(founderId: string): Promise<CalendarEventsResult> {
+  if (!isGoogleConfigured()) return { data: [], source: 'not_connected' }
 
   const cacheKey = `calendar:${founderId}`
   const cached = getCached<CalendarEvent[]>(cacheKey)
-  if (cached) return cached
+  if (cached) return { data: cached, source: 'google' }
 
   const { createServiceClient } = await import('@/lib/supabase/service')
   const { decrypt } = await import('@/lib/vault')
@@ -74,7 +79,7 @@ export async function fetchCalendarEvents(founderId: string): Promise<CalendarEv
     .eq('founder_id', founderId)
     .eq('service', 'google')
 
-  if (!vaultRows?.length) return getMockEvents()
+  if (!vaultRows?.length) return { data: [], source: 'not_connected' }
 
   const allEvents = await Promise.all(
     vaultRows.map(async (row) => {
@@ -95,7 +100,7 @@ export async function fetchCalendarEvents(founderId: string): Promise<CalendarEv
 
   const events = allEvents.flat().sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
   setCache(cacheKey, events, GOOGLE_CACHE_TTL_MS)
-  return events
+  return { data: events, source: 'google' }
 }
 
 export function getMockEvents(): CalendarEvent[] {
