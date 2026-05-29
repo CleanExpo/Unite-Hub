@@ -108,6 +108,7 @@ Load when working within the specific domain.
 | `email-template` | Email component patterns |
 | `error-boundary` | React error boundary patterns |
 | `i18n-patterns` | Internationalisation (en-AU primary) |
+| `react-best-practices` | Vercel React/Next perf rules (72 rules: waterfalls, bundle, server-perf). Load when writing/reviewing/refactoring React or Next.js |
 | `xaem-theme-ui` | Theme UI component system |
 
 ### Integrations
