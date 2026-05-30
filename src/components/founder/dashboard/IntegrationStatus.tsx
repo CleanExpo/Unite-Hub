@@ -1,10 +1,13 @@
 // src/components/founder/dashboard/IntegrationStatus.tsx
-// Server Component — reads env vars directly, never exposes keys to client
-// Renders a compact status strip showing which integrations are configured
+// Server Component — reads env vars + the credentials vault, never exposes keys to client
+// Renders a compact status strip showing the REAL connection state of each integration.
+// "Configured" (OAuth app env vars present) is NOT the same as "Connected" (a stored
+// OAuth token exists) — the dot is only lit when a real token is in the vault.
 
 import Link from 'next/link'
 import { isXeroConfigured } from '@/lib/integrations/xero/client'
 import { isGoogleConfigured } from '@/lib/integrations/google'
+import { createServiceClient } from '@/lib/supabase/service'
 
 interface IntegrationDot {
   label: string
@@ -42,14 +45,48 @@ function StatusDot({ connected, label, detail, href }: IntegrationDot) {
   return inner
 }
 
-export function IntegrationStatus() {
+// Three honest states: a token in the vault → "Connected"; env vars present but no
+// token → "Configured · not connected"; neither → "Not configured".
+function detailFor(configured: boolean, connected: boolean): string {
+  if (connected) return 'Connected'
+  if (configured) return 'Configured · not connected'
+  return 'Not configured'
+}
+
+export async function IntegrationStatus({ founderId }: { founderId: string }) {
+  const supabase = createServiceClient()
+
+  // Real connection = an encrypted OAuth token stored in the vault for that service.
+  const [xeroVault, googleVault] = await Promise.all([
+    supabase
+      .from('credentials_vault')
+      .select('id', { count: 'exact', head: true })
+      .eq('founder_id', founderId)
+      .eq('service', 'xero'),
+    supabase
+      .from('credentials_vault')
+      .select('id', { count: 'exact', head: true })
+      .eq('founder_id', founderId)
+      .eq('service', 'google'),
+  ])
+
+  // A failed vault query must NOT silently degrade to "Not configured" (that
+  // would show a false connection state). Surface it to the error boundary.
+  if (xeroVault.error || googleVault.error) {
+    throw new Error(
+      `IntegrationStatus vault query failed: ${(xeroVault.error ?? googleVault.error)?.message}`,
+    )
+  }
+
   // Xero — single OAuth app, one config covers all businesses
-  const xeroConnected = isXeroConfigured()
+  const xeroConfigured = isXeroConfigured()
+  const xeroConnected = (xeroVault.count ?? 0) > 0
 
   // Google / Gmail — one OAuth app covers all connected accounts
-  const googleConnected = isGoogleConfigured()
+  const googleConfigured = isGoogleConfigured()
+  const googleConnected = (googleVault.count ?? 0) > 0
 
-  // Linear — personal API key
+  // Linear — personal API key; config IS the connection (no OAuth token to store)
   const linearConnected = Boolean(process.env.LINEAR_API_KEY)
 
   return (
@@ -69,13 +106,14 @@ export function IntegrationStatus() {
       <StatusDot
         label="Xero"
         connected={xeroConnected}
-        detail={xeroConnected ? 'Connected' : 'Not configured'}
+        detail={detailFor(xeroConfigured, xeroConnected)}
         href="/founder/xero"
       />
       <StatusDot
         label="Gmail"
         connected={googleConnected}
-        detail={googleConnected ? 'Connected' : 'Not configured'}
+        detail={detailFor(googleConfigured, googleConnected)}
+        href="/founder/email"
       />
       <StatusDot
         label="Linear"
