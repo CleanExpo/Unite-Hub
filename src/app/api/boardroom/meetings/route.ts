@@ -18,6 +18,7 @@ export async function GET(request: Request) {
   let query = supabase
     .from('board_meetings')
     .select('id, meeting_date, status, agenda, brief_md, metrics, created_at')
+    .eq('founder_id', user.id)
     .order('meeting_date', { ascending: false })
     .limit(limit)
 
