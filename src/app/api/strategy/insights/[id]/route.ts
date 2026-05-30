@@ -23,6 +23,7 @@ export async function PATCH(
     .from('strategy_insights')
     .update({ status: body.status, updated_at: new Date().toISOString() })
     .eq('id', id)
+    .eq('founder_id', user.id)
     .select()
     .single()
 
@@ -43,6 +44,7 @@ export async function DELETE(
     .from('strategy_insights')
     .update({ status: 'done', updated_at: new Date().toISOString() })
     .eq('id', id)
+    .eq('founder_id', user.id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ success: true })
