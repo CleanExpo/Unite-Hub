@@ -48,6 +48,7 @@ export async function GET(
             duration_seconds: heygenStatus.duration,
           })
           .eq('id', id)
+          .eq('founder_id', user.id)
           .select('*')
           .single()
 
@@ -63,6 +64,7 @@ export async function GET(
             error_message: heygenStatus.error ?? 'Video generation failed on HeyGen',
           })
           .eq('id', id)
+          .eq('founder_id', user.id)
           .select('*')
           .single()
 
