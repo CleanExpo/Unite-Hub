@@ -33,6 +33,7 @@ export async function PATCH(
     .from('ceo_decisions')
     .update(patch)
     .eq('id', id)
+    .eq('founder_id', user.id)
     .select()
     .single()
 
@@ -49,7 +50,7 @@ export async function DELETE(
 
   const { id } = await params
   const supabase = await createClient()
-  const { error } = await supabase.from('ceo_decisions').update({ status: 'cancelled', updated_at: new Date().toISOString() }).eq('id', id)
+  const { error } = await supabase.from('ceo_decisions').update({ status: 'cancelled', updated_at: new Date().toISOString() }).eq('id', id).eq('founder_id', user.id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ success: true })
 }
