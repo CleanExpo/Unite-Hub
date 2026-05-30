@@ -70,6 +70,14 @@ export async function IntegrationStatus({ founderId }: { founderId: string }) {
       .eq('service', 'google'),
   ])
 
+  // A failed vault query must NOT silently degrade to "Not configured" (that
+  // would show a false connection state). Surface it to the error boundary.
+  if (xeroVault.error || googleVault.error) {
+    throw new Error(
+      `IntegrationStatus vault query failed: ${(xeroVault.error ?? googleVault.error)?.message}`,
+    )
+  }
+
   // Xero — single OAuth app, one config covers all businesses
   const xeroConfigured = isXeroConfigured()
   const xeroConnected = (xeroVault.count ?? 0) > 0
