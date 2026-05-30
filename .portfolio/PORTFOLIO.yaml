@@ -39,7 +39,7 @@ products:
       production:
         project_id: prj_y8hsRwhZHe6ewe6wCbwMbBYx20yp
         project_name: unite-hub
-        domain: unite-hub.vercel.app
+        domain: unite-hub-self.vercel.app  # bare unite-hub.vercel.app is third-party-owned (Gatwick union portal); Vercel assigned -self fallback
       sandbox:
         project_id: prj_tNqIsHGY3kvw7zdO2bXVxFWTPIk0
         project_name: unite-hub-sandbox
