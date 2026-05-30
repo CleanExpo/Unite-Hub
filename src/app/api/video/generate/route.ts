@@ -175,6 +175,7 @@ export async function POST(request: Request) {
         external_job_id: heygenVideoId,
       })
       .eq('id', videoAsset.id)
+      .eq('founder_id', user.id)
 
     // 10. Return immediately with IDs
     return NextResponse.json({
@@ -191,6 +192,7 @@ export async function POST(request: Request) {
         error_message: error instanceof Error ? error.message : 'HeyGen API call failed',
       })
       .eq('id', videoAsset.id)
+      .eq('founder_id', user.id)
 
     console.error('[VideoGenerate] HeyGen call failed:', error)
     return NextResponse.json(
