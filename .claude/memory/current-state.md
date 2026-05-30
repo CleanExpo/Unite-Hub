@@ -2,7 +2,7 @@
 > Updated by PreCompact hook. Session: 247b9e38
 
 ## Active Task
-Compaction triggered — context was saved at 30/05/2026 19:33 AEST.
+Compaction triggered — context was saved at 30/05/2026 19:54 AEST.
 Re-read CONSTITUTION.md if rules feel unclear after compaction.
 
 ## Recent Architectural Choices
@@ -15,4 +15,4 @@ Check recent git status: `git status` and `git log --oneline -5`
 Re-read .claude/memory/CONSTITUTION.md to restore rule context.
 
 ## Last Updated
-30/05/2026 19:33 AEST (PreCompact hook)
+30/05/2026 19:54 AEST (PreCompact hook)
