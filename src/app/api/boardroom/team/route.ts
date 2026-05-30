@@ -15,6 +15,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from('team_members')
     .select('*')
+    .eq('founder_id', user.id)
     .eq('active', true)
     .order('created_at', { ascending: true })
 
