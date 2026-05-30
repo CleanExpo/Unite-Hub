@@ -18,7 +18,7 @@ export async function GET(
   const supabase = await createClient()
 
   const [meetingRes, notesRes] = await Promise.all([
-    supabase.from('board_meetings').select('*').eq('id', id).single(),
+    supabase.from('board_meetings').select('*').eq('id', id).eq('founder_id', user.id).single(),
     supabase
       .from('board_meeting_notes')
       .select('*')
@@ -45,6 +45,7 @@ export async function PATCH(
     .from('board_meetings')
     .update({ status: body.status, updated_at: new Date().toISOString() })
     .eq('id', id)
+    .eq('founder_id', user.id)
     .select()
     .single()
 
