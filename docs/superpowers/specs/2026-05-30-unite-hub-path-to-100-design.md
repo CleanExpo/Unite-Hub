@@ -13,7 +13,7 @@ All claims below were confirmed *this session*, not carried from prior ledgers.
 | Layer | Finding | Evidence |
 |---|---|---|
 | Type-check | PASS | `pnpm run type-check` exit 0 |
-| Tests | **560/560 pass** (54 files, 23s) | `pnpm run test` |
+| Tests | **560/560 pass** (54 files, 23s) — *pre-G4 baseline; G4/Phase 0.3 later added 13 founder-scoping tests → 573/573 across 62 files (see G4 RESOLVED below)* | `pnpm run test` |
 | Local build | Stops at env-validation prebuild gate only (`.env.local` unpopulated) — **not a code defect**; deploys fine on Vercel where env is set | build log: "missing CRITICAL or REQUIRED env vars" |
 | Founder sections | 26/27 wired to real founder-scoped APIs; loading/error near-complete | recon agent 1 (route-by-route table) |
 | Database | 35 migrations, 28 tables with `founder_id` RLS, **zero** `workspace_id`/`owner_id` query violations in `src/` | recon agent 3 |

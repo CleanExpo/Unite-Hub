@@ -70,4 +70,37 @@ describe('GET /api/video/[id]/status', () => {
     )
     expect(founderCalls.length).toBeGreaterThanOrEqual(2)
   })
+
+  it('founder-scopes the video_assets UPDATE on the failed path', async () => {
+    chain = makeChain([
+      {
+        data: {
+          id: 'vid-1',
+          status: 'generating',
+          external_job_id: 'job-1',
+          founder_id: 'user-123',
+        },
+        error: null,
+      },
+      { data: { id: 'vid-1', status: 'failed' }, error: null },
+    ])
+    vi.mocked(createServiceClient).mockReturnValue({ from: vi.fn(() => chain) } as never)
+    vi.mocked(getVideoStatus).mockResolvedValue({
+      status: 'failed',
+      error: 'Video generation failed on HeyGen',
+    } as never)
+
+    const request = new Request('http://localhost/api/video/vid-1/status')
+    const res = await GET(request, { params: Promise.resolve({ id: 'vid-1' }) })
+
+    expect(res.status).toBe(200)
+
+    // The founder_id filter must appear on both the fetch AND the failed-path update
+    expect(chain.eq).toHaveBeenCalledWith('founder_id', 'user-123')
+
+    const founderCalls = (chain.eq as ReturnType<typeof vi.fn>).mock.calls.filter(
+      (c) => c[0] === 'founder_id'
+    )
+    expect(founderCalls.length).toBeGreaterThanOrEqual(2)
+  })
 })
