@@ -53,13 +53,13 @@ All claims below were confirmed *this session*, not carried from prior ledgers.
 
 ## 3. Roadmap (sequenced) — recommended and locked unless redirected
 
-Rationale for order: **de-risk the foundation before building on it, then pull the biggest real-data lever, then close the last facade, then polish.** Activation-first was rejected (builds on an unconfirmed prod DB); approvals-first was rejected (lowest leverage — numbers stay mock).
+Rationale for order: **de-risk the foundation before building on it, then pull the biggest real-data lever, then close the last facade, then polish.** Activation-first was rejected (builds on an unconfirmed prod DB — now confirmed, so this risk is retired); approvals-first was rejected (lowest leverage — numbers stay mock).
 
-### Phase 0 — Integrity gates (high-certainty, hours)
-- **0.1** Confirm prod Supabase ref (G1) via `vercel env ls production`. Record result in PORTFOLIO/ledger.
-- **0.2** If prod ≠ sandbox: apply `20260324000001` + `20260530000000` to prod DB (with the file-header rollback). If prod == sandbox: mark migrations already-live.
-- **0.3** Fix G4 — add `.eq('founder_id', user.id)` to `boardroom/meetings/route.ts`.
-- **Acceptance:** prod ref recorded; prod `/api/dashboard/stats` + `/api/connected-projects` return 200 with real founder data; boardroom route founder-scoped; verify loop green.
+### Phase 0 — Integrity gates (mostly DONE this session)
+- **0.1** ✅ DONE — prod Supabase ref confirmed `lksfwktwtmyznckodsau` (prod == sandbox); recorded in ledger + memory. See G1.
+- **0.2** ✅ DONE (no action) — prod == sandbox, so `20260324000001` + `20260530000000` are already live in prod. No replay.
+- **0.3** TODO — Fix G4: add `.eq('founder_id', user.id)` to `boardroom/meetings/route.ts`. One-line defence-in-depth fix; the only remaining Phase 0 work.
+- **Acceptance:** prod ref recorded ✓; prod drift migrations confirmed live ✓; boardroom route founder-scoped (pending 0.3); verify loop green.
 
 ### Phase 1 — Real-data activation (the 100% lever)
 - **1.1** Build `/api/integrations/status` — single founder-scoped endpoint returning per-provider connection state (vault token count + env-key presence + last sync). Feeds a dashboard "Integrations" panel so connection state is visible at a glance.
