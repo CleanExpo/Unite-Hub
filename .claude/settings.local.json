@@ -50,7 +50,12 @@
       "mcp__Claude_in_Chrome__navigate",
       "mcp__Claude_in_Chrome__read_page",
       "mcp__Claude_in_Chrome__get_page_text",
-      "mcp__Claude_in_Chrome__find"
+      "mcp__Claude_in_Chrome__find",
+      "mcp__Claude_in_Chrome__javascript_tool",
+      "mcp__8777c965-460d-4500-92f4-872faed47b19__list_projects",
+      "mcp__8777c965-460d-4500-92f4-872faed47b19__execute_sql",
+      "mcp__8777c965-460d-4500-92f4-872faed47b19__apply_migration",
+      "mcp__Claude_in_Chrome__computer"
     ],
     "deny": [],
     "ask": []
