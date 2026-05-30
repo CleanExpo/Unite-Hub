@@ -34,7 +34,7 @@ export default async function DashboardPage() {
       <CoachBriefs />
       <ExperimentsDashboardWidget />
       <KPIGrid />
-      <IntegrationStatus />
+      <IntegrationStatus founderId={user.id} />
     </div>
   )
 }

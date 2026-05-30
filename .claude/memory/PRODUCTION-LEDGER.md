@@ -31,6 +31,17 @@ Production Vercel project `unite-hub` (`prj_y8hsRwhZHe6ewe6wCbwMbBYx20yp`, team 
 
 ---
 
+## Three sandbox CRM bugs — FIXED 2026-05-30 (root cause: LIVE DB schema drift, not code)
+Live sandbox DB (`lksfwktwtmyznckodsau`) was out of sync with repo migrations + generated `src/types/database.ts`. The deployed CODE was already correct for #1/#2 — the DATABASE was drifted/incomplete. All three verified via authenticated browser fetch (200) on `unite-hub-sandbox.vercel.app`.
+
+- **#1 (HIGH) dashboard "Failed to load hub status".** `/api/connected-projects` 500'd: `hub_satellites` table didn't exist on the live sandbox — its migration (`20260324000001_hub_satellites.sql`) was in the repo but never applied. **Fix:** applied that migration to the live DB (with DROP …IF EXISTS guards; committed file unchanged per "never modify applied migrations"). Live → 200 `{satellites:[]}`.
+- **#2 (MED) dashboard contact count 0 vs 1.** `/api/dashboard/stats` 500'd: live `approval_queue` carried the legacy `_archive/507` shape (`owner_id`/`workspace_id`) because its `CREATE TABLE IF NOT EXISTS` ran *before* the canonical `nexus_schema` def — first-to-run wins, so `founder_id` was missing. **Fix:** new additive migration `20260530000000_approval_queue_founder_id_align.sql` (table EMPTY → zero data loss) adds `founder_id` + canonical columns + founder_id RLS; legacy columns left nullable for trivial rollback (rollback in file header). Generated types already match canonical → no regen. Live → 200, contacts:1.
+- **#3 (MED) Xero "connected" vs "not configured" contradiction.** Three surfaces disagreed because `IntegrationStatus.tsx` used env-config (`isXeroConfigured()`) for the "Connected" label while `SetupChecklist` used real vault tokens. **Deeper truth surfaced:** `credentials_vault` HAS real tokens (dr=Disaster Recovery, carsi=CARSI; 6 google accounts) BUT `XERO_CLIENT_ID/SECRET` env vars are MISSING on the sandbox — a deployment-config gap, not a code bug. **Fix:** `IntegrationStatus.tsx` now async + founder-scoped, queries `credentials_vault` token counts, reports 3 honest states (Connected / Configured·not-connected / Not configured) — now agrees with the honest SetupChecklist signal. Did NOT rework the Xero page connect-gate (scope discipline). Gate: type-check ✓ / lint ✓. Visual confirmation requires deploy (local change not yet on live sandbox).
+
+**AMBER (deployment-config, carried):** sandbox is missing `XERO_CLIENT_ID/SECRET` while vault holds real Xero tokens — connect flow can't complete until the OAuth app env vars are set on the sandbox.
+
+---
+
 ## Section status map (from recon swarm, 2026-05-29)
 
 ### RED — CORRECTED 2026-05-29 (recon over-classified: it only read page.tsx, missed client-component fetches)
