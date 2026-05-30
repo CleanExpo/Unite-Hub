@@ -40,6 +40,11 @@ Live sandbox DB (`lksfwktwtmyznckodsau`) was out of sync with repo migrations + 
 
 **AMBER (deployment-config, carried):** sandbox is missing `XERO_CLIENT_ID/SECRET` while vault holds real Xero tokens — connect flow can't complete until the OAuth app env vars are set on the sandbox.
 
+### PR #64 MERGED 2026-05-30 + post-merge findings
+- **Merged** (squash `6e852ded`, linear history). Initial merge was `BLOCKED` by branch protection `required_conversation_resolution: true` + 2 unresolved CodeRabbit threads (NOT reviews — `required_approving_review_count: 0`). Both addressed in code, not dismissed: (a) `IntegrationStatus` now **throws** on a `credentials_vault` query error (caught by `(founder)/founder/dashboard/error.tsx`) instead of swallowing it into a false "Not configured" — a swallowed error showing a fake connection state is exactly Invader #1; (b) broad Chrome MCP perms (navigate/read_page/get_page_text/find/tabs_context/javascript_tool/computer) moved `allow`→`ask` for least-privilege. Threads resolved, CI re-passed (3 required green), merged.
+- **Vault claim VERIFIED** (was previously asserted, now proven via `execute_sql` on `lksfwktwtmyznckodsau`): `credentials_vault` holds **2 xero** rows (`carsi`, `dr`) + **6 google** rows, ALL owned by founder `c3f32c79-0d4a-4607-a906-ba8ca08e83b6`. So the dashboard Xero/Gmail dots read "Connected" ONLY when the logged-in session is that founder (component filters `.eq('founder_id', founderId)`).
+- **🔴 CRITICAL prod-config finding:** `vercel env pull --environment=production` on `unite-hub` returns **`NEXT_PUBLIC_SUPABASE_URL=""` (empty)**. Production has NO Supabase connection configured. Consequences: (1) the prod CRM cannot reach any DB — auth/data are non-functional past the static login shell; (2) the #1/#2 DB-drift migrations were applied to the **sandbox** DB (`lksfwktwtmyznckodsau`) only and **cannot be targeted at prod** until prod's Supabase URL+keys are set. This is a Phill/Board action — needs the real prod Supabase connection values (must not be fabricated) and is a HIGH-risk production-config change. The earlier "/shipit SHIPPED, prod live" claim is **functionally incomplete**: the deploy serves the login page but the DB tier is unconfigured.
+
 ---
 
 ## Section status map (from recon swarm, 2026-05-29)
