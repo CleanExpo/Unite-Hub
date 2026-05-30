@@ -48,7 +48,8 @@
       "mcp__2f101dc2-2ac2-4d93-9846-ffe27a392a3e__get_user",
       "mcp__8777c965-460d-4500-92f4-872faed47b19__list_projects",
       "mcp__8777c965-460d-4500-92f4-872faed47b19__execute_sql",
-      "mcp__8777c965-460d-4500-92f4-872faed47b19__apply_migration"
+      "mcp__8777c965-460d-4500-92f4-872faed47b19__apply_migration",
+      "mcp__8777c965-460d-4500-92f4-872faed47b19__list_migrations"
     ],
     "deny": [],
     "ask": [
