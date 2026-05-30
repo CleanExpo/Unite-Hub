@@ -21,6 +21,7 @@ export async function GET(request: Request) {
   let query = supabase
     .from('strategy_insights')
     .select('*')
+    .eq('founder_id', user.id)
     .order('created_at', { ascending: false })
 
   if (business) query = query.eq('business_key', business)
