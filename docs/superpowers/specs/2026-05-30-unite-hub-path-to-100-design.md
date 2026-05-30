@@ -26,10 +26,11 @@ All claims below were confirmed *this session*, not carried from prior ledgers.
 
 ## 2. Gap inventory (the only things between here and 100%)
 
-### G1 — prod-vs-sandbox Supabase identity UNCONFIRMED (operational integrity)
-- Sandbox ref: `lksfwktwtmyznckodsau` (known). Prod ref: **unconfirmed** from files.
-- If prod ≠ sandbox, the 30/05 drift-repair migrations (`20260324000001_hub_satellites.sql`, `20260530000000_approval_queue_founder_id_align.sql`) may **not be live in prod** → prod `/api/connected-projects` and `/api/dashboard/stats` could 500.
-- **Confirm:** `vercel env ls production` → read `NEXT_PUBLIC_SUPABASE_URL` ref; compare to sandbox. (`vercel env pull` is unreliable — renders all values empty; per project memory use `ls`.)
+### G1 — prod-vs-sandbox Supabase identity — RESOLVED 2026-05-30 (prod == sandbox)
+- **CONFIRMED: prod and sandbox share the same Supabase project `lksfwktwtmyznckodsau`** ("Unite-Group").
+- Evidence (this session): the live prod client bundle at `unite-hub-self.vercel.app` embeds `lksfwktwtmyznckodsau.supabase.co` (NEXT_PUBLIC_SUPABASE_URL is public, baked into client JS). `vercel env pull` returned `NEXT_PUBLIC_SUPABASE_URL=""` — re-confirming pull is an unreliable artifact; the bundle is authoritative.
+- Direct DB check on `lksfwktwtmyznckodsau`: `hub_satellites` table LIVE, `approval_queue.founder_id` column LIVE → **the 30/05 drift-repair migrations ARE live in prod.** No replay needed. The contrarian "prod ≠ sandbox, 30 missing migrations" risk branch is disproven.
+- **New observation (not a blocker):** that project reports **1,710 public tables** — far beyond this CRM's ~30. The Supabase project is shared/contaminated with other apps' tables. Flag for later hygiene; does not affect founder-scoped RLS correctness.
 
 ### G2 — Integrations 0/13 connected (the dominant "real data" lever)
 - Code present + vault-backed for: Xero, Gmail, Google Calendar, Google Drive, Linear, SendGrid, Facebook/Instagram, LinkedIn, TikTok, YouTube, Anthropic, Reddit, GitHub.
