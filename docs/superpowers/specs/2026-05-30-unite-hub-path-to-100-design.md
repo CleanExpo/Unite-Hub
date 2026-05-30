@@ -42,8 +42,10 @@ All claims below were confirmed *this session*, not carried from prior ledgers.
 - `ApprovalQueue.tsx` renders hardcoded empty state; **no `/api/approvals` route exists**.
 - `approval_queue` **table exists** (founder-scoped, RLS repaired 30/05) — what's missing is the route + UI wiring + a **product decision on what populates the queue** (likely pending AI actions from content-engine/social-publisher awaiting human sign-off). Do not build the schema blind.
 
-### G4 — Missing explicit founder scope — 8 violations across 7 routes (NOT one line)
-A full `src/app/api/**/route.ts` scan (this session) disproved the earlier "boardroom is the only unscoped route" claim. RLS backstops every one (tables carry founder_id policies), but all violate the defence-in-depth invariant in `src/app/api/CLAUDE.md` (application code is the first line, RLS the last).
+### G4 — Missing explicit founder scope — 8 violations across 7 routes — RESOLVED 2026-05-30
+**CLOSED.** All 8 violations fixed via TDD (plan `docs/superpowers/plans/2026-05-30-founder-scoping-phase0.md`, branch `feature/founder-scoping-phase0-3`): each got an explicit `.eq('founder_id', user.id)` in the query WHERE clause + a colocated unit test asserting the founder filter is applied. 573/573 tests pass; type-check + lint clean. Post-fix structural re-scan of boardroom/strategy/video routes confirms **zero VIOLATION-bucket routes remain** — every founder-partitioned `.from(...)` now chains `founder_id` (inserts write it in the payload).
+
+A full `src/app/api/**/route.ts` scan (this session) disproved the earlier "boardroom is the only unscoped route" claim. RLS backstops every one (tables carry founder_id policies), but all violated the defence-in-depth invariant in `src/app/api/CLAUDE.md` (application code is the first line, RLS the last).
 
 | Route | Table | Unscoped op(s) |
 |---|---|---|
@@ -60,6 +62,10 @@ Common pattern: query by `id` only, leaning on RLS. Boardroom module is 5/8. Eac
 
 **Separate flag (not in this count, larger question):** the scan also found **46 routes using the service-role client**. `rules/database/supabase.md` says founder_id must be written explicitly *even in service-role contexts* (service role bypasses RLS, so the app filter is the ONLY line there). Those 46 were not individually audited for explicit founder_id — that is a distinct audit, sized separately, not folded into G4's 8.
 
+**Follow-ups surfaced by the G4 close-out re-scan (2026-05-30) — logged, NOT fixed in 0.3 (no scope-creep):**
+- `video/generate/route.ts` (service-role client) — two `video_assets` `.update(...)` chains (L171 generating-path, L187 failed-path) filter by `.eq('id', videoAsset.id)` only, no `founder_id`. Lower risk than the status route: the id is freshly INSERTed by the same request with `founder_id: user.id` (founder-owned, not URL-supplied). Still violates the service-role defence-in-depth invariant. → belongs to **Phase 0.4** (service-role audit).
+- `board_meeting_notes` and `strategy_insight_comments` routes — these child tables have **no `founder_id` column** (confirmed via live schema on `lksfwktwtmyznckodsau`); they key off the parent (`meeting_id` / `insight_id`) only. Not a G4 violation (no column to scope by). Distinct hardening item: the notes/comments GET+POST don't verify the **parent** meeting/insight belongs to the founder before reading/writing children → transitive parent-ownership check. → separate follow-up, not G4, not 0.4.
+
 ### G5 — Design-standard debt (non-functional)
 - ~30–41 component files still `import ... from 'lucide-react'` (rule: custom SVG only). Renders fine; cosmetic.
 - Also: axios transitive 1.13.6→1.16.1 via `pnpm overrides`; `/api/analytics` lacks `last_synced_at`.
@@ -73,9 +79,9 @@ Rationale for order: **de-risk the foundation before building on it, then pull t
 ### Phase 0 — Integrity gates
 - **0.1** ✅ DONE — prod Supabase ref confirmed `lksfwktwtmyznckodsau` (prod == sandbox); recorded in ledger + memory. See G1.
 - **0.2** ✅ DONE (no action) — migration history confirms `approval_queue_founder_id_align` + `hub_satellites` applied in prod. No replay.
-- **0.3** TODO — Fix G4: the **8 founder-scoping violations across 7 routes** (boardroom ×5, strategy ×2, video ×1). Per-query `.eq('founder_id', user.id)`; on `[id]` mutation routes, scope the mutation filter not just a post-fetch check. Re-run the route scan after to confirm zero VIOLATION-bucket routes remain.
-- **0.4** TODO (flagged, sized separately) — audit the 46 service-role routes for explicit founder_id (service role bypasses RLS → app filter is the only line). NOT a Phase-0 blocker for Phase 1; can run in parallel or defer, but must close before "100%".
-- **Acceptance:** prod ref recorded ✓; drift migrations confirmed applied-as-migrations ✓; route scan returns 0 VIOLATION routes (0.3); verify loop green. (0.4 tracked, not gating Phase 1.)
+- **0.3** ✅ DONE 2026-05-30 — Fixed G4: the **8 founder-scoping violations across 7 routes** (boardroom ×5, strategy ×2, video ×1) via TDD on branch `feature/founder-scoping-phase0-3`. Each got `.eq('founder_id', user.id)` in the query WHERE clause + a unit test. Post-fix re-scan: 0 VIOLATION-bucket routes remain. 573/573 tests pass; type-check + lint clean. See G4 (RESOLVED) for follow-ups logged to 0.4.
+- **0.4** TODO (flagged, sized separately) — audit the 46 service-role routes for explicit founder_id (service role bypasses RLS → app filter is the only line). Known member: `video/generate/route.ts` (two `video_assets` updates, see G4 follow-ups). NOT a Phase-0 blocker for Phase 1; can run in parallel or defer, but must close before "100%".
+- **Acceptance:** prod ref recorded ✓; drift migrations confirmed applied-as-migrations ✓; route scan returns 0 VIOLATION routes (0.3) ✓; verify loop green ✓. (0.4 tracked, not gating Phase 1.)
 
 ### Phase 1 — Real-data activation (the 100% lever)
 - **1.1** Build `/api/integrations/status` — single founder-scoped endpoint returning per-provider connection state (vault token count + env-key presence + last sync). Feeds a dashboard "Integrations" panel so connection state is visible at a glance.
