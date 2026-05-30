@@ -29,7 +29,7 @@ All claims below were confirmed *this session*, not carried from prior ledgers.
 ### G1 — prod-vs-sandbox Supabase identity — RESOLVED 2026-05-30 (prod == sandbox)
 - **CONFIRMED: prod and sandbox share the same Supabase project `lksfwktwtmyznckodsau`** ("Unite-Group").
 - Evidence (this session): the live prod client bundle at `unite-hub-self.vercel.app` embeds `lksfwktwtmyznckodsau.supabase.co` (NEXT_PUBLIC_SUPABASE_URL is public, baked into client JS). `vercel env pull` returned `NEXT_PUBLIC_SUPABASE_URL=""` — re-confirming pull is an unreliable artifact; the bundle is authoritative.
-- Direct DB check on `lksfwktwtmyznckodsau`: `hub_satellites` table LIVE, `approval_queue.founder_id` column LIVE → **the 30/05 drift-repair migrations ARE live in prod.** No replay needed. The contrarian "prod ≠ sandbox, 30 missing migrations" risk branch is disproven.
+- **Migration-history proof (not mere table existence):** `list_migrations` on `lksfwktwtmyznckodsau` returns `20260530065857 approval_queue_founder_id_align` and `20260530070116 hub_satellites` in the applied `schema_migrations` history → **the 30/05 drift-repair migrations ARE applied-as-migrations in prod**, not just objects that happen to exist. No replay needed. The contrarian "prod ≠ sandbox, missing migrations" risk branch is disproven. (Note: the repo file `20260324000001_hub_satellites.sql` was applied under regenerated version `20260530070116` — content live, version differs.)
 - **New observation (not a blocker):** that project reports **1,710 public tables** — far beyond this CRM's ~30. The Supabase project is shared/contaminated with other apps' tables. Flag for later hygiene; does not affect founder-scoped RLS correctness.
 
 ### G2 — Integrations 0/13 connected (the dominant "real data" lever)
@@ -42,8 +42,23 @@ All claims below were confirmed *this session*, not carried from prior ledgers.
 - `ApprovalQueue.tsx` renders hardcoded empty state; **no `/api/approvals` route exists**.
 - `approval_queue` **table exists** (founder-scoped, RLS repaired 30/05) — what's missing is the route + UI wiring + a **product decision on what populates the queue** (likely pending AI actions from content-engine/social-publisher awaiting human sign-off). Do not build the schema blind.
 
-### G4 — `/api/boardroom/meetings` missing explicit founder scope
-- `boardroom/meetings/route.ts:18-26` queries `board_meetings` with no `.eq('founder_id', user.id)`. RLS covers it (table has founder_id SELECT policy), but it violates the defence-in-depth invariant in `src/app/api/CLAUDE.md`. One-line fix.
+### G4 — Missing explicit founder scope — 8 violations across 7 routes (NOT one line)
+A full `src/app/api/**/route.ts` scan (this session) disproved the earlier "boardroom is the only unscoped route" claim. RLS backstops every one (tables carry founder_id policies), but all violate the defence-in-depth invariant in `src/app/api/CLAUDE.md` (application code is the first line, RLS the last).
+
+| Route | Table | Unscoped op(s) |
+|---|---|---|
+| `boardroom/meetings/route.ts` | `board_meetings` | GET (~L19) |
+| `boardroom/meetings/[id]/route.ts` | `board_meetings` | GET (~L21), PATCH (~L45) |
+| `boardroom/team/route.ts` | `team_members` | GET (~L16, only `.eq('active',true)`) |
+| `boardroom/team/[id]/route.ts` | `team_members` | PATCH (~L19), DELETE (~L38) |
+| `boardroom/decisions/[id]/route.ts` | `ceo_decisions` | PATCH (~L33), DELETE (~L52) |
+| `strategy/insights/route.ts` | `strategy_insights` | GET (~L22) |
+| `strategy/insights/[id]/route.ts` | `strategy_insights` | PATCH (~L23) |
+| `video/[id]/status/route.ts` | `video_assets` | UPDATE (~L43) |
+
+Common pattern: query by `id` only, leaning on RLS. Boardroom module is 5/8. Each is a per-query `.eq('founder_id', user.id)` add (or, on `[id]` mutation routes, scope the filter so a cross-founder id can't be mutated even if RLS policy drifts).
+
+**Separate flag (not in this count, larger question):** the scan also found **46 routes using the service-role client**. `rules/database/supabase.md` says founder_id must be written explicitly *even in service-role contexts* (service role bypasses RLS, so the app filter is the ONLY line there). Those 46 were not individually audited for explicit founder_id — that is a distinct audit, sized separately, not folded into G4's 8.
 
 ### G5 — Design-standard debt (non-functional)
 - ~30–41 component files still `import ... from 'lucide-react'` (rule: custom SVG only). Renders fine; cosmetic.
@@ -55,11 +70,12 @@ All claims below were confirmed *this session*, not carried from prior ledgers.
 
 Rationale for order: **de-risk the foundation before building on it, then pull the biggest real-data lever, then close the last facade, then polish.** Activation-first was rejected (builds on an unconfirmed prod DB — now confirmed, so this risk is retired); approvals-first was rejected (lowest leverage — numbers stay mock).
 
-### Phase 0 — Integrity gates (mostly DONE this session)
+### Phase 0 — Integrity gates
 - **0.1** ✅ DONE — prod Supabase ref confirmed `lksfwktwtmyznckodsau` (prod == sandbox); recorded in ledger + memory. See G1.
-- **0.2** ✅ DONE (no action) — prod == sandbox, so `20260324000001` + `20260530000000` are already live in prod. No replay.
-- **0.3** TODO — Fix G4: add `.eq('founder_id', user.id)` to `boardroom/meetings/route.ts`. One-line defence-in-depth fix; the only remaining Phase 0 work.
-- **Acceptance:** prod ref recorded ✓; prod drift migrations confirmed live ✓; boardroom route founder-scoped (pending 0.3); verify loop green.
+- **0.2** ✅ DONE (no action) — migration history confirms `approval_queue_founder_id_align` + `hub_satellites` applied in prod. No replay.
+- **0.3** TODO — Fix G4: the **8 founder-scoping violations across 7 routes** (boardroom ×5, strategy ×2, video ×1). Per-query `.eq('founder_id', user.id)`; on `[id]` mutation routes, scope the mutation filter not just a post-fetch check. Re-run the route scan after to confirm zero VIOLATION-bucket routes remain.
+- **0.4** TODO (flagged, sized separately) — audit the 46 service-role routes for explicit founder_id (service role bypasses RLS → app filter is the only line). NOT a Phase-0 blocker for Phase 1; can run in parallel or defer, but must close before "100%".
+- **Acceptance:** prod ref recorded ✓; drift migrations confirmed applied-as-migrations ✓; route scan returns 0 VIOLATION routes (0.3); verify loop green. (0.4 tracked, not gating Phase 1.)
 
 ### Phase 1 — Real-data activation (the 100% lever)
 - **1.1** Build `/api/integrations/status` — single founder-scoped endpoint returning per-provider connection state (vault token count + env-key presence + last sync). Feeds a dashboard "Integrations" panel so connection state is visible at a glance.
