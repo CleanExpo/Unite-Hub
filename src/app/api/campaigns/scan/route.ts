@@ -109,6 +109,7 @@ export async function POST(request: Request) {
         scan_error: null,
       })
       .eq('id', profileId)
+      .eq('founder_id', user.id)
 
     return NextResponse.json({
       profileId,
@@ -130,6 +131,7 @@ export async function POST(request: Request) {
       .from('brand_profiles')
       .update({ status: 'failed', scan_error: message })
       .eq('id', profileId)
+      .eq('founder_id', user.id)
 
     return NextResponse.json(
       { id: profileId, status: 'failed', error: message },
