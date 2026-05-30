@@ -23,33 +23,38 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Single Next.js app at the repo root — scans the root package.json.
-    # Only runs when a real SNYK_TOKEN secret is configured; otherwise it is
-    # skipped honestly rather than gated on an unset variable.
-    if: ${{ secrets.SNYK_TOKEN != '' }}
+    # The `secrets` context cannot be used in a job-level `if`, so the token is
+    # exposed as a job env var and the Snyk-specific steps are gated on it. When
+    # SNYK_TOKEN is unset the scan steps skip honestly (the job still reports).
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
       - name: Checkout code
+        if: env.SNYK_TOKEN != ''
         uses: actions/checkout@v6
 
       - name: Setup Node.js
+        if: env.SNYK_TOKEN != ''
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Enable pnpm
+        if: env.SNYK_TOKEN != ''
         run: corepack enable && corepack prepare pnpm@9.15.0 --activate
 
       - name: Install dependencies
+        if: env.SNYK_TOKEN != ''
         run: pnpm install --frozen-lockfile
 
       - name: Run Snyk to check for vulnerabilities
+        if: env.SNYK_TOKEN != ''
         uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high --file=package.json
 
       - name: Upload Snyk report
-        if: always()
+        if: env.SNYK_TOKEN != '' && always()
         uses: actions/upload-artifact@v7
         with:
           name: snyk-report
