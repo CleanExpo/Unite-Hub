@@ -1,8 +1,8 @@
 # Current State
-> Updated by PreCompact hook. Session: bc7a67e7
+> Updated by PreCompact hook. Session: dcdeb812
 
 ## Active Task
-Compaction triggered — context was saved at 31/05/2026 19:55 AEST.
+Compaction triggered — context was saved at 31/05/2026 21:21 AEST.
 Re-read CONSTITUTION.md if rules feel unclear after compaction.
 
 ## Recent Architectural Choices
@@ -15,4 +15,4 @@ Check recent git status: `git status` and `git log --oneline -5`
 Re-read .claude/memory/CONSTITUTION.md to restore rule context.
 
 ## Last Updated
-31/05/2026 19:55 AEST (PreCompact hook)
+31/05/2026 21:21 AEST (PreCompact hook)

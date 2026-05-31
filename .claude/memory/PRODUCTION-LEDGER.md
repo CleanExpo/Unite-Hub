@@ -49,6 +49,45 @@ Live sandbox DB (`lksfwktwtmyznckodsau`) was out of sync with repo migrations + 
 
 ---
 
+## Integration connection board — HONEST SNAPSHOT 2026-05-31 (CEO "100% setup" mission)
+> Verified live against prod==sandbox Supabase `lksfwktwtmyznckodsau` (founder `c3f32c79-0d4a-4607-a906-ba8ca08e83b6`) + `vercel env ls production`. This is the ground truth for the "one CEO login → all integrations connected" north-star.
+
+**What's actually connected right now (real founder-scoped tokens / env):**
+| Provider | Source | Connected? | Evidence |
+|----------|--------|-----------|----------|
+| Gmail / Google Calendar / Google Drive / YouTube | vault `google` | ✅ token present (×6 accounts) | `credentials_vault` google n=6; prod env `GOOGLE_CLIENT_ID/SECRET` set |
+| Xero | vault `xero` | ✅ token present (×2: carsi, dr) | `credentials_vault` xero n=2; ⚠️ but `XERO_CLIENT_ID/SECRET` **NOT set in prod env** → connect/refresh can't complete |
+| IMAP email | vault `imap` | ✅ token present (×2) | `credentials_vault` imap n=2 (no env keys required) |
+| Facebook / Instagram / LinkedIn / TikTok | social_channels | ❌ 0 connected | zero `social_channels` rows for founder + app keys unset in prod |
+| Linear | env `LINEAR_API_KEY` | ❌ not configured | env key absent in prod; MCP session also `auth_revoked` |
+| SendGrid | env `SENDGRID_API_KEY` | ❌ not configured | env key absent in prod |
+| Reddit | env `REDDIT_CLIENT_ID/SECRET` | ❌ not configured | env keys absent in prod |
+| GitHub | env `GITHUB_TOKEN` | ❌ not configured | env key absent in prod |
+
+**Score: 3 of 14 provider rows connected** (google-family ride one token; xero token present but env-incomplete; imap). 0 social, 0 env-only providers.
+
+### PR #70 — integrations/status route schema-drift fix (the route that powers this board)
+`src/app/api/integrations/status/route.ts` (Phase 1.1) was **500ing against the live DB**: it queried `social_channels.is_connected` / `last_synced_at` / `.eq('founder_id', …)`, but the live legacy table uses `connected` / `last_post_at` / `owner_id`. Fixed the query + type cast + filter to match live schema. Verified: type-check ✓, lint ✓, corrected query proven against live DB (build blocked only by pre-existing local env-validation, not this change). Branch `fix/integrations-status-social-schema`, PR https://github.com/CleanExpo/Unite-Hub/pull/70.
+
+**AMBER (data-model, carried):** `social_channels` is single-tenant via legacy `owner_id` (holds the founder uuid), not `founder_id` like every other table. NOT blind-migrated — the table may be shared across products (same DB hosts 1,710 tables / multiple apps). Founder-scope decision deferred; the route honestly scopes by `owner_id` for now.
+
+### Path to 100% — sequenced, split by what unblocks each (be-true: no fabricated creds, no scripted OAuth)
+**Tier A — Phill supplies SECRET VALUES (env vars; I cannot fabricate credentials):**
+1. `XERO_CLIENT_ID` + `XERO_CLIENT_SECRET` on prod — vault already holds Xero tokens, so this *completes* an already-started connection (highest leverage).
+2. `LINEAR_API_KEY` on prod — single global key, no OAuth needed; unblocks Kanban/issue sync.
+3. `SENDGRID_API_KEY` on prod — unblocks transactional email send path.
+4. Social app credentials: `FACEBOOK_APP_ID/SECRET`, `LINKEDIN_CLIENT_ID/SECRET`, `TIKTOK_CLIENT_KEY/SECRET`, `REDDIT_CLIENT_ID/SECRET`, `GITHUB_TOKEN`.
+
+**Tier B — Phill performs a ONE-TIME authorise click (OAuth consent can't be scripted):**
+5. Facebook / Instagram / LinkedIn / TikTok — after Tier A app keys are set, each needs one consent click to write a `social_channels` row (`connected=true`).
+6. Linear MCP connector — re-authenticate (`auth_revoked`) so goals/issues sync.
+
+**Tier C — already done / no action:** Google-family (Gmail/Calendar/Drive/YouTube) and IMAP are connected; nothing required.
+
+> Honest framing for the CEO: "100% setup" = Tier A (you paste ~10 secret values into Vercel env) + Tier B (you click authorise ~5 times). Everything code-side that doesn't need a human secret/consent is GREEN. I will never claim auto-login — OAuth consent is a human step by design.
+
+---
+
 ## Section status map (from recon swarm, 2026-05-29)
 
 ### RED — CORRECTED 2026-05-29 (recon over-classified: it only read page.tsx, missed client-component fetches)
