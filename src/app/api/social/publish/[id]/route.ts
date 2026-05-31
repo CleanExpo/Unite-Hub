@@ -30,7 +30,7 @@ export async function POST(
     return NextResponse.json({ error: 'Post is not in a publishable state' }, { status: 400 })
   }
 
-  await supabase.from('social_posts').update({ status: 'publishing' }).eq('id', id)
+  await supabase.from('social_posts').update({ status: 'publishing' }).eq('id', id).eq('founder_id', user.id)
 
   const platformPostIds: Record<string, string> = {}
   const errors: string[] = []
@@ -74,7 +74,7 @@ export async function POST(
     published_at: allFailed ? null : new Date().toISOString(),
     platform_post_ids: { ...(post.platform_post_ids ?? {}), ...platformPostIds },
     error_message: errors.length ? errors.join('; ') : null,
-  }).eq('id', id)
+  }).eq('id', id).eq('founder_id', user.id)
 
   return NextResponse.json({
     status,

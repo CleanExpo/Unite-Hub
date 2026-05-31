@@ -101,6 +101,7 @@ export async function POST(
       .from('campaign_assets')
       .update({ social_post_id: post.id, status: 'published' })
       .in('id', platformAssets.map(a => a['id'] as string))
+      .eq('founder_id', user.id)
   }
 
   // Update campaign status
@@ -109,6 +110,7 @@ export async function POST(
       .from('campaigns')
       .update({ status: 'published' })
       .eq('id', id)
+      .eq('founder_id', user.id)
   }
 
   return NextResponse.json({ postsCreated, postIds })
