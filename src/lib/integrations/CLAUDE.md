@@ -23,7 +23,11 @@ for per-business OAuth tokens.
    silent mock revenue is the single worst failure mode in this codebase — fail loud, not fake.
 2. **Founder/business scoping.** Credential lookups are keyed by `(founderId, businessKey)`.
    Business keys: `dr, nrpg, carsi, restore, synthex, ato, ccw` (see `src/lib/businesses.ts`).
-   Xero is connected for `dr, nrpg, carsi, restore, synthex, ccw` (not `ato`).
+   Xero token state (verified live 31/05/2026, `credentials_vault`): tokens stored ONLY for
+   `dr` + `carsi`. No tokens for `nrpg, restore, synthex, ccw, ato`. Note: even the two stored
+   tokens return `source: 'mock'` until the Xero client secrets are set in env —
+   `isXeroConfigured()` is false in prod (only `GOOGLE_CLIENT_*` set). Activation needs
+   `XERO_CLIENT_ID/SECRET` (carsi, restore, synthex, ccw) + `DR_CLIENT_ID/SECRET` (dr, nrpg).
 3. **Graceful degradation.** A missing/expired integration must not crash a request.
    Catch, return an empty/`mock`-flagged result, and let the caller decide. CI builds run
    with placeholder keys — integrations must boot without real credentials.
