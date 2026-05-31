@@ -45,6 +45,7 @@ export async function POST(
     .from('email_campaigns')
     .update({ status: 'sending' })
     .eq('id', id)
+    .eq('founder_id', user.id)
 
   if (updateError) {
     console.error('[email/campaigns/send] Status update failed:', updateError.message)
@@ -58,7 +59,7 @@ export async function POST(
 
   if (recipients.length === 0) {
     // Revert status
-    await supabase.from('email_campaigns').update({ status: 'draft' }).eq('id', id)
+    await supabase.from('email_campaigns').update({ status: 'draft' }).eq('id', id).eq('founder_id', user.id)
     return NextResponse.json({ error: 'Campaign has no recipients' }, { status: 400 })
   }
 
@@ -97,6 +98,7 @@ export async function POST(
         failed_count: result.failed,
       })
       .eq('id', id)
+      .eq('founder_id', user.id)
 
     return NextResponse.json({
       status: finalStatus,
@@ -108,7 +110,7 @@ export async function POST(
     console.error('[email/campaigns/send] SendGrid error:', message)
 
     // Revert status to draft so it can be retried
-    await supabase.from('email_campaigns').update({ status: 'draft' }).eq('id', id)
+    await supabase.from('email_campaigns').update({ status: 'draft' }).eq('id', id).eq('founder_id', user.id)
 
     return NextResponse.json({ error: 'Failed to send campaign', detail: message }, { status: 500 })
   }

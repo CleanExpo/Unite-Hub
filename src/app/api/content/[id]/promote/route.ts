@@ -72,6 +72,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     .from('generated_content')
     .update({ social_post_id: post.id, status: 'approved' })
     .eq('id', id)
+    .eq('founder_id', user.id)
 
   return NextResponse.json({
     status: 'promoted',

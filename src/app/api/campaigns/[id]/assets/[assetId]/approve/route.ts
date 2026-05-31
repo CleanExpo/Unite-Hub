@@ -41,6 +41,7 @@ export async function POST(
     .from('campaign_assets')
     .update({ status: 'ready', quality_status: 'approved' })
     .eq('id', assetId)
+    .eq('founder_id', user.id)
 
   if (updateError) {
     return NextResponse.json({ error: 'Failed to approve asset' }, { status: 500 })

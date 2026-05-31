@@ -71,6 +71,7 @@ export async function POST(
     .from('campaign_assets')
     .update({ status: 'generating_image' })
     .eq('id', assetId)
+    .eq('founder_id', user.id)
 
   // Generate new image via dual-engine router
   const result = await generateCampaignImage(
@@ -122,6 +123,7 @@ export async function POST(
       quality_status: result.qualityStatus,
     })
     .eq('id', assetId)
+    .eq('founder_id', user.id)
 
   return NextResponse.json({
     success: true,
