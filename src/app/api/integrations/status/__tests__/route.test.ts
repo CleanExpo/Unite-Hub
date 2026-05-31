@@ -63,17 +63,18 @@ describe('GET /api/integrations/status', () => {
 
     const { client, eqCalls } = makeSupabase(
       [{ service: 'xero', created_at: '2026-05-01T00:00:00Z', updated_at: '2026-05-02T00:00:00Z', last_accessed_at: null }],
-      [{ platform: 'linkedin', is_connected: true, last_synced_at: '2026-05-03T00:00:00Z', updated_at: '2026-05-03T00:00:00Z' }]
+      // social_channels is single-tenant via legacy `owner_id`; columns are `connected` / `last_post_at`
+      [{ platform: 'linkedin', connected: true, last_post_at: '2026-05-03T00:00:00Z', updated_at: '2026-05-03T00:00:00Z' }]
     )
     vi.mocked(createClient).mockResolvedValue(client)
 
     const res = await GET()
     expect(res.status).toBe(200)
 
-    // both reads founder-scoped
+    // vault scoped by founder_id; social_channels scoped by legacy owner_id (holds the founder uuid)
     expect(eqCalls).toEqual([
       ['founder_id', 'user-123'],
-      ['founder_id', 'user-123'],
+      ['owner_id', 'user-123'],
     ])
 
     const body = await res.json()
