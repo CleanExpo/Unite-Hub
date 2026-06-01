@@ -26,6 +26,7 @@ const BREADCRUMB_MAP: Record<string, string> = {
   '/founder/email':       'Email',
   '/founder/calendar':    'Calendar',
   '/founder/skills':      'Skills',
+  '/founder/pi':          'Pi Command Cockpit',
   '/founder/settings':    'Settings',
 }
 
@@ -47,6 +48,7 @@ export function Topbar() {
   const toggleCapture = useUIStore((s) => s.toggleCapture)
   const toggleCommandBar = useUIStore((s) => s.toggleCommandBar)
   const breadcrumb = getBreadcrumb(pathname)
+  const showPiEvidencePosture = pathname === '/founder/pi'
 
   return (
     <header
@@ -70,6 +72,24 @@ export function Topbar() {
       >
         {breadcrumb}
       </span>
+
+      {showPiEvidencePosture && (
+        <div className="hidden lg:flex items-center gap-1.5" aria-label="Pi cockpit evidence posture">
+          {['3-loop gate active', 'Linear evidence', 'Build logs watched'].map((label) => (
+            <span
+              key={label}
+              className="rounded-sm border px-2 py-1 text-[10px] font-medium uppercase tracking-[0.16em]"
+              style={{
+                borderColor: 'var(--color-border)',
+                background: 'var(--surface-card)',
+                color: 'var(--color-text-muted)',
+              }}
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Right actions */}
       <div className="ml-auto flex items-center gap-3">
