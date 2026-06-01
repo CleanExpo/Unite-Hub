@@ -4,7 +4,10 @@ import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-const execFileAsync = promisify(execFile)
+type ExecFileAsync = (file: string, args: string[], options: { timeout: number; windowsHide: boolean }) => Promise<{ stdout: string; stderr?: string }>
+
+const defaultExecFileAsync = promisify(execFile) as ExecFileAsync
+let execFileAsync: ExecFileAsync = defaultExecFileAsync
 
 const STATUS_SYMBOLS: Record<string, string> = {
   '✓': 'done',
@@ -15,11 +18,23 @@ const STATUS_SYMBOLS: Record<string, string> = {
   '◌': 'scheduled',
 }
 
+const TASK_ID_PATTERN = /^t_[a-z0-9]+$/i
+const SAFE_TEXT_LIMIT = 2_000
+
 interface HermesKanbanTask {
   id: string
   status: string
   assignee: string | null
   title: string
+}
+
+type HermesActionPayload = {
+  action?: string
+  taskId?: string
+  title?: string
+  body?: string
+  note?: string
+  assignee?: string
 }
 
 function parseTaskLine(line: string): HermesKanbanTask | null {
@@ -49,26 +64,98 @@ function summarise(tasks: HermesKanbanTask[]) {
   }, {})
 }
 
+function safeText(value: unknown, field: string, required: true): string
+function safeText(value: unknown, field: string, required?: false): string | undefined
+function safeText(value: unknown, field: string, required = false) {
+  if (typeof value !== 'string') {
+    if (required) throw new Error(`${field} is required`)
+    return undefined
+  }
+  const trimmed = value.trim()
+  if (!trimmed) {
+    if (required) throw new Error(`${field} is required`)
+    return undefined
+  }
+  if (trimmed.length > SAFE_TEXT_LIMIT) throw new Error(`${field} is too long`)
+  return trimmed
+}
+
+function safeTaskId(value: unknown) {
+  const taskId = safeText(value, 'taskId', true)
+  if (!TASK_ID_PATTERN.test(taskId)) throw new Error('valid taskId is required')
+  return taskId
+}
+
+function buildHermesActionCommand(payload: HermesActionPayload) {
+  const action = safeText(payload.action, 'action', true)
+
+  if (action === 'create') {
+    const title = safeText(payload.title, 'title', true)
+    const args: string[] = ['kanban', 'create', title]
+    const body = safeText(payload.body, 'body')
+    const assignee = safeText(payload.assignee, 'assignee')
+    if (body) args.push('--body', body)
+    if (assignee) args.push('--assignee', assignee)
+    args.push('--created-by', 'unite-hub', '--json')
+    return args
+  }
+
+  if (action === 'complete') {
+    const taskId = safeTaskId(payload.taskId)
+    const args: string[] = ['kanban', 'complete', taskId]
+    const note = safeText(payload.note, 'note')
+    if (note) args.push('--result', note)
+    return args
+  }
+
+  if (action === 'block') {
+    const taskId = safeTaskId(payload.taskId)
+    const args: string[] = ['kanban', 'block', taskId]
+    const note = safeText(payload.note, 'note')
+    if (note) args.push(note)
+    return args
+  }
+
+  if (action === 'unblock') {
+    return ['kanban', 'unblock', safeTaskId(payload.taskId)]
+  }
+
+  if (action === 'promote') {
+    return ['kanban', 'promote', safeTaskId(payload.taskId)]
+  }
+
+  if (action === 'comment') {
+    const note = safeText(payload.note, 'note', true)
+    return ['kanban', 'comment', '--author', 'unite-hub', safeTaskId(payload.taskId), note]
+  }
+
+  throw new Error('unsupported action')
+}
+
+async function readHermesBoard() {
+  const [{ stdout: boardsStdout }, { stdout: listStdout }] = await Promise.all([
+    execFileAsync('hermes', ['kanban', 'boards', 'list'], { timeout: 15_000, windowsHide: true }),
+    execFileAsync('hermes', ['kanban', 'list'], { timeout: 15_000, windowsHide: true }),
+  ])
+
+  const tasks = listStdout
+    .split(/\r?\n/)
+    .map(parseTaskLine)
+    .filter((task): task is HermesKanbanTask => Boolean(task))
+
+  return {
+    source: 'hermes-kanban',
+    configured: true,
+    board: boardsStdout.includes('Current board:') ? boardsStdout.match(/Current board:\s*(\S+)/)?.[1] ?? 'default' : 'default',
+    summary: summarise(tasks),
+    tasks,
+    lastSyncedAt: new Date().toISOString(),
+  }
+}
+
 export async function GET() {
   try {
-    const [{ stdout: boardsStdout }, { stdout: listStdout }] = await Promise.all([
-      execFileAsync('hermes', ['kanban', 'boards', 'list'], { timeout: 15_000, windowsHide: true }),
-      execFileAsync('hermes', ['kanban', 'list'], { timeout: 15_000, windowsHide: true }),
-    ])
-
-    const tasks = listStdout
-      .split(/\r?\n/)
-      .map(parseTaskLine)
-      .filter((task): task is HermesKanbanTask => Boolean(task))
-
-    return NextResponse.json({
-      source: 'hermes-kanban',
-      configured: true,
-      board: boardsStdout.includes('Current board:') ? boardsStdout.match(/Current board:\s*(\S+)/)?.[1] ?? 'default' : 'default',
-      summary: summarise(tasks),
-      tasks,
-      lastSyncedAt: new Date().toISOString(),
-    })
+    return NextResponse.json(await readHermesBoard())
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown Hermes Kanban error'
     return NextResponse.json(
@@ -85,4 +172,26 @@ export async function GET() {
   }
 }
 
-export const __test__ = { parseTaskLine, summarise }
+export async function POST(request: Request) {
+  try {
+    const payload = await request.json() as HermesActionPayload
+    const action = safeText(payload.action, 'action', true)
+    const args = buildHermesActionCommand(payload)
+    const { stdout, stderr } = await execFileAsync('hermes', args, { timeout: 20_000, windowsHide: true })
+    return NextResponse.json({
+      source: 'hermes-kanban',
+      action,
+      receipt: { command: ['hermes', ...args], stdout: stdout.trim(), stderr: stderr?.trim() ?? '' },
+      board: await readHermesBoard(),
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown Hermes Kanban action error'
+    return NextResponse.json({ source: 'hermes-kanban', configured: false, error: message }, { status: 400 })
+  }
+}
+
+function setExecFileForTest(mock: ExecFileAsync) {
+  execFileAsync = mock
+}
+
+export const __test__ = { parseTaskLine, summarise, buildHermesActionCommand, setExecFileForTest }

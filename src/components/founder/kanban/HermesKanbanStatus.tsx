@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 
 type HermesTask = {
   id: string
@@ -18,12 +18,22 @@ type HermesKanbanResponse = {
   error?: string
 }
 
+type HermesActionResponse = {
+  action: string
+  board?: HermesKanbanResponse
+  error?: string
+}
+
 const STATUS_ORDER = ['ready', 'running', 'blocked', 'todo', 'scheduled', 'done']
 
 export function HermesKanbanStatus() {
   const [data, setData] = useState<HermesKanbanResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [stale, setStale] = useState(false)
+  const [title, setTitle] = useState('')
+  const [body, setBody] = useState('')
+  const [actionStatus, setActionStatus] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const loadHermesBoard = useCallback(async () => {
     try {
@@ -43,6 +53,42 @@ export function HermesKanbanStatus() {
     const interval = setInterval(loadHermesBoard, 60_000)
     return () => clearInterval(interval)
   }, [loadHermesBoard])
+
+  async function postHermesAction(payload: Record<string, string>) {
+    setSubmitting(true)
+    setActionStatus(null)
+    try {
+      const response = await fetch('/api/hermes/kanban', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const result = await response.json() as HermesActionResponse
+      if (!response.ok) throw new Error(result.error ?? 'Hermes action failed')
+      if (result.board) {
+        setData(result.board)
+        setStale(!result.board.configured)
+      }
+      setActionStatus(`Action recorded: ${result.action}`)
+      return result
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Hermes action failed'
+      setActionStatus(`Action failed: ${message}`)
+      return null
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function createTask(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!title.trim()) return
+    const result = await postHermesAction({ action: 'create', title: title.trim(), body: body.trim(), assignee: 'default' })
+    if (result) {
+      setTitle('')
+      setBody('')
+    }
+  }
 
   if (loading) {
     return (
@@ -85,6 +131,26 @@ export function HermesKanbanStatus() {
         </div>
       </div>
 
+      <form onSubmit={createTask} className="mt-4 grid gap-2 rounded-sm border p-3 lg:grid-cols-[1fr_1.5fr_auto]" style={{ borderColor: 'var(--color-border)', background: 'var(--surface-canvas)' }}>
+        <label className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+          Hermes task title
+          <input value={title} onChange={(event) => setTitle(event.target.value)} className="mt-1 w-full rounded-sm border bg-transparent px-2 py-2 text-[12px] outline-none" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} placeholder="Founder approved next task" />
+        </label>
+        <label className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+          Hermes task context
+          <input value={body} onChange={(event) => setBody(event.target.value)} className="mt-1 w-full rounded-sm border bg-transparent px-2 py-2 text-[12px] outline-none" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} placeholder="Evidence, scope, handoff notes" />
+        </label>
+        <button type="submit" disabled={submitting || !title.trim()} className="self-end rounded-sm border px-3 py-2 text-[11px] font-medium disabled:opacity-40" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}>
+          Create Hermes task
+        </button>
+      </form>
+
+      {actionStatus && (
+        <p className="mt-2 text-[11px]" style={{ color: actionStatus.startsWith('Action failed') ? '#f59e0b' : 'var(--color-text-muted)' }}>
+          {actionStatus}
+        </p>
+      )}
+
       <div className="mt-4 grid gap-2 md:grid-cols-6">
         {STATUS_ORDER.map((status) => (
           <div key={status} className="rounded-sm border p-2" style={{ borderColor: 'var(--color-border)', background: 'var(--surface-canvas)' }}>
@@ -103,6 +169,14 @@ export function HermesKanbanStatus() {
               <span>{task.assignee ?? 'unassigned'}</span>
             </div>
             <p className="mt-1 text-[12px]" style={{ color: 'var(--color-text-primary)' }}>{task.title}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {task.status === 'blocked' ? (
+                <button type="button" disabled={submitting} aria-label={`Unblock ${task.id}`} onClick={() => postHermesAction({ action: 'unblock', taskId: task.id })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Unblock</button>
+              ) : (
+                <button type="button" disabled={submitting} aria-label={`Block ${task.id}`} onClick={() => postHermesAction({ action: 'block', taskId: task.id, note: 'Blocked from Unite-Hub dual-board controls' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Block</button>
+              )}
+              <button type="button" disabled={submitting} aria-label={`Complete ${task.id}`} onClick={() => postHermesAction({ action: 'complete', taskId: task.id, note: 'Completed from Unite-Hub dual-board controls' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Complete</button>
+            </div>
           </div>
         )) : (
           <p className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
