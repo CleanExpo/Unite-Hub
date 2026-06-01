@@ -7,6 +7,7 @@ type HermesTask = {
   status: string
   assignee: string | null
   title: string
+  linearLink?: { identifier: string; url?: string }
 }
 
 type HermesKanbanResponse = {
@@ -168,13 +169,15 @@ export function HermesKanbanStatus() {
       </div>
 
       <div className="mt-4 grid gap-2 lg:grid-cols-2">
-        {openTasks.length > 0 ? openTasks.map((task) => (
+        {openTasks.length > 0 ? openTasks.map((task) => {
+          const linearLink = linearLinks[task.id] ?? task.linearLink
+          return (
           <div key={task.id} className="rounded-sm border p-3" style={{ borderColor: 'var(--color-border)', background: 'var(--surface-canvas)' }}>
             <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.14em]" style={{ color: 'var(--color-text-disabled)' }}>
               <span>{task.id}</span>
               <span>{task.status}</span>
               <span>{task.assignee ?? 'unassigned'}</span>
-              <span>{linearLinks[task.id] ? `Linked: ${linearLinks[task.id].identifier}` : 'Hermes only'}</span>
+              <span>{linearLink ? `Linked: ${linearLink.identifier}` : 'Hermes only'}</span>
             </div>
             <p className="mt-1 text-[12px]" style={{ color: 'var(--color-text-primary)' }}>{task.title}</p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -184,10 +187,11 @@ export function HermesKanbanStatus() {
                 <button type="button" disabled={submitting} aria-label={`Block ${task.id}`} onClick={() => postHermesAction({ action: 'block', taskId: task.id, note: 'Blocked from Unite-Hub dual-board controls' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Block</button>
               )}
               <button type="button" disabled={submitting} aria-label={`Complete ${task.id}`} onClick={() => postHermesAction({ action: 'complete', taskId: task.id, note: 'Completed from Unite-Hub dual-board controls' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Complete</button>
-              <button type="button" disabled={submitting || Boolean(linearLinks[task.id])} aria-label={`Link Linear ${task.id}`} onClick={() => postHermesAction({ action: 'linkLinear', taskId: task.id, title: task.title, body: 'Linked from Unite-Hub dual-board controls', teamKey: 'UNI' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Link Linear</button>
+              <button type="button" disabled={submitting || Boolean(linearLink)} aria-label={`Link Linear ${task.id}`} onClick={() => postHermesAction({ action: 'linkLinear', taskId: task.id, title: task.title, body: 'Linked from Unite-Hub dual-board controls', teamKey: 'UNI' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Link Linear</button>
             </div>
           </div>
-        )) : (
+          )
+        }) : (
           <p className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
             No open Hermes Kanban tasks on this board.
           </p>

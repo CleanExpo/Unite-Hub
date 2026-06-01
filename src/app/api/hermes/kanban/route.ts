@@ -24,11 +24,17 @@ const STATUS_SYMBOLS: Record<string, string> = {
 const TASK_ID_PATTERN = /^t_[a-z0-9]+$/i
 const SAFE_TEXT_LIMIT = 2_000
 
+interface LinearBacklink {
+  identifier: string
+  url?: string
+}
+
 interface HermesKanbanTask {
   id: string
   status: string
   assignee: string | null
   title: string
+  linearLink?: LinearBacklink
 }
 
 type HermesActionPayload = {
@@ -144,16 +150,51 @@ function buildLinearIssueInput(payload: HermesActionPayload): CreateIssueInput {
   }
 }
 
+function parseLinearBacklink(comments: unknown): LinearBacklink | undefined {
+  if (!Array.isArray(comments)) return undefined
+
+  for (const comment of comments) {
+    if (!comment || typeof comment !== 'object') continue
+    const body = 'body' in comment && typeof comment.body === 'string' ? comment.body : undefined
+    if (!body) continue
+
+    const match = body.match(/Linear link:\s*([A-Z]+-\d+)(?:\s+(https?:\/\/\S+))?/)
+    if (match) return { identifier: match[1], ...(match[2] ? { url: match[2] } : {}) }
+  }
+
+  return undefined
+}
+
+async function hydrateLinearBacklinks(tasks: HermesKanbanTask[]) {
+  const hydrateableTaskIds = new Set(tasks
+    .filter((task) => task.status !== 'done')
+    .slice(0, 25)
+    .map((task) => task.id))
+
+  return Promise.all(tasks.map(async (task) => {
+    if (!hydrateableTaskIds.has(task.id)) return task
+
+    try {
+      const { stdout } = await execFileAsync('hermes', ['kanban', 'show', '--json', task.id], { timeout: 15_000, windowsHide: true })
+      const detail = JSON.parse(stdout) as { comments?: unknown }
+      const linearLink = parseLinearBacklink(detail.comments)
+      return linearLink ? { ...task, linearLink } : task
+    } catch {
+      return task
+    }
+  }))
+}
+
 async function readHermesBoard() {
   const [{ stdout: boardsStdout }, { stdout: listStdout }] = await Promise.all([
     execFileAsync('hermes', ['kanban', 'boards', 'list'], { timeout: 15_000, windowsHide: true }),
     execFileAsync('hermes', ['kanban', 'list'], { timeout: 15_000, windowsHide: true }),
   ])
 
-  const tasks = listStdout
+  const tasks = await hydrateLinearBacklinks(listStdout
     .split(/\r?\n/)
     .map(parseTaskLine)
-    .filter((task): task is HermesKanbanTask => Boolean(task))
+    .filter((task): task is HermesKanbanTask => Boolean(task)))
 
   return {
     source: 'hermes-kanban',
@@ -219,4 +260,4 @@ function setCreateIssueForTest(mock: CreateLinearIssue) {
   createLinearIssue = mock
 }
 
-export const __test__ = { parseTaskLine, summarise, buildHermesActionCommand, buildLinearIssueInput, setExecFileForTest, setCreateIssueForTest }
+export const __test__ = { parseTaskLine, summarise, buildHermesActionCommand, buildLinearIssueInput, parseLinearBacklink, setExecFileForTest, setCreateIssueForTest }

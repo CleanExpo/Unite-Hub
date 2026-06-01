@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { POST, __test__ } from '../route'
+import { GET, POST, __test__ } from '../route'
 
 describe('Hermes Kanban route parsing', () => {
   it('parses assigned Hermes task rows', () => {
@@ -135,5 +135,38 @@ describe('Hermes Kanban route parsing', () => {
       't_176bb1b0',
       'Linear link: UNI-777 https://linear.app/unite-group/issue/UNI-777/test',
     ], expect.any(Object))
+  })
+
+  it('parses Linear backlinks from Hermes task comments', () => {
+    expect(__test__.parseLinearBacklink([
+      { body: 'Operator note' },
+      { body: 'Linear link: UNI-777 https://linear.app/unite-group/issue/UNI-777/test' },
+    ])).toEqual({ identifier: 'UNI-777', url: 'https://linear.app/unite-group/issue/UNI-777/test' })
+  })
+
+  it('hydrates Linear backlinks into the board task list from Hermes show output', async () => {
+    const execMock = vi.fn()
+      .mockResolvedValueOnce({ stdout: 'Current board: default\n', stderr: '' })
+      .mockResolvedValueOnce({ stdout: '▶ t_176bb1b0  ready     default               Unite-Hub: keep Hermes Kanban mirrored in Founder OS\n', stderr: '' })
+      .mockResolvedValueOnce({
+        stdout: JSON.stringify({
+          task: { id: 't_176bb1b0' },
+          comments: [
+            { body: 'Linear link: UNI-777 https://linear.app/unite-group/issue/UNI-777/test' },
+          ],
+        }),
+        stderr: '',
+      })
+    __test__.setExecFileForTest(execMock)
+
+    const response = await GET()
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.tasks[0]).toMatchObject({
+      id: 't_176bb1b0',
+      linearLink: { identifier: 'UNI-777', url: 'https://linear.app/unite-group/issue/UNI-777/test' },
+    })
+    expect(execMock).toHaveBeenCalledWith('hermes', ['kanban', 'show', '--json', 't_176bb1b0'], expect.any(Object))
   })
 })

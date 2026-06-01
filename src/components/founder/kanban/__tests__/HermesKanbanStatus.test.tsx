@@ -121,6 +121,25 @@ describe('HermesKanbanStatus', () => {
     }))
   })
 
+  it('hydrates an existing Linear backlink from the Hermes board payload on page load', async () => {
+    vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ...liveBoard,
+        tasks: [{
+          ...liveBoard.tasks[0],
+          linearLink: { identifier: 'UNI-777', url: 'https://linear.app/unite-group/issue/UNI-777/test' },
+        }],
+      }),
+    } as unknown as Response)
+
+    render(<HermesKanbanStatus />)
+
+    await waitFor(() => expect(screen.getByText('Linked: UNI-777')).toBeInTheDocument())
+    expect(screen.queryByText('Hermes only')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Link Linear t_176bb1b0' })).toBeDisabled()
+  })
+
   it('links a Hermes task to Linear and surfaces the dual-board badge', async () => {
     const fetchMock = vi.spyOn(global, 'fetch')
       .mockResolvedValueOnce({ ok: true, json: async () => liveBoard } as unknown as Response)
