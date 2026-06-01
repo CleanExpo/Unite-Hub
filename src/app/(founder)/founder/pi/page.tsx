@@ -15,9 +15,9 @@ export default async function FounderPiPage() {
   return (
     <div className="p-6 flex flex-col gap-6">
       <PageHeader
-        title="Pi Dev Ops Router"
-        subtitle="Founder-safe senior-engineer intake for task packets, context packs, machine routing, and approval gates."
-        tip="Route first. Execute only after the scope, evidence path, and machine owner are clear."
+        title="Pi Command Cockpit"
+        subtitle="Founder-safe senior-engineer control plane for routing, approvals, machine assignment, run state, and evidence receipts."
+        tip="Command first. Queue before execution. Complete only with evidence."
       />
       <PiRouterPanel />
     </div>
