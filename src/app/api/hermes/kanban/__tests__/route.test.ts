@@ -89,4 +89,51 @@ describe('Hermes Kanban route parsing', () => {
       '--json',
     ], expect.any(Object))
   })
+
+  it('builds a deterministic Linear issue payload from a Hermes task', () => {
+    expect(__test__.buildLinearIssueInput({
+      taskId: 't_176bb1b0',
+      title: 'Unite-Hub: keep Hermes Kanban mirrored in Founder OS',
+      body: 'Evidence loop required',
+      teamKey: 'UNI',
+    })).toEqual({
+      teamKey: 'UNI',
+      title: '[Hermes t_176bb1b0] Unite-Hub: keep Hermes Kanban mirrored in Founder OS',
+      description: 'Hermes Task: t_176bb1b0\nSource: Unite-Hub dual-board controls\n\nEvidence loop required',
+      priority: 3,
+    })
+  })
+
+  it('links a Hermes task to a new Linear issue and records the backlink as a Hermes comment', async () => {
+    const execMock = vi.fn()
+      .mockResolvedValueOnce({ stdout: 'commented t_176bb1b0\n', stderr: '' })
+      .mockResolvedValueOnce({ stdout: 'Current board: default\n', stderr: '' })
+      .mockResolvedValueOnce({ stdout: '▶ t_176bb1b0  ready     default               Unite-Hub: keep Hermes Kanban mirrored in Founder OS\n', stderr: '' })
+    __test__.setExecFileForTest(execMock)
+    __test__.setCreateIssueForTest(vi.fn().mockResolvedValue({ id: 'UNI-777', url: 'https://linear.app/unite-group/issue/UNI-777/test' }))
+
+    const response = await POST(new Request('http://localhost/api/hermes/kanban', {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'linkLinear',
+        taskId: 't_176bb1b0',
+        title: 'Unite-Hub: keep Hermes Kanban mirrored in Founder OS',
+        body: 'Evidence loop required',
+        teamKey: 'UNI',
+      }),
+    }))
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.action).toBe('linkLinear')
+    expect(payload.linkedIssue).toEqual({ identifier: 'UNI-777', url: 'https://linear.app/unite-group/issue/UNI-777/test' })
+    expect(execMock).toHaveBeenCalledWith('hermes', [
+      'kanban',
+      'comment',
+      '--author',
+      'unite-hub',
+      't_176bb1b0',
+      'Linear link: UNI-777 https://linear.app/unite-group/issue/UNI-777/test',
+    ], expect.any(Object))
+  })
 })

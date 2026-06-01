@@ -21,6 +21,7 @@ type HermesKanbanResponse = {
 type HermesActionResponse = {
   action: string
   board?: HermesKanbanResponse
+  linkedIssue?: { identifier: string; url?: string }
   error?: string
 }
 
@@ -34,6 +35,7 @@ export function HermesKanbanStatus() {
   const [body, setBody] = useState('')
   const [actionStatus, setActionStatus] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [linearLinks, setLinearLinks] = useState<Record<string, { identifier: string; url?: string }>>({})
 
   const loadHermesBoard = useCallback(async () => {
     try {
@@ -69,7 +71,12 @@ export function HermesKanbanStatus() {
         setData(result.board)
         setStale(!result.board.configured)
       }
-      setActionStatus(`Action recorded: ${result.action}`)
+      if (result.linkedIssue && typeof payload.taskId === 'string') {
+        setLinearLinks((links) => ({ ...links, [payload.taskId]: result.linkedIssue! }))
+        setActionStatus(`Action recorded: ${result.action} → ${result.linkedIssue.identifier}`)
+      } else {
+        setActionStatus(`Action recorded: ${result.action}`)
+      }
       return result
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Hermes action failed'
@@ -167,6 +174,7 @@ export function HermesKanbanStatus() {
               <span>{task.id}</span>
               <span>{task.status}</span>
               <span>{task.assignee ?? 'unassigned'}</span>
+              <span>{linearLinks[task.id] ? `Linked: ${linearLinks[task.id].identifier}` : 'Hermes only'}</span>
             </div>
             <p className="mt-1 text-[12px]" style={{ color: 'var(--color-text-primary)' }}>{task.title}</p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -176,6 +184,7 @@ export function HermesKanbanStatus() {
                 <button type="button" disabled={submitting} aria-label={`Block ${task.id}`} onClick={() => postHermesAction({ action: 'block', taskId: task.id, note: 'Blocked from Unite-Hub dual-board controls' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Block</button>
               )}
               <button type="button" disabled={submitting} aria-label={`Complete ${task.id}`} onClick={() => postHermesAction({ action: 'complete', taskId: task.id, note: 'Completed from Unite-Hub dual-board controls' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Complete</button>
+              <button type="button" disabled={submitting || Boolean(linearLinks[task.id])} aria-label={`Link Linear ${task.id}`} onClick={() => postHermesAction({ action: 'linkLinear', taskId: task.id, title: task.title, body: 'Linked from Unite-Hub dual-board controls', teamKey: 'UNI' })} className="rounded-sm border px-2 py-1 text-[10px]" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>Link Linear</button>
             </div>
           </div>
         )) : (

@@ -1,13 +1,16 @@
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { NextResponse } from 'next/server'
+import { createIssue, type CreateIssueInput } from '@/lib/integrations/linear'
 
 export const dynamic = 'force-dynamic'
 
 type ExecFileAsync = (file: string, args: string[], options: { timeout: number; windowsHide: boolean }) => Promise<{ stdout: string; stderr?: string }>
+type CreateLinearIssue = (input: CreateIssueInput) => Promise<{ id: string; url?: string }>
 
 const defaultExecFileAsync = promisify(execFile) as ExecFileAsync
 let execFileAsync: ExecFileAsync = defaultExecFileAsync
+let createLinearIssue: CreateLinearIssue = createIssue
 
 const STATUS_SYMBOLS: Record<string, string> = {
   '✓': 'done',
@@ -35,6 +38,7 @@ type HermesActionPayload = {
   body?: string
   note?: string
   assignee?: string
+  teamKey?: string
 }
 
 function parseTaskLine(line: string): HermesKanbanTask | null {
@@ -116,13 +120,8 @@ function buildHermesActionCommand(payload: HermesActionPayload) {
     return args
   }
 
-  if (action === 'unblock') {
-    return ['kanban', 'unblock', safeTaskId(payload.taskId)]
-  }
-
-  if (action === 'promote') {
-    return ['kanban', 'promote', safeTaskId(payload.taskId)]
-  }
+  if (action === 'unblock') return ['kanban', 'unblock', safeTaskId(payload.taskId)]
+  if (action === 'promote') return ['kanban', 'promote', safeTaskId(payload.taskId)]
 
   if (action === 'comment') {
     const note = safeText(payload.note, 'note', true)
@@ -130,6 +129,19 @@ function buildHermesActionCommand(payload: HermesActionPayload) {
   }
 
   throw new Error('unsupported action')
+}
+
+function buildLinearIssueInput(payload: HermesActionPayload): CreateIssueInput {
+  const taskId = safeTaskId(payload.taskId)
+  const title = safeText(payload.title, 'title', true)
+  const body = safeText(payload.body, 'body') ?? 'No additional Hermes task context supplied.'
+  const teamKey = safeText(payload.teamKey, 'teamKey') ?? 'UNI'
+  return {
+    teamKey,
+    title: `[Hermes ${taskId}] ${title}`,
+    description: `Hermes Task: ${taskId}\nSource: Unite-Hub dual-board controls\n\n${body}`,
+    priority: 3,
+  }
 }
 
 async function readHermesBoard() {
@@ -159,14 +171,7 @@ export async function GET() {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown Hermes Kanban error'
     return NextResponse.json(
-      {
-        source: 'hermes-kanban',
-        configured: false,
-        error: message,
-        summary: {},
-        tasks: [],
-        lastSyncedAt: new Date().toISOString(),
-      },
+      { source: 'hermes-kanban', configured: false, error: message, summary: {}, tasks: [], lastSyncedAt: new Date().toISOString() },
       { status: 502 },
     )
   }
@@ -176,6 +181,22 @@ export async function POST(request: Request) {
   try {
     const payload = await request.json() as HermesActionPayload
     const action = safeText(payload.action, 'action', true)
+
+    if (action === 'linkLinear') {
+      const taskId = safeTaskId(payload.taskId)
+      const issue = await createLinearIssue(buildLinearIssueInput(payload))
+      const backlink = `Linear link: ${issue.id}${issue.url ? ` ${issue.url}` : ''}`
+      const args = ['kanban', 'comment', '--author', 'unite-hub', taskId, backlink]
+      const { stdout, stderr } = await execFileAsync('hermes', args, { timeout: 20_000, windowsHide: true })
+      return NextResponse.json({
+        source: 'hermes-kanban',
+        action,
+        linkedIssue: { identifier: issue.id, url: issue.url },
+        receipt: { command: ['hermes', ...args], stdout: stdout.trim(), stderr: stderr?.trim() ?? '' },
+        board: await readHermesBoard(),
+      })
+    }
+
     const args = buildHermesActionCommand(payload)
     const { stdout, stderr } = await execFileAsync('hermes', args, { timeout: 20_000, windowsHide: true })
     return NextResponse.json({
@@ -194,4 +215,8 @@ function setExecFileForTest(mock: ExecFileAsync) {
   execFileAsync = mock
 }
 
-export const __test__ = { parseTaskLine, summarise, buildHermesActionCommand, setExecFileForTest }
+function setCreateIssueForTest(mock: CreateLinearIssue) {
+  createLinearIssue = mock
+}
+
+export const __test__ = { parseTaskLine, summarise, buildHermesActionCommand, buildLinearIssueInput, setExecFileForTest, setCreateIssueForTest }

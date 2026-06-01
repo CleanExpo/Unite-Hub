@@ -120,4 +120,36 @@ describe('HermesKanbanStatus', () => {
       body: JSON.stringify({ action: 'block', taskId: 't_176bb1b0', note: 'Blocked from Unite-Hub dual-board controls' }),
     }))
   })
+
+  it('links a Hermes task to Linear and surfaces the dual-board badge', async () => {
+    const fetchMock = vi.spyOn(global, 'fetch')
+      .mockResolvedValueOnce({ ok: true, json: async () => liveBoard } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          action: 'linkLinear',
+          linkedIssue: { identifier: 'UNI-777', url: 'https://linear.app/unite-group/issue/UNI-777/test' },
+          board: liveBoard,
+        }),
+      } as unknown as Response)
+
+    render(<HermesKanbanStatus />)
+
+    await waitFor(() => expect(screen.getByText('Unite-Hub: keep Hermes Kanban mirrored in Founder OS')).toBeInTheDocument())
+    expect(screen.getByText('Hermes only')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Link Linear t_176bb1b0' }))
+
+    await waitFor(() => expect(screen.getByText('Action recorded: linkLinear → UNI-777')).toBeInTheDocument())
+    expect(screen.getByText('Linked: UNI-777')).toBeInTheDocument()
+    expect(fetchMock).toHaveBeenLastCalledWith('/api/hermes/kanban', expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'linkLinear',
+        taskId: 't_176bb1b0',
+        title: 'Unite-Hub: keep Hermes Kanban mirrored in Founder OS',
+        body: 'Linked from Unite-Hub dual-board controls',
+        teamKey: 'UNI',
+      }),
+    }))
+  })
 })
