@@ -1,0 +1,240 @@
+{
+  "date": "2026-06-02",
+  "owner": "Phill McGurk, CEO",
+  "repository": "D:/Unite-Hub",
+  "decision": "Pi-wrapper belongs inside Unite-Hub as the founder daily-driver UI; Pi-Dev-Ops remains the execution engine.",
+  "priority_sequence": [
+    {
+      "lane": 1,
+      "name": "Command Centre shell",
+      "goal": "Create /founder/command-centre as the one-url founder cockpit.",
+      "agents": [
+        "project-manager",
+        "code-auditor",
+        "frontend-designer",
+        "senior-fullstack",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "Authenticated route loads",
+        "Panels show priorities, approvals, Pi runs, vault/account health, model spend, integrations, browser tasks",
+        "No fake data claims; pending integrations have explicit empty states",
+        "Type-check passes",
+        "Scientific Luxury design rules obeyed"
+      ]
+    },
+    {
+      "lane": 2,
+      "name": "Pi-wrapper MVP",
+      "goal": "Submit founder commands from Unite-Hub and return lane/model/approval receipts from a provider-neutral router.",
+      "agents": [
+        "project-manager",
+        "senior-fullstack",
+        "api-integrations",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "src/lib/pi-wrapper/types.ts exists",
+        "src/lib/pi-wrapper/router.ts classifies commands deterministically",
+        "/api/pi/route returns schema-valid JSON",
+        "/founder/pi displays receipt and next action",
+        "Tests cover route classifications"
+      ]
+    },
+    {
+      "lane": "2A",
+      "name": "Device Registry and Heartbeat",
+      "goal": "Unite-Hub can see Mac mini, Windows Desktop PC, and MacBook Pro availability/capabilities.",
+      "agents": [
+        "senior-fullstack",
+        "devops-engineer",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "Devices report last_seen, role, capabilities, availability",
+        "Command Centre shows machine status",
+        "Offline machines are visible and not silently used"
+      ]
+    },
+    {
+      "lane": "2B",
+      "name": "Task Packet and Context Pack Store",
+      "goal": "Founder chat ideas become durable packets that survive machine and provider switching.",
+      "agents": [
+        "project-manager",
+        "senior-fullstack",
+        "database-architect",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "Idea is classified to correct portfolio app",
+        "Context pack reloads from another worker/model",
+        "Task packet stores original idea, lane, risk, model recommendation, done criteria, receipts"
+      ]
+    },
+    {
+      "lane": "2C",
+      "name": "Machine Assignment Router",
+      "goal": "Assign work to Mac mini, Windows Desktop, MacBook Pro, or cloud by capability and risk.",
+      "agents": [
+        "senior-fullstack",
+        "devops-engineer",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "Browser/heavy tasks avoid sleeping laptops",
+        "Long-running jobs prefer Mac mini",
+        "Routing tests cover browser task, heavy build, scheduled brief, mobile approval"
+      ]
+    },
+    {
+      "lane": "2D",
+      "name": "Run Queue UI",
+      "goal": "Founder can see all background agents, machines, status, blockers, and latest receipts inside Unite-Hub.",
+      "agents": [
+        "frontend-designer",
+        "senior-fullstack",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "Statuses include queued, assigned, running, waiting_for_approval, blocked, completed, failed",
+        "UI shows assigned machine, model/provider, phase, latest receipt",
+        "Phill can review progress from MacBook Pro while other machines execute"
+      ]
+    },
+    {
+      "lane": 3,
+      "name": "Account Registry MVP",
+      "goal": "Inventory every external account before browser automation or credential use.",
+      "agents": [
+        "database-architect",
+        "api-integrations",
+        "senior-fullstack",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "accounts_registry migration drafted/applied in scoped lane",
+        "Every query filtered by founder_id",
+        "No raw password display",
+        "Statuses: unknown, verified, needs_cleanup, agent_ready, human_only"
+      ]
+    },
+    {
+      "lane": 4,
+      "name": "Vault Grants and Approval Gate",
+      "goal": "Allow time-limited scoped grants for agent use without exposing secrets to the browser client.",
+      "agents": [
+        "database-architect",
+        "api-integrations",
+        "security-auditor",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "vault_access_grants model exists",
+        "Every grant has purpose, scope, expiry, status",
+        "Decrypted secrets remain server-side only",
+        "Audit events written for every use"
+      ]
+    },
+    {
+      "lane": 5,
+      "name": "Browser Gateway spike",
+      "goal": "Prove read-only Playwright-controlled browser automation on a safe internal/demo target.",
+      "agents": [
+        "api-integrations",
+        "security-auditor",
+        "senior-fullstack",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "No bank/social/tax automation in first spike",
+        "Screenshot/action receipt captured",
+        "Approval gate demonstrated",
+        "No attempt to bypass MFA or anti-bot controls"
+      ]
+    },
+    {
+      "lane": 6,
+      "name": "Provider Router and Cost Dashboard",
+      "goal": "Route models by Performance/Speed/Cost and preserve context across provider switches.",
+      "agents": [
+        "senior-fullstack",
+        "project-manager",
+        "qa-tester"
+      ],
+      "acceptance": [
+        "Model registry seeded from Nexus Hub policy",
+        "Router outputs selected_model, provider, reason, cost_band, latency_band, fallback_model, reviewer_model",
+        "Tests cover cheap routing, deep architecture, UI vision, code implementation, and browser planning"
+      ]
+    }
+  ],
+  "safety_policy": {
+    "allowed": [
+      "Human-approved OAuth/session grants",
+      "Read-only browser checks",
+      "Draft-only preparation before approval",
+      "Audited credential access through server-side workers"
+    ],
+    "not_allowed": [
+      "Bypassing MFA",
+      "Defeating anti-bot controls",
+      "Auto-moving money",
+      "Submitting tax/legal/banking changes without human approval",
+      "Exposing decrypted secrets to client-side UI"
+    ]
+  },
+  "model_triangle": {
+    "performance": "Reasoning quality, coding quality, long-context and multimodal capability",
+    "speed": "Latency, iteration rate, UI responsiveness",
+    "cost": "Token spend, provider pricing, subscription/API distinction, retry cost"
+  },
+  "first_instruction_to_agents": "Do Lane 1 and Lane 2 first. Then add Device Registry/Heartbeat, Task Packets/Context Packs, Machine Assignment Router, and Run Queue UI before Account Registry, Vault Grants, or Browser Gateway.",
+  "three_machine_architecture": {
+    "decision": "Unite-Hub must operate across Windows Desktop PC, MacBook Pro, and Mac mini with durable context and machine-aware routing.",
+    "machine_roles": [
+      {
+        "machine": "Mac mini",
+        "role": "always_on_command_host",
+        "responsibilities": [
+          "cron",
+          "gateway",
+          "queue workers",
+          "webhook receiver",
+          "context sync",
+          "scheduled briefs"
+        ]
+      },
+      {
+        "machine": "Windows Desktop PC",
+        "role": "heavy_execution_workstation",
+        "responsibilities": [
+          "heavy builds",
+          "local verification",
+          "Playwright/browser gateway",
+          "Docker/local tools"
+        ]
+      },
+      {
+        "machine": "MacBook Pro",
+        "role": "mobile_founder_cockpit",
+        "responsibilities": [
+          "idea capture",
+          "voice/chat input",
+          "approvals",
+          "review",
+          "portable access through Unite-Hub"
+        ]
+      }
+    ],
+    "required_primitives": [
+      "device_registry",
+      "heartbeat_api",
+      "task_packets",
+      "context_packs",
+      "machine_assignment_router",
+      "run_queue_ui"
+    ],
+    "product_promise": "Open Unite-Hub anywhere, type an idea, and the system turns it into a tracked task packet with the right app, agents, machine, model, and approval path."
+  }
+}
