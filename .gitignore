@@ -42,6 +42,8 @@ dev-output.log
 .env.production
 .env.development
 .env.test
+.env.pulled
+.linear-api-key
 
 # Vercel
 .vercel
