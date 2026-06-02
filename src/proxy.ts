@@ -10,6 +10,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 import { checkRateLimit } from '@/lib/middleware/rate-limit';
+import { hasPrivateAccess, isPrivateAccessConfigured } from '@/lib/auth/private-access';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -122,6 +123,27 @@ export async function proxy(request: NextRequest) {
     loginUrl.pathname = '/auth/login';
     loginUrl.searchParams.set('redirectTo', pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // ------------------------------------------------------------------
+  // 4. Private CRM guard — only explicit founder/invite allow-list can enter
+  // ------------------------------------------------------------------
+  if (user && !isPublicPath(pathname) && !hasPrivateAccess(user)) {
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json(
+        { error: 'Forbidden', message: 'This Unite-Hub CRM is private.' },
+        { status: 403 },
+      );
+    }
+
+    const deniedUrl = request.nextUrl.clone();
+    deniedUrl.pathname = '/auth/login';
+    deniedUrl.searchParams.set('access', 'denied');
+    return NextResponse.redirect(deniedUrl);
+  }
+
+  if (isPrivateAccessConfigured()) {
+    response.headers.set('X-Unite-Hub-Private', 'allow-list');
   }
 
   return response;
