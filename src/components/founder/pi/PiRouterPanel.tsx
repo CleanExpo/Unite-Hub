@@ -32,6 +32,28 @@ interface PiRunQueueListResponse {
   summary: FounderRunQueueSummary
 }
 
+interface PiWorkflowState {
+  workflowId: string
+  evidenceId: string | null
+  status: string
+  currentGate: string
+  changedFileCount: number
+  verificationSummary: string
+  nextAction: string
+  modelRoute: {
+    planner: string
+    implementer: string
+    challenger: string
+    opusUltrathink: string
+  }
+  requiresMargotReview: boolean
+  threeLoopRequired: boolean
+}
+
+interface PiWorkflowResponse {
+  workflow: PiWorkflowState
+}
+
 const EXAMPLE_MESSAGE =
   'Build the Unite-Hub command centre panel for run queue visibility, then test it before moving to the next build.'
 
@@ -50,6 +72,7 @@ export function PiRouterPanel() {
   const [result, setResult] = useState<PiRunQueueResponse | null>(null)
   const [queueItems, setQueueItems] = useState<FounderRunQueueItem[]>([])
   const [summary, setSummary] = useState<FounderRunQueueSummary | null>(null)
+  const [workflowState, setWorkflowState] = useState<PiWorkflowState | null>(null)
   const [transitionNote, setTransitionNote] = useState('')
   const [evidenceLink, setEvidenceLink] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -58,7 +81,15 @@ export function PiRouterPanel() {
 
   useEffect(() => {
     void loadQueue()
+    void loadWorkflowState()
   }, [])
+
+  async function loadWorkflowState() {
+    const response = await fetch('/api/pi/workflows')
+    if (!response.ok) return
+    const body = (await response.json()) as PiWorkflowResponse
+    setWorkflowState(body.workflow)
+  }
 
   async function loadQueue() {
     const response = await fetch('/api/pi/run-queue')
@@ -281,6 +312,37 @@ export function PiRouterPanel() {
       </section>
 
       <aside className="space-y-4">
+        <Card variant="bordered" padding="lg" className="space-y-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.24em] text-cyan-200/60">Pi-Dev-Ops workflow</p>
+              <CardTitle className="mt-2">Senior engineer gate</CardTitle>
+              <CardDescription>Dynamic Workflow evidence surfaced before the next build lane moves.</CardDescription>
+            </div>
+            <StatusPill status={workflowState?.status ?? 'waiting'} />
+          </div>
+
+          {workflowState ? (
+            <div className="space-y-3">
+              <ResultRow label="Workflow" value={workflowState.workflowId} />
+              <ResultRow label="Current gate" value={workflowState.currentGate} />
+              <ResultRow label="Changed files" value={`${workflowState.changedFileCount}`} />
+              <ResultRow label="Planner" value={workflowState.modelRoute.planner} />
+              <ResultRow label="Challenger" value={workflowState.modelRoute.challenger} />
+              <div className="rounded-sm border border-green-400/20 bg-green-500/10 p-3 text-xs leading-5 text-green-100/80">
+                {workflowState.verificationSummary}
+              </div>
+              <div className="rounded-sm border border-cyan-300/20 bg-cyan-300/[0.06] p-3 text-sm leading-6 text-cyan-50/80">
+                {workflowState.nextAction}
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-sm border border-dashed border-white/[0.12] p-3 text-sm text-white/45">
+              Workflow evidence not loaded yet.
+            </div>
+          )}
+        </Card>
+
         <Card variant="bordered" padding="lg" className="space-y-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.24em] text-white/35">Control rail</p>

@@ -1,0 +1,81 @@
+{
+  "workflow_id": "pi-dev-ops-dynamic-workflow-template",
+  "version": "1.0.0",
+  "source_research": "https://code.claude.com/docs/en/workflows",
+  "intent": "Senior engineer build loop for Unite-Hub / Unite-Group Nexus",
+  "risk": "medium",
+  "governance": {
+    "external_facing_output": false,
+    "requires_margot_review": true,
+    "requires_pi_ceo_board_gate": false,
+    "allows_push": false,
+    "allows_secret_changes": false,
+    "allows_destructive_migration": false
+  },
+  "model_routing": {
+    "planner": "gpt-5.5-class",
+    "implementer": "gpt-5.5-class",
+    "context_pack": "kimi-2.5-class",
+    "challenger": "kimi-2.5-class",
+    "security_reviewer": "gpt-5.5-class",
+    "opus_ultrathink": "explicit Claude Code OAuth/subscription or approved provider path only"
+  },
+  "budgets": {
+    "max_agents": 5,
+    "max_turns_per_agent": 8,
+    "max_wall_minutes": 90,
+    "max_changed_files": 12,
+    "max_context_files_per_lane": 12
+  },
+  "scope": {
+    "repo": "D:\\Unite-Hub",
+    "branch": "main",
+    "allowed_paths": [
+      ".pi/dev-ops/**",
+      "docs/**",
+      "scripts/**",
+      "src/**"
+    ],
+    "denied_paths": [
+      ".env*",
+      ".linear-api-key",
+      "node_modules/**",
+      ".next/**",
+      ".git/**"
+    ],
+    "expected_change_paths": []
+  },
+  "gates": [
+    "intake",
+    "connection",
+    "bloat",
+    "build",
+    "verification",
+    "review",
+    "finalise",
+    "token"
+  ],
+  "required_evidence_fields": [
+    "request",
+    "repo",
+    "branch",
+    "connection_map",
+    "intended_scope",
+    "actual_changed_files",
+    "verification_commands",
+    "verification_results",
+    "reviewer",
+    "review_result",
+    "bloat_decision",
+    "final_state"
+  ],
+  "verification": {
+    "default_commands": [
+      "pnpm test -- <targeted tests>",
+      "pnpm type-check",
+      "pnpm build"
+    ],
+    "three_loop_required_for_code_changes": true,
+    "blocked_policy": "Record blocker and run strongest local substitute; never claim complete without evidence."
+  }
+}
