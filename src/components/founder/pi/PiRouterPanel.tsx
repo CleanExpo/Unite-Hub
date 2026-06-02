@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Card, { CardDescription, CardTitle } from '@/components/ui/card'
 import Button from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import type { FounderRunQueueAction, FounderRunQueueItem, FounderRunQueueSummary } from '@/lib/founder-os'
+import type { FounderContinuationEnforcement, FounderRunQueueAction, FounderRunQueueItem, FounderRunQueueSummary } from '@/lib/founder-os'
 
 interface PiQueueReceipt {
   id: string
@@ -25,11 +25,13 @@ interface PiRunQueueResponse {
   routingReasons?: string[]
   receipt: PiQueueReceipt | null
   summary?: FounderRunQueueSummary
+  enforcement?: FounderContinuationEnforcement
 }
 
 interface PiRunQueueListResponse {
   items: FounderRunQueueItem[]
   summary: FounderRunQueueSummary
+  enforcement: FounderContinuationEnforcement
 }
 
 interface PiWorkflowState {
@@ -72,6 +74,7 @@ export function PiRouterPanel() {
   const [result, setResult] = useState<PiRunQueueResponse | null>(null)
   const [queueItems, setQueueItems] = useState<FounderRunQueueItem[]>([])
   const [summary, setSummary] = useState<FounderRunQueueSummary | null>(null)
+  const [enforcement, setEnforcement] = useState<FounderContinuationEnforcement | null>(null)
   const [workflowState, setWorkflowState] = useState<PiWorkflowState | null>(null)
   const [transitionNote, setTransitionNote] = useState('')
   const [evidenceLink, setEvidenceLink] = useState('')
@@ -97,6 +100,7 @@ export function PiRouterPanel() {
     const body = (await response.json()) as PiRunQueueListResponse
     setQueueItems(body.items)
     setSummary(body.summary)
+    setEnforcement(body.enforcement)
   }
 
   async function routeMessage() {
@@ -116,6 +120,7 @@ export function PiRouterPanel() {
       }
 
       setResult(body)
+      setEnforcement(body.enforcement ?? null)
       await loadQueue()
     } catch (routeError) {
       setError(routeError instanceof Error ? routeError.message : 'Unable to route founder message')
@@ -147,6 +152,7 @@ export function PiRouterPanel() {
       }
 
       setResult(body)
+      setEnforcement(body.enforcement ?? null)
       setTransitionNote('')
       if (action === 'complete') setEvidenceLink('')
       await loadQueue()
@@ -349,6 +355,20 @@ export function PiRouterPanel() {
             <CardTitle className="mt-2">Approvals + evidence</CardTitle>
             <CardDescription>Completion requires evidence. Blocking requires a clear note.</CardDescription>
           </div>
+
+          {enforcement && (
+            <div className={`rounded-sm border p-3 text-sm leading-6 ${
+              enforcement.canOpenNextLane
+                ? 'border-green-400/20 bg-green-500/10 text-green-100/85'
+                : 'border-amber-300/25 bg-amber-400/10 text-amber-100/85'
+            }`}>
+              <div className="text-xs font-medium uppercase tracking-[0.18em] text-white/45">Continue-until-complete enforcement</div>
+              <div className="mt-2">{enforcement.requiredAction}</div>
+              <div className="mt-2 font-mono text-xs text-white/45">
+                open={enforcement.openWorkCount} blocked={enforcement.blockedCount} completed={enforcement.completedCount}
+              </div>
+            </div>
+          )}
 
           <Textarea
             value={transitionNote}

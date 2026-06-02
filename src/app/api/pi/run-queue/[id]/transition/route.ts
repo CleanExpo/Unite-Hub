@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { founderRunQueueStore, type FounderRunQueueAction } from '../../../../../../lib/founder-os'
+import { buildContinuationEnforcement, founderRunQueueStore, type FounderRunQueueAction } from '../../../../../../lib/founder-os'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,6 +49,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     return NextResponse.json({
       queueItem,
       summary: founderRunQueueStore.summary(),
+      enforcement: buildContinuationEnforcement(founderRunQueueStore.list()),
       receipt: queueItem.receipts.at(-1) ?? null,
     })
   } catch (error) {

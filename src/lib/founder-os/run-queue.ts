@@ -1,5 +1,6 @@
 import type {
   FounderContextPack,
+  FounderContinuationEnforcement,
   FounderRunQueueAction,
   FounderRunQueueItem,
   FounderRunQueueReceipt,
@@ -96,6 +97,28 @@ export function summarizeRunQueue(items: FounderRunQueueItem[]): FounderRunQueue
     inProgress: countStatus(items, 'in_progress'),
     blocked: countStatus(items, 'blocked'),
     completed: countStatus(items, 'completed'),
+  }
+}
+
+const OPEN_WORK_STATUSES: FounderRunQueueStatus[] = ['queued', 'waiting_for_approval', 'waiting_for_device', 'in_progress']
+
+export function buildContinuationEnforcement(items: FounderRunQueueItem[]): FounderContinuationEnforcement {
+  const openItems = items.filter((item) => OPEN_WORK_STATUSES.includes(item.status))
+  const blockedCount = countStatus(items, 'blocked')
+  const completedCount = countStatus(items, 'completed')
+  const canOpenNextLane = openItems.length === 0
+
+  return {
+    mode: 'continue_until_complete',
+    openWorkCount: openItems.length,
+    blockedCount,
+    completedCount,
+    canOpenNextLane,
+    requiredAction: canOpenNextLane
+      ? 'All queued Pi runs are closed with receipts. Open the next gated lane only if scope remains.'
+      : `Complete or block ${openItems.length} open Pi run${openItems.length === 1 ? '' : 's'} before opening the next build lane.`,
+    enforcedStatuses: OPEN_WORK_STATUSES,
+    openItemIds: openItems.map((item) => item.id),
   }
 }
 

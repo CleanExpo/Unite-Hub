@@ -15,6 +15,16 @@ describe('PiRouterPanel workflow visibility', () => {
         json: async () => ({
           items: [],
           summary: { total: 0, queued: 0, waitingForApproval: 0, waitingForDevice: 0, inProgress: 0, blocked: 0, completed: 0 },
+          enforcement: {
+            mode: 'continue_until_complete',
+            openWorkCount: 1,
+            blockedCount: 0,
+            completedCount: 0,
+            canOpenNextLane: false,
+            requiredAction: 'Complete or block 1 open Pi run before opening the next build lane.',
+            enforcedStatuses: ['queued', 'waiting_for_approval', 'waiting_for_device', 'in_progress'],
+            openItemIds: ['run_task-1'],
+          },
         }),
       } as unknown as Response)
       .mockResolvedValueOnce({
@@ -48,5 +58,7 @@ describe('PiRouterPanel workflow visibility', () => {
     expect(screen.getByText('gpt-5.5-class')).toBeInTheDocument()
     expect(screen.getByText('kimi-2.5-class')).toBeInTheDocument()
     expect(screen.getByText('pnpm build: PASS')).toBeInTheDocument()
+    expect(screen.getByText('Continue-until-complete enforcement')).toBeInTheDocument()
+    expect(screen.getByText('Complete or block 1 open Pi run before opening the next build lane.')).toBeInTheDocument()
   })
 })

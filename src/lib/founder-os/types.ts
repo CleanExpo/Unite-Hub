@@ -163,3 +163,14 @@ export interface FounderRunQueueSummary {
   blocked: number
   completed: number
 }
+
+export interface FounderContinuationEnforcement {
+  mode: 'continue_until_complete'
+  openWorkCount: number
+  blockedCount: number
+  completedCount: number
+  canOpenNextLane: boolean
+  requiredAction: string
+  enforcedStatuses: FounderRunQueueStatus[]
+  openItemIds: string[]
+}

@@ -24,6 +24,8 @@ describe('POST /api/pi/run-queue', () => {
     expect(body.queueItem.status).toBe('queued')
     expect(body.queueItem.taskPacket.portfolioTarget).toBe('pi_dev_ops')
     expect(body.queueItem.machineAssignment.assignedDeviceId).toBe('windows-desktop')
+    expect(body.enforcement.mode).toBe('continue_until_complete')
+    expect(body.enforcement.canOpenNextLane).toBe(false)
     expect(body.receipt.status).toBe('queued')
   })
 
@@ -36,5 +38,7 @@ describe('POST /api/pi/run-queue', () => {
     expect(response.status).toBe(200)
     expect(body.items.length).toBeGreaterThan(0)
     expect(body.summary.total).toBe(body.items.length)
+    expect(body.enforcement.openWorkCount).toBeGreaterThan(0)
+    expect(body.enforcement.requiredAction).toContain('before opening the next build lane')
   })
 })

@@ -1,40 +1,48 @@
 {
-  "workflow_id": "pi-dev-ops-dynamic-workflows-pathway-2026-06-02",
-  "request": "Research Claude Code Dynamic Workflows and generate a true remaining pathway for Unite-Hub / Unite-Group Nexus.",
+  "workflow_id": "pi-dev-ops-continuation-enforcement-2026-06-02",
+  "request": "Make continue-until-complete enforceable across the Pi-Dev-Ops run queue and Founder OS control rail, not just visible in the Pi cockpit.",
   "repo": "D:\\Unite-Hub",
   "branch": "main",
   "connection_map": {
-    "portfolio_ssot": ".portfolio/PORTFOLIO.yaml",
-    "agent_context": ["AGENTS.md", "CLAUDE.md", ".pi/README.md"],
-    "founder_os_surface": "src/app + Founder OS components",
-    "execution_board": "Hermes Kanban + Linear linkage",
-    "governance": "Margot -> Pi-CEO Board -> Senior PM / Pi-Dev-Ops gates"
+    "workflow_source": ".pi/dev-ops/dynamic-workflows/manifest.template.json",
+    "run_queue_store": "src/lib/founder-os/run-queue.ts",
+    "run_queue_api": "src/app/api/pi/run-queue/route.ts",
+    "transition_api": "src/app/api/pi/run-queue/[id]/transition/route.ts",
+    "founder_os_surface": "src/components/founder/pi/PiRouterPanel.tsx",
+    "execution_board": "Hermes Kanban + Linear linkage remain external ledgers; queue enforcement blocks next lane until local run items close or block with receipts"
   },
   "intended_scope": [
-    ".pi/dev-ops/dynamic-workflows/README.md",
-    ".pi/dev-ops/dynamic-workflows/manifest.template.json",
-    ".pi/dev-ops/dynamic-workflows/evidence.pathway.json",
-    "scripts/validate-pi-dev-ops-workflow.mjs"
+    "src/lib/founder-os/run-queue.ts",
+    "src/lib/founder-os/types.ts",
+    "src/app/api/pi/run-queue/route.ts",
+    "src/app/api/pi/run-queue/[id]/transition/route.ts",
+    "src/components/founder/pi/PiRouterPanel.tsx"
   ],
   "actual_changed_files": [
-    ".pi/dev-ops/dynamic-workflows/README.md",
-    ".pi/dev-ops/dynamic-workflows/manifest.template.json",
     ".pi/dev-ops/dynamic-workflows/evidence.pathway.json",
-    "scripts/validate-pi-dev-ops-workflow.mjs",
-    "src/lib/founder-os/pi-dev-ops-workflows.ts",
-    "src/lib/founder-os/__tests__/pi-dev-ops-workflows.test.ts",
-    "src/app/api/pi/workflows/route.ts",
-    "src/app/api/pi/workflows/__tests__/route.test.ts",
+    "src/lib/founder-os/types.ts",
+    "src/lib/founder-os/run-queue.ts",
+    "src/lib/founder-os/__tests__/run-queue-enforcement.test.ts",
+    "src/app/api/pi/run-queue/route.ts",
+    "src/app/api/pi/run-queue/[id]/transition/route.ts",
+    "src/app/api/pi/run-queue/__tests__/route.test.ts",
     "src/components/founder/pi/PiRouterPanel.tsx",
     "src/components/founder/pi/__tests__/PiRouterPanel.test.tsx"
   ],
   "verification_commands": [
-    "node scripts/validate-pi-dev-ops-workflow.mjs .pi/dev-ops/dynamic-workflows/manifest.template.json .pi/dev-ops/dynamic-workflows/evidence.pathway.json"
+    "pnpm vitest run src/lib/founder-os/__tests__/run-queue.test.ts src/lib/founder-os/__tests__/run-queue-enforcement.test.ts src/app/api/pi/run-queue/__tests__/route.test.ts src/components/founder/pi/__tests__/PiRouterPanel.test.tsx",
+    "node scripts/validate-pi-dev-ops-workflow.mjs .pi/dev-ops/dynamic-workflows/manifest.template.json .pi/dev-ops/dynamic-workflows/evidence.pathway.json",
+    "pnpm type-check",
+    "pnpm build"
   ],
   "verification_results": [
     {
-      "command": "3x targeted loop: pnpm vitest run src/lib/founder-os/__tests__/pi-dev-ops-workflows.test.ts src/app/api/pi/workflows/__tests__/route.test.ts src/components/founder/pi/__tests__/PiRouterPanel.test.tsx && node scripts/validate-pi-dev-ops-workflow.mjs ...",
-      "result": "PASS: loops 1/2/3 clean; 3 test files passed; 4 tests passed each loop; validator passed each loop with changed_files=10 and gates=8"
+      "command": "RED: pnpm vitest run src/lib/founder-os/__tests__/run-queue-enforcement.test.ts",
+      "result": "FAIL as expected before implementation: buildContinuationEnforcement is not a function; 2 failed tests"
+    },
+    {
+      "command": "3x targeted loop: pnpm vitest run src/lib/founder-os/__tests__/run-queue.test.ts src/lib/founder-os/__tests__/run-queue-enforcement.test.ts src/app/api/pi/run-queue/__tests__/route.test.ts src/components/founder/pi/__tests__/PiRouterPanel.test.tsx && node scripts/validate-pi-dev-ops-workflow.mjs .pi/dev-ops/dynamic-workflows/manifest.template.json .pi/dev-ops/dynamic-workflows/evidence.pathway.json",
+      "result": "PASS: loops 1/2/3 clean; 4 test files passed; 11 tests passed each loop; workflow validator passed each loop with changed_files=9 and gates=8"
     },
     {
       "command": "pnpm type-check",
@@ -42,11 +50,11 @@
     },
     {
       "command": "pnpm build",
-      "result": "PASS: env validation passed; Next.js production build compiled successfully; /api/pi/workflows route included; TypeScript passed; static pages generated"
+      "result": "PASS: env validation passed; Next.js production build compiled successfully; TypeScript passed; /api/pi/run-queue, /api/pi/run-queue/[id]/transition, /api/pi/workflows, and /founder/pi included"
     }
   ],
-  "reviewer": "Pi-Dev-Ops independent challenger policy: pending live UI implementation lane",
-  "review_result": "pass_for_pathway_artifact; requires separate implementation lane before any UI claim",
-  "bloat_decision": "kept to pathway docs + runnable validator; no broad UI or automation rewrite in this lane",
+  "reviewer": "Pi-Dev-Ops independent challenger policy: deterministic enforcement primitive with tests before production code",
+  "review_result": "pass_for_enforcement_lane; 3-loop verification, type-check, and production build passed",
+  "bloat_decision": "kept enforcement narrow: pure queue primitive, API response metadata, and one control-rail status panel; no autonomous write-back expansion in this lane",
   "final_state": "complete"
 }

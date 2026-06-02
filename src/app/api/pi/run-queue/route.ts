@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import {
   assignMachineForTask,
+  buildContinuationEnforcement,
   buildTaskPacketFromIdea,
   founderRunQueueStore,
   type FounderDevice,
@@ -50,6 +51,7 @@ export async function GET() {
   return NextResponse.json({
     items,
     summary: founderRunQueueStore.summary(),
+    enforcement: buildContinuationEnforcement(items),
   })
 }
 
@@ -87,6 +89,7 @@ export async function POST(request: Request) {
   return NextResponse.json({
     queueItem,
     routingReasons: routeResult.routingReasons,
+    enforcement: buildContinuationEnforcement(founderRunQueueStore.list()),
     receipt: {
       id: `receipt_${queueItem.id}`,
       status: 'queued',
