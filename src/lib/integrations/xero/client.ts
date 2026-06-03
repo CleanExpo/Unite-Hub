@@ -33,20 +33,60 @@ const RATE_LIMIT_DELAY_MS = 1_000
 
 const DR_BUSINESS_KEYS = new Set(['dr', 'nrpg'])
 
-export function getXeroCredentials(businessKey: string): {
-  clientId: string
-  clientSecret: string
-} {
-  if (DR_BUSINESS_KEYS.has(businessKey)) {
-    return {
-      clientId: process.env.DR_CLIENT_ID ?? '',
-      clientSecret: process.env.DR_CLIENT_SECRET ?? '',
-    }
-  }
+export interface XeroTenantConnection {
+  tenantId: string
+  tenantName: string
+}
+
+function sharedXeroCredentials(): { clientId: string; clientSecret: string } {
   return {
     clientId: process.env.XERO_CLIENT_ID ?? '',
     clientSecret: process.env.XERO_CLIENT_SECRET ?? '',
   }
+}
+
+export function getXeroCredentials(businessKey: string): {
+  clientId: string
+  clientSecret: string
+} {
+  const shared = sharedXeroCredentials()
+
+  if (DR_BUSINESS_KEYS.has(businessKey)) {
+    const drCredentials = {
+      clientId: process.env.DR_CLIENT_ID ?? '',
+      clientSecret: process.env.DR_CLIENT_SECRET ?? '',
+    }
+    return drCredentials.clientId && drCredentials.clientSecret ? drCredentials : shared
+  }
+
+  return shared
+}
+
+const XERO_TENANT_ENV_BY_BUSINESS_KEY: Record<string, string[]> = {
+  dr: ['XERO_TENANT_ID_DR', 'XERO_TENANT_ID_DISASTER_RECOVERY'],
+  nrpg: ['XERO_TENANT_ID_NRPG', 'XERO_TENANT_ID_DRQLD', 'XERO_TENANT_ID_DISASTER_RECOVERY_QLD'],
+  carsi: ['XERO_TENANT_ID_CARSI'],
+}
+
+export function getExpectedXeroTenantId(businessKey: string): string | null {
+  for (const envName of XERO_TENANT_ENV_BY_BUSINESS_KEY[businessKey] ?? []) {
+    const value = process.env[envName]?.trim()
+    if (value) return value
+  }
+  return null
+}
+
+export function selectXeroTenantForBusiness(
+  businessKey: string,
+  connections: XeroTenantConnection[],
+): XeroTenantConnection | null {
+  const expectedTenantId = getExpectedXeroTenantId(businessKey)
+  if (expectedTenantId) {
+    return connections.find((tenant) => tenant.tenantId === expectedTenantId) ?? null
+  }
+
+  // Avoid silently saving the wrong organisation when one login has multiple tenants.
+  return connections.length === 1 ? connections[0] : null
 }
 
 // ── Configuration check ─────────────────────────────────────────────────────

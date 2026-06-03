@@ -21,6 +21,8 @@ export type {
 export {
   isXeroConfigured,
   getXeroCredentials,
+  getExpectedXeroTenantId,
+  selectXeroTenantForBusiness,
   getMockRevenueMTD,
   refreshXeroToken,
   getValidXeroToken,

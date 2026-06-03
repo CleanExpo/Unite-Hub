@@ -38,6 +38,9 @@ vi.mock('@/lib/vault', () => ({
 
 import {
   isXeroConfigured,
+  getXeroCredentials,
+  getExpectedXeroTenantId,
+  selectXeroTenantForBusiness,
   getMockRevenueMTD,
   refreshXeroToken,
   getValidXeroToken,
@@ -129,6 +132,63 @@ describe('Xero Client', () => {
   })
 
   // ── getMockRevenueMTD ─────────────────────────────────────────────────
+
+  describe('getXeroCredentials', () => {
+    it('uses shared Xero credentials for CARSI', () => {
+      expect(getXeroCredentials('carsi')).toEqual({
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
+      })
+    })
+
+    it('falls back to shared Xero credentials for DR when DR-specific credentials are absent', () => {
+      delete process.env.DR_CLIENT_ID
+      delete process.env.DR_CLIENT_SECRET
+
+      expect(getXeroCredentials('dr')).toEqual({
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
+      })
+    })
+
+    it('uses DR-specific credentials when both DR vars are present', () => {
+      process.env.DR_CLIENT_ID = 'dr-client-id'
+      process.env.DR_CLIENT_SECRET = 'dr-client-secret'
+
+      expect(getXeroCredentials('nrpg')).toEqual({
+        clientId: 'dr-client-id',
+        clientSecret: 'dr-client-secret',
+      })
+    })
+  })
+
+  describe('selectXeroTenantForBusiness', () => {
+    const connections = [
+      { tenantId: 'tenant-dr', tenantName: 'Disaster Recovery' },
+      { tenantId: 'tenant-carsi', tenantName: 'CARSI' },
+    ]
+
+    it('selects the configured tenant id for a business key', () => {
+      process.env.XERO_TENANT_ID_CARSI = 'tenant-carsi'
+
+      expect(getExpectedXeroTenantId('carsi')).toBe('tenant-carsi')
+      expect(selectXeroTenantForBusiness('carsi', connections)).toEqual(connections[1])
+    })
+
+    it('returns null when the configured tenant is not in the authorised connection list', () => {
+      process.env.XERO_TENANT_ID_DR = 'missing-tenant'
+
+      expect(selectXeroTenantForBusiness('dr', connections)).toBeNull()
+    })
+
+    it('uses the only returned tenant when no explicit mapping is configured', () => {
+      expect(selectXeroTenantForBusiness('restore', [connections[0]])).toEqual(connections[0])
+    })
+
+    it('refuses to guess when no mapping exists and multiple tenants are returned', () => {
+      expect(selectXeroTenantForBusiness('restore', connections)).toBeNull()
+    })
+  })
 
   describe('getMockRevenueMTD', () => {
     it('returns known mock data for a configured business key', () => {

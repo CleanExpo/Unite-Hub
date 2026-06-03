@@ -3,7 +3,7 @@
 
 import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
-import { getXeroCredentials } from '@/lib/integrations/xero'
+import { getXeroCredentials, selectXeroTenantForBusiness } from '@/lib/integrations/xero'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -72,8 +72,14 @@ export async function GET(request: Request) {
       return NextResponse.redirect(new URL('/founder/xero?error=no_tenant', request.url))
     }
 
-    // Use first tenant (single-org setup)
-    const tenant = connections[0]
+    const tenant = selectXeroTenantForBusiness(businessKey, connections)
+    if (!tenant) {
+      const params = new URLSearchParams({
+        error: 'tenant_mismatch',
+        business: businessKey,
+      })
+      return NextResponse.redirect(new URL(`/founder/xero?${params.toString()}`, request.url))
+    }
 
     const storedTokens = {
       access_token: tokenData.access_token,
@@ -98,6 +104,11 @@ export async function GET(request: Request) {
         iv: payload.iv,
         salt: payload.salt,
         notes: tenant.tenantName,
+        metadata: {
+          businessKey,
+          tenantId: tenant.tenantId,
+          tenantName: tenant.tenantName,
+        },
       },
       { onConflict: 'founder_id,service,label' }
     )
