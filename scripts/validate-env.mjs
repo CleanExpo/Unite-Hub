@@ -52,6 +52,7 @@ const INTEGRATION = [
   // Xero — DR account (code reads DR_CLIENT_ID / DR_CLIENT_SECRET — see xero/client.ts)
   { name: 'XERO_TENANT_ID_CARSI', hint: 'Xero tenant ID for CARSI', group: 'Xero' },
   { name: 'XERO_TENANT_ID_DR', hint: 'Xero tenant ID for Disaster Recovery', group: 'Xero' },
+  { name: 'XERO_WEBHOOK_KEY', hint: 'Xero webhook signing key', group: 'Xero' },
   // Google
   { name: 'GOOGLE_CLIENT_ID', hint: 'Google OAuth client ID', group: 'Google' },
   { name: 'GOOGLE_CLIENT_SECRET', hint: 'Google OAuth client secret', group: 'Google' },
