@@ -7684,6 +7684,150 @@ export type Database = {
           },
         ]
       }
+      knowledge_batches: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          founder_id: string
+          id: string
+          source_path: string | null
+          source_type: string
+          stats: Json
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          founder_id: string
+          id?: string
+          source_path?: string | null
+          source_type?: string
+          stats?: Json
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          founder_id?: string
+          id?: string
+          source_path?: string | null
+          source_type?: string
+          stats?: Json
+        }
+        Relationships: []
+      }
+      knowledge_notes: {
+        Row: {
+          ai_optimized: boolean
+          confidence: string
+          content: string
+          content_html: string | null
+          created_at: string
+          founder_id: string
+          frontmatter: Json
+          id: string
+          ingestion_batch: string | null
+          is_deleted: boolean
+          note_type: string
+          obsidian_mtime: string | null
+          obsidian_source: string | null
+          project_key: string
+          quality: string
+          sources: Json
+          tags: string[]
+          title: string
+          updated_at: string
+          vault_path: string
+          word_count: number
+        }
+        Insert: {
+          ai_optimized?: boolean
+          confidence?: string
+          content?: string
+          content_html?: string | null
+          created_at?: string
+          founder_id: string
+          frontmatter?: Json
+          id?: string
+          ingestion_batch?: string | null
+          is_deleted?: boolean
+          note_type?: string
+          obsidian_mtime?: string | null
+          obsidian_source?: string | null
+          project_key: string
+          quality?: string
+          sources?: Json
+          tags?: string[]
+          title: string
+          updated_at?: string
+          vault_path: string
+          word_count?: number
+        }
+        Update: {
+          ai_optimized?: boolean
+          confidence?: string
+          content?: string
+          content_html?: string | null
+          created_at?: string
+          founder_id?: string
+          frontmatter?: Json
+          id?: string
+          ingestion_batch?: string | null
+          is_deleted?: boolean
+          note_type?: string
+          obsidian_mtime?: string | null
+          obsidian_source?: string | null
+          project_key?: string
+          quality?: string
+          sources?: Json
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          vault_path?: string
+          word_count?: number
+        }
+        Relationships: []
+      }
+      knowledge_projects: {
+        Row: {
+          created_at: string
+          description: string | null
+          founder_id: string
+          id: string
+          key: string
+          label: string
+          last_ingested_at: string | null
+          metadata: Json
+          note_count: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          founder_id: string
+          id?: string
+          key: string
+          label: string
+          last_ingested_at?: string | null
+          metadata?: Json
+          note_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          founder_id?: string
+          id?: string
+          key?: string
+          label?: string
+          last_ingested_at?: string | null
+          metadata?: Json
+          note_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       onboarding_sequences: {
         Row: {
           cancelled_at: string | null
@@ -13134,3 +13278,8 @@ export const Constants = {
 // Convenience row type aliases
 export type Contact = Database['public']['Tables']['contacts']['Row']
 export type UserSettings = Database['public']['Tables']['user_settings']['Row']
+
+// Knowledge Console type aliases
+export type KnowledgeNote = Database['public']['Tables']['knowledge_notes']['Row']
+export type KnowledgeProject = Database['public']['Tables']['knowledge_projects']['Row']
+export type KnowledgeBatch = Database['public']['Tables']['knowledge_batches']['Row']
