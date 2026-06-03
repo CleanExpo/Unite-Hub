@@ -225,6 +225,8 @@ login-page.png
 # Env files not covered by existing patterns
 .env.vercel-*
 .env.vault
+.env.unite-group-nexus
+.env.local.backup.*
 .veritas-kanban/
 
 # Claude Code task state
