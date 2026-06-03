@@ -45,6 +45,14 @@ export async function GET(request: Request) {
     })
 
     if (!tokenRes.ok) {
+      const errorText = await tokenRes.text().catch(() => '')
+      console.error('[Xero Callback] Token exchange failed:', {
+        status: tokenRes.status,
+        statusText: tokenRes.statusText,
+        businessKey,
+        redirectUri,
+        body: errorText.slice(0, 500),
+      })
       return NextResponse.redirect(new URL('/founder/xero?error=token_exchange', request.url))
     }
 
@@ -121,7 +129,8 @@ export async function GET(request: Request) {
     return NextResponse.redirect(
       new URL(`/founder/xero?connected=true&business=${businessKey}`, request.url)
     )
-  } catch {
+  } catch (error) {
+    console.error('[Xero Callback] Unexpected failure:', error)
     return NextResponse.redirect(new URL('/founder/xero?error=unknown', request.url))
   }
 }
