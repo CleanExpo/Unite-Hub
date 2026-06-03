@@ -44,11 +44,16 @@ export async function GET(request: Request) {
     const weekStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
     const today = new Date().toISOString().split('T')[0]
 
+    const videoPipelineStatsPromise = Promise.resolve(
+      supabase.rpc('get_video_pipeline_stats', { p_founder_id: founderId })
+    ).catch(() => ({ data: null }))
+
     // Parallel data fetch
     const [
       linearCompleted,
       linearInFlight,
       linearDue,
+      videoPipelineResult,
       agentResult,
       vaultResult,
       decisionsResult,
@@ -56,6 +61,7 @@ export async function GET(request: Request) {
       fetchRecentlyCompletedIssues(weekStart),
       fetchInFlightIssues(),
       fetchIssuesWithDueDates(),
+      videoPipelineStatsPromise,
       supabase
         .from('agent_executions')
         .select('agent_name, status, execution_time_ms, created_at')
@@ -134,12 +140,22 @@ export async function GET(request: Request) {
       ? linearDue.value.filter((i: { dueDate?: string }) => i.dueDate && i.dueDate < today).length
       : 0
 
-    // Determine velocity score (0-100)
+    const videoPipelineData = (videoPipelineResult as { status: string; value?: { data?: Record<string, unknown> } }).status === 'fulfilled'
+      ? (videoPipelineResult as unknown as { value: { data: Record<string, unknown> } }).value?.data ?? {}
+      : {}
+    const videoJobsTotal = (videoPipelineData.total_jobs as number) ?? 0
+    const videoJobsPublished = (videoPipelineData.published_this_week as number) ?? 0
+    const videoJobsFailed = (videoPipelineData.failed_this_week as number) ?? 0
+    const videoCostCents = (videoPipelineData.total_cost_cents as number) ?? 0
+    const videoCostAud = Math.round(videoCostCents) / 100
+
+    // Determine velocity score (0-100) — now includes video pipeline
     const velocityScore = Math.min(100, Math.round(
-      (shipped / Math.max(inFlight, 1)) * 40 +
-      (successRate * 30) +
+      (shipped / Math.max(inFlight, 1)) * 30 +
+      (successRate * 25) +
       (Math.min(vaultCount, 100) / 100) * 15 +
-      (githubCommits > 0 ? 15 : 0)
+      (githubCommits > 0 ? 10 : 0) +
+      (videoJobsPublished > 0 ? 20 : 0)
     ))
 
     // Determine headline
@@ -176,6 +192,12 @@ export async function GET(request: Request) {
         vault: { notesAdded, notesTotal: vaultCount, projectsActive: projectsSet.size },
         agents: { executions: agentData.length, avgDurationSec: avgDuration, successRate: Math.round(successRate * 100) },
         decisions: { open: openDecisions, blocked: blockedDecisions },
+        video: {
+          totalJobs: videoJobsTotal,
+          publishedThisWeek: videoJobsPublished,
+          failedThisWeek: videoJobsFailed,
+          totalCostAud: videoCostAud,
+        },
       },
     }
 

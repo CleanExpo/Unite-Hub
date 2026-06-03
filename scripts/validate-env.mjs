@@ -47,11 +47,11 @@ const INTEGRATION = [
   // Linear
   { name: 'LINEAR_API_KEY', hint: 'Linear personal API key', group: 'Linear' },
   // Xero — CARSI account
-  { name: 'XERO_CLIENT_ID', hint: 'Xero OAuth client ID (CARSI account)', group: 'Xero' },
-  { name: 'XERO_CLIENT_SECRET', hint: 'Xero OAuth client secret (CARSI account)', group: 'Xero' },
+  { name: 'XERO_CLIENT_ID', hint: 'Xero shared OAuth client ID', group: 'Xero' },
+  { name: 'XERO_CLIENT_SECRET', hint: 'Xero shared OAuth client secret', group: 'Xero' },
   // Xero — DR account (code reads DR_CLIENT_ID / DR_CLIENT_SECRET — see xero/client.ts)
-  { name: 'DR_CLIENT_ID', hint: 'Xero OAuth client ID (DR account)', group: 'Xero DR' },
-  { name: 'DR_CLIENT_SECRET', hint: 'Xero OAuth client secret (DR account)', group: 'Xero DR' },
+  { name: 'XERO_TENANT_ID_CARSI', hint: 'Xero tenant ID for CARSI', group: 'Xero' },
+  { name: 'XERO_TENANT_ID_DR', hint: 'Xero tenant ID for Disaster Recovery', group: 'Xero' },
   // Google
   { name: 'GOOGLE_CLIENT_ID', hint: 'Google OAuth client ID', group: 'Google' },
   { name: 'GOOGLE_CLIENT_SECRET', hint: 'Google OAuth client secret', group: 'Google' },
