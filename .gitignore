@@ -289,3 +289,5 @@ scripts/_archive/
 .claude/audits/*.json
 
 .vercel
+
+.env*.local
