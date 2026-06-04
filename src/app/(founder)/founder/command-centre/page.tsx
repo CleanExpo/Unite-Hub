@@ -12,6 +12,8 @@ import { getToolCatalogue } from '@/lib/command-centre/tools/catalogue'
 import { LiveClock } from './LiveClock'
 import { CommandPalette } from './CommandPalette'
 import { IdeaConsole } from './IdeaConsole'
+import { QueueBoard } from './QueueBoard'
+import { SeedRegistryButton } from './SeedRegistryButton'
 import styles from './command-deck.module.css'
 
 const chakra = Chakra_Petch({
@@ -135,11 +137,25 @@ export default async function CommandDeckPage() {
         <IdeaConsole projects={projects.map((p) => ({ name: p.name }))} />
       </section>
 
+      {/* ── Work queue ───────────────────────────────────────────────── */}
+      <div className={styles.sectionHead} id="work-queue">
+        <span className={styles.sectionLabel}>Work Queue</span>
+        <span className={styles.sectionMeta}>proposed → queued → running → done</span>
+      </div>
+
+      <section className={`${styles.reveal}`} style={{ animationDelay: '0.03s' }}>
+        <QueueBoard />
+      </section>
+
       {/* ── Portfolio ────────────────────────────────────────────────── */}
       <div className={styles.sectionHead} id="portfolio">
         <span className={styles.sectionLabel}>Portfolio Registry</span>
         <span className={styles.sectionMeta}>{projects.length} units · {activeCount} live</span>
       </div>
+
+      <section className={`${styles.reveal}`} style={{ animationDelay: '0.035s' }}>
+        <SeedRegistryButton />
+      </section>
 
       <section className={styles.panelGrid}>
         {projects.map((project: CommandCentreProject, i: number) => (
