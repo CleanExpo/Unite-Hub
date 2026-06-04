@@ -4,73 +4,90 @@ Date: 2026-06-04
 Source brief: CleanExpo/Unite-Hub issue #74
 Execution branch: codex/obsidian-knowledge-console
 
+## Status
+
+This document merges the remote issue-brief plan with the current repo inspection. The remote plan correctly frames the product as an Obsidian-powered WebUI, but it used two stale assumptions for this Unite-Hub codebase:
+
+- It proposed `/dashboard/knowledge`; this repo's founder shell uses `/founder/*`, and the Knowledge Console already exists at `/founder/knowledge-console`.
+- It proposed `workspace_id`; this repo's current operating rule requires founder-scoped DB access with `founder_id`.
+
+The accepted MVP path is therefore a read-only founder route at `/founder/knowledge-console`, backed only by founder-scoped read APIs.
+
 ## Planning Findings
 
-The requested plan path did not exist when this pass started. The repo already contained earlier Obsidian planning material in:
+Existing planning and architecture documents:
 
 - `docs/planning/OBSIDIAN_KNOWLEDGE_CONSOLE_PLAN.md`
 - `docs/planning/OBSIDIAN_NEXUS_KNOWLEDGE_CONSOLE_PLAN.md`
 - `docs/architecture/OBSIDIAN_NEXUS_HERMES_ARCHITECTURE.md`
 
-Current code already has a founder route at `/founder/knowledge-console`, navigation entries in the sidebar, command palette, and topbar, a preview-only route at `/preview/knowledge-console`, founder-scoped knowledge GET APIs, and an additive Supabase migration for `knowledge_projects`, `knowledge_notes`, and `knowledge_batches`.
+Current code already has:
 
-Issue #74 asks for planning before implementation and limits the first slice to a safe read-only MVP. The issue mentions `workspace_id`, but this repo's current operating rule is stronger and more specific: all DB access must scope by `founder_id`. This plan follows `founder_id` and rejects `workspace_id` for this feature.
+- Founder route: `src/app/(founder)/founder/knowledge-console/page.tsx`
+- Preview route: `src/app/(preview)/preview/knowledge-console/page.tsx`
+- Client UI: `src/components/founder/knowledge-console/KnowledgeConsoleClient.tsx`
+- Navigation entries in sidebar, command palette, and topbar
+- Founder-scoped read APIs for projects and notes
+- Additive Supabase schema scaffold for `knowledge_projects`, `knowledge_notes`, and `knowledge_batches`
+
+## Product Decision
+
+Do not clone, rebrand, iframe, or directly control Obsidian.
+
+Architecture:
+
+```text
+Obsidian Vault
+  -> Git/filesystem sync or reviewed local bridge
+  -> Unite-Hub server-side ingestion
+  -> Supabase founder-scoped knowledge tables
+  -> Nexus Knowledge Console WebUI
+  -> Hermes/OpenAI/Codex workflows after provenance is stable
+```
 
 ## MVP Boundary
 
-In scope for this pass:
+In scope:
 
-- Keep Obsidian local-first. Do not clone, embed, or control Obsidian.
-- Render an authenticated founder Knowledge Console at `/founder/knowledge-console`.
-- Provide a safe preview mode at `/preview/knowledge-console` only when `KNOWLEDGE_CONSOLE_PREVIEW=1`.
-- Read project and note data through founder-scoped GET routes only.
-- Fall back to static demo data when the schema is not applied or not seeded.
-- Show project filtering, note search, markdown preview, frontmatter, tags, loading, empty, and error states.
-- Keep "Open in Obsidian" disabled unless ingestion later stores a safe URI/source metadata.
-- Document future Hermes, RAG, ingestion, write-back, and video workflows without enabling them in the read-only console.
+- Authenticated founder Knowledge Console at `/founder/knowledge-console`.
+- Preview shell at `/preview/knowledge-console` only when `KNOWLEDGE_CONSOLE_PREVIEW=1`.
+- Project/vault browser, note list, markdown preview, tags, frontmatter, loading, empty, and error states.
+- Founder-scoped GET APIs only.
+- Static fallback data when the schema is missing or unseeded.
+- Disabled `Open in Obsidian` affordance until safe metadata exists.
+- Placeholder Hermes, RAG, ingestion, write-back, and video concepts as future work only.
 
-Out of scope for this pass:
+Out of scope:
 
 - No local Obsidian REST/plugin API.
-- No write-back to the vault.
-- No note creation/update/delete routes for the founder UI.
-- No video generation trigger from the Knowledge Console.
+- No note create/update/delete routes for the founder UI.
+- No vault write-back.
+- No video-generation trigger from the Knowledge Console.
 - No live DB changes from this task.
 - No new dependencies.
 - No broad redesign of the founder shell.
 
-## Repo-Grounded Architecture
+## Repo-Grounded API Contract
 
-Route and UI:
+- `GET /api/knowledge/projects` reads `knowledge_projects` with `.eq('founder_id', user.id)`.
+- `GET /api/knowledge/notes` reads `knowledge_notes` with `.eq('founder_id', user.id)` and `.eq('is_deleted', false)`.
+- `GET /api/knowledge/notes/[id]` reads one note with `.eq('founder_id', user.id)`, `.eq('id', id)`, and `.eq('is_deleted', false)`.
 
-- `src/app/(founder)/founder/knowledge-console/page.tsx` authenticates with `getUser()` and redirects unauthenticated users to `/auth/login`.
-- `src/components/founder/knowledge-console/KnowledgeConsoleClient.tsx` owns the client-side read-only console, preview fallback, filtering, selected-note loading, and empty/error UI.
-- `src/app/(preview)/preview/knowledge-console/page.tsx` renders the same client only when the preview env flag is enabled.
-
-Read APIs:
-
-- `GET /api/knowledge/projects` lists `knowledge_projects` with `.eq('founder_id', user.id)`.
-- `GET /api/knowledge/notes` lists `knowledge_notes` with `.eq('founder_id', user.id)` and `.eq('is_deleted', false)`.
-- `GET /api/knowledge/notes/[id]` reads a single note with `.eq('founder_id', user.id)`, `.eq('id', id)`, and `.eq('is_deleted', false)`.
-
-Schema scaffold:
-
-- `supabase/migrations/20260603000000_knowledge_schema_phase1.sql` is additive and founder-scoped.
-- Authenticated RLS policy for this MVP should be SELECT-only. Future ingestion can use service-role controlled code or a separately reviewed write policy.
+Normal authenticated users should receive SELECT-only RLS policies for the Phase 1 knowledge tables. Future ingestion should use reviewed server-side service-role code or a separately approved write policy.
 
 ## Acceptance Criteria
 
-- The new dated plan exists at `docs/plans/2026-06-04-obsidian-nexus-knowledge-console.md`.
-- Knowledge Console remains available through founder navigation and command palette.
-- The founder page and preview page render the read-only shell.
+- This dated plan exists and reflects current Unite-Hub architecture.
+- The Knowledge Console remains reachable through founder navigation and command palette.
+- The founder page and preview page render the same read-only shell.
 - The UI has no enabled write, video, or vault mutation action.
-- Knowledge GET routes remain authenticated and founder-scoped.
-- The migration does not grant normal authenticated insert/update/delete policies for Phase 1.
+- Knowledge APIs are authenticated and founder-scoped.
+- The Phase 1 migration does not grant normal authenticated insert/update/delete policies.
 - Validation passes: `pnpm lint`, `pnpm type-check`, `pnpm test`, and `pnpm build`.
 
-## Future Work After MVP
+## Future Work
 
-1. Apply and seed the schema through a reviewed environment-specific migration path.
-2. Build a controlled ingestion worker that parses Markdown/frontmatter and upserts notes using service-role credentials server-side only.
-3. Add RAG chunking and citation-backed Hermes actions once ingestion provenance is stable.
-4. Revisit write-back and video creation as separate approval-gated features with explicit audit trails.
+1. Apply and seed the schema through reviewed environment-specific migration operations.
+2. Build a controlled Markdown/frontmatter ingestion worker.
+3. Add chunking, embeddings, and citation-backed Hermes/RAG actions.
+4. Revisit write-back and video creation as separate approval-gated features with audit trails.
