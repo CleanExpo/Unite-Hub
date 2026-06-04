@@ -11,6 +11,7 @@ import { getProjects, type CommandCentreProject } from '@/lib/command-centre/reg
 import { getToolCatalogue } from '@/lib/command-centre/tools/catalogue'
 import { LiveClock } from './LiveClock'
 import { CommandPalette } from './CommandPalette'
+import { IdeaConsole } from './IdeaConsole'
 import styles from './command-deck.module.css'
 
 const chakra = Chakra_Petch({
@@ -123,6 +124,16 @@ export default async function CommandDeckPage() {
           </span>
         </div>
       </header>
+
+      {/* ── Idea intake ──────────────────────────────────────────────── */}
+      <div className={styles.sectionHead} id="idea-intake">
+        <span className={styles.sectionLabel}>Idea Intake</span>
+        <span className={styles.sectionMeta}>idea → board → queue</span>
+      </div>
+
+      <section className={`${styles.reveal}`} style={{ animationDelay: '0.02s' }}>
+        <IdeaConsole projects={projects.map((p) => ({ name: p.name }))} />
+      </section>
 
       {/* ── Portfolio ────────────────────────────────────────────────── */}
       <div className={styles.sectionHead} id="portfolio">

@@ -32,6 +32,15 @@ function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
+function focusIdeaConsole() {
+  const el = document.getElementById('idea-console')
+  el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  // Focus the first field once the smooth scroll is under way.
+  requestAnimationFrame(() => {
+    el?.querySelector('textarea')?.focus()
+  })
+}
+
 export function CommandPalette({
   projects,
   tools,
@@ -52,6 +61,7 @@ export function CommandPalette({
 
   const items = useMemo<Item[]>(() => {
     const nav: Item[] = [
+      { id: 'nav-idea', group: 'Navigate', icon: '▸', title: 'Submit an idea', sub: 'focus the idea console', run: focusIdeaConsole },
       { id: 'nav-portfolio', group: 'Navigate', icon: '▸', title: 'Portfolio Registry', sub: 'jump to projects', run: () => scrollTo('portfolio') },
       { id: 'nav-bus', group: 'Navigate', icon: '▸', title: 'Capability Bus', sub: 'jump to tools', run: () => scrollTo('capability-bus') },
       { id: 'nav-top', group: 'Navigate', icon: '▸', title: 'Status Strip', sub: 'back to top', run: () => window.scrollTo({ top: 0, behavior: 'smooth' }) },
