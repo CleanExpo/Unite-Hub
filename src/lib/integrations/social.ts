@@ -139,7 +139,11 @@ export async function loadPlatformTokens(
   if (error || !data) return null
 
   try {
-    const decrypted = decrypt(data)
+    const decrypted = decrypt({
+      encryptedValue: data.encrypted_value,
+      iv: data.iv,
+      salt: data.salt,
+    })
     const tokens = JSON.parse(decrypted)
     return {
       accessToken: tokens.access_token,

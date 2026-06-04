@@ -7,7 +7,12 @@ export async function GET() {
   const clientId = process.env.GOOGLE_CLIENT_ID
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 
-  if (!clientId || clientId === 'your-google-client-id') {
+  if (
+    !clientId ||
+    !clientSecret ||
+    clientId === 'your-google-client-id' ||
+    clientSecret === 'your-google-client-secret'
+  ) {
     return NextResponse.json({
       success: false,
       status: 'missing_credentials',

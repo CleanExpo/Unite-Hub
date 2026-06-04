@@ -227,6 +227,7 @@ login-page.png
 .env.vault
 .env.unite-group-nexus
 .env.local.backup.*
+.env.local.pre-pull-*
 .veritas-kanban/
 
 # Claude Code task state

@@ -20,7 +20,6 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
-  Video,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -237,8 +236,6 @@ export function KnowledgeConsoleClient() {
   const [notes, setNotes] = useState<NoteSummary[]>(fallbackNotesFor(FALLBACK_PROJECTS[2].key, ''))
   const [selectedNoteId, setSelectedNoteId] = useState<string>(FALLBACK_NOTES[2].id)
   const [selectedNote, setSelectedNote] = useState<NoteDetail | null>(FALLBACK_NOTES[2])
-  const [creatingVideo, setCreatingVideo] = useState(false)
-  const [videoJobStatus, setVideoJobStatus] = useState<string | null>(null)
   const [source, setSource] = useState<LoadSource>('fallback')
   const [searchQuery, setSearchQuery] = useState('')
   const [loadingProjects, setLoadingProjects] = useState(true)
@@ -407,35 +404,6 @@ export function KnowledgeConsoleClient() {
   }, [activeProject, notes])
 
   const frontmatter = isRecord(selectedNote?.frontmatter) ? selectedNote.frontmatter : {}
-
-  const canCreateVideo = useMemo(() => {
-    if (!selectedNote) return false
-    return (
-      (selectedNote.quality === 'published' || selectedNote.confidence === 'high') &&
-      (selectedNote.word_count || 0) >= 300
-    )
-  }, [selectedNote])
-
-  async function handleCreateVideo() {
-    if (!selectedNote || !canCreateVideo) return
-    try {
-      setCreatingVideo(true)
-      setVideoJobStatus(null)
-      const response = await fetch(`/api/knowledge/notes/${selectedNote.id}/create-video`, {
-        method: 'POST',
-      })
-      const data = await response.json()
-      if (!response.ok) {
-        setVideoJobStatus(`Error: ${data.error || response.statusText}`)
-        return
-      }
-      setVideoJobStatus(`Video job created: ${data.status} → ${data.videoJobId}`)
-    } catch (err) {
-      setVideoJobStatus(`Error: ${err instanceof Error ? err.message : 'Unknown'}`)
-    } finally {
-      setCreatingVideo(false)
-    }
-  }
 
   return (
     <div className="flex min-h-full flex-col gap-5 p-4 md:p-6">
@@ -633,28 +601,7 @@ export function KnowledgeConsoleClient() {
                   <ExternalLink size={13} strokeWidth={1.7} />
                   Open in Obsidian
                 </button>
-                <button
-                  type="button"
-                  onClick={handleCreateVideo}
-                  disabled={!canCreateVideo || creatingVideo}
-                  className="inline-flex h-8 shrink-0 items-center gap-2 rounded-sm border px-3 text-[12px] transition-opacity hover:opacity-80 disabled:opacity-30"
-                  style={{
-                    borderColor: canCreateVideo ? 'var(--color-accent-border)' : 'var(--color-border)',
-                    color: canCreateVideo ? 'var(--color-accent)' : 'var(--color-text-muted)',
-                    background: canCreateVideo ? 'var(--color-accent-10)' : 'transparent',
-                  }}
-                  title={canCreateVideo ? 'Convert this note to an AI-generated video' : 'Note must be quality=published or confidence=high, and ≥300 words'}
-                >
-                  {creatingVideo ? <Loader2 size={13} className="animate-spin" /> : <Video size={13} strokeWidth={1.7} />}
-                  {creatingVideo ? 'Creating...' : 'Create Video'}
-                </button>
               </div>
-
-              {videoJobStatus && (
-                <div className="border-b px-4 py-2 text-[11px]" style={{ borderColor: 'var(--color-border)', color: videoJobStatus.startsWith('Error') ? 'var(--color-error)' : 'var(--color-accent)' }}>
-                  {videoJobStatus}
-                </div>
-              )}
 
               <div className="grid min-h-0 flex-1 gap-0 2xl:grid-cols-[minmax(0,1fr)_250px]">
                 <pre
