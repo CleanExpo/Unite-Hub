@@ -10,6 +10,7 @@ import { Chakra_Petch } from 'next/font/google'
 import { getProjects, type CommandCentreProject } from '@/lib/command-centre/registry'
 import { getToolCatalogue } from '@/lib/command-centre/tools/catalogue'
 import { LiveClock } from './LiveClock'
+import { CommandPalette } from './CommandPalette'
 import styles from './command-deck.module.css'
 
 const chakra = Chakra_Petch({
@@ -73,6 +74,11 @@ export default async function CommandDeckPage() {
 
   return (
     <div className={`${chakra.variable} ${styles.deck}`}>
+      <CommandPalette
+        projects={projects.map((p) => ({ name: p.name, status: p.status, production_url: p.production_url }))}
+        tools={tools.map((t) => ({ tool_key: t.tool_key, source: t.source, risk_class: t.risk_class }))}
+      />
+
       {/* ── Status strip ─────────────────────────────────────────────── */}
       <header className={`${styles.statusStrip} ${styles.reveal}`}>
         <div className={styles.brand}>
@@ -113,13 +119,13 @@ export default async function CommandDeckPage() {
             <span className={styles.sysText}>All systems nominal</span>
           </span>
           <span className={styles.kbd}>
-            <b>⌘K</b> command palette · soon
+            <b>⌘K</b> command palette
           </span>
         </div>
       </header>
 
       {/* ── Portfolio ────────────────────────────────────────────────── */}
-      <div className={styles.sectionHead}>
+      <div className={styles.sectionHead} id="portfolio">
         <span className={styles.sectionLabel}>Portfolio Registry</span>
         <span className={styles.sectionMeta}>{projects.length} units · {activeCount} live</span>
       </div>
@@ -170,7 +176,7 @@ export default async function CommandDeckPage() {
       </section>
 
       {/* ── Capability bus ───────────────────────────────────────────── */}
-      <div className={styles.sectionHead}>
+      <div className={styles.sectionHead} id="capability-bus">
         <span className={styles.sectionLabel}>Capability Bus</span>
         <span className={styles.sectionMeta}>{tools.length} tools · {Object.keys(sources).length} sources</span>
       </div>
