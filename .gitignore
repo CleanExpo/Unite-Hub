@@ -230,8 +230,8 @@ login-page.png
 .env.local.pre-pull-*
 .veritas-kanban/
 
-# Claude Code task state
-tasks/
+# Claude Code task state (root-level only — must not swallow nested API routes like app/api/**/tasks/)
+/tasks/
 
 # Contract testing output
 pacts/
