@@ -15,8 +15,11 @@
 --   3. cc_evidence_records — evidence notes linked to a task
 --
 -- A reversible "-- DOWN / rollback" section is at the foot of the file.
--- NOTE: not applied to any remote/linked DB by this change — ready to
--- apply on a branch DB (no local supabase stack was running).
+-- APPLY TARGET: "Unite-Group Test" project (xgqwfwqumliuguzhshwv) — NOT production.
+-- Apply via the Supabase SQL editor (paste everything above the DOWN line), or via
+-- the MCP once a permission rule for apply_migration is added. Remote migration apply
+-- is gated by the harness, so it is performed deliberately, never silently.
+-- Companion: 20260604010000_cc_command_centre_phase2.sql (remaining data-model tables).
 -- ============================================================
 
 -- ============================================================
