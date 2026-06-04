@@ -1,13 +1,9 @@
-// src/app/api/knowledge/notes/route.ts
-// GET /api/knowledge/notes — list knowledge notes (paginated, filterable)
-// POST /api/knowledge/notes — create a new knowledge note (Phase 1: manual seed only)
+// GET /api/knowledge/notes - list founder-scoped knowledge notes.
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getUser, createClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
-
-// ─── GET ────────────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
   const user = await getUser()
@@ -72,81 +68,4 @@ export async function GET(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   return NextResponse.json({ notes: data ?? [], count: count ?? 0, offset, limit })
-}
-
-// ─── POST ───────────────────────────────────────────────────────────────────
-
-export async function POST(req: NextRequest) {
-  const user = await getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
-
-  const body = await req.json() as {
-    project_key: string
-    vault_path: string
-    title: string
-    content?: string
-    content_html?: string
-    note_type?: string
-    tags?: string[]
-    frontmatter?: Record<string, unknown>
-    sources?: Array<{ title: string; url: string }>
-    confidence?: string
-    quality?: string
-    ai_optimized?: boolean
-    obsidian_source?: string
-    obsidian_mtime?: string
-  }
-
-  if (!body.project_key || !body.vault_path || !body.title) {
-    return NextResponse.json({ error: 'project_key, vault_path, and title are required' }, { status: 400 })
-  }
-
-  const supabase = await createClient()
-
-  // Verify project exists
-  const { data: project } = await supabase
-    .from('knowledge_projects')
-    .select('id')
-    .eq('founder_id', user.id)
-    .eq('key', body.project_key)
-    .single()
-
-  if (!project) {
-    return NextResponse.json({ error: `Project '${body.project_key}' not found` }, { status: 404 })
-  }
-
-  const slug = body.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-
-  const wordCount = (body.content ?? '').split(/\s+/).filter(Boolean).length
-
-  const { data, error } = await supabase
-    .from('knowledge_notes')
-    .insert({
-      founder_id: user.id,
-      project_key: body.project_key,
-      vault_path: body.vault_path,
-      title: body.title,
-      slug,
-      content: body.content ?? '',
-      content_html: body.content_html ?? null,
-      word_count: wordCount,
-      note_type: body.note_type ?? 'concept',
-      tags: body.tags ?? [],
-      frontmatter: body.frontmatter ?? {},
-      sources: body.sources ?? [],
-      confidence: body.confidence ?? 'medium',
-      quality: body.quality ?? 'draft',
-      ai_optimized: body.ai_optimized ?? false,
-      obsidian_source: body.obsidian_source ?? null,
-      obsidian_mtime: body.obsidian_mtime ? new Date(body.obsidian_mtime).toISOString() : null,
-    })
-    .select('id')
-    .single()
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-
-  return NextResponse.json({ id: data.id }, { status: 201 })
 }

@@ -124,7 +124,7 @@ CREATE INDEX IF NOT EXISTS knowledge_batches_founder_idx
   ON knowledge_batches(founder_id, started_at DESC);
 
 -- ============================================================
--- 6. RLS POLICIES (founder_id = auth.uid() pattern)
+-- 6. RLS POLICIES (Phase 1 read-only founder access)
 -- ============================================================
 
 ALTER TABLE knowledge_notes ENABLE ROW LEVEL SECURITY;
@@ -135,40 +135,17 @@ ALTER TABLE knowledge_batches ENABLE ROW LEVEL SECURITY;
 CREATE POLICY knowledge_notes_select ON knowledge_notes
   FOR SELECT USING (founder_id = auth.uid());
 
-CREATE POLICY knowledge_notes_insert ON knowledge_notes
-  FOR INSERT WITH CHECK (founder_id = auth.uid());
-
-CREATE POLICY knowledge_notes_update ON knowledge_notes
-  FOR UPDATE USING (founder_id = auth.uid())
-  WITH CHECK (founder_id = auth.uid());
-
-CREATE POLICY knowledge_notes_delete ON knowledge_notes
-  FOR DELETE USING (founder_id = auth.uid());
-
 -- knowledge_projects
 CREATE POLICY knowledge_projects_select ON knowledge_projects
   FOR SELECT USING (founder_id = auth.uid());
-
-CREATE POLICY knowledge_projects_insert ON knowledge_projects
-  FOR INSERT WITH CHECK (founder_id = auth.uid());
-
-CREATE POLICY knowledge_projects_update ON knowledge_projects
-  FOR UPDATE USING (founder_id = auth.uid())
-  WITH CHECK (founder_id = auth.uid());
-
-CREATE POLICY knowledge_projects_delete ON knowledge_projects
-  FOR DELETE USING (founder_id = auth.uid());
 
 -- knowledge_batches
 CREATE POLICY knowledge_batches_select ON knowledge_batches
   FOR SELECT USING (founder_id = auth.uid());
 
-CREATE POLICY knowledge_batches_insert ON knowledge_batches
-  FOR INSERT WITH CHECK (founder_id = auth.uid());
-
-CREATE POLICY knowledge_batches_update ON knowledge_batches
-  FOR UPDATE USING (founder_id = auth.uid())
-  WITH CHECK (founder_id = auth.uid());
+-- Normal authenticated users intentionally receive no insert/update/delete
+-- policies in Phase 1. Future ingestion should use reviewed server-side
+-- service-role code or a separately approved write policy.
 
 -- ============================================================
 -- 7. TRIGGERS (auto-update updated_at)

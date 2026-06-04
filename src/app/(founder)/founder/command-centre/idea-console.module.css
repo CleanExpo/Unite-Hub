@@ -1,0 +1,331 @@
+/* Idea Console — idea-intake panel for the Nexus Command Deck (CC-16).
+   Scoped CSS module (no runtime style injection — CSP/nonce safe).
+   Reuses the deck signal palette via local fallbacks so the panel stands
+   alone if rendered outside the .deck scope. */
+
+.console {
+  --c-cyan: #38e1ff;
+  --c-go: #34d399;
+  --c-amber: #fbbf24;
+  --c-abort: #f87171;
+  --c-line: rgba(120, 170, 210, 0.14);
+  --c-panel: rgba(10, 18, 28, 0.72);
+  --c-panel-hi: rgba(16, 26, 38, 0.9);
+  --c-text: #cfe0ec;
+  --c-muted: #6f879b;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1rem;
+  border: 1px solid var(--c-line);
+  border-radius: 4px;
+  padding: 1.1rem;
+  background: linear-gradient(180deg, var(--c-panel-hi), var(--c-panel));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 880px) {
+  .console { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── Intake column ─────────────────────────────────────────────────────── */
+.intake {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.label {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+.textarea,
+.select {
+  width: 100%;
+  border: 1px solid var(--c-line);
+  border-radius: 3px;
+  background: rgba(4, 8, 13, 0.6);
+  color: var(--c-text);
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  font-size: 0.85rem;
+  padding: 0.6rem 0.7rem;
+}
+
+.textarea {
+  min-height: 116px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.select {
+  appearance: none;
+  cursor: pointer;
+  font-family: var(--font-geist-mono, monospace);
+  letter-spacing: 0.04em;
+}
+
+.textarea:focus-visible,
+.select:focus-visible,
+.submit:focus-visible,
+.board:focus-visible {
+  outline: 2px solid var(--c-cyan);
+  outline-offset: 1px;
+}
+
+.actions { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+
+.submit,
+.board {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--c-cyan);
+  border-radius: 3px;
+  background: rgba(56, 225, 255, 0.08);
+  color: #eaf4fb;
+  font-family: var(--font-chakra, system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.95rem;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.submit:hover:not(:disabled),
+.board:hover:not(:disabled) {
+  background: rgba(56, 225, 255, 0.16);
+}
+
+.board {
+  border-color: var(--c-go);
+  background: rgba(52, 211, 153, 0.08);
+}
+.board:hover:not(:disabled) { background: rgba(52, 211, 153, 0.16); }
+
+.submit:disabled,
+.board:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hint {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+/* ── Readout column ────────────────────────────────────────────────────── */
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+  border-left: 1px solid var(--c-line);
+  padding-left: 1rem;
+}
+
+@media (max-width: 880px) {
+  .readout { border-left: none; border-top: 1px solid var(--c-line); padding-left: 0; padding-top: 0.9rem; }
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  text-align: center;
+  color: var(--c-muted);
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ── Banners ───────────────────────────────────────────────────────────── */
+.error {
+  border: 1px solid var(--c-abort);
+  border-left-width: 3px;
+  border-radius: 3px;
+  background: rgba(248, 113, 113, 0.08);
+  color: #ffd7d7;
+  font-size: 0.78rem;
+  padding: 0.55rem 0.7rem;
+}
+
+/* ── Task card ─────────────────────────────────────────────────────────── */
+.card {
+  border: 1px solid var(--c-line);
+  border-radius: 3px;
+  background: rgba(4, 8, 13, 0.5);
+  padding: 0.7rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.cardHead { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+
+.cardTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #eaf4fb;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.chip {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.16rem 0.45rem;
+  border-radius: 2px;
+  border: 1px solid var(--c-amber);
+  color: var(--c-amber);
+  white-space: nowrap;
+}
+
+.taskId {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--c-muted);
+  word-break: break-all;
+}
+
+/* ── Verdict ───────────────────────────────────────────────────────────── */
+.verdict {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  border: 1px solid var(--c-line);
+  border-radius: 3px;
+  background: rgba(4, 8, 13, 0.5);
+  padding: 0.7rem 0.8rem;
+}
+
+.verdictHead { display: flex; align-items: center; gap: 0.6rem; }
+
+.verdictBadge {
+  font-family: var(--font-chakra, system-ui, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.6rem;
+  border-radius: 2px;
+  border: 1px solid currentColor;
+}
+.verdictBadge[data-verdict="APPROVED"] { color: var(--c-go); background: rgba(52, 211, 153, 0.1); }
+.verdictBadge[data-verdict="HOLD"] { color: var(--c-amber); background: rgba(251, 191, 36, 0.1); }
+.verdictBadge[data-verdict="REJECTED"] { color: var(--c-abort); background: rgba(248, 113, 113, 0.1); }
+
+.rationale {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--c-text);
+}
+
+/* ── Persona breakdown ─────────────────────────────────────────────────── */
+.personaList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.persona {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.personaDot {
+  width: 8px; height: 8px; border-radius: 50%;
+  margin-top: 0.35rem;
+  background: var(--c-muted);
+}
+.personaDot[data-stance="APPROVED"] { background: var(--c-go); }
+.personaDot[data-stance="HOLD"] { background: var(--c-amber); }
+.personaDot[data-stance="REJECTED"] { background: var(--c-abort); }
+
+.personaBody { min-width: 0; }
+.personaName {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #aebfcd;
+}
+.personaComment {
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--c-muted);
+}
+
+/* ── Sub-tasks ─────────────────────────────────────────────────────────── */
+.subList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.subItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--c-line);
+  border-radius: 2px;
+  background: rgba(4, 8, 13, 0.4);
+  padding: 0.4rem 0.55rem;
+}
+.subIndex {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.58rem;
+  color: var(--c-go);
+  flex-shrink: 0;
+}
+.subTitle {
+  font-size: 0.76rem;
+  color: var(--c-text);
+  min-width: 0;
+  word-break: break-word;
+}
+
+.subhead {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+/* ── Spinner ───────────────────────────────────────────────────────────── */
+.spinner {
+  width: 12px; height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 1.4s; }
+}
