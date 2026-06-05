@@ -20,7 +20,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
-      <body nonce={nonce}>
+      <body nonce={nonce} suppressHydrationWarning>
         <ThemeProvider>{children}</ThemeProvider>
         <Analytics />
       </body>
