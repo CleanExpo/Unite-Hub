@@ -1,0 +1,248 @@
+/* Queue Board — kanban work-queue panel for the Nexus Command Deck (CC-17).
+   Scoped CSS module (no runtime style injection — CSP/nonce safe).
+   Mirrors the command-deck flight-deck palette: cyan / go-green / amber / red. */
+
+.board {
+  --qb-cyan: #38e1ff;
+  --qb-go: #34d399;
+  --qb-amber: #fbbf24;
+  --qb-abort: #f87171;
+  --qb-line: rgba(120, 170, 210, 0.14);
+  --qb-panel: rgba(10, 18, 28, 0.72);
+  --qb-panel-hi: rgba(16, 26, 38, 0.9);
+  --qb-text: #cfe0ec;
+  --qb-muted: #6f879b;
+
+  font-family: var(--font-chakra), var(--font-geist-sans), system-ui, sans-serif;
+  color: var(--qb-text);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+
+.toolbarMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--qb-muted);
+}
+
+.refresh {
+  appearance: none;
+  cursor: pointer;
+  border: 1px solid var(--qb-line);
+  background: var(--qb-panel-hi);
+  color: var(--qb-text);
+  font: inherit;
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.refresh:hover:not(:disabled) {
+  border-color: var(--qb-cyan);
+}
+.refresh:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+/* ── Column grid ───────────────────────────────────────────────────────── */
+.columns {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(170px, 1fr));
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+@media (max-width: 1100px) {
+  .columns { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+@media (max-width: 680px) {
+  .columns { grid-template-columns: 1fr; }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--qb-line);
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--qb-panel-hi), var(--qb-panel));
+  border-top: 2px solid var(--col, var(--qb-line));
+}
+
+.colHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--qb-line);
+}
+.colTitle {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--qb-text);
+}
+.colCount {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--qb-muted);
+  border: 1px solid var(--qb-line);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+}
+
+.colBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.55rem;
+  min-height: 60px;
+}
+
+.colEmpty {
+  font-size: 0.72rem;
+  color: var(--qb-muted);
+  padding: 0.5rem 0.3rem;
+  font-style: italic;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+.card {
+  border: 1px solid var(--qb-line);
+  border-radius: 5px;
+  background: rgba(8, 14, 22, 0.6);
+  padding: 0.55rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cardHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+.cardTitle {
+  font-size: 0.82rem;
+  line-height: 1.25;
+  color: var(--qb-text);
+  word-break: break-word;
+}
+
+.statusLight {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: 0.28rem;
+  border-radius: 50%;
+  background: var(--qb-muted);
+}
+.statusLight[data-status="proposed"] { background: var(--qb-muted); }
+.statusLight[data-status="queued"] { background: var(--qb-cyan); box-shadow: 0 0 6px var(--qb-cyan); }
+.statusLight[data-status="running"] { background: var(--qb-go); box-shadow: 0 0 6px var(--qb-go); }
+.statusLight[data-status="blocked"] { background: var(--qb-abort); box-shadow: 0 0 6px var(--qb-abort); }
+.statusLight[data-status="awaiting_approval"] { background: var(--qb-amber); box-shadow: 0 0 6px var(--qb-amber); }
+.statusLight[data-status="done"] { background: var(--qb-go); }
+.statusLight[data-status="failed"] { background: var(--qb-abort); }
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+.tag {
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--qb-muted);
+  border: 1px solid var(--qb-line);
+  border-radius: 3px;
+  padding: 0.05rem 0.35rem;
+}
+.tag[data-risk="high"],
+.tag[data-risk="critical"] { color: var(--qb-abort); border-color: rgba(248, 113, 113, 0.4); }
+.tag[data-risk="medium"] { color: var(--qb-amber); border-color: rgba(251, 191, 36, 0.4); }
+
+/* ── Approval actions ──────────────────────────────────────────────────── */
+.approveRow {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+}
+.actionBtn {
+  appearance: none;
+  cursor: pointer;
+  flex: 1;
+  border: 1px solid var(--qb-line);
+  background: transparent;
+  color: var(--qb-text);
+  font: inherit;
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.2rem;
+  border-radius: 4px;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.actionBtn:disabled { opacity: 0.45; cursor: progress; }
+.actionBtn[data-kind="approve"]:hover:not(:disabled) {
+  border-color: var(--qb-go); color: var(--qb-go);
+}
+.actionBtn[data-kind="reject"]:hover:not(:disabled) {
+  border-color: var(--qb-abort); color: var(--qb-abort);
+}
+.actionBtn[data-kind="defer"]:hover:not(:disabled) {
+  border-color: var(--qb-amber); color: var(--qb-amber);
+}
+
+.cardError {
+  font-size: 0.68rem;
+  color: var(--qb-abort);
+}
+
+/* ── States ────────────────────────────────────────────────────────────── */
+.state {
+  border: 1px solid var(--qb-line);
+  border-radius: 6px;
+  background: var(--qb-panel);
+  padding: 1.4rem 1.1rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--qb-muted);
+}
+.stateError {
+  border-color: rgba(248, 113, 113, 0.4);
+  color: var(--qb-abort);
+}
+
+.spinner {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: 0.4rem;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  vertical-align: -1px;
+  animation: qbspin 0.7s linear infinite;
+}
+@keyframes qbspin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+}
