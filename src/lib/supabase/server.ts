@@ -20,6 +20,7 @@
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { getPooledDatabaseUrl, isPoolerEnabled } from './pooler-config';
+import { getSupabaseAnonConfig } from './env-guard';
 
 /**
  * Check if we're in a build-time/static context
@@ -61,9 +62,19 @@ async function getCookieStore() {
 export async function createClient() {
   const cookieStore = await getCookieStore();
 
+  // Fail loud and specific if the anon key is missing/truncated at runtime.
+  // Skipped during the static build phase, where there is no request context
+  // and the key may legitimately be unavailable.
+  const { url, anonKey } = isBuildTime()
+    ? {
+        url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      }
+    : getSupabaseAnonConfig();
+
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    anonKey,
     {
       cookies: {
         get(name: string) {

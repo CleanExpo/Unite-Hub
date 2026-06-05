@@ -7,6 +7,7 @@
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { getSupabaseAnonConfig } from './env-guard';
 
 /**
  * Create a Supabase client for middleware
@@ -29,9 +30,14 @@ export function createMiddlewareClient(request: NextRequest, extraRequestHeaders
     },
   });
 
+  // Fail loud and specific if the anon key is missing/truncated at runtime.
+  // This middleware runs on every non-static request, so an absent key here is
+  // exactly what surfaces app-wide as "No API key found in request".
+  const { url, anonKey } = getSupabaseAnonConfig();
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    anonKey,
     {
       cookies: {
         get(name: string) {
