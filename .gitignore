@@ -297,3 +297,6 @@ scripts/_archive/
 # Env backups (may contain real secrets — never commit)
 .env.local.bak.*
 .env.local.*.bak
+
+# Local dev launcher (machine-specific CA path)
+start-dev.ps1
