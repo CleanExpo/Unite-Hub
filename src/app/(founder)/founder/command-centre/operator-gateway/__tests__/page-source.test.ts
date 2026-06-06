@@ -61,4 +61,20 @@ describe('command centre operator gateway UI source', () => {
     expect(source).toContain('No real execute button')
     expect(source).not.toContain('Execute job')
   })
+
+  it('shows controlled real-local execution design status while keeping external/live execution disabled', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Controlled real-local execution')
+    expect(source).toContain('local_foundation_ready')
+    expect(source).toContain('/api/hermes/operator-gateway/jobs/local-execution')
+    expect(source).toContain('Hard-gated actions refused')
+    expect(source).toContain('pending Claude/Cursor lanes')
+    expect(source).toContain('active Hermes/Codex/skill-exec lanes')
+    expect(source).not.toContain('Real execute job')
+  })
+
 })

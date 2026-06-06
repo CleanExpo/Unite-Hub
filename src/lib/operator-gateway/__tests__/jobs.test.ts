@@ -406,3 +406,154 @@ describe('operator gateway jobs layer', () => {
     }
   })
 })
+
+
+describe('controlled real-local execution foundation', () => {
+  it('validates approved local-only lanes and refuses pending or unregistered lanes', async () => {
+    const { validateControlledLocalExecutionRequest } = await import('../jobs')
+
+    const safe = validateControlledLocalExecutionRequest({
+      laneId: 'hermes_local',
+      taskType: 'documentation',
+      localOnly: true,
+      requestedCommand: 'pnpm vitest run src/lib/operator-gateway/__tests__/jobs.test.ts',
+    })
+
+    expect(safe.ok).toBe(true)
+    expect(safe.mode).toBe('controlled_real_local')
+    expect(safe.laneStatus).toBe('active')
+
+    for (const laneId of ['claude_code_max_primary', 'cursor_cli', 'unknown_lane']) {
+      const result = validateControlledLocalExecutionRequest({
+        laneId,
+        taskType: 'documentation',
+        localOnly: true,
+        requestedCommand: 'pnpm test',
+      })
+      expect(result.ok).toBe(false)
+      expect(result.reasons.join(' ')).toMatch(/pending|not registered|not active/i)
+    }
+  })
+
+  it('refuses hard-gated, external, production, API-key, browser, Computer Use, and secret-like requests before mutation', async () => {
+    const { validateControlledLocalExecutionRequest } = await import('../jobs')
+
+    for (const request of [
+      { laneId: 'hermes_local', taskType: 'production_deploy', localOnly: true },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: false },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, externalActionRequested: true },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, productionActionRequested: true },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, apiKeyRequested: true },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, browserAutomationRequested: true },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, computerUseRequested: true },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, requestedCommand: 'op item get secret' },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, requestedCommand: 'supabase db push' },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, requestedCommand: 'psql postgres://prod' },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, requestedCommand: 'vercel deploy --prod' },
+      { laneId: 'hermes_local', taskType: 'documentation', localOnly: true, requestedCommand: 'curl https://example.com' },
+    ]) {
+      const result = validateControlledLocalExecutionRequest(request)
+      expect(result.ok).toBe(false)
+    }
+  })
+
+  it('records a controlled local execution approval event and running status without dispatching external tools', async () => {
+    const { requestControlledLocalOperatorExecution } = await import('../jobs')
+    const existingJob = {
+      id: 'job-local-1',
+      founder_id: 'founder-1',
+      lane_id: 'hermes_local',
+      title: 'Local policy proof',
+      task_type: 'documentation',
+      status: 'planned',
+      external_action_requested: false,
+      production_action_requested: false,
+      api_key_requested: false,
+      evidence_refs: [],
+      metadata: {},
+      created_at: '2026-06-07T09:00:00Z',
+      updated_at: '2026-06-07T09:00:00Z',
+    }
+    const updatedJob = {
+      ...existingJob,
+      status: 'running',
+      evidence_refs: ['2nd-brain/.agentic_nexus/CONTROLLED_REAL_LOCAL_EXECUTION_EVIDENCE_PACKET.md'],
+      metadata: {
+        controlledRealLocalExecution: {
+          status: 'foundation_ready',
+          laneId: 'hermes_local',
+          taskType: 'documentation',
+          localOnly: true,
+          externalExecution: false,
+          liveRunner: false,
+          productionDbTouched: false,
+          dispatchPerformed: false,
+          requestedAt: '2026-06-07T10:00:00Z',
+        },
+      },
+      updated_at: '2026-06-07T10:00:00Z',
+    }
+    const readSingle = vi.fn().mockResolvedValue({ data: existingJob, error: null })
+    const readFounderEq = vi.fn(() => ({ single: readSingle }))
+    const readIdEq = vi.fn(() => ({ eq: readFounderEq }))
+    const select = vi.fn(() => ({ eq: readIdEq }))
+    const updateSingle = vi.fn().mockResolvedValue({ data: updatedJob, error: null })
+    const updateSelect = vi.fn(() => ({ single: updateSingle }))
+    const updateFounderEq = vi.fn(() => ({ select: updateSelect }))
+    const updateIdEq = vi.fn(() => ({ eq: updateFounderEq }))
+    const update = vi.fn(() => ({ eq: updateIdEq }))
+    const eventInsert = vi.fn().mockResolvedValue({ data: null, error: null })
+    const from = vi.fn((table: string) => {
+      if (table === 'operator_jobs') return { select, update }
+      if (table === 'operator_events') return { insert: eventInsert }
+      throw new Error(`unexpected table ${table}`)
+    })
+
+    const result = await requestControlledLocalOperatorExecution({
+      founderId: 'founder-1',
+      client: { from },
+      jobId: 'job-local-1',
+      laneId: 'hermes_local',
+      taskType: 'documentation',
+      localOnly: true,
+      requestedCommand: 'pnpm vitest run src/lib/operator-gateway/__tests__/jobs.test.ts',
+      now: () => '2026-06-07T10:00:00Z',
+    })
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) throw new Error('expected controlled local foundation success')
+    expect(result.source).toBe('controlled_real_local_foundation')
+    expect(result.localExecutionFoundation).toBe('local_foundation_ready')
+    expect(result.dispatchPerformed).toBe(false)
+    expect(result.externalExecutionEnabled).toBe(false)
+    expect(result.liveExecution).toBe(false)
+    expect(result.productionConnected).toBe(false)
+    expect(result.eventAppended).toBe(true)
+    expect(result.jobStatusUpdated).toBe(true)
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({ status: 'running' }))
+    expect(eventInsert).toHaveBeenCalledWith(expect.objectContaining({
+      event_type: 'status_changed',
+      from_status: 'planned',
+      to_status: 'running',
+      evidence_ref: '2nd-brain/.agentic_nexus/CONTROLLED_REAL_LOCAL_EXECUTION_EVIDENCE_PACKET.md',
+    }))
+  })
+
+  it('refuses controlled local execution requests without touching DB when policy fails', async () => {
+    const { requestControlledLocalOperatorExecution } = await import('../jobs')
+    const client = { from: vi.fn() }
+    const result = await requestControlledLocalOperatorExecution({
+      founderId: 'founder-1',
+      client,
+      jobId: 'job-local-1',
+      laneId: 'hermes_local',
+      taskType: 'documentation',
+      localOnly: true,
+      requestedCommand: 'op item get sandbox voice',
+    })
+
+    expect(result.ok).toBe(false)
+    expect(result.source).toBe('policy_refused')
+    expect(client.from).not.toHaveBeenCalled()
+  })
+})

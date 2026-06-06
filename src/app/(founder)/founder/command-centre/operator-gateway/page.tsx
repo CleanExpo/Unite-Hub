@@ -1,6 +1,6 @@
 // src/app/(founder)/founder/command-centre/operator-gateway/page.tsx
 //
-// Unite-Group Nexus Command Centre — operator execution surface (SANDBOX DRY-RUN-ONLY MODE).
+// Unite-Group Nexus Command Centre — operator execution surface (SANDBOX DRY-RUN + CONTROLLED REAL-LOCAL FOUNDATION MODE).
 // Founder-only via the (founder) layout. This page may create sandbox planned jobs and dry-run them only:
 // no production DB writes, no external execution, no live runner, no API keys, no web-session scraping. No real execute button.
 
@@ -113,7 +113,7 @@ export default async function OperatorGatewayPage() {
 
       <div style={banner}>
         <strong>Operator-session lanes only.</strong> No API keys. Max/Pro plans are not backend credentials. No external execution yet.
-        The CRM may show lanes, plan jobs, display evidence, and expose blocked gates — it does not run Codex/Claude/Cursor/Hermes jobs from this page.
+        The CRM may show lanes, plan jobs, display evidence, and expose blocked gates — it does not run Codex/Claude/Cursor/Hermes jobs from this page. Controlled real-local execution is policy-gated; dispatch is still disabled.
       </div>
 
       <div style={warning}>
@@ -141,6 +141,8 @@ export default async function OperatorGatewayPage() {
           <p>External execution disabled: {boolLabel(!view.externalExecutionEnabled, false)}</p>
           <p>Job creation enabled: {boolLabel(view.jobSubmission.enabled, false)}</p>
           <p>Dry-run execution enabled: {boolLabel(view.dryRunExecution.enabled, false)}</p>
+          <p>Controlled real-local execution: <span style={pill('green')}>{view.controlledLocalExecution.status}</span></p>
+          <p>Local foundation endpoint: <code>{view.controlledLocalExecution.endpoint}</code></p>
           <p>Jobs visible: <b>{view.jobQueue.jobCount}</b></p>
           {view.jobQueue.source === 'sandbox_select' && view.jobQueue.jobCount === 0 ? (
             <p style={{ color: '#3fb950', fontSize: 13 }}>Sandbox connected empty state: no operator jobs recorded yet.</p>
@@ -154,6 +156,19 @@ export default async function OperatorGatewayPage() {
           <p>Reviewer: {view.boardDecisionPanel.reviewer}</p>
           <p>Next Board gate: <b>{view.boardDecisionPanel.nextBoardGate}</b></p>
         </div>
+      </section>
+
+      <section style={card} aria-label="controlled real-local execution">
+        <h2 style={{ fontSize: 18, marginTop: 0 }}>Controlled real-local execution · local_foundation_ready</h2>
+        <p style={{ color: '#3fb950', fontSize: 14 }}>Controlled real-local execution design status is local_foundation_ready. The foundation validates policy, appends sandbox events, and can update sandbox job status, but dispatch remains disabled.</p>
+        <p style={{ color: '#f97316', fontSize: 13 }}>Hard-gated actions refused: production DB, deploy, migrations, secrets/OP/1Password, API keys, external services, browser automation, Computer Use, email, payments, claims, orders, and public/client actions.</p>
+        <p style={{ color: '#8b949e', fontSize: 13 }}>active Hermes/Codex/skill-exec lanes: {view.controlledLocalExecution.activeLanes.join(', ')}</p>
+        <p style={{ color: '#8b949e', fontSize: 13 }}>pending Claude/Cursor lanes: {view.controlledLocalExecution.pendingLanes.join(', ')}</p>
+        <p>External execution enabled: {boolLabel(view.controlledLocalExecution.externalExecutionEnabled)}</p>
+        <p>Live runner enabled: {boolLabel(view.controlledLocalExecution.liveRunnerEnabled)}</p>
+        <p>Production connected: {boolLabel(view.controlledLocalExecution.productionConnected, false)}</p>
+        <p>Dispatch performed: {boolLabel(view.controlledLocalExecution.dispatchEnabled)}</p>
+        <code>/api/hermes/operator-gateway/jobs/local-execution</code>
       </section>
 
       <section style={card} aria-label="lane selector">
@@ -267,6 +282,31 @@ export default async function OperatorGatewayPage() {
                   }}
                 >
                   Dry-run only · append event + update sandbox status
+                </button>
+              </form>
+              <form method="post" action="/api/hermes/operator-gateway/jobs/local-execution" style={{ marginTop: '0.5rem' }}>
+                <input type="hidden" name="jobId" value={job.id} />
+                <input type="hidden" name="laneId" value={job.laneId} />
+                <input type="hidden" name="taskType" value={job.taskType} />
+                <input type="hidden" name="localOnly" value="true" />
+                <input type="hidden" name="requestedCommand" value="policy foundation only; dispatch disabled" />
+                <input type="hidden" name="externalActionRequested" value="false" />
+                <input type="hidden" name="productionActionRequested" value="false" />
+                <input type="hidden" name="apiKeyRequested" value="false" />
+                <input type="hidden" name="browserAutomationRequested" value="false" />
+                <input type="hidden" name="computerUseRequested" value="false" />
+                <button
+                  type="submit"
+                  disabled={!view.controlledLocalExecution.enabled || job.status !== 'planned' || job.externalActionRequested || job.productionActionRequested || job.apiKeyRequested}
+                  style={{
+                    ...inputStyle,
+                    color: '#3fb950',
+                    fontWeight: 700,
+                    opacity: view.controlledLocalExecution.enabled && job.status === 'planned' ? 1 : 0.6,
+                    cursor: view.controlledLocalExecution.enabled && job.status === 'planned' ? 'pointer' : 'not-allowed',
+                  }}
+                >
+                  Request controlled local foundation · policy/event/status only
                 </button>
               </form>
             </div>

@@ -25,6 +25,19 @@ export interface CommandCentreOperatorSurfaceView {
     jobCount: number
     note: string
   }
+  controlledLocalExecution: {
+    mode: 'controlled_real_local_foundation'
+    status: 'local_foundation_ready'
+    endpoint: '/api/hermes/operator-gateway/jobs/local-execution'
+    enabled: boolean
+    dispatchEnabled: false
+    externalExecutionEnabled: false
+    liveRunnerEnabled: false
+    productionConnected: false
+    activeLanes: string[]
+    pendingLanes: string[]
+    disabledReason: string
+  }
   dryRunExecution: {
     mode: 'sandbox_dry_run_only'
     enabled: boolean
@@ -60,9 +73,9 @@ export interface CommandCentreOperatorSurfaceView {
     items: { id: string; title: string; status: 'ready' | 'blocked_gate' | 'completed' | 'waiting_input'; nextAction: string }[]
   }
   boardDecisionPanel: {
-    currentDecision: 'build_command_centre_operator_execution_surface'
+    currentDecision: 'approve_controlled_real_local_operator_execution_design_packet'
     reviewer: 'Phill McGurk'
-    status: 'implemented_safe_local_surface'
+    status: 'local_foundation_ready'
     nextBoardGate: string
   }
   safetyStatus: {
@@ -136,6 +149,21 @@ export function getCommandCentreOperatorSurfaceView(
       jobCount: jobsView.jobCount,
       note: jobsView.note,
     },
+    controlledLocalExecution: {
+      mode: 'controlled_real_local_foundation',
+      status: 'local_foundation_ready',
+      endpoint: '/api/hermes/operator-gateway/jobs/local-execution',
+      enabled: sandboxJobCreationEnabled,
+      dispatchEnabled: false,
+      externalExecutionEnabled: false,
+      liveRunnerEnabled: false,
+      productionConnected: false,
+      activeLanes: ['hermes_local', 'openai_codex_max', 'agentic_nexus_skill_exec'],
+      pendingLanes: ['claude_code_max_primary', 'claude_code_max_secondary', 'cursor_cli'],
+      disabledReason: sandboxJobCreationEnabled
+        ? 'Controlled real-local execution policy/types foundation is ready. It may append sandbox events and mark jobs running, but dispatch remains disabled until a later Board/ShipIt execution gate.'
+        : 'Controlled real-local execution foundation is disabled until sandbox persistence/job creation is connected.',
+    },
     dryRunExecution: {
       mode: 'sandbox_dry_run_only',
       enabled: sandboxJobCreationEnabled,
@@ -191,7 +219,7 @@ export function getCommandCentreOperatorSurfaceView(
             : 'approve_operator_gateway_sandbox_apply',
         status: 'needs_board_grant',
         reason: sandboxJobCreationEnabled
-          ? 'Sandbox dry-run-only execution is enabled; controlled real local operator execution design remains a later Board gate.'
+          ? 'Controlled real-local execution foundation is design-ready/local-foundation-ready; actual dispatch remains disabled.'
           : jobsView.source === 'sandbox_select'
             ? 'Sandbox persistence is connected for read-only visibility; job creation remains disabled until a later Board gate.'
             : 'operator_jobs/operator_events migration remains sandbox-first and unapplied; no DB writes are allowed here.',
@@ -230,7 +258,7 @@ export function getCommandCentreOperatorSurfaceView(
         },
         {
           id: sandboxJobCreationEnabled
-            ? 'approve_controlled_real_local_operator_execution_design_packet'
+            ? 'approve_controlled_real_local_execution_dispatch_gate'
             : jobsView.source === 'sandbox_select'
               ? 'approve_operator_gateway_sandbox_job_creation'
               : 'approve_operator_gateway_sandbox_apply',
@@ -261,11 +289,11 @@ export function getCommandCentreOperatorSurfaceView(
       ],
     },
     boardDecisionPanel: {
-      currentDecision: 'build_command_centre_operator_execution_surface',
+      currentDecision: 'approve_controlled_real_local_operator_execution_design_packet',
       reviewer: 'Phill McGurk',
-      status: 'implemented_safe_local_surface',
+      status: 'local_foundation_ready',
       nextBoardGate: sandboxJobCreationEnabled
-        ? 'approve_controlled_real_local_operator_execution_design_packet'
+        ? 'approve_controlled_real_local_execution_dispatch_gate'
         : jobsView.source === 'sandbox_select'
           ? 'approve_operator_gateway_sandbox_job_creation'
           : 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',

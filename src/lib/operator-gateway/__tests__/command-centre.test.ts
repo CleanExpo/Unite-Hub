@@ -50,7 +50,7 @@ describe('command centre operator execution surface view', () => {
       expect.objectContaining({ gateId: 'enable_external_operator_execution' }),
     ]))
     expect(view.evidencePointers.length).toBeGreaterThanOrEqual(4)
-    expect(view.boardDecisionPanel.currentDecision).toBe('build_command_centre_operator_execution_surface')
+    expect(view.boardDecisionPanel.currentDecision).toBe('approve_controlled_real_local_operator_execution_design_packet')
     expect(view.boardDecisionPanel.nextBoardGate).toContain('approve')
   })
 
@@ -87,7 +87,23 @@ describe('command centre sandbox job creation state', () => {
     expect(view.dryRunExecution.productionConnected).toBe(false)
     expect(view.dryRunExecution.endpoint).toBe('/api/hermes/operator-gateway/jobs/dry-run')
     expect(view.blockedGates.map((gate) => gate.gateId)).toContain('approve_operator_gateway_sandbox_job_execution_dry_run')
-    expect(view.boardDecisionPanel.nextBoardGate).toBe('approve_controlled_real_local_operator_execution_design_packet')
+    expect(view.boardDecisionPanel.nextBoardGate).toBe('approve_controlled_real_local_execution_dispatch_gate')
     expect(view.safetyStatus.externalExecutionEnabled).toBe(false)
   })
+
+  it('surfaces controlled real-local execution foundation status without dispatch', () => {
+    const view = getCommandCentreOperatorSurfaceView({ jobsView: sandboxEmptyJobsView, sandboxJobCreationEnabled: true })
+
+    expect(view.controlledLocalExecution.mode).toBe('controlled_real_local_foundation')
+    expect(view.controlledLocalExecution.status).toBe('local_foundation_ready')
+    expect(view.controlledLocalExecution.endpoint).toBe('/api/hermes/operator-gateway/jobs/local-execution')
+    expect(view.controlledLocalExecution.enabled).toBe(true)
+    expect(view.controlledLocalExecution.dispatchEnabled).toBe(false)
+    expect(view.controlledLocalExecution.externalExecutionEnabled).toBe(false)
+    expect(view.controlledLocalExecution.liveRunnerEnabled).toBe(false)
+    expect(view.controlledLocalExecution.productionConnected).toBe(false)
+    expect(view.controlledLocalExecution.activeLanes).toEqual(['hermes_local', 'openai_codex_max', 'agentic_nexus_skill_exec'])
+    expect(view.controlledLocalExecution.pendingLanes).toEqual(['claude_code_max_primary', 'claude_code_max_secondary', 'cursor_cli'])
+  })
+
 })

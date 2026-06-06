@@ -248,7 +248,7 @@ interface OperatorEventInsert {
 }
 
 interface OperatorJobUpdate {
-  status: 'done'
+  status: 'done' | 'running'
   evidence_refs: string[]
   metadata: Record<string, unknown>
 }
@@ -258,7 +258,7 @@ interface OperatorDryRunEventInsert {
   job_id: string
   event_type: 'status_changed'
   from_status: OperatorJobStatus
-  to_status: 'done'
+  to_status: 'done' | 'running'
   detail: string
   evidence_ref: string
 }
@@ -692,6 +692,260 @@ export async function dryRunSandboxOperatorJob(options: DryRunSandboxOperatorJob
     }
   } catch {
     return dryRunRejection(503, 'sandbox_update_failed', 'Sandbox dry-run failed due to runtime error.', ['sandbox dry-run runtime error'])
+  }
+}
+
+
+
+export const CONTROLLED_REAL_LOCAL_EXECUTION_EVIDENCE_REF = '2nd-brain/.agentic_nexus/CONTROLLED_REAL_LOCAL_EXECUTION_EVIDENCE_PACKET.md'
+
+export interface ControlledLocalExecutionRequest {
+  jobId?: string
+  laneId?: string
+  taskType?: string
+  localOnly?: boolean
+  requestedCommand?: string
+  externalActionRequested?: boolean
+  productionActionRequested?: boolean
+  apiKeyRequested?: boolean
+  browserAutomationRequested?: boolean
+  computerUseRequested?: boolean
+}
+
+export type ControlledLocalExecutionPolicyResult =
+  | {
+      ok: true
+      mode: 'controlled_real_local'
+      laneStatus: 'active'
+      reasons: []
+    }
+  | {
+      ok: false
+      mode: 'controlled_real_local'
+      laneStatus: 'active' | 'pending' | 'not_active' | 'not_registered'
+      reasons: string[]
+    }
+
+const CONTROLLED_LOCAL_ACTIVE_LANES = ['hermes_local', 'openai_codex_max', 'agentic_nexus_skill_exec'] as const
+const CONTROLLED_LOCAL_PENDING_LANES = ['claude_code_max_primary', 'claude_code_max_secondary', 'cursor_cli'] as const
+const PROHIBITED_LOCAL_COMMAND_PATTERN = /\b(op\s+item|get\s+secret|supabase\s+(db|migration|link|login)|psql\b|vercel\s+deploy|railway\b|stripe\b|sendgrid\b|curl\b|wget\b|ssh\b|scp\b|nc\b|ncat\b|playwright\b|puppeteer\b|computer_use\b|browser\b|open\s+https?:|deploy\b|migration\b)\b/i
+const SECRET_LIKE_LOCAL_COMMAND_PATTERN = /secret|token|api[_-]?key|password|credential|1password|onepassword/i
+
+export function validateControlledLocalExecutionRequest(request: ControlledLocalExecutionRequest): ControlledLocalExecutionPolicyResult {
+  const reasons: string[] = []
+  const laneId = request.laneId ?? ''
+  const lane = getOperatorLanes().find((candidate) => candidate.laneId === laneId)
+  let laneStatus: ControlledLocalExecutionPolicyResult['laneStatus'] = 'not_registered'
+
+  if (!laneId) reasons.push('laneId is required')
+  if (!lane) {
+    if (laneId) reasons.push(`laneId '${laneId}' is not registered`)
+  } else if ((CONTROLLED_LOCAL_PENDING_LANES as readonly string[]).includes(lane.laneId)) {
+    laneStatus = 'pending'
+    reasons.push(`laneId '${lane.laneId}' is pending operator install/login and cannot run controlled local execution yet`)
+  } else if (!(CONTROLLED_LOCAL_ACTIVE_LANES as readonly string[]).includes(lane.laneId) || lane.status !== 'active') {
+    laneStatus = 'not_active'
+    reasons.push(`laneId '${lane.laneId}' is not active for controlled real-local execution`)
+  } else {
+    laneStatus = 'active'
+  }
+
+  if (!request.taskType || !request.taskType.trim()) reasons.push('taskType is required')
+  if (request.taskType && HARD_GATED_TASK_TYPES.includes(request.taskType)) {
+    reasons.push(`taskType '${request.taskType}' is hard-gated and must be refused`)
+  }
+  if (lane && request.taskType && !lane.allowedTaskTypes.includes(request.taskType)) {
+    reasons.push(`taskType '${request.taskType}' is not allowed for lane '${lane.laneId}'`)
+  }
+  if (request.localOnly !== true) reasons.push('localOnly must be true')
+  if (request.externalActionRequested === true) reasons.push('externalActionRequested must remain false')
+  if (request.productionActionRequested === true) reasons.push('productionActionRequested must remain false')
+  if (request.apiKeyRequested === true) reasons.push('apiKeyRequested must remain false')
+  if (request.browserAutomationRequested === true) reasons.push('browserAutomationRequested must remain false')
+  if (request.computerUseRequested === true) reasons.push('computerUseRequested must remain false')
+
+  const command = request.requestedCommand?.trim() ?? ''
+  if (command) {
+    if (PROHIBITED_LOCAL_COMMAND_PATTERN.test(command)) {
+      reasons.push('requestedCommand contains prohibited external, production, browser, deployment, DB, or OP/secret operation')
+    }
+    if (SECRET_LIKE_LOCAL_COMMAND_PATTERN.test(command)) {
+      reasons.push('requestedCommand must not reference secrets, tokens, API keys, passwords, credentials, or 1Password')
+    }
+  }
+
+  if (reasons.length > 0) return { ok: false, mode: 'controlled_real_local', laneStatus, reasons }
+  return { ok: true, mode: 'controlled_real_local', laneStatus: 'active', reasons: [] }
+}
+
+export interface ControlledLocalOperatorExecutionOptions extends ControlledLocalExecutionRequest {
+  founderId?: string
+  client?: OperatorJobsDryRunClient | null
+  now?: () => string
+}
+
+export type ControlledLocalOperatorExecutionResult =
+  | {
+      ok: true
+      status: 200
+      source: 'controlled_real_local_foundation'
+      localExecutionFoundation: 'local_foundation_ready'
+      liveExecution: false
+      externalExecutionEnabled: false
+      productionConnected: false
+      dispatchPerformed: false
+      eventAppended: true
+      jobStatusUpdated: true
+      job: OperatorJob
+      event: {
+        eventType: 'status_changed'
+        fromStatus: OperatorJobStatus
+        toStatus: 'running'
+        evidenceRef: string
+        detail: string
+      }
+    }
+  | {
+      ok: false
+      status: 400 | 404 | 503
+      source: 'validation_failed' | 'policy_refused' | 'not_connected' | 'sandbox_job_not_found' | 'sandbox_local_execution_refused' | 'sandbox_update_failed' | 'sandbox_event_insert_failed'
+      error: string
+      reasons: string[]
+      localExecutionFoundation: 'policy_refused' | 'sandbox_rejected'
+      liveExecution: false
+      externalExecutionEnabled: false
+      productionConnected: false
+      dispatchPerformed: false
+      eventAppended: false
+      jobStatusUpdated: false
+    }
+
+function controlledLocalRejection(
+  status: Extract<ControlledLocalOperatorExecutionResult, { ok: false }>['status'],
+  source: Extract<ControlledLocalOperatorExecutionResult, { ok: false }>['source'],
+  error: string,
+  reasons: string[],
+  localExecutionFoundation: 'policy_refused' | 'sandbox_rejected' = 'policy_refused',
+): ControlledLocalOperatorExecutionResult {
+  return {
+    ok: false,
+    status,
+    source,
+    error,
+    reasons,
+    localExecutionFoundation,
+    liveExecution: false,
+    externalExecutionEnabled: false,
+    productionConnected: false,
+    dispatchPerformed: false,
+    eventAppended: false,
+    jobStatusUpdated: false,
+  }
+}
+
+export async function requestControlledLocalOperatorExecution(options: ControlledLocalOperatorExecutionOptions): Promise<ControlledLocalOperatorExecutionResult> {
+  const { founderId, client, jobId } = options
+  if (!founderId) return controlledLocalRejection(400, 'validation_failed', 'Controlled real-local execution rejected by safety validation.', ['founder/session is required'])
+  if (!jobId || !jobId.trim()) return controlledLocalRejection(400, 'validation_failed', 'Controlled real-local execution rejected by safety validation.', ['jobId is required'])
+
+  const policy = validateControlledLocalExecutionRequest(options)
+  if (!policy.ok) {
+    return controlledLocalRejection(400, 'policy_refused', 'Controlled real-local execution refused by policy.', policy.reasons)
+  }
+  if (!client) {
+    return controlledLocalRejection(503, 'not_connected', 'Sandbox operator_jobs controlled real-local request is unavailable; no production fallback exists.', ['approved sandbox write client is not configured'], 'sandbox_rejected')
+  }
+
+  try {
+    const existingResult = await client
+      .from('operator_jobs')
+      .select(OPERATOR_JOBS_SELECT)
+      .eq('id', jobId.trim())
+      .eq('founder_id', founderId)
+      .single()
+    if (existingResult.error || !existingResult.data) {
+      return controlledLocalRejection(404, 'sandbox_job_not_found', 'Sandbox operator job not found for founder.', ['sandbox operator job not found'], 'sandbox_rejected')
+    }
+    const job = mapOperatorJobRow(existingResult.data)
+    if (!job) return controlledLocalRejection(400, 'sandbox_local_execution_refused', 'Controlled real-local execution refused unsafe job row.', ['job violates no-API-key invariants'])
+
+    const reasons: string[] = []
+    if (job.status !== 'planned') reasons.push(`job status '${job.status}' cannot request controlled local execution; expected planned`)
+    if (job.laneId !== options.laneId) reasons.push('request laneId must match the persisted sandbox job lane')
+    if (job.taskType !== options.taskType) reasons.push('request taskType must match the persisted sandbox job taskType')
+    if (HARD_GATED_TASK_TYPES.includes(job.taskType)) reasons.push(`taskType '${job.taskType}' is hard-gated and prohibited`)
+    if (job.apiKeyRequested !== false) reasons.push('apiKeyRequested must be false')
+    if (job.externalActionRequested) reasons.push('externalActionRequested must be false')
+    if (job.productionActionRequested) reasons.push('productionActionRequested must be false')
+    if (reasons.length) return controlledLocalRejection(400, 'sandbox_local_execution_refused', 'Controlled real-local execution refused by sandbox row validation.', reasons)
+
+    const requestedAt = options.now?.() ?? new Date().toISOString()
+    const command = typeof options.requestedCommand === 'string' ? options.requestedCommand.trim().slice(0, 240) : ''
+    const evidenceRefs = Array.from(new Set([...job.evidenceRefs, CONTROLLED_REAL_LOCAL_EXECUTION_EVIDENCE_REF]))
+    const metadata = {
+      ...job.metadata,
+      controlledRealLocalExecution: {
+        status: 'foundation_ready',
+        laneId: options.laneId,
+        taskType: options.taskType,
+        localOnly: true,
+        requestedCommand: command || undefined,
+        externalExecution: false,
+        liveRunner: false,
+        productionDbTouched: false,
+        dispatchPerformed: false,
+        requestedAt,
+      },
+    }
+    const updateResult = await client
+      .from('operator_jobs')
+      .update({ status: 'running' as never, evidence_refs: evidenceRefs, metadata })
+      .eq('id', job.id)
+      .eq('founder_id', founderId)
+      .select(OPERATOR_JOBS_SELECT)
+      .single()
+    if (updateResult.error || !updateResult.data) {
+      return controlledLocalRejection(503, 'sandbox_update_failed', 'Sandbox controlled real-local status update failed.', ['sandbox operator_jobs update failed'], 'sandbox_rejected')
+    }
+    const updatedJob = mapOperatorJobRow(updateResult.data)
+    if (!updatedJob) return controlledLocalRejection(503, 'sandbox_update_failed', 'Sandbox controlled real-local update returned unsafe row.', ['updated row failed safety mapping'], 'sandbox_rejected')
+
+    const detail = `Controlled real-local execution foundation accepted for job ${job.id}. Local-only policy passed. Dispatch disabled; no external execution, live runner, production DB, browser automation, Computer Use, or secrets access occurred.`
+    const eventResult = await client.from('operator_events').insert({
+      founder_id: founderId,
+      job_id: job.id,
+      event_type: 'status_changed',
+      from_status: job.status,
+      to_status: 'running' as never,
+      detail,
+      evidence_ref: CONTROLLED_REAL_LOCAL_EXECUTION_EVIDENCE_REF,
+    })
+    if (eventResult.error) {
+      return controlledLocalRejection(503, 'sandbox_event_insert_failed', 'Sandbox controlled real-local event append failed.', ['sandbox operator_events append failed'], 'sandbox_rejected')
+    }
+
+    return {
+      ok: true,
+      status: 200,
+      source: 'controlled_real_local_foundation',
+      localExecutionFoundation: 'local_foundation_ready',
+      liveExecution: false,
+      externalExecutionEnabled: false,
+      productionConnected: false,
+      dispatchPerformed: false,
+      eventAppended: true,
+      jobStatusUpdated: true,
+      job: updatedJob,
+      event: {
+        eventType: 'status_changed',
+        fromStatus: job.status,
+        toStatus: 'running',
+        evidenceRef: CONTROLLED_REAL_LOCAL_EXECUTION_EVIDENCE_REF,
+        detail,
+      },
+    }
+  } catch {
+    return controlledLocalRejection(503, 'sandbox_update_failed', 'Controlled real-local execution request failed due to runtime error.', ['sandbox controlled real-local runtime error'], 'sandbox_rejected')
   }
 }
 
