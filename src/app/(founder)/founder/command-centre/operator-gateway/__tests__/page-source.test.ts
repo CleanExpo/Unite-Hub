@@ -48,4 +48,17 @@ describe('command centre operator gateway UI source', () => {
     expect(source).toContain('Live runner enabled')
     expect(source).toContain('External execution disabled')
   })
+
+  it('shows dry-run-only execution state without a real execute button', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Dry-run only')
+    expect(source).toContain('/api/hermes/operator-gateway/jobs/dry-run')
+    expect(source).toContain('dry-run-only execution')
+    expect(source).toContain('No real execute button')
+    expect(source).not.toContain('Execute job')
+  })
 })
