@@ -1,12 +1,14 @@
 // src/app/(founder)/founder/command-centre/operator-gateway/page.tsx
 //
-// Unite-Group Nexus Command Centre — operator execution surface (SAFE LOCAL MODE).
-// Founder-only via the (founder) layout. This page is intentionally inert:
-// no DB writes, no external execution, no API keys, no web-session scraping.
+// Unite-Group Nexus Command Centre — operator execution surface (SANDBOX JOB CREATION MODE).
+// Founder-only via the (founder) layout. This page may create sandbox planned jobs only:
+// no production DB writes, no external execution, no live runner, no API keys, no web-session scraping.
 
 export const dynamic = 'force-dynamic'
 
+import { getUser } from '@/lib/supabase/server'
 import { getCommandCentreOperatorSurfaceView } from '@/lib/operator-gateway/command-centre'
+import { getOperatorJobsView, getSandboxOperatorJobsClient } from '@/lib/operator-gateway/jobs'
 
 const wrap: React.CSSProperties = {
   maxWidth: 1180,
@@ -93,8 +95,12 @@ function boolLabel(value: boolean, safeWhenFalse = true) {
   return <span style={pill(safe ? 'green' : 'red')}>{value ? 'yes' : 'no'}</span>
 }
 
-export default function OperatorGatewayPage() {
-  const view = getCommandCentreOperatorSurfaceView()
+export default async function OperatorGatewayPage() {
+  const user = await getUser()
+  const jobsView = user
+    ? await getOperatorJobsView({ founderId: user.id, client: getSandboxOperatorJobsClient() })
+    : undefined
+  const view = getCommandCentreOperatorSurfaceView({ jobsView, sandboxJobCreationEnabled: true })
   const activeLanes = view.lanes.filter((lane) => lane.status === 'active')
   const inactiveLanes = view.lanes.filter((lane) => lane.status !== 'active')
 
@@ -130,8 +136,10 @@ export default function OperatorGatewayPage() {
           <p>Production connected: {boolLabel(view.jobQueue.source === 'production', false)}</p>
           <p>Connected: {boolLabel(view.jobQueue.connected, false)}</p>
           <p>Source: <code>{view.jobQueue.source}</code></p>
+          <p>Live runner enabled: {boolLabel(false)}</p>
           <p>Live execution: {boolLabel(view.jobQueue.liveExecution)}</p>
-          <p>Job creation enabled: {boolLabel(view.jobSubmission.enabled)}</p>
+          <p>External execution disabled: {boolLabel(false, false)}</p>
+          <p>Job creation enabled: {boolLabel(view.jobSubmission.enabled, false)}</p>
           <p>Jobs visible: <b>{view.jobQueue.jobCount}</b></p>
           {view.jobQueue.source === 'sandbox_select' && view.jobQueue.jobCount === 0 ? (
             <p style={{ color: '#3fb950', fontSize: 13 }}>Sandbox connected empty state: no operator jobs recorded yet.</p>
@@ -183,26 +191,48 @@ export default function OperatorGatewayPage() {
       </section>
 
       <section style={grid}>
-        <div style={card} aria-label="new job form disabled safe mode">
-          <h2 style={{ fontSize: 18, marginTop: 0 }}>New job form · disabled safe mode</h2>
-          <p style={{ color: '#8b949e', fontSize: 14 }}>{view.jobSubmission.disabledReason}</p>
-          <label style={{ display: 'block', marginBottom: '0.7rem' }}>
-            <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Lane</span>
-            <select disabled style={inputStyle} defaultValue="openai_codex_max">
-              {view.lanes.map((lane) => <option key={lane.laneId}>{lane.laneId}</option>)}
-            </select>
-          </label>
-          <label style={{ display: 'block', marginBottom: '0.7rem' }}>
-            <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Job title</span>
-            <input disabled style={inputStyle} placeholder="Safe local planning only — persistence disabled" />
-          </label>
-          <label style={{ display: 'block', marginBottom: '0.7rem' }}>
-            <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Task type</span>
-            <select disabled style={inputStyle}>
-              {view.jobSubmission.allowedTaskTypes.map((task) => <option key={task}>{task}</option>)}
-            </select>
-          </label>
-          <button disabled style={{ ...inputStyle, color: '#f97316', fontWeight: 700 }}>Queue disabled until approve_operator_gateway_sandbox_job_creation</button>
+        <div style={card} aria-label="new sandbox job form">
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>Create sandbox job · sandbox job creation enabled</h2>
+          <p style={{ color: '#3fb950', fontSize: 14 }}>{view.jobSubmission.disabledReason}</p>
+          <p style={{ color: '#f97316', fontSize: 13 }}>
+            Hard-gate warning: production DB writes, deployment, API-key requests, payments, email, claims, orders, external execution, and live runner activation are refused.
+          </p>
+          <form method="post" action="/api/hermes/operator-gateway/jobs">
+            <label style={{ display: 'block', marginBottom: '0.7rem' }}>
+              <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Lane</span>
+              <select name="laneId" required style={{ ...inputStyle, color: '#e6edf3' }} defaultValue="hermes_local">
+                {view.lanes.map((lane) => <option key={lane.laneId} value={lane.laneId}>{lane.laneId}</option>)}
+              </select>
+            </label>
+            <label style={{ display: 'block', marginBottom: '0.7rem' }}>
+              <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Job title</span>
+              <input name="title" required minLength={3} maxLength={160} style={{ ...inputStyle, color: '#e6edf3' }} placeholder="Sandbox-only planned job" />
+            </label>
+            <label style={{ display: 'block', marginBottom: '0.7rem' }}>
+              <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Task type</span>
+              <select name="taskType" required style={{ ...inputStyle, color: '#e6edf3' }} defaultValue="documentation">
+                {view.jobSubmission.allowedTaskTypes.map((task) => <option key={task} value={task}>{task}</option>)}
+              </select>
+            </label>
+            <input type="hidden" name="externalActionRequested" value="false" />
+            <input type="hidden" name="productionActionRequested" value="false" />
+            <input type="hidden" name="apiKeyRequested" value="false" />
+            <button type="submit" style={{ ...inputStyle, color: '#3fb950', fontWeight: 700 }}>Create sandbox job</button>
+          </form>
+          <p style={{ color: '#8b949e', fontSize: 12 }}>
+            This creates a sandbox `operator_jobs` row only. It does not execute the job and does not connect production.
+          </p>
+        </div>
+
+        <div style={card} aria-label="sandbox job queue">
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>Sandbox job queue</h2>
+          {jobsView?.jobs.length ? jobsView.jobs.map((job) => (
+            <div key={job.id} style={{ borderBottom: '1px solid #21262d', padding: '0.6rem 0' }}>
+              <div><b>{job.title}</b> <span style={pill('blue')}>{job.status}</span></div>
+              <div style={{ color: '#8b949e', fontSize: 13 }}>{job.laneId} · {job.taskType}</div>
+              <div style={{ color: '#3fb950', fontSize: 12 }}>apiKeyRequested=false · externalExecution=false · liveRunner=false</div>
+            </div>
+          )) : <p style={{ color: '#8b949e', fontSize: 14 }}>No sandbox jobs visible yet. Created jobs appear here after refresh.</p>}
         </div>
 
         <div style={card} aria-label="senior pm next action queue">

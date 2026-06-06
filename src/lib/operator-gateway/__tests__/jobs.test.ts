@@ -3,6 +3,7 @@ import {
   validateJobProposal,
   canTransition,
   getOperatorJobsView,
+  createSandboxOperatorJob,
   OPERATOR_JOB_STATUSES,
   type JobProposal,
 } from '../jobs'
@@ -166,6 +167,98 @@ describe('operator gateway jobs layer', () => {
     expect(v.noApiKeyMode).toBe(true)
     expect(v.jobs).toEqual([])
     expect(v.note).toContain('unavailable')
+  })
+
+
+
+  it('creates a sandbox-only operator job and appends a created event without execution', async () => {
+    const insertedJob = {
+      id: 'job-created-1',
+      founder_id: 'founder-1',
+      lane_id: 'hermes_local',
+      title: 'Write sandbox evidence packet',
+      task_type: 'documentation',
+      status: 'planned',
+      external_action_requested: false,
+      production_action_requested: false,
+      api_key_requested: false,
+      evidence_refs: [],
+      metadata: { priority: 'low' },
+      created_at: '2026-06-06T13:00:00Z',
+      updated_at: '2026-06-06T13:00:00Z',
+    }
+    const jobSingle = vi.fn().mockResolvedValue({ data: insertedJob, error: null })
+    const jobSelect = vi.fn(() => ({ single: jobSingle }))
+    const jobInsert = vi.fn(() => ({ select: jobSelect }))
+    const eventInsert = vi.fn().mockResolvedValue({ data: null, error: null })
+    const from = vi.fn((table: string) => {
+      if (table === 'operator_jobs') return { insert: jobInsert }
+      if (table === 'operator_events') return { insert: eventInsert }
+      throw new Error(`unexpected table ${table}`)
+    })
+
+    const result = await createSandboxOperatorJob({
+      founderId: 'founder-1',
+      client: { from },
+      proposal: {
+        laneId: 'hermes_local',
+        title: 'Write sandbox evidence packet',
+        taskType: 'documentation',
+        metadata: { priority: 'low' },
+      },
+    })
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) throw new Error('expected success')
+    expect(result.source).toBe('sandbox_insert')
+    expect(result.liveExecution).toBe(false)
+    expect(result.externalExecutionEnabled).toBe(false)
+    expect(result.job.apiKeyRequested).toBe(false)
+    expect(from).toHaveBeenCalledWith('operator_jobs')
+    expect(from).toHaveBeenCalledWith('operator_events')
+    expect(jobInsert).toHaveBeenCalledWith(expect.objectContaining({
+      founder_id: 'founder-1',
+      lane_id: 'hermes_local',
+      task_type: 'documentation',
+      status: 'planned',
+      external_action_requested: false,
+      production_action_requested: false,
+      api_key_requested: false,
+    }))
+    expect(eventInsert).toHaveBeenCalledWith(expect.objectContaining({
+      founder_id: 'founder-1',
+      job_id: 'job-created-1',
+      event_type: 'created',
+      from_status: null,
+      to_status: 'planned',
+    }))
+  })
+
+  it('refuses sandbox job creation for hard-gated, API-key, external, and production requests', async () => {
+    const client = { from: vi.fn() }
+    for (const proposal of [
+      { laneId: 'hermes_local', title: 'Deploy prod', taskType: 'production_deploy' },
+      { laneId: 'hermes_local', title: 'Needs key', taskType: 'documentation', apiKeyRequested: true },
+      { laneId: 'hermes_local', title: 'External', taskType: 'documentation', externalActionRequested: true },
+      { laneId: 'hermes_local', title: 'Prod', taskType: 'documentation', productionActionRequested: true },
+      { laneId: 'hermes_local', title: 'Bad lane task', taskType: 'feature_implementation' },
+    ]) {
+      const result = await createSandboxOperatorJob({ founderId: 'founder-1', client, proposal })
+      expect(result.ok).toBe(false)
+    }
+    expect(client.from).not.toHaveBeenCalled()
+  })
+
+  it('fails closed when sandbox write client is unavailable', async () => {
+    const result = await createSandboxOperatorJob({
+      founderId: 'founder-1',
+      client: null,
+      proposal: { laneId: 'hermes_local', title: 'Doc', taskType: 'documentation' },
+    })
+    expect(result.ok).toBe(false)
+    if (result.ok) throw new Error('expected failure')
+    expect(result.status).toBe(503)
+    expect(result.error).toContain('Sandbox operator_jobs INSERT is unavailable')
   })
 
   it('exposes the seven lifecycle statuses', () => {

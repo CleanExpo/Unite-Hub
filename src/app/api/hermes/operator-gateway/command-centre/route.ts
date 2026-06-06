@@ -14,5 +14,5 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
   const jobsView = await getOperatorJobsView({ founderId: user.id, client: getSandboxOperatorJobsClient() })
-  return NextResponse.json(getCommandCentreOperatorSurfaceView({ jobsView }))
+  return NextResponse.json(getCommandCentreOperatorSurfaceView({ jobsView, sandboxJobCreationEnabled: true }))
 }

@@ -83,3 +83,19 @@ describe('command centre operator execution surface view', () => {
     expect(view.boardDecisionPanel.nextBoardGate).toBe('approve_operator_gateway_sandbox_job_creation')
     expect(view.blockedGates.map((gate) => gate.gateId)).toContain('approve_operator_gateway_sandbox_job_creation')
   })
+
+
+describe('command centre sandbox job creation state', () => {
+  it('enables sandbox persistence-only creation when Board gate is approved', () => {
+    const view = getCommandCentreOperatorSurfaceView({ jobsView: sandboxEmptyJobsView, sandboxJobCreationEnabled: true })
+
+    expect(view.jobSubmission.mode).toBe('sandbox_persist_only')
+    expect(view.jobSubmission.enabled).toBe(true)
+    expect(view.jobSubmission.canPersist).toBe(true)
+    expect(view.jobSubmission.canExecute).toBe(false)
+    expect(view.jobSubmission.disabledReason).toContain('sandbox-only')
+    expect(view.blockedGates.map((gate) => gate.gateId)).toContain('approve_operator_gateway_sandbox_job_execution_dry_run')
+    expect(view.boardDecisionPanel.nextBoardGate).toBe('approve_operator_gateway_sandbox_job_execution_dry_run')
+    expect(view.safetyStatus.externalExecutionEnabled).toBe(false)
+  })
+})
