@@ -88,16 +88,25 @@ CREATE POLICY operator_events_insert ON operator_events
   );
 
 -- ============================================================
--- 5. updated_at trigger (reuse cc_update_updated_at_column from cc_command_centre phase 1)
+-- 5. updated_at helper + trigger (self-contained for sandbox)
 -- ============================================================
+CREATE OR REPLACE FUNCTION operator_gateway_update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 DROP TRIGGER IF EXISTS operator_jobs_updated_at ON operator_jobs;
 CREATE TRIGGER operator_jobs_updated_at BEFORE UPDATE ON operator_jobs
-  FOR EACH ROW EXECUTE FUNCTION cc_update_updated_at_column();
+  FOR EACH ROW EXECUTE FUNCTION operator_gateway_update_updated_at_column();
 
 -- ============================================================
--- DOWN / rollback  (drop in reverse dependency order)
+-- DOWN / rollback  (drop in reverse dependency sequence)
 -- ============================================================
 -- DROP TRIGGER IF EXISTS operator_jobs_updated_at ON operator_jobs;
 -- DROP TABLE IF EXISTS operator_events;
 -- DROP TABLE IF EXISTS operator_jobs;
+-- DROP FUNCTION IF EXISTS operator_gateway_update_updated_at_column();
 -- ============================================================
