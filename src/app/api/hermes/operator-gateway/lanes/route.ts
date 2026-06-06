@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 // No API keys, no external calls: returns the in-repo operator lane registry.
 export async function GET() {
   const user = await getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
   return NextResponse.json({
     source: 'static_registry',

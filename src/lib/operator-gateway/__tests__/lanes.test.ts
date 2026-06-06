@@ -40,6 +40,7 @@ describe('model operator gateway lane registry', () => {
     expect(byId['cursor_cli'].status).toBe('not_installed')
     expect(status.activeLaneCount).toBe(3)
     expect(status.noApiKeyMode).toBe(true)
+    expect(status.source).toBe('static_registry')
   })
 
   it('every active model lane requires a human operator session (not an API key)', () => {

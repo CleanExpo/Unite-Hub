@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 // command-centre dashboard. No external calls, no secrets, no DB writes.
 export async function GET() {
   const user = await getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
   return NextResponse.json(getGatewayStatus())
 }

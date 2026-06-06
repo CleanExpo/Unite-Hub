@@ -163,6 +163,7 @@ export function getOperatorLanes(): readonly OperatorLane[] {
 }
 
 export interface GatewayStatus {
+  source: 'static_registry' | 'not_connected'
   gateway: 'model_operator_gateway'
   noApiKeyMode: true
   laneCount: number
@@ -178,6 +179,7 @@ export function getGatewayStatus(): GatewayStatus {
   const active = lanes.filter((l) => l.status === 'active')
   const unavailable = lanes.filter((l) => l.status !== 'active')
   return {
+    source: 'static_registry',
     gateway: 'model_operator_gateway',
     noApiKeyMode: true,
     laneCount: lanes.length,
