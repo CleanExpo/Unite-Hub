@@ -14,6 +14,7 @@
  *  - external/production action flags default false.
  */
 
+import { createClient } from '@supabase/supabase-js'
 import { HARD_GATED_TASK_TYPES } from './lanes'
 
 export type OperatorJobStatus =
@@ -128,8 +129,10 @@ export function canTransition(from: OperatorJobStatus, to: OperatorJobStatus): b
   return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false
 }
 
+export const OPERATOR_GATEWAY_SANDBOX_PROJECT_REF = 'xgqwfwqumliuguzhshwv'
+
 export interface OperatorJobsView {
-  source: 'static_registry' | 'not_connected' | 'sandbox' | 'production'
+  source: 'static_registry' | 'not_connected' | 'sandbox_select' | 'production'
   noApiKeyMode: true
   liveExecution: false
   jobCount: number
@@ -137,19 +140,131 @@ export interface OperatorJobsView {
   note: string
 }
 
-/**
- * Read-only jobs view. The operator_jobs table is sandbox-first and NOT yet applied,
- * so this returns an empty, source-tagged ('not_connected') payload. When the
- * Board-approved sandbox migration is applied, this becomes a founder-scoped SELECT
- * and the source flips to 'sandbox'. No live execution is ever performed here.
- */
-export function getOperatorJobsView(): OperatorJobsView {
+type QueryResult<T> = Promise<{ data: T[] | null; error: { message?: string } | null }>
+
+export interface OperatorJobsReadClient {
+  from(table: 'operator_jobs'): {
+    select(columns: string): {
+      eq(column: 'founder_id', value: string): {
+        order(column: 'created_at', options: { ascending: false }): QueryResult<OperatorJobRow>
+      }
+    }
+  }
+}
+
+interface OperatorJobRow {
+  id: string
+  founder_id: string
+  lane_id: string
+  title: string
+  task_type: string
+  status: OperatorJobStatus
+  external_action_requested: boolean
+  production_action_requested: boolean
+  api_key_requested: boolean
+  evidence_refs: string[] | null
+  metadata: Record<string, unknown> | null
+  created_at: string
+  updated_at: string
+}
+
+export interface OperatorJobsViewOptions {
+  founderId?: string
+  client?: OperatorJobsReadClient | null
+}
+
+export function getOperatorJobsFallbackView(reason = 'Sandbox operator_jobs SELECT is unavailable; read-only fallback. No live operator execution.'): OperatorJobsView {
   return {
     source: 'not_connected',
     noApiKeyMode: true,
     liveExecution: false,
     jobCount: 0,
     jobs: [],
-    note: 'operator_jobs table is sandbox-first and not yet applied; read-only foundation. No live operator execution.',
+    note: reason,
+  }
+}
+
+function mapOperatorJobRow(row: OperatorJobRow): OperatorJob | null {
+  if (row.api_key_requested !== false) return null
+  return {
+    id: row.id,
+    founderId: row.founder_id,
+    laneId: row.lane_id,
+    title: row.title,
+    taskType: row.task_type,
+    status: row.status,
+    externalActionRequested: row.external_action_requested,
+    productionActionRequested: row.production_action_requested,
+    apiKeyRequested: false,
+    evidenceRefs: row.evidence_refs ?? [],
+    metadata: row.metadata ?? {},
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }
+}
+
+const OPERATOR_JOBS_SELECT = [
+  'id',
+  'founder_id',
+  'lane_id',
+  'title',
+  'task_type',
+  'status',
+  'external_action_requested',
+  'production_action_requested',
+  'api_key_requested',
+  'evidence_refs',
+  'metadata',
+  'created_at',
+  'updated_at',
+].join(',')
+
+export function isApprovedSandboxSupabaseUrl(url: string | undefined): boolean {
+  return Boolean(url && url.includes(`${OPERATOR_GATEWAY_SANDBOX_PROJECT_REF}.supabase.co`))
+}
+
+export function getSandboxOperatorJobsClient(): OperatorJobsReadClient | null {
+  const url = process.env.OPERATOR_GATEWAY_SANDBOX_SUPABASE_URL
+  const anonKey = process.env.OPERATOR_GATEWAY_SANDBOX_SUPABASE_ANON_KEY
+
+  if (!isApprovedSandboxSupabaseUrl(url) || !anonKey) return null
+
+  return createClient(url!, anonKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  }) as unknown as OperatorJobsReadClient
+}
+
+/**
+ * Read-only jobs view. When an approved sandbox client is provided/configured,
+ * performs founder-scoped SELECT against operator_jobs and returns
+ * source='sandbox_select'. Otherwise it fails closed to not_connected. No DB writes,
+ * API-key mode, production DB access, or live execution occurs here.
+ */
+export async function getOperatorJobsView(options: OperatorJobsViewOptions = {}): Promise<OperatorJobsView> {
+  const { founderId, client = null } = options
+  if (!founderId || !client) return getOperatorJobsFallbackView()
+
+  try {
+    const { data, error } = await client
+      .from('operator_jobs')
+      .select(OPERATOR_JOBS_SELECT)
+      .eq('founder_id', founderId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      return getOperatorJobsFallbackView(`Sandbox operator_jobs SELECT unavailable: ${error.message ?? 'unknown error'}. No live operator execution.`)
+    }
+
+    const jobs = (data ?? []).map(mapOperatorJobRow).filter((job): job is OperatorJob => job !== null)
+    return {
+      source: 'sandbox_select',
+      noApiKeyMode: true,
+      liveExecution: false,
+      jobCount: jobs.length,
+      jobs,
+      note: `sandbox persistence connected; ${jobs.length} jobs visible. Job creation and live execution remain disabled.`,
+    }
+  } catch {
+    return getOperatorJobsFallbackView('Sandbox operator_jobs SELECT unavailable due to runtime error. No live operator execution.')
   }
 }

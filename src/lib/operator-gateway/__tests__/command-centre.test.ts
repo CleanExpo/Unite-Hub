@@ -1,5 +1,15 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { getCommandCentreOperatorSurfaceView } from '../command-centre'
+import type { OperatorJobsView } from '../jobs'
+
+const sandboxEmptyJobsView: OperatorJobsView = {
+  source: 'sandbox_select',
+  noApiKeyMode: true,
+  liveExecution: false,
+  jobCount: 0,
+  jobs: [],
+  note: 'Sandbox persistence connected; 0 jobs visible.',
+}
 
 describe('command centre operator execution surface view', () => {
   it('exposes all operator-session lanes without API-key mode or external execution', () => {
@@ -58,3 +68,18 @@ describe('command centre operator execution surface view', () => {
     expect(cursor.blockedReason).toContain('operator install/login')
   })
 })
+
+
+  it('marks job queue connected when sandbox SELECT is available while keeping job creation disabled', () => {
+    const view = getCommandCentreOperatorSurfaceView({ jobsView: sandboxEmptyJobsView })
+
+    expect(view.jobQueue.source).toBe('sandbox_select')
+    expect(view.jobQueue.connected).toBe(true)
+    expect(view.jobQueue.jobCount).toBe(0)
+    expect(view.jobQueue.note).toContain('Sandbox')
+    expect(view.jobSubmission.enabled).toBe(false)
+    expect(view.jobSubmission.canPersist).toBe(false)
+    expect(view.jobSubmission.canExecute).toBe(false)
+    expect(view.boardDecisionPanel.nextBoardGate).toBe('approve_operator_gateway_sandbox_job_creation')
+    expect(view.blockedGates.map((gate) => gate.gateId)).toContain('approve_operator_gateway_sandbox_job_creation')
+  })

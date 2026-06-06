@@ -126,10 +126,16 @@ export default function OperatorGatewayPage() {
         </div>
         <div style={card}>
           <h2 style={{ fontSize: 16, marginTop: 0 }}>Job queue</h2>
-          <p>Connected: {boolLabel(view.jobQueue.connected)}</p>
+          <p>Sandbox persistence: {boolLabel(view.jobQueue.source === 'sandbox_select', false)}</p>
+          <p>Production connected: {boolLabel(view.jobQueue.source === 'production', false)}</p>
+          <p>Connected: {boolLabel(view.jobQueue.connected, false)}</p>
           <p>Source: <code>{view.jobQueue.source}</code></p>
           <p>Live execution: {boolLabel(view.jobQueue.liveExecution)}</p>
+          <p>Job creation enabled: {boolLabel(view.jobSubmission.enabled)}</p>
           <p>Jobs visible: <b>{view.jobQueue.jobCount}</b></p>
+          {view.jobQueue.source === 'sandbox_select' && view.jobQueue.jobCount === 0 ? (
+            <p style={{ color: '#3fb950', fontSize: 13 }}>Sandbox connected empty state: no operator jobs recorded yet.</p>
+          ) : null}
           <p style={{ color: '#8b949e', fontSize: 13 }}>{view.jobQueue.note}</p>
         </div>
         <div style={card}>
@@ -196,7 +202,7 @@ export default function OperatorGatewayPage() {
               {view.jobSubmission.allowedTaskTypes.map((task) => <option key={task}>{task}</option>)}
             </select>
           </label>
-          <button disabled style={{ ...inputStyle, color: '#f97316', fontWeight: 700 }}>Queue disabled until sandbox DB + execution gate</button>
+          <button disabled style={{ ...inputStyle, color: '#f97316', fontWeight: 700 }}>Queue disabled until approve_operator_gateway_sandbox_job_creation</button>
         </div>
 
         <div style={card} aria-label="senior pm next action queue">

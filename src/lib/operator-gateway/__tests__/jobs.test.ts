@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import {
   validateJobProposal,
   canTransition,
@@ -80,13 +80,92 @@ describe('operator gateway jobs layer', () => {
     expect(canTransition('planned', 'done')).toBe(false)
   })
 
-  it('jobs view is read-only, not connected, no live execution', () => {
-    const v = getOperatorJobsView()
+  it('jobs view default fallback is read-only, not connected, no live execution', async () => {
+    const v = await getOperatorJobsView()
     expect(v.source).toBe('not_connected')
     expect(v.liveExecution).toBe(false)
     expect(v.noApiKeyMode).toBe(true)
     expect(v.jobCount).toBe(0)
     expect(v.jobs).toEqual([])
+  })
+
+
+  it('reads sandbox operator_jobs with founder-scoped SELECT and maps rows', async () => {
+    const order = vi.fn().mockResolvedValue({
+      data: [
+        {
+          id: 'job-1',
+          founder_id: 'founder-1',
+          lane_id: 'hermes_local',
+          title: 'Verify sandbox queue',
+          task_type: 'verification',
+          status: 'planned',
+          external_action_requested: false,
+          production_action_requested: false,
+          api_key_requested: false,
+          evidence_refs: ['evidence/a.md'],
+          metadata: { priority: 'low' },
+          created_at: '2026-06-06T12:00:00Z',
+          updated_at: '2026-06-06T12:01:00Z',
+        },
+      ],
+      error: null,
+    })
+    const eq = vi.fn(() => ({ order }))
+    const select = vi.fn(() => ({ eq }))
+    const from = vi.fn(() => ({ select }))
+
+    const v = await getOperatorJobsView({ founderId: 'founder-1', client: { from } })
+
+    expect(v.source).toBe('sandbox_select')
+    expect(v.jobCount).toBe(1)
+    expect(v.liveExecution).toBe(false)
+    expect(v.noApiKeyMode).toBe(true)
+    expect(v.jobs[0]).toEqual({
+      id: 'job-1',
+      founderId: 'founder-1',
+      laneId: 'hermes_local',
+      title: 'Verify sandbox queue',
+      taskType: 'verification',
+      status: 'planned',
+      externalActionRequested: false,
+      productionActionRequested: false,
+      apiKeyRequested: false,
+      evidenceRefs: ['evidence/a.md'],
+      metadata: { priority: 'low' },
+      createdAt: '2026-06-06T12:00:00Z',
+      updatedAt: '2026-06-06T12:01:00Z',
+    })
+    expect(from).toHaveBeenCalledWith('operator_jobs')
+    expect(select).toHaveBeenCalledWith(expect.stringContaining('founder_id'))
+    expect(eq).toHaveBeenCalledWith('founder_id', 'founder-1')
+    expect(order).toHaveBeenCalledWith('created_at', { ascending: false })
+    expect(v.note).toContain('sandbox')
+  })
+
+  it('returns sandbox_select empty state when sandbox SELECT succeeds with zero jobs', async () => {
+    const order = vi.fn().mockResolvedValue({ data: [], error: null })
+    const client = { from: vi.fn(() => ({ select: vi.fn(() => ({ eq: vi.fn(() => ({ order })) })) })) }
+
+    const v = await getOperatorJobsView({ founderId: 'founder-1', client })
+
+    expect(v.source).toBe('sandbox_select')
+    expect(v.jobCount).toBe(0)
+    expect(v.jobs).toEqual([])
+    expect(v.note).toContain('0 jobs')
+  })
+
+  it('falls back safely when sandbox SELECT is unavailable and does not enable execution', async () => {
+    const order = vi.fn().mockResolvedValue({ data: null, error: { message: 'sandbox unavailable' } })
+    const client = { from: vi.fn(() => ({ select: vi.fn(() => ({ eq: vi.fn(() => ({ order })) })) })) }
+
+    const v = await getOperatorJobsView({ founderId: 'founder-1', client })
+
+    expect(v.source).toBe('not_connected')
+    expect(v.liveExecution).toBe(false)
+    expect(v.noApiKeyMode).toBe(true)
+    expect(v.jobs).toEqual([])
+    expect(v.note).toContain('unavailable')
   })
 
   it('exposes the seven lifecycle statuses', () => {

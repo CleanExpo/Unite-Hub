@@ -1,5 +1,5 @@
 import { getControlPanelView } from './control-panel'
-import { getOperatorJobsView } from './jobs'
+import { getOperatorJobsFallbackView, type OperatorJobsView } from './jobs'
 import { getGatewayStatus, getOperatorLanes, type OperatorLane } from './lanes'
 
 export interface CommandCentreLaneView extends OperatorLane {
@@ -19,7 +19,7 @@ export interface CommandCentreOperatorSurfaceView {
   productionActionsGated: true
   lanes: CommandCentreLaneView[]
   jobQueue: {
-    source: 'static_registry' | 'not_connected' | 'sandbox' | 'production'
+    source: 'static_registry' | 'not_connected' | 'sandbox_select' | 'production'
     connected: boolean
     liveExecution: false
     jobCount: number
@@ -93,9 +93,9 @@ function blockedReasonFor(lane: OperatorLane): string | null {
   return `Lane is ${lane.status}; activation is a separate Board/operator gate.`
 }
 
-export function getCommandCentreOperatorSurfaceView(): CommandCentreOperatorSurfaceView {
+export function getCommandCentreOperatorSurfaceView(options: { jobsView?: OperatorJobsView } = {}): CommandCentreOperatorSurfaceView {
   const lanes = getOperatorLanes()
-  const jobsView = getOperatorJobsView()
+  const jobsView = options.jobsView ?? getOperatorJobsFallbackView()
   const gateway = getGatewayStatus()
   const control = getControlPanelView()
 
@@ -118,7 +118,7 @@ export function getCommandCentreOperatorSurfaceView(): CommandCentreOperatorSurf
     })),
     jobQueue: {
       source: jobsView.source,
-      connected: jobsView.source === 'sandbox' || jobsView.source === 'production',
+      connected: jobsView.source === 'sandbox_select' || jobsView.source === 'production',
       liveExecution: jobsView.liveExecution,
       jobCount: jobsView.jobCount,
       note: jobsView.note,
@@ -145,7 +145,9 @@ export function getCommandCentreOperatorSurfaceView(): CommandCentreOperatorSurf
         'skill_run',
       ],
       disabledReason:
-        'DB write/job persistence is not approved. This form is a safe planning surface only; it cannot queue or execute jobs yet.',
+        jobsView.source === 'sandbox_select'
+          ? 'Sandbox persistence is connected for read-only SELECT. Job creation is still disabled until approve_operator_gateway_sandbox_job_creation.'
+          : 'DB write/job persistence is not approved. This form is a safe planning surface only; it cannot queue or execute jobs yet.',
     },
     evidencePointers: [
       { label: 'Operator lane registry', href: 'src/lib/operator-gateway/lanes.ts', source: 'static_registry' },
@@ -156,9 +158,11 @@ export function getCommandCentreOperatorSurfaceView(): CommandCentreOperatorSurf
     ],
     blockedGates: [
       {
-        gateId: 'approve_operator_gateway_sandbox_apply',
+        gateId: jobsView.source === 'sandbox_select' ? 'approve_operator_gateway_sandbox_job_creation' : 'approve_operator_gateway_sandbox_apply',
         status: 'needs_board_grant',
-        reason: 'operator_jobs/operator_events migration remains sandbox-first and unapplied; no DB writes are allowed here.',
+        reason: jobsView.source === 'sandbox_select'
+          ? 'Sandbox persistence is connected for read-only visibility; job creation remains disabled until a later Board gate.'
+          : 'operator_jobs/operator_events migration remains sandbox-first and unapplied; no DB writes are allowed here.',
       },
       {
         gateId: 'install_claude_code_and_cursor_lanes',
@@ -193,10 +197,12 @@ export function getCommandCentreOperatorSurfaceView(): CommandCentreOperatorSurf
           nextAction: 'Open PR review; do not deploy.',
         },
         {
-          id: 'approve_operator_gateway_sandbox_apply',
-          title: 'Apply operator_jobs/operator_events to sandbox',
+          id: jobsView.source === 'sandbox_select' ? 'approve_operator_gateway_sandbox_job_creation' : 'approve_operator_gateway_sandbox_apply',
+          title: jobsView.source === 'sandbox_select' ? 'Approve sandbox job creation writes' : 'Apply operator_jobs/operator_events to sandbox',
           status: 'blocked_gate',
-          nextAction: 'Board grant required before sandbox migration apply.',
+          nextAction: jobsView.source === 'sandbox_select'
+            ? 'Board grant required before enabling sandbox job creation writes.'
+            : 'Board grant required before sandbox migration apply.',
         },
         {
           id: 'install_claude_code_and_cursor_lanes',
@@ -216,7 +222,9 @@ export function getCommandCentreOperatorSurfaceView(): CommandCentreOperatorSurf
       currentDecision: 'build_command_centre_operator_execution_surface',
       reviewer: 'Phill McGurk',
       status: 'implemented_safe_local_surface',
-      nextBoardGate: 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',
+      nextBoardGate: jobsView.source === 'sandbox_select'
+        ? 'approve_operator_gateway_sandbox_job_creation'
+        : 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',
     },
     safetyStatus: {
       apiKeyMode: false,
