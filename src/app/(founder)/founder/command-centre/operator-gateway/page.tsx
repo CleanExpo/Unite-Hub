@@ -1,36 +1,46 @@
 // src/app/(founder)/founder/command-centre/operator-gateway/page.tsx
 //
-// Model Operator Gateway — founder command-centre surface (READ-ONLY foundation).
-// Renders the operator lane roster + the (sandbox-first) jobs view. No mutations,
-// no job runner, no tool invocation, no external calls. Auth enforced by the
-// (founder) layout. The jobs table is sandbox-first and not yet applied, so the
-// jobs panel shows a "not connected" state by design.
+// Unite-Group Nexus Command Centre — operator execution surface (SAFE LOCAL MODE).
+// Founder-only via the (founder) layout. This page is intentionally inert:
+// no DB writes, no external execution, no API keys, no web-session scraping.
 
 export const dynamic = 'force-dynamic'
 
-import { getGatewayStatus, getOperatorLanes } from '@/lib/operator-gateway/lanes'
-import { getOperatorJobsView } from '@/lib/operator-gateway/jobs'
+import { getCommandCentreOperatorSurfaceView } from '@/lib/operator-gateway/command-centre'
 
 const wrap: React.CSSProperties = {
-  maxWidth: 980,
+  maxWidth: 1180,
   margin: '0 auto',
-  padding: '2rem 1.25rem',
+  padding: '2rem 1.25rem 3rem',
   fontFamily: 'ui-sans-serif, system-ui, sans-serif',
   color: '#e6edf3',
+}
+const grid: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+  gap: '1rem',
 }
 const card: React.CSSProperties = {
   background: '#0d1117',
   border: '1px solid #30363d',
-  borderRadius: 10,
+  borderRadius: 4,
   padding: '1rem 1.25rem',
   marginBottom: '1.25rem',
 }
 const banner: React.CSSProperties = {
-  background: '#15233b',
-  border: '1px solid #1f6feb',
-  borderRadius: 10,
-  padding: '0.75rem 1rem',
+  background: '#071b24',
+  border: '1px solid #00F5FF',
+  borderRadius: 4,
+  padding: '0.85rem 1rem',
   marginBottom: '1.5rem',
+  fontSize: 14,
+}
+const warning: React.CSSProperties = {
+  background: '#271506',
+  border: '1px solid #f97316',
+  borderRadius: 4,
+  padding: '0.85rem 1rem',
+  marginBottom: '1.25rem',
   fontSize: 14,
 }
 const th: React.CSSProperties = {
@@ -39,128 +49,202 @@ const th: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: '0.04em',
   color: '#8b949e',
-  padding: '0.4rem 0.6rem',
+  padding: '0.45rem 0.6rem',
   borderBottom: '1px solid #30363d',
 }
 const td: React.CSSProperties = {
-  padding: '0.5rem 0.6rem',
+  padding: '0.55rem 0.6rem',
   borderBottom: '1px solid #21262d',
   fontSize: 14,
+  verticalAlign: 'top',
+}
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  border: '1px solid #30363d',
+  borderRadius: 4,
+  background: '#050505',
+  color: '#8b949e',
+  padding: '0.65rem 0.75rem',
 }
 
-function badge(active: boolean): React.CSSProperties {
+function pill(tone: 'green' | 'red' | 'amber' | 'blue'): React.CSSProperties {
+  const tones = {
+    green: ['#12361f', '#3fb950', '#238636'],
+    red: ['#3a1d1d', '#f85149', '#da3633'],
+    amber: ['#3a300f', '#d29922', '#9e6a03'],
+    blue: ['#071b24', '#00F5FF', '#00a3b5'],
+  } as const
+  const [bg, fg, bd] = tones[tone]
   return {
     display: 'inline-block',
-    padding: '0.1rem 0.5rem',
+    padding: '0.12rem 0.5rem',
     borderRadius: 999,
     fontSize: 12,
-    fontWeight: 600,
-    background: active ? '#12361f' : '#3a1d1d',
-    color: active ? '#3fb950' : '#f85149',
-    border: `1px solid ${active ? '#238636' : '#da3633'}`,
+    fontWeight: 700,
+    background: bg,
+    color: fg,
+    border: `1px solid ${bd}`,
+    whiteSpace: 'nowrap',
   }
 }
 
+function boolLabel(value: boolean, safeWhenFalse = true) {
+  const safe = safeWhenFalse ? !value : value
+  return <span style={pill(safe ? 'green' : 'red')}>{value ? 'yes' : 'no'}</span>
+}
+
 export default function OperatorGatewayPage() {
-  const status = getGatewayStatus()
-  const lanes = getOperatorLanes()
-  const jobsView = getOperatorJobsView()
+  const view = getCommandCentreOperatorSurfaceView()
+  const activeLanes = view.lanes.filter((lane) => lane.status === 'active')
+  const inactiveLanes = view.lanes.filter((lane) => lane.status !== 'active')
 
   return (
     <div style={wrap}>
-      <h1 style={{ fontSize: 24, marginBottom: '0.25rem' }}>Model Operator Gateway</h1>
+      <h1 style={{ fontSize: 28, marginBottom: '0.25rem' }}>Nexus Command Centre · Operator Execution Surface</h1>
       <p style={{ color: '#8b949e', marginTop: 0 }}>
-        Operator-side CLI / session execution lanes. No API keys, no backend credentials.
+        Founder-controlled command centre for Hermes, Codex Max, Claude Code Max, Cursor CLI, and registered Agentic Nexus skills.
       </p>
 
       <div style={banner}>
-        <strong>Foundation — read-only.</strong> No live operator execution. The
-        operator_jobs / operator_events tables are sandbox-first and not yet applied.
-        This surface records and displays; it does not run anything.
+        <strong>Operator-session lanes only.</strong> No API keys. Max/Pro plans are not backend credentials. No external execution yet.
+        The CRM may show lanes, plan jobs, display evidence, and expose blocked gates — it does not run Codex/Claude/Cursor/Hermes jobs from this page.
       </div>
 
-      {/* ── Status summary ─────────────────────────────────────────── */}
-      <div style={card}>
-        <h2 style={{ fontSize: 16, marginTop: 0 }}>Gateway status</h2>
-        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', fontSize: 14 }}>
-          <span>Lanes: <b>{status.laneCount}</b></span>
-          <span>Active: <b style={{ color: '#3fb950' }}>{status.activeLaneCount}</b></span>
-          <span>Blocked / unavailable: <b>{status.blockedOrUnavailableLaneCount}</b></span>
-          <span>Max-plan lanes: <b>{status.maxPlanLaneCount}</b></span>
-          <span>
-            No-API-key mode:{' '}
-            <b style={{ color: status.noApiKeyMode ? '#3fb950' : '#f85149' }}>
-              {status.noApiKeyMode ? 'yes' : 'no'}
-            </b>
-          </span>
-          <span>
-            Any API-key lane:{' '}
-            <b style={{ color: status.anyApiKeyLane ? '#f85149' : '#3fb950' }}>
-              {status.anyApiKeyLane ? 'yes' : 'no'}
-            </b>
-          </span>
+      <div style={warning}>
+        <strong>Production actions gated.</strong> Deployment, production DB writes, sandbox migration apply, web-session scraping,
+        stored subscription credentials, browser automation, payments, email, claims, and orders remain blocked unless Phill grants a later named gate.
+      </div>
+
+      <section style={grid} aria-label="safety status">
+        <div style={card}>
+          <h2 style={{ fontSize: 16, marginTop: 0 }}>Safety status</h2>
+          <p>No API-key mode: {boolLabel(view.noApiKeyMode, false)}</p>
+          <p>External execution enabled: {boolLabel(view.externalExecutionEnabled)}</p>
+          <p>Production DB touched: {boolLabel(view.safetyStatus.productionDbTouched)}</p>
+          <p>Deployment occurred: {boolLabel(view.safetyStatus.deploymentOccurred)}</p>
+          <p>Web session scraping: {boolLabel(view.safetyStatus.webSessionScraping)}</p>
         </div>
-      </div>
+        <div style={card}>
+          <h2 style={{ fontSize: 16, marginTop: 0 }}>Job queue</h2>
+          <p>Connected: {boolLabel(view.jobQueue.connected)}</p>
+          <p>Source: <code>{view.jobQueue.source}</code></p>
+          <p>Live execution: {boolLabel(view.jobQueue.liveExecution)}</p>
+          <p>Jobs visible: <b>{view.jobQueue.jobCount}</b></p>
+          <p style={{ color: '#8b949e', fontSize: 13 }}>{view.jobQueue.note}</p>
+        </div>
+        <div style={card}>
+          <h2 style={{ fontSize: 16, marginTop: 0 }}>Board decision</h2>
+          <p><b>{view.boardDecisionPanel.currentDecision}</b></p>
+          <p>Status: <span style={pill('green')}>{view.boardDecisionPanel.status}</span></p>
+          <p>Reviewer: {view.boardDecisionPanel.reviewer}</p>
+          <p>Next Board gate: <b>{view.boardDecisionPanel.nextBoardGate}</b></p>
+        </div>
+      </section>
 
-      {/* ── Lane roster ────────────────────────────────────────────── */}
-      <div style={card}>
-        <h2 style={{ fontSize: 16, marginTop: 0 }}>Lane roster</h2>
+      <section style={card} aria-label="lane selector">
+        <h2 style={{ fontSize: 18, marginTop: 0 }}>Lane selector</h2>
+        <p style={{ color: '#8b949e', fontSize: 14 }}>
+          {activeLanes.length} active lanes · {inactiveLanes.length} inactive/blocked lanes · all lanes visible · all lanes apiKeyRequired=false.
+        </p>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
               <th style={th}>Lane</th>
-              <th style={th}>Provider</th>
-              <th style={th}>Auth mode</th>
+              <th style={th}>Auth</th>
               <th style={th}>Status</th>
+              <th style={th}>External</th>
+              <th style={th}>Production</th>
+              <th style={th}>Blocked reason</th>
             </tr>
           </thead>
           <tbody>
-            {lanes.map((l) => (
-              <tr key={l.laneId}>
-                <td style={td}>{l.laneId}</td>
-                <td style={td}>{l.provider}</td>
-                <td style={td}>{l.authMode}</td>
+            {view.lanes.map((lane) => (
+              <tr key={lane.laneId}>
                 <td style={td}>
-                  <span style={badge(l.status === 'active')}>{l.status}</span>
+                  <b>{lane.displayName}</b>
+                  <div style={{ color: '#8b949e', fontSize: 12 }}>{lane.laneId} · {lane.tool}</div>
+                  <div style={{ color: '#3fb950', fontSize: 12 }}>{lane.safetyLabel}</div>
                 </td>
+                <td style={td}>{lane.authMode}</td>
+                <td style={td}><span style={pill(lane.status === 'active' ? 'green' : 'amber')}>{lane.status}</span></td>
+                <td style={td}>{boolLabel(lane.externalActionAllowed)}</td>
+                <td style={td}>{boolLabel(lane.productionActionAllowed)}</td>
+                <td style={td}>{lane.blockedReason ?? 'ready for safe local planning only'}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </section>
 
-      {/* ── Jobs (sandbox-first; not connected) ────────────────────── */}
-      <div style={card}>
-        <h2 style={{ fontSize: 16, marginTop: 0 }}>Operator jobs</h2>
-        <p style={{ color: '#8b949e', fontSize: 14, marginTop: 0 }}>
-          Source: <code>{jobsView.source}</code> · Live execution:{' '}
-          <b>{jobsView.liveExecution ? 'yes' : 'no'}</b> · Jobs: <b>{jobsView.jobCount}</b>
-        </p>
-        {jobsView.jobs.length === 0 ? (
-          <p style={{ fontSize: 14, color: '#8b949e' }}>{jobsView.note}</p>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th style={th}>Title</th>
-                <th style={th}>Lane</th>
-                <th style={th}>Task type</th>
-                <th style={th}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {jobsView.jobs.map((j) => (
-                <tr key={j.id}>
-                  <td style={td}>{j.title}</td>
-                  <td style={td}>{j.laneId}</td>
-                  <td style={td}>{j.taskType}</td>
-                  <td style={td}>{j.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      <section style={grid}>
+        <div style={card} aria-label="new job form disabled safe mode">
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>New job form · disabled safe mode</h2>
+          <p style={{ color: '#8b949e', fontSize: 14 }}>{view.jobSubmission.disabledReason}</p>
+          <label style={{ display: 'block', marginBottom: '0.7rem' }}>
+            <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Lane</span>
+            <select disabled style={inputStyle} defaultValue="openai_codex_max">
+              {view.lanes.map((lane) => <option key={lane.laneId}>{lane.laneId}</option>)}
+            </select>
+          </label>
+          <label style={{ display: 'block', marginBottom: '0.7rem' }}>
+            <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Job title</span>
+            <input disabled style={inputStyle} placeholder="Safe local planning only — persistence disabled" />
+          </label>
+          <label style={{ display: 'block', marginBottom: '0.7rem' }}>
+            <span style={{ display: 'block', fontSize: 12, color: '#8b949e', marginBottom: 4 }}>Task type</span>
+            <select disabled style={inputStyle}>
+              {view.jobSubmission.allowedTaskTypes.map((task) => <option key={task}>{task}</option>)}
+            </select>
+          </label>
+          <button disabled style={{ ...inputStyle, color: '#f97316', fontWeight: 700 }}>Queue disabled until sandbox DB + execution gate</button>
+        </div>
+
+        <div style={card} aria-label="senior pm next action queue">
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>Senior PM next action queue</h2>
+          {view.seniorPmQueue.items.map((item) => (
+            <div key={item.id} style={{ borderBottom: '1px solid #21262d', padding: '0.6rem 0' }}>
+              <div><b>{item.title}</b> <span style={pill(item.status === 'completed' ? 'green' : 'amber')}>{item.status}</span></div>
+              <div style={{ color: '#8b949e', fontSize: 13 }}>{item.nextAction}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section style={grid}>
+        <div style={card} aria-label="hard gates">
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>Hard-gate warnings</h2>
+          {view.blockedGates.map((gate) => (
+            <div key={gate.gateId} style={{ marginBottom: '0.8rem' }}>
+              <span style={pill(gate.status === 'blocked' ? 'red' : 'amber')}>{gate.status}</span>{' '}
+              <b>{gate.gateId}</b>
+              <p style={{ color: '#8b949e', fontSize: 13, margin: '0.25rem 0 0' }}>{gate.reason}</p>
+            </div>
+          ))}
+        </div>
+
+        <div style={card} aria-label="daily ops status">
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>Daily ops panel</h2>
+          <p>Source: <code>{view.dailyOps.source}</code></p>
+          <p>External dispatch enabled: {boolLabel(view.dailyOps.externalDispatchEnabled)}</p>
+          <ul style={{ color: '#8b949e', fontSize: 14 }}>
+            {view.dailyOps.panels.map((panel) => <li key={panel}>{panel}</li>)}
+          </ul>
+          <p style={{ color: '#8b949e', fontSize: 13 }}>{view.dailyOps.note}</p>
+        </div>
+      </section>
+
+      <section style={card} aria-label="evidence and audit links">
+        <h2 style={{ fontSize: 18, marginTop: 0 }}>Evidence / audit links</h2>
+        <div style={grid}>
+          {view.evidencePointers.map((pointer) => (
+            <div key={pointer.href} style={{ border: '1px solid #21262d', borderRadius: 4, padding: '0.75rem' }}>
+              <b>{pointer.label}</b>
+              <div style={{ color: '#8b949e', fontSize: 12 }}>{pointer.source}</div>
+              <code style={{ fontSize: 12 }}>{pointer.href}</code>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }
