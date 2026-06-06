@@ -1,0 +1,92 @@
+import { NextResponse } from 'next/server'
+import { getUser } from '@/lib/supabase/server'
+import { getSandboxOperatorJobsClient, requestControlledLocalOperatorExecution } from '@/lib/operator-gateway/jobs'
+
+export const dynamic = 'force-dynamic'
+
+// POST — founder/session guarded controlled real-local foundation request.
+// It validates local-only policy, updates sandbox status/event, and performs NO external dispatch.
+export async function POST(request: Request) {
+  const user = await getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+
+  let body: Record<string, unknown>
+  let formSubmission = false
+  try {
+    const contentType = request.headers.get('content-type') ?? ''
+    if (!contentType || contentType.includes('application/json') || contentType.includes('text/plain')) {
+      body = await request.json()
+    } else {
+      formSubmission = true
+      const form = await request.formData()
+      body = {
+        jobId: String(form.get('jobId') ?? ''),
+        laneId: String(form.get('laneId') ?? ''),
+        taskType: String(form.get('taskType') ?? ''),
+        requestedCommand: String(form.get('requestedCommand') ?? ''),
+        localOnly: form.get('localOnly') === 'true',
+        externalActionRequested: form.get('externalActionRequested') === 'true',
+        productionActionRequested: form.get('productionActionRequested') === 'true',
+        apiKeyRequested: form.get('apiKeyRequested') === 'true',
+        browserAutomationRequested: form.get('browserAutomationRequested') === 'true',
+        computerUseRequested: form.get('computerUseRequested') === 'true',
+      }
+    }
+  } catch {
+    return NextResponse.json(
+      {
+        ok: false,
+        source: 'validation_failed',
+        error: 'Invalid request body.',
+        reasons: ['request body must be JSON or form data'],
+        localExecutionFoundation: 'policy_refused',
+        liveExecution: false,
+        externalExecutionEnabled: false,
+        productionConnected: false,
+        dispatchPerformed: false,
+        eventAppended: false,
+        jobStatusUpdated: false,
+      },
+      { status: 400 },
+    )
+  }
+
+  const result = await requestControlledLocalOperatorExecution({
+    founderId: user.id,
+    client: getSandboxOperatorJobsClient(),
+    jobId: typeof body.jobId === 'string' ? body.jobId : undefined,
+    laneId: typeof body.laneId === 'string' ? body.laneId : undefined,
+    taskType: typeof body.taskType === 'string' ? body.taskType : undefined,
+    localOnly: body.localOnly === true,
+    requestedCommand: typeof body.requestedCommand === 'string' ? body.requestedCommand : undefined,
+    externalActionRequested: body.externalActionRequested === true,
+    productionActionRequested: body.productionActionRequested === true,
+    apiKeyRequested: body.apiKeyRequested === true,
+    browserAutomationRequested: body.browserAutomationRequested === true,
+    computerUseRequested: body.computerUseRequested === true,
+  })
+
+  if (formSubmission && result.ok) {
+    return NextResponse.redirect(new URL('/founder/command-centre/operator-gateway', request.url), { status: 303 })
+  }
+
+  if (!result.ok && result.status !== 400 && result.status !== 404) {
+    return NextResponse.json(
+      {
+        ok: false,
+        source: result.source,
+        error: 'Controlled real-local execution request is currently unavailable.',
+        localExecutionFoundation: 'sandbox_rejected',
+        liveExecution: false,
+        externalExecutionEnabled: false,
+        productionConnected: false,
+        dispatchPerformed: false,
+        eventAppended: false,
+        jobStatusUpdated: false,
+      },
+      { status: result.status },
+    )
+  }
+
+  return NextResponse.json(result, { status: result.status })
+}
