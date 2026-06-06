@@ -34,8 +34,6 @@ describe('command centre operator gateway UI source', () => {
     expect(page).not.toContain('playwright')
     expect(page).not.toContain('runOperatorJob')
   })
-})
-
 
   it('shows sandbox-only job creation while keeping execution disabled', () => {
     const source = readFileSync(
@@ -50,3 +48,4 @@ describe('command centre operator gateway UI source', () => {
     expect(source).toContain('Live runner enabled')
     expect(source).toContain('External execution disabled')
   })
+})

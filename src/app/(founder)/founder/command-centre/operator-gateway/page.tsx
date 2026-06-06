@@ -138,7 +138,7 @@ export default async function OperatorGatewayPage() {
           <p>Source: <code>{view.jobQueue.source}</code></p>
           <p>Live runner enabled: {boolLabel(false)}</p>
           <p>Live execution: {boolLabel(view.jobQueue.liveExecution)}</p>
-          <p>External execution disabled: {boolLabel(false, false)}</p>
+          <p>External execution disabled: {boolLabel(!view.externalExecutionEnabled, false)}</p>
           <p>Job creation enabled: {boolLabel(view.jobSubmission.enabled, false)}</p>
           <p>Jobs visible: <b>{view.jobQueue.jobCount}</b></p>
           {view.jobQueue.source === 'sandbox_select' && view.jobQueue.jobCount === 0 ? (
@@ -192,8 +192,12 @@ export default async function OperatorGatewayPage() {
 
       <section style={grid}>
         <div style={card} aria-label="new sandbox job form">
-          <h2 style={{ fontSize: 18, marginTop: 0 }}>Create sandbox job · sandbox job creation enabled</h2>
-          <p style={{ color: '#3fb950', fontSize: 14 }}>{view.jobSubmission.disabledReason}</p>
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>
+            {view.jobSubmission.enabled
+              ? 'Create sandbox job · sandbox job creation enabled'
+              : 'Create sandbox job · currently disabled'}
+          </h2>
+          <p style={{ color: view.jobSubmission.enabled ? '#3fb950' : '#f97316', fontSize: 14 }}>{view.jobSubmission.disabledReason}</p>
           <p style={{ color: '#f97316', fontSize: 13 }}>
             Hard-gate warning: production DB writes, deployment, API-key requests, payments, email, claims, orders, external execution, and live runner activation are refused.
           </p>
@@ -217,7 +221,19 @@ export default async function OperatorGatewayPage() {
             <input type="hidden" name="externalActionRequested" value="false" />
             <input type="hidden" name="productionActionRequested" value="false" />
             <input type="hidden" name="apiKeyRequested" value="false" />
-            <button type="submit" style={{ ...inputStyle, color: '#3fb950', fontWeight: 700 }}>Create sandbox job</button>
+            <button
+              type="submit"
+              disabled={!view.jobSubmission.enabled}
+              style={{
+                ...inputStyle,
+                color: '#3fb950',
+                fontWeight: 700,
+                opacity: view.jobSubmission.enabled ? 1 : 0.6,
+                cursor: view.jobSubmission.enabled ? 'pointer' : 'not-allowed',
+              }}
+            >
+              Create sandbox job
+            </button>
           </form>
           <p style={{ color: '#8b949e', fontSize: 12 }}>
             This creates a sandbox `operator_jobs` row only. It does not execute the job and does not connect production.

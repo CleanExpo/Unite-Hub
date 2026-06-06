@@ -67,5 +67,20 @@ export async function POST(request: Request) {
     return NextResponse.redirect(new URL('/founder/command-centre/operator-gateway', request.url), { status: 303 })
   }
 
+  if (!result.ok && result.status !== 400) {
+    return NextResponse.json(
+      {
+        ok: false,
+        source: 'sandbox_insert_failed',
+        error: 'Sandbox job creation is currently unavailable.',
+        liveExecution: false,
+        externalExecutionEnabled: false,
+        productionConnected: false,
+        jobCreation: 'sandbox_rejected',
+      },
+      { status: result.status },
+    )
+  }
+
   return NextResponse.json(result, { status: result.status })
 }

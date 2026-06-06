@@ -147,4 +147,31 @@ describe('GET /api/hermes/operator-gateway/jobs', () => {
     expect(json.jobCreation).toBe('sandbox_rejected')
     expect(json.liveExecution).toBe(false)
   })
+
+
+  it('POST sanitizes sandbox write failures before returning to clients', async () => {
+    mockGetUser.mockResolvedValue({ id: 'founder-1' } as never)
+    mockCreateSandboxOperatorJob.mockResolvedValue({
+      ok: false,
+      status: 503,
+      source: 'sandbox_insert_failed',
+      error: 'raw supabase internal details should not leak',
+      liveExecution: false,
+      externalExecutionEnabled: false,
+      productionConnected: false,
+      jobCreation: 'sandbox_rejected',
+    })
+
+    const res = await POST(new Request('http://test.local/api/hermes/operator-gateway/jobs', {
+      method: 'POST',
+      body: JSON.stringify({ laneId: 'hermes_local', title: 'Doc', taskType: 'documentation' }),
+    }))
+    const json = await res.json()
+
+    expect(res.status).toBe(503)
+    expect(json.error).toBe('Sandbox job creation is currently unavailable.')
+    expect(JSON.stringify(json)).not.toContain('raw supabase internal details')
+    expect(json.liveExecution).toBe(false)
+    expect(json.externalExecutionEnabled).toBe(false)
+  })
 })
