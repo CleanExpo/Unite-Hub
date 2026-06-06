@@ -70,16 +70,18 @@ describe('command centre operator execution surface view', () => {
 })
 
 
-  it('marks job queue connected when sandbox SELECT is available while keeping job creation disabled', () => {
-    const view = getCommandCentreOperatorSurfaceView({ jobsView: sandboxEmptyJobsView })
 
-    expect(view.jobQueue.source).toBe('sandbox_select')
-    expect(view.jobQueue.connected).toBe(true)
-    expect(view.jobQueue.jobCount).toBe(0)
-    expect(view.jobQueue.note).toContain('Sandbox')
-    expect(view.jobSubmission.enabled).toBe(false)
-    expect(view.jobSubmission.canPersist).toBe(false)
+describe('command centre sandbox job creation state', () => {
+  it('enables sandbox persistence-only creation when Board gate is approved', () => {
+    const view = getCommandCentreOperatorSurfaceView({ jobsView: sandboxEmptyJobsView, sandboxJobCreationEnabled: true })
+
+    expect(view.jobSubmission.mode).toBe('sandbox_persist_only')
+    expect(view.jobSubmission.enabled).toBe(true)
+    expect(view.jobSubmission.canPersist).toBe(true)
     expect(view.jobSubmission.canExecute).toBe(false)
-    expect(view.boardDecisionPanel.nextBoardGate).toBe('approve_operator_gateway_sandbox_job_creation')
-    expect(view.blockedGates.map((gate) => gate.gateId)).toContain('approve_operator_gateway_sandbox_job_creation')
+    expect(view.jobSubmission.disabledReason).toContain('sandbox-only')
+    expect(view.blockedGates.map((gate) => gate.gateId)).toContain('approve_operator_gateway_sandbox_job_execution_dry_run')
+    expect(view.boardDecisionPanel.nextBoardGate).toBe('approve_operator_gateway_sandbox_job_execution_dry_run')
+    expect(view.safetyStatus.externalExecutionEnabled).toBe(false)
   })
+})

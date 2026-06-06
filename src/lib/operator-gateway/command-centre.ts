@@ -26,9 +26,9 @@ export interface CommandCentreOperatorSurfaceView {
     note: string
   }
   jobSubmission: {
-    mode: 'disabled_safe_mock'
-    enabled: false
-    canPersist: false
+    mode: 'disabled_safe_mock' | 'sandbox_persist_only'
+    enabled: boolean
+    canPersist: boolean
     canExecute: false
     defaultExternalActionRequested: false
     defaultProductionActionRequested: false
@@ -93,9 +93,12 @@ function blockedReasonFor(lane: OperatorLane): string | null {
   return `Lane is ${lane.status}; activation is a separate Board/operator gate.`
 }
 
-export function getCommandCentreOperatorSurfaceView(options: { jobsView?: OperatorJobsView } = {}): CommandCentreOperatorSurfaceView {
+export function getCommandCentreOperatorSurfaceView(
+  options: { jobsView?: OperatorJobsView; sandboxJobCreationEnabled?: boolean } = {},
+): CommandCentreOperatorSurfaceView {
   const lanes = getOperatorLanes()
   const jobsView = options.jobsView ?? getOperatorJobsFallbackView()
+  const sandboxJobCreationEnabled = options.sandboxJobCreationEnabled === true && jobsView.source === 'sandbox_select'
   const gateway = getGatewayStatus()
   const control = getControlPanelView()
 
@@ -124,9 +127,9 @@ export function getCommandCentreOperatorSurfaceView(options: { jobsView?: Operat
       note: jobsView.note,
     },
     jobSubmission: {
-      mode: 'disabled_safe_mock',
-      enabled: false,
-      canPersist: false,
+      mode: sandboxJobCreationEnabled ? 'sandbox_persist_only' : 'disabled_safe_mock',
+      enabled: sandboxJobCreationEnabled,
+      canPersist: sandboxJobCreationEnabled,
       canExecute: false,
       defaultExternalActionRequested: false,
       defaultProductionActionRequested: false,
@@ -144,8 +147,9 @@ export function getCommandCentreOperatorSurfaceView(options: { jobsView?: Operat
         'dashboard',
         'skill_run',
       ],
-      disabledReason:
-        jobsView.source === 'sandbox_select'
+      disabledReason: sandboxJobCreationEnabled
+        ? 'sandbox-only job creation is enabled. Jobs are persisted as planned records only; external execution and the live runner remain disabled.'
+        : jobsView.source === 'sandbox_select'
           ? 'Sandbox persistence is connected for read-only SELECT. Job creation is still disabled until approve_operator_gateway_sandbox_job_creation.'
           : 'DB write/job persistence is not approved. This form is a safe planning surface only; it cannot queue or execute jobs yet.',
     },
@@ -158,11 +162,17 @@ export function getCommandCentreOperatorSurfaceView(options: { jobsView?: Operat
     ],
     blockedGates: [
       {
-        gateId: jobsView.source === 'sandbox_select' ? 'approve_operator_gateway_sandbox_job_creation' : 'approve_operator_gateway_sandbox_apply',
+        gateId: sandboxJobCreationEnabled
+          ? 'approve_operator_gateway_sandbox_job_execution_dry_run'
+          : jobsView.source === 'sandbox_select'
+            ? 'approve_operator_gateway_sandbox_job_creation'
+            : 'approve_operator_gateway_sandbox_apply',
         status: 'needs_board_grant',
-        reason: jobsView.source === 'sandbox_select'
-          ? 'Sandbox persistence is connected for read-only visibility; job creation remains disabled until a later Board gate.'
-          : 'operator_jobs/operator_events migration remains sandbox-first and unapplied; no DB writes are allowed here.',
+        reason: sandboxJobCreationEnabled
+          ? 'Sandbox job creation is enabled for planned records only; dry-run execution and runner design need a later Board gate.'
+          : jobsView.source === 'sandbox_select'
+            ? 'Sandbox persistence is connected for read-only visibility; job creation remains disabled until a later Board gate.'
+            : 'operator_jobs/operator_events migration remains sandbox-first and unapplied; no DB writes are allowed here.',
       },
       {
         gateId: 'install_claude_code_and_cursor_lanes',
@@ -197,12 +207,22 @@ export function getCommandCentreOperatorSurfaceView(options: { jobsView?: Operat
           nextAction: 'Open PR review; do not deploy.',
         },
         {
-          id: jobsView.source === 'sandbox_select' ? 'approve_operator_gateway_sandbox_job_creation' : 'approve_operator_gateway_sandbox_apply',
-          title: jobsView.source === 'sandbox_select' ? 'Approve sandbox job creation writes' : 'Apply operator_jobs/operator_events to sandbox',
+          id: sandboxJobCreationEnabled
+            ? 'approve_operator_gateway_sandbox_job_execution_dry_run'
+            : jobsView.source === 'sandbox_select'
+              ? 'approve_operator_gateway_sandbox_job_creation'
+              : 'approve_operator_gateway_sandbox_apply',
+          title: sandboxJobCreationEnabled
+            ? 'Design sandbox execution dry-run and runner handoff packet'
+            : jobsView.source === 'sandbox_select'
+              ? 'Approve sandbox job creation writes'
+              : 'Apply operator_jobs/operator_events to sandbox',
           status: 'blocked_gate',
-          nextAction: jobsView.source === 'sandbox_select'
-            ? 'Board grant required before enabling sandbox job creation writes.'
-            : 'Board grant required before sandbox migration apply.',
+          nextAction: sandboxJobCreationEnabled
+            ? 'Prepare runner design/dry-run packet; do not execute jobs yet.'
+            : jobsView.source === 'sandbox_select'
+              ? 'Board grant required before enabling sandbox job creation writes.'
+              : 'Board grant required before sandbox migration apply.',
         },
         {
           id: 'install_claude_code_and_cursor_lanes',
@@ -222,9 +242,11 @@ export function getCommandCentreOperatorSurfaceView(options: { jobsView?: Operat
       currentDecision: 'build_command_centre_operator_execution_surface',
       reviewer: 'Phill McGurk',
       status: 'implemented_safe_local_surface',
-      nextBoardGate: jobsView.source === 'sandbox_select'
-        ? 'approve_operator_gateway_sandbox_job_creation'
-        : 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',
+      nextBoardGate: sandboxJobCreationEnabled
+        ? 'approve_operator_gateway_sandbox_job_execution_dry_run'
+        : jobsView.source === 'sandbox_select'
+          ? 'approve_operator_gateway_sandbox_job_creation'
+          : 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',
     },
     safetyStatus: {
       apiKeyMode: false,

@@ -15,7 +15,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
-import { HARD_GATED_TASK_TYPES } from './lanes'
+import { HARD_GATED_TASK_TYPES, getOperatorLanes } from './lanes'
 
 export type OperatorJobStatus =
   | 'planned'
@@ -89,6 +89,10 @@ export interface JobProposal {
   externalActionRequested?: boolean
   productionActionRequested?: boolean
   apiKeyRequested?: boolean
+  evidenceRefs?: string[]
+  metadata?: Record<string, unknown>
+  founderId?: string
+  status?: OperatorJobStatus
 }
 
 export interface ValidationResult {
@@ -120,6 +124,20 @@ export function validateJobProposal(p: JobProposal): ValidationResult {
   if (p.productionActionRequested === true) {
     reasons.push('productionActionRequested defaults false; enabling it is a separate Board gate')
   }
+  if (p.founderId) {
+    reasons.push('founderId is server-derived and cannot be supplied by request body')
+  }
+  if (p.status && p.status !== 'planned') {
+    reasons.push('status is server-controlled; sandbox job creation starts as planned only')
+  }
+
+  const lane = getOperatorLanes().find((candidate) => candidate.laneId === p.laneId)
+  if (p.laneId && !lane) {
+    reasons.push(`laneId '${p.laneId}' is not registered`)
+  }
+  if (lane && p.taskType && !lane.allowedTaskTypes.includes(p.taskType)) {
+    reasons.push(`taskType '${p.taskType}' is not allowed for lane '${p.laneId}'`)
+  }
 
   return { ok: reasons.length === 0, reasons }
 }
@@ -141,6 +159,7 @@ export interface OperatorJobsView {
 }
 
 type QueryResult<T> = Promise<{ data: T[] | null; error: { message?: string } | null }>
+type MutationResult<T> = Promise<{ data: T | null; error: { message?: string } | null }>
 
 export interface OperatorJobsReadClient {
   from(table: 'operator_jobs'): {
@@ -149,6 +168,19 @@ export interface OperatorJobsReadClient {
         order(column: 'created_at', options: { ascending: false }): QueryResult<OperatorJobRow>
       }
     }
+  }
+}
+
+export interface OperatorJobsWriteClient {
+  from(table: 'operator_jobs'): {
+    insert(payload: OperatorJobInsert): {
+      select(columns: string): {
+        single(): MutationResult<OperatorJobRow>
+      }
+    }
+  }
+  from(table: 'operator_events'): {
+    insert(payload: OperatorEventInsert): Promise<{ data: unknown; error: { message?: string } | null }>
   }
 }
 
@@ -166,6 +198,29 @@ interface OperatorJobRow {
   metadata: Record<string, unknown> | null
   created_at: string
   updated_at: string
+}
+
+interface OperatorJobInsert {
+  founder_id: string
+  lane_id: string
+  title: string
+  task_type: string
+  status: 'planned'
+  external_action_requested: false
+  production_action_requested: false
+  api_key_requested: false
+  evidence_refs: string[]
+  metadata: Record<string, unknown>
+}
+
+interface OperatorEventInsert {
+  founder_id: string
+  job_id: string
+  event_type: 'created'
+  from_status: null
+  to_status: 'planned'
+  detail: string
+  evidence_ref: string | null
 }
 
 export interface OperatorJobsViewOptions {
@@ -223,7 +278,7 @@ export function isApprovedSandboxSupabaseUrl(url: string | undefined): boolean {
   return Boolean(url && url.includes(`${OPERATOR_GATEWAY_SANDBOX_PROJECT_REF}.supabase.co`))
 }
 
-export function getSandboxOperatorJobsClient(): OperatorJobsReadClient | null {
+export function getSandboxOperatorJobsClient(): (OperatorJobsReadClient & OperatorJobsWriteClient) | null {
   const url = process.env.OPERATOR_GATEWAY_SANDBOX_SUPABASE_URL
   const anonKey = process.env.OPERATOR_GATEWAY_SANDBOX_SUPABASE_ANON_KEY
 
@@ -231,7 +286,197 @@ export function getSandboxOperatorJobsClient(): OperatorJobsReadClient | null {
 
   return createClient(url!, anonKey, {
     auth: { autoRefreshToken: false, persistSession: false },
-  }) as unknown as OperatorJobsReadClient
+  }) as unknown as OperatorJobsReadClient & OperatorJobsWriteClient
+}
+
+
+export interface CreateSandboxOperatorJobOptions {
+  founderId?: string
+  client?: OperatorJobsWriteClient | null
+  proposal: JobProposal
+}
+
+export type CreateSandboxOperatorJobResult =
+  | {
+      ok: true
+      status: 201
+      source: 'sandbox_insert'
+      jobCreation: 'sandbox_enabled'
+      liveExecution: false
+      externalExecutionEnabled: false
+      productionConnected: false
+      eventAppended: true
+      job: OperatorJob
+    }
+  | {
+      ok: false
+      status: 400 | 503
+      source: 'validation_failed' | 'not_connected' | 'sandbox_insert_failed' | 'sandbox_event_insert_failed'
+      error: string
+      reasons: string[]
+      liveExecution: false
+      externalExecutionEnabled: false
+      productionConnected: false
+      jobCreation: 'sandbox_rejected'
+    }
+
+function sanitizeEvidenceRefs(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0).slice(0, 10)
+}
+
+function sanitizeMetadata(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const forbidden = /secret|token|api[_-]?key|password|credential/i
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>)
+      .filter(([key, entry]) => !forbidden.test(key) && typeof entry !== 'function')
+      .slice(0, 25),
+  )
+}
+
+export async function createSandboxOperatorJob(options: CreateSandboxOperatorJobOptions): Promise<CreateSandboxOperatorJobResult> {
+  const { founderId, client, proposal } = options
+  const validation = validateJobProposal(proposal)
+
+  if (!founderId) {
+    return {
+      ok: false,
+      status: 400,
+      source: 'validation_failed',
+      error: 'Sandbox job creation rejected by safety validation.',
+      reasons: ['founder/session is required'],
+      liveExecution: false,
+      externalExecutionEnabled: false,
+      productionConnected: false,
+      jobCreation: 'sandbox_rejected',
+    }
+  }
+  if (!validation.ok || validation.reasons.length > 0) {
+    return {
+      ok: false,
+      status: 400,
+      source: 'validation_failed',
+      error: 'Sandbox job creation rejected by safety validation.',
+      reasons: validation.reasons,
+      liveExecution: false,
+      externalExecutionEnabled: false,
+      productionConnected: false,
+      jobCreation: 'sandbox_rejected',
+    }
+  }
+
+  if (!client) {
+    return {
+      ok: false,
+      status: 503,
+      source: 'not_connected',
+      error: 'Sandbox operator_jobs INSERT is unavailable; no production fallback exists.',
+      reasons: ['approved sandbox write client is not configured'],
+      liveExecution: false,
+      externalExecutionEnabled: false,
+      productionConnected: false,
+      jobCreation: 'sandbox_rejected',
+    }
+  }
+
+  const payload: OperatorJobInsert = {
+    founder_id: founderId,
+    lane_id: proposal.laneId,
+    title: proposal.title.trim(),
+    task_type: proposal.taskType,
+    status: 'planned',
+    external_action_requested: false,
+    production_action_requested: false,
+    api_key_requested: false,
+    evidence_refs: sanitizeEvidenceRefs(proposal.evidenceRefs),
+    metadata: sanitizeMetadata(proposal.metadata),
+  }
+
+  try {
+    const { data, error } = await client
+      .from('operator_jobs')
+      .insert(payload)
+      .select(OPERATOR_JOBS_SELECT)
+      .single()
+
+    if (error || !data) {
+      return {
+        ok: false,
+        status: 503,
+        source: 'sandbox_insert_failed',
+        error: `Sandbox operator_jobs INSERT failed: ${error?.message ?? 'no row returned'}`,
+        reasons: ['sandbox operator_jobs insert failed'],
+        liveExecution: false,
+        externalExecutionEnabled: false,
+        productionConnected: false,
+        jobCreation: 'sandbox_rejected',
+      }
+    }
+
+    const job = mapOperatorJobRow(data)
+    if (!job) {
+      return {
+        ok: false,
+        status: 503,
+        source: 'sandbox_insert_failed',
+        error: 'Sandbox operator_jobs INSERT returned a row that violates no-API-key invariants.',
+        reasons: ['inserted row failed safety mapping'],
+        liveExecution: false,
+        externalExecutionEnabled: false,
+        productionConnected: false,
+        jobCreation: 'sandbox_rejected',
+      }
+    }
+
+    const eventPayload: OperatorEventInsert = {
+      founder_id: founderId,
+      job_id: job.id,
+      event_type: 'created',
+      from_status: null,
+      to_status: 'planned',
+      detail: 'Sandbox-only operator job created. External execution and live runner remain disabled.',
+      evidence_ref: null,
+    }
+    const eventResult = await client.from('operator_events').insert(eventPayload)
+    if (eventResult.error) {
+      return {
+        ok: false,
+        status: 503,
+        source: 'sandbox_event_insert_failed',
+        error: `Sandbox operator_events INSERT failed: ${eventResult.error.message ?? 'unknown error'}`,
+        reasons: ['sandbox operator_events append failed'],
+        liveExecution: false,
+        externalExecutionEnabled: false,
+        productionConnected: false,
+        jobCreation: 'sandbox_rejected',
+      }
+    }
+
+    return {
+      ok: true,
+      status: 201,
+      source: 'sandbox_insert',
+      jobCreation: 'sandbox_enabled',
+      liveExecution: false,
+      externalExecutionEnabled: false,
+      productionConnected: false,
+      eventAppended: true,
+      job,
+    }
+  } catch {
+    return {
+      ok: false,
+      status: 503,
+      source: 'sandbox_insert_failed',
+      error: 'Sandbox operator job creation failed due to runtime error.',
+      reasons: ['sandbox write runtime error'],
+      liveExecution: false,
+      externalExecutionEnabled: false,
+      productionConnected: false,
+      jobCreation: 'sandbox_rejected',
+    }
+  }
 }
 
 /**
