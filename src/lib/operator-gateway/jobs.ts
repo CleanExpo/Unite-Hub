@@ -184,6 +184,30 @@ export interface OperatorJobsWriteClient {
   }
 }
 
+export interface OperatorJobsDryRunClient {
+  from(table: 'operator_jobs'): {
+    select(columns: string): {
+      eq(column: 'id', value: string): {
+        eq(column: 'founder_id', value: string): {
+          single(): MutationResult<OperatorJobRow>
+        }
+      }
+    }
+    update(payload: OperatorJobUpdate): {
+      eq(column: 'id', value: string): {
+        eq(column: 'founder_id', value: string): {
+          select(columns: string): {
+            single(): MutationResult<OperatorJobRow>
+          }
+        }
+      }
+    }
+  }
+  from(table: 'operator_events'): {
+    insert(payload: OperatorDryRunEventInsert): Promise<{ data: unknown; error: { message?: string } | null }>
+  }
+}
+
 interface OperatorJobRow {
   id: string
   founder_id: string
@@ -221,6 +245,22 @@ interface OperatorEventInsert {
   to_status: 'planned'
   detail: string
   evidence_ref: string | null
+}
+
+interface OperatorJobUpdate {
+  status: 'done'
+  evidence_refs: string[]
+  metadata: Record<string, unknown>
+}
+
+interface OperatorDryRunEventInsert {
+  founder_id: string
+  job_id: string
+  event_type: 'status_changed'
+  from_status: OperatorJobStatus
+  to_status: 'done'
+  detail: string
+  evidence_ref: string
 }
 
 export interface OperatorJobsViewOptions {
@@ -278,7 +318,7 @@ export function isApprovedSandboxSupabaseUrl(url: string | undefined): boolean {
   return Boolean(url && url.includes(`${OPERATOR_GATEWAY_SANDBOX_PROJECT_REF}.supabase.co`))
 }
 
-export function getSandboxOperatorJobsClient(): (OperatorJobsReadClient & OperatorJobsWriteClient) | null {
+export function getSandboxOperatorJobsClient(): (OperatorJobsReadClient & OperatorJobsWriteClient & OperatorJobsDryRunClient) | null {
   const url = process.env.OPERATOR_GATEWAY_SANDBOX_SUPABASE_URL
   const anonKey = process.env.OPERATOR_GATEWAY_SANDBOX_SUPABASE_ANON_KEY
 
@@ -286,7 +326,7 @@ export function getSandboxOperatorJobsClient(): (OperatorJobsReadClient & Operat
 
   return createClient(url!, anonKey, {
     auth: { autoRefreshToken: false, persistSession: false },
-  }) as unknown as OperatorJobsReadClient & OperatorJobsWriteClient
+  }) as unknown as OperatorJobsReadClient & OperatorJobsWriteClient & OperatorJobsDryRunClient
 }
 
 
@@ -476,6 +516,182 @@ export async function createSandboxOperatorJob(options: CreateSandboxOperatorJob
       productionConnected: false,
       jobCreation: 'sandbox_rejected',
     }
+  }
+}
+
+export const OPERATOR_GATEWAY_DRY_RUN_EVIDENCE_REF = '2nd-brain/.agentic_nexus/OPERATOR_GATEWAY_SANDBOX_DRY_RUN_EXECUTION_EVIDENCE_PACKET.md'
+
+export interface DryRunSandboxOperatorJobOptions {
+  founderId?: string
+  client?: OperatorJobsDryRunClient | null
+  jobId?: string
+  dryRunReason?: string
+  externalActionRequested?: boolean
+  productionActionRequested?: boolean
+  apiKeyRequested?: boolean
+  now?: () => string
+}
+
+export type DryRunSandboxOperatorJobResult =
+  | {
+      ok: true
+      status: 200
+      source: 'sandbox_dry_run'
+      dryRunExecution: 'sandbox_enabled'
+      liveExecution: false
+      externalExecutionEnabled: false
+      productionConnected: false
+      eventAppended: true
+      jobStatusUpdated: true
+      job: OperatorJob
+      event: {
+        eventType: 'status_changed'
+        fromStatus: OperatorJobStatus
+        toStatus: 'done'
+        evidenceRef: string
+        detail: string
+      }
+    }
+  | {
+      ok: false
+      status: 400 | 404 | 503
+      source: 'validation_failed' | 'not_connected' | 'sandbox_job_not_found' | 'sandbox_dry_run_refused' | 'sandbox_update_failed' | 'sandbox_event_insert_failed'
+      error: string
+      reasons: string[]
+      dryRunExecution: 'sandbox_rejected'
+      liveExecution: false
+      externalExecutionEnabled: false
+      productionConnected: false
+      eventAppended: false
+      jobStatusUpdated: false
+    }
+
+function sanitizeDryRunReason(value: unknown): string {
+  if (typeof value !== 'string') return 'Operator requested sandbox dry-run lifecycle proof.'
+  const forbidden = /secret|token|api[_-]?key|password|credential/i
+  const safe = value
+    .split(/\r?\n/)
+    .filter((line) => !forbidden.test(line))
+    .join(' ')
+    .trim()
+    .slice(0, 240)
+  return safe || 'Operator requested sandbox dry-run lifecycle proof.'
+}
+
+
+function dryRunRejection(
+  status: Extract<DryRunSandboxOperatorJobResult, { ok: false }>['status'],
+  source: Extract<DryRunSandboxOperatorJobResult, { ok: false }>['source'],
+  error: string,
+  reasons: string[],
+): DryRunSandboxOperatorJobResult {
+  return {
+    ok: false,
+    status,
+    source,
+    error,
+    reasons,
+    dryRunExecution: 'sandbox_rejected',
+    liveExecution: false,
+    externalExecutionEnabled: false,
+    productionConnected: false,
+    eventAppended: false,
+    jobStatusUpdated: false,
+  }
+}
+
+export async function dryRunSandboxOperatorJob(options: DryRunSandboxOperatorJobOptions): Promise<DryRunSandboxOperatorJobResult> {
+  const { founderId, client, jobId } = options
+  if (!founderId) return dryRunRejection(400, 'validation_failed', 'Sandbox dry-run rejected by safety validation.', ['founder/session is required'])
+  if (!jobId || !jobId.trim()) return dryRunRejection(400, 'validation_failed', 'Sandbox dry-run rejected by safety validation.', ['jobId is required'])
+  if (options.externalActionRequested === true) return dryRunRejection(400, 'validation_failed', 'Sandbox dry-run refuses external execution requests.', ['externalActionRequested must remain false'])
+  if (options.productionActionRequested === true) return dryRunRejection(400, 'validation_failed', 'Sandbox dry-run refuses production action requests.', ['productionActionRequested must remain false'])
+  if (options.apiKeyRequested === true) return dryRunRejection(400, 'validation_failed', 'Sandbox dry-run refuses API-key requests.', ['apiKeyRequested must remain false'])
+  if (!client) return dryRunRejection(503, 'not_connected', 'Sandbox operator_jobs dry-run is unavailable; no production fallback exists.', ['approved sandbox write client is not configured'])
+
+  try {
+    const existingResult = await client
+      .from('operator_jobs')
+      .select(OPERATOR_JOBS_SELECT)
+      .eq('id', jobId.trim())
+      .eq('founder_id', founderId)
+      .single()
+    if (existingResult.error || !existingResult.data) {
+      return dryRunRejection(404, 'sandbox_job_not_found', 'Sandbox operator job not found for founder.', ['sandbox operator job not found'])
+    }
+    const job = mapOperatorJobRow(existingResult.data)
+    if (!job) return dryRunRejection(400, 'sandbox_dry_run_refused', 'Sandbox dry-run refused unsafe job row.', ['job violates no-API-key invariants'])
+
+    const reasons: string[] = []
+    if (job.status !== 'planned') reasons.push(`job status '${job.status}' is not dry-runnable; expected planned`)
+    if (HARD_GATED_TASK_TYPES.includes(job.taskType)) reasons.push(`taskType '${job.taskType}' is hard-gated and prohibited by default`)
+    if (job.apiKeyRequested !== false) reasons.push('apiKeyRequested must be false')
+    if (job.externalActionRequested) reasons.push('externalActionRequested must be false')
+    if (job.productionActionRequested) reasons.push('productionActionRequested must be false')
+    if (reasons.length) return dryRunRejection(400, 'sandbox_dry_run_refused', 'Sandbox dry-run refused by safety validation.', reasons)
+
+    const completedAt = options.now?.() ?? new Date().toISOString()
+    const reason = sanitizeDryRunReason(options.dryRunReason)
+    const evidenceRefs = Array.from(new Set([...job.evidenceRefs, OPERATOR_GATEWAY_DRY_RUN_EVIDENCE_REF]))
+    const metadata = {
+      ...job.metadata,
+      dryRun: {
+        status: 'completed',
+        completedAt,
+        reason,
+        externalExecution: false,
+        liveRunner: false,
+        productionDbTouched: false,
+      },
+    }
+    const updateResult = await client
+      .from('operator_jobs')
+      .update({ status: 'done', evidence_refs: evidenceRefs, metadata })
+      .eq('id', job.id)
+      .eq('founder_id', founderId)
+      .select(OPERATOR_JOBS_SELECT)
+      .single()
+    if (updateResult.error || !updateResult.data) {
+      return dryRunRejection(503, 'sandbox_update_failed', 'Sandbox dry-run job status update failed.', ['sandbox operator_jobs update failed'])
+    }
+    const updatedJob = mapOperatorJobRow(updateResult.data)
+    if (!updatedJob) return dryRunRejection(503, 'sandbox_update_failed', 'Sandbox dry-run update returned unsafe row.', ['updated row failed safety mapping'])
+
+    const detail = `Sandbox dry-run completed for job ${job.id}. No external execution occurred. Live runner disabled. Production DB not connected. Reason: ${reason}`
+    const eventResult = await client.from('operator_events').insert({
+      founder_id: founderId,
+      job_id: job.id,
+      event_type: 'status_changed',
+      from_status: job.status,
+      to_status: 'done',
+      detail,
+      evidence_ref: OPERATOR_GATEWAY_DRY_RUN_EVIDENCE_REF,
+    })
+    if (eventResult.error) {
+      return dryRunRejection(503, 'sandbox_event_insert_failed', 'Sandbox dry-run event append failed.', ['sandbox operator_events append failed'])
+    }
+
+    return {
+      ok: true,
+      status: 200,
+      source: 'sandbox_dry_run',
+      dryRunExecution: 'sandbox_enabled',
+      liveExecution: false,
+      externalExecutionEnabled: false,
+      productionConnected: false,
+      eventAppended: true,
+      jobStatusUpdated: true,
+      job: updatedJob,
+      event: {
+        eventType: 'status_changed',
+        fromStatus: job.status,
+        toStatus: 'done',
+        evidenceRef: OPERATOR_GATEWAY_DRY_RUN_EVIDENCE_REF,
+        detail,
+      },
+    }
+  } catch {
+    return dryRunRejection(503, 'sandbox_update_failed', 'Sandbox dry-run failed due to runtime error.', ['sandbox dry-run runtime error'])
   }
 }
 

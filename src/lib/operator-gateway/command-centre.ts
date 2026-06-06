@@ -25,6 +25,16 @@ export interface CommandCentreOperatorSurfaceView {
     jobCount: number
     note: string
   }
+  dryRunExecution: {
+    mode: 'sandbox_dry_run_only'
+    enabled: boolean
+    canExecuteExternally: false
+    liveRunnerEnabled: false
+    productionConnected: false
+    endpoint: '/api/hermes/operator-gateway/jobs/dry-run'
+    label: 'Dry-run only'
+    disabledReason: string
+  }
   jobSubmission: {
     mode: 'disabled_safe_mock' | 'sandbox_persist_only'
     enabled: boolean
@@ -126,6 +136,18 @@ export function getCommandCentreOperatorSurfaceView(
       jobCount: jobsView.jobCount,
       note: jobsView.note,
     },
+    dryRunExecution: {
+      mode: 'sandbox_dry_run_only',
+      enabled: sandboxJobCreationEnabled,
+      canExecuteExternally: false,
+      liveRunnerEnabled: false,
+      productionConnected: false,
+      endpoint: '/api/hermes/operator-gateway/jobs/dry-run',
+      label: 'Dry-run only',
+      disabledReason: sandboxJobCreationEnabled
+        ? 'sandbox dry-run-only execution is enabled for safe planned jobs; it appends evidence and updates sandbox status only.'
+        : 'Sandbox dry-run-only execution is disabled until sandbox persistence and job creation are connected.',
+    },
     jobSubmission: {
       mode: sandboxJobCreationEnabled ? 'sandbox_persist_only' : 'disabled_safe_mock',
       enabled: sandboxJobCreationEnabled,
@@ -169,7 +191,7 @@ export function getCommandCentreOperatorSurfaceView(
             : 'approve_operator_gateway_sandbox_apply',
         status: 'needs_board_grant',
         reason: sandboxJobCreationEnabled
-          ? 'Sandbox job creation is enabled for planned records only; dry-run execution and runner design need a later Board gate.'
+          ? 'Sandbox dry-run-only execution is enabled; controlled real local operator execution design remains a later Board gate.'
           : jobsView.source === 'sandbox_select'
             ? 'Sandbox persistence is connected for read-only visibility; job creation remains disabled until a later Board gate.'
             : 'operator_jobs/operator_events migration remains sandbox-first and unapplied; no DB writes are allowed here.',
@@ -208,18 +230,18 @@ export function getCommandCentreOperatorSurfaceView(
         },
         {
           id: sandboxJobCreationEnabled
-            ? 'approve_operator_gateway_sandbox_job_execution_dry_run'
+            ? 'approve_controlled_real_local_operator_execution_design_packet'
             : jobsView.source === 'sandbox_select'
               ? 'approve_operator_gateway_sandbox_job_creation'
               : 'approve_operator_gateway_sandbox_apply',
           title: sandboxJobCreationEnabled
-            ? 'Design sandbox execution dry-run and runner handoff packet'
+            ? 'Design controlled real local operator execution packet'
             : jobsView.source === 'sandbox_select'
               ? 'Approve sandbox job creation writes'
               : 'Apply operator_jobs/operator_events to sandbox',
           status: 'blocked_gate',
           nextAction: sandboxJobCreationEnabled
-            ? 'Prepare runner design/dry-run packet; do not execute jobs yet.'
+            ? 'Prepare controlled real local operator execution design packet; keep external execution disabled.'
             : jobsView.source === 'sandbox_select'
               ? 'Board grant required before enabling sandbox job creation writes.'
               : 'Board grant required before sandbox migration apply.',
@@ -243,7 +265,7 @@ export function getCommandCentreOperatorSurfaceView(
       reviewer: 'Phill McGurk',
       status: 'implemented_safe_local_surface',
       nextBoardGate: sandboxJobCreationEnabled
-        ? 'approve_operator_gateway_sandbox_job_execution_dry_run'
+        ? 'approve_controlled_real_local_operator_execution_design_packet'
         : jobsView.source === 'sandbox_select'
           ? 'approve_operator_gateway_sandbox_job_creation'
           : 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',

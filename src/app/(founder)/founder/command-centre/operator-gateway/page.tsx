@@ -1,8 +1,8 @@
 // src/app/(founder)/founder/command-centre/operator-gateway/page.tsx
 //
-// Unite-Group Nexus Command Centre — operator execution surface (SANDBOX JOB CREATION MODE).
-// Founder-only via the (founder) layout. This page may create sandbox planned jobs only:
-// no production DB writes, no external execution, no live runner, no API keys, no web-session scraping.
+// Unite-Group Nexus Command Centre — operator execution surface (SANDBOX DRY-RUN-ONLY MODE).
+// Founder-only via the (founder) layout. This page may create sandbox planned jobs and dry-run them only:
+// no production DB writes, no external execution, no live runner, no API keys, no web-session scraping. No real execute button.
 
 export const dynamic = 'force-dynamic'
 
@@ -140,6 +140,7 @@ export default async function OperatorGatewayPage() {
           <p>Live execution: {boolLabel(view.jobQueue.liveExecution)}</p>
           <p>External execution disabled: {boolLabel(!view.externalExecutionEnabled, false)}</p>
           <p>Job creation enabled: {boolLabel(view.jobSubmission.enabled, false)}</p>
+          <p>Dry-run execution enabled: {boolLabel(view.dryRunExecution.enabled, false)}</p>
           <p>Jobs visible: <b>{view.jobQueue.jobCount}</b></p>
           {view.jobQueue.source === 'sandbox_select' && view.jobQueue.jobCount === 0 ? (
             <p style={{ color: '#3fb950', fontSize: 13 }}>Sandbox connected empty state: no operator jobs recorded yet.</p>
@@ -241,12 +242,33 @@ export default async function OperatorGatewayPage() {
         </div>
 
         <div style={card} aria-label="sandbox job queue">
-          <h2 style={{ fontSize: 18, marginTop: 0 }}>Sandbox job queue</h2>
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>Sandbox job queue · Dry-run only</h2>
+          <p style={{ color: '#3fb950', fontSize: 13 }}>dry-run-only execution appends sandbox evidence and updates sandbox job status. External execution disabled. Live runner disabled. Production not connected. No real execute button.</p>
           {jobsView?.jobs.length ? jobsView.jobs.map((job) => (
             <div key={job.id} style={{ borderBottom: '1px solid #21262d', padding: '0.6rem 0' }}>
               <div><b>{job.title}</b> <span style={pill('blue')}>{job.status}</span></div>
               <div style={{ color: '#8b949e', fontSize: 13 }}>{job.laneId} · {job.taskType}</div>
               <div style={{ color: '#3fb950', fontSize: 12 }}>apiKeyRequested=false · externalExecution=false · liveRunner=false</div>
+              <form method="post" action="/api/hermes/operator-gateway/jobs/dry-run" style={{ marginTop: '0.5rem' }}>
+                <input type="hidden" name="jobId" value={job.id} />
+                <input type="hidden" name="dryRunReason" value="Command Centre dry-run-only execution selected" />
+                <input type="hidden" name="externalActionRequested" value="false" />
+                <input type="hidden" name="productionActionRequested" value="false" />
+                <input type="hidden" name="apiKeyRequested" value="false" />
+                <button
+                  type="submit"
+                  disabled={!view.dryRunExecution.enabled || job.status !== 'planned' || job.externalActionRequested || job.productionActionRequested || job.apiKeyRequested}
+                  style={{
+                    ...inputStyle,
+                    color: '#00F5FF',
+                    fontWeight: 700,
+                    opacity: view.dryRunExecution.enabled && job.status === 'planned' ? 1 : 0.6,
+                    cursor: view.dryRunExecution.enabled && job.status === 'planned' ? 'pointer' : 'not-allowed',
+                  }}
+                >
+                  Dry-run only · append event + update sandbox status
+                </button>
+              </form>
             </div>
           )) : <p style={{ color: '#8b949e', fontSize: 14 }}>No sandbox jobs visible yet. Created jobs appear here after refresh.</p>}
         </div>

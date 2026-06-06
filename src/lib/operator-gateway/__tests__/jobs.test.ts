@@ -272,4 +272,137 @@ describe('operator gateway jobs layer', () => {
       'cancelled',
     ])
   })
+
+
+  it('dry-runs a planned sandbox job by updating status and appending a status_changed event only', async () => {
+    const existingJob = {
+      id: 'job-dry-1',
+      founder_id: 'founder-1',
+      lane_id: 'hermes_local',
+      title: 'Dry-run evidence job',
+      task_type: 'documentation',
+      status: 'planned',
+      external_action_requested: false,
+      production_action_requested: false,
+      api_key_requested: false,
+      evidence_refs: [],
+      metadata: { source: 'test' },
+      created_at: '2026-06-06T13:00:00Z',
+      updated_at: '2026-06-06T13:00:00Z',
+    }
+    const updatedJob = {
+      ...existingJob,
+      status: 'done',
+      evidence_refs: ['2nd-brain/.agentic_nexus/OPERATOR_GATEWAY_SANDBOX_DRY_RUN_EXECUTION_EVIDENCE_PACKET.md'],
+      metadata: {
+        source: 'test',
+        dryRun: {
+          status: 'completed',
+          completedAt: '2026-06-06T14:00:00Z',
+          reason: 'prove lifecycle',
+          externalExecution: false,
+          liveRunner: false,
+          productionDbTouched: false,
+        },
+      },
+      updated_at: '2026-06-06T14:00:00Z',
+    }
+    const readSingle = vi.fn().mockResolvedValue({ data: existingJob, error: null })
+    const readFounderEq = vi.fn(() => ({ single: readSingle }))
+    const readIdEq = vi.fn(() => ({ eq: readFounderEq }))
+    const select = vi.fn(() => ({ eq: readIdEq }))
+    const updateSingle = vi.fn().mockResolvedValue({ data: updatedJob, error: null })
+    const updateSelect = vi.fn(() => ({ single: updateSingle }))
+    const updateFounderEq = vi.fn(() => ({ select: updateSelect }))
+    const updateIdEq = vi.fn(() => ({ eq: updateFounderEq }))
+    const update = vi.fn(() => ({ eq: updateIdEq }))
+    const eventInsert = vi.fn().mockResolvedValue({ data: null, error: null })
+    const from = vi.fn((table: string) => {
+      if (table === 'operator_jobs') return { select, update }
+      if (table === 'operator_events') return { insert: eventInsert }
+      throw new Error(`unexpected table ${table}`)
+    })
+
+    const { dryRunSandboxOperatorJob } = await import('../jobs')
+    const result = await dryRunSandboxOperatorJob({
+      founderId: 'founder-1',
+      client: { from },
+      jobId: 'job-dry-1',
+      dryRunReason: 'prove lifecycle',
+      now: () => '2026-06-06T14:00:00Z',
+    })
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) throw new Error('expected dry-run success')
+    expect(result.source).toBe('sandbox_dry_run')
+    expect(result.dryRunExecution).toBe('sandbox_enabled')
+    expect(result.liveExecution).toBe(false)
+    expect(result.externalExecutionEnabled).toBe(false)
+    expect(result.productionConnected).toBe(false)
+    expect(result.eventAppended).toBe(true)
+    expect(result.jobStatusUpdated).toBe(true)
+    expect(result.job.status).toBe('done')
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({
+      status: 'done',
+      evidence_refs: expect.arrayContaining(['2nd-brain/.agentic_nexus/OPERATOR_GATEWAY_SANDBOX_DRY_RUN_EXECUTION_EVIDENCE_PACKET.md']),
+      metadata: expect.objectContaining({
+        dryRun: expect.objectContaining({
+          status: 'completed',
+          externalExecution: false,
+          liveRunner: false,
+          productionDbTouched: false,
+        }),
+      }),
+    }))
+    expect(eventInsert).toHaveBeenCalledWith(expect.objectContaining({
+      founder_id: 'founder-1',
+      job_id: 'job-dry-1',
+      event_type: 'status_changed',
+      from_status: 'planned',
+      to_status: 'done',
+      evidence_ref: '2nd-brain/.agentic_nexus/OPERATOR_GATEWAY_SANDBOX_DRY_RUN_EXECUTION_EVIDENCE_PACKET.md',
+    }))
+  })
+
+  it('refuses dry-run requests for missing founder, missing job, external, production, and API-key inputs without touching DB', async () => {
+    const { dryRunSandboxOperatorJob } = await import('../jobs')
+    const client = { from: vi.fn() }
+    for (const options of [
+      { founderId: undefined, client, jobId: 'job-1' },
+      { founderId: 'founder-1', client, jobId: '' },
+      { founderId: 'founder-1', client, jobId: 'job-1', externalActionRequested: true },
+      { founderId: 'founder-1', client, jobId: 'job-1', productionActionRequested: true },
+      { founderId: 'founder-1', client, jobId: 'job-1', apiKeyRequested: true },
+    ]) {
+      const result = await dryRunSandboxOperatorJob(options)
+      expect(result.ok).toBe(false)
+    }
+    expect(client.from).not.toHaveBeenCalled()
+  })
+
+  it('refuses dry-run for hard-gated or unsafe sandbox job rows before updating status', async () => {
+    const { dryRunSandboxOperatorJob } = await import('../jobs')
+    for (const row of [
+      { task_type: 'production_deploy', api_key_requested: false, external_action_requested: false, production_action_requested: false },
+      { task_type: 'documentation', api_key_requested: true, external_action_requested: false, production_action_requested: false },
+      { task_type: 'documentation', api_key_requested: false, external_action_requested: true, production_action_requested: false },
+      { task_type: 'documentation', api_key_requested: false, external_action_requested: false, production_action_requested: true },
+    ]) {
+      const existingJob = {
+        id: 'job-unsafe', founder_id: 'founder-1', lane_id: 'hermes_local', title: 'Unsafe', status: 'planned',
+        evidence_refs: [], metadata: {}, created_at: '2026-06-06T13:00:00Z', updated_at: '2026-06-06T13:00:00Z', ...row,
+      }
+      const readSingle = vi.fn().mockResolvedValue({ data: existingJob, error: null })
+      const client = {
+        from: vi.fn(() => ({
+          select: vi.fn(() => ({ eq: vi.fn(() => ({ eq: vi.fn(() => ({ single: readSingle })) })) })),
+          update: vi.fn(),
+        })),
+      }
+      const result = await dryRunSandboxOperatorJob({ founderId: 'founder-1', client, jobId: 'job-unsafe' })
+      expect(result.ok).toBe(false)
+      if (result.ok) throw new Error('expected refusal')
+      expect(result.source).toBe('sandbox_dry_run_refused')
+    }
+  })
 })
