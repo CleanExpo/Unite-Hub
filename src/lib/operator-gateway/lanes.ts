@@ -33,7 +33,8 @@ export interface OperatorLane {
 }
 
 const CODE_TASKS = ['feature_implementation', 'refactor', 'code_review', 'test_authoring', 'documentation']
-const HARD_GATED_TASKS = [
+// Exported so the operator job layer (jobs.ts) can reject hard-gated work by default.
+export const HARD_GATED_TASK_TYPES = [
   'production_deploy',
   'production_db_write',
   'payments',
@@ -41,6 +42,7 @@ const HARD_GATED_TASKS = [
   'claims_orders',
   'secrets_access',
 ]
+const HARD_GATED_TASKS = HARD_GATED_TASK_TYPES
 
 export const OPERATOR_LANES: readonly OperatorLane[] = [
   {
