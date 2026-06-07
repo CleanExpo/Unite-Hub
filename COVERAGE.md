@@ -192,7 +192,7 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 
 ### Fresh proof commands
 
-- `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration --file /Users/phillmcgurk/Unite-Hub/supabase/migrations/20260325000001_ai_file_cache.sql` -> PASS, applied exact existing migration script.
+- `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration --file ${REPO_ROOT}/supabase/migrations/20260325000001_ai_file_cache.sql` -> PASS, applied exact existing migration script.
 - `supabase migration repair --linked --workdir /tmp/unite-hub-ai-file-cache-migration --status applied 20260325000001` -> PASS, migration history marked applied.
 - `node <service-role effect check: select id from ai_file_cache limit 0>` -> PASS, table exists.
 - `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload` -> PASS, `1` Playwright test.

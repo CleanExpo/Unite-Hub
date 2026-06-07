@@ -1,6 +1,6 @@
 import { appendFileSync } from 'node:fs'
 import { randomBytes } from 'node:crypto'
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect, type BrowserContext, type Page } from '@playwright/test'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { loadSupabaseAdminConfig } from './support/supabase-admin-config'
 
@@ -121,10 +121,13 @@ test.describe('authenticated file upload', () => {
     appendEvidence('- Safety: generated password was kept in memory only and was not logged.')
     appendEvidence('- Provider note: UNITE_HUB_TEST_MOCK_AI_FILES=1 uses a tagged test-only mock file id; no live provider call is made.')
 
+    let context: BrowserContext | undefined
+    let contextB: BrowserContext | undefined
+
     try {
       await provisionUser(admin, state, state.users[0])
       await provisionUser(admin, state, state.users[1])
-      const context = await browser.newContext()
+      context = await browser.newContext()
       const page = await context.newPage()
       await signIn(page, state.users[0])
 
@@ -173,7 +176,7 @@ test.describe('authenticated file upload', () => {
       })
       expect(String(data?.file_id ?? '')).toMatch(/^file_mock_/)
 
-      const contextB = await browser.newContext()
+      contextB = await browser.newContext()
       const pageB = await contextB.newPage()
       await signIn(pageB, state.users[1])
       const listB = await pageB.request.get('/api/files')
@@ -207,10 +210,9 @@ test.describe('authenticated file upload', () => {
 
       appendEvidence(`  - uploaded tiny tagged file: status 201, cacheKey ${cacheKey}, persisted file id ${data?.file_id}`)
       appendEvidence(`  - cross-user isolation verified: user B could not list/read ${cacheKey} via API or direct RLS query`)
-
-      await contextB.close()
-      await context.close()
     } finally {
+      await contextB?.close().catch(() => undefined)
+      await context?.close().catch(() => undefined)
       await cleanup(admin, state)
     }
   })

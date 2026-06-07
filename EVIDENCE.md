@@ -506,7 +506,7 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - Pre-check command: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration "select to_regclass('public.ai_file_cache') as before;"`
 - Pre-check result: `before: null`.
 - Migration tooling note: `supabase db push --linked --dry-run` from the full repo would apply unrelated pending migrations; a one-file temp workdir dry run showed only `20260325000001` local-only, but `db push` refused because legacy short remote migration versions sort/match incorrectly. To avoid a broad push, the exact existing migration script was applied through Supabase CLI.
-- Applied command: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration --file /Users/phillmcgurk/Unite-Hub/supabase/migrations/20260325000001_ai_file_cache.sql`
+- Applied command: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration --file ${REPO_ROOT}/supabase/migrations/20260325000001_ai_file_cache.sql`
 - Migration-history command: `supabase migration repair --linked --workdir /tmp/unite-hub-ai-file-cache-migration --status applied 20260325000001`
 - Apply result: command exited `0`; migration history reported `Repaired migration history: [20260325000001] => applied`.
 - Verification command: `node <service-role effect check: select id from ai_file_cache limit 0>`
