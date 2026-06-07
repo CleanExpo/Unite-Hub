@@ -85,6 +85,7 @@ export interface CommandCentreOperatorSurfaceView {
   }
   skillMesh: ReturnType<typeof getSpecializedSkillMeshStatus>
   missionRouter: {
+    source: 'static_registry'
     status: 'static_local_router_ready'
     sampleObjective: string
     sampleRoute: MissionRouteResult
@@ -316,6 +317,7 @@ export function getCommandCentreOperatorSurfaceView(
     },
     skillMesh,
     missionRouter: {
+      source: 'static_registry',
       status: 'static_local_router_ready',
       sampleObjective,
       sampleRoute,

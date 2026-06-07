@@ -41,4 +41,15 @@ describe('GET /api/hermes/operator-gateway/skill-mesh', () => {
     expect(json.sampleRoute.actions.length).toBeGreaterThanOrEqual(15)
     expect(json.sampleRoute.actions.length).toBeLessThanOrEqual(20)
   })
+
+  it('returns sanitized JSON for unexpected loader errors', async () => {
+    mockGetUser.mockRejectedValue(new Error('raw auth internals'))
+
+    const res = await GET()
+    const json = await res.json()
+
+    expect(res.status).toBe(500)
+    expect(json).toEqual({ error: 'Failed to load skill mesh status' })
+    expect(JSON.stringify(json)).not.toContain('raw auth internals')
+  })
 })

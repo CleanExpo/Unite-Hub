@@ -7,14 +7,18 @@ export const dynamic = 'force-dynamic'
 // GET — founder/session guarded Specialised Skill Mesh + Business Mission Router status.
 // Static local registry only: no DB writes, no live runner, no external execution, no API-key mode.
 export async function GET() {
-  const user = await getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  try {
+    const user = await getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
-  const status = getSpecializedSkillMeshStatus()
-  return NextResponse.json({
-    ...status,
-    founderOnly: true,
-    externalExecutionEnabled: false,
-    sampleRoute: routeBusinessMission('Prepare CARSI course product launch readiness'),
-  })
+    const status = getSpecializedSkillMeshStatus()
+    return NextResponse.json({
+      ...status,
+      founderOnly: true,
+      externalExecutionEnabled: false,
+      sampleRoute: routeBusinessMission('Prepare CARSI course product launch readiness'),
+    })
+  } catch {
+    return NextResponse.json({ error: 'Failed to load skill mesh status' }, { status: 500 })
+  }
 }

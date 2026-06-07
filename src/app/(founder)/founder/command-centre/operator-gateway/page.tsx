@@ -174,6 +174,7 @@ export default async function OperatorGatewayPage() {
       <section style={grid} aria-label="specialized skill mesh">
         <div style={card}>
           <h2 style={{ fontSize: 18, marginTop: 0 }}>Specialised Skill Mesh</h2>
+          <p style={{ color: '#8b949e', fontSize: 13 }}>Source: <code>{view.skillMesh.source ?? 'not_connected'}</code></p>
           <p style={{ color: '#3fb950', fontSize: 14 }}>Available specialised skills: <b>{view.skillMesh.specializedSkillCount}</b></p>
           <p style={{ color: '#3fb950', fontSize: 14 }}>Business mission templates: <b>{view.skillMesh.businessMissionTemplateCount}</b></p>
           <p>Active lanes: <code>{view.skillMesh.activeLanes.join(', ')}</code></p>
@@ -184,6 +185,7 @@ export default async function OperatorGatewayPage() {
         </div>
         <div style={card}>
           <h2 style={{ fontSize: 18, marginTop: 0 }}>Business Mission Router</h2>
+          <p style={{ color: '#8b949e', fontSize: 13 }}>Source: <code>{view.missionRouter.source ?? view.skillMesh.source ?? 'not_connected'}</code> (sample route)</p>
           <p>Status: <span style={pill('green')}>{view.missionRouter.status}</span></p>
           <p>Sample objective: <b>{view.missionRouter.sampleObjective}</b></p>
           <p>Selected template: <code>{view.missionRouter.sampleRoute.selectedTemplateId}</code></p>

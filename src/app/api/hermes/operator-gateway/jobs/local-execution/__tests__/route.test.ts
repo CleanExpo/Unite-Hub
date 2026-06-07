@@ -148,4 +148,20 @@ describe('POST /api/hermes/operator-gateway/jobs/local-execution', () => {
     expect(json.error).toBe('Controlled real-local execution request is currently unavailable.')
     expect(JSON.stringify(json)).not.toContain('raw sandbox internals')
   })
+
+  it('returns 400 for non-object JSON bodies', async () => {
+    mockGetUser.mockResolvedValue({ id: 'founder-1' } as never)
+
+    const res = await POST(new Request('http://test.local/api/hermes/operator-gateway/jobs/local-execution', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: 'null',
+    }))
+    const json = await res.json()
+
+    expect(res.status).toBe(400)
+    expect(json.source).toBe('validation_failed')
+    expect(json.reasons).toContain('request body must be a JSON object or form data')
+    expect(mockRequestControlledLocalOperatorExecution).not.toHaveBeenCalled()
+  })
 })

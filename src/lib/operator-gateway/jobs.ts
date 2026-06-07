@@ -73,7 +73,7 @@ export const OPERATOR_JOB_STATUSES: readonly OperatorJobStatus[] = [
 
 // Allowed forward transitions for a recorded job lifecycle (no executor — contract only).
 const ALLOWED_TRANSITIONS: Record<OperatorJobStatus, OperatorJobStatus[]> = {
-  planned: ['queued', 'cancelled'],
+  planned: ['queued', 'running', 'cancelled'],
   queued: ['running', 'cancelled'],
   running: ['blocked', 'done', 'failed', 'cancelled'],
   blocked: ['running', 'failed', 'cancelled'],
@@ -816,8 +816,8 @@ export type ControlledLocalOperatorExecutionResult =
       externalExecutionEnabled: false
       productionConnected: false
       dispatchPerformed: false
-      eventAppended: false
-      jobStatusUpdated: false
+      eventAppended: boolean
+      jobStatusUpdated: boolean
     }
 
 function controlledLocalRejection(
@@ -826,6 +826,7 @@ function controlledLocalRejection(
   error: string,
   reasons: string[],
   localExecutionFoundation: 'policy_refused' | 'sandbox_rejected' = 'policy_refused',
+  flags: { eventAppended?: boolean; jobStatusUpdated?: boolean } = {},
 ): ControlledLocalOperatorExecutionResult {
   return {
     ok: false,
@@ -838,8 +839,8 @@ function controlledLocalRejection(
     externalExecutionEnabled: false,
     productionConnected: false,
     dispatchPerformed: false,
-    eventAppended: false,
-    jobStatusUpdated: false,
+    eventAppended: flags.eventAppended ?? false,
+    jobStatusUpdated: flags.jobStatusUpdated ?? false,
   }
 }
 
@@ -870,7 +871,7 @@ export async function requestControlledLocalOperatorExecution(options: Controlle
     if (!job) return controlledLocalRejection(400, 'sandbox_local_execution_refused', 'Controlled real-local execution refused unsafe job row.', ['job violates no-API-key invariants'])
 
     const reasons: string[] = []
-    if (job.status !== 'planned') reasons.push(`job status '${job.status}' cannot request controlled local execution; expected planned`)
+    if (!canTransition(job.status, 'running')) reasons.push(`job status '${job.status}' cannot transition to running for controlled local execution`)
     if (job.laneId !== options.laneId) reasons.push('request laneId must match the persisted sandbox job lane')
     if (job.taskType !== options.taskType) reasons.push('request taskType must match the persisted sandbox job taskType')
     if (HARD_GATED_TASK_TYPES.includes(job.taskType)) reasons.push(`taskType '${job.taskType}' is hard-gated and prohibited`)
@@ -921,7 +922,7 @@ export async function requestControlledLocalOperatorExecution(options: Controlle
       evidence_ref: CONTROLLED_REAL_LOCAL_EXECUTION_EVIDENCE_REF,
     })
     if (eventResult.error) {
-      return controlledLocalRejection(503, 'sandbox_event_insert_failed', 'Sandbox controlled real-local event append failed.', ['sandbox operator_events append failed'], 'sandbox_rejected')
+      return controlledLocalRejection(503, 'sandbox_event_insert_failed', 'Sandbox controlled real-local event append failed.', ['sandbox operator_events append failed'], 'sandbox_rejected', { jobStatusUpdated: true })
     }
 
     return {
