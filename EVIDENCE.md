@@ -1,7 +1,8 @@
 # Evidence — append only
 
-Date: 2026-06-07T06:01:51Z
+Date: 2026-06-07T09:05:13Z
 Branch: `feat/24h-verify-and-harden`
+PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 
 ## 2026-06-07
 
@@ -15,57 +16,74 @@ Branch: `feat/24h-verify-and-harden`
 - **Actual result:** passed
 - **Evidence:** `tsc --noEmit` completed with exit code 0.
 
-### 3) Lint passes after removing `any` escapes from the middleware fix
+### 3) Lint passes
 - **Command:** `pnpm lint`
 - **Actual result:** passed
 - **Evidence:** `eslint src/` completed with exit code 0.
 
-### 4) Full Vitest suite passes
+### 4) Full Vitest suite passes on current PR head
 - **Command:** `pnpm vitest run`
 - **Actual result:** passed
-- **Evidence:** `118 passed` test files, `842 passed` tests, exit code 0.
+- **Evidence:** `118 passed` test files, `843 passed` tests, exit code 0.
 
-### 5) Public health endpoint no longer hard-crashes when Supabase env is missing
-- **Command:** `curl -i --max-time 10 http://127.0.0.1:3003/api/health`
-- **Actual result:** `HTTP/1.1 503 Service Unavailable`
-- **Body evidence:** `{"status":"degraded","timestamp":"2026-06-07T06:00:32.607Z","connections":{"supabase":"error"}}`
-
-### 6) Root path now redirects cleanly instead of 500ing
-- **Command:** `curl -i --max-time 10 http://127.0.0.1:3003/`
-- **Actual result:** `HTTP/1.1 307 Temporary Redirect`
-- **Body evidence:** redirect target `/auth/login?redirectTo=%2F`
-
-### 7) Login page renders in the missing-env case
-- **Command:** `curl -i --max-time 10 http://127.0.0.1:3003/auth/login`
-- **Actual result:** `HTTP/1.1 200 OK`
-- **Body evidence:** HTML contains the `Sign in` heading, Google button, email field, password field, and submit button.
-
-### 8) Contacts route no longer hard-crashes in the missing-env case
-- **Command:** `curl -i --max-time 10 http://127.0.0.1:3003/api/contacts`
-- **Actual result:** `HTTP/1.1 307 Temporary Redirect`
-- **Body evidence:** redirect target `/auth/login?redirectTo=%2Fapi%2Fcontacts`
-
-### 9) Targeted unit tests for the hardening fix pass
-- **Command:** `pnpm vitest run src/app/api/health/__tests__/route.test.ts src/lib/supabase/__tests__/server.test.ts src/lib/supabase/__tests__/middleware.test.ts src/app/__tests__/page.test.ts`
+### 5) Targeted regression test for `getUserWithRole()` missing-config guard passes
+- **Command:** `pnpm vitest run src/lib/supabase/__tests__/server.test.ts`
 - **Actual result:** passed
-- **Evidence:** `4 passed`, `11 passed`.
+- **Evidence:** `3 passed`; test asserts `getUser`, `getSession`, and `getUserWithRole` return `null` without calling `createServerClient` when Supabase env is missing.
 
-### 10) The local dev server boots cleanly after the Supabase guard fix
-- **Command:** `pnpm dev --port 3003`
-- **Actual result:** running successfully
-- **Evidence:** `next dev -p 3008` started and served requests on port 3003 via the override; no Supabase client crash on startup.
+### 6) Local production build is blocked by absent local secrets/env, not by an observed TypeScript/build error
+- **Command:** `pnpm build`
+- **Actual result:** failed in `prebuild`
+- **Evidence:** `scripts/validate-env.mjs --ci` reported `0/3` critical and `0/4` required env vars set in the local shell, then exited 1. No secret values were printed or supplied.
 
-### 11) Live smoke probes confirm the public entry points behave correctly in the missing-env case
+### 7) GitHub Build Application passed on PR #93 current commit
+- **Command:** `gh run view 27087960201 --job 79946073153 --log --repo CleanExpo/Unite-Hub`
+- **Actual result:** passed
+- **Evidence:** job completed successfully for commit `f41abce4`; route manifest was emitted. Warnings observed were non-fatal (`url.parse` deprecation, pnpm Supabase bin warning, cache-control/Turbopack warnings).
+
+### 8) PR #93 merge-error diagnosis
 - **Commands:**
-  - `curl -sS -D - http://127.0.0.1:3003/api/health -o /tmp/health.out`
-  - `curl -sS -D - http://127.0.0.1:3003/ -o /tmp/root.out`
-  - `curl -sS -D - http://127.0.0.1:3003/api/contacts -o /tmp/contacts.out`
-- **Actual result:**
-  - `/api/health` → `HTTP/1.1 503 Service Unavailable` with body `{"status":"degraded","timestamp":"2026-06-07T06:07:28.996Z","connections":{"supabase":"error"}}`
-  - `/` → `HTTP/1.1 307 Temporary Redirect` to `/auth/login?redirectTo=%2F`
-  - `/api/contacts` → `HTTP/1.1 307 Temporary Redirect` to `/auth/login?redirectTo=%2Fapi%2Fcontacts`
+  - `gh pr checks 93 --repo CleanExpo/Unite-Hub`
+  - `gh pr view 93 --json mergeable,mergeStateStatus,statusCheckRollup`
+  - `gh api repos/CleanExpo/Unite-Hub/branches/main/protection`
+- **Actual result:** build/checks were not the merge blocker; branch policy required conversation resolution.
+- **Evidence:** initial state showed `mergeable=MERGEABLE`, required checks green, `mergeStateStatus=BLOCKED`, and branch protection `required_conversation_resolution=true` with 5 unresolved CodeRabbit threads.
 
-### 12) Full Vitest suite passes in the current branch state
-- **Command:** `pnpm vitest run`
-- **Actual result:** passed
-- **Evidence:** `118 passed` test files, `842 passed` tests, exit code 0.
+### 9) CodeRabbit active finding fixed and stale threads resolved
+- **Change:** guarded `getUserWithRole()` with `hasSupabaseConfig()` before `createClient()`.
+- **Commit:** `f41abce4 fix: guard user-with-role auth without Supabase env`
+- **Evidence:** active thread `PRRT_kwDOQUchfM6HoecO` resolved after the fix; four other unresolved threads were marked `outdated=true` by GitHub and resolved to satisfy required conversation resolution.
+
+### 10) Final PR check and merge state
+- **Command:** `gh pr view 93 --json state,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup,headRefOid`
+- **Actual result:** clean/mergeable
+- **Evidence:** `headRefOid=f41abce4f507f2914f81c8fd3b8775aef4fcbae9`, `mergeable=MERGEABLE`, `mergeStateStatus=CLEAN`, all check-rollup entries success or skipped.
+
+### 11) Live smoke: public auth/health paths with Supabase env intentionally empty
+- **Server command:** `NEXT_PUBLIC_SUPABASE_URL= NEXT_PUBLIC_SUPABASE_ANON_KEY= SUPABASE_SERVICE_ROLE_KEY= ANTHROPIC_API_KEY= VAULT_ENCRYPTION_KEY= CRON_SECRET= FOUNDER_USER_ID= pnpm exec next dev -p 3003`
+- **Commands / actual results:**
+  - `curl -i --max-redirs 0 http://127.0.0.1:3003/` → `HTTP/1.1 307 Temporary Redirect`, `location: /auth/login?redirectTo=%2F`
+  - `curl -i --max-redirs 0 http://127.0.0.1:3003/auth/login` → `HTTP/1.1 200 OK`
+  - `curl -i --max-redirs 0 http://127.0.0.1:3003/api/health` → `HTTP/1.1 503 Service Unavailable`, JSON degraded Supabase status
+
+### 12) Live smoke: representative protected APIs no longer 500 in missing-env mode
+- **Command shape:** `curl -i --max-redirs 0 http://127.0.0.1:3003/<path>`
+- **Actual results:**
+  - `/api/contacts` → `307 /auth/login?redirectTo=%2Fapi%2Fcontacts`
+  - `/api/dashboard/stats` → `307 /auth/login?redirectTo=%2Fapi%2Fdashboard%2Fstats`
+  - `/api/integrations/status` → `307 /auth/login?redirectTo=%2Fapi%2Fintegrations%2Fstatus`
+  - `/api/email/threads` → `307 /auth/login?redirectTo=%2Fapi%2Femail%2Fthreads`
+  - `/api/email/campaigns` → `307 /auth/login?redirectTo=%2Fapi%2Femail%2Fcampaigns`
+  - `/api/video/jobs` → `307 /auth/login?redirectTo=%2Fapi%2Fvideo%2Fjobs`
+  - `/api/social/status` → `307 /auth/login?redirectTo=%2Fapi%2Fsocial%2Fstatus`
+  - `/api/hermes/operator-gateway/command-centre` → `307 /auth/login?redirectTo=%2Fapi%2Fhermes%2Foperator-gateway%2Fcommand-centre`
+  - `/api/hermes/operator-gateway/status` → `307 /auth/login?redirectTo=%2Fapi%2Fhermes%2Foperator-gateway%2Fstatus`
+  - `/api/hermes/kanban` → `307 /auth/login?redirectTo=%2Fapi%2Fhermes%2Fkanban`
+  - `/api/xero/connect` → `307 /auth/login?redirectTo=%2Fapi%2Fxero%2Fconnect`
+  - `/api/auth/google/authorize` → `401 {"error":"Unauthorized"}`
+
+### 13) Preview deployments created by Vercel for PR #93
+- **Evidence:** GitHub status contexts passed:
+  - `Vercel – unite-hub` → `https://vercel.com/unite-group/unite-hub/4RAU9HFy6hrcbqx3QDtzLGruuDhQ`
+  - `Vercel – unite-hub-sandbox` → `https://vercel.com/unite-group/unite-hub-sandbox/8Sj87vsVAM3kf28QB2wq3JbU19qL`
+- **Note:** This is preview deployment readiness, not proof of authenticated product journeys.
