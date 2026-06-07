@@ -143,3 +143,12 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
 23. **Provide paid AI file/transcription execution settings**
    - Authenticated files list works, but tiny upload returned the `ANTHROPIC_API_KEY` credential blocker, and no transcription endpoint was found.
    - Needed decision: provide a cost-controlled transcription/upload test lane or mark transcription not connected.
+
+## Added 2026-06-07T13:06Z — Lead scoring ai_score column blocker
+
+24. **Approve an additive `contacts.ai_score` schema change, or accept metadata persistence as the current product contract**
+   - Mission target requested persistence to `contacts.ai_score`.
+   - Current generated schema and live Supabase effect probe both show `contacts.ai_score` does not exist. The live probe returned status `400`, error code `42703`, message `column contacts.ai_score does not exist`.
+   - A production schema change is outside the scoped reversible test-data exception for this targeted run, so it was not applied.
+   - Safe progress made: `POST /api/contacts/:id/score` now runs the existing `qualifyLead` logic as the authenticated founder, founder-scopes by `founder_id`, persists the score to `contacts.metadata.leadQualification`, and is guarded by `pnpm test:e2e:lead-scoring`.
+   - Needed decision: either approve an additive migration for `contacts.ai_score` with generated type updates, or update the target contract so `contacts.metadata.leadQualification.score` is the accepted persistence field.

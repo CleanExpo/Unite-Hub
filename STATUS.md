@@ -254,3 +254,34 @@ All six requested currently-UNKNOWN journeys remain **UNKNOWN** after an autonom
 1. Decide whether to implement the missing drip lifecycle route or remove it from the product promise.
 2. Add an authenticated lead-scoring route/path that persists/re-reads a score for a seeded contact, or mark scoring as library-only.
 3. Wire the paid file/transcription path with explicit cost controls and a real cleanup story, or mark transcription not connected.
+
+## Lead scoring targeted build — 2026-06-07T13:06Z
+
+### What genuinely works now
+
+- `POST /api/contacts/:id/score` exists and is authenticated.
+- The route reuses `qualifyLead` as the single source of truth.
+- Contact access is founder-scoped with `.eq('founder_id', user.id)`.
+- The e2e guard proved a real authenticated user can score a tagged contact, persist the expected score `100` to `contacts.metadata.leadQualification`, re-read it, and cannot score another founder's tagged contact.
+- Cleanup was verified for the throwaway auth users and contacts.
+
+### What remains blocked
+
+- The exact requested `contacts.ai_score` persistence is **UNKNOWN / BLOCKED** because the current live `contacts` table has no `ai_score` column. A service-role effect probe returned `42703 column contacts.ai_score does not exist`.
+- No schema change was applied because this run authorised scoped reversible test data only, not production schema changes.
+
+### Fresh verification
+
+- `pnpm type-check` -> PASS.
+- `pnpm lint` -> PASS.
+- `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` -> PASS, `1` Playwright test.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright regression test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright regression tests.
+- `node <scoped cleanup audit for lead-scoring/contact-crud/core regression IDs>` -> PASS, `5/5` auth users gone, `0` contacts remain, `0` campaigns remain.
+- `pnpm vitest run` -> PASS, `118` test files and `847` tests.
+- `pnpm build` -> BLOCKED before compile by local `prebuild` env validation (`0/3` critical, `0/4` required set in this shell).
+- `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build` -> BLOCKED before compile with Supabase critical vars present (`3/3`) and required runtime names absent (`0/4`).
+
+### Next decision
+
+Approve an additive `contacts.ai_score` migration and generated type update, or accept `contacts.metadata.leadQualification.score` as the product persistence field.

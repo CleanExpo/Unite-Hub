@@ -334,3 +334,67 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - Supabase host: lksfwktwtmyznckodsau.supabase.co
 - Command: `node <scoped cleanup audit for all auth/contact/campaign IDs recorded in this run>`
 - Actual result: `12/12` recorded test auth users gone; `0` recorded test contacts remain; `0` recorded test campaigns remain.
+
+### Lead scoring API run - 2026-06-07T13:06:33.433Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Persistence note: current contacts table has no ai_score column; route persists to contacts.metadata.leadQualification.
+  - created lead scoring auth user A: 835c2733-6c17-41a5-91c7-98dbf2dee01f
+  - created lead scoring auth user B: 85c2e16b-dea3-483b-8fc7-4cad50b3044e
+  - created lead scoring contact A: 28bb9c4e-88cd-4985-83c1-5b858500d41b (playwright+lead-scoring+2026-06-07T13-06-33-433Z+a@unite-hub.invalid)
+  - created lead scoring contact B: 1d420d9f-f8a9-430c-a9f5-22d5ffccd88d (playwright+lead-scoring+2026-06-07T13-06-33-433Z+b@unite-hub.invalid)
+  - scored contact 28bb9c4e-88cd-4985-83c1-5b858500d41b: expected score 100, persisted metadata score 100
+  - cross-founder scoring blocked: A received 404 for B contact 1d420d9f-f8a9-430c-a9f5-22d5ffccd88d
+  - cleanup verified for lead scoring marker 2026-06-07T13:06:33.433Z: contacts/users removed
+
+### Lead scoring targeted build - 2026-06-07T13:06:55Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Command: `node <service-role effect probe: contacts select id,ai_score limit 0>`
+- Actual result: Supabase returned status `400`, error code `42703`, message `column contacts.ai_score does not exist`.
+- Command: `pnpm type-check`
+- Actual result: PASS; `tsc --noEmit` exited `0`.
+- Command: `pnpm lint`
+- Actual result: PASS; `eslint src/` exited `0`.
+- Command: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright test passed. The guard provisioned two throwaway users, created two tagged contacts, called `POST /api/contacts/:id/score` as user A, asserted expected score `100`, re-read persisted `contacts.metadata.leadQualification.score = 100`, asserted A received `404` scoring B's contact, and verified cleanup.
+
+### Contact CRUD approved production-write run - 2026-06-07T13:07:42.761Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 136ec938-d552-457f-b89f-9276cfd26011
+  - created test auth user B: d6cdc026-8033-4505-9632-f105114d14f6
+  - created test contact A: a4ef22d0-88bd-4696-9bf9-9d69fd49b2cd (playwright+crud+2026-06-07T13-07-42-761Z+a@unite-hub.test)
+  - created test contact B: b88a0a30-beb6-45f4-9b40-a06c6a9e9cb0 (playwright+crud+2026-06-07T13-07-42-761Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: a4ef22d0-88bd-4696-9bf9-9d69fd49b2cd
+  - cleanup verified for marker 2026-06-07T13:07:42.761Z: contacts/users removed; workspace IDs created: 0
+
+### Core authenticated journey run - 2026-06-07T13:07:58.446Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: af048002-21a3-468a-a793-85165d849e1e
+  - integrations status returned 200 with 14 providers
+  - created tagged email campaign: 2a0cedd0-227e-4f06-bd93-e3dd6025f9f4
+  - campaign send path blocked without recipients before any provider send: 2a0cedd0-227e-4f06-bd93-e3dd6025f9f4
+  - files list returned 200 with 0 cached files
+  - tiny file upload returned 500 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN
+  - cleanup verified for core journey marker 2026-06-07T13:07:58.446Z
+
+### Lead scoring targeted cleanup audit - 2026-06-07T13:08Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Command: `node <scoped cleanup audit for lead-scoring/contact-crud/core regression IDs>`
+- Actual result: `5/5` recorded auth users gone; `0` recorded contacts remain; `0` recorded campaigns remain.
+
+### Lead scoring final local gates - 2026-06-07T13:09Z
+- Command: `pnpm type-check`
+- Actual result: PASS; `tsc --noEmit` exited `0`.
+- Command: `pnpm lint`
+- Actual result: PASS; `eslint src/` exited `0`.
+- Command: `git diff --check`
+- Actual result: PASS; no whitespace errors.
+- Command: `pnpm vitest run`
+- Actual result: PASS; `118` test files passed, `847` tests passed.
+- Command: `pnpm build`
+- Actual result: BLOCKED before compile by `scripts/validate-env.mjs --ci`; validator reported `0/3` critical and `0/4` required runtime env vars present in this local shell.
+- Command: `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build`
+- Actual result: BLOCKED before compile by `scripts/validate-env.mjs --ci`; Supabase critical vars were injected by effect (`3/3` critical present), but required runtime names were absent from the spawned process (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).

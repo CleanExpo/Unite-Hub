@@ -135,3 +135,25 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - `pnpm vitest run 'src/app/api/email/campaigns/[id]/send/__tests__/route.test.ts'` -> PASS, `3` tests.
 - `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` test.
 - `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` tests.
+
+## Lead scoring targeted build — 2026-06-07T13:06Z
+
+### Coverage
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Lead scoring authenticated route with existing schema | PASS | `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` passed `1/1`; the route loaded a real tagged contact as an authenticated founder, ran `qualifyLead`, returned expected score `100`, re-read persisted `contacts.metadata.leadQualification.score = 100`, blocked cross-founder scoring with `404`, and verified cleanup. |
+| Requested `contacts.ai_score` persistence | UNKNOWN / BLOCKED | Live Supabase effect probe returned `42703 column contacts.ai_score does not exist`; production schema changes were not authorised for this run. See `DECISIONS_NEEDED.md` item 24. |
+
+### Fresh proof commands
+
+- `node <service-role effect probe: contacts select id,ai_score limit 0>` -> BLOCKED by missing column, `42703`.
+- `pnpm type-check` -> PASS.
+- `pnpm lint` -> PASS.
+- `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` -> PASS, `1` Playwright test.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright regression test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright regression tests.
+- `node <scoped cleanup audit for lead-scoring/contact-crud/core regression IDs>` -> PASS, `5/5` auth users gone, `0` contacts remain, `0` campaigns remain.
+- `pnpm vitest run` -> PASS, `118` test files and `847` tests.
+- `pnpm build` -> BLOCKED before compile by local `prebuild` env validation (`0/3` critical, `0/4` required set in this shell).
+- `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build` -> BLOCKED before compile with Supabase critical vars present (`3/3`) and required runtime names absent (`0/4`).
