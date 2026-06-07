@@ -11,7 +11,9 @@ Reviewer role: Founder / Board / Unite-Group Nexus product owner
 - equations implemented: yes
 - Mission Control UI updated: yes
 - tests passed: yes
-- PR created/merged: pending git runway
+- PR created/merged: PR created; merge not performed because server checks/review were not fully green at final poll
+- PR: https://github.com/CleanExpo/Unite-Hub/pull/91
+- PR base: `feat/restoreassist-dod-coverage-gaps` for BDM-only scope
 - production DB touched: no
 - deployment occurred: no
 - hard gates bypassed: no
