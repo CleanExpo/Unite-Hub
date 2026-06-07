@@ -107,3 +107,31 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - Protected endpoint shells for contacts, integrations, files, email campaigns, and email threads returned login redirects before auth, not 500s.
 - `pnpm vitest run src/lib/crm/__tests__/qualify-lead.test.ts src/app/api/integrations/status/__tests__/route.test.ts src/app/api/auth/google/__tests__/authorize.test.ts` passed `16` tests.
 - `vercel env run --environment production -- pnpm test:e2e:core-journeys` ran `4` tests: `3` passed, `1` failed on missing admin provisioning.
+
+## Core journey sweep update — 2026-06-07T12:14Z
+
+### Coverage
+
+- Requested journeys: `6`
+- PASS: `2`
+- FAIL: `1`
+- UNKNOWN: `3`
+- Overall verified percentage with UNKNOWN excluded: `2/3` = **66.7%**.
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Contact CRUD + cross-user RLS isolation | PASS | `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` passed `1/1` after provisioning two tagged auth users, creating contacts A/B, proving A cannot list/read B and B cannot list/read A, updating, deleting, and verifying cleanup. |
+| Integrations status as authenticated user | PASS | `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` passed `5/5`; authenticated `/api/integrations/status` returned `200` with `14` providers and a matching summary. |
+| Lead scoring seeded-contact journey | UNKNOWN | Deterministic `qualifyLead` logic is guarded in Playwright and unit tests, but no authenticated "seed contact -> run scoring -> persist score" API/app route was found or run. |
+| Drip campaign create → add step → enroll → process | FAIL | Route inventory found no current `src/app/api/campaigns/drip` implementation for create/add step/enrol/process. The available email campaign route can create/list a campaign and blocks send with no recipients, but it is not the requested drip lifecycle. |
+| Multimedia upload + transcription | UNKNOWN | Authenticated `/api/files` list returned `200`; tiny upload returned `500` with `ANTHROPIC_API_KEY` credential blocker; no transcription endpoint was found. |
+| Gmail OAuth → import → contact creation | UNKNOWN | Google OAuth authorize/callback guards pass, but real OAuth consent is human-gated and no mock/test token import path was found. |
+
+### Fresh proof commands
+
+- `supabase projects api-keys --project-ref lksfwktwtmyznckodsau --output json` was parsed in memory; host/key presence only was printed, no key values.
+- `pnpm type-check` -> PASS.
+- `pnpm lint` -> PASS.
+- `pnpm vitest run 'src/app/api/email/campaigns/[id]/send/__tests__/route.test.ts'` -> PASS, `3` tests.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` tests.

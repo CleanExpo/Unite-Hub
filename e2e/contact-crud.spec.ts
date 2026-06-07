@@ -1,12 +1,9 @@
-import { appendFileSync, existsSync } from 'node:fs'
+import { appendFileSync } from 'node:fs'
 import { randomBytes } from 'node:crypto'
 import { test, expect, type APIRequestContext, type Browser, type Page } from '@playwright/test'
-import { config as loadDotenv } from 'dotenv'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import { loadSupabaseAdminConfig } from './support/supabase-admin-config'
 
-if (existsSync('.env.local')) loadDotenv({ path: '.env.local', override: false })
-
-const productionRef = 'lksfwktwtmyznckodsau'
 const evidencePath = 'EVIDENCE.md'
 const decisionsPath = 'DECISIONS_NEEDED.md'
 
@@ -35,31 +32,6 @@ type CleanupLeftover = {
   error: string
 }
 
-function loadConfig() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  const missing = [
-    ['NEXT_PUBLIC_SUPABASE_URL', url],
-    ['NEXT_PUBLIC_SUPABASE_ANON_KEY', anonKey],
-    ['SUPABASE_SERVICE_ROLE_KEY', serviceRoleKey],
-  ]
-    .filter(([, value]) => !value)
-    .map(([name]) => name)
-
-  if (missing.length > 0) {
-    throw new Error(`Contact CRUD production-write exception precondition failed; missing ${missing.join(', ')}`)
-  }
-
-  const host = new URL(url!).host
-  if (host.split('.')[0] !== productionRef) {
-    throw new Error(`Expected production Supabase host for the approved exception, got ${host}`)
-  }
-
-  return { url: url!, anonKey: anonKey!, serviceRoleKey: serviceRoleKey!, host }
-}
-
 function isoMarker() {
   return new Date().toISOString()
 }
@@ -73,7 +45,7 @@ function randomPassword() {
 }
 
 function makeAdminClient() {
-  const cfg = loadConfig()
+  const cfg = loadSupabaseAdminConfig()
   return createClient(cfg.url, cfg.serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   })
@@ -112,7 +84,10 @@ async function signIn(page: Page, user: TestUser) {
   await page.locator('input[type="email"]').fill(user.email)
   await page.locator('input[type="password"]').fill(user.password)
   await page.locator('button[type="submit"]').click()
-  await expect(page).toHaveURL(/\/founder\/contacts|\/founder\/dashboard/, { timeout: 15000 })
+  await page.waitForURL(
+    (url) => ['/founder/contacts', '/founder/dashboard'].includes(url.pathname),
+    { timeout: 15000 }
+  )
 }
 
 async function createTaggedContact(request: APIRequestContext, user: TestUser, state: CleanupState) {
@@ -205,7 +180,7 @@ async function cleanup(admin: SupabaseClient, state: CleanupState) {
   for (const user of state.users) {
     if (!user.id) continue
     const { data, error } = await admin.auth.admin.getUserById(user.id)
-    if (error) {
+    if (error && !error.message.toLowerCase().includes('user not found')) {
       leftover.users.push({ id: user.id, error: `post-delete re-query failed: ${error.message}` })
     } else if (data.user) {
       leftover.users.push({ id: user.id, error: 're-query found auth user after cleanup' })
@@ -232,7 +207,7 @@ test.describe('authenticated Contact CRUD approved production-write verification
   test.describe.configure({ mode: 'serial', timeout: 120_000 })
 
   test('proves CRUD and cross-user isolation with tagged throwaway rows', async ({ browser }) => {
-    const cfg = loadConfig()
+    const cfg = loadSupabaseAdminConfig()
     const marker = isoMarker()
     const safeMarker = emailSafeMarker(marker)
     const state: CleanupState = {
