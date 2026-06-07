@@ -7,6 +7,7 @@
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { hasSupabaseConfig } from './server';
 
 /**
  * Create a Supabase client for middleware
@@ -28,6 +29,16 @@ export function createMiddlewareClient(request: NextRequest, extraRequestHeaders
       headers: requestHeaders,
     },
   });
+
+  if (!hasSupabaseConfig()) {
+    const supabase = {
+      auth: {
+        getUser: async () => ({ data: { user: null }, error: null }),
+      },
+    } as ReturnType<typeof createServerClient>;
+
+    return { supabase, response };
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
