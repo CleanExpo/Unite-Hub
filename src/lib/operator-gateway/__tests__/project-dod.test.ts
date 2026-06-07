@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
 import {
   calculateProjectCoverage,
   emitMissingRequirementJobs,
@@ -175,6 +177,41 @@ describe('project Definition of Done coverage reconciler', () => {
     expect(coverage.failedHardGateCount).toBe(1)
     expect(coverage.missingRequirements[0].probeCommandOrCheck).toBe('/etc/passwd')
     expect(coverage.projectDone).toBe(false)
+  })
+
+  it('allows local RestoreAssist evidence artifacts while keeping arbitrary host paths blocked', () => {
+    const evidencePath = resolve(process.cwd(), '../RestoreAssist/docs/definition-of-done/RESTOREASSIST_PROJECT_DOD.md')
+    const createdFixture = !existsSync(evidencePath)
+
+    if (createdFixture) {
+      mkdirSync(dirname(evidencePath), { recursive: true })
+      writeFileSync(evidencePath, '# RestoreAssist test evidence fixture\n', 'utf8')
+    }
+
+    try {
+      const coverage = calculateProjectCoverage({
+        projectId: 'unit_test_project',
+        projectName: 'Unit Test Project',
+        ownerRole: 'Founder / Board',
+        approverRole: 'Founder / Board',
+        completionThreshold: 1,
+        falseDonePreventionActive: true,
+        requirements: [
+          {
+            ...requirement('req-restoreassist-local-doc', true, true),
+            probeType: 'docs_artifact_exists',
+            probeCommandOrCheck: '../RestoreAssist/docs/definition-of-done/RESTOREASSIST_PROJECT_DOD.md',
+          },
+        ],
+      })
+
+      expect(coverage.passedRequirements).toBe(1)
+      expect(coverage.projectDone).toBe(true)
+    } finally {
+      if (createdFixture) {
+        rmSync(resolve(process.cwd(), '../RestoreAssist'), { recursive: true, force: true })
+      }
+    }
   })
 
   it('preserves declared failed requirement status in probe output', () => {

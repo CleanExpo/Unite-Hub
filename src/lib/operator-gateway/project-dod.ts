@@ -414,7 +414,7 @@ function withProbe(
 }
 
 function resolvePath(pathOrCheck: string): string | null {
-  const allowedRoots = [REPO_ROOT, resolve(REPO_ROOT, '../2nd-brain/.agentic_nexus')]
+  const allowedRoots = [REPO_ROOT, resolve(REPO_ROOT, '../2nd-brain/.agentic_nexus'), resolve(REPO_ROOT, '../RestoreAssist')]
   const candidate = resolve(REPO_ROOT, pathOrCheck)
 
   const allowed = allowedRoots.some((root) => candidate === root || candidate.startsWith(`${root}${sep}`))
