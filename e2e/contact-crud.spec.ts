@@ -30,6 +30,11 @@ type CleanupState = {
   workspaceIds: string[]
 }
 
+type CleanupLeftover = {
+  id: string
+  error: string
+}
+
 function loadConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -167,7 +172,7 @@ async function assertContactGone(admin: SupabaseClient, contactIds: string[]) {
 }
 
 async function cleanup(admin: SupabaseClient, state: CleanupState) {
-  const leftover: Record<string, string[]> = { contacts: [], workspaces: [], users: [] }
+  const leftover: Record<string, CleanupLeftover[]> = { contacts: [], workspaces: [], users: [] }
   const contactIds = state.contacts.map((contact) => contact.id)
 
   if (contactIds.length > 0) {
@@ -175,32 +180,44 @@ async function cleanup(admin: SupabaseClient, state: CleanupState) {
       .from('contacts')
       .delete()
       .in('id', contactIds)
-    if (error) leftover.contacts.push(...contactIds)
+    if (error) {
+      leftover.contacts.push(...contactIds.map((id) => ({ id, error: `delete failed: ${error.message}` })))
+    }
   }
 
   for (const id of state.workspaceIds) {
     const { error } = await admin.from('workspaces').delete().eq('id', id)
-    if (error) leftover.workspaces.push(id)
+    if (error) leftover.workspaces.push({ id, error: `delete failed: ${error.message}` })
   }
 
   for (const user of state.users) {
     if (!user.id) continue
     const { error } = await admin.auth.admin.deleteUser(user.id)
-    if (error) leftover.users.push(user.id)
+    if (error) leftover.users.push({ id: user.id, error: `delete failed: ${error.message}` })
   }
 
   const remainingContacts = await assertContactGone(admin, contactIds)
-  leftover.contacts.push(...remainingContacts.map((row) => row.id as string))
+  leftover.contacts.push(...remainingContacts.map((row) => ({
+    id: row.id as string,
+    error: 're-query found contact after cleanup',
+  })))
 
   for (const user of state.users) {
     if (!user.id) continue
     const { data, error } = await admin.auth.admin.getUserById(user.id)
-    if (!error && data.user) leftover.users.push(user.id)
+    if (error) {
+      leftover.users.push({ id: user.id, error: `post-delete re-query failed: ${error.message}` })
+    } else if (data.user) {
+      leftover.users.push({ id: user.id, error: 're-query found auth user after cleanup' })
+    }
   }
 
   const deduped = Object.fromEntries(
-    Object.entries(leftover).map(([key, values]) => [key, [...new Set(values)]])
-  ) as Record<string, string[]>
+    Object.entries(leftover).map(([key, values]) => {
+      const byIdAndError = new Map(values.map((value) => [`${value.id}:${value.error}`, value]))
+      return [key, [...byIdAndError.values()]]
+    })
+  ) as Record<string, CleanupLeftover[]>
 
   if (Object.values(deduped).some((values) => values.length > 0)) {
     const message = `\n## Added ${new Date().toISOString()} - Contact CRUD cleanup incomplete\n\nLeftover test IDs for marker ${state.marker}: ${JSON.stringify(deduped)}\n`
