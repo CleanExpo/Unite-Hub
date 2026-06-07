@@ -194,3 +194,63 @@ No test users, workspaces, contacts, schema changes, deploys, promotions, aliase
 Workspace note: the current Contact API is founder-scoped and has no `workspace_id`. Live metadata shows `workspaces.org_id` is required and references `organizations`; creating an organization is outside the approved write exception, and using an existing organization would touch pre-existing data. Workspace creation was therefore not attempted.
 
 Current blocker: make `SUPABASE_SERVICE_ROLE_KEY` available to the approved test runner by effect, or provide another safe admin-user creation path that does not expose secrets. Then rerun `pnpm test:e2e:contact-crud` and record the create/list/update/delete/RLS/cleanup proof.
+
+## Core journey sweep — 2026-06-07T12:00Z
+
+### Status
+
+All six requested currently-UNKNOWN journeys remain **UNKNOWN** after an autonomous sweep. None were promoted to PASS, and none produced a product-level FAIL, because the run could not provision throwaway authenticated users.
+
+### What was genuinely verified
+
+- Production Supabase host is reachable by anon REST effect check: `/rest/v1/contacts?select=id&limit=1` returned `200 []`.
+- `SUPABASE_SERVICE_ROLE_KEY` is still unavailable to the local `vercel env run` process by effect, so test auth users cannot be created/deleted safely.
+- Protected endpoint shells fail closed before auth: contacts, integrations status, files, email campaigns, and email threads redirect to login.
+- Google OAuth authorize returns `401` before auth; callback without a session redirects to login.
+- Deterministic lead-scoring library tests pass.
+- Integration-status route unit tests pass.
+- Google OAuth authorize/callback unit tests pass.
+
+### Journey map
+
+- Contact CRUD + cross-user RLS: **UNKNOWN**. Blocked before write by missing admin provisioning.
+- Integrations status: **UNKNOWN** as a user journey. Route/unit shape verified, but no authenticated throwaway user could be created.
+- Lead scoring: **UNKNOWN** as a user journey. Rule logic verified; no authenticated seeded-contact scoring endpoint found.
+- Drip campaign: **UNKNOWN**. No current `src/app/api/campaigns/drip` route found for create/add step/enroll/process.
+- Multimedia upload + transcription: **UNKNOWN**. Upload route exists; transcription endpoint was not found and provider credentials/cost path was unavailable.
+- Gmail OAuth import/contact creation: **UNKNOWN**. OAuth consent is human-gated; Google env vars were unavailable to the runner by effect.
+
+### Top 3 next fixes
+
+1. Run the guards in an environment where `SUPABASE_SERVICE_ROLE_KEY` is available to the process without exposing it, so throwaway auth users can be provisioned and cleaned up.
+2. Decide/implement the actual lead-scoring and drip-campaign API journeys, or mark them not connected in product docs until they exist.
+3. Add a transcription endpoint/spec or clarify that `/api/files` upload is the current multimedia boundary; then wire a smallest-sample paid-provider test with explicit cost controls.
+
+## Core journey sweep update — 2026-06-07T12:14Z
+
+### What genuinely works now
+
+- Contact CRUD as real authenticated users is **PASS** under the approved scoped production-write exception. The guard created two throwaway auth users, created contacts A/B, listed, updated, deleted, proved cross-user isolation both ways, and verified cleanup.
+- Integrations status as a real authenticated user is **PASS**. `/api/integrations/status` returned `200` with `14` providers and a matching summary for a throwaway user.
+- Email campaign create/list and the no-recipient send safety path are now guarded. A real schema mismatch (`name`/`categories` columns absent from `email_campaigns`) was found by e2e, fixed by storing labels/categories in `metadata`, and re-run green.
+
+### Still broken or unknown
+
+- Drip campaign create/add step/enrol/process is **FAIL** for the requested journey: there is no current `src/app/api/campaigns/drip` route implementation.
+- Lead scoring as a seeded-contact user journey is **UNKNOWN**. The deterministic scoring rule is guarded, but no authenticated scoring API/app path was found.
+- Multimedia transcription is **UNKNOWN**. Authenticated files list works; tiny upload is blocked by `ANTHROPIC_API_KEY`, and no transcription endpoint was found.
+- Gmail OAuth import/contact creation is **UNKNOWN**. Consent needs a human Google account; no autonomous mock-token import path was found.
+
+### Fresh verification
+
+- `pnpm type-check` -> PASS.
+- `pnpm lint` -> PASS.
+- `pnpm vitest run 'src/app/api/email/campaigns/[id]/send/__tests__/route.test.ts'` -> PASS, `3` tests.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright tests.
+
+### Top 3 next fixes
+
+1. Decide whether to implement the missing drip lifecycle route or remove it from the product promise.
+2. Add an authenticated lead-scoring route/path that persists/re-reads a score for a seeded contact, or mark scoring as library-only.
+3. Wire the paid file/transcription path with explicit cost controls and a real cleanup story, or mark transcription not connected.

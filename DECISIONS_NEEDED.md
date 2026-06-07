@@ -99,3 +99,47 @@ Branch: `feat/24h-verify-and-harden`
    - The current production-write exception authorizes test users, test workspaces, and test contacts only; it does not explicitly authorize creating a throwaway organization.
    - Using any existing organization would touch pre-existing data and was not attempted.
    - Needed decision: either explicitly authorize a uniquely tagged throwaway organization solely as the required parent for the test workspaces, or accept that the current Contact API proof is founder-scoped rather than workspace-scoped.
+
+## Added 2026-06-07T12:00Z — Core journey sweep blockers
+
+15. **Provide an execution lane where admin provisioning is available by effect**
+   - `vercel env run --environment production -- node <presence/effect check>` still reports `SUPABASE_SERVICE_ROLE_KEY:false` while `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are available.
+   - Without this, no autonomous test can create/delete throwaway auth users, so all real authenticated journeys remain UNKNOWN.
+
+16. **Clarify or implement the lead-scoring user journey**
+   - Verified deterministic `qualifyLead` logic exists and tests pass.
+   - No authenticated API/app path was found for "seed a contact -> run scoring path -> assert persisted score".
+
+17. **Clarify or implement the drip-campaign lifecycle route**
+   - `scripts/process-campaigns.mjs` points to `/api/campaigns/drip` with `process_pending`, but route inventory found no `src/app/api/campaigns/drip` implementation.
+   - Needed decision: provide the intended current route or mark drip campaigns not connected.
+
+18. **Clarify or implement multimedia transcription**
+   - `/api/files` upload exists, but no transcription endpoint was found.
+   - Needed decision: provide the intended transcription path and cost ceiling, or mark transcription not connected.
+
+19. **Complete Gmail OAuth consent manually before import/contact proof**
+   - Google OAuth consent requires a human and a real Google account.
+   - The autonomous run verified route shells/unit tests only; import/contact creation remains UNKNOWN until consent and test tokens are available.
+
+## Added 2026-06-07T12:06:14.611Z - Contact CRUD cleanup incomplete
+
+Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspaces":[],"users":[{"id":"73ff441d-71c4-4fc8-8270-f2986fb1e7ae","error":"post-delete re-query failed: User not found"},{"id":"2ba9df32-c892-4745-9070-b1800f83b76c","error":"post-delete re-query failed: User not found"}]}
+
+## Added 2026-06-07T12:14Z — Decisions still needed after core sweep
+
+20. **False-positive cleanup note above is resolved**
+   - The `User not found` responses in item 12:06:14 mean the test users were already deleted. Later cleanup logic was corrected to treat that response as deletion proof.
+   - Separate interrupted core run cleanup was verified for user `41746f1d-80a3-4af8-9525-a13318b749fe` and campaign `5ca0d9fe-303a-464c-b0ba-081a3def632a`: campaign count was `0` and user re-query after delete was gone.
+
+21. **Decide the drip campaign product contract**
+   - Current verification found no `src/app/api/campaigns/drip` route for create/add step/enrol/process.
+   - Needed decision: implement the current drip lifecycle, or mark drip campaigns as not connected in the product surface.
+
+22. **Decide the lead-scoring user journey**
+   - `qualifyLead` logic is deterministic and guarded, but no authenticated "seed contact -> run score -> persist/re-read score" path was found.
+   - Needed decision: provide/approve the intended endpoint or mark this as library-only until wired.
+
+23. **Provide paid AI file/transcription execution settings**
+   - Authenticated files list works, but tiny upload returned the `ANTHROPIC_API_KEY` credential blocker, and no transcription endpoint was found.
+   - Needed decision: provide a cost-controlled transcription/upload test lane or mark transcription not connected.

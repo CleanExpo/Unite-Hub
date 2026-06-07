@@ -44,7 +44,8 @@
     "integrity:check": "node scripts/run-integrity-check.mjs",
     "linear": "node scripts/linear-update.mjs",
     "test:e2e": "playwright test",
-    "test:e2e:contact-crud": "playwright test e2e/contact-crud.spec.ts"
+    "test:e2e:contact-crud": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/contact-crud.spec.ts",
+    "test:e2e:core-journeys": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/core-journeys.spec.ts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

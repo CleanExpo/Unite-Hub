@@ -220,3 +220,117 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
   - `vercel env ls production | rg "SUPABASE|PLAYWRIGHT|TEST"` -> listed `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `NEXT_PUBLIC_SUPABASE_URL` as encrypted production variables, but the focused `vercel env run` did not expose the service-role key to the local test process by effect.
 - **Safety result:** no test auth user, workspace, contact, schema, deploy, promotion, alias, billing, email-send, or cleanup action was performed because the run failed before provisioning.
 - **Conclusion:** the full authenticated Contact CRUD proof remains `UNKNOWN`; it is now blocked specifically on getting `SUPABASE_SERVICE_ROLE_KEY` into the approved local/CI runner by effect, or providing an equivalent safe admin-user creation mechanism that does not expose secrets.
+
+### 26) Core journey verification sweep attempted all requested journeys
+- **Timestamp:** `2026-06-07T12:00:22Z`
+- **Branch:** `feat/verify-core-journeys`
+- **Authorization context:** Phill approved scoped reversible production writes for uniquely tagged throwaway users/workspaces/contacts/campaigns/uploads, with mandatory cleanup. No write was attempted because admin provisioning was unavailable to the runner by effect.
+- **Runtime/env effect check:**
+  - `vercel env run --environment production -- node <safe presence/effect check>` -> host `lksfwktwtmyznckodsau.supabase.co`; `NEXT_PUBLIC_SUPABASE_URL:true`; `NEXT_PUBLIC_SUPABASE_ANON_KEY:true`; `SUPABASE_SERVICE_ROLE_KEY:false`; `ANTHROPIC_API_KEY:false`; `GOOGLE_CLIENT_ID:false`; `GOOGLE_CLIENT_SECRET:false`; `/rest/v1/contacts?select=id&limit=1` returned `200 []`.
+- **Endpoint shell probe with Node fetch against `https://unite-hub-self.vercel.app`:**
+  - `/api/contacts` -> `307 /auth/login?redirectTo=%2Fapi%2Fcontacts`
+  - `/api/integrations/status` -> `307 /auth/login?redirectTo=%2Fapi%2Fintegrations%2Fstatus`
+  - `/api/files` -> `307 /auth/login?redirectTo=%2Fapi%2Ffiles`
+  - `/api/email/campaigns` -> `307 /auth/login?redirectTo=%2Fapi%2Femail%2Fcampaigns`
+  - `/api/email/threads` -> `307 /auth/login?redirectTo=%2Fapi%2Femail%2Fthreads`
+  - `/api/auth/google/authorize` -> `401 {"error":"Unauthorized"}`
+  - `/api/auth/google/callback` -> `307 https://unite-hub-self.vercel.app/auth/login`
+  - `/api/campaigns/drip` -> `307 /auth/login?redirectTo=%2Fapi%2Fcampaigns%2Fdrip` via auth middleware; route inventory found no `src/app/api/campaigns/drip` implementation.
+- **Automated tests run:**
+  - `pnpm vitest run src/lib/crm/__tests__/qualify-lead.test.ts src/app/api/integrations/status/__tests__/route.test.ts src/app/api/auth/google/__tests__/authorize.test.ts` -> passed; `3` files / `16` tests.
+  - `vercel env run --environment production -- pnpm test:e2e:core-journeys` -> `1` failed, `3` passed. Failed test: `real-user journeys have admin provisioning available`, missing `SUPABASE_SERVICE_ROLE_KEY`. Passed tests: protected endpoints fail closed before auth; lead scoring rule deterministic for a known high-signal lead; Google OAuth consent boundary explicit.
+- **Journey outcomes:**
+  - Contact CRUD + cross-user RLS isolation -> `UNKNOWN`; admin provisioning unavailable, so no test users/contacts could be created.
+  - Integrations status as authenticated user -> `UNKNOWN`; route exists and unit tests pass, but no throwaway auth user could be provisioned.
+  - Lead scoring seeded-contact journey -> `UNKNOWN`; deterministic scoring logic passes, but no authenticated seeded-contact scoring API path was found or run.
+  - Drip campaign create/add step/enroll/process -> `UNKNOWN`; no current `src/app/api/campaigns/drip` route found; no email/provider call attempted.
+  - Multimedia upload + transcription -> `UNKNOWN`; `/api/files` exists and fails closed before auth, but no transcription endpoint was found and provider credentials/cost path was unavailable.
+  - Gmail OAuth import -> contact creation -> `UNKNOWN`; authorize/callback shell and unit tests pass, but real consent is human-gated and Google env vars were unavailable to the runner by effect.
+- **Safety result:** no test user, workspace, contact, campaign, upload, schema change, deploy, promotion, alias, billing action, explicit email send, or cleanup action occurred.
+
+### Contact CRUD approved production-write run - 2026-06-07T12:06:12.154Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 73ff441d-71c4-4fc8-8270-f2986fb1e7ae
+  - created test auth user B: 2ba9df32-c892-4745-9070-b1800f83b76c
+
+### Contact CRUD approved production-write run - 2026-06-07T12:07:00.494Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 684c8ae3-8087-4653-94fe-266857e040cf
+  - created test auth user B: 7a89e8e3-724e-4291-aa06-05bd3a44f8b0
+  - created test contact A: 714b12e4-4d01-44d8-ba92-d55ee2615e0f (playwright+crud+2026-06-07T12-07-00-494Z+a@unite-hub.test)
+  - created test contact B: 295ea775-1c22-4f57-b7e7-6c415861274c (playwright+crud+2026-06-07T12-07-00-494Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: 714b12e4-4d01-44d8-ba92-d55ee2615e0f
+  - cleanup verified for marker 2026-06-07T12:07:00.494Z: contacts/users removed; workspace IDs created: 0
+
+### Core authenticated journey run - 2026-06-07T12:09:06.461Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: a19a146f-129f-4cb0-ba25-b02aa28010a8
+  - cleanup verified for core journey marker 2026-06-07T12:09:06.461Z
+
+### Contact CRUD approved production-write run - 2026-06-07T12:10:15.822Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 4f51027a-5b99-4a53-8f3c-849f9a8becbd
+  - created test auth user B: c755f02c-2ea6-4636-a63d-2e4a8e456cc8
+  - created test contact A: 1ba7badc-f858-47bc-91b8-ee9b1e5680b9 (playwright+crud+2026-06-07T12-10-15-822Z+a@unite-hub.test)
+  - created test contact B: e51c5fb1-3535-4920-9252-2e6c27e0dc6c (playwright+crud+2026-06-07T12-10-15-822Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: 1ba7badc-f858-47bc-91b8-ee9b1e5680b9
+  - cleanup verified for marker 2026-06-07T12:10:15.822Z: contacts/users removed; workspace IDs created: 0
+
+### Core authenticated journey run - 2026-06-07T12:10:30.050Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: fdd1b309-cd00-4ce6-943d-81baf42dc705
+  - integrations status returned 200 with 14 providers
+  - cleanup verified for core journey marker 2026-06-07T12:10:30.050Z
+
+### Core authenticated journey run - 2026-06-07T12:11:23.860Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: edf2e122-e23d-4399-8c1e-1d3535067ab0
+  - integrations status returned 200 with 14 providers
+  - cleanup verified for core journey marker 2026-06-07T12:11:23.860Z
+
+### Core authenticated journey run - 2026-06-07T12:11:42.256Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: 5a5b2a1b-96cb-4bd4-bae2-2050de337752
+  - integrations status returned 200 with 14 providers
+  - cleanup verified for core journey marker 2026-06-07T12:11:42.256Z
+
+### Core authenticated journey run - 2026-06-07T12:12:23.215Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: 41746f1d-80a3-4af8-9525-a13318b749fe
+  - integrations status returned 200 with 14 providers
+  - created tagged email campaign: 5ca0d9fe-303a-464c-b0ba-081a3def632a
+  - campaign send path blocked without recipients before any provider send: 5ca0d9fe-303a-464c-b0ba-081a3def632a
+  - files list returned 200 with 0 cached files
+  - tiny file upload returned 500 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN
+
+### Cleanup verification for interrupted core journey run - 2026-06-07T12:13:15Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Command: `node <scoped cleanup probe for user 41746f1d-80a3-4af8-9525-a13318b749fe and campaign 5ca0d9fe-303a-464c-b0ba-081a3def632a>`
+- Actual result: campaign before count `0`, campaign after count `0`, user existed before cleanup, user re-query after delete was gone.
+
+### Core authenticated journey run - 2026-06-07T12:14:06.915Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: 7d78b52e-c1ec-4503-be88-7f02ceceb76f
+  - integrations status returned 200 with 14 providers
+  - created tagged email campaign: 33adbe30-6b03-471f-8179-97865b6626dd
+  - campaign send path blocked without recipients before any provider send: 33adbe30-6b03-471f-8179-97865b6626dd
+  - files list returned 200 with 0 cached files
+  - tiny file upload returned 500 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN
+  - cleanup verified for core journey marker 2026-06-07T12:14:06.915Z
+
+### Final cleanup audit - 2026-06-07T12:16:05Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Command: `node <scoped cleanup audit for all auth/contact/campaign IDs recorded in this run>`
+- Actual result: `12/12` recorded test auth users gone; `0` recorded test contacts remain; `0` recorded test campaigns remain.
