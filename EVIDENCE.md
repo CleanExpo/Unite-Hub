@@ -144,3 +144,15 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - **Full gates after final code:** `pnpm type-check && pnpm lint && pnpm vitest run` passed; `118` test files / `847` tests.
 - **Build check after final code:** `pnpm build` failed in `prebuild` because local env validation still reports `0/3` critical and `0/4` required vars set.
 - **Evidence files:** `tmp/verify-run/google-oauth-authorize-callback-fix.log`, `tmp/verify-run/google-callback-live-after.log`, `tmp/verify-run/post-google-oauth-final-gates.log`, `tmp/verify-run/final-build.log`.
+
+### 20) Post-merge verification after resolving PR #95 report-file conflicts
+- **Timestamp:** `2026-06-07T10:28:26Z`
+- **Merge context:** `origin/main` was merged into `feat/24h-verify-and-harden`; conflicts were limited to `COVERAGE.md`, `EVIDENCE.md`, `STATUS.md`, and `DECISIONS_NEEDED.md`.
+- **Resolution:** kept the appended verification/report updates and removed conflict markers.
+- **Commands / actual results:**
+  - `pnpm vitest run src/app/api/auth/google/__tests__/authorize.test.ts` → passed; `1` file / `7` tests.
+  - `pnpm type-check` → passed.
+  - `pnpm lint` → passed.
+  - `pnpm vitest run` → passed; `118` files / `847` tests.
+  - `pnpm build` → failed in `prebuild` because local env validation still reports `0/3` critical and `0/4` required vars set.
+- **Evidence files:** `tmp/verify-run/post-merge-gates.log`, `tmp/verify-run/post-merge-build.log`.
