@@ -111,4 +111,22 @@ describe('command centre operator gateway UI source', () => {
     expect(source).not.toContain('Auto-promote live skill')
   })
 
+
+  it('shows Board Decision Mathematics Engine status without hard-gate bypass', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Board Decision Mathematics Engine')
+    expect(source).toContain('Expected value')
+    expect(source).toContain('Verification + retry')
+    expect(source).toContain('Calibration status')
+    expect(source).toContain('Human approval required')
+    expect(source).toContain('No hard gates bypassed')
+    expect(source).toContain('market launch action disabled')
+    expect(source).toContain('/api/hermes/operator-gateway/command-centre')
+    expect(source).not.toContain('Override hard gate')
+  })
+
 })

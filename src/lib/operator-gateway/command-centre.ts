@@ -8,6 +8,7 @@ import {
 } from './specialized-skill-mesh'
 import { getSkillEvolutionStatus } from './skill-evolution'
 import { getProjectDodCoverageStatus } from './project-dod'
+import { runFirstBoardDecisionSimulation, type BoardDecisionSimulation } from './board-decision'
 
 export interface CommandCentreLaneView extends OperatorLane {
   visibleInCommandCentre: true
@@ -83,9 +84,31 @@ export interface CommandCentreOperatorSurfaceView {
     currentDecision:
       | 'build_unite_group_specialized_skill_mesh_and_business_mission_router'
       | 'build_project_definition_of_done_and_coverage_reconciler'
+      | 'build_board_decision_mathematics_engine'
     reviewer: 'Phill McGurk'
-    status: 'local_foundation_ready'
+    status: 'local_foundation_ready' | 'local_decision_engine_ready'
     nextBoardGate: string
+    engine: {
+      status: BoardDecisionSimulation['status']
+      source: BoardDecisionSimulation['source']
+      candidateMovesScored: number
+      nextRecommendedMoveId: string
+      nextRecommendedAction: string
+      nextRecommendedObjective: string
+      expectedValue: number
+      pSuccess: number
+      verificationRequired: boolean
+      hardGateStatus: string
+      coverageImpact: number
+      coverageTarget: number
+      calibrationStatus: BoardDecisionSimulation['calibrationStatus']
+      humanApprovalRequired: boolean
+      hardGatesDetected: number
+      hardGatesBypassed: 0
+      verifyFirstMoves: number
+      marketLaunchActionDisabled: true
+      externalExecutionEnabled: false
+    }
   }
   skillMesh: ReturnType<typeof getSpecializedSkillMeshStatus>
   skillEvolution: ReturnType<typeof getSkillEvolutionStatus>
@@ -147,6 +170,8 @@ export function getCommandCentreOperatorSurfaceView(
   const skillMesh = getSpecializedSkillMeshStatus()
   const skillEvolution = getSkillEvolutionStatus()
   const projectCoverage = getProjectDodCoverageStatus()
+  const boardDecisionEngine = runFirstBoardDecisionSimulation()
+  const nextBoardDecision = boardDecisionEngine.nextRecommendedMove
   const sampleObjective = 'Prepare CARSI course product launch readiness'
   const sampleRoute = routeBusinessMission(sampleObjective)
 
@@ -322,14 +347,35 @@ export function getCommandCentreOperatorSurfaceView(
       ],
     },
     boardDecisionPanel: {
-      currentDecision: 'build_project_definition_of_done_and_coverage_reconciler',
+      currentDecision: 'build_board_decision_mathematics_engine',
       reviewer: 'Phill McGurk',
-      status: 'local_foundation_ready',
+      status: 'local_decision_engine_ready',
       nextBoardGate: sandboxJobCreationEnabled
         ? 'approve_controlled_real_local_execution_dispatch_gate'
         : jobsView.source === 'sandbox_select'
           ? 'approve_operator_gateway_sandbox_job_creation'
           : 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',
+      engine: {
+        status: boardDecisionEngine.status,
+        source: boardDecisionEngine.source,
+        candidateMovesScored: boardDecisionEngine.candidateMovesScored,
+        nextRecommendedMoveId: nextBoardDecision.moveId,
+        nextRecommendedAction: nextBoardDecision.decision,
+        nextRecommendedObjective: nextBoardDecision.objective,
+        expectedValue: nextBoardDecision.expectedValue,
+        pSuccess: nextBoardDecision.pSuccess,
+        verificationRequired: nextBoardDecision.verificationPlan.required,
+        hardGateStatus: nextBoardDecision.hardGate,
+        coverageImpact: nextBoardDecision.coverageDelta,
+        coverageTarget: boardDecisionEngine.coverageTarget,
+        calibrationStatus: boardDecisionEngine.calibrationStatus,
+        humanApprovalRequired: nextBoardDecision.humanApprovalRequired,
+        hardGatesDetected: boardDecisionEngine.hardGatesDetected,
+        hardGatesBypassed: boardDecisionEngine.hardGatesBypassed,
+        verifyFirstMoves: boardDecisionEngine.verifyFirstMoves,
+        marketLaunchActionDisabled: boardDecisionEngine.marketLaunchActionDisabled,
+        externalExecutionEnabled: boardDecisionEngine.externalExecutionEnabled,
+      },
     },
     skillMesh,
     skillEvolution,

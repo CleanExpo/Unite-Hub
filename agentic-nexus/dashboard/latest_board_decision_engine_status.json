@@ -1,0 +1,24 @@
+{
+  "status": "local_decision_engine_ready",
+  "engine": "board_decision_mathematics_engine",
+  "candidate_moves_scored": 7,
+  "next_recommended_move": "product_factory_composer",
+  "next_recommended_action": "act_now",
+  "hard_gates_detected": 3,
+  "hard_gates_bypassed": 0,
+  "verification_first_moves": 1,
+  "coverage_target": 0.98,
+  "calibration_status": "supported",
+  "external_execution_enabled": false,
+  "market_launch_action_disabled": true,
+  "production_db_touched": false,
+  "deployment_occurred": false,
+  "op_1password_retried": false,
+  "blocked_op_touched": false,
+  "validation": {
+    "type_check": "passed",
+    "lint": "passed",
+    "focused_tests": "28 passed",
+    "full_suite": "836 passed"
+  }
+}

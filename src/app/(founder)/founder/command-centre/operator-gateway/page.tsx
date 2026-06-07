@@ -156,6 +156,33 @@ export default async function OperatorGatewayPage() {
         </ul>
       </section>
 
+      <section style={card} aria-label="board decision mathematics engine">
+        <h2 style={{ fontSize: 18, marginTop: 0 }}>Board Decision Mathematics Engine</h2>
+        <p style={{ color: '#3fb950', fontSize: 14 }}>
+          Deterministic local decision layer: Expected value + Verification + retry + calibration + coverage target, with irreversible hard gates always escalated.
+        </p>
+        <p style={{ color: '#8b949e', fontSize: 13 }}>Status endpoint: <code>/api/hermes/operator-gateway/command-centre</code></p>
+        <div style={grid}>
+          <p>Candidate moves scored: <b>{view.boardDecisionPanel.engine.candidateMovesScored}</b></p>
+          <p>Recommended action: <span style={pill(view.boardDecisionPanel.engine.nextRecommendedAction === 'act_now' ? 'green' : 'amber')}>{view.boardDecisionPanel.engine.nextRecommendedAction}</span></p>
+          <p>Next move: <b>{view.boardDecisionPanel.engine.nextRecommendedMoveId}</b></p>
+          <p>Expected value: <b>{view.boardDecisionPanel.engine.expectedValue}</b></p>
+          <p>p_success: <b>{Math.round(view.boardDecisionPanel.engine.pSuccess * 100)}%</b></p>
+          <p>Coverage impact: <b>{Math.round(view.boardDecisionPanel.engine.coverageImpact * 100)}%</b></p>
+          <p>Coverage target: <b>{Math.round(view.boardDecisionPanel.engine.coverageTarget * 100)}%</b></p>
+          <p>Verification requirement: {boolLabel(view.boardDecisionPanel.engine.verificationRequired, false)}</p>
+          <p>Calibration status: <span style={pill('green')}>{view.boardDecisionPanel.engine.calibrationStatus}</span></p>
+          <p>Human approval required: {boolLabel(view.boardDecisionPanel.engine.humanApprovalRequired)}</p>
+          <p>Hard gates detected: <b>{view.boardDecisionPanel.engine.hardGatesDetected}</b></p>
+          <p>No hard gates bypassed: {boolLabel(view.boardDecisionPanel.engine.hardGatesBypassed === 0, false)}</p>
+          <p>market launch action disabled: {boolLabel(view.boardDecisionPanel.engine.marketLaunchActionDisabled, false)}</p>
+          <p>External execution enabled: {boolLabel(view.boardDecisionPanel.engine.externalExecutionEnabled)}</p>
+        </div>
+        <p style={{ color: '#f97316', fontSize: 13 }}>
+          EV is never permission to deploy, charge, publish, email, mutate production, or override BLOCKED-OP. Human approval remains mandatory for irreversible moves.
+        </p>
+      </section>
+
       <section style={grid} aria-label="safety status">
         <div style={card}>
           <h2 style={{ fontSize: 16, marginTop: 0 }}>Safety status</h2>
