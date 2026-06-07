@@ -206,3 +206,17 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
   - Same safe check for sandbox `development` -> host `lksfwktwtmyznckodsau.supabase.co`, REST status `200`, body prefix `[]`, `hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`.
 - **Safety result:** no seed, create, update, delete, schema, deploy, promotion, alias, billing, or secret-printing action was performed.
 - **Conclusion:** the same blocker has repeated after the PR #96 merge and PR #97 follow-up: no confirmed non-production Unite-Hub Supabase lane is configured, and no Playwright test-login credentials are present in the checked runtimes.
+
+### 25) Approved production-write exception attempt stopped before writes
+- **Timestamp:** `2026-06-07T11:40:27Z`
+- **Authorization context:** Phill approved a scoped reversible production-write exception for up to two tagged test auth users, test workspaces, and test contacts, with mandatory cleanup.
+- **Guard update:** `e2e/contact-crud.spec.ts` was changed to provision two throwaway users, generate passwords in memory, log in through the real UI, create/update/read/delete only tagged contacts via authenticated `/api/contacts`, assert cross-user isolation both ways, and cleanup exact created IDs in `finally`.
+- **Live metadata check:** `contacts` is founder-scoped in the current API and live schema; `workspaces.org_id` is required and references `organizations`. Creating an organization is outside the approved exception, and using an existing organization would touch pre-existing data, so workspace creation was not attempted.
+- **Commands / actual results:**
+  - `pnpm type-check` -> passed.
+  - `pnpm lint` -> passed.
+  - `vercel env run --environment production -- env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> failed before any write with `Contact CRUD production-write exception precondition failed; missing SUPABASE_SERVICE_ROLE_KEY`.
+  - Local allowed source check (`process env` then `.env.local`) -> `.env.local` absent and `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` unavailable.
+  - `vercel env ls production | rg "SUPABASE|PLAYWRIGHT|TEST"` -> listed `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `NEXT_PUBLIC_SUPABASE_URL` as encrypted production variables, but the focused `vercel env run` did not expose the service-role key to the local test process by effect.
+- **Safety result:** no test auth user, workspace, contact, schema, deploy, promotion, alias, billing, email-send, or cleanup action was performed because the run failed before provisioning.
+- **Conclusion:** the full authenticated Contact CRUD proof remains `UNKNOWN`; it is now blocked specifically on getting `SUPABASE_SERVICE_ROLE_KEY` into the approved local/CI runner by effect, or providing an equivalent safe admin-user creation mechanism that does not expose secrets.
