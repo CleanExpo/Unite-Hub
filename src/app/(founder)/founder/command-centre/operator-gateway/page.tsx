@@ -171,6 +171,31 @@ export default async function OperatorGatewayPage() {
         <code>/api/hermes/operator-gateway/jobs/local-execution</code>
       </section>
 
+      <section style={card} aria-label="self-evolving skill mesh">
+        <h2 style={{ fontSize: 18, marginTop: 0 }}>Self-Evolving Skill Mesh</h2>
+        <p style={{ color: '#3fb950', fontSize: 14 }}>
+          Local foundation ready: baseline skill → feedback/evals → prompt candidate → gated promotion/rollback. Read-only status only; no live skill mutation.
+        </p>
+        <p style={{ color: '#8b949e', fontSize: 13 }}>Source: <code>{view.skillEvolution.source}</code></p>
+        <div style={grid}>
+          <p>Skills under evaluation: <b>{view.skillEvolution.skillsUnderEvaluation}</b></p>
+          <p>Graders defined: <b>{view.skillEvolution.gradersDefined}</b></p>
+          <p>Prompt versions tracked: <b>{view.skillEvolution.promptVersionsTracked}</b></p>
+          <p>Promotion candidates: <b>{view.skillEvolution.promotionCandidates}</b></p>
+          <p>Blocked promotions: <b>{view.skillEvolution.blockedPromotions}</b></p>
+          <p>Rollback paths available: <b>{view.skillEvolution.rollbackAvailableCount}</b></p>
+        </div>
+        <p>Next skill to evaluate: <b>{view.skillEvolution.nextRecommendedSkillToEvaluate}</b></p>
+        <p>Latest eval run: <code>{view.skillEvolution.latestEvalRun.evalRunId}</code> · score {view.skillEvolution.latestEvalRun.score} / threshold {view.skillEvolution.latestEvalRun.passThreshold}</p>
+        <p>No API-key mode: {boolLabel(view.skillEvolution.noApiKeyMode, false)}</p>
+        <p>External eval API called: {boolLabel(view.skillEvolution.externalEvalApiCalled)}</p>
+        <p>Paid API eval called: {boolLabel(view.skillEvolution.paidApiEvalCalled)}</p>
+        <p>Live auto-promotion enabled: {boolLabel(view.skillEvolution.liveAutoPromotionEnabled)}</p>
+        <p>Production auto-promotion allowed: {boolLabel(view.skillEvolution.productionAutoPromotionAllowed)}</p>
+        <p>Production DB touched: {boolLabel(view.skillEvolution.productionDbTouched)}</p>
+        <p style={{ color: '#8b949e', fontSize: 13 }}>Status endpoint: <code>/api/hermes/operator-gateway/skill-evolution</code></p>
+      </section>
+
       <section style={grid} aria-label="specialized skill mesh">
         <div style={card}>
           <h2 style={{ fontSize: 18, marginTop: 0 }}>Specialised Skill Mesh</h2>

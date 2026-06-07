@@ -1,0 +1,71 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "failure_reasons": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "grader_id": {
+      "type": "string"
+    },
+    "human_review_required_when": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "input": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "name": {
+      "type": "string"
+    },
+    "output": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "pass_threshold": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "safe_automated_use": {
+      "type": "string"
+    },
+    "scoring_range": {
+      "additionalProperties": false,
+      "properties": {
+        "max": {
+          "const": 1
+        },
+        "min": {
+          "const": 0
+        }
+      },
+      "required": [
+        "min",
+        "max"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "grader_id",
+    "name",
+    "input",
+    "output",
+    "scoring_range",
+    "pass_threshold",
+    "failure_reasons",
+    "safe_automated_use",
+    "human_review_required_when"
+  ],
+  "type": "object"
+}

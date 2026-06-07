@@ -1,0 +1,44 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "candidate_live": {
+      "const": false
+    },
+    "candidate_version": {
+      "type": "string"
+    },
+    "current_version": {
+      "type": "string"
+    },
+    "evidence_path": {
+      "type": "string"
+    },
+    "production_mutation_allowed": {
+      "const": false
+    },
+    "promotion_gate_required": {
+      "type": "boolean"
+    },
+    "rollback_available": {
+      "type": "boolean"
+    },
+    "rollback_version": {
+      "type": "string"
+    },
+    "skill_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "skill_id",
+    "current_version",
+    "candidate_version",
+    "rollback_version",
+    "candidate_live",
+    "production_mutation_allowed",
+    "rollback_available",
+    "promotion_gate_required",
+    "evidence_path"
+  ],
+  "type": "object"
+}
