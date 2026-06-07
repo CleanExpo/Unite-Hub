@@ -91,6 +91,9 @@ function classifyTier(pathname: string): Tier | null {
   // CRON routes — skip (validated by CRON_SECRET)
   if (pathname.startsWith('/api/cron')) return null;
 
+  // Drip lifecycle actions are CRUD/workflow operations, not AI generation.
+  if (pathname.startsWith('/api/campaigns/drip')) return 'standard';
+
   // AI-heavy routes
   for (const fragment of AI_PATH_FRAGMENTS) {
     if (pathname.includes(fragment)) return 'ai';
