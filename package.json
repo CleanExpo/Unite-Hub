@@ -43,7 +43,8 @@
     "stripe:audit": "node scripts/run-stripe-agent.mjs audit",
     "integrity:check": "node scripts/run-integrity-check.mjs",
     "linear": "node scripts/linear-update.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:contact-crud": "playwright test e2e/contact-crud.spec.ts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

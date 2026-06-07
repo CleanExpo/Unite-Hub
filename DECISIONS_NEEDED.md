@@ -43,3 +43,32 @@ Branch: `feat/24h-verify-and-harden`
 6. **Confirm whether drip campaigns and transcription are current product promises**
    - Finding: current routes show email campaign draft/send and video/file routes, but no verified drip enrol/process route and no transcription endpoint.
    - Needed decision: mark these as not connected/UNKNOWN in the product surface, or provide the intended current implementation path for verification.
+
+## Added 2026-06-07T10:41Z — Contact CRUD verification precondition failed
+
+7. **Provide a confirmed non-production Supabase verification lane**
+   - Mission blocked before branch/test-data work.
+   - Safe env check result: `.env.test` was not present, `NEXT_PUBLIC_SUPABASE_URL` was absent, and no Supabase host could be printed or compared against the known production ref `lksfwktwtmyznckodsau`.
+   - Required missing env vars:
+     - `NEXT_PUBLIC_SUPABASE_URL`
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+     - `SUPABASE_SERVICE_ROLE_KEY`
+     - `PLAYWRIGHT_TEST_EMAIL`
+     - `PLAYWRIGHT_TEST_PASSWORD`
+   - Safety decision: no branch, seed, auth login, database write, teardown, PR, or Contact CRUD probe was attempted because non-production targeting could not be proven.
+
+## Added 2026-06-07T10:58Z — Contact CRUD guard created, proof still blocked
+
+8. **Point a verification environment at a non-production Supabase host**
+   - Current verified host for Vercel development, preview, and production: `lksfwktwtmyznckodsau.supabase.co`.
+   - That host matches the known production ref, so seed/create/update/delete are blocked by production-safe mode.
+   - The new setup script refuses production writes and produced: `Refusing setup: lksfwktwtmyznckodsau.supabase.co is the known production Supabase host`.
+
+9. **Provide test login credentials to the runtime that runs `pnpm test:e2e:contact-crud`**
+   - The focused guard failed before authenticated list with: `PLAYWRIGHT_TEST_EMAIL/PLAYWRIGHT_TEST_PASSWORD are unavailable to the authenticated Contact CRUD test`.
+   - Without these, authenticated list and RLS scoping remain UNKNOWN.
+
+10. **Choose whether to approve any production-write exception**
+   - Default remains no production writes.
+   - To prove create/update/delete without a non-production Supabase host, Phill would need to explicitly approve one throwaway create/update/delete cycle against production test data.
+   - No such approval has been given, and no production write was attempted.

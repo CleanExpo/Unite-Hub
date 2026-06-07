@@ -113,3 +113,31 @@ After this push, wait for PR #93 checks to settle again. Then use an approved au
 ### Single highest-value next step
 
 Create an approved non-production authenticated verification setup: local/preview Supabase env, a test founder session, and explicit permission for provider sandbox credentials. Without that, the remaining founder CRUD and integration journeys cannot be honestly moved from UNKNOWN to PASS.
+
+## Contact CRUD verification attempt — 2026-06-07T10:58Z
+
+### Status
+
+Contact CRUD is **UNKNOWN**, not PASS.
+
+### Verified facts
+
+- The configured Vercel development, preview, and production environments resolve to `lksfwktwtmyznckodsau.supabase.co`.
+- That host matches the known production Supabase ref, so production-safe mode was required.
+- The production env read-only Supabase REST check returned `200 []` for `/rest/v1/contacts?select=id&limit=1`.
+- The verification setup script refused to seed against production with: `Refusing setup: lksfwktwtmyznckodsau.supabase.co is the known production Supabase host`.
+- The focused guard `vercel env run --environment production -- pnpm test:e2e:contact-crud` failed before authenticated list because `PLAYWRIGHT_TEST_EMAIL/PLAYWRIGHT_TEST_PASSWORD` were unavailable to the test process.
+
+### RLS result
+
+RLS scoping is **UNKNOWN** for this Contact CRUD mission. I could not create a second-founder fixture because the active host is production, and the authenticated read-only test could not log in without test credentials.
+
+### Guard left behind
+
+- `scripts/contact-crud-verification.mjs` provides status/setup/teardown commands and refuses production writes.
+- `e2e/contact-crud.spec.ts` performs production-safe authenticated list/RLS checks on production hosts and full create/list/update/delete checks only on non-production hosts.
+- `pnpm test:e2e:contact-crud` runs the focused Playwright guard.
+
+### Next journey
+
+The next highest-value journey remains Gmail import, but only after a real non-production Supabase lane or explicit production-write approval exists. For Contact CRUD specifically, the next step is to point preview/development at a separate non-production Supabase host and provide test login credentials to the runtime.

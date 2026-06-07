@@ -156,3 +156,28 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
   - `pnpm vitest run` → passed; `118` files / `847` tests.
   - `pnpm build` → failed in `prebuild` because local env validation still reports `0/3` critical and `0/4` required vars set.
 - **Evidence files:** `tmp/verify-run/post-merge-gates.log`, `tmp/verify-run/post-merge-build.log`.
+
+### 21) Contact CRUD verification lane resolved to production-safe mode
+- **Timestamp:** `2026-06-07T10:58:37Z`
+- **Branch:** `feat/verify-contact-crud`
+- **Host/effect commands:**
+  - `vercel env run --environment development -- node <safe host/effect check>`
+  - `vercel env run --environment preview --git-branch feat/verify-contact-crud -- node <safe host/effect check>`
+  - `vercel env run --environment production -- node <safe host/effect check>`
+- **Actual result:**
+  - Development host: `lksfwktwtmyznckodsau.supabase.co`, matching known production ref; `/rest/v1/contacts?select=id&limit=1` returned `401 Invalid API key`.
+  - Preview host: `lksfwktwtmyznckodsau.supabase.co`, matching known production ref; `/rest/v1/contacts?select=id&limit=1` returned `401 Invalid API key`.
+  - Production host: `lksfwktwtmyznckodsau.supabase.co`, matching known production ref; `/rest/v1/contacts?select=id&limit=1` returned `200 []`.
+- **Safety result:** production-safe mode engaged. No seed, create, update, delete, schema change, deployment, promotion, or alias action was performed.
+
+### 22) Contact CRUD guard added but authenticated proof is UNKNOWN
+- **Timestamp:** `2026-06-07T10:58:37Z`
+- **Added guard files:** `scripts/contact-crud-verification.mjs`, `e2e/contact-crud.spec.ts`, and package script `pnpm test:e2e:contact-crud`.
+- **Setup refusal command:** `vercel env run --environment production -- node scripts/contact-crud-verification.mjs setup`
+- **Setup refusal result:** failed safely with `Refusing setup: lksfwktwtmyznckodsau.supabase.co is the known production Supabase host`.
+- **Focused e2e command:** `vercel env run --environment production -- pnpm test:e2e:contact-crud`
+- **Focused e2e result:** failed before authenticated list with `PLAYWRIGHT_TEST_EMAIL/PLAYWRIGHT_TEST_PASSWORD are unavailable to the authenticated Contact CRUD test`.
+- **Mechanical gates:** `pnpm type-check` passed; `pnpm lint` passed.
+- **Final focused rerun:** `vercel env run --environment production -- pnpm test:e2e:contact-crud` still failed before authenticated list with `PLAYWRIGHT_TEST_EMAIL/PLAYWRIGHT_TEST_PASSWORD are unavailable to the authenticated Contact CRUD test`.
+- **Evidence files:** `tmp/contact-crud-type-lint.log`, `tmp/contact-crud-prod-status-setup-refusal.log`, `tmp/contact-crud-prod-e2e-after-browser.log`, `tmp/contact-crud-final-focused.log`, `tmp/contact-crud-final-lint.log`.
+- **Conclusion:** Contact CRUD remains `UNKNOWN`; the current environment proves only that the configured Vercel lanes point at the known production Supabase host and that the new guard refuses production writes.
