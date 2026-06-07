@@ -141,3 +141,28 @@ RLS scoping is **UNKNOWN** for this Contact CRUD mission. I could not create a s
 ### Next journey
 
 The next highest-value journey remains Gmail import, but only after a real non-production Supabase lane or explicit production-write approval exists. For Contact CRUD specifically, the next step is to point preview/development at a separate non-production Supabase host and provide test login credentials to the runtime.
+
+## Post-merge Contact CRUD lane check — 2026-06-07T11:12Z
+
+### Status
+
+Contact CRUD remains **UNKNOWN**, not PASS.
+
+### Additional verified facts
+
+- PR #96 is merged into `main` at merge commit `5a6e767062085c63a36e04b12bd9e107d5143198`.
+- `unite-hub-sandbox` exists as a Vercel project (`prj_tNqIsHGY3kvw7zdO2bXVxFWTPIk0`) and serves `https://unite-hub-sandbox.vercel.app`.
+- The sandbox deployment's public client chunks reference only `https://lksfwktwtmyznckodsau.supabase.co`.
+- Safe `vercel env run` host/effect checks against the sandbox project's `production`, `preview`, and `development` environments all resolved to `lksfwktwtmyznckodsau.supabase.co`.
+- The same sandbox env checks returned REST status `200` for `/rest/v1/contacts?select=id&limit=1`, proving the env can reach Supabase but also proving it reaches the known production host.
+- The checked sandbox runtimes do not expose test-login variables to the guard (`hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`).
+- Supabase inventory shows a separate project named `Unite-Group Test` (`xgqwfwqumliuguzhshwv`), but the checked Unite-Hub Vercel environments are not wired to it.
+
+### Current blocker
+
+The objective cannot be completed safely with the current external state. Full Contact CRUD proof requires either:
+
+- a Unite-Hub Vercel/local verification runtime pointed at a confirmed non-production Supabase host, with test login credentials available to Playwright, or
+- explicit human approval for a tightly scoped production write exception using throwaway test data.
+
+No such approval has been given, so create/update/delete were not attempted.
