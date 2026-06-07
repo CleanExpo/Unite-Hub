@@ -9,7 +9,7 @@ vi.mock('next/headers', () => ({
 }));
 
 import { createServerClient } from '@supabase/ssr';
-import { getSession, getUser } from '../server';
+import { getSession, getUser, getUserWithRole } from '../server';
 
 describe('supabase server helpers', () => {
   const originalUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -33,6 +33,11 @@ describe('supabase server helpers', () => {
 
   it('returns null session when Supabase config is missing', async () => {
     await expect(getSession()).resolves.toBeNull();
+    expect(createServerClient).not.toHaveBeenCalled();
+  });
+
+  it('returns null user-with-role when Supabase config is missing', async () => {
+    await expect(getUserWithRole()).resolves.toBeNull();
     expect(createServerClient).not.toHaveBeenCalled();
   });
 });

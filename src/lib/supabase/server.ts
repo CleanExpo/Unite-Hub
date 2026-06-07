@@ -169,6 +169,10 @@ export async function getSession() {
  * Used for role-based access control
  */
 export async function getUserWithRole() {
+  if (!hasSupabaseConfig()) {
+    return null;
+  }
+
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
