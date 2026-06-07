@@ -113,3 +113,34 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
   - `hermes doctor`
 - **Actual result:** Hermes main + delegation config uses Anthropic Opus 4.8; `hermes doctor` reported Anthropic API and OpenRouter API connectivity OK.
 - **Safety note:** an Anthropic key was pasted in chat and should be revoked/rotated. I did not use or store the pasted key.
+
+### 17) Fresh baseline gates at current HEAD
+- **Timestamp:** `2026-06-07T10:21:11Z`
+- **Branch / commit:** `feat/24h-verify-and-harden` at `e10ab201`
+- **Commands / actual results:**
+  - `pnpm validate:env` → failed; validator reported `0/3` critical vars and `0/4` required vars set in this local shell.
+  - `pnpm type-check` → passed; `tsc --noEmit` completed with exit code 0.
+  - `pnpm lint` → passed; `eslint src/` completed with exit code 0.
+  - `pnpm vitest run` → passed; `118` test files and `844` tests passed.
+  - `pnpm build` → failed in `prebuild`; `scripts/validate-env.mjs --ci` reported the same missing local env gate (`0/3` critical, `0/4` required).
+- **Evidence files:** `tmp/verify-run/validate-env.log`, `tmp/verify-run/type-check.log`, `tmp/verify-run/lint.log`, `tmp/verify-run/vitest.log`, `tmp/verify-run/build.log`.
+- **Safety note:** no secret values were supplied, printed, or committed.
+
+### 18) Fresh local missing-env route smoke found a Google OAuth callback 500
+- **Timestamp:** `2026-06-07T10:22:03Z`
+- **Server command:** `NEXT_PUBLIC_SUPABASE_URL= NEXT_PUBLIC_SUPABASE_ANON_KEY= SUPABASE_SERVICE_ROLE_KEY= ANTHROPIC_API_KEY= VAULT_ENCRYPTION_KEY= CRON_SECRET= FOUNDER_USER_ID= pnpm exec next dev -p 3004`
+- **Smoke command shape:** `curl -sS -i --max-redirs 0 http://127.0.0.1:3004/<path>`
+- **Actual PASS results:** `/` → `307 /auth/login?redirectTo=%2F`; `/auth/login` → `200`; `/api/health` → `503` degraded; representative protected contacts/email/campaigns/dashboard/video/integrations APIs → `307` login redirects or explicit `401`; `/api/health/google` → `200`; `/api/health/connectors` → `401`.
+- **Actual FAIL result:** `/api/auth/google/callback` with no query params returned `500 Internal Server Error`.
+- **Evidence file:** `tmp/verify-run/smoke-3004.log`.
+
+### 19) Google OAuth app-url hardening fixed the verified 500
+- **Timestamp:** `2026-06-07T10:24:59Z`
+- **Change:** Google OAuth `authorize` and `callback` now fall back to the incoming request origin when `NEXT_PUBLIC_APP_URL` is absent, instead of calling `.trim()` on an undefined env var.
+- **Targeted command:** `pnpm vitest run src/app/api/auth/google/__tests__/authorize.test.ts`
+- **Targeted result:** passed; `1` test file / `7` tests.
+- **Live command:** `curl -sS -i --max-redirs 0 http://127.0.0.1:3004/api/auth/google/callback`
+- **Live result:** passed; route changed from `500 Internal Server Error` to `307 Temporary Redirect` with `location: http://localhost:3004/auth/login`.
+- **Full gates after final code:** `pnpm type-check && pnpm lint && pnpm vitest run` passed; `118` test files / `847` tests.
+- **Build check after final code:** `pnpm build` failed in `prebuild` because local env validation still reports `0/3` critical and `0/4` required vars set.
+- **Evidence files:** `tmp/verify-run/google-oauth-authorize-callback-fix.log`, `tmp/verify-run/google-callback-live-after.log`, `tmp/verify-run/post-google-oauth-final-gates.log`, `tmp/verify-run/final-build.log`.

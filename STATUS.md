@@ -83,3 +83,33 @@ Hermes main + delegation config was switched to Anthropic Opus 4.8 (`provider=an
 ## Highest-value next step
 
 After this push, wait for PR #93 checks to settle again. Then use an approved authenticated test session strategy and real non-production Supabase/integration env to run end-to-end probes for contact CRUD, OAuth import, campaign processing, scoring, and transcription. Until then, those journeys must remain UNKNOWN.
+
+## Fresh update — 2026-06-07T10:24Z
+
+### What changed in this slice
+
+- Fixed a verified local runtime failure in Google OAuth:
+  - Before: `GET /api/auth/google/callback` returned `500` when `NEXT_PUBLIC_APP_URL` was absent.
+  - After: the same live request returns `307` to login.
+- Hardened both Google OAuth `authorize` and `callback` to use the request origin when `NEXT_PUBLIC_APP_URL` is absent.
+- Added regression tests for:
+  - Google authorize redirect URI fallback.
+  - Google callback anonymous fallback.
+  - Google callback missing-params fallback.
+
+### Fresh verification
+
+- `pnpm vitest run src/app/api/auth/google/__tests__/authorize.test.ts` → PASS, `7` tests.
+- Live curl against `http://127.0.0.1:3004/api/auth/google/callback` → PASS, `307` to login instead of prior `500`.
+- `pnpm type-check && pnpm lint && pnpm vitest run` → PASS, full suite `118` files / `847` tests.
+- `pnpm build` → BLOCKED by missing local env vars in `prebuild`, not by an observed compile error.
+
+### Updated risk map
+
+- `NEXT_PUBLIC_APP_URL` is still a parity concern. The validator lists it as integration config, but many OAuth routes treat app URL as operationally important. Google is now guarded; Meta/LinkedIn/TikTok/YouTube/Xero/social OAuth paths still need the same review before those flows can be called production-hardened.
+- Outlook import is not merely unverified; current route inventory did not find a Microsoft Graph/Outlook OAuth route. Treat Outlook import as absent/UNKNOWN, not working.
+- Drip campaign lifecycle and transcription remain UNKNOWN; current routes do not prove those product journeys exist end-to-end.
+
+### Single highest-value next step
+
+Create an approved non-production authenticated verification setup: local/preview Supabase env, a test founder session, and explicit permission for provider sandbox credentials. Without that, the remaining founder CRUD and integration journeys cannot be honestly moved from UNKNOWN to PASS.

@@ -48,3 +48,32 @@ I treated a journey as **verified** only when I had a real command, HTTP respons
 The runtime blocker fixed here was the missing-Supabase-env crash path in middleware / root redirect / health / server auth helpers. That restored public and unauthenticated smoke verification without fabricating auth or integration credentials.
 
 This PR does **not** prove the product is sellable. The authenticated founder CRUD and provider-backed journeys remain UNKNOWN until approved test credentials/session strategy are available.
+
+## Fresh update — 2026-06-07T10:24Z
+
+### Added verified coverage
+
+- **Google OAuth callback missing-env safety:** PASS. Before the fix, unauthenticated `GET /api/auth/google/callback` on the local missing-env dev server returned `500`. After the fix, the same live request returns `307` to `http://localhost:3004/auth/login`.
+- **Google OAuth redirect construction without `NEXT_PUBLIC_APP_URL`:** PASS in automated regression. `pnpm vitest run src/app/api/auth/google/__tests__/authorize.test.ts` passed `7/7` tests, including request-origin fallback for `authorize` and `callback`.
+
+### Current honest coverage
+
+- **Safe unauthenticated/local smoke targets verified:** 20 / 20 after the Google callback fix = **100% of attempted no-auth smoke targets**.
+- **Critical product journey catalogue:** 3 PASS / 8 total = **37.5% proven end-to-end**.
+- **Additional partial hardening:** Google OAuth no-auth/missing-env guard is verified, but full Gmail OAuth → import → contact creation remains **UNKNOWN** because no authenticated session or provider credentials were available.
+
+### Still UNKNOWN, not sellable-proof
+
+- Contact create/list/update with authenticated founder data.
+- Gmail full OAuth callback token exchange, import, and contact creation.
+- Outlook OAuth/import: route inventory found Microsoft account metadata but no current Outlook/Microsoft Graph OAuth route.
+- Drip campaign create → step → enrol → process: route inventory found email campaign draft/send routes, but no current drip/enrol/process API journey.
+- Lead scoring from real ingestion: library scoring tests exist, but no API/app journey was found.
+- Multimedia upload + transcription: upload/video routes exist, but no transcription endpoint was found.
+
+### Fresh gate evidence
+
+- `pnpm type-check` → PASS.
+- `pnpm lint` → PASS.
+- `pnpm vitest run` → PASS, `118` files / `847` tests.
+- `pnpm build` → BLOCKED by local env validation (`0/3` critical, `0/4` required), before compilation.
