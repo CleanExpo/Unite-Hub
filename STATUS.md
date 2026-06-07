@@ -317,3 +317,21 @@ What genuinely works now: `POST /api/files/transcribe` exists and is authenticat
 What remains blocked: durable transcript persistence is **UNKNOWN / BLOCKED** because no active additive transcript migration or existing `ai_file_cache` transcript/metadata column exists. Live provider transcription is **UNKNOWN / BLOCKED** because this run intentionally avoided paid provider calls and there is no approved key/cost/source-byte retrieval path for live transcription.
 
 Fresh verification: type-check PASS, lint PASS, whitespace check PASS, transcription e2e PASS (`2/2`), contact-crud PASS (`1/1`), core-journeys PASS (`5/5`), lead-scoring PASS (`1/1`), file-upload PASS (`1/1`), cleanup audit PASS (`0` tagged transcription rows remain), Vitest PASS (`118` files / `847` tests). Local build remains blocked before compile by missing required runtime env names in this shell.
+
+## Drip campaign lifecycle — 2026-06-08T08:54+10:00
+
+What genuinely works now: `POST /api/campaigns/drip` exists and is authenticated. It supports `create_campaign`, `add_step`, `enroll_contact`, and `process_pending` over the existing founder-scoped `email_campaigns` and `contacts` tables. The self-cleaning guard `pnpm test:e2e:drip-campaign` proved unauthenticated fail-closed behaviour, create, add step, enrol, dry-run process, cross-user `404`, and cleanup with tagged throwaway users.
+
+Safety behaviour: `process_pending` defaults to dry-run and records `providerSend='not_attempted'`; it does not call SendGrid or any real provider.
+
+What remains blocked: this is a compatibility lifecycle using `email_campaigns.metadata.drip`, not a final dedicated drip schema. Clean GREEN drip still needs approved active tables for steps, enrollments, scheduling/retry state, and execution logs.
+
+Fresh verification: type-check PASS, lint PASS, drip e2e PASS (`2/2`), cleanup audit PASS (`0` tagged drip campaigns and contacts remain). Full regression run still needs to happen before PR handoff.
+
+## Email import to contacts — 2026-06-08T08:59+10:00
+
+What genuinely works now: `POST /api/email/contacts/import` exists and is authenticated. In `gmail_mock` mode it converts a tagged non-deliverable sender into a founder-scoped contact, avoids duplicate contacts by founder/email, and fails closed for another founder's contact list. The self-cleaning guard `pnpm test:e2e:email-import` proved unauthenticated fail-closed behaviour, import `201`, duplicate import `200 created=false`, cross-user isolation, and cleanup.
+
+What remains blocked: live Gmail thread import is **UNKNOWN / HUMAN-GATED** until Google OAuth consent and real thread fetch are available. Outlook/Microsoft import is **UNKNOWN / NOT BUILT** because no active Microsoft OAuth/Graph route exists.
+
+Fresh verification: type-check PASS, lint PASS, email-import e2e PASS (`2/2`), cleanup audit PASS (`0` tagged email-import contacts remain), final chained e2e gate PASS, Vitest PASS (`118` files / `847` tests). Local build remains blocked before compile by missing required runtime env names in this shell.

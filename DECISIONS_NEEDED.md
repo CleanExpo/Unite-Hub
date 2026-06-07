@@ -178,3 +178,25 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
 28. **Provide live transcription provider/cost approval before live proof**
    - The e2e guard uses `UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1` and makes no paid external transcription call.
    - Needed decision: provide the provider API key/cost ceiling and the intended source-byte retrieval/storage path for live transcription, then run one tiny live sample.
+
+## Added 2026-06-08T08:54+10:00 — Drip compatibility lifecycle proved, clean schema still needed
+
+29. **Approve a dedicated drip lifecycle schema when this needs to become GREEN**
+   - `POST /api/campaigns/drip` now proves a dry-run compatibility lifecycle using `email_campaigns.metadata.drip` and `recipient_list`.
+   - Active migrations do not include dedicated `drip_campaigns`, `campaign_steps`, `campaign_enrollments`, schedule/retry state, or execution logs.
+   - Needed decision: approve an additive active drip schema migration and generated type update, or keep the metadata-backed compatibility route as the current AMBER product contract.
+
+30. **Approve live email provider sending separately from dry-run processing**
+   - `process_pending` deliberately does not call SendGrid or any live provider in this pass.
+   - Needed decision: define the live-send gate, test-domain policy, unsubscribe/consent rules, and provider cost/credential lane before enabling provider sends.
+
+## Added 2026-06-08T08:59+10:00 — Email import mocked path proved, live providers still gated
+
+31. **Complete Google OAuth consent before live Gmail import proof**
+   - `POST /api/email/contacts/import` now proves mocked Gmail sender-to-contact import without live provider access.
+   - Live Gmail import remains gated by human Google OAuth consent and real Gmail thread fetch.
+   - Needed action: Phill completes Google consent with the target account, then run one tagged live thread import proof.
+
+32. **Decide Outlook/Microsoft scope**
+   - No active Microsoft/Outlook OAuth or Graph import route exists.
+   - Needed decision: either approve Microsoft authorize/callback plus Graph fetch implementation, or mark Outlook import as not connected for the current CRM surface.

@@ -603,3 +603,77 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - Actual result: PASS; `118` files and `847` tests passed.
 - Build command: `pnpm build`
 - Actual result: BLOCKED before compile by local env validation (`0/3` critical and `0/4` required runtime vars in this shell).
+
+### Drip campaign API run - 2026-06-07T22:52:25.109Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: process_pending is dry-run only in this guard; no email provider send is attempted.
+  - created drip auth user A: 9d9ebb45-912e-4b73-9470-489d37f31343
+  - created drip auth user B: b4c844ef-1154-4671-b848-814e2c9a53a8
+  - created drip contact a8d4ae43-82fc-4eab-b855-cf55431f4535: playwright+drip-contact+2026-06-07T22-52-25-109Z@unite-hub.test
+  - created drip campaign a7ba8a38-7707-4378-a4d1-ffc05c86f011
+  - added one drip step and enrolled the tagged contact
+  - process_pending dry-run returned processed=1, failed=0, providerSend=not_attempted
+  - cross-user isolation verified: user B received 404 for campaign a7ba8a38-7707-4378-a4d1-ffc05c86f011
+  - cleanup verified for drip marker 2026-06-07T22:52:25.109Z
+
+### Drip campaign targeted build - 2026-06-08T08:54+10:00
+- Schema review: active migrations include `email_campaigns` and `contacts`, but no active `drip_campaigns`, `campaign_steps`, `campaign_enrollments`, schedule/retry state, or execution-log tables. No schema change was applied.
+- Endpoint: `POST /api/campaigns/drip` accepts `create_campaign`, `add_step`, `enroll_contact`, and `process_pending` actions. It requires auth and founder-scopes campaign/contact lookups.
+- Persistence: compatibility state is persisted in `email_campaigns.metadata.drip` plus `recipient_list`; this is not claimed as final clean drip schema.
+- Provider safety: `process_pending` dry-runs safe test-domain recipients and returns `providerSend='not_attempted'`; no SendGrid/live provider call is made.
+- Rate-limit fix: `/api/campaigns/drip` is classified as standard API traffic, not AI-heavy generation traffic, so normal lifecycle clicks do not hit the 5/min AI bucket.
+- Command: `pnpm run type-check`
+- Actual result: PASS.
+- Command: `pnpm run lint`
+- Actual result: PASS.
+- Command: `DRIP_CAMPAIGN_APPEND_EVIDENCE=1 pnpm test:e2e:drip-campaign`
+- Actual result: PASS; `2` Playwright tests passed.
+- Follow-up command after support-script update: `pnpm test:e2e:drip-campaign`
+- Follow-up actual result: PASS; `2` Playwright tests passed.
+- Cleanup audit command: `node <service-role effect check: tagged drip email_campaigns and contacts>`
+- Cleanup audit result: host `lksfwktwtmyznckodsau.supabase.co`, `dripCampaignsRemaining:0`, `dripContactsRemaining:0`.
+
+### Email import API run - 2026-06-07T22:58:39.370Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: gmail_mock proves sender-to-contact import without live Google consent.
+  - created email import auth user A: 13422b92-2aa9-49dd-bc88-c43913b23cfb
+  - created email import auth user B: 391972c0-df2f-4021-9132-121c3e0b1504
+  - imported mocked Gmail sender to contact 048d3674-efba-4ebf-b421-08292c9019aa: playwright+gmail-import+2026-06-07t22-58-39-370z@unite-hub.test
+  - duplicate import returned existing contact instead of creating another
+  - cross-user isolation verified: user B could not list playwright+gmail-import+2026-06-07t22-58-39-370z@unite-hub.test
+  - cleanup verified for email import marker 2026-06-07T22:58:39.370Z
+
+### Email import targeted build - 2026-06-08T08:59+10:00
+- Route: `POST /api/email/contacts/import` accepts mocked Gmail sender payloads, requires auth, founder-scopes contact lookup/insert, and returns existing contacts for duplicate founder/email imports.
+- Live-provider honesty: live Gmail mode returns `503 gmail_live_import_not_connected`; no OAuth consent, Gmail read, or Outlook/Microsoft call was attempted.
+- Command: `EMAIL_IMPORT_APPEND_EVIDENCE=1 pnpm test:e2e:email-import`
+- Actual result: PASS; `2` Playwright tests passed.
+- Cleanup audit command: `node <service-role effect check: contacts like playwright+gmail-import+%@unite-hub.test>`
+- Cleanup audit result: host `lksfwktwtmyznckodsau.supabase.co`, `emailImportContactsRemaining:0`.
+- Final chained e2e command: `pnpm run type-check && pnpm run lint && pnpm test:e2e:drip-campaign && pnpm test:e2e:email-import && pnpm test:e2e:contact-crud && pnpm test:e2e:core-journeys && pnpm test:e2e:lead-scoring && pnpm test:e2e:file-upload && pnpm test:e2e:transcription && git diff --check`
+- Final chained e2e result: PASS.
+- Full unit command after both new routes: `pnpm vitest run`
+- Actual result: PASS; `118` files and `847` tests passed.
+- Build command: `pnpm build`
+- Actual result: BLOCKED before compile by local env validation (`0/3` critical and `0/4` required runtime vars in this shell).
+
+### Email import API run - 2026-06-07T22:57:06.290Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: gmail_mock proves sender-to-contact import without live Google consent.
+  - created email import auth user A: 45bc4f21-7efa-4931-ac93-8e3bdc6c3ed3
+  - created email import auth user B: c8686f9c-8797-4cc2-a0b6-8a99a6c9b4d3
+  - cleanup verified for email import marker 2026-06-07T22:57:06.290Z
+
+### Email import API run - 2026-06-07T22:57:29.663Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: gmail_mock proves sender-to-contact import without live Google consent.
+  - created email import auth user A: 28ece068-4e67-4eeb-8fed-0f23a3860f98
+  - created email import auth user B: f753e9f6-969e-4cf1-99a9-73a1304fcf27
+  - imported mocked Gmail sender to contact f6f1e71e-962f-4056-adcf-38bcd327aa69: playwright+gmail-import+2026-06-07t22-57-29-663z@unite-hub.test
+  - duplicate import returned existing contact instead of creating another
+  - cross-user isolation verified: user B could not list playwright+gmail-import+2026-06-07t22-57-29-663z@unite-hub.test
+  - cleanup verified for email import marker 2026-06-07T22:57:29.663Z

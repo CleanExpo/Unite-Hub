@@ -232,3 +232,53 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - `node <service-role cleanup audit: ai_file_cache like __PW_TEST__TRANSCRIPTION__%>` -> PASS, `0` tagged transcription upload rows remain.
 - `pnpm vitest run` -> PASS, `118` files / `847` tests.
 - `pnpm build` -> BLOCKED before compile by missing local required runtime env names.
+
+## Drip campaign compatibility lifecycle proof — 2026-06-08T08:54+10:00
+
+### Coverage
+
+- Requested target: `1`
+- PASS: `1`
+- FAIL: `0`
+- UNKNOWN: `2` sub-steps
+- Overall verified percentage with UNKNOWN excluded: `1/1` = **100%** for dry-run compatibility lifecycle.
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Drip create -> add step -> enrol contact -> process_pending dry-run | PASS | `DRIP_CAMPAIGN_APPEND_EVIDENCE=1 pnpm test:e2e:drip-campaign` passed `2/2`; the guard proved `POST /api/campaigns/drip` fails closed before auth, then provisioned two tagged throwaway auth users, created a tagged contact, created a drip campaign, added a step, enrolled the contact, dry-ran `process_pending` with `processed=1`, `failed=0`, `providerSend='not_attempted'`, proved user B receives `404` for user A's campaign, and verified cleanup. |
+| Dedicated drip schema | UNKNOWN / BLOCKED | Active migrations do not include `drip_campaigns`, `campaign_steps`, `campaign_enrollments`, or execution logs. This pass uses existing `email_campaigns.metadata.drip` and `recipient_list`, which is a compatibility path, not the final clean schema. |
+| Live provider sending | UNKNOWN / BLOCKED | No live email provider send was attempted. `process_pending` defaults to dry-run and only processes safe test-domain recipients in this implementation. |
+
+### Fresh proof commands
+
+- `pnpm run type-check` -> PASS.
+- `pnpm run lint` -> PASS.
+- `DRIP_CAMPAIGN_APPEND_EVIDENCE=1 pnpm test:e2e:drip-campaign` -> PASS, `2` Playwright tests.
+- `pnpm test:e2e:drip-campaign` -> PASS, `2` Playwright tests after support-script update.
+- `node <service-role cleanup audit: email_campaigns/contacts tagged __PW_TEST__DRIP>` -> PASS, `0` tagged campaigns and `0` tagged contacts remain.
+
+## Email import-to-contact mocked proof — 2026-06-08T08:59+10:00
+
+### Coverage
+
+- Requested target: `1`
+- PASS: `1`
+- FAIL: `0`
+- UNKNOWN: `2` sub-steps
+- Overall verified percentage with UNKNOWN excluded: `1/1` = **100%** for mocked email sender import.
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Mocked Gmail sender -> contact import | PASS | `EMAIL_IMPORT_APPEND_EVIDENCE=1 pnpm test:e2e:email-import` passed `2/2`; the guard proved `POST /api/email/contacts/import` fails closed before auth, then provisioned two tagged throwaway auth users, imported a mocked Gmail sender into one founder-scoped contact, proved duplicate import returns the existing contact, proved user B cannot list user A's imported contact, and verified cleanup. |
+| Live Gmail thread import | UNKNOWN / HUMAN-GATED | Google OAuth consent and a real Gmail account are required before live thread fetch/import can be proved. The route returns `503 gmail_live_import_not_connected` for live mode instead of faking it. |
+| Outlook/Microsoft import | UNKNOWN / NOT BUILT | No active Microsoft/Outlook OAuth route or Graph import helper exists. |
+
+### Fresh proof commands
+
+- `pnpm run type-check` -> PASS.
+- `pnpm run lint` -> PASS.
+- `EMAIL_IMPORT_APPEND_EVIDENCE=1 pnpm test:e2e:email-import` -> PASS, `2` Playwright tests.
+- `node <service-role cleanup audit: contacts like playwright+gmail-import+%@unite-hub.test>` -> PASS, `0` tagged contacts remain.
+- Final chained e2e gate -> PASS: drip `2/2`, email-import `2/2`, contact-crud `1/1`, core-journeys `5/5`, lead-scoring `1/1`, file-upload `1/1`, transcription `2/2`.
+- `pnpm vitest run` -> PASS, `118` files / `847` tests.
+- `pnpm build` -> BLOCKED before compile by missing local required runtime env names.
