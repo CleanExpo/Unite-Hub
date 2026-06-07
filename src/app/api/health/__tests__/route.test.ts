@@ -37,6 +37,8 @@ const mockCookieStore = {
 describe('GET /api/health', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'anon-example-key';
 
     // Reset implementation after clearAllMocks (clearAllMocks clears calls but
     // not implementations set via mockReturnValue — however we re-set them here
@@ -95,6 +97,27 @@ describe('GET /api/health', () => {
 
     expect(response.status).toBe(503);
     expect(body.connections.supabase).toBe('error');
+  });
+
+  it('returns 503 with degraded status when Supabase env is missing', async () => {
+    const originalUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const originalKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    process.env.NEXT_PUBLIC_SUPABASE_URL = '';
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = '';
+
+    try {
+      const response = await GET();
+      const body = await response.json();
+
+      expect(response.status).toBe(503);
+      expect(body.status).toBe('degraded');
+      expect(body.connections.supabase).toBe('error');
+      expect(createServerClient).not.toHaveBeenCalled();
+    } finally {
+      process.env.NEXT_PUBLIC_SUPABASE_URL = originalUrl;
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = originalKey;
+    }
   });
 
   it('includes a timestamp in the response', async () => {

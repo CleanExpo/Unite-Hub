@@ -4,6 +4,10 @@
 
 import { createClient } from '@supabase/supabase-js'
 
+export function hasSupabaseServiceConfig(env: NodeJS.ProcessEnv = process.env): boolean {
+  return Boolean(env.NEXT_PUBLIC_SUPABASE_URL?.trim() && env.SUPABASE_SERVICE_ROLE_KEY?.trim())
+}
+
 export function createServiceClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

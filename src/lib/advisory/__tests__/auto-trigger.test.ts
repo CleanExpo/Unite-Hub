@@ -12,6 +12,7 @@ const mockIn = vi.fn()
 const mockFrom = vi.fn()
 
 vi.mock('@/lib/supabase/service', () => ({
+  hasSupabaseServiceConfig: () => true,
   createServiceClient: () => ({
     from: mockFrom,
   }),
