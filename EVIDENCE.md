@@ -1,6 +1,6 @@
 # Evidence — append only
 
-Date: 2026-06-07T09:05:13Z
+Date: 2026-06-07T09:36:30Z
 Branch: `feat/24h-verify-and-harden`
 PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 
@@ -21,10 +21,10 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - **Actual result:** passed
 - **Evidence:** `eslint src/` completed with exit code 0.
 
-### 4) Full Vitest suite passes on current PR head
+### 4) Full Vitest suite passes on current local head
 - **Command:** `pnpm vitest run`
 - **Actual result:** passed
-- **Evidence:** `118 passed` test files, `843 passed` tests, exit code 0.
+- **Evidence:** `118 passed` test files, `844 passed` tests, exit code 0.
 
 ### 5) Targeted regression test for `getUserWithRole()` missing-config guard passes
 - **Command:** `pnpm vitest run src/lib/supabase/__tests__/server.test.ts`
@@ -36,7 +36,7 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - **Actual result:** failed in `prebuild`
 - **Evidence:** `scripts/validate-env.mjs --ci` reported `0/3` critical and `0/4` required env vars set in the local shell, then exited 1. No secret values were printed or supplied.
 
-### 7) GitHub Build Application passed on PR #93 current commit
+### 7) GitHub Build Application passed on PR #93 prior commit
 - **Command:** `gh run view 27087960201 --job 79946073153 --log --repo CleanExpo/Unite-Hub`
 - **Actual result:** passed
 - **Evidence:** job completed successfully for commit `f41abce4`; route manifest was emitted. Warnings observed were non-fatal (`url.parse` deprecation, pnpm Supabase bin warning, cache-control/Turbopack warnings).
@@ -54,10 +54,10 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - **Commit:** `f41abce4 fix: guard user-with-role auth without Supabase env`
 - **Evidence:** active thread `PRRT_kwDOQUchfM6HoecO` resolved after the fix; four other unresolved threads were marked `outdated=true` by GitHub and resolved to satisfy required conversation resolution.
 
-### 10) Final PR check and merge state
+### 10) Clean PR state before the latest fire-and-forget hardening slice
 - **Command:** `gh pr view 93 --json state,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup,headRefOid`
-- **Actual result:** clean/mergeable
-- **Evidence:** `headRefOid=f41abce4f507f2914f81c8fd3b8775aef4fcbae9`, `mergeable=MERGEABLE`, `mergeStateStatus=CLEAN`, all check-rollup entries success or skipped.
+- **Actual result:** clean/mergeable at commit `9f1716cbd0f489ff6c821a7ac077e08d699308d5`
+- **Evidence:** `mergeable=MERGEABLE`, `mergeStateStatus=CLEAN`, all check-rollup entries success or skipped.
 
 ### 11) Live smoke: public auth/health paths with Supabase env intentionally empty
 - **Server command:** `NEXT_PUBLIC_SUPABASE_URL= NEXT_PUBLIC_SUPABASE_ANON_KEY= SUPABASE_SERVICE_ROLE_KEY= ANTHROPIC_API_KEY= VAULT_ENCRYPTION_KEY= CRON_SECRET= FOUNDER_USER_ID= pnpm exec next dev -p 3003`
@@ -83,7 +83,33 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
   - `/api/auth/google/authorize` → `401 {"error":"Unauthorized"}`
 
 ### 13) Preview deployments created by Vercel for PR #93
-- **Evidence:** GitHub status contexts passed:
-  - `Vercel – unite-hub` → `https://vercel.com/unite-group/unite-hub/4RAU9HFy6hrcbqx3QDtzLGruuDhQ`
-  - `Vercel – unite-hub-sandbox` → `https://vercel.com/unite-group/unite-hub-sandbox/8Sj87vsVAM3kf28QB2wq3JbU19qL`
+- **Evidence:** GitHub status contexts passed on prior PR head:
+  - `Vercel – unite-hub` → `https://vercel.com/unite-group/unite-hub/72bXJcxdchYHqMryfxJpGKY5kCxB`
+  - `Vercel – unite-hub-sandbox` → `https://vercel.com/unite-group/unite-hub-sandbox/BZgM42r58x5GWFRbjB2bBMGh3vTe`
 - **Note:** This is preview deployment readiness, not proof of authenticated product journeys.
+
+### 14) RED/GREEN: fire-and-forget delivery no longer logs raw Supabase service-client construction errors
+- **RED command:** `pnpm vitest run src/app/api/cron/bookkeeper/__tests__/route.test.ts -t "does not log Supabase service-client errors"`
+- **RED result:** failed because stderr included `[Notify] Unhandled error: supabaseUrl is required` and `[Bookkeeper CRON] MACAS auto-trigger error: Error: supabaseUrl is required.`
+- **Fix:** added `hasSupabaseServiceConfig()` and guarded fire-and-forget notification/advisory DB-backed work when local service-role env is absent.
+- **GREEN command:** same targeted test.
+- **GREEN result:** passed; intended skip warnings appear, but raw `supabaseUrl is required` SDK construction errors do not.
+
+### 15) Neighbour and full-suite verification after fire-and-forget hardening
+- **Commands:**
+  - `pnpm vitest run src/app/api/cron/bookkeeper/__tests__/route.test.ts src/lib/advisory/__tests__/auto-trigger.test.ts`
+  - `pnpm type-check`
+  - `pnpm lint`
+  - `pnpm vitest run`
+- **Actual result:** passed
+- **Evidence:** neighbour suites `22 passed`; full suite `118 passed` files / `844 passed` tests; type-check and lint exit code 0.
+
+### 16) Hermes provider/delegation configuration verified
+- **Commands:**
+  - `hermes config set model.provider anthropic`
+  - `hermes config set model.default claude-opus-4-8`
+  - `hermes config set delegation.provider anthropic`
+  - `hermes config set delegation.model claude-opus-4-8`
+  - `hermes doctor`
+- **Actual result:** Hermes main + delegation config uses Anthropic Opus 4.8; `hermes doctor` reported Anthropic API and OpenRouter API connectivity OK.
+- **Safety note:** an Anthropic key was pasted in chat and should be revoked/rotated. I did not use or store the pasted key.

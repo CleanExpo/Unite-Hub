@@ -9,7 +9,7 @@
  * a verification badge in the UI to remind Phill to review inputs before acting.
  */
 
-import { createServiceClient } from '@/lib/supabase/service'
+import { createServiceClient, hasSupabaseServiceConfig } from '@/lib/supabase/service'
 import { collectFinancialContext } from './financial-context'
 import { evaluateReadiness, type BusinessRunResult } from './readiness-gate'
 import type { BusinessKey } from '@/lib/businesses'
@@ -43,8 +43,14 @@ export async function triggerMacasAdvisory(
   input: AutoTriggerInput
 ): Promise<AutoTriggerResult> {
   const { founderId, runId, runCompletedAt, businessResults } = input
-  const supabase = createServiceClient()
   const result: AutoTriggerResult = { casesCreated: 0, businessesSkipped: 0, errors: [] }
+
+  if (!hasSupabaseServiceConfig()) {
+    console.warn('[MACAS Auto-Trigger] Supabase service config not set — skipping advisory case creation')
+    return result
+  }
+
+  const supabase = createServiceClient()
 
   // --- Readiness gate ---
   const { ready, skipped } = evaluateReadiness(businessResults, runCompletedAt)
