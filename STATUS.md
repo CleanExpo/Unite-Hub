@@ -174,3 +174,23 @@ Contact CRUD remains **UNKNOWN**.
 Fresh effect checks against `unite-hub-sandbox` production, preview, and development still resolve to `lksfwktwtmyznckodsau.supabase.co`, and all three checks still report no Playwright test email/password in the runtime. PR #97 remains open with docs-only blocker evidence.
 
 There is no safe next automated action that would complete the original objective without an external change: either wire a Unite-Hub verification runtime to a confirmed non-production Supabase project and provide test login credentials, or explicitly approve a tightly scoped production-write exception. No production writes were attempted.
+
+## Approved production-write exception attempt — 2026-06-07T11:40Z
+
+Contact CRUD remains **UNKNOWN**, not PASS.
+
+Phill approved a scoped reversible production-write exception, so the guard was updated to create two throwaway Supabase auth users, log in as each, prove Contact CRUD through the authenticated app API, assert cross-user isolation both ways, and cleanup exact created IDs in `finally`.
+
+Fresh verification stopped before any production write:
+
+- `pnpm type-check` passed.
+- `pnpm lint` passed.
+- `vercel env run --environment production -- env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` failed before provisioning with `Contact CRUD production-write exception precondition failed; missing SUPABASE_SERVICE_ROLE_KEY`.
+- `.env.local` is absent, so the allowed local source order also cannot provide the service-role key.
+- `vercel env ls production` shows `SUPABASE_SERVICE_ROLE_KEY` exists as an encrypted production variable, but `vercel env run` did not expose it to the local runner by effect.
+
+No test users, workspaces, contacts, schema changes, deploys, promotions, aliases, billing actions, or explicit email sends occurred.
+
+Workspace note: the current Contact API is founder-scoped and has no `workspace_id`. Live metadata shows `workspaces.org_id` is required and references `organizations`; creating an organization is outside the approved write exception, and using an existing organization would touch pre-existing data. Workspace creation was therefore not attempted.
+
+Current blocker: make `SUPABASE_SERVICE_ROLE_KEY` available to the approved test runner by effect, or provide another safe admin-user creation path that does not expose secrets. Then rerun `pnpm test:e2e:contact-crud` and record the create/list/update/delete/RLS/cleanup proof.

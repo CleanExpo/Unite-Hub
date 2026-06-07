@@ -84,3 +84,18 @@ Branch: `feat/24h-verify-and-harden`
 12. **Provide Playwright test login credentials in the selected verification runtime**
    - Verified `unite-hub-sandbox` production, preview, and development envs expose the Supabase URL/anon envs but not `PLAYWRIGHT_TEST_EMAIL` / `PLAYWRIGHT_TEST_PASSWORD` or the accepted `TEST_FOUNDER_EMAIL` / `TEST_FOUNDER_PASSWORD` aliases.
    - Needed decision: add test-only founder credentials to the selected non-production runtime, without pasting secrets into chat.
+
+## Added 2026-06-07T11:40Z — Approved production-write exception blocked before provisioning
+
+13. **Expose `SUPABASE_SERVICE_ROLE_KEY` to the approved test runner by effect**
+   - Phill approved creating up to two tagged test auth users, test workspaces, and test contacts, then deleting them.
+   - The self-cleaning Playwright guard now creates users itself, so pre-set `PLAYWRIGHT_TEST_*` credentials are no longer required.
+   - Actual blocker: `vercel env run --environment production -- env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` failed before any write because `SUPABASE_SERVICE_ROLE_KEY` was unavailable to the local process.
+   - `vercel env ls production` lists `SUPABASE_SERVICE_ROLE_KEY` as an encrypted production variable, but the local runner did not receive it by effect.
+   - Needed decision: run the guard in an environment where the service-role key is available to the process without exposing it in chat/logs, or provide an equivalent safe admin-user provisioning mechanism.
+
+14. **Decide whether a tagged test organization is also authorized for workspace creation**
+   - Live metadata shows `workspaces.org_id` is required and references `organizations`.
+   - The current production-write exception authorizes test users, test workspaces, and test contacts only; it does not explicitly authorize creating a throwaway organization.
+   - Using any existing organization would touch pre-existing data and was not attempted.
+   - Needed decision: either explicitly authorize a uniquely tagged throwaway organization solely as the required parent for the test workspaces, or accept that the current Contact API proof is founder-scoped rather than workspace-scoped.
