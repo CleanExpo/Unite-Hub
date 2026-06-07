@@ -166,3 +166,11 @@ The objective cannot be completed safely with the current external state. Full C
 - explicit human approval for a tightly scoped production write exception using throwaway test data.
 
 No such approval has been given, so create/update/delete were not attempted.
+
+## Continuation blocker audit — 2026-06-07T11:18Z
+
+Contact CRUD remains **UNKNOWN**.
+
+Fresh effect checks against `unite-hub-sandbox` production, preview, and development still resolve to `lksfwktwtmyznckodsau.supabase.co`, and all three checks still report no Playwright test email/password in the runtime. PR #97 remains open with docs-only blocker evidence.
+
+There is no safe next automated action that would complete the original objective without an external change: either wire a Unite-Hub verification runtime to a confirmed non-production Supabase project and provide test login credentials, or explicitly approve a tightly scoped production-write exception. No production writes were attempted.

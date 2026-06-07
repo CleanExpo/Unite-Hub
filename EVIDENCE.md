@@ -196,3 +196,13 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - **Supabase project inventory:** Supabase project list includes a separate project named `Unite-Group Test` with ref `xgqwfwqumliuguzhshwv`, but the Unite-Hub Vercel sandbox/development/preview/production envs checked above are not wired to that host.
 - **Safety result:** no seed, create, update, delete, schema, deploy, promotion, alias, billing, or secret-printing action was performed.
 - **Conclusion:** the requested full authenticated Contact CRUD proof remains blocked by the same condition: no configured non-production Unite-Hub Supabase lane plus no test login credentials in the checked runtimes.
+
+### 24) Continuation audit: blocker unchanged
+- **Timestamp:** `2026-06-07T11:18:00Z`
+- **Commands / actual results:**
+  - `gh pr view 97 --json number,state,url,mergeStateStatus,mergeable,headRefName,baseRefName,commits,files` -> PR #97 is `OPEN`, `mergeable:MERGEABLE`, `mergeStateStatus:BLOCKED`; files changed are `DECISIONS_NEEDED.md`, `EVIDENCE.md`, and `STATUS.md`.
+  - `vercel env run --cwd /tmp/<sandbox-project-link> --environment production -- node <safe host/effect and test-login presence check>` -> host `lksfwktwtmyznckodsau.supabase.co`, REST status `200`, body prefix `[]`, `hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`.
+  - Same safe check for sandbox `preview` -> host `lksfwktwtmyznckodsau.supabase.co`, REST status `200`, body prefix `[]`, `hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`.
+  - Same safe check for sandbox `development` -> host `lksfwktwtmyznckodsau.supabase.co`, REST status `200`, body prefix `[]`, `hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`.
+- **Safety result:** no seed, create, update, delete, schema, deploy, promotion, alias, billing, or secret-printing action was performed.
+- **Conclusion:** the same blocker has repeated after the PR #96 merge and PR #97 follow-up: no confirmed non-production Unite-Hub Supabase lane is configured, and no Playwright test-login credentials are present in the checked runtimes.
