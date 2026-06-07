@@ -160,3 +160,10 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
    - The verified live Supabase lane returned `Could not find the table 'public.ai_file_cache' in the schema cache`, so persisted upload cannot be honestly marked PASS.
    - Safe progress made: known upload blockers now return explicit `503` codes instead of raw `500`; `pnpm test:e2e:file-upload` proves the authenticated boundary and cleanup without making a live paid provider call.
    - Needed decision: apply `supabase/migrations/20260325000001_ai_file_cache.sql` through the normal migration process, then rerun `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload` to prove `201` plus persisted admin re-read; or declare upload persistence not connected for the current production surface.
+
+## Added 2026-06-08T08:11+10:00 — Upload persistence blocker resolved
+
+26. **Resolved: `ai_file_cache` migration applied and persisted upload proved**
+   - The existing migration `supabase/migrations/20260325000001_ai_file_cache.sql` was applied to `lksfwktwtmyznckodsau`.
+   - `pnpm test:e2e:file-upload` now proves HTTP `201`, persisted `ai_file_cache` row, API cross-user isolation, direct authenticated RLS isolation, and cleanup.
+   - No decision remains for this item unless Phill wants rollback. The rollback command is recorded in `EVIDENCE.md` and must not be run without explicit approval.
