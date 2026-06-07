@@ -235,13 +235,13 @@ test.describe('core journey verification guard', () => {
         },
       })
       const uploadBody = await upload.json()
-      expect([201, 500], JSON.stringify({ step: 'file-upload', status: upload.status(), body: uploadBody })).toContain(upload.status())
+      expect([201, 503], JSON.stringify({ step: 'file-upload', status: upload.status(), body: uploadBody })).toContain(upload.status())
       if (upload.status() === 201) {
         expect(uploadBody).toMatchObject({ cacheKey, filename: `__PW_TEST__${safeMarker(marker)}.txt`, sizeBytes: 29 })
         appendEvidence(`  - tiny file upload returned 201 with cacheKey ${cacheKey}`)
       } else {
         expect(String(uploadBody.error ?? '')).toContain('ANTHROPIC_API_KEY')
-        appendEvidence('  - tiny file upload returned 500 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN')
+        appendEvidence('  - tiny file upload returned 503 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN')
       }
 
       await context.close()

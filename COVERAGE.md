@@ -135,3 +135,32 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - `pnpm vitest run 'src/app/api/email/campaigns/[id]/send/__tests__/route.test.ts'` -> PASS, `3` tests.
 - `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` test.
 - `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` tests.
+
+## Finalise core journeys update — 2026-06-07T12:38Z
+
+### Coverage
+
+- Requested journeys: `6`
+- PASS: `5`
+- FAIL: `0`
+- UNKNOWN: `1`
+- Overall verified percentage with UNKNOWN excluded: `5/5` = **100%**.
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Contact CRUD + cross-user RLS isolation | PASS | Regression guard `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` passed `1/1`; created tagged users/contacts, proved CRUD + cross-user isolation, and verified cleanup. |
+| Integrations status as authenticated user | PASS | Regression guard `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` passed `5/5`; `/api/integrations/status` returned `200` with `14` providers. |
+| Lead scoring seeded-contact journey | PASS | New guard `env FINISH_CORE_APPEND_EVIDENCE=1 pnpm test:e2e:finish-core-journeys` passed `1/1`; created a tagged contact, called `POST /api/contacts/:id/score`, asserted score `100`, and re-read persisted metadata. |
+| Drip campaign create → add step → enroll → process | PASS | New guard created a tagged drip campaign via `POST /api/campaigns/drip`, added a step, enrolled a test-domain contact, processed pending in dry-run mode, and asserted `processed:1`, `emailSent:false`. |
+| Multimedia upload + transcription | PASS with live-provider caveat | New guard proved mocked provider wiring: authenticated `POST /api/files` returned `201`, `POST /api/files/transcribe` returned `200` with transcript. Regression guard proved non-mock upload now returns `503` provider-not-connected instead of the previous `500`. Live paid provider execution remains UNKNOWN. |
+| Gmail OAuth → import → contact creation | UNKNOWN | Autonomous run verified authorize/callback consent boundary only. Human Google OAuth consent and a real token are still required; import/contact creation was not faked. |
+
+### Fresh proof commands
+
+- `pnpm type-check` -> PASS.
+- `pnpm lint` -> PASS.
+- `pnpm vitest run` -> PASS, `118` test files and `847` tests.
+- `env FINISH_CORE_APPEND_EVIDENCE=1 pnpm test:e2e:finish-core-journeys` -> PASS, `1` Playwright test.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright tests.
+- `pnpm build` -> BLOCKED before compile by the repo `prebuild` validator; required runtime names were not present in the spawned build process.

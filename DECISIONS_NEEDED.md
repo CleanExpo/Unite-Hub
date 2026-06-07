@@ -143,3 +143,19 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
 23. **Provide paid AI file/transcription execution settings**
    - Authenticated files list works, but tiny upload returned the `ANTHROPIC_API_KEY` credential blocker, and no transcription endpoint was found.
    - Needed decision: provide a cost-controlled transcription/upload test lane or mark transcription not connected.
+
+## Added 2026-06-07T12:38Z — Finalise run remaining human-gated items
+
+24. **Complete Gmail OAuth consent for a controlled test account**
+   - Autonomous verification cannot complete Google consent.
+   - Human steps:
+     1. Sign in to the Unite-Hub preview or production lane as the intended founder/test user.
+     2. Open `/api/auth/google/authorize?email=<controlled-test-gmail-address>`.
+     3. Complete Google consent in the browser for a controlled test account.
+     4. Confirm the callback returns to `/founder/email?connected=...`.
+     5. Re-run the Gmail import/contact e2e once a test token exists in `credentials_vault`.
+   - Do not use a personal inbox with real contacts for autonomous import proof.
+
+25. **Approve live transcription provider execution and cost ceiling**
+   - The finish-core guard proves upload/transcription wiring using `UNITE_HUB_TEST_MOCK_AI_FILES=1`.
+   - Live paid provider execution is still UNKNOWN until credentials and a maximum spend/sample size are approved.

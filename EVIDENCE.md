@@ -334,3 +334,61 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - Supabase host: lksfwktwtmyznckodsau.supabase.co
 - Command: `node <scoped cleanup audit for all auth/contact/campaign IDs recorded in this run>`
 - Actual result: `12/12` recorded test auth users gone; `0` recorded test contacts remain; `0` recorded test campaigns remain.
+
+### Finish core journey run - 2026-06-07T12:37:15.580Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created finish-core auth user: f07bcee4-d18b-4112-8ace-b5f1806336da
+  - created tagged contact: 87e4d1c0-f266-43b0-a9b0-7873f26b9d1d
+  - lead scoring persisted score 100 for contact: 87e4d1c0-f266-43b0-a9b0-7873f26b9d1d
+  - cleanup verified for finish-core marker 2026-06-07T12:37:15.580Z
+
+### Finish core journey run - 2026-06-07T12:37:50.525Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created finish-core auth user: 088cd19c-c85f-4ce0-bcd7-de815867a427
+  - created tagged contact: 62e89d09-252c-4c41-bf5c-842e8eb84e45
+  - lead scoring persisted score 100 for contact: 62e89d09-252c-4c41-bf5c-842e8eb84e45
+  - drip lifecycle processed campaign 6f818909-26d9-46f7-8cb7-4f37116c4902 in dry-run mode with no email sent
+  - upload and transcription mock wiring returned 201/200 for cacheKey __PW_TEST__2026-06-07T12-37-50-525Z
+  - Gmail OAuth consent boundary verified; import remains human-gated
+  - cleanup verified for finish-core marker 2026-06-07T12:37:50.525Z
+
+### Contact CRUD approved production-write run - 2026-06-07T12:38:12.611Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 02f22420-d2c3-47fe-b0a5-39f87a30cebb
+  - created test auth user B: e64bcca9-fff5-4f91-9d95-7673898f90b6
+  - created test contact A: cefbd841-7114-458f-b0e0-4db9bf5fd33d (playwright+crud+2026-06-07T12-38-12-611Z+a@unite-hub.test)
+  - created test contact B: 94b55ec4-b101-4f85-a48f-109793ba6089 (playwright+crud+2026-06-07T12-38-12-611Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: cefbd841-7114-458f-b0e0-4db9bf5fd33d
+  - cleanup verified for marker 2026-06-07T12:38:12.611Z: contacts/users removed; workspace IDs created: 0
+
+### Core authenticated journey run - 2026-06-07T12:38:30.306Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: 1dedc0c5-3800-4fdd-a7a2-ea63238d432b
+  - integrations status returned 200 with 14 providers
+  - created tagged email campaign: 9cf3dd75-23cd-4c45-a83c-6831aaec7c08
+  - campaign send path blocked without recipients before any provider send: 9cf3dd75-23cd-4c45-a83c-6831aaec7c08
+  - files list returned 200 with 0 cached files
+  - tiny file upload returned 503 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN
+  - cleanup verified for core journey marker 2026-06-07T12:38:30.306Z
+
+### Finalise cleanup audit - 2026-06-07T12:40:18Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Command: `node <scoped cleanup audit for finalise-run auth/contact/campaign IDs>`
+- Actual result: `5/5` recorded finalise auth users gone; `0` recorded finalise contacts remain; `0` recorded finalise campaigns remain.
+
+### Finalise local gates - 2026-06-07T12:42:48Z
+- Command: `pnpm type-check`
+- Actual result: PASS; `tsc --noEmit` exited `0`.
+- Command: `pnpm lint`
+- Actual result: PASS; `eslint src/` exited `0`.
+- Command: `git diff --check`
+- Actual result: PASS; no whitespace errors.
+- Command: `pnpm vitest run`
+- Actual result: PASS; `118` test files passed, `847` tests passed.
+- Command: `node -e "require('dotenv').config({path:'.env.local'}); ... pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build"`
+- Actual result: BLOCKED before compile by `scripts/validate-env.mjs --ci`; validator reported critical Supabase vars present (`3/3`) and required runtime names absent from the spawned build process (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).

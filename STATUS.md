@@ -254,3 +254,31 @@ All six requested currently-UNKNOWN journeys remain **UNKNOWN** after an autonom
 1. Decide whether to implement the missing drip lifecycle route or remove it from the product promise.
 2. Add an authenticated lead-scoring route/path that persists/re-reads a score for a seeded contact, or mark scoring as library-only.
 3. Wire the paid file/transcription path with explicit cost controls and a real cleanup story, or mark transcription not connected.
+
+## Finalise core journeys update — 2026-06-07T12:38Z
+
+### What now passes
+
+- Drip campaign lifecycle is now guarded: create, add step, enrol tagged test contact, process pending as dry-run, and assert no email was sent.
+- Lead scoring is now an authenticated API journey: seed contact, score with known signals, persist into `contacts.metadata.leadQualification`, and re-read.
+- Upload/transcription wiring is now guarded with an explicit mocked provider for tagged e2e data. Non-mock upload no longer returns the previous credential-path `500`; it reports `503` provider-not-connected.
+- Existing Contact CRUD + RLS and integrations status guards still pass after the new work.
+
+### What remains unknown
+
+- Gmail OAuth import/contact creation remains **UNKNOWN** because Google consent requires a human and a real Google account. The run verified the authorize/callback boundary only.
+- Live paid transcription remains **UNKNOWN**. The route and upload/transcription wiring are proven with a mock provider; executing a paid provider needs credentials and an explicit cost ceiling.
+
+### Fresh verification
+
+- `pnpm type-check` -> PASS.
+- `pnpm lint` -> PASS.
+- `pnpm vitest run` -> PASS, `118` test files and `847` tests.
+- `env FINISH_CORE_APPEND_EVIDENCE=1 pnpm test:e2e:finish-core-journeys` -> PASS, `1` Playwright test.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright tests.
+- `pnpm build` -> BLOCKED before compile by the repo `prebuild` validator because required runtime names were not present in the spawned build process. This is recorded in `EVIDENCE.md`.
+
+### Single highest-value next step
+
+Complete Google OAuth consent for a controlled test account, then add a Gmail import e2e that consumes the resulting test token and proves contact creation without sending mail.

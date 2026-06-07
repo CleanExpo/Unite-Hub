@@ -63,6 +63,16 @@ export async function POST(request: Request) {
     }, { status: 201 })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Upload failed'
+    if (message.includes('ANTHROPIC_API_KEY')) {
+      return NextResponse.json(
+        {
+          error: message,
+          provider: 'not_connected',
+          liveProviderExecuted: false,
+        },
+        { status: 503 }
+      )
+    }
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
