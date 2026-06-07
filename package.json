@@ -46,6 +46,7 @@
     "test:e2e": "playwright test",
     "test:e2e:contact-crud": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/contact-crud.spec.ts",
     "test:e2e:lead-scoring": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/lead-scoring.spec.ts",
+    "test:e2e:file-upload": "UNITE_HUB_TEST_MOCK_AI_FILES=1 tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/file-upload.spec.ts",
     "test:e2e:core-journeys": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/core-journeys.spec.ts"
   },
   "devDependencies": {

@@ -285,3 +285,17 @@ All six requested currently-UNKNOWN journeys remain **UNKNOWN** after an autonom
 ### Next decision
 
 Approve an additive `contacts.ai_score` migration and generated type update, or accept `contacts.metadata.leadQualification.score` as the product persistence field.
+
+## Overnight Task 1 — Lead scoring confirmation — 2026-06-07T13:28Z
+
+Task 1 did not produce a new PR because PR #101 is already merged and the only missing part is a schema decision. Fresh guard proof still passes for current-schema persistence: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` passed `1/1`, including expected score `100`, persisted `contacts.metadata.leadQualification.score = 100`, cross-founder `404`, and cleanup.
+
+Exact `contacts.ai_score` persistence remains **UNKNOWN / BLOCKED** until an additive schema change is approved, or the product contract accepts metadata persistence.
+
+## Overnight Task 2 — Upload 500 — 2026-06-07T13:36Z
+
+What genuinely works now: authenticated `/api/files` no longer exposes known configuration blockers as raw `500`s. Missing Anthropic config returns `503 provider_not_configured`; missing upload cache storage returns `503 file_cache_not_configured`. The new `pnpm test:e2e:file-upload` guard proves this as a real signed-in throwaway user and verifies cleanup.
+
+What remains blocked: persisted tiny-file upload is still **UNKNOWN / BLOCKED** because the repo's existing `ai_file_cache` migration is not applied in the verified live Supabase lane. Once `supabase/migrations/20260325000001_ai_file_cache.sql` is applied, rerun `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload`; the same guard will require `201` plus an admin re-read when the table exists.
+
+Fresh verification: type-check PASS, lint PASS, file-upload e2e PASS, contact-crud regression PASS, core-journeys regression PASS, lead-scoring regression PASS, Vitest PASS (`118` files / `847` tests), whitespace check PASS. Build remains blocked before compile by missing local required runtime env names.

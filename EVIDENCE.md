@@ -398,3 +398,94 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - Actual result: BLOCKED before compile by `scripts/validate-env.mjs --ci`; validator reported `0/3` critical and `0/4` required runtime env vars present in this local shell.
 - Command: `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build`
 - Actual result: BLOCKED before compile by `scripts/validate-env.mjs --ci`; Supabase critical vars were injected by effect (`3/3` critical present), but required runtime names were absent from the spawned process (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).
+
+### Lead scoring API run - 2026-06-07T13:27:59.681Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Persistence note: current contacts table has no ai_score column; route persists to contacts.metadata.leadQualification.
+  - created lead scoring auth user A: cf21b1ce-70e5-455b-9150-7aedac2fd6bd
+  - created lead scoring auth user B: d790cecc-4b71-42ca-8173-0d4e73cee023
+  - created lead scoring contact A: 60280e7f-e341-4955-821a-85d252199930 (playwright+lead-scoring+2026-06-07T13-27-59-681Z+a@unite-hub.invalid)
+  - created lead scoring contact B: c34bd9d0-2d7d-4212-8303-7545c35a0294 (playwright+lead-scoring+2026-06-07T13-27-59-681Z+b@unite-hub.invalid)
+  - scored contact 60280e7f-e341-4955-821a-85d252199930: expected score 100, persisted metadata score 100
+  - cross-founder scoring blocked: A received 404 for B contact c34bd9d0-2d7d-4212-8303-7545c35a0294
+  - cleanup verified for lead scoring marker 2026-06-07T13:27:59.681Z: contacts/users removed
+
+### Overnight Task 1 - confirm Lead Scoring - 2026-06-07T13:28Z
+- Command: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright test passed. This proves authenticated scoring, expected rule score `100`, persisted `contacts.metadata.leadQualification.score = 100`, cross-founder `404`, and cleanup.
+- Task 1 requested `persisted ai_score == expected`. Current live/generated schema has no `contacts.ai_score` column, already proven by `42703 column contacts.ai_score does not exist`; exact `ai_score` persistence remains UNKNOWN/BLOCKED pending schema decision.
+
+### File upload API run - 2026-06-07T13:31:56.307Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+- Provider note: UNITE_HUB_TEST_MOCK_AI_FILES=1 uses a tagged test-only mock file id and still persists ai_file_cache.
+  - created file-upload auth user: 72f24d28-bb0a-462b-bf17-13636d74d9ed
+
+### File upload API run - 2026-06-07T13:34:11.655Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+- Provider note: UNITE_HUB_TEST_MOCK_AI_FILES=1 uses a tagged test-only mock file id; persisted upload requires ai_file_cache to exist.
+  - created file-upload auth user: fcc113f5-2c53-4b2c-81af-2cd7f9e8dfa1
+  - tiny tagged file upload returned 503 file_cache_not_configured; existing ai_file_cache migration is not applied in the verified lane.
+  - cleanup verified for file-upload marker 2026-06-07T13:34:11.655Z
+
+### Contact CRUD approved production-write run - 2026-06-07T13:34:24.662Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 3b486ab8-dc34-4ff2-a514-11021ded56c2
+  - created test auth user B: e2a15a95-8999-4370-876d-e04a609032a4
+  - created test contact A: ec5888df-b667-40f1-8bc3-d3be5e5fd819 (playwright+crud+2026-06-07T13-34-24-662Z+a@unite-hub.test)
+  - created test contact B: 59d6fa2c-14d3-47e0-800e-aef92d096776 (playwright+crud+2026-06-07T13-34-24-662Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: ec5888df-b667-40f1-8bc3-d3be5e5fd819
+  - cleanup verified for marker 2026-06-07T13:34:24.662Z: contacts/users removed; workspace IDs created: 0
+
+### Core authenticated journey run - 2026-06-07T13:34:38.972Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: ab3cb714-fd56-43eb-8e1c-f9a95b9e4f07
+  - integrations status returned 200 with 14 providers
+  - created tagged email campaign: a8ac77bd-417f-4a3a-979b-f276237c0cd1
+  - campaign send path blocked without recipients before any provider send: a8ac77bd-417f-4a3a-979b-f276237c0cd1
+  - files list returned 200 with 0 cached files
+  - tiny file upload returned 503 with provider_not_configured; full upload/transcription remains UNKNOWN
+  - cleanup verified for core journey marker 2026-06-07T13:34:38.972Z
+
+### Lead scoring API run - 2026-06-07T13:34:51.909Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Persistence note: current contacts table has no ai_score column; route persists to contacts.metadata.leadQualification.
+  - created lead scoring auth user A: 35038e3d-1bf7-4eca-baf2-9a48a2aaf593
+  - created lead scoring auth user B: 10f517cc-004a-44cd-bdc5-a2b74614a82c
+  - created lead scoring contact A: 46237748-ec72-4763-9ad8-f8e795bd160e (playwright+lead-scoring+2026-06-07T13-34-51-909Z+a@unite-hub.invalid)
+  - created lead scoring contact B: ac6de39a-db91-4b3a-bd72-1d18006db78e (playwright+lead-scoring+2026-06-07T13-34-51-909Z+b@unite-hub.invalid)
+  - scored contact 46237748-ec72-4763-9ad8-f8e795bd160e: expected score 100, persisted metadata score 100
+  - cross-founder scoring blocked: A received 404 for B contact ac6de39a-db91-4b3a-bd72-1d18006db78e
+  - cleanup verified for lead scoring marker 2026-06-07T13:34:51.909Z: contacts/users removed
+
+### Overnight Task 2 - fix authenticated upload 500 - 2026-06-07T13:36Z
+- Code result: `/api/files` no longer returns raw `500` for known configuration blockers. Missing Anthropic provider config returns `503 { code: "provider_not_configured" }`; missing `ai_file_cache` table returns `503 { code: "file_cache_not_configured" }`.
+- Schema finding: `supabase/migrations/20260325000001_ai_file_cache.sql` exists in the repo, but the verified live Supabase lane reports `Could not find the table 'public.ai_file_cache' in the schema cache`.
+- Command: `pnpm type-check`
+- Actual result: PASS; `tsc --noEmit` exited `0`.
+- Command: `pnpm lint`
+- Actual result: PASS; `eslint src/` exited `0`.
+- Command: `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload`
+- Actual result: PASS; `1` Playwright test passed. It provisioned a tagged throwaway auth user, signed in, posted a tiny tagged file with `UNITE_HUB_TEST_MOCK_AI_FILES=1`, received `503 file_cache_not_configured` instead of `500`, and verified auth-user cleanup.
+- Command: `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud`
+- Actual result: PASS; `1` Playwright regression test passed.
+- Command: `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys`
+- Actual result: PASS; `5` Playwright regression tests passed; authenticated `/api/files` boundary returned `503 provider_not_configured` rather than leaking `ANTHROPIC_API_KEY`.
+- Command: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright regression test passed.
+- Command: `pnpm vitest run`
+- Actual result: PASS; `118` test files passed, `847` tests passed.
+- Command: `git diff --check`
+- Actual result: PASS; no whitespace errors.
+- Command: `pnpm build`
+- Actual result: BLOCKED before compile by local `prebuild` env validation (`0/3` critical and `0/4` required runtime vars set in this shell).
+- Command: `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build`
+- Actual result: BLOCKED before compile with Supabase critical vars present by effect (`3/3`) but required runtime names absent (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).
+- Command: `node <scoped cleanup audit for overnight task 2 exact IDs>`
+- Actual result: PASS; `7/7` recorded auth users gone, `0` recorded contacts remain, `0` recorded campaigns remain, file-cache audit returned `table missing`.

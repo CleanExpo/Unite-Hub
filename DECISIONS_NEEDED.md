@@ -152,3 +152,11 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
    - A production schema change is outside the scoped reversible test-data exception for this targeted run, so it was not applied.
    - Safe progress made: `POST /api/contacts/:id/score` now runs the existing `qualifyLead` logic as the authenticated founder, founder-scopes by `founder_id`, persists the score to `contacts.metadata.leadQualification`, and is guarded by `pnpm test:e2e:lead-scoring`.
    - Needed decision: either approve an additive migration for `contacts.ai_score` with generated type updates, or update the target contract so `contacts.metadata.leadQualification.score` is the accepted persistence field.
+
+## Added 2026-06-07T13:36Z — Upload persistence blocked by unapplied existing migration
+
+25. **Apply the existing `ai_file_cache` migration in the verified Supabase lane, or mark file upload persistence not connected**
+   - The code path for `/api/files` persists uploads to `ai_file_cache`, and the repo already contains `supabase/migrations/20260325000001_ai_file_cache.sql`.
+   - The verified live Supabase lane returned `Could not find the table 'public.ai_file_cache' in the schema cache`, so persisted upload cannot be honestly marked PASS.
+   - Safe progress made: known upload blockers now return explicit `503` codes instead of raw `500`; `pnpm test:e2e:file-upload` proves the authenticated boundary and cleanup without making a live paid provider call.
+   - Needed decision: apply `supabase/migrations/20260325000001_ai_file_cache.sql` through the normal migration process, then rerun `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload` to prove `201` plus persisted admin re-read; or declare upload persistence not connected for the current production surface.

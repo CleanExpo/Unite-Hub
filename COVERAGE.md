@@ -157,3 +157,29 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - `pnpm vitest run` -> PASS, `118` test files and `847` tests.
 - `pnpm build` -> BLOCKED before compile by local `prebuild` env validation (`0/3` critical, `0/4` required set in this shell).
 - `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build` -> BLOCKED before compile with Supabase critical vars present (`3/3`) and required runtime names absent (`0/4`).
+
+## Overnight confirmation — Lead scoring — 2026-06-07T13:28Z
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Lead scoring authenticated route with existing schema | PASS | Fresh rerun `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` passed `1/1`; expected score `100` matched persisted `contacts.metadata.leadQualification.score`, cross-founder scoring returned `404`, cleanup verified. |
+| Requested `contacts.ai_score` persistence | UNKNOWN / BLOCKED | Not fixed in Task 1 because live/generated schema has no `contacts.ai_score` column; adding it is a production schema decision. |
+
+## Overnight Task 2 — Upload 500 — 2026-06-07T13:36Z
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Authenticated upload raw-500 fix | PASS | `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload` passed `1/1`; tagged throwaway user posted a tiny tagged file with the test mock provider path and received explicit `503 file_cache_not_configured` instead of raw `500`. Regression guard `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` passed `5/5` and now asserts explicit `503` config codes. |
+| Persisted tiny file upload | UNKNOWN / BLOCKED | The existing repo migration `supabase/migrations/20260325000001_ai_file_cache.sql` is not applied in the verified live Supabase lane; Supabase returned `Could not find the table 'public.ai_file_cache' in the schema cache`. Persisted upload cannot be honestly marked PASS until that migration is applied and the guard returns `201` with an admin re-read of `ai_file_cache`. |
+
+### Fresh proof commands
+
+- `pnpm type-check` -> PASS.
+- `pnpm lint` -> PASS.
+- `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload` -> PASS, `1` Playwright test.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright regression test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright regression tests.
+- `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` -> PASS, `1` Playwright regression test.
+- `pnpm vitest run` -> PASS, `118` test files and `847` tests.
+- `node <scoped cleanup audit for overnight task 2 exact IDs>` -> PASS, `7/7` auth users gone, `0` contacts remain, `0` campaigns remain, `ai_file_cache` table missing.
+- `pnpm build` and the Supabase-injected build variant -> BLOCKED before compile by missing required runtime env names in this local shell.

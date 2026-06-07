@@ -59,25 +59,31 @@ export async function uploadAndCacheFile(
   const cached = await getCachedFile(founderId, cacheKey)
   if (cached) return cached
 
-  // Upload to Anthropic Files API
-  const client = getAIClient()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Files API beta types
-  const result = await (client.beta.files as any).upload(
-    { file, betas: ['files-api-2025-04-14'] }
-  )
-
   const sizeBytes = file instanceof Blob ? file.size : (file as Buffer).length
   const expiresAt = ttlDays
     ? new Date(Date.now() + ttlDays * 86400_000).toISOString()
     : null
+  let fileId: string
+
+  if (process.env.UNITE_HUB_TEST_MOCK_AI_FILES === '1' && cacheKey.startsWith('__PW_TEST__')) {
+    fileId = `file_mock_${Buffer.from(`${founderId}:${cacheKey}`).toString('base64url').slice(0, 24)}`
+  } else {
+    // Upload to Anthropic Files API
+    const client = getAIClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Files API beta types
+    const result = await (client.beta.files as any).upload(
+      { file, betas: ['files-api-2025-04-14'] }
+    )
+    fileId = result.id
+  }
 
   // Persist to Supabase
   const supabase = createServiceClient()
-  await supabase.from('ai_file_cache').upsert(
+  const { error } = await supabase.from('ai_file_cache').upsert(
     {
       founder_id:  founderId,
       cache_key:   cacheKey,
-      file_id:     result.id,
+      file_id:     fileId,
       filename,
       mime_type:   mimeType,
       size_bytes:  sizeBytes,
@@ -86,8 +92,12 @@ export async function uploadAndCacheFile(
     { onConflict: 'founder_id,cache_key' }
   )
 
+  if (error) {
+    throw new Error(`Failed to persist uploaded file cache: ${error.message}`)
+  }
+
   return {
-    fileId:     result.id,
+    fileId,
     filename,
     mimeType,
     sizeBytes,
