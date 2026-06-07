@@ -6,6 +6,7 @@ import {
   routeBusinessMission,
   type MissionRouteResult,
 } from './specialized-skill-mesh'
+import { getSkillEvolutionStatus } from './skill-evolution'
 
 export interface CommandCentreLaneView extends OperatorLane {
   visibleInCommandCentre: true
@@ -84,6 +85,7 @@ export interface CommandCentreOperatorSurfaceView {
     nextBoardGate: string
   }
   skillMesh: ReturnType<typeof getSpecializedSkillMeshStatus>
+  skillEvolution: ReturnType<typeof getSkillEvolutionStatus>
   missionRouter: {
     source: 'static_registry'
     status: 'static_local_router_ready'
@@ -139,6 +141,7 @@ export function getCommandCentreOperatorSurfaceView(
   const gateway = getGatewayStatus()
   const control = getControlPanelView()
   const skillMesh = getSpecializedSkillMeshStatus()
+  const skillEvolution = getSkillEvolutionStatus()
   const sampleObjective = 'Prepare CARSI course product launch readiness'
   const sampleRoute = routeBusinessMission(sampleObjective)
 
@@ -316,6 +319,7 @@ export function getCommandCentreOperatorSurfaceView(
           : 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',
     },
     skillMesh,
+    skillEvolution,
     missionRouter: {
       source: 'static_registry',
       status: 'static_local_router_ready',

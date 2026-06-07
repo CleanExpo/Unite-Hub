@@ -93,4 +93,22 @@ describe('command centre operator gateway UI source', () => {
     expect(source).toContain('External execution remains disabled')
   })
 
+  it('shows self-evolving skill mesh status without auto-promotion or external eval calls', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Self-Evolving Skill Mesh')
+    expect(source).toContain('Skills under evaluation')
+    expect(source).toContain('Graders defined')
+    expect(source).toContain('Promotion candidates')
+    expect(source).toContain('Blocked promotions')
+    expect(source).toContain('Next skill to evaluate')
+    expect(source).toContain('/api/hermes/operator-gateway/skill-evolution')
+    expect(source).toContain('Live auto-promotion enabled')
+    expect(source).toContain('External eval API called')
+    expect(source).not.toContain('Auto-promote live skill')
+  })
+
 })

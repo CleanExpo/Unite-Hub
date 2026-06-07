@@ -1,0 +1,87 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "api_key_mode": {
+      "type": "boolean"
+    },
+    "candidate_version": {
+      "type": "string"
+    },
+    "current_version": {
+      "type": "string"
+    },
+    "eval_strategy": {
+      "type": "string"
+    },
+    "evidence_path": {
+      "type": "string"
+    },
+    "external_eval_api_called": {
+      "type": "boolean"
+    },
+    "graders": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "latest_score": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "live_auto_promotion_enabled": {
+      "type": "boolean"
+    },
+    "model_lane": {
+      "type": "string"
+    },
+    "pass_threshold": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "production_gate_required": {
+      "type": "boolean"
+    },
+    "promotion_status": {
+      "enum": [
+        "candidate_ready",
+        "blocked_human_gate",
+        "blocked_below_threshold",
+        "monitoring_only"
+      ]
+    },
+    "rollback_available": {
+      "type": "boolean"
+    },
+    "skill_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "under_evaluation",
+        "candidate_ready",
+        "blocked",
+        "monitoring"
+      ]
+    }
+  },
+  "required": [
+    "skill_id",
+    "current_version",
+    "candidate_version",
+    "model_lane",
+    "eval_strategy",
+    "graders",
+    "pass_threshold",
+    "latest_score",
+    "promotion_status",
+    "rollback_available",
+    "evidence_path",
+    "production_gate_required",
+    "status"
+  ],
+  "type": "object"
+}
