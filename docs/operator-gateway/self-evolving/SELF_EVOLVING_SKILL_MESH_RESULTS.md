@@ -12,7 +12,7 @@ Decision: build_self_evolving_skill_mesh_engine
 - UI foundation implemented: yes
 - tests passed: yes
 - first skill eval candidate created: yes
-- PR created/merged: pending at time of artifact creation
+- PR created/merged: yes — PR #87 merged at 2026-06-07T01:44:59Z, merge commit d955c09f1a0e407fc1a3341727d55f676e90d8c8
 - production DB touched: no
 - external eval API called: no
 - live skill auto-promoted: no
@@ -45,6 +45,14 @@ Implemented in Unite-Hub:
 - `npm run lint`: pass
 - focused tests: 5 files / 23 tests pass
 - `npm run test`: 111 files / 806 tests pass
+
+## Git/PR runway
+
+- PR: https://github.com/CleanExpo/Unite-Hub/pull/87
+- PR state: merged
+- Merge commit: d955c09f1a0e407fc1a3341727d55f676e90d8c8
+- Local validation: type-check, lint, focused tests, full suite all passed
+- Server validation: CI/security/build/agentic browsing/Vercel preview checks passed before merge
 
 ## Safety rendering (§6A)
 
