@@ -561,3 +561,45 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
   - scored contact 4da0161c-6d29-41d7-a678-5a1cc52956d2: expected score 100, persisted metadata score 100
   - cross-founder scoring blocked: A received 404 for B contact 50d7eb1f-51ab-4560-99a8-05b583619d61
   - cleanup verified for lead scoring marker 2026-06-07T22:08:30.177Z: contacts/users removed
+
+### Transcription API run - 2026-06-07T22:31:43.778Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1 proves wiring without a live paid provider call.
+  - created transcription auth user A: fe5c6225-4cdf-433c-bb06-23c8c843fc36
+  - created transcription auth user B: 8aa822c0-5e79-44f5-914b-7cd27854de0e
+  - uploaded tagged source file: status 201, cacheKey __PW_TEST__TRANSCRIPTION__2026-06-07T22-31-43-778Z
+  - mocked transcription returned 200 with transcript text for __PW_TEST__TRANSCRIPTION__2026-06-07T22-31-43-778Z
+  - cross-user transcription isolation verified: user B received 404 for __PW_TEST__TRANSCRIPTION__2026-06-07T22-31-43-778Z
+  - persistence note: transcript durable storage remains UNKNOWN because no active transcript schema exists.
+  - cleanup verified for transcription marker 2026-06-07T22:31:43.778Z
+
+### Transcription endpoint targeted build - 2026-06-08T08:32+10:00
+- Schema review: active `ai_file_cache` has no transcript or metadata persistence field; no active additive transcript migration was found. No schema change was applied.
+- Endpoint: `POST /api/files/transcribe` accepts JSON `{ "cacheKey": "..." }`, requires auth, founder-scopes lookup through `ai_file_cache`, and returns a test-only mocked transcript when `UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1`.
+- Persistence honesty: response includes `persistence.persisted=false` and `persistence.status='unknown'` until an approved transcript persistence schema exists.
+- Live provider honesty: no live provider call was attempted; the provider step remains UNKNOWN pending API key/cost/source-byte approval.
+- Command: `pnpm run type-check`
+- Actual result: PASS.
+- Command: `pnpm run lint`
+- Actual result: PASS.
+- Command: `git diff --check`
+- Actual result: PASS.
+- Command: `TRANSCRIPTION_APPEND_EVIDENCE=1 pnpm test:e2e:transcription`
+- Actual result: PASS; first run passed `1` Playwright test with tagged upload `201`, mocked transcription `200`, cross-user transcription `404`, and cleanup verified.
+- Follow-up command after adding unauthenticated fail-closed check: `pnpm test:e2e:transcription`
+- Follow-up actual result: PASS; `2` Playwright tests passed.
+- Regression command: `pnpm test:e2e:contact-crud`
+- Actual result: PASS; `1` Playwright test passed.
+- Regression command: `pnpm test:e2e:core-journeys`
+- Actual result: PASS; `5` Playwright tests passed.
+- Regression command: `pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright test passed.
+- Regression command: `pnpm test:e2e:file-upload`
+- Actual result: PASS; `1` Playwright test passed.
+- Cleanup audit command: `node <service-role effect check: ai_file_cache like __PW_TEST__TRANSCRIPTION__%>`
+- Cleanup audit result: host `lksfwktwtmyznckodsau.supabase.co`, `transcriptionRowsRemaining:0`.
+- Full unit command: `pnpm vitest run`
+- Actual result: PASS; `118` files and `847` tests passed.
+- Build command: `pnpm build`
+- Actual result: BLOCKED before compile by local env validation (`0/3` critical and `0/4` required runtime vars in this shell).

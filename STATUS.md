@@ -309,3 +309,11 @@ Schema note: `supabase db push` could not safely apply only this migration becau
 Rollback command recorded in `EVIDENCE.md`: `drop table if exists public.ai_file_cache cascade;` followed by marking migration `20260325000001` reverted. Do not run it unless Phill explicitly asks for rollback.
 
 Fresh verification: file-upload e2e PASS, contact-crud regression PASS, core-journeys regression PASS, lead-scoring regression PASS, type-check PASS, lint PASS, Vitest PASS (`118` files / `847` tests), whitespace check PASS. Local build remains blocked before compile by missing required runtime env names in this shell.
+
+## Transcription endpoint — 2026-06-08T08:32+10:00
+
+What genuinely works now: `POST /api/files/transcribe` exists and is authenticated. It looks up the uploaded file through the existing founder-scoped `ai_file_cache` path, supports a test-only mocked provider, returns deterministic transcript text, and fails closed for another founder's cache key. The self-cleaning guard `pnpm test:e2e:transcription` proved unauthenticated fail-closed behaviour, upload `201`, transcription `200`, cross-user `404`, and cleanup with tagged throwaway users.
+
+What remains blocked: durable transcript persistence is **UNKNOWN / BLOCKED** because no active additive transcript migration or existing `ai_file_cache` transcript/metadata column exists. Live provider transcription is **UNKNOWN / BLOCKED** because this run intentionally avoided paid provider calls and there is no approved key/cost/source-byte retrieval path for live transcription.
+
+Fresh verification: type-check PASS, lint PASS, whitespace check PASS, transcription e2e PASS (`2/2`), contact-crud PASS (`1/1`), core-journeys PASS (`5/5`), lead-scoring PASS (`1/1`), file-upload PASS (`1/1`), cleanup audit PASS (`0` tagged transcription rows remain), Vitest PASS (`118` files / `847` tests). Local build remains blocked before compile by missing required runtime env names in this shell.

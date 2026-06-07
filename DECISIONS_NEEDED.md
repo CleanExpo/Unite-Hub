@@ -167,3 +167,14 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
    - The existing migration `supabase/migrations/20260325000001_ai_file_cache.sql` was applied to `lksfwktwtmyznckodsau`.
    - `pnpm test:e2e:file-upload` now proves HTTP `201`, persisted `ai_file_cache` row, API cross-user isolation, direct authenticated RLS isolation, and cleanup.
    - No decision remains for this item unless Phill wants rollback. The rollback command is recorded in `EVIDENCE.md` and must not be run without explicit approval.
+
+## Added 2026-06-08T08:32+10:00 — Transcription mocked wiring proved, persistence/live blocked
+
+27. **Approve transcript persistence schema, or accept response-only transcription for now**
+   - `POST /api/files/transcribe` now proves mocked-provider wiring over founder-scoped `ai_file_cache`.
+   - No active additive migration or existing `ai_file_cache` transcript/metadata column exists, so durable transcript persistence was not implemented.
+   - Needed decision: approve an additive transcript persistence migration and generated type update, or accept `persistence.status='unknown'` / response-only transcripts until that schema exists.
+
+28. **Provide live transcription provider/cost approval before live proof**
+   - The e2e guard uses `UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1` and makes no paid external transcription call.
+   - Needed decision: provide the provider API key/cost ceiling and the intended source-byte retrieval/storage path for live transcription, then run one tiny live sample.

@@ -202,3 +202,33 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` -> PASS, `1` Playwright regression test.
 - `pnpm type-check`, `pnpm lint`, `pnpm vitest run`, `git diff --check` -> PASS.
 - `pnpm build` and Supabase-injected build variant -> BLOCKED before compile by missing local required runtime env names.
+
+## Transcription endpoint mocked-provider proof — 2026-06-08T08:32+10:00
+
+### Coverage
+
+- Requested target: `1`
+- PASS: `1`
+- FAIL: `0`
+- UNKNOWN: `2` sub-steps
+- Overall verified percentage with UNKNOWN excluded: `1/1` = **100%** for mocked transcription wiring.
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Transcription endpoint mocked-provider wiring | PASS | `pnpm test:e2e:transcription` passed `2/2`; the guard proved `POST /api/files/transcribe` fails closed before auth, then provisioned two tagged throwaway auth users, uploaded a tagged file through `/api/files` with HTTP `201`, called `POST /api/files/transcribe`, asserted HTTP `200` and deterministic mocked transcript text, proved user B receives `404` for user A's cache key, and verified cleanup. |
+| Durable transcript persistence | UNKNOWN / BLOCKED | No active additive transcript migration or existing `ai_file_cache` transcript/metadata column exists. The endpoint returns `persistence.persisted=false` and `persistence.status='unknown'` rather than inventing schema or pretending persistence. |
+| Live transcription provider | UNKNOWN / BLOCKED | No live provider call was attempted; the run used `UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1` to avoid provider cost/credential use. A live proof needs provider API key/cost approval and a storage design for retrievable source bytes/transcript output. |
+
+### Fresh proof commands
+
+- `pnpm run type-check` -> PASS.
+- `pnpm run lint` -> PASS.
+- `git diff --check` -> PASS.
+- `pnpm test:e2e:transcription` -> PASS, `2` Playwright tests.
+- `pnpm test:e2e:contact-crud` -> PASS, `1` Playwright regression test.
+- `pnpm test:e2e:core-journeys` -> PASS, `5` Playwright regression tests, including integrations.
+- `pnpm test:e2e:lead-scoring` -> PASS, `1` Playwright regression test.
+- `pnpm test:e2e:file-upload` -> PASS, `1` Playwright regression test.
+- `node <service-role cleanup audit: ai_file_cache like __PW_TEST__TRANSCRIPTION__%>` -> PASS, `0` tagged transcription upload rows remain.
+- `pnpm vitest run` -> PASS, `118` files / `847` tests.
+- `pnpm build` -> BLOCKED before compile by missing local required runtime env names.
