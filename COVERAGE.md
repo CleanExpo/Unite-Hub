@@ -183,3 +183,22 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - `pnpm vitest run` -> PASS, `118` test files and `847` tests.
 - `node <scoped cleanup audit for overnight task 2 exact IDs>` -> PASS, `7/7` auth users gone, `0` contacts remain, `0` campaigns remain, `ai_file_cache` table missing.
 - `pnpm build` and the Supabase-injected build variant -> BLOCKED before compile by missing required runtime env names in this local shell.
+
+## File upload persisted proof — 2026-06-08T08:11+10:00
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Persisted tiny file upload | PASS | Applied existing migration `supabase/migrations/20260325000001_ai_file_cache.sql`; `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload` passed `1/1` with HTTP `201`, admin re-read of `ai_file_cache`, API cross-user isolation, direct authenticated RLS isolation, and cleanup. |
+
+### Fresh proof commands
+
+- `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration --file ${REPO_ROOT}/supabase/migrations/20260325000001_ai_file_cache.sql` -> PASS, applied exact existing migration script.
+- `supabase migration repair --linked --workdir /tmp/unite-hub-ai-file-cache-migration --status applied 20260325000001` -> PASS, migration history marked applied.
+- `node <service-role effect check: select id from ai_file_cache limit 0>` -> PASS, table exists.
+- `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload` -> PASS, `1` Playwright test.
+- `node <cleanup audit: ai_file_cache like __PW_TEST__UPLOAD__%>` -> PASS, `0` tagged upload rows remain.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright regression test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright regression tests.
+- `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` -> PASS, `1` Playwright regression test.
+- `pnpm type-check`, `pnpm lint`, `pnpm vitest run`, `git diff --check` -> PASS.
+- `pnpm build` and Supabase-injected build variant -> BLOCKED before compile by missing local required runtime env names.

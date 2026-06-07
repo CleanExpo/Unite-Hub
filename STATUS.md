@@ -299,3 +299,13 @@ What genuinely works now: authenticated `/api/files` no longer exposes known con
 What remains blocked: persisted tiny-file upload is still **UNKNOWN / BLOCKED** because the repo's existing `ai_file_cache` migration is not applied in the verified live Supabase lane. Once `supabase/migrations/20260325000001_ai_file_cache.sql` is applied, rerun `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload`; the same guard will require `201` plus an admin re-read when the table exists.
 
 Fresh verification: type-check PASS, lint PASS, file-upload e2e PASS, contact-crud regression PASS, core-journeys regression PASS, lead-scoring regression PASS, Vitest PASS (`118` files / `847` tests), whitespace check PASS. Build remains blocked before compile by missing local required runtime env names.
+
+## File upload persistence — 2026-06-08T08:11+10:00
+
+What genuinely works now: persisted file upload is **PASS**. The existing migration `supabase/migrations/20260325000001_ai_file_cache.sql` has been applied to `lksfwktwtmyznckodsau`, and `pnpm test:e2e:file-upload` now requires and proves HTTP `201`, persisted `ai_file_cache` admin re-read, API cross-user isolation, direct authenticated RLS isolation, and cleanup.
+
+Schema note: `supabase db push` could not safely apply only this migration because the live project has legacy short migration versions whose history does not sort/match cleanly in the CLI. To avoid applying unrelated pending migrations, the exact existing migration file was run through `supabase db query --file`, then `supabase migration repair --status applied 20260325000001` recorded the migration version.
+
+Rollback command recorded in `EVIDENCE.md`: `drop table if exists public.ai_file_cache cascade;` followed by marking migration `20260325000001` reverted. Do not run it unless Phill explicitly asks for rollback.
+
+Fresh verification: file-upload e2e PASS, contact-crud regression PASS, core-journeys regression PASS, lead-scoring regression PASS, type-check PASS, lint PASS, Vitest PASS (`118` files / `847` tests), whitespace check PASS. Local build remains blocked before compile by missing required runtime env names in this shell.

@@ -489,3 +489,75 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - Actual result: BLOCKED before compile with Supabase critical vars present by effect (`3/3`) but required runtime names absent (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).
 - Command: `node <scoped cleanup audit for overnight task 2 exact IDs>`
 - Actual result: PASS; `7/7` recorded auth users gone, `0` recorded contacts remain, `0` recorded campaigns remain, file-cache audit returned `table missing`.
+
+### File upload API run - 2026-06-07T22:07:36.960Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+- Provider note: UNITE_HUB_TEST_MOCK_AI_FILES=1 uses a tagged test-only mock file id; no live provider call is made.
+  - created file-upload auth user A: f0bf93fd-08e1-4c31-9611-d4e990b971f1
+  - created file-upload auth user B: 2bdefbcb-f8d8-4fb4-b6a1-3b4fab2c8709
+  - uploaded tiny tagged file: status 201, cacheKey __PW_TEST__UPLOAD__2026-06-07T22-07-36-960Z, persisted file id file_mock_ZjBiZjkzZmQtMDhlMS00YzMx
+  - cross-user isolation verified: user B could not list/read __PW_TEST__UPLOAD__2026-06-07T22-07-36-960Z via API or direct RLS query
+  - cleanup verified for file-upload marker 2026-06-07T22:07:36.960Z
+
+### File upload persistence migration - 2026-06-08T08:10+10:00
+- Approved schema scope: apply only existing in-repo migration `supabase/migrations/20260325000001_ai_file_cache.sql`.
+- Migration review: additive new `public.ai_file_cache` table, comments, two indexes, RLS enabled, and two RLS policies. No existing table/column alter, rename, drop, or data mutation.
+- Pre-check command: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration "select to_regclass('public.ai_file_cache') as before;"`
+- Pre-check result: `before: null`.
+- Migration tooling note: `supabase db push --linked --dry-run` from the full repo would apply unrelated pending migrations; a one-file temp workdir dry run showed only `20260325000001` local-only, but `db push` refused because legacy short remote migration versions sort/match incorrectly. To avoid a broad push, the exact existing migration script was applied through Supabase CLI.
+- Applied command: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration --file ${REPO_ROOT}/supabase/migrations/20260325000001_ai_file_cache.sql`
+- Migration-history command: `supabase migration repair --linked --workdir /tmp/unite-hub-ai-file-cache-migration --status applied 20260325000001`
+- Apply result: command exited `0`; migration history reported `Repaired migration history: [20260325000001] => applied`.
+- Verification command: `node <service-role effect check: select id from ai_file_cache limit 0>`
+- Verification result: host `lksfwktwtmyznckodsau.supabase.co`, table exists, no PostgREST error.
+- RLS policy verification: database metadata query returned policies `founders_own_files` for role `authenticated` and `service_role_full_access` for role `service_role`.
+- Rollback command if Phill explicitly requests rollback: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration "drop table if exists public.ai_file_cache cascade;" && supabase migration repair --linked --workdir /tmp/unite-hub-ai-file-cache-migration --status reverted 20260325000001`
+
+### File upload persisted PASS - 2026-06-08T08:11+10:00
+- Command: `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload`
+- Actual result: PASS; `1` Playwright test passed. The guard provisioned two tagged throwaway auth users, signed in as user A, uploaded a tiny tagged file, asserted HTTP `201`, asserted response body contained the tagged `cacheKey`, filename, byte size, and mock `file_mock_...` id, admin re-read `ai_file_cache` for the exact founder/cache key, proved user B could not list the file via `/api/files`, proved user B could not read it via direct authenticated RLS query, and verified cleanup.
+- Cleanup audit command: `node <service-role effect check: ai_file_cache like __PW_TEST__UPLOAD__%>`
+- Cleanup audit result: host `lksfwktwtmyznckodsau.supabase.co`, `testUploadRowsRemaining:0`.
+- Regression command: `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud`
+- Actual result: PASS; `1` Playwright test passed.
+- Regression command: `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys`
+- Actual result: PASS; `5` Playwright tests passed.
+- Regression command: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright test passed.
+- Local gates: `pnpm type-check` PASS; `pnpm lint` PASS; `pnpm vitest run` PASS (`118` test files, `847` tests); `git diff --check` PASS.
+- Build: `pnpm build` BLOCKED before compile by local env validation (`0/3` critical, `0/4` required runtime vars in this shell). Supabase-injected build variant had critical Supabase vars present (`3/3`) but remained blocked by missing required runtime names (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).
+
+### Contact CRUD approved production-write run - 2026-06-07T22:08:05.608Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 33f63ebb-c144-4fe9-a69b-f9b713bfeeb0
+  - created test auth user B: f3c2ddfe-b68d-4897-bbd5-b41b906384be
+  - created test contact A: 6c002794-a94d-4d7f-9f29-970f02cd007b (playwright+crud+2026-06-07T22-08-05-608Z+a@unite-hub.test)
+  - created test contact B: 2bf1d312-6510-482d-8704-b7ad8fac7ac4 (playwright+crud+2026-06-07T22-08-05-608Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: 6c002794-a94d-4d7f-9f29-970f02cd007b
+  - cleanup verified for marker 2026-06-07T22:08:05.608Z: contacts/users removed; workspace IDs created: 0
+
+### Core authenticated journey run - 2026-06-07T22:08:18.675Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: 5b0d18ed-e1e6-4c7a-876a-154618c8229c
+  - integrations status returned 200 with 14 providers
+  - created tagged email campaign: c3237ad4-587d-4938-81eb-dc77a2abf1f3
+  - campaign send path blocked without recipients before any provider send: c3237ad4-587d-4938-81eb-dc77a2abf1f3
+  - files list returned 200 with 0 cached files
+  - tiny file upload returned 503 with provider_not_configured; full upload/transcription remains UNKNOWN
+  - cleanup verified for core journey marker 2026-06-07T22:08:18.675Z
+
+### Lead scoring API run - 2026-06-07T22:08:30.177Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Persistence note: current contacts table has no ai_score column; route persists to contacts.metadata.leadQualification.
+  - created lead scoring auth user A: 5eae90fe-9357-4b4c-abf1-b66d02964727
+  - created lead scoring auth user B: 83ede974-0aa5-4d74-9e1a-2f7827330436
+  - created lead scoring contact A: 4da0161c-6d29-41d7-a678-5a1cc52956d2 (playwright+lead-scoring+2026-06-07T22-08-30-177Z+a@unite-hub.invalid)
+  - created lead scoring contact B: 50d7eb1f-51ab-4560-99a8-05b583619d61 (playwright+lead-scoring+2026-06-07T22-08-30-177Z+b@unite-hub.invalid)
+  - scored contact 4da0161c-6d29-41d7-a678-5a1cc52956d2: expected score 100, persisted metadata score 100
+  - cross-founder scoring blocked: A received 404 for B contact 50d7eb1f-51ab-4560-99a8-05b583619d61
+  - cleanup verified for lead scoring marker 2026-06-07T22:08:30.177Z: contacts/users removed
