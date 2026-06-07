@@ -72,3 +72,15 @@ Branch: `feat/24h-verify-and-harden`
    - Default remains no production writes.
    - To prove create/update/delete without a non-production Supabase host, Phill would need to explicitly approve one throwaway create/update/delete cycle against production test data.
    - No such approval has been given, and no production write was attempted.
+
+## Added 2026-06-07T11:12Z — Post-merge sandbox lane still points at production
+
+11. **Wire `unite-hub-sandbox` or another verification runtime to a non-production Supabase project**
+   - Verified `unite-hub-sandbox` exists, but its production, preview, and development environments all resolved by effect to `lksfwktwtmyznckodsau.supabase.co`.
+   - The sandbox deployment's public client chunks also reference only `https://lksfwktwtmyznckodsau.supabase.co`.
+   - Supabase inventory shows a separate project named `Unite-Group Test` (`xgqwfwqumliuguzhshwv`), but the checked Unite-Hub Vercel environments are not currently wired to it.
+   - Needed decision: point a verification runtime at a confirmed non-production Supabase host and provide the corresponding app runtime env, or approve a different safe verification lane.
+
+12. **Provide Playwright test login credentials in the selected verification runtime**
+   - Verified `unite-hub-sandbox` production, preview, and development envs expose the Supabase URL/anon envs but not `PLAYWRIGHT_TEST_EMAIL` / `PLAYWRIGHT_TEST_PASSWORD` or the accepted `TEST_FOUNDER_EMAIL` / `TEST_FOUNDER_PASSWORD` aliases.
+   - Needed decision: add test-only founder credentials to the selected non-production runtime, without pasting secrets into chat.

@@ -181,3 +181,28 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - **Final focused rerun:** `vercel env run --environment production -- pnpm test:e2e:contact-crud` still failed before authenticated list with `PLAYWRIGHT_TEST_EMAIL/PLAYWRIGHT_TEST_PASSWORD are unavailable to the authenticated Contact CRUD test`.
 - **Evidence files:** `tmp/contact-crud-type-lint.log`, `tmp/contact-crud-prod-status-setup-refusal.log`, `tmp/contact-crud-prod-e2e-after-browser.log`, `tmp/contact-crud-final-focused.log`, `tmp/contact-crud-final-lint.log`.
 - **Conclusion:** Contact CRUD remains `UNKNOWN`; the current environment proves only that the configured Vercel lanes point at the known production Supabase host and that the new guard refuses production writes.
+
+### 23) Post-merge sandbox lane check still resolves to production Supabase
+- **Timestamp:** `2026-06-07T11:12:51Z`
+- **Branch / PR context:** PR #96 was merged, but the original objective still requires a confirmed non-production Contact CRUD lane before seed/write/delete verification.
+- **Commands / actual results:**
+  - `gh pr view 96 --json number,state,mergedAt,mergeCommit,url,headRefName,baseRefName` -> PR #96 state `MERGED`, merged at `2026-06-07T11:06:45Z`, merge commit `5a6e767062085c63a36e04b12bd9e107d5143198`.
+  - `vercel project ls` -> project list includes `unite-hub-sandbox` with production URL `https://unite-hub-sandbox.vercel.app`.
+  - `vercel project inspect unite-hub-sandbox` -> project ID `prj_tNqIsHGY3kvw7zdO2bXVxFWTPIk0`, name `unite-hub-sandbox`, owner `Unite-Group`.
+  - `node <public bundle grep for https://unite-hub-sandbox.vercel.app/auth/login chunks>` -> scanned `27` client chunks; only Supabase host found was `https://lksfwktwtmyznckodsau.supabase.co`.
+  - `vercel env run --cwd /tmp/<sandbox-project-link> --environment production -- node <safe host/effect check>` -> host `lksfwktwtmyznckodsau.supabase.co`, REST `/rest/v1/contacts?select=id&limit=1` status `200`, body prefix `[]`.
+  - Same safe host/effect check for sandbox `development` and `preview` envs -> both host `lksfwktwtmyznckodsau.supabase.co`, REST status `200`, body prefix `[]`.
+  - Sandbox Vercel `production`, `preview`, and `development` env readiness check -> `hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`, `hasUrl:true`, `hasAnon:true`.
+- **Supabase project inventory:** Supabase project list includes a separate project named `Unite-Group Test` with ref `xgqwfwqumliuguzhshwv`, but the Unite-Hub Vercel sandbox/development/preview/production envs checked above are not wired to that host.
+- **Safety result:** no seed, create, update, delete, schema, deploy, promotion, alias, billing, or secret-printing action was performed.
+- **Conclusion:** the requested full authenticated Contact CRUD proof remains blocked by the same condition: no configured non-production Unite-Hub Supabase lane plus no test login credentials in the checked runtimes.
+
+### 24) Continuation audit: blocker unchanged
+- **Timestamp:** `2026-06-07T11:18:00Z`
+- **Commands / actual results:**
+  - `gh pr view 97 --json number,state,url,mergeStateStatus,mergeable,headRefName,baseRefName,commits,files` -> PR #97 is `OPEN`, `mergeable:MERGEABLE`, `mergeStateStatus:BLOCKED`; files changed are `DECISIONS_NEEDED.md`, `EVIDENCE.md`, and `STATUS.md`.
+  - `vercel env run --cwd /tmp/<sandbox-project-link> --environment production -- node <safe host/effect and test-login presence check>` -> host `lksfwktwtmyznckodsau.supabase.co`, REST status `200`, body prefix `[]`, `hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`.
+  - Same safe check for sandbox `preview` -> host `lksfwktwtmyznckodsau.supabase.co`, REST status `200`, body prefix `[]`, `hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`.
+  - Same safe check for sandbox `development` -> host `lksfwktwtmyznckodsau.supabase.co`, REST status `200`, body prefix `[]`, `hasPlaywrightEmail:false`, `hasPlaywrightPassword:false`.
+- **Safety result:** no seed, create, update, delete, schema, deploy, promotion, alias, billing, or secret-printing action was performed.
+- **Conclusion:** the same blocker has repeated after the PR #96 merge and PR #97 follow-up: no confirmed non-production Unite-Hub Supabase lane is configured, and no Playwright test-login credentials are present in the checked runtimes.
