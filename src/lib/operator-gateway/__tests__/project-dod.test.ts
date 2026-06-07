@@ -126,8 +126,22 @@ describe('project Definition of Done coverage reconciler', () => {
     expect(status.productionDbTouched).toBe(false)
     expect(status.deploymentOccurred).toBe(false)
     expect(status.projectsWithDodSpecs).toBeGreaterThanOrEqual(4)
-    expect(status.projects[0].missingRequirements.length).toBeGreaterThan(0)
+    expect(status.projects.some((project) => project.missingRequirements.length > 0)).toBe(true)
     expect(status.nextProjectToReconcile.projectId).toBeTruthy()
+    expect(status.nextGeneratedJobs.map((job) => job.globalRank)).toEqual(status.nextGeneratedJobs.map((_, index) => index + 1))
+  })
+
+  it('rejects invalid runtime registry enum values', () => {
+    const registry = getProjectDodRegistry()
+    const invalidProject = {
+      ...registry[0],
+      requirements: [{ ...registry[0].requirements[0], probeType: 'shell_exec' as ProjectRequirement['probeType'] }],
+    }
+
+    const validation = validateProjectDodRegistry([invalidProject])
+
+    expect(validation.valid).toBe(false)
+    expect(validation.errors).toContain(`${invalidProject.projectId}/${invalidProject.requirements[0].requirementId}: probeType invalid`)
   })
 
   it('refuses project completion when false-done prevention is disabled', () => {
@@ -162,6 +176,35 @@ describe('project Definition of Done coverage reconciler', () => {
     expect(coverage.missingRequirements[0].probeCommandOrCheck).toBe('/etc/passwd')
     expect(coverage.projectDone).toBe(false)
   })
+
+  it('preserves declared failed requirement status in probe output', () => {
+    const coverage = calculateProjectCoverage({
+      projectId: 'unit_test_project',
+      projectName: 'Unit Test Project',
+      ownerRole: 'Founder / Board',
+      approverRole: 'Founder / Board',
+      completionThreshold: 1,
+      falseDonePreventionActive: true,
+      requirements: [{ ...requirement('req-failed-status', false, false, 'failed'), probeType: 'unknown' as ProjectRequirement['probeType'] }],
+    })
+
+    expect(coverage.missingRequirements[0].probeResult).toBe('failed')
+  })
+
+  it('treats disconnected static boolean probes as not connected rather than synthetic pass states', () => {
+    const coverage = calculateProjectCoverage({
+      projectId: 'unit_test_project',
+      projectName: 'Unit Test Project',
+      ownerRole: 'Founder / Board',
+      approverRole: 'Founder / Board',
+      completionThreshold: 1,
+      falseDonePreventionActive: true,
+      requirements: [{ ...requirement('req-static-disconnected', true, true), probeType: 'static_boolean', probeCommandOrCheck: 'no_prod_db_no_deploy' }],
+    })
+
+    expect(coverage.passedRequirements).toBe(0)
+    expect(coverage.missingRequirements[0].evidence[0]).toContain('not_connected:static_boolean:no_prod_db_no_deploy')
+  })
 })
 
 function requirement(
@@ -176,9 +219,9 @@ function requirement(
     projectId: 'unit_test_project',
     category: 'test_check',
     description: `Requirement ${requirementId} must be independently checkable before the project is done.`,
-    probeType: 'static_boolean',
-    probeCommandOrCheck: pass ? 'true' : 'false',
-    passCondition: pass ? 'probe returns true' : 'probe returns false',
+    probeType: 'file_exists',
+    probeCommandOrCheck: pass ? 'project_dod_registry.jsonl' : 'missing-unit-test-artifact.json',
+    passCondition: pass ? 'local file probe passes' : 'local file probe misses',
     evidenceRequired: ['coverage result evidence'],
     priority,
     ownerRole: 'Senior PM',

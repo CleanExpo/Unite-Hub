@@ -10,13 +10,26 @@ export type ProjectRequirementProbeType =
   | 'docs_artifact_exists'
   | 'static_boolean'
 
+export type ProjectRequirementCategory =
+  | 'capability_check'
+  | 'surface_check'
+  | 'route_check'
+  | 'schema_check'
+  | 'integration_check'
+  | 'test_check'
+  | 'deployment_check'
+  | 'evidence_check'
+  | 'dashboard_check'
+  | 'business_readiness_check'
+  | 'owner_approver_check'
+
 export type ProjectRequirementStatus = 'planned' | 'missing' | 'blocked' | 'passed' | 'failed' | 'not_applicable'
 export type ProjectRequirementPriority = 'P0' | 'P1' | 'P2' | 'P3'
 
 export interface ProjectRequirement {
   requirementId: string
   projectId: string
-  category: string
+  category: ProjectRequirementCategory
   description: string
   probeType: ProjectRequirementProbeType
   probeCommandOrCheck: string
@@ -41,7 +54,7 @@ export interface ProjectDefinitionOfDone {
 interface RawProjectRequirement {
   requirement_id: string
   project_id: string
-  category: string
+  category: ProjectRequirementCategory
   description: string
   probe_type: ProjectRequirementProbeType
   probe_command_or_check: string
@@ -102,6 +115,7 @@ export interface MissingRequirementJob {
   nextAction: string
   evidenceRequired: string[]
   seniorPmRank: number
+  globalRank?: number
   blockedByBoardGate: boolean
 }
 
@@ -136,16 +150,41 @@ export interface ProjectDodCoverageStatus {
 const REPO_ROOT = process.cwd()
 const REGISTRY_PATH = join(REPO_ROOT, 'project_dod_registry.jsonl')
 
-const STATIC_BOOLEAN_PROBES: Record<string, boolean> = {
-  true: true,
-  false: false,
-  no_prod_db_no_deploy: true,
-  restoreassist_standalone_posture_documented: true,
-  restoreassist_prod_gate_explicit: true,
-  carsi_public_launch_gate: true,
-  carsi_no_external_side_effects: true,
-  carsi_owner_approver_model: true,
-  agentic_nexus_no_live_activation: true,
+const VALID_CATEGORIES: ProjectRequirementCategory[] = [
+  'capability_check',
+  'surface_check',
+  'route_check',
+  'schema_check',
+  'integration_check',
+  'test_check',
+  'deployment_check',
+  'evidence_check',
+  'dashboard_check',
+  'business_readiness_check',
+  'owner_approver_check',
+]
+const VALID_PROBE_TYPES: ProjectRequirementProbeType[] = [
+  'file_exists',
+  'route_exists',
+  'test_exists',
+  'dashboard_artifact_exists',
+  'schema_exists',
+  'docs_artifact_exists',
+  'static_boolean',
+]
+const VALID_PRIORITIES: ProjectRequirementPriority[] = ['P0', 'P1', 'P2', 'P3']
+const VALID_STATUSES: ProjectRequirementStatus[] = ['planned', 'passed', 'missing', 'failed', 'blocked', 'not_applicable']
+
+type StaticProbeState = { connected: boolean; value: boolean; source: 'local_static_declared' | 'not_connected' }
+
+const STATIC_BOOLEAN_PROBES: Record<string, StaticProbeState> = {
+  no_prod_db_no_deploy: { connected: false, value: false, source: 'not_connected' },
+  restoreassist_standalone_posture_documented: { connected: false, value: false, source: 'not_connected' },
+  restoreassist_prod_gate_explicit: { connected: false, value: false, source: 'not_connected' },
+  carsi_public_launch_gate: { connected: false, value: false, source: 'not_connected' },
+  carsi_no_external_side_effects: { connected: false, value: false, source: 'not_connected' },
+  carsi_owner_approver_model: { connected: false, value: false, source: 'not_connected' },
+  agentic_nexus_no_live_activation: { connected: false, value: false, source: 'not_connected' },
 }
 
 export function getProjectDodRegistry(): ProjectDefinitionOfDone[] {
@@ -188,6 +227,10 @@ export function validateProjectDodRegistry(registry: ProjectDefinitionOfDone[] =
         if (value === undefined || value === null || value === '') errors.push(`${project.projectId}/${requirement.requirementId}: ${field} missing`)
       }
       if (requirement.projectId !== project.projectId) errors.push(`${project.projectId}/${requirement.requirementId}: project_id mismatch`)
+      if (!VALID_CATEGORIES.includes(requirement.category)) errors.push(`${project.projectId}/${requirement.requirementId}: category invalid`)
+      if (!VALID_PROBE_TYPES.includes(requirement.probeType)) errors.push(`${project.projectId}/${requirement.requirementId}: probeType invalid`)
+      if (!VALID_PRIORITIES.includes(requirement.priority)) errors.push(`${project.projectId}/${requirement.requirementId}: priority invalid`)
+      if (!VALID_STATUSES.includes(requirement.status)) errors.push(`${project.projectId}/${requirement.requirementId}: status invalid`)
       if (!Array.isArray(requirement.evidenceRequired) || requirement.evidenceRequired.length === 0) {
         errors.push(`${project.projectId}/${requirement.requirementId}: evidence_required missing`)
       }
@@ -274,7 +317,24 @@ export function emitMissingRequirementJobs(coverage: Pick<ProjectCoverageResult,
 
 export function getProjectDodCoverageStatus(): ProjectDodCoverageStatus {
   const projects = getProjectDodRegistry().map((project) => calculateProjectCoverage(project))
-  const jobs = projects.flatMap((project) => project.nextGeneratedJobs).sort((a, b) => a.seniorPmRank - b.seniorPmRank).slice(0, 12)
+  const projectPriority = [...projects]
+    .sort((a, b) => {
+      if (a.failedHardGateCount !== b.failedHardGateCount) return b.failedHardGateCount - a.failedHardGateCount
+      if (a.coveragePercent !== b.coveragePercent) return a.coveragePercent - b.coveragePercent
+      return a.projectId.localeCompare(b.projectId)
+    })
+    .reduce<Record<string, number>>((acc, project, index) => {
+      acc[project.projectId] = index + 1
+      return acc
+    }, {})
+  const jobs = projects
+    .flatMap((project) => project.nextGeneratedJobs.map((job) => ({
+      ...job,
+      globalRank: ((projectPriority[project.projectId] ?? projects.length + 1) * 1000) + job.seniorPmRank,
+    })))
+    .sort((a, b) => a.globalRank - b.globalRank)
+    .slice(0, 12)
+    .map((job, index) => ({ ...job, globalRank: index + 1 }))
   const nextProject = [...projects].sort((a, b) => a.coveragePercent - b.coveragePercent)[0]
   const requirementCount = projects.reduce((sum, project) => sum + project.totalRequirements, 0)
   const averageCoveragePercent = projects.length === 0
@@ -326,20 +386,30 @@ function runProbe(requirement: ProjectRequirement): RequirementProbeResult {
     return withProbe(requirement, pathExists, pathExists ? 'passed' : 'missing')
   }
   if (requirement.probeType === 'static_boolean') {
-    const passed = STATIC_BOOLEAN_PROBES[requirement.probeCommandOrCheck] === true
-    return withProbe(requirement, passed, passed ? 'passed' : 'missing')
+    const probe = STATIC_BOOLEAN_PROBES[requirement.probeCommandOrCheck]
+    const passed = probe?.connected === true && probe.value === true
+    return withProbe(requirement, passed, passed ? 'passed' : 'missing', probe?.source ?? 'not_connected')
   }
-  return withProbe(requirement, requirement.status === 'passed', requirement.status === 'passed' ? 'passed' : 'missing')
+  return withProbe(
+    requirement,
+    requirement.status === 'passed',
+    requirement.status === 'passed' ? 'passed' : requirement.status === 'failed' ? 'failed' : 'missing',
+  )
 }
 
-function withProbe(requirement: ProjectRequirement, passed: boolean, probeResult: RequirementProbeResult['probeResult']): RequirementProbeResult {
+function withProbe(
+  requirement: ProjectRequirement,
+  passed: boolean,
+  probeResult: RequirementProbeResult['probeResult'],
+  probeSource?: StaticProbeState['source'],
+): RequirementProbeResult {
   return {
     ...requirement,
     passed,
     probeResult,
     evidence: passed
       ? [`${requirement.probeType}:${requirement.probeCommandOrCheck}`]
-      : [`missing:${requirement.probeType}:${requirement.probeCommandOrCheck}`],
+      : [`${probeSource ?? 'missing'}:${requirement.probeType}:${requirement.probeCommandOrCheck}`],
   }
 }
 

@@ -29,7 +29,19 @@
     },
     "category": {
       "type": "string",
-      "minLength": 2
+      "enum": [
+        "capability_check",
+        "surface_check",
+        "route_check",
+        "schema_check",
+        "integration_check",
+        "test_check",
+        "deployment_check",
+        "evidence_check",
+        "dashboard_check",
+        "business_readiness_check",
+        "owner_approver_check"
+      ]
     },
     "description": {
       "type": "string",

@@ -5,50 +5,199 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "project_id",
-    "project_name",
-    "coverage_percent",
-    "project_done",
-    "false_done_prevention_active",
-    "missing_requirements",
-    "blocked_requirements",
-    "failed_hard_gate_count",
-    "false_done_prevented",
-    "next_generated_jobs"
+    "projectId",
+    "projectName",
+    "coveragePercent",
+    "projectDone",
+    "falseDonePreventionActive",
+    "falseDonePrevented",
+    "missingRequirements",
+    "blockedRequirements",
+    "failedHardGateCount",
+    "nextGeneratedJobs"
   ],
+  "$defs": {
+    "RequirementProbeResult": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "requirementId",
+        "projectId",
+        "category",
+        "description",
+        "probeType",
+        "probeCommandOrCheck",
+        "priority",
+        "hardGate",
+        "status",
+        "passed",
+        "probeResult",
+        "evidence"
+      ],
+      "properties": {
+        "requirementId": {
+          "type": "string"
+        },
+        "projectId": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "probeType": {
+          "type": "string"
+        },
+        "probeCommandOrCheck": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "P0",
+            "P1",
+            "P2",
+            "P3"
+          ]
+        },
+        "hardGate": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "passed",
+            "missing",
+            "failed",
+            "blocked",
+            "not_applicable"
+          ]
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "probeResult": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "missing",
+            "failed",
+            "blocked",
+            "not_applicable"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "MissingRequirementJob": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "projectId",
+        "requirementId",
+        "priority",
+        "title",
+        "nextAction",
+        "evidenceRequired",
+        "seniorPmRank",
+        "blockedByBoardGate"
+      ],
+      "properties": {
+        "jobId": {
+          "type": "string"
+        },
+        "projectId": {
+          "type": "string"
+        },
+        "requirementId": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "P0",
+            "P1",
+            "P2",
+            "P3"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "nextAction": {
+          "type": "string"
+        },
+        "evidenceRequired": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "seniorPmRank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "globalRank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "blockedByBoardGate": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
   "properties": {
-    "project_id": {
+    "projectId": {
       "type": "string"
     },
-    "project_name": {
+    "projectName": {
       "type": "string"
     },
-    "coverage_percent": {
+    "coveragePercent": {
       "type": "integer",
       "minimum": 0,
       "maximum": 100
     },
-    "project_done": {
+    "projectDone": {
       "type": "boolean"
     },
-    "false_done_prevention_active": {
+    "falseDonePreventionActive": {
       "type": "boolean"
     },
-    "missing_requirements": {
-      "type": "array"
+    "falseDonePrevented": {
+      "type": "boolean"
     },
-    "blocked_requirements": {
-      "type": "array"
+    "missingRequirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RequirementProbeResult"
+      }
     },
-    "failed_hard_gate_count": {
+    "blockedRequirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RequirementProbeResult"
+      }
+    },
+    "failedHardGateCount": {
       "type": "integer",
       "minimum": 0
     },
-    "false_done_prevented": {
-      "type": "boolean"
-    },
-    "next_generated_jobs": {
-      "type": "array"
+    "nextGeneratedJobs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/MissingRequirementJob"
+      }
     }
   }
 }

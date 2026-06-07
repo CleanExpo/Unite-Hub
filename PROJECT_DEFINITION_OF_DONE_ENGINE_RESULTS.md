@@ -74,14 +74,26 @@ Commands run:
 
 - `npm run type-check` — passed
 - `npm run lint` — passed
-- focused Vitest DoD/API/UI suite — 17 tests passed
-- full Vitest suite — 818 tests passed across 114 files
+- focused Vitest DoD/API/UI suite — 20 tests passed
+- full Vitest suite — 821 tests passed across 114 files
 
 Independent pre-commit review initially failed on three issues, all fixed before commit:
 
 - absolute host paths are now sandboxed to the repository root or explicit Agentic Nexus dashboard root
 - false-done prevention is now enforced through the normal project completion path
 - path probes now call `existsSync` once and reuse the result
+
+
+CodeRabbit review comments were then fixed before final merge gate:
+
+- coverage result schema now matches camelCase runtime payloads and types nested arrays
+- requirement category schema is enum-constrained
+- runtime registry validation now checks category/probe/priority/status enums
+- global Senior PM next-job ranking no longer collides across projects
+- declared `failed` requirement status is preserved in probe output
+- disconnected static boolean probes now emit `not_connected` rather than synthetic passes
+- order-sensitive test assertion removed
+- redundant API response field overrides removed
 
 ## PR created / merged
 

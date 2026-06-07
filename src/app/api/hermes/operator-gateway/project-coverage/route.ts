@@ -11,14 +11,7 @@ export async function GET() {
     const user = await getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
-    const status = getProjectDodCoverageStatus()
-    return NextResponse.json({
-      ...status,
-      founderOnly: true,
-      productionDbTouched: false,
-      deploymentOccurred: false,
-      externalExecutionEnabled: false,
-    })
+    return NextResponse.json(getProjectDodCoverageStatus())
   } catch {
     return NextResponse.json({ error: 'Failed to load project DoD coverage status' }, { status: 500 })
   }
