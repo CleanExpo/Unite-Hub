@@ -1,6 +1,11 @@
 import { getControlPanelView } from './control-panel'
 import { getOperatorJobsFallbackView, type OperatorJobsView } from './jobs'
 import { getGatewayStatus, getOperatorLanes, type OperatorLane } from './lanes'
+import {
+  getSpecializedSkillMeshStatus,
+  routeBusinessMission,
+  type MissionRouteResult,
+} from './specialized-skill-mesh'
 
 export interface CommandCentreLaneView extends OperatorLane {
   visibleInCommandCentre: true
@@ -73,10 +78,18 @@ export interface CommandCentreOperatorSurfaceView {
     items: { id: string; title: string; status: 'ready' | 'blocked_gate' | 'completed' | 'waiting_input'; nextAction: string }[]
   }
   boardDecisionPanel: {
-    currentDecision: 'approve_controlled_real_local_operator_execution_design_packet'
+    currentDecision: 'build_unite_group_specialized_skill_mesh_and_business_mission_router'
     reviewer: 'Phill McGurk'
     status: 'local_foundation_ready'
     nextBoardGate: string
+  }
+  skillMesh: ReturnType<typeof getSpecializedSkillMeshStatus>
+  missionRouter: {
+    status: 'static_local_router_ready'
+    sampleObjective: string
+    sampleRoute: MissionRouteResult
+    externalExecutionEnabled: false
+    liveRunnerEnabled: false
   }
   safetyStatus: {
     apiKeyMode: false
@@ -124,6 +137,9 @@ export function getCommandCentreOperatorSurfaceView(
   const sandboxJobCreationEnabled = options.sandboxJobCreationEnabled === true && jobsView.source === 'sandbox_select'
   const gateway = getGatewayStatus()
   const control = getControlPanelView()
+  const skillMesh = getSpecializedSkillMeshStatus()
+  const sampleObjective = 'Prepare CARSI course product launch readiness'
+  const sampleRoute = routeBusinessMission(sampleObjective)
 
   return {
     source: 'static_registry',
@@ -289,7 +305,7 @@ export function getCommandCentreOperatorSurfaceView(
       ],
     },
     boardDecisionPanel: {
-      currentDecision: 'approve_controlled_real_local_operator_execution_design_packet',
+      currentDecision: 'build_unite_group_specialized_skill_mesh_and_business_mission_router',
       reviewer: 'Phill McGurk',
       status: 'local_foundation_ready',
       nextBoardGate: sandboxJobCreationEnabled
@@ -297,6 +313,14 @@ export function getCommandCentreOperatorSurfaceView(
         : jobsView.source === 'sandbox_select'
           ? 'approve_operator_gateway_sandbox_job_creation'
           : 'approve_operator_gateway_sandbox_apply or install_claude_code_and_cursor_lanes',
+    },
+    skillMesh,
+    missionRouter: {
+      status: 'static_local_router_ready',
+      sampleObjective,
+      sampleRoute,
+      externalExecutionEnabled: false,
+      liveRunnerEnabled: false,
     },
     safetyStatus: {
       apiKeyMode: false,
