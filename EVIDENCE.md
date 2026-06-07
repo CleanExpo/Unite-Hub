@@ -49,3 +49,23 @@ Branch: `feat/24h-verify-and-harden`
 - **Command:** `pnpm vitest run src/app/api/health/__tests__/route.test.ts src/lib/supabase/__tests__/server.test.ts src/lib/supabase/__tests__/middleware.test.ts src/app/__tests__/page.test.ts`
 - **Actual result:** passed
 - **Evidence:** `4 passed`, `11 passed`.
+
+### 10) The local dev server boots cleanly after the Supabase guard fix
+- **Command:** `pnpm dev --port 3003`
+- **Actual result:** running successfully
+- **Evidence:** `next dev -p 3008` started and served requests on port 3003 via the override; no Supabase client crash on startup.
+
+### 11) Live smoke probes confirm the public entry points behave correctly in the missing-env case
+- **Commands:**
+  - `curl -sS -D - http://127.0.0.1:3003/api/health -o /tmp/health.out`
+  - `curl -sS -D - http://127.0.0.1:3003/ -o /tmp/root.out`
+  - `curl -sS -D - http://127.0.0.1:3003/api/contacts -o /tmp/contacts.out`
+- **Actual result:**
+  - `/api/health` → `HTTP/1.1 503 Service Unavailable` with body `{"status":"degraded","timestamp":"2026-06-07T06:07:28.996Z","connections":{"supabase":"error"}}`
+  - `/` → `HTTP/1.1 307 Temporary Redirect` to `/auth/login?redirectTo=%2F`
+  - `/api/contacts` → `HTTP/1.1 307 Temporary Redirect` to `/auth/login?redirectTo=%2Fapi%2Fcontacts`
+
+### 12) Full Vitest suite passes in the current branch state
+- **Command:** `pnpm vitest run`
+- **Actual result:** passed
+- **Evidence:** `118 passed` test files, `842 passed` tests, exit code 0.
