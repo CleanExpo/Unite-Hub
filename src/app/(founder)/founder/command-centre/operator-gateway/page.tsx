@@ -121,6 +121,41 @@ export default async function OperatorGatewayPage() {
         stored subscription credentials, browser automation, payments, email, claims, and orders remain blocked unless Phill grants a later named gate.
       </div>
 
+
+
+      <section style={card} aria-label="project definition of done coverage">
+        <h2 style={{ fontSize: 18, marginTop: 0 }}>Project Definition of Done Engine · Project coverage</h2>
+        <p style={{ color: '#3fb950', fontSize: 14 }}>
+          false-done prevention active: project done is only green when authoritative DoD coverage passes threshold and hard gates are closed.
+        </p>
+        <p style={{ color: '#8b949e', fontSize: 13 }}>Status endpoint: <code>/api/hermes/operator-gateway/project-coverage</code></p>
+        <div style={grid}>
+          <p>Projects with DoD specs: <b>{view.projectCoverage.projectsWithDodSpecs}</b></p>
+          <p>Average coverage: <b>{view.projectCoverage.averageCoveragePercent}%</b></p>
+          <p>Requirements tracked: <b>{view.projectCoverage.requirementCount}</b></p>
+          <p>Project done count: <b>{view.projectCoverage.projectDoneCount}</b></p>
+          <p>Missing requirements: <b>{view.projectCoverage.missingRequirementCount}</b></p>
+          <p>Blocked requirements: <b>{view.projectCoverage.blockedRequirementCount}</b></p>
+        </div>
+        <p>Next project to reconcile: <b>{view.projectCoverage.nextProjectToReconcile.projectName}</b> · {view.projectCoverage.nextProjectToReconcile.coveragePercent}% coverage</p>
+        <div style={grid}>
+          {view.projectCoverage.projects.map((project) => (
+            <div key={project.projectId} style={{ border: '1px solid #21262d', borderRadius: 4, padding: '0.75rem' }}>
+              <h3 style={{ fontSize: 15, marginTop: 0 }}>{project.projectName}</h3>
+              <p>Coverage: <b>{project.coveragePercent}%</b> · project done: {boolLabel(project.projectDone, false)}</p>
+              <p>missing requirements: <b>{project.missingRequirements.length}</b> · hard-gate failures: <b>{project.failedHardGateCount}</b></p>
+              <p style={{ color: project.projectDone ? '#3fb950' : '#f97316', fontSize: 12 }}>{project.judgementStatus}</p>
+            </div>
+          ))}
+        </div>
+        <h3 style={{ fontSize: 15 }}>Senior PM next generated jobs</h3>
+        <ul style={{ color: '#8b949e', fontSize: 14 }}>
+          {view.projectCoverage.nextGeneratedJobs.slice(0, 6).map((job) => (
+            <li key={job.jobId}><b>{job.priority}</b> · {job.projectId} · {job.nextAction}</li>
+          ))}
+        </ul>
+      </section>
+
       <section style={grid} aria-label="safety status">
         <div style={card}>
           <h2 style={{ fontSize: 16, marginTop: 0 }}>Safety status</h2>

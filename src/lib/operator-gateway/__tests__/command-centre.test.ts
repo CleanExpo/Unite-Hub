@@ -50,7 +50,10 @@ describe('command centre operator execution surface view', () => {
       expect.objectContaining({ gateId: 'enable_external_operator_execution' }),
     ]))
     expect(view.evidencePointers.length).toBeGreaterThanOrEqual(4)
-    expect(view.boardDecisionPanel.currentDecision).toBe('build_unite_group_specialized_skill_mesh_and_business_mission_router')
+    expect(view.boardDecisionPanel.currentDecision).toBe('build_project_definition_of_done_and_coverage_reconciler')
+    expect(view.projectCoverage.falseDonePreventionActive).toBe(true)
+    expect(view.projectCoverage.projectsWithDodSpecs).toBeGreaterThanOrEqual(4)
+    expect(view.projectCoverage.nextGeneratedJobs.length).toBeGreaterThan(0)
     expect(view.boardDecisionPanel.nextBoardGate).toContain('approve')
     expect(view.skillMesh.specializedSkillCount).toBeGreaterThanOrEqual(17)
     expect(view.skillMesh.businessMissionTemplateCount).toBeGreaterThanOrEqual(12)

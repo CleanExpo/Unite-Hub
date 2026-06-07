@@ -7,6 +7,7 @@ import {
   type MissionRouteResult,
 } from './specialized-skill-mesh'
 import { getSkillEvolutionStatus } from './skill-evolution'
+import { getProjectDodCoverageStatus } from './project-dod'
 
 export interface CommandCentreLaneView extends OperatorLane {
   visibleInCommandCentre: true
@@ -79,13 +80,16 @@ export interface CommandCentreOperatorSurfaceView {
     items: { id: string; title: string; status: 'ready' | 'blocked_gate' | 'completed' | 'waiting_input'; nextAction: string }[]
   }
   boardDecisionPanel: {
-    currentDecision: 'build_unite_group_specialized_skill_mesh_and_business_mission_router'
+    currentDecision:
+      | 'build_unite_group_specialized_skill_mesh_and_business_mission_router'
+      | 'build_project_definition_of_done_and_coverage_reconciler'
     reviewer: 'Phill McGurk'
     status: 'local_foundation_ready'
     nextBoardGate: string
   }
   skillMesh: ReturnType<typeof getSpecializedSkillMeshStatus>
   skillEvolution: ReturnType<typeof getSkillEvolutionStatus>
+  projectCoverage: ReturnType<typeof getProjectDodCoverageStatus>
   missionRouter: {
     source: 'static_registry'
     status: 'static_local_router_ready'
@@ -142,6 +146,7 @@ export function getCommandCentreOperatorSurfaceView(
   const control = getControlPanelView()
   const skillMesh = getSpecializedSkillMeshStatus()
   const skillEvolution = getSkillEvolutionStatus()
+  const projectCoverage = getProjectDodCoverageStatus()
   const sampleObjective = 'Prepare CARSI course product launch readiness'
   const sampleRoute = routeBusinessMission(sampleObjective)
 
@@ -229,6 +234,8 @@ export function getCommandCentreOperatorSurfaceView(
       { label: 'Hermes control panel registry', href: 'src/lib/operator-gateway/control-panel.ts', source: 'static_registry' },
       { label: 'Gateway status API', href: '/api/hermes/operator-gateway/status', source: 'crm_route' },
       { label: 'Agentic Nexus dashboard summary', href: '2nd-brain/.agentic_nexus/DASHBOARD_STATUS_SUMMARY.md', source: 'agentic_nexus' },
+      { label: 'Project DoD coverage registry', href: 'project_dod_registry.jsonl', source: 'static_registry' },
+      { label: 'Project DoD coverage status API', href: '/api/hermes/operator-gateway/project-coverage', source: 'crm_route' },
     ],
     blockedGates: [
       {
@@ -270,6 +277,12 @@ export function getCommandCentreOperatorSurfaceView(
     seniorPmQueue: {
       source: 'local_dashboard_snapshot',
       items: [
+        ...projectCoverage.nextGeneratedJobs.slice(0, 3).map((job) => ({
+          id: job.jobId,
+          title: job.title,
+          status: (job.blockedByBoardGate ? 'blocked_gate' : 'ready') as 'ready' | 'blocked_gate',
+          nextAction: job.nextAction,
+        })),
         {
           id: 'command_centre_operator_execution_surface',
           title: 'Build founder Command Centre operator surface',
@@ -309,7 +322,7 @@ export function getCommandCentreOperatorSurfaceView(
       ],
     },
     boardDecisionPanel: {
-      currentDecision: 'build_unite_group_specialized_skill_mesh_and_business_mission_router',
+      currentDecision: 'build_project_definition_of_done_and_coverage_reconciler',
       reviewer: 'Phill McGurk',
       status: 'local_foundation_ready',
       nextBoardGate: sandboxJobCreationEnabled
@@ -320,6 +333,7 @@ export function getCommandCentreOperatorSurfaceView(
     },
     skillMesh,
     skillEvolution,
+    projectCoverage,
     missionRouter: {
       source: 'static_registry',
       status: 'static_local_router_ready',
