@@ -220,3 +220,30 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
   - `vercel env ls production | rg "SUPABASE|PLAYWRIGHT|TEST"` -> listed `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `NEXT_PUBLIC_SUPABASE_URL` as encrypted production variables, but the focused `vercel env run` did not expose the service-role key to the local test process by effect.
 - **Safety result:** no test auth user, workspace, contact, schema, deploy, promotion, alias, billing, email-send, or cleanup action was performed because the run failed before provisioning.
 - **Conclusion:** the full authenticated Contact CRUD proof remains `UNKNOWN`; it is now blocked specifically on getting `SUPABASE_SERVICE_ROLE_KEY` into the approved local/CI runner by effect, or providing an equivalent safe admin-user creation mechanism that does not expose secrets.
+
+### 26) Core journey verification sweep attempted all requested journeys
+- **Timestamp:** `2026-06-07T12:00:22Z`
+- **Branch:** `feat/verify-core-journeys`
+- **Authorization context:** Phill approved scoped reversible production writes for uniquely tagged throwaway users/workspaces/contacts/campaigns/uploads, with mandatory cleanup. No write was attempted because admin provisioning was unavailable to the runner by effect.
+- **Runtime/env effect check:**
+  - `vercel env run --environment production -- node <safe presence/effect check>` -> host `lksfwktwtmyznckodsau.supabase.co`; `NEXT_PUBLIC_SUPABASE_URL:true`; `NEXT_PUBLIC_SUPABASE_ANON_KEY:true`; `SUPABASE_SERVICE_ROLE_KEY:false`; `ANTHROPIC_API_KEY:false`; `GOOGLE_CLIENT_ID:false`; `GOOGLE_CLIENT_SECRET:false`; `/rest/v1/contacts?select=id&limit=1` returned `200 []`.
+- **Endpoint shell probe with Node fetch against `https://unite-hub-self.vercel.app`:**
+  - `/api/contacts` -> `307 /auth/login?redirectTo=%2Fapi%2Fcontacts`
+  - `/api/integrations/status` -> `307 /auth/login?redirectTo=%2Fapi%2Fintegrations%2Fstatus`
+  - `/api/files` -> `307 /auth/login?redirectTo=%2Fapi%2Ffiles`
+  - `/api/email/campaigns` -> `307 /auth/login?redirectTo=%2Fapi%2Femail%2Fcampaigns`
+  - `/api/email/threads` -> `307 /auth/login?redirectTo=%2Fapi%2Femail%2Fthreads`
+  - `/api/auth/google/authorize` -> `401 {"error":"Unauthorized"}`
+  - `/api/auth/google/callback` -> `307 https://unite-hub-self.vercel.app/auth/login`
+  - `/api/campaigns/drip` -> `307 /auth/login?redirectTo=%2Fapi%2Fcampaigns%2Fdrip` via auth middleware; route inventory found no `src/app/api/campaigns/drip` implementation.
+- **Automated tests run:**
+  - `pnpm vitest run src/lib/crm/__tests__/qualify-lead.test.ts src/app/api/integrations/status/__tests__/route.test.ts src/app/api/auth/google/__tests__/authorize.test.ts` -> passed; `3` files / `16` tests.
+  - `vercel env run --environment production -- pnpm test:e2e:core-journeys` -> `1` failed, `3` passed. Failed test: `real-user journeys have admin provisioning available`, missing `SUPABASE_SERVICE_ROLE_KEY`. Passed tests: protected endpoints fail closed before auth; lead scoring rule deterministic for a known high-signal lead; Google OAuth consent boundary explicit.
+- **Journey outcomes:**
+  - Contact CRUD + cross-user RLS isolation -> `UNKNOWN`; admin provisioning unavailable, so no test users/contacts could be created.
+  - Integrations status as authenticated user -> `UNKNOWN`; route exists and unit tests pass, but no throwaway auth user could be provisioned.
+  - Lead scoring seeded-contact journey -> `UNKNOWN`; deterministic scoring logic passes, but no authenticated seeded-contact scoring API path was found or run.
+  - Drip campaign create/add step/enroll/process -> `UNKNOWN`; no current `src/app/api/campaigns/drip` route found; no email/provider call attempted.
+  - Multimedia upload + transcription -> `UNKNOWN`; `/api/files` exists and fails closed before auth, but no transcription endpoint was found and provider credentials/cost path was unavailable.
+  - Gmail OAuth import -> contact creation -> `UNKNOWN`; authorize/callback shell and unit tests pass, but real consent is human-gated and Google env vars were unavailable to the runner by effect.
+- **Safety result:** no test user, workspace, contact, campaign, upload, schema change, deploy, promotion, alias, billing action, explicit email send, or cleanup action occurred.
