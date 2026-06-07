@@ -77,4 +77,20 @@ describe('command centre operator gateway UI source', () => {
     expect(source).not.toContain('Real execute job')
   })
 
+  it('shows specialized skill mesh and business mission router without live execution', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Specialised Skill Mesh')
+    expect(source).toContain('Business Mission Router')
+    expect(source).toContain('Available specialised skills')
+    expect(source).toContain('Business mission templates')
+    expect(source).toContain('First 20-action mission route')
+    expect(source).toContain('sandbox_voice_migration_blocked_op')
+    expect(source).toContain('/api/hermes/operator-gateway/skill-mesh')
+    expect(source).toContain('External execution remains disabled')
+  })
+
 })

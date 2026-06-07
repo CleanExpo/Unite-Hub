@@ -50,8 +50,14 @@ describe('command centre operator execution surface view', () => {
       expect.objectContaining({ gateId: 'enable_external_operator_execution' }),
     ]))
     expect(view.evidencePointers.length).toBeGreaterThanOrEqual(4)
-    expect(view.boardDecisionPanel.currentDecision).toBe('approve_controlled_real_local_operator_execution_design_packet')
+    expect(view.boardDecisionPanel.currentDecision).toBe('build_unite_group_specialized_skill_mesh_and_business_mission_router')
     expect(view.boardDecisionPanel.nextBoardGate).toContain('approve')
+    expect(view.skillMesh.specializedSkillCount).toBeGreaterThanOrEqual(17)
+    expect(view.skillMesh.businessMissionTemplateCount).toBeGreaterThanOrEqual(12)
+    expect(view.skillMesh.blockedLanes).toContain('sandbox_voice_migration_blocked_op')
+    expect(view.missionRouter.sampleRoute.actions.length).toBeGreaterThanOrEqual(15)
+    expect(view.missionRouter.sampleRoute.actions.length).toBeLessThanOrEqual(20)
+    expect(view.missionRouter.externalExecutionEnabled).toBe(false)
   })
 
   it('keeps blocked-lane messaging honest for Max-plan operator sessions', () => {
