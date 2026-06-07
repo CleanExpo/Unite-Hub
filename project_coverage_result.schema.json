@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "project_coverage_result.schema.json",
+  "title": "Project Coverage Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "project_name",
+    "coverage_percent",
+    "project_done",
+    "false_done_prevention_active",
+    "missing_requirements",
+    "blocked_requirements",
+    "failed_hard_gate_count",
+    "false_done_prevented",
+    "next_generated_jobs"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "coverage_percent": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "project_done": {
+      "type": "boolean"
+    },
+    "false_done_prevention_active": {
+      "type": "boolean"
+    },
+    "missing_requirements": {
+      "type": "array"
+    },
+    "blocked_requirements": {
+      "type": "array"
+    },
+    "failed_hard_gate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "false_done_prevented": {
+      "type": "boolean"
+    },
+    "next_generated_jobs": {
+      "type": "array"
+    }
+  }
+}
