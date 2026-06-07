@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const user = await getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
-  let body: Record<string, unknown>
+  let body: unknown
   let formSubmission = false
   try {
     const contentType = request.headers.get('content-type') ?? ''
@@ -51,19 +51,40 @@ export async function POST(request: Request) {
     )
   }
 
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        source: 'validation_failed',
+        error: 'Invalid request body.',
+        reasons: ['request body must be a JSON object or form data'],
+        localExecutionFoundation: 'policy_refused',
+        liveExecution: false,
+        externalExecutionEnabled: false,
+        productionConnected: false,
+        dispatchPerformed: false,
+        eventAppended: false,
+        jobStatusUpdated: false,
+      },
+      { status: 400 },
+    )
+  }
+
+  const requestBody = body as Record<string, unknown>
+
   const result = await requestControlledLocalOperatorExecution({
     founderId: user.id,
     client: getSandboxOperatorJobsClient(),
-    jobId: typeof body.jobId === 'string' ? body.jobId : undefined,
-    laneId: typeof body.laneId === 'string' ? body.laneId : undefined,
-    taskType: typeof body.taskType === 'string' ? body.taskType : undefined,
-    localOnly: body.localOnly === true,
-    requestedCommand: typeof body.requestedCommand === 'string' ? body.requestedCommand : undefined,
-    externalActionRequested: body.externalActionRequested === true,
-    productionActionRequested: body.productionActionRequested === true,
-    apiKeyRequested: body.apiKeyRequested === true,
-    browserAutomationRequested: body.browserAutomationRequested === true,
-    computerUseRequested: body.computerUseRequested === true,
+    jobId: typeof requestBody.jobId === 'string' ? requestBody.jobId : undefined,
+    laneId: typeof requestBody.laneId === 'string' ? requestBody.laneId : undefined,
+    taskType: typeof requestBody.taskType === 'string' ? requestBody.taskType : undefined,
+    localOnly: requestBody.localOnly === true,
+    requestedCommand: typeof requestBody.requestedCommand === 'string' ? requestBody.requestedCommand : undefined,
+    externalActionRequested: requestBody.externalActionRequested === true,
+    productionActionRequested: requestBody.productionActionRequested === true,
+    apiKeyRequested: requestBody.apiKeyRequested === true,
+    browserAutomationRequested: requestBody.browserAutomationRequested === true,
+    computerUseRequested: requestBody.computerUseRequested === true,
   })
 
   if (formSubmission && result.ok) {

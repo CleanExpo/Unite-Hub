@@ -171,6 +171,32 @@ export default async function OperatorGatewayPage() {
         <code>/api/hermes/operator-gateway/jobs/local-execution</code>
       </section>
 
+      <section style={grid} aria-label="specialized skill mesh">
+        <div style={card}>
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>Specialised Skill Mesh</h2>
+          <p style={{ color: '#8b949e', fontSize: 13 }}>Source: <code>{view.skillMesh.source ?? 'not_connected'}</code></p>
+          <p style={{ color: '#3fb950', fontSize: 14 }}>Available specialised skills: <b>{view.skillMesh.specializedSkillCount}</b></p>
+          <p style={{ color: '#3fb950', fontSize: 14 }}>Business mission templates: <b>{view.skillMesh.businessMissionTemplateCount}</b></p>
+          <p>Active lanes: <code>{view.skillMesh.activeLanes.join(', ')}</code></p>
+          <p>Pending lanes: <code>{view.skillMesh.pendingLanes.join(', ')}</code></p>
+          <p>Blocked lanes: <code>{view.skillMesh.blockedLanes.join(', ')}</code></p>
+          <p style={{ color: '#f97316', fontSize: 13 }}>sandbox_voice_migration_blocked_op remains BLOCKED-OP until 1Password CLI authentication is green.</p>
+          <p style={{ color: '#8b949e', fontSize: 13 }}>Status endpoint: <code>/api/hermes/operator-gateway/skill-mesh</code></p>
+        </div>
+        <div style={card}>
+          <h2 style={{ fontSize: 18, marginTop: 0 }}>Business Mission Router</h2>
+          <p style={{ color: '#8b949e', fontSize: 13 }}>Source: <code>{view.missionRouter.source ?? view.skillMesh.source ?? 'not_connected'}</code> (sample route)</p>
+          <p>Status: <span style={pill('green')}>{view.missionRouter.status}</span></p>
+          <p>Sample objective: <b>{view.missionRouter.sampleObjective}</b></p>
+          <p>Selected template: <code>{view.missionRouter.sampleRoute.selectedTemplateId}</code></p>
+          <p>First 20-action mission route: <b>{view.missionRouter.sampleRoute.actions.length}</b> sandbox job candidates</p>
+          <p>External execution remains disabled: {boolLabel(view.missionRouter.externalExecutionEnabled)}</p>
+          <p>Live runner enabled: {boolLabel(view.missionRouter.liveRunnerEnabled)}</p>
+          <p>API-key mode: {boolLabel(view.missionRouter.sampleRoute.apiKeyMode)}</p>
+          <p style={{ color: '#8b949e', fontSize: 13 }}>Skill team: {view.missionRouter.sampleRoute.selectedSkillTeam.join(', ')}</p>
+        </div>
+      </section>
+
       <section style={card} aria-label="lane selector">
         <h2 style={{ fontSize: 18, marginTop: 0 }}>Lane selector</h2>
         <p style={{ color: '#8b949e', fontSize: 14 }}>
