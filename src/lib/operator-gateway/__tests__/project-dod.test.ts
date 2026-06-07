@@ -177,6 +177,27 @@ describe('project Definition of Done coverage reconciler', () => {
     expect(coverage.projectDone).toBe(false)
   })
 
+  it('allows local RestoreAssist evidence artifacts while keeping arbitrary host paths blocked', () => {
+    const coverage = calculateProjectCoverage({
+      projectId: 'unit_test_project',
+      projectName: 'Unit Test Project',
+      ownerRole: 'Founder / Board',
+      approverRole: 'Founder / Board',
+      completionThreshold: 1,
+      falseDonePreventionActive: true,
+      requirements: [
+        {
+          ...requirement('req-restoreassist-local-doc', true, true),
+          probeType: 'docs_artifact_exists',
+          probeCommandOrCheck: '../RestoreAssist/docs/definition-of-done/RESTOREASSIST_PROJECT_DOD.md',
+        },
+      ],
+    })
+
+    expect(coverage.passedRequirements).toBe(1)
+    expect(coverage.projectDone).toBe(true)
+  })
+
   it('preserves declared failed requirement status in probe output', () => {
     const coverage = calculateProjectCoverage({
       projectId: 'unit_test_project',
