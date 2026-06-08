@@ -107,7 +107,7 @@ After this push, wait for PR #93 checks to settle again. Then use an approved au
 ### Updated risk map
 
 - `NEXT_PUBLIC_APP_URL` is still a parity concern. The validator lists it as integration config, but many OAuth routes treat app URL as operationally important. Google is now guarded; Meta/LinkedIn/TikTok/YouTube/Xero/social OAuth paths still need the same review before those flows can be called production-hardened.
-- Outlook import is not merely unverified; current route inventory did not find a Microsoft Graph/Outlook OAuth route. Treat Outlook import as absent/UNKNOWN, not working.
+- Outlook/Microsoft import is not live-proved. Microsoft OAuth route guards now exist, but live consent and Microsoft Graph mailbox import remain UNKNOWN / not connected.
 - Drip campaign lifecycle and transcription remain UNKNOWN; current routes do not prove those product journeys exist end-to-end.
 
 ### Single highest-value next step
@@ -332,6 +332,35 @@ Fresh verification: type-check PASS, lint PASS, drip e2e PASS (`2/2`), cleanup a
 
 What genuinely works now: `POST /api/email/contacts/import` exists and is authenticated. In `gmail_mock` mode it converts a tagged non-deliverable sender into a founder-scoped contact, avoids duplicate contacts by founder/email, and fails closed for another founder's contact list. The self-cleaning guard `pnpm test:e2e:email-import` proved unauthenticated fail-closed behaviour, import `201`, duplicate import `200 created=false`, cross-user isolation, and cleanup.
 
-What remains blocked: live Gmail thread import is **UNKNOWN / HUMAN-GATED** until Google OAuth consent and real thread fetch are available. Outlook/Microsoft import is **UNKNOWN / NOT BUILT** because no active Microsoft OAuth/Graph route exists.
+What remains blocked: live Gmail thread import is **UNKNOWN / HUMAN-GATED** until Google OAuth consent and real thread fetch are available. Outlook/Microsoft import is **PASS for OAuth route guards / UNKNOWN for live consent and Graph import**; no live Microsoft consent or mailbox read has been proved.
 
 Fresh verification: type-check PASS, lint PASS, email-import e2e PASS (`2/2`), cleanup audit PASS (`0` tagged email-import contacts remain), final chained e2e gate PASS, Vitest PASS (`118` files / `847` tests). Local build remains blocked before compile by missing required runtime env names in this shell.
+
+## Core journey swarm follow-up — 2026-06-08T10:09+10:00
+
+What genuinely works now:
+
+- Gmail import has a live route path for `source='gmail'` using existing founder-scoped Google credentials, `threadId` or `messageId`, and contact upsert/create by `founder_id` + email. Unit tests prove no-account, thread import, message import, and unauthorised-token handling; mocked e2e still proves safe contact creation and cleanup.
+- Microsoft OAuth foundation exists at `/api/auth/microsoft/authorize` and `/api/auth/microsoft/callback`, with auth guards, missing-env guards, signed state, token exchange, encryption, and founder-scoped `credentials_vault` storage. Unit tests prove the guard rails.
+- Dedicated drip and transcript persistence are no longer just vague blockers: additive migrations, routes, and stricter e2e guards are ready for review.
+
+Still blocked:
+
+- Dedicated drip e2e is schema-gated until `supabase/migrations/20260608000000_drip_lifecycle_schema.sql` is applied.
+- Transcript persistence e2e is schema-gated until `supabase/migrations/20260607235936_ai_file_transcripts.sql` is applied.
+- Live Gmail and Microsoft import remain human-consent gated; no provider consent or live mailbox read was attempted.
+- Local build is blocked before compile by missing runtime env in this shell.
+
+Top 3 next fixes:
+
+1. Review and apply the two additive migrations in an authorised schema lane, then rerun `pnpm test:e2e:drip-campaign` and `pnpm test:e2e:transcription`.
+2. Complete Google and Microsoft OAuth consent with target accounts, then run one tagged live import proof for each provider.
+3. Move Playwright e2e to a non-production Supabase CI lane; current CI skips Playwright and local guards still rely on the approved production-write exception.
+
+## PR #106 Review Fix Swarm — 2026-06-08T10:42+10:00
+
+What changed: the swarm addressed the actionable PR #106 review set without applying migrations or deploying. Microsoft OAuth state now carries founder id, nonce, and expiry; callback validates founder/expiry and stores credentials against the authoritative Microsoft Graph sender. Email import now rejects unknown sources instead of falling through to mocks and uses the request-scoped Supabase client. Drip processing now runs through the request-scoped client, marks unsafe/live-send attempts as failed so they do not reprocess, and the dedicated schema migration has composite founder constraints. Transcription no longer exposes raw DB errors to clients and preserves response-only mocked transcription when the transcript table is not applied by returning a `schema_missing` persistence marker.
+
+Fresh verification: focused Microsoft/import Vitest PASS (`21` tests), type-check PASS, lint PASS, full Vitest PASS (`120` files / `868` tests), email-import e2e PASS (`2/2`), transcription e2e PASS (`2/2`), contact-crud PASS (`1/1`), lead-scoring PASS (`1/1`), file-upload PASS (`1/1`), core-journeys PASS (`5/5`), whitespace check PASS, Supabase dry-run PASS without applying schema. Local build remains blocked before compile by missing runtime env in this shell.
+
+Still blocked: dedicated drip and transcript persistence remain schema-gated until the two additive migrations are explicitly applied in an authorized schema lane. Live Gmail/Microsoft import still needs human OAuth consent.

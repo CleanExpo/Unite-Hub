@@ -677,3 +677,28 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
   - duplicate import returned existing contact instead of creating another
   - cross-user isolation verified: user B could not list playwright+gmail-import+2026-06-07t22-57-29-663z@unite-hub.test
   - cleanup verified for email import marker 2026-06-07T22:57:29.663Z
+
+### Core journey swarm follow-up - 2026-06-08T10:09+10:00
+- Branch: `feat/core-journeys-swarm-2`.
+- Microsoft OAuth foundation: added auth-gated authorize/callback routes plus helper. `pnpm vitest run src/app/api/auth/microsoft/__tests__/authorize.test.ts --config vitest.config.api.ts` passed `8/8`.
+- Gmail live import wiring: `source='gmail'` now supports `threadId` or `messageId` using existing Google credentials. `pnpm vitest run src/app/api/email/contacts/import/__tests__/route.test.ts --config vitest.config.api.ts` passed `7/7`.
+- Mocked email import guard: `pnpm run test:e2e:email-import` passed `2/2`; tagged contact cleanup verified by the guard.
+- Regression guards: `pnpm test:e2e:contact-crud` passed `1/1`; `pnpm test:e2e:lead-scoring` passed `1/1`; `pnpm test:e2e:file-upload` passed `1/1`; `pnpm test:e2e:core-journeys` passed `5/5`.
+- Local gates: `pnpm run type-check` PASS; `pnpm run lint` PASS; `pnpm vitest run` PASS (`120` files / `862` tests); `git diff --check` PASS.
+- Schema dry-run: `pnpm exec supabase db push --dry-run --linked` completed without applying changes and listed pending migrations including `20260607235936_ai_file_transcripts.sql` and `20260608000000_drip_lifecycle_schema.sql`.
+- Build: `pnpm build` BLOCKED before compile by local env validation (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID` absent in this shell).
+
+### PR #106 review-fix swarm - 2026-06-08T10:42+10:00
+- Branch: `feat/core-journeys-swarm-2`.
+- Scope: addressed CodeRabbit actionable review items for Microsoft OAuth state/token handling, email import source validation/RLS client usage, drip request-scoped processing and tenant FKs, transcript persistence safety, and documentation contradictions.
+- Microsoft focused route tests: `pnpm vitest run src/app/api/auth/microsoft/__tests__/authorize.test.ts src/app/api/email/contacts/import/__tests__/route.test.ts --config vitest.config.api.ts` -> PASS, `2` files / `21` tests.
+- Full TypeScript: `pnpm run type-check` -> PASS.
+- Lint: `pnpm run lint` -> PASS.
+- Targeted ESLint for touched route files -> PASS; E2E file lint warning only noted that `e2e/transcription.spec.ts` is outside the src ESLint config.
+- Full unit/integration suite: `pnpm vitest run` -> PASS, `120` files / `868` tests.
+- Email import E2E: `pnpm run test:e2e:email-import` -> PASS, `2/2`, tagged cleanup performed by guard.
+- Transcription E2E: `pnpm run test:e2e:transcription` -> PASS, `2/2`; with `ai_file_transcripts` absent, endpoint returned transcript content plus `persistence.status='unknown'`, `persisted=false`, `reason='schema_missing'` instead of leaking raw DB errors or blocking mocked transcription.
+- Regression E2E: `pnpm run test:e2e:contact-crud` -> PASS `1/1`; `pnpm run test:e2e:lead-scoring` -> PASS `1/1`; `pnpm run test:e2e:file-upload` -> PASS `1/1`; `pnpm run test:e2e:core-journeys` -> PASS `5/5`.
+- Whitespace: `git diff --check` -> PASS.
+- Schema dry-run: `pnpm exec supabase db push --dry-run --linked` -> PASS dry-run only; no schema was applied. It still lists many pending historical migrations plus `20260607235936_ai_file_transcripts.sql` and `20260608000000_drip_lifecycle_schema.sql`.
+- Build: `pnpm build` -> BLOCKED before compile by local env validation (`0/3` critical, `0/4` required runtime vars in this shell).
