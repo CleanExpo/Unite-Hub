@@ -63,15 +63,19 @@ export async function POST(request: Request) {
     }, { status: 201 })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Upload failed'
+    if (message.includes('ai_file_cache') && message.includes('Could not find the table')) {
+      return NextResponse.json({
+        error: 'File upload cache is not configured',
+        table: 'ai_file_cache',
+        code: 'file_cache_not_configured',
+      }, { status: 503 })
+    }
     if (message.includes('ANTHROPIC_API_KEY')) {
-      return NextResponse.json(
-        {
-          error: message,
-          provider: 'not_connected',
-          liveProviderExecuted: false,
-        },
-        { status: 503 }
-      )
+      return NextResponse.json({
+        error: 'File upload provider is not configured',
+        provider: 'anthropic',
+        code: 'provider_not_configured',
+      }, { status: 503 })
     }
     return NextResponse.json({ error: message }, { status: 500 })
   }

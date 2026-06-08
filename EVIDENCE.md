@@ -335,53 +335,57 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - Command: `node <scoped cleanup audit for all auth/contact/campaign IDs recorded in this run>`
 - Actual result: `12/12` recorded test auth users gone; `0` recorded test contacts remain; `0` recorded test campaigns remain.
 
-### Finish core journey run - 2026-06-07T12:37:15.580Z
+### Lead scoring API run - 2026-06-07T13:06:33.433Z
 - Supabase host: lksfwktwtmyznckodsau.supabase.co
-- Safety: generated password was kept in memory only and was not logged.
-  - created finish-core auth user: f07bcee4-d18b-4112-8ace-b5f1806336da
-  - created tagged contact: 87e4d1c0-f266-43b0-a9b0-7873f26b9d1d
-  - lead scoring persisted score 100 for contact: 87e4d1c0-f266-43b0-a9b0-7873f26b9d1d
-  - cleanup verified for finish-core marker 2026-06-07T12:37:15.580Z
+- Safety: generated passwords were kept in memory only and were not logged.
+- Persistence note: current contacts table has no ai_score column; route persists to contacts.metadata.leadQualification.
+  - created lead scoring auth user A: 835c2733-6c17-41a5-91c7-98dbf2dee01f
+  - created lead scoring auth user B: 85c2e16b-dea3-483b-8fc7-4cad50b3044e
+  - created lead scoring contact A: 28bb9c4e-88cd-4985-83c1-5b858500d41b (playwright+lead-scoring+2026-06-07T13-06-33-433Z+a@unite-hub.invalid)
+  - created lead scoring contact B: 1d420d9f-f8a9-430c-a9f5-22d5ffccd88d (playwright+lead-scoring+2026-06-07T13-06-33-433Z+b@unite-hub.invalid)
+  - scored contact 28bb9c4e-88cd-4985-83c1-5b858500d41b: expected score 100, persisted metadata score 100
+  - cross-founder scoring blocked: A received 404 for B contact 1d420d9f-f8a9-430c-a9f5-22d5ffccd88d
+  - cleanup verified for lead scoring marker 2026-06-07T13:06:33.433Z: contacts/users removed
 
-### Finish core journey run - 2026-06-07T12:37:50.525Z
+### Lead scoring targeted build - 2026-06-07T13:06:55Z
 - Supabase host: lksfwktwtmyznckodsau.supabase.co
-- Safety: generated password was kept in memory only and was not logged.
-  - created finish-core auth user: 088cd19c-c85f-4ce0-bcd7-de815867a427
-  - created tagged contact: 62e89d09-252c-4c41-bf5c-842e8eb84e45
-  - lead scoring persisted score 100 for contact: 62e89d09-252c-4c41-bf5c-842e8eb84e45
-  - drip lifecycle processed campaign 6f818909-26d9-46f7-8cb7-4f37116c4902 in dry-run mode with no email sent
-  - upload and transcription mock wiring returned 201/200 for cacheKey __PW_TEST__2026-06-07T12-37-50-525Z
-  - Gmail OAuth consent boundary verified; import remains human-gated
-  - cleanup verified for finish-core marker 2026-06-07T12:37:50.525Z
+- Command: `node <service-role effect probe: contacts select id,ai_score limit 0>`
+- Actual result: Supabase returned status `400`, error code `42703`, message `column contacts.ai_score does not exist`.
+- Command: `pnpm type-check`
+- Actual result: PASS; `tsc --noEmit` exited `0`.
+- Command: `pnpm lint`
+- Actual result: PASS; `eslint src/` exited `0`.
+- Command: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright test passed. The guard provisioned two throwaway users, created two tagged contacts, called `POST /api/contacts/:id/score` as user A, asserted expected score `100`, re-read persisted `contacts.metadata.leadQualification.score = 100`, asserted A received `404` scoring B's contact, and verified cleanup.
 
-### Contact CRUD approved production-write run - 2026-06-07T12:38:12.611Z
+### Contact CRUD approved production-write run - 2026-06-07T13:07:42.761Z
 - Supabase host: lksfwktwtmyznckodsau.supabase.co
 - Safety: generated passwords were kept in memory only and were not logged.
 - Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
-  - created test auth user A: 02f22420-d2c3-47fe-b0a5-39f87a30cebb
-  - created test auth user B: e64bcca9-fff5-4f91-9d95-7673898f90b6
-  - created test contact A: cefbd841-7114-458f-b0e0-4db9bf5fd33d (playwright+crud+2026-06-07T12-38-12-611Z+a@unite-hub.test)
-  - created test contact B: 94b55ec4-b101-4f85-a48f-109793ba6089 (playwright+crud+2026-06-07T12-38-12-611Z+b@unite-hub.test)
-  - authenticated delete verified for contact A: cefbd841-7114-458f-b0e0-4db9bf5fd33d
-  - cleanup verified for marker 2026-06-07T12:38:12.611Z: contacts/users removed; workspace IDs created: 0
+  - created test auth user A: 136ec938-d552-457f-b89f-9276cfd26011
+  - created test auth user B: d6cdc026-8033-4505-9632-f105114d14f6
+  - created test contact A: a4ef22d0-88bd-4696-9bf9-9d69fd49b2cd (playwright+crud+2026-06-07T13-07-42-761Z+a@unite-hub.test)
+  - created test contact B: b88a0a30-beb6-45f4-9b40-a06c6a9e9cb0 (playwright+crud+2026-06-07T13-07-42-761Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: a4ef22d0-88bd-4696-9bf9-9d69fd49b2cd
+  - cleanup verified for marker 2026-06-07T13:07:42.761Z: contacts/users removed; workspace IDs created: 0
 
-### Core authenticated journey run - 2026-06-07T12:38:30.306Z
+### Core authenticated journey run - 2026-06-07T13:07:58.446Z
 - Supabase host: lksfwktwtmyznckodsau.supabase.co
 - Safety: generated password was kept in memory only and was not logged.
-  - created core journey auth user: 1dedc0c5-3800-4fdd-a7a2-ea63238d432b
+  - created core journey auth user: af048002-21a3-468a-a793-85165d849e1e
   - integrations status returned 200 with 14 providers
-  - created tagged email campaign: 9cf3dd75-23cd-4c45-a83c-6831aaec7c08
-  - campaign send path blocked without recipients before any provider send: 9cf3dd75-23cd-4c45-a83c-6831aaec7c08
+  - created tagged email campaign: 2a0cedd0-227e-4f06-bd93-e3dd6025f9f4
+  - campaign send path blocked without recipients before any provider send: 2a0cedd0-227e-4f06-bd93-e3dd6025f9f4
   - files list returned 200 with 0 cached files
-  - tiny file upload returned 503 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN
-  - cleanup verified for core journey marker 2026-06-07T12:38:30.306Z
+  - tiny file upload returned 500 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN
+  - cleanup verified for core journey marker 2026-06-07T13:07:58.446Z
 
-### Finalise cleanup audit - 2026-06-07T12:40:18Z
+### Lead scoring targeted cleanup audit - 2026-06-07T13:08Z
 - Supabase host: lksfwktwtmyznckodsau.supabase.co
-- Command: `node <scoped cleanup audit for finalise-run auth/contact/campaign IDs>`
-- Actual result: `5/5` recorded finalise auth users gone; `0` recorded finalise contacts remain; `0` recorded finalise campaigns remain.
+- Command: `node <scoped cleanup audit for lead-scoring/contact-crud/core regression IDs>`
+- Actual result: `5/5` recorded auth users gone; `0` recorded contacts remain; `0` recorded campaigns remain.
 
-### Finalise local gates - 2026-06-07T12:42:48Z
+### Lead scoring final local gates - 2026-06-07T13:09Z
 - Command: `pnpm type-check`
 - Actual result: PASS; `tsc --noEmit` exited `0`.
 - Command: `pnpm lint`
@@ -390,5 +394,311 @@ PR: https://github.com/CleanExpo/Unite-Hub/pull/93
 - Actual result: PASS; no whitespace errors.
 - Command: `pnpm vitest run`
 - Actual result: PASS; `118` test files passed, `847` tests passed.
-- Command: `node -e "require('dotenv').config({path:'.env.local'}); ... pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build"`
-- Actual result: BLOCKED before compile by `scripts/validate-env.mjs --ci`; validator reported critical Supabase vars present (`3/3`) and required runtime names absent from the spawned build process (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).
+- Command: `pnpm build`
+- Actual result: BLOCKED before compile by `scripts/validate-env.mjs --ci`; validator reported `0/3` critical and `0/4` required runtime env vars present in this local shell.
+- Command: `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build`
+- Actual result: BLOCKED before compile by `scripts/validate-env.mjs --ci`; Supabase critical vars were injected by effect (`3/3` critical present), but required runtime names were absent from the spawned process (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).
+
+### Lead scoring API run - 2026-06-07T13:27:59.681Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Persistence note: current contacts table has no ai_score column; route persists to contacts.metadata.leadQualification.
+  - created lead scoring auth user A: cf21b1ce-70e5-455b-9150-7aedac2fd6bd
+  - created lead scoring auth user B: d790cecc-4b71-42ca-8173-0d4e73cee023
+  - created lead scoring contact A: 60280e7f-e341-4955-821a-85d252199930 (playwright+lead-scoring+2026-06-07T13-27-59-681Z+a@unite-hub.invalid)
+  - created lead scoring contact B: c34bd9d0-2d7d-4212-8303-7545c35a0294 (playwright+lead-scoring+2026-06-07T13-27-59-681Z+b@unite-hub.invalid)
+  - scored contact 60280e7f-e341-4955-821a-85d252199930: expected score 100, persisted metadata score 100
+  - cross-founder scoring blocked: A received 404 for B contact c34bd9d0-2d7d-4212-8303-7545c35a0294
+  - cleanup verified for lead scoring marker 2026-06-07T13:27:59.681Z: contacts/users removed
+
+### Overnight Task 1 - confirm Lead Scoring - 2026-06-07T13:28Z
+- Command: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright test passed. This proves authenticated scoring, expected rule score `100`, persisted `contacts.metadata.leadQualification.score = 100`, cross-founder `404`, and cleanup.
+- Task 1 requested `persisted ai_score == expected`. Current live/generated schema has no `contacts.ai_score` column, already proven by `42703 column contacts.ai_score does not exist`; exact `ai_score` persistence remains UNKNOWN/BLOCKED pending schema decision.
+
+### File upload API run - 2026-06-07T13:31:56.307Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+- Provider note: UNITE_HUB_TEST_MOCK_AI_FILES=1 uses a tagged test-only mock file id and still persists ai_file_cache.
+  - created file-upload auth user: 72f24d28-bb0a-462b-bf17-13636d74d9ed
+
+### File upload API run - 2026-06-07T13:34:11.655Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+- Provider note: UNITE_HUB_TEST_MOCK_AI_FILES=1 uses a tagged test-only mock file id; persisted upload requires ai_file_cache to exist.
+  - created file-upload auth user: fcc113f5-2c53-4b2c-81af-2cd7f9e8dfa1
+  - tiny tagged file upload returned 503 file_cache_not_configured; existing ai_file_cache migration is not applied in the verified lane.
+  - cleanup verified for file-upload marker 2026-06-07T13:34:11.655Z
+
+### Contact CRUD approved production-write run - 2026-06-07T13:34:24.662Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 3b486ab8-dc34-4ff2-a514-11021ded56c2
+  - created test auth user B: e2a15a95-8999-4370-876d-e04a609032a4
+  - created test contact A: ec5888df-b667-40f1-8bc3-d3be5e5fd819 (playwright+crud+2026-06-07T13-34-24-662Z+a@unite-hub.test)
+  - created test contact B: 59d6fa2c-14d3-47e0-800e-aef92d096776 (playwright+crud+2026-06-07T13-34-24-662Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: ec5888df-b667-40f1-8bc3-d3be5e5fd819
+  - cleanup verified for marker 2026-06-07T13:34:24.662Z: contacts/users removed; workspace IDs created: 0
+
+### Core authenticated journey run - 2026-06-07T13:34:38.972Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: ab3cb714-fd56-43eb-8e1c-f9a95b9e4f07
+  - integrations status returned 200 with 14 providers
+  - created tagged email campaign: a8ac77bd-417f-4a3a-979b-f276237c0cd1
+  - campaign send path blocked without recipients before any provider send: a8ac77bd-417f-4a3a-979b-f276237c0cd1
+  - files list returned 200 with 0 cached files
+  - tiny file upload returned 503 with provider_not_configured; full upload/transcription remains UNKNOWN
+  - cleanup verified for core journey marker 2026-06-07T13:34:38.972Z
+
+### Lead scoring API run - 2026-06-07T13:34:51.909Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Persistence note: current contacts table has no ai_score column; route persists to contacts.metadata.leadQualification.
+  - created lead scoring auth user A: 35038e3d-1bf7-4eca-baf2-9a48a2aaf593
+  - created lead scoring auth user B: 10f517cc-004a-44cd-bdc5-a2b74614a82c
+  - created lead scoring contact A: 46237748-ec72-4763-9ad8-f8e795bd160e (playwright+lead-scoring+2026-06-07T13-34-51-909Z+a@unite-hub.invalid)
+  - created lead scoring contact B: ac6de39a-db91-4b3a-bd72-1d18006db78e (playwright+lead-scoring+2026-06-07T13-34-51-909Z+b@unite-hub.invalid)
+  - scored contact 46237748-ec72-4763-9ad8-f8e795bd160e: expected score 100, persisted metadata score 100
+  - cross-founder scoring blocked: A received 404 for B contact ac6de39a-db91-4b3a-bd72-1d18006db78e
+  - cleanup verified for lead scoring marker 2026-06-07T13:34:51.909Z: contacts/users removed
+
+### Overnight Task 2 - fix authenticated upload 500 - 2026-06-07T13:36Z
+- Code result: `/api/files` no longer returns raw `500` for known configuration blockers. Missing Anthropic provider config returns `503 { code: "provider_not_configured" }`; missing `ai_file_cache` table returns `503 { code: "file_cache_not_configured" }`.
+- Schema finding: `supabase/migrations/20260325000001_ai_file_cache.sql` exists in the repo, but the verified live Supabase lane reports `Could not find the table 'public.ai_file_cache' in the schema cache`.
+- Command: `pnpm type-check`
+- Actual result: PASS; `tsc --noEmit` exited `0`.
+- Command: `pnpm lint`
+- Actual result: PASS; `eslint src/` exited `0`.
+- Command: `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload`
+- Actual result: PASS; `1` Playwright test passed. It provisioned a tagged throwaway auth user, signed in, posted a tiny tagged file with `UNITE_HUB_TEST_MOCK_AI_FILES=1`, received `503 file_cache_not_configured` instead of `500`, and verified auth-user cleanup.
+- Command: `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud`
+- Actual result: PASS; `1` Playwright regression test passed.
+- Command: `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys`
+- Actual result: PASS; `5` Playwright regression tests passed; authenticated `/api/files` boundary returned `503 provider_not_configured` rather than leaking `ANTHROPIC_API_KEY`.
+- Command: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright regression test passed.
+- Command: `pnpm vitest run`
+- Actual result: PASS; `118` test files passed, `847` tests passed.
+- Command: `git diff --check`
+- Actual result: PASS; no whitespace errors.
+- Command: `pnpm build`
+- Actual result: BLOCKED before compile by local `prebuild` env validation (`0/3` critical and `0/4` required runtime vars set in this shell).
+- Command: `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build`
+- Actual result: BLOCKED before compile with Supabase critical vars present by effect (`3/3`) but required runtime names absent (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).
+- Command: `node <scoped cleanup audit for overnight task 2 exact IDs>`
+- Actual result: PASS; `7/7` recorded auth users gone, `0` recorded contacts remain, `0` recorded campaigns remain, file-cache audit returned `table missing`.
+
+### File upload API run - 2026-06-07T22:07:36.960Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+- Provider note: UNITE_HUB_TEST_MOCK_AI_FILES=1 uses a tagged test-only mock file id; no live provider call is made.
+  - created file-upload auth user A: f0bf93fd-08e1-4c31-9611-d4e990b971f1
+  - created file-upload auth user B: 2bdefbcb-f8d8-4fb4-b6a1-3b4fab2c8709
+  - uploaded tiny tagged file: status 201, cacheKey __PW_TEST__UPLOAD__2026-06-07T22-07-36-960Z, persisted file id file_mock_ZjBiZjkzZmQtMDhlMS00YzMx
+  - cross-user isolation verified: user B could not list/read __PW_TEST__UPLOAD__2026-06-07T22-07-36-960Z via API or direct RLS query
+  - cleanup verified for file-upload marker 2026-06-07T22:07:36.960Z
+
+### File upload persistence migration - 2026-06-08T08:10+10:00
+- Approved schema scope: apply only existing in-repo migration `supabase/migrations/20260325000001_ai_file_cache.sql`.
+- Migration review: additive new `public.ai_file_cache` table, comments, two indexes, RLS enabled, and two RLS policies. No existing table/column alter, rename, drop, or data mutation.
+- Pre-check command: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration "select to_regclass('public.ai_file_cache') as before;"`
+- Pre-check result: `before: null`.
+- Migration tooling note: `supabase db push --linked --dry-run` from the full repo would apply unrelated pending migrations; a one-file temp workdir dry run showed only `20260325000001` local-only, but `db push` refused because legacy short remote migration versions sort/match incorrectly. To avoid a broad push, the exact existing migration script was applied through Supabase CLI.
+- Applied command: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration --file ${REPO_ROOT}/supabase/migrations/20260325000001_ai_file_cache.sql`
+- Migration-history command: `supabase migration repair --linked --workdir /tmp/unite-hub-ai-file-cache-migration --status applied 20260325000001`
+- Apply result: command exited `0`; migration history reported `Repaired migration history: [20260325000001] => applied`.
+- Verification command: `node <service-role effect check: select id from ai_file_cache limit 0>`
+- Verification result: host `lksfwktwtmyznckodsau.supabase.co`, table exists, no PostgREST error.
+- RLS policy verification: database metadata query returned policies `founders_own_files` for role `authenticated` and `service_role_full_access` for role `service_role`.
+- Rollback command if Phill explicitly requests rollback: `supabase db query --linked --workdir /tmp/unite-hub-ai-file-cache-migration "drop table if exists public.ai_file_cache cascade;" && supabase migration repair --linked --workdir /tmp/unite-hub-ai-file-cache-migration --status reverted 20260325000001`
+
+### File upload persisted PASS - 2026-06-08T08:11+10:00
+- Command: `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload`
+- Actual result: PASS; `1` Playwright test passed. The guard provisioned two tagged throwaway auth users, signed in as user A, uploaded a tiny tagged file, asserted HTTP `201`, asserted response body contained the tagged `cacheKey`, filename, byte size, and mock `file_mock_...` id, admin re-read `ai_file_cache` for the exact founder/cache key, proved user B could not list the file via `/api/files`, proved user B could not read it via direct authenticated RLS query, and verified cleanup.
+- Cleanup audit command: `node <service-role effect check: ai_file_cache like __PW_TEST__UPLOAD__%>`
+- Cleanup audit result: host `lksfwktwtmyznckodsau.supabase.co`, `testUploadRowsRemaining:0`.
+- Regression command: `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud`
+- Actual result: PASS; `1` Playwright test passed.
+- Regression command: `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys`
+- Actual result: PASS; `5` Playwright tests passed.
+- Regression command: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright test passed.
+- Local gates: `pnpm type-check` PASS; `pnpm lint` PASS; `pnpm vitest run` PASS (`118` test files, `847` tests); `git diff --check` PASS.
+- Build: `pnpm build` BLOCKED before compile by local env validation (`0/3` critical, `0/4` required runtime vars in this shell). Supabase-injected build variant had critical Supabase vars present (`3/3`) but remained blocked by missing required runtime names (`ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID`).
+
+### Contact CRUD approved production-write run - 2026-06-07T22:08:05.608Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Workspace note: live Contact API is founder-scoped and has no workspace_id; workspaces require an organization parent, which is outside this write exception.
+  - created test auth user A: 33f63ebb-c144-4fe9-a69b-f9b713bfeeb0
+  - created test auth user B: f3c2ddfe-b68d-4897-bbd5-b41b906384be
+  - created test contact A: 6c002794-a94d-4d7f-9f29-970f02cd007b (playwright+crud+2026-06-07T22-08-05-608Z+a@unite-hub.test)
+  - created test contact B: 2bf1d312-6510-482d-8704-b7ad8fac7ac4 (playwright+crud+2026-06-07T22-08-05-608Z+b@unite-hub.test)
+  - authenticated delete verified for contact A: 6c002794-a94d-4d7f-9f29-970f02cd007b
+  - cleanup verified for marker 2026-06-07T22:08:05.608Z: contacts/users removed; workspace IDs created: 0
+
+### Core authenticated journey run - 2026-06-07T22:08:18.675Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated password was kept in memory only and was not logged.
+  - created core journey auth user: 5b0d18ed-e1e6-4c7a-876a-154618c8229c
+  - integrations status returned 200 with 14 providers
+  - created tagged email campaign: c3237ad4-587d-4938-81eb-dc77a2abf1f3
+  - campaign send path blocked without recipients before any provider send: c3237ad4-587d-4938-81eb-dc77a2abf1f3
+  - files list returned 200 with 0 cached files
+  - tiny file upload returned 503 with provider_not_configured; full upload/transcription remains UNKNOWN
+  - cleanup verified for core journey marker 2026-06-07T22:08:18.675Z
+
+### Lead scoring API run - 2026-06-07T22:08:30.177Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Persistence note: current contacts table has no ai_score column; route persists to contacts.metadata.leadQualification.
+  - created lead scoring auth user A: 5eae90fe-9357-4b4c-abf1-b66d02964727
+  - created lead scoring auth user B: 83ede974-0aa5-4d74-9e1a-2f7827330436
+  - created lead scoring contact A: 4da0161c-6d29-41d7-a678-5a1cc52956d2 (playwright+lead-scoring+2026-06-07T22-08-30-177Z+a@unite-hub.invalid)
+  - created lead scoring contact B: 50d7eb1f-51ab-4560-99a8-05b583619d61 (playwright+lead-scoring+2026-06-07T22-08-30-177Z+b@unite-hub.invalid)
+  - scored contact 4da0161c-6d29-41d7-a678-5a1cc52956d2: expected score 100, persisted metadata score 100
+  - cross-founder scoring blocked: A received 404 for B contact 50d7eb1f-51ab-4560-99a8-05b583619d61
+  - cleanup verified for lead scoring marker 2026-06-07T22:08:30.177Z: contacts/users removed
+
+### Transcription API run - 2026-06-07T22:31:43.778Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1 proves wiring without a live paid provider call.
+  - created transcription auth user A: fe5c6225-4cdf-433c-bb06-23c8c843fc36
+  - created transcription auth user B: 8aa822c0-5e79-44f5-914b-7cd27854de0e
+  - uploaded tagged source file: status 201, cacheKey __PW_TEST__TRANSCRIPTION__2026-06-07T22-31-43-778Z
+  - mocked transcription returned 200 with transcript text for __PW_TEST__TRANSCRIPTION__2026-06-07T22-31-43-778Z
+  - cross-user transcription isolation verified: user B received 404 for __PW_TEST__TRANSCRIPTION__2026-06-07T22-31-43-778Z
+  - persistence note: transcript durable storage remains UNKNOWN because no active transcript schema exists.
+  - cleanup verified for transcription marker 2026-06-07T22:31:43.778Z
+
+### Transcription endpoint targeted build - 2026-06-08T08:32+10:00
+- Schema review: active `ai_file_cache` has no transcript or metadata persistence field; no active additive transcript migration was found. No schema change was applied.
+- Endpoint: `POST /api/files/transcribe` accepts JSON `{ "cacheKey": "..." }`, requires auth, founder-scopes lookup through `ai_file_cache`, and returns a test-only mocked transcript when `UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1`.
+- Persistence honesty: response includes `persistence.persisted=false` and `persistence.status='unknown'` until an approved transcript persistence schema exists.
+- Live provider honesty: no live provider call was attempted; the provider step remains UNKNOWN pending API key/cost/source-byte approval.
+- Command: `pnpm run type-check`
+- Actual result: PASS.
+- Command: `pnpm run lint`
+- Actual result: PASS.
+- Command: `git diff --check`
+- Actual result: PASS.
+- Command: `TRANSCRIPTION_APPEND_EVIDENCE=1 pnpm test:e2e:transcription`
+- Actual result: PASS; first run passed `1` Playwright test with tagged upload `201`, mocked transcription `200`, cross-user transcription `404`, and cleanup verified.
+- Follow-up command after adding unauthenticated fail-closed check: `pnpm test:e2e:transcription`
+- Follow-up actual result: PASS; `2` Playwright tests passed.
+- Regression command: `pnpm test:e2e:contact-crud`
+- Actual result: PASS; `1` Playwright test passed.
+- Regression command: `pnpm test:e2e:core-journeys`
+- Actual result: PASS; `5` Playwright tests passed.
+- Regression command: `pnpm test:e2e:lead-scoring`
+- Actual result: PASS; `1` Playwright test passed.
+- Regression command: `pnpm test:e2e:file-upload`
+- Actual result: PASS; `1` Playwright test passed.
+- Cleanup audit command: `node <service-role effect check: ai_file_cache like __PW_TEST__TRANSCRIPTION__%>`
+- Cleanup audit result: host `lksfwktwtmyznckodsau.supabase.co`, `transcriptionRowsRemaining:0`.
+- Full unit command: `pnpm vitest run`
+- Actual result: PASS; `118` files and `847` tests passed.
+- Build command: `pnpm build`
+- Actual result: BLOCKED before compile by local env validation (`0/3` critical and `0/4` required runtime vars in this shell).
+
+### Drip campaign API run - 2026-06-07T22:52:25.109Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: process_pending is dry-run only in this guard; no email provider send is attempted.
+  - created drip auth user A: 9d9ebb45-912e-4b73-9470-489d37f31343
+  - created drip auth user B: b4c844ef-1154-4671-b848-814e2c9a53a8
+  - created drip contact a8d4ae43-82fc-4eab-b855-cf55431f4535: playwright+drip-contact+2026-06-07T22-52-25-109Z@unite-hub.test
+  - created drip campaign a7ba8a38-7707-4378-a4d1-ffc05c86f011
+  - added one drip step and enrolled the tagged contact
+  - process_pending dry-run returned processed=1, failed=0, providerSend=not_attempted
+  - cross-user isolation verified: user B received 404 for campaign a7ba8a38-7707-4378-a4d1-ffc05c86f011
+  - cleanup verified for drip marker 2026-06-07T22:52:25.109Z
+
+### Drip campaign targeted build - 2026-06-08T08:54+10:00
+- Schema review: active migrations include `email_campaigns` and `contacts`, but no active `drip_campaigns`, `campaign_steps`, `campaign_enrollments`, schedule/retry state, or execution-log tables. No schema change was applied.
+- Endpoint: `POST /api/campaigns/drip` accepts `create_campaign`, `add_step`, `enroll_contact`, and `process_pending` actions. It requires auth and founder-scopes campaign/contact lookups.
+- Persistence: compatibility state is persisted in `email_campaigns.metadata.drip` plus `recipient_list`; this is not claimed as final clean drip schema.
+- Provider safety: `process_pending` dry-runs safe test-domain recipients and returns `providerSend='not_attempted'`; no SendGrid/live provider call is made.
+- Rate-limit fix: `/api/campaigns/drip` is classified as standard API traffic, not AI-heavy generation traffic, so normal lifecycle clicks do not hit the 5/min AI bucket.
+- Command: `pnpm run type-check`
+- Actual result: PASS.
+- Command: `pnpm run lint`
+- Actual result: PASS.
+- Command: `DRIP_CAMPAIGN_APPEND_EVIDENCE=1 pnpm test:e2e:drip-campaign`
+- Actual result: PASS; `2` Playwright tests passed.
+- Follow-up command after support-script update: `pnpm test:e2e:drip-campaign`
+- Follow-up actual result: PASS; `2` Playwright tests passed.
+- Cleanup audit command: `node <service-role effect check: tagged drip email_campaigns and contacts>`
+- Cleanup audit result: host `lksfwktwtmyznckodsau.supabase.co`, `dripCampaignsRemaining:0`, `dripContactsRemaining:0`.
+
+### Email import API run - 2026-06-07T22:58:39.370Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: gmail_mock proves sender-to-contact import without live Google consent.
+  - created email import auth user A: 13422b92-2aa9-49dd-bc88-c43913b23cfb
+  - created email import auth user B: 391972c0-df2f-4021-9132-121c3e0b1504
+  - imported mocked Gmail sender to contact 048d3674-efba-4ebf-b421-08292c9019aa: playwright+gmail-import+2026-06-07t22-58-39-370z@unite-hub.test
+  - duplicate import returned existing contact instead of creating another
+  - cross-user isolation verified: user B could not list playwright+gmail-import+2026-06-07t22-58-39-370z@unite-hub.test
+  - cleanup verified for email import marker 2026-06-07T22:58:39.370Z
+
+### Email import targeted build - 2026-06-08T08:59+10:00
+- Route: `POST /api/email/contacts/import` accepts mocked Gmail sender payloads, requires auth, founder-scopes contact lookup/insert, and returns existing contacts for duplicate founder/email imports.
+- Live-provider honesty: live Gmail mode returns `503 gmail_live_import_not_connected`; no OAuth consent, Gmail read, or Outlook/Microsoft call was attempted.
+- Command: `EMAIL_IMPORT_APPEND_EVIDENCE=1 pnpm test:e2e:email-import`
+- Actual result: PASS; `2` Playwright tests passed.
+- Cleanup audit command: `node <service-role effect check: contacts like playwright+gmail-import+%@unite-hub.test>`
+- Cleanup audit result: host `lksfwktwtmyznckodsau.supabase.co`, `emailImportContactsRemaining:0`.
+- Final chained e2e command: `pnpm run type-check && pnpm run lint && pnpm test:e2e:drip-campaign && pnpm test:e2e:email-import && pnpm test:e2e:contact-crud && pnpm test:e2e:core-journeys && pnpm test:e2e:lead-scoring && pnpm test:e2e:file-upload && pnpm test:e2e:transcription && git diff --check`
+- Final chained e2e result: PASS.
+- Full unit command after both new routes: `pnpm vitest run`
+- Actual result: PASS; `118` files and `847` tests passed.
+- Build command: `pnpm build`
+- Actual result: BLOCKED before compile by local env validation (`0/3` critical and `0/4` required runtime vars in this shell).
+
+### Email import API run - 2026-06-07T22:57:06.290Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: gmail_mock proves sender-to-contact import without live Google consent.
+  - created email import auth user A: 45bc4f21-7efa-4931-ac93-8e3bdc6c3ed3
+  - created email import auth user B: c8686f9c-8797-4cc2-a0b6-8a99a6c9b4d3
+  - cleanup verified for email import marker 2026-06-07T22:57:06.290Z
+
+### Email import API run - 2026-06-07T22:57:29.663Z
+- Supabase host: lksfwktwtmyznckodsau.supabase.co
+- Safety: generated passwords were kept in memory only and were not logged.
+- Provider note: gmail_mock proves sender-to-contact import without live Google consent.
+  - created email import auth user A: 28ece068-4e67-4eeb-8fed-0f23a3860f98
+  - created email import auth user B: f753e9f6-969e-4cf1-99a9-73a1304fcf27
+  - imported mocked Gmail sender to contact f6f1e71e-962f-4056-adcf-38bcd327aa69: playwright+gmail-import+2026-06-07t22-57-29-663z@unite-hub.test
+  - duplicate import returned existing contact instead of creating another
+  - cross-user isolation verified: user B could not list playwright+gmail-import+2026-06-07t22-57-29-663z@unite-hub.test
+  - cleanup verified for email import marker 2026-06-07T22:57:29.663Z
+
+### Core journey swarm follow-up - 2026-06-08T10:09+10:00
+- Branch: `feat/core-journeys-swarm-2`.
+- Microsoft OAuth foundation: added auth-gated authorize/callback routes plus helper. `pnpm vitest run src/app/api/auth/microsoft/__tests__/authorize.test.ts --config vitest.config.api.ts` passed `8/8`.
+- Gmail live import wiring: `source='gmail'` now supports `threadId` or `messageId` using existing Google credentials. `pnpm vitest run src/app/api/email/contacts/import/__tests__/route.test.ts --config vitest.config.api.ts` passed `7/7`.
+- Mocked email import guard: `pnpm run test:e2e:email-import` passed `2/2`; tagged contact cleanup verified by the guard.
+- Regression guards: `pnpm test:e2e:contact-crud` passed `1/1`; `pnpm test:e2e:lead-scoring` passed `1/1`; `pnpm test:e2e:file-upload` passed `1/1`; `pnpm test:e2e:core-journeys` passed `5/5`.
+- Local gates: `pnpm run type-check` PASS; `pnpm run lint` PASS; `pnpm vitest run` PASS (`120` files / `862` tests); `git diff --check` PASS.
+- Schema dry-run: `pnpm exec supabase db push --dry-run --linked` completed without applying changes and listed pending migrations including `20260607235936_ai_file_transcripts.sql` and `20260608000000_drip_lifecycle_schema.sql`.
+- Build: `pnpm build` BLOCKED before compile by local env validation (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `VAULT_ENCRYPTION_KEY`, `CRON_SECRET`, `FOUNDER_USER_ID` absent in this shell).
+
+### PR #106 review-fix swarm - 2026-06-08T10:42+10:00
+- Branch: `feat/core-journeys-swarm-2`.
+- Scope: addressed CodeRabbit actionable review items for Microsoft OAuth state/token handling, email import source validation/RLS client usage, drip request-scoped processing and tenant FKs, transcript persistence safety, and documentation contradictions.
+- Microsoft focused route tests: `pnpm vitest run src/app/api/auth/microsoft/__tests__/authorize.test.ts src/app/api/email/contacts/import/__tests__/route.test.ts --config vitest.config.api.ts` -> PASS, `2` files / `21` tests.
+- Full TypeScript: `pnpm run type-check` -> PASS.
+- Lint: `pnpm run lint` -> PASS.
+- Targeted ESLint for touched route files -> PASS; E2E file lint warning only noted that `e2e/transcription.spec.ts` is outside the src ESLint config.
+- Full unit/integration suite: `pnpm vitest run` -> PASS, `120` files / `868` tests.
+- Email import E2E: `pnpm run test:e2e:email-import` -> PASS, `2/2`, tagged cleanup performed by guard.
+- Transcription E2E: `pnpm run test:e2e:transcription` -> PASS, `2/2`; with `ai_file_transcripts` absent, endpoint returned transcript content plus `persistence.status='unknown'`, `persisted=false`, `reason='schema_missing'` instead of leaking raw DB errors or blocking mocked transcription.
+- Regression E2E: `pnpm run test:e2e:contact-crud` -> PASS `1/1`; `pnpm run test:e2e:lead-scoring` -> PASS `1/1`; `pnpm run test:e2e:file-upload` -> PASS `1/1`; `pnpm run test:e2e:core-journeys` -> PASS `5/5`.
+- Whitespace: `git diff --check` -> PASS.
+- Schema dry-run: `pnpm exec supabase db push --dry-run --linked` -> PASS dry-run only; no schema was applied. It still lists many pending historical migrations plus `20260607235936_ai_file_transcripts.sql` and `20260608000000_drip_lifecycle_schema.sql`.
+- Build: `pnpm build` -> BLOCKED before compile by local env validation (`0/3` critical, `0/4` required runtime vars in this shell).

@@ -107,7 +107,7 @@ After this push, wait for PR #93 checks to settle again. Then use an approved au
 ### Updated risk map
 
 - `NEXT_PUBLIC_APP_URL` is still a parity concern. The validator lists it as integration config, but many OAuth routes treat app URL as operationally important. Google is now guarded; Meta/LinkedIn/TikTok/YouTube/Xero/social OAuth paths still need the same review before those flows can be called production-hardened.
-- Outlook import is not merely unverified; current route inventory did not find a Microsoft Graph/Outlook OAuth route. Treat Outlook import as absent/UNKNOWN, not working.
+- Outlook/Microsoft import is not live-proved. Microsoft OAuth route guards now exist, but live consent and Microsoft Graph mailbox import remain UNKNOWN / not connected.
 - Drip campaign lifecycle and transcription remain UNKNOWN; current routes do not prove those product journeys exist end-to-end.
 
 ### Single highest-value next step
@@ -255,30 +255,112 @@ All six requested currently-UNKNOWN journeys remain **UNKNOWN** after an autonom
 2. Add an authenticated lead-scoring route/path that persists/re-reads a score for a seeded contact, or mark scoring as library-only.
 3. Wire the paid file/transcription path with explicit cost controls and a real cleanup story, or mark transcription not connected.
 
-## Finalise core journeys update — 2026-06-07T12:38Z
+## Lead scoring targeted build — 2026-06-07T13:06Z
 
-### What now passes
+### What genuinely works now
 
-- Drip campaign lifecycle is now guarded: create, add step, enrol tagged test contact, process pending as dry-run, and assert no email was sent.
-- Lead scoring is now an authenticated API journey: seed contact, score with known signals, persist into `contacts.metadata.leadQualification`, and re-read.
-- Upload/transcription wiring is now guarded with an explicit mocked provider for tagged e2e data. Non-mock upload no longer returns the previous credential-path `500`; it reports `503` provider-not-connected.
-- Existing Contact CRUD + RLS and integrations status guards still pass after the new work.
+- `POST /api/contacts/:id/score` exists and is authenticated.
+- The route reuses `qualifyLead` as the single source of truth.
+- Contact access is founder-scoped with `.eq('founder_id', user.id)`.
+- The e2e guard proved a real authenticated user can score a tagged contact, persist the expected score `100` to `contacts.metadata.leadQualification`, re-read it, and cannot score another founder's tagged contact.
+- Cleanup was verified for the throwaway auth users and contacts.
 
-### What remains unknown
+### What remains blocked
 
-- Gmail OAuth import/contact creation remains **UNKNOWN** because Google consent requires a human and a real Google account. The run verified the authorize/callback boundary only.
-- Live paid transcription remains **UNKNOWN**. The route and upload/transcription wiring are proven with a mock provider; executing a paid provider needs credentials and an explicit cost ceiling.
+- The exact requested `contacts.ai_score` persistence is **UNKNOWN / BLOCKED** because the current live `contacts` table has no `ai_score` column. A service-role effect probe returned `42703 column contacts.ai_score does not exist`.
+- No schema change was applied because this run authorised scoped reversible test data only, not production schema changes.
 
 ### Fresh verification
 
 - `pnpm type-check` -> PASS.
 - `pnpm lint` -> PASS.
+- `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` -> PASS, `1` Playwright test.
+- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright regression test.
+- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright regression tests.
+- `node <scoped cleanup audit for lead-scoring/contact-crud/core regression IDs>` -> PASS, `5/5` auth users gone, `0` contacts remain, `0` campaigns remain.
 - `pnpm vitest run` -> PASS, `118` test files and `847` tests.
-- `env FINISH_CORE_APPEND_EVIDENCE=1 pnpm test:e2e:finish-core-journeys` -> PASS, `1` Playwright test.
-- `env CONTACT_CRUD_APPEND_EVIDENCE=1 pnpm test:e2e:contact-crud` -> PASS, `1` Playwright test.
-- `env CORE_JOURNEYS_APPEND_EVIDENCE=1 pnpm test:e2e:core-journeys` -> PASS, `5` Playwright tests.
-- `pnpm build` -> BLOCKED before compile by the repo `prebuild` validator because required runtime names were not present in the spawned build process. This is recorded in `EVIDENCE.md`.
+- `pnpm build` -> BLOCKED before compile by local `prebuild` env validation (`0/3` critical, `0/4` required set in this shell).
+- `pnpm exec tsx e2e/support/run-with-supabase-admin.ts pnpm build` -> BLOCKED before compile with Supabase critical vars present (`3/3`) and required runtime names absent (`0/4`).
 
-### Single highest-value next step
+### Next decision
 
-Complete Google OAuth consent for a controlled test account, then add a Gmail import e2e that consumes the resulting test token and proves contact creation without sending mail.
+Approve an additive `contacts.ai_score` migration and generated type update, or accept `contacts.metadata.leadQualification.score` as the product persistence field.
+
+## Overnight Task 1 — Lead scoring confirmation — 2026-06-07T13:28Z
+
+Task 1 did not produce a new PR because PR #101 is already merged and the only missing part is a schema decision. Fresh guard proof still passes for current-schema persistence: `env LEAD_SCORING_APPEND_EVIDENCE=1 pnpm test:e2e:lead-scoring` passed `1/1`, including expected score `100`, persisted `contacts.metadata.leadQualification.score = 100`, cross-founder `404`, and cleanup.
+
+Exact `contacts.ai_score` persistence remains **UNKNOWN / BLOCKED** until an additive schema change is approved, or the product contract accepts metadata persistence.
+
+## Overnight Task 2 — Upload 500 — 2026-06-07T13:36Z
+
+What genuinely works now: authenticated `/api/files` no longer exposes known configuration blockers as raw `500`s. Missing Anthropic config returns `503 provider_not_configured`; missing upload cache storage returns `503 file_cache_not_configured`. The new `pnpm test:e2e:file-upload` guard proves this as a real signed-in throwaway user and verifies cleanup.
+
+What remains blocked: persisted tiny-file upload is still **UNKNOWN / BLOCKED** because the repo's existing `ai_file_cache` migration is not applied in the verified live Supabase lane. Once `supabase/migrations/20260325000001_ai_file_cache.sql` is applied, rerun `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload`; the same guard will require `201` plus an admin re-read when the table exists.
+
+Fresh verification: type-check PASS, lint PASS, file-upload e2e PASS, contact-crud regression PASS, core-journeys regression PASS, lead-scoring regression PASS, Vitest PASS (`118` files / `847` tests), whitespace check PASS. Build remains blocked before compile by missing local required runtime env names.
+
+## File upload persistence — 2026-06-08T08:11+10:00
+
+What genuinely works now: persisted file upload is **PASS**. The existing migration `supabase/migrations/20260325000001_ai_file_cache.sql` has been applied to `lksfwktwtmyznckodsau`, and `pnpm test:e2e:file-upload` now requires and proves HTTP `201`, persisted `ai_file_cache` admin re-read, API cross-user isolation, direct authenticated RLS isolation, and cleanup.
+
+Schema note: `supabase db push` could not safely apply only this migration because the live project has legacy short migration versions whose history does not sort/match cleanly in the CLI. To avoid applying unrelated pending migrations, the exact existing migration file was run through `supabase db query --file`, then `supabase migration repair --status applied 20260325000001` recorded the migration version.
+
+Rollback command recorded in `EVIDENCE.md`: `drop table if exists public.ai_file_cache cascade;` followed by marking migration `20260325000001` reverted. Do not run it unless Phill explicitly asks for rollback.
+
+Fresh verification: file-upload e2e PASS, contact-crud regression PASS, core-journeys regression PASS, lead-scoring regression PASS, type-check PASS, lint PASS, Vitest PASS (`118` files / `847` tests), whitespace check PASS. Local build remains blocked before compile by missing required runtime env names in this shell.
+
+## Transcription endpoint — 2026-06-08T08:32+10:00
+
+What genuinely works now: `POST /api/files/transcribe` exists and is authenticated. It looks up the uploaded file through the existing founder-scoped `ai_file_cache` path, supports a test-only mocked provider, returns deterministic transcript text, and fails closed for another founder's cache key. The self-cleaning guard `pnpm test:e2e:transcription` proved unauthenticated fail-closed behaviour, upload `201`, transcription `200`, cross-user `404`, and cleanup with tagged throwaway users.
+
+What remains blocked: durable transcript persistence is **UNKNOWN / BLOCKED** because no active additive transcript migration or existing `ai_file_cache` transcript/metadata column exists. Live provider transcription is **UNKNOWN / BLOCKED** because this run intentionally avoided paid provider calls and there is no approved key/cost/source-byte retrieval path for live transcription.
+
+Fresh verification: type-check PASS, lint PASS, whitespace check PASS, transcription e2e PASS (`2/2`), contact-crud PASS (`1/1`), core-journeys PASS (`5/5`), lead-scoring PASS (`1/1`), file-upload PASS (`1/1`), cleanup audit PASS (`0` tagged transcription rows remain), Vitest PASS (`118` files / `847` tests). Local build remains blocked before compile by missing required runtime env names in this shell.
+
+## Drip campaign lifecycle — 2026-06-08T08:54+10:00
+
+What genuinely works now: `POST /api/campaigns/drip` exists and is authenticated. It supports `create_campaign`, `add_step`, `enroll_contact`, and `process_pending` over the existing founder-scoped `email_campaigns` and `contacts` tables. The self-cleaning guard `pnpm test:e2e:drip-campaign` proved unauthenticated fail-closed behaviour, create, add step, enrol, dry-run process, cross-user `404`, and cleanup with tagged throwaway users.
+
+Safety behaviour: `process_pending` defaults to dry-run and records `providerSend='not_attempted'`; it does not call SendGrid or any real provider.
+
+What remains blocked: this is a compatibility lifecycle using `email_campaigns.metadata.drip`, not a final dedicated drip schema. Clean GREEN drip still needs approved active tables for steps, enrollments, scheduling/retry state, and execution logs.
+
+Fresh verification: type-check PASS, lint PASS, drip e2e PASS (`2/2`), cleanup audit PASS (`0` tagged drip campaigns and contacts remain). Full regression run still needs to happen before PR handoff.
+
+## Email import to contacts — 2026-06-08T08:59+10:00
+
+What genuinely works now: `POST /api/email/contacts/import` exists and is authenticated. In `gmail_mock` mode it converts a tagged non-deliverable sender into a founder-scoped contact, avoids duplicate contacts by founder/email, and fails closed for another founder's contact list. The self-cleaning guard `pnpm test:e2e:email-import` proved unauthenticated fail-closed behaviour, import `201`, duplicate import `200 created=false`, cross-user isolation, and cleanup.
+
+What remains blocked: live Gmail thread import is **UNKNOWN / HUMAN-GATED** until Google OAuth consent and real thread fetch are available. Outlook/Microsoft import is **PASS for OAuth route guards / UNKNOWN for live consent and Graph import**; no live Microsoft consent or mailbox read has been proved.
+
+Fresh verification: type-check PASS, lint PASS, email-import e2e PASS (`2/2`), cleanup audit PASS (`0` tagged email-import contacts remain), final chained e2e gate PASS, Vitest PASS (`118` files / `847` tests). Local build remains blocked before compile by missing required runtime env names in this shell.
+
+## Core journey swarm follow-up — 2026-06-08T10:09+10:00
+
+What genuinely works now:
+
+- Gmail import has a live route path for `source='gmail'` using existing founder-scoped Google credentials, `threadId` or `messageId`, and contact upsert/create by `founder_id` + email. Unit tests prove no-account, thread import, message import, and unauthorised-token handling; mocked e2e still proves safe contact creation and cleanup.
+- Microsoft OAuth foundation exists at `/api/auth/microsoft/authorize` and `/api/auth/microsoft/callback`, with auth guards, missing-env guards, signed state, token exchange, encryption, and founder-scoped `credentials_vault` storage. Unit tests prove the guard rails.
+- Dedicated drip and transcript persistence are no longer just vague blockers: additive migrations, routes, and stricter e2e guards are ready for review.
+
+Still blocked:
+
+- Dedicated drip e2e is schema-gated until `supabase/migrations/20260608000000_drip_lifecycle_schema.sql` is applied.
+- Transcript persistence e2e is schema-gated until `supabase/migrations/20260607235936_ai_file_transcripts.sql` is applied.
+- Live Gmail and Microsoft import remain human-consent gated; no provider consent or live mailbox read was attempted.
+- Local build is blocked before compile by missing runtime env in this shell.
+
+Top 3 next fixes:
+
+1. Review and apply the two additive migrations in an authorised schema lane, then rerun `pnpm test:e2e:drip-campaign` and `pnpm test:e2e:transcription`.
+2. Complete Google and Microsoft OAuth consent with target accounts, then run one tagged live import proof for each provider.
+3. Move Playwright e2e to a non-production Supabase CI lane; current CI skips Playwright and local guards still rely on the approved production-write exception.
+
+## PR #106 Review Fix Swarm — 2026-06-08T10:42+10:00
+
+What changed: the swarm addressed the actionable PR #106 review set without applying migrations or deploying. Microsoft OAuth state now carries founder id, nonce, and expiry; callback validates founder/expiry and stores credentials against the authoritative Microsoft Graph sender. Email import now rejects unknown sources instead of falling through to mocks and uses the request-scoped Supabase client. Drip processing now runs through the request-scoped client, marks unsafe/live-send attempts as failed so they do not reprocess, and the dedicated schema migration has composite founder constraints. Transcription no longer exposes raw DB errors to clients and preserves response-only mocked transcription when the transcript table is not applied by returning a `schema_missing` persistence marker.
+
+Fresh verification: focused Microsoft/import Vitest PASS (`21` tests), type-check PASS, lint PASS, full Vitest PASS (`120` files / `868` tests), email-import e2e PASS (`2/2`), transcription e2e PASS (`2/2`), contact-crud PASS (`1/1`), lead-scoring PASS (`1/1`), file-upload PASS (`1/1`), core-journeys PASS (`5/5`), whitespace check PASS, Supabase dry-run PASS without applying schema. Local build remains blocked before compile by missing runtime env in this shell.
+
+Still blocked: dedicated drip and transcript persistence remain schema-gated until the two additive migrations are explicitly applied in an authorized schema lane. Live Gmail/Microsoft import still needs human OAuth consent.

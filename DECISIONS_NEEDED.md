@@ -37,8 +37,8 @@ Branch: `feat/24h-verify-and-harden`
    - No env values should be pasted into chat.
 
 5. **Confirm whether Outlook import is in scope for the current CRM**
-   - Finding: route inventory found Microsoft account metadata, but no Microsoft Graph/Outlook OAuth/import API route in the current app.
-   - Needed decision: mark Outlook import as not connected for this production-hardening pass, or provide the intended current route/spec if it exists outside the inspected tree.
+   - Finding: Microsoft authorize/callback route guards now exist, but live Microsoft consent and Microsoft Graph import remain UNKNOWN / not connected.
+   - Needed decision: mark Outlook import as not connected for this production-hardening pass, or approve the intended live Microsoft Graph import verification path.
 
 6. **Confirm whether drip campaigns and transcription are current product promises**
    - Finding: current routes show email campaign draft/send and video/file routes, but no verified drip enrol/process route and no transcription endpoint.
@@ -144,18 +144,79 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
    - Authenticated files list works, but tiny upload returned the `ANTHROPIC_API_KEY` credential blocker, and no transcription endpoint was found.
    - Needed decision: provide a cost-controlled transcription/upload test lane or mark transcription not connected.
 
-## Added 2026-06-07T12:38Z — Finalise run remaining human-gated items
+## Added 2026-06-07T13:06Z — Lead scoring ai_score column blocker
 
-24. **Complete Gmail OAuth consent for a controlled test account**
-   - Autonomous verification cannot complete Google consent.
-   - Human steps:
-     1. Sign in to the Unite-Hub preview or production lane as the intended founder/test user.
-     2. Open `/api/auth/google/authorize?email=<controlled-test-gmail-address>`.
-     3. Complete Google consent in the browser for a controlled test account.
-     4. Confirm the callback returns to `/founder/email?connected=...`.
-     5. Re-run the Gmail import/contact e2e once a test token exists in `credentials_vault`.
-   - Do not use a personal inbox with real contacts for autonomous import proof.
+24. **Approve an additive `contacts.ai_score` schema change, or accept metadata persistence as the current product contract**
+   - Mission target requested persistence to `contacts.ai_score`.
+   - Current generated schema and live Supabase effect probe both show `contacts.ai_score` does not exist. The live probe returned status `400`, error code `42703`, message `column contacts.ai_score does not exist`.
+   - A production schema change is outside the scoped reversible test-data exception for this targeted run, so it was not applied.
+   - Safe progress made: `POST /api/contacts/:id/score` now runs the existing `qualifyLead` logic as the authenticated founder, founder-scopes by `founder_id`, persists the score to `contacts.metadata.leadQualification`, and is guarded by `pnpm test:e2e:lead-scoring`.
+   - Needed decision: either approve an additive migration for `contacts.ai_score` with generated type updates, or update the target contract so `contacts.metadata.leadQualification.score` is the accepted persistence field.
 
-25. **Approve live transcription provider execution and cost ceiling**
-   - The finish-core guard proves upload/transcription wiring using `UNITE_HUB_TEST_MOCK_AI_FILES=1`.
-   - Live paid provider execution is still UNKNOWN until credentials and a maximum spend/sample size are approved.
+## Added 2026-06-07T13:36Z — Upload persistence blocked by unapplied existing migration
+
+25. **Apply the existing `ai_file_cache` migration in the verified Supabase lane, or mark file upload persistence not connected**
+   - The code path for `/api/files` persists uploads to `ai_file_cache`, and the repo already contains `supabase/migrations/20260325000001_ai_file_cache.sql`.
+   - The verified live Supabase lane returned `Could not find the table 'public.ai_file_cache' in the schema cache`, so persisted upload cannot be honestly marked PASS.
+   - Safe progress made: known upload blockers now return explicit `503` codes instead of raw `500`; `pnpm test:e2e:file-upload` proves the authenticated boundary and cleanup without making a live paid provider call.
+   - Needed decision: apply `supabase/migrations/20260325000001_ai_file_cache.sql` through the normal migration process, then rerun `env FILE_UPLOAD_APPEND_EVIDENCE=1 pnpm test:e2e:file-upload` to prove `201` plus persisted admin re-read; or declare upload persistence not connected for the current production surface.
+
+## Added 2026-06-08T08:11+10:00 — Upload persistence blocker resolved
+
+26. **Resolved: `ai_file_cache` migration applied and persisted upload proved**
+   - The existing migration `supabase/migrations/20260325000001_ai_file_cache.sql` was applied to `lksfwktwtmyznckodsau`.
+   - `pnpm test:e2e:file-upload` now proves HTTP `201`, persisted `ai_file_cache` row, API cross-user isolation, direct authenticated RLS isolation, and cleanup.
+   - No decision remains for this item unless Phill wants rollback. The rollback command is recorded in `EVIDENCE.md` and must not be run without explicit approval.
+
+## Added 2026-06-08T08:32+10:00 — Transcription mocked wiring proved, persistence/live blocked
+
+27. **Approve transcript persistence schema, or accept response-only transcription for now**
+   - `POST /api/files/transcribe` now proves mocked-provider wiring over founder-scoped `ai_file_cache`.
+   - No active additive migration or existing `ai_file_cache` transcript/metadata column exists, so durable transcript persistence was not implemented.
+   - Needed decision: approve an additive transcript persistence migration and generated type update, or accept `persistence.status='unknown'` / response-only transcripts until that schema exists.
+
+28. **Provide live transcription provider/cost approval before live proof**
+   - The e2e guard uses `UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1` and makes no paid external transcription call.
+   - Needed decision: provide the provider API key/cost ceiling and the intended source-byte retrieval/storage path for live transcription, then run one tiny live sample.
+
+## Added 2026-06-08T08:54+10:00 — Drip compatibility lifecycle proved, clean schema still needed
+
+29. **Approve a dedicated drip lifecycle schema when this needs to become GREEN**
+   - `POST /api/campaigns/drip` now proves a dry-run compatibility lifecycle using `email_campaigns.metadata.drip` and `recipient_list`.
+   - Active migrations do not include dedicated `drip_campaigns`, `campaign_steps`, `campaign_enrollments`, schedule/retry state, or execution logs.
+   - Needed decision: approve an additive active drip schema migration and generated type update, or keep the metadata-backed compatibility route as the current AMBER product contract.
+
+30. **Approve live email provider sending separately from dry-run processing**
+   - `process_pending` deliberately does not call SendGrid or any live provider in this pass.
+   - Needed decision: define the live-send gate, test-domain policy, unsubscribe/consent rules, and provider cost/credential lane before enabling provider sends.
+
+## Added 2026-06-08T08:59+10:00 — Email import mocked path proved, live providers still gated
+
+31. **Complete Google OAuth consent before live Gmail import proof**
+   - `POST /api/email/contacts/import` now proves mocked Gmail sender-to-contact import without live provider access.
+   - Live Gmail import remains gated by human Google OAuth consent and real Gmail thread fetch.
+   - Needed action: Phill completes Google consent with the target account, then run one tagged live thread import proof.
+
+32. **Decide Outlook/Microsoft scope**
+   - Microsoft authorize/callback route guards now exist, but live Microsoft consent and Microsoft Graph import remain UNKNOWN / not connected.
+   - Needed decision: either approve completing and verifying a live Microsoft Graph import path, or mark Outlook import as not connected for the current CRM surface.
+
+## Added 2026-06-08T09:20+10:00 — Transcript persistence migration ready, application gated
+
+33. **Apply the additive transcript persistence migration in the authorized schema-change lane**
+   - Migration/code/tests are ready in `supabase/migrations/20260607235936_ai_file_transcripts.sql`, `src/app/api/files/transcribe/route.ts`, and `e2e/transcription.spec.ts`.
+   - Read-only live probe returned `PGRST205 Could not find the table 'public.ai_file_transcripts' in the schema cache`, so the focused transcription E2E is blocked until this migration is applied.
+   - This lane did not run production schema changes. Required next command, once authorized and after reviewing the SQL: `supabase db query --linked --file supabase/migrations/20260607235936_ai_file_transcripts.sql`, then `env TRANSCRIPTION_APPEND_EVIDENCE=1 pnpm test:e2e:transcription`.
+   - Live provider transcription remains UNKNOWN until provider credentials, source-byte retrieval/storage, and cost ceiling are explicitly approved.
+
+## Added 2026-06-08T10:09+10:00 — Swarm follow-up gates
+
+34. **Review/apply the dedicated drip migration before claiming GREEN drip**
+   - Migration/code/tests are ready in `supabase/migrations/20260608000000_drip_lifecycle_schema.sql`, `src/app/api/campaigns/drip/route.ts`, and `e2e/drip-campaign.spec.ts`.
+   - No schema change was applied in this run. Required next commands after review/approval: `pnpm exec supabase db push --dry-run --linked`, then the approved apply command for only the intended additive migrations, then `DRIP_CAMPAIGN_APPEND_EVIDENCE=1 pnpm test:e2e:drip-campaign`.
+   - Live provider sending remains separately gated by consent/unsubscribe/test-domain rules and provider cost/credential approval.
+
+35. **Complete human OAuth consent before live Gmail/Microsoft import proof**
+   - Gmail live import route wiring now exists and unit tests pass, but live proof still needs a connected Google account and a tagged real thread/message ID.
+   - Microsoft authorize/callback route wiring now exists and unit tests pass, but live proof still needs Microsoft app env vars and human consent.
+   - Do not mark provider import GREEN until a real consented account import is run with tagged data and cleanup proof.

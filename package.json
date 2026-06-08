@@ -45,8 +45,12 @@
     "linear": "node scripts/linear-update.mjs",
     "test:e2e": "playwright test",
     "test:e2e:contact-crud": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/contact-crud.spec.ts",
-    "test:e2e:core-journeys": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/core-journeys.spec.ts",
-    "test:e2e:finish-core-journeys": "UNITE_HUB_TEST_MOCK_AI_FILES=1 tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/finish-core-journeys.spec.ts"
+    "test:e2e:lead-scoring": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/lead-scoring.spec.ts",
+    "test:e2e:file-upload": "UNITE_HUB_TEST_MOCK_AI_FILES=1 tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/file-upload.spec.ts",
+    "test:e2e:transcription": "UNITE_HUB_TEST_MOCK_AI_FILES=1 UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1 tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/transcription.spec.ts",
+    "test:e2e:drip-campaign": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/drip-campaign.spec.ts",
+    "test:e2e:email-import": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/email-import.spec.ts",
+    "test:e2e:core-journeys": "tsx e2e/support/run-with-supabase-admin.ts playwright test e2e/core-journeys.spec.ts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

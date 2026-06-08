@@ -1,24 +1,38 @@
-import { NextResponse } from 'next/server'
-import { getUser } from '@/lib/supabase/server'
-import { createServiceClient } from '@/lib/supabase/service'
+import { NextRequest, NextResponse } from 'next/server'
+import { getUser, createClient } from '@/lib/supabase/server'
 import { qualifyLead } from '@/lib/crm/qualify-lead'
 
 export const dynamic = 'force-dynamic'
 
-function metadataOf(value: unknown): Record<string, unknown> {
-  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {}
+type LeadScoringMetadata = Record<string, unknown> & {
+  message?: string | null
+  interests?: string[] | null
+  marketingConsent?: boolean | null
+  referralSource?: string | null
+  source?: string | null
+}
+
+function metadataOf(value: unknown): LeadScoringMetadata {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as LeadScoringMetadata)
+    : {}
+}
+
+function stringArrayOf(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return null
+  const items = value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+  return items.length > 0 ? items : null
 }
 
 export async function POST(
-  request: Request,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const user = await getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
   const { id } = await params
-  const body = await request.json().catch(() => ({})) as Record<string, unknown>
-  const supabase = createServiceClient()
+  const supabase = await createClient()
 
   const { data: contact, error: loadError } = await supabase
     .from('contacts')
@@ -35,19 +49,21 @@ export async function POST(
     phone: contact.phone,
     company: contact.company,
     jobTitle: contact.role,
-    message: typeof body.message === 'string' ? body.message : typeof metadata.message === 'string' ? metadata.message : null,
-    interests: Array.isArray(body.interests) ? body.interests.filter((item: unknown): item is string => typeof item === 'string') : null,
-    marketingConsent: body.marketingConsent === true || metadata.marketingConsent === true,
-    referralSource: typeof body.referralSource === 'string' ? body.referralSource : null,
-    source: typeof body.source === 'string' ? body.source : null,
+    message: typeof metadata.message === 'string' ? metadata.message : null,
+    interests: stringArrayOf(metadata.interests),
+    marketingConsent: metadata.marketingConsent === true,
+    referralSource: typeof metadata.referralSource === 'string' ? metadata.referralSource : null,
+    source: typeof metadata.source === 'string' ? metadata.source : null,
   })
 
+  const scoredAt = new Date().toISOString()
   const nextMetadata = {
     ...metadata,
     leadQualification: {
       ...result,
-      scoredAt: new Date().toISOString(),
-      source: 'api',
+      scoredAt,
+      source: 'qualifyLead',
+      persistence: 'metadata.leadQualification',
     },
   }
 
@@ -59,6 +75,15 @@ export async function POST(
     .select('id, metadata')
     .single()
 
-  if (updateError) return NextResponse.json({ error: 'Failed to persist lead score' }, { status: 500 })
-  return NextResponse.json({ contactId: id, result, metadata: updated.metadata })
+  if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 })
+
+  return NextResponse.json({
+    contactId: id,
+    result,
+    persisted: {
+      column: 'metadata.leadQualification',
+      aiScoreColumn: 'missing',
+      metadata: (updated.metadata as LeadScoringMetadata).leadQualification ?? null,
+    },
+  })
 }

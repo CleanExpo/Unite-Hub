@@ -240,8 +240,11 @@ test.describe('core journey verification guard', () => {
         expect(uploadBody).toMatchObject({ cacheKey, filename: `__PW_TEST__${safeMarker(marker)}.txt`, sizeBytes: 29 })
         appendEvidence(`  - tiny file upload returned 201 with cacheKey ${cacheKey}`)
       } else {
-        expect(String(uploadBody.error ?? '')).toContain('ANTHROPIC_API_KEY')
-        appendEvidence('  - tiny file upload returned 503 with ANTHROPIC_API_KEY credential blocker; transcription remains UNKNOWN')
+        expect([
+          'provider_not_configured',
+          'file_cache_not_configured',
+        ]).toContain(uploadBody.code)
+        appendEvidence(`  - tiny file upload returned 503 with ${uploadBody.code}; full upload/transcription remains UNKNOWN`)
       }
 
       await context.close()

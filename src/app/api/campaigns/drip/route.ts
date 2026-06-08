@@ -1,220 +1,459 @@
-import { randomUUID } from 'node:crypto'
+// src/app/api/campaigns/drip/route.ts
+// Founder-scoped drip lifecycle backed by dedicated drip_* tables.
+
 import { NextResponse } from 'next/server'
-import { getUser } from '@/lib/supabase/server'
-import { createServiceClient } from '@/lib/supabase/service'
+import { createClient, getUser } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
-type DripStep = {
+type JsonObject = Record<string, unknown>
+
+type DripCampaignRow = {
   id: string
-  order: number
-  delayHours: number
+  founder_id: string
+  business_key: string
+  name: string
   subject: string
-  bodyText: string
-  bodyHtml: string
+  body_html: string
+  body_text: string | null
+  status: string
+  source: string
+  metadata: unknown
+  created_at: string
+  updated_at: string
 }
 
-type DripEnrollment = {
+type DripStepRow = {
   id: string
-  contactId: string
+  founder_id: string
+  campaign_id: string
+  step_order: number
+  subject: string
+  body_html: string
+  body_text: string | null
+  delay_minutes: number
+  created_at: string
+}
+
+type DripEnrollmentRow = {
+  id: string
+  founder_id: string
+  campaign_id: string
+  contact_id: string
   email: string
-  status: 'pending' | 'processed' | 'skipped'
-  enrolledAt: string
-  processedAt?: string
-  lastResult?: string
+  name: string | null
+  status: 'active' | 'completed' | 'paused' | 'failed' | 'cancelled'
+  current_step_order: number
+  next_run_at: string
+  enrolled_at: string
+  completed_at: string | null
 }
 
-type DripMetadata = {
+type ContactRow = {
+  id: string
+  email: string | null
+  first_name: string | null
+  last_name: string | null
+}
+
+type CreateCampaignBody = {
+  action: 'create_campaign'
+  businessKey?: string
   name?: string
-  drip?: {
-    steps?: DripStep[]
-    enrollments?: DripEnrollment[]
-    processRuns?: Array<{ id: string; processed: number; skipped: number; dryRun: true; processedAt: string }>
+  subject?: string
+  bodyHtml?: string
+  bodyText?: string
+}
+
+type AddStepBody = {
+  action: 'add_step'
+  campaignId?: string
+  subject?: string
+  bodyHtml?: string
+  bodyText?: string
+  delayMinutes?: number
+}
+
+type EnrollBody = {
+  action: 'enroll_contact'
+  campaignId?: string
+  contactId?: string
+}
+
+type ProcessBody = {
+  action: 'process_pending'
+  campaignId?: string
+  dryRun?: boolean
+}
+
+type DripBody = CreateCampaignBody | AddStepBody | EnrollBody | ProcessBody
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
+
+function required(value: string | undefined, name: string): string | NextResponse {
+  if (!value?.trim()) {
+    return NextResponse.json({ error: `${name} is required` }, { status: 400 })
   }
+  return value.trim()
 }
 
-function metadataOf(value: unknown): DripMetadata {
-  return value && typeof value === 'object' ? (value as DripMetadata) : {}
+function contactName(contact: ContactRow): string | null {
+  const name = [contact.first_name, contact.last_name].filter(Boolean).join(' ').trim()
+  return name || null
 }
 
-function dripOf(value: unknown) {
-  const metadata = metadataOf(value)
+function isSafeDryRunRecipient(email: string): boolean {
+  return email.endsWith('@unite-hub.test') || email.includes('__PW_TEST__')
+}
+
+function campaignPayload(campaign: DripCampaignRow) {
   return {
-    ...metadata,
-    drip: {
-      steps: metadata.drip?.steps ?? [],
-      enrollments: metadata.drip?.enrollments ?? [],
-      processRuns: metadata.drip?.processRuns ?? [],
-    },
+    id: campaign.id,
+    founder_id: campaign.founder_id,
+    business_key: campaign.business_key,
+    name: campaign.name,
+    subject: campaign.subject,
+    body_html: campaign.body_html,
+    body_text: campaign.body_text,
+    status: campaign.status,
+    source: campaign.source,
+    metadata: campaign.metadata,
+    created_at: campaign.created_at,
+    updated_at: campaign.updated_at,
   }
 }
 
-function isTestAddress(email: string) {
-  return email.endsWith('@unite-hub.test') || email.endsWith('.test')
+function stepPayload(step: DripStepRow) {
+  return {
+    id: step.id,
+    order: step.step_order,
+    subject: step.subject,
+    bodyHtml: step.body_html,
+    bodyText: step.body_text,
+    delayMinutes: step.delay_minutes,
+    createdAt: step.created_at,
+  }
 }
 
-async function loadCampaign(supabase: ReturnType<typeof createServiceClient>, founderId: string, id: string) {
-  return supabase
-    .from('email_campaigns')
+function enrollmentPayload(enrollment: DripEnrollmentRow) {
+  return {
+    id: enrollment.id,
+    contactId: enrollment.contact_id,
+    email: enrollment.email,
+    name: enrollment.name,
+    status: enrollment.status,
+    currentStepOrder: enrollment.current_step_order,
+    nextRunAt: enrollment.next_run_at,
+    enrolledAt: enrollment.enrolled_at,
+    completedAt: enrollment.completed_at,
+  }
+}
+
+async function loadCampaign(
+  supabase: SupabaseServerClient,
+  founderId: string,
+  campaignId: string
+) {
+  const { data, error } = await supabase
+    .from('drip_campaigns')
     .select('*')
-    .eq('id', id)
+    .eq('id', campaignId)
     .eq('founder_id', founderId)
     .single()
+
+  if (error || !data) return null
+  return data as DripCampaignRow
+}
+
+async function loadSteps(
+  supabase: SupabaseServerClient,
+  founderId: string,
+  campaignId: string
+) {
+  const { data, error } = await supabase
+    .from('drip_steps')
+    .select('*')
+    .eq('campaign_id', campaignId)
+    .eq('founder_id', founderId)
+    .order('step_order', { ascending: true })
+
+  if (error) throw error
+  return (data ?? []) as DripStepRow[]
 }
 
 export async function POST(request: Request) {
   const user = await getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
-  let body: {
-    action?: string
-    campaignId?: string
-    contactId?: string
-    businessKey?: string
-    name?: string
-    subject?: string
-    bodyText?: string
-    bodyHtml?: string
-    delayHours?: number
-  }
-
+  let body: DripBody
   try {
-    body = await request.json()
+    body = await request.json() as DripBody
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const supabase = createServiceClient()
-  const now = new Date().toISOString()
+  if (!body.action) {
+    return NextResponse.json({ error: 'action is required' }, { status: 400 })
+  }
 
-  if (body.action === 'create') {
-    if (!body.businessKey?.trim()) return NextResponse.json({ error: 'businessKey is required' }, { status: 400 })
-    if (!body.name?.trim()) return NextResponse.json({ error: 'name is required' }, { status: 400 })
+  const supabase = await createClient()
+
+  if (body.action === 'create_campaign') {
+    const businessKey = required(body.businessKey, 'businessKey')
+    if (businessKey instanceof NextResponse) return businessKey
+    const name = required(body.name, 'name')
+    if (name instanceof NextResponse) return name
+    const subject = required(body.subject, 'subject')
+    if (subject instanceof NextResponse) return subject
+    const bodyHtml = required(body.bodyHtml, 'bodyHtml')
+    if (bodyHtml instanceof NextResponse) return bodyHtml
 
     const { data, error } = await supabase
-      .from('email_campaigns')
+      .from('drip_campaigns')
       .insert({
         founder_id: user.id,
-        business_key: body.businessKey.trim(),
-        subject: body.subject?.trim() || body.name.trim(),
-        body_html: body.bodyHtml || '<p>Drip campaign draft.</p>',
+        business_key: businessKey,
+        name,
+        subject,
+        body_html: bodyHtml,
         body_text: body.bodyText ?? null,
-        recipient_list: [],
         status: 'draft',
-        metadata: {
-          name: body.name.trim(),
-          source: 'drip',
-          drip: { steps: [], enrollments: [], processRuns: [] },
-        },
+        source: 'api',
+        metadata: { categories: ['drip'] } satisfies JsonObject,
       })
-      .select()
+      .select('*')
       .single()
 
-    if (error) return NextResponse.json({ error: 'Failed to create drip campaign' }, { status: 500 })
-    return NextResponse.json({ campaign: data }, { status: 201 })
+    if (error || !data) {
+      console.error('[campaigns/drip] create failed:', error?.message)
+      return NextResponse.json({ error: 'Failed to create drip campaign' }, { status: 500 })
+    }
+
+    return NextResponse.json({ campaign: campaignPayload(data as DripCampaignRow) }, { status: 201 })
   }
 
-  if (!body.campaignId) return NextResponse.json({ error: 'campaignId is required' }, { status: 400 })
-  const { data: campaign, error: campaignError } = await loadCampaign(supabase, user.id, body.campaignId)
-  if (campaignError || !campaign) return NextResponse.json({ error: 'Campaign not found' }, { status: 404 })
+  const campaignId = required(body.campaignId, 'campaignId')
+  if (campaignId instanceof NextResponse) return campaignId
 
-  const metadata = dripOf(campaign.metadata)
+  const campaign = await loadCampaign(supabase, user.id, campaignId)
+  if (!campaign) return NextResponse.json({ error: 'Campaign not found' }, { status: 404 })
 
   if (body.action === 'add_step') {
-    if (!body.subject?.trim()) return NextResponse.json({ error: 'subject is required' }, { status: 400 })
-    if (!body.bodyText?.trim() && !body.bodyHtml?.trim()) {
-      return NextResponse.json({ error: 'bodyText or bodyHtml is required' }, { status: 400 })
+    const subject = required(body.subject, 'subject')
+    if (subject instanceof NextResponse) return subject
+    const bodyHtml = required(body.bodyHtml, 'bodyHtml')
+    if (bodyHtml instanceof NextResponse) return bodyHtml
+
+    const existingSteps = await loadSteps(supabase, user.id, campaign.id)
+    const stepOrder = existingSteps.length + 1
+    const { data, error } = await supabase
+      .from('drip_steps')
+      .insert({
+        founder_id: user.id,
+        campaign_id: campaign.id,
+        step_order: stepOrder,
+        subject,
+        body_html: bodyHtml,
+        body_text: body.bodyText ?? null,
+        delay_minutes: Math.max(0, body.delayMinutes ?? 0),
+      })
+      .select('*')
+      .single()
+
+    if (error || !data) {
+      console.error('[campaigns/drip] add step failed:', error?.message)
+      return NextResponse.json({ error: 'Failed to add drip step' }, { status: 500 })
     }
-
-    const step: DripStep = {
-      id: randomUUID(),
-      order: metadata.drip.steps.length + 1,
-      delayHours: Math.max(0, Number(body.delayHours ?? 0)),
-      subject: body.subject.trim(),
-      bodyText: body.bodyText ?? '',
-      bodyHtml: body.bodyHtml ?? `<p>${body.bodyText ?? ''}</p>`,
-    }
-
-    metadata.drip.steps.push(step)
-    const { error } = await supabase
-      .from('email_campaigns')
-      .update({ metadata })
-      .eq('id', campaign.id)
-      .eq('founder_id', user.id)
-
-    if (error) return NextResponse.json({ error: 'Failed to add drip step' }, { status: 500 })
-    return NextResponse.json({ step })
+    return NextResponse.json({ step: stepPayload(data as DripStepRow), stepCount: stepOrder })
   }
 
-  if (body.action === 'enroll') {
-    if (!body.contactId) return NextResponse.json({ error: 'contactId is required' }, { status: 400 })
+  if (body.action === 'enroll_contact') {
+    const contactId = required(body.contactId, 'contactId')
+    if (contactId instanceof NextResponse) return contactId
 
-    const { data: contact, error: contactError } = await supabase
+    const { data: contact, error } = await supabase
       .from('contacts')
-      .select('id, email')
-      .eq('id', body.contactId)
+      .select('id,email,first_name,last_name')
+      .eq('id', contactId)
       .eq('founder_id', user.id)
       .single()
 
-    if (contactError || !contact) return NextResponse.json({ error: 'Contact not found' }, { status: 404 })
-    if (!contact.email) return NextResponse.json({ error: 'Contact email is required' }, { status: 400 })
-
-    const enrollment: DripEnrollment = {
-      id: randomUUID(),
-      contactId: contact.id as string,
-      email: contact.email as string,
-      status: 'pending',
-      enrolledAt: now,
+    if (error || !contact) return NextResponse.json({ error: 'Contact not found' }, { status: 404 })
+    const typedContact = contact as ContactRow
+    if (!typedContact.email?.trim()) {
+      return NextResponse.json({ error: 'Contact has no email address' }, { status: 400 })
     }
 
-    metadata.drip.enrollments.push(enrollment)
-    const { error } = await supabase
-      .from('email_campaigns')
-      .update({ metadata })
-      .eq('id', campaign.id)
-      .eq('founder_id', user.id)
+    const steps = await loadSteps(supabase, user.id, campaign.id)
+    if (steps.length === 0) {
+      return NextResponse.json({ error: 'Campaign has no drip steps' }, { status: 400 })
+    }
 
-    if (error) return NextResponse.json({ error: 'Failed to enroll contact' }, { status: 500 })
-    return NextResponse.json({ enrollment })
+    const { data: existingEnrollment, error: existingError } = await supabase
+      .from('drip_enrollments')
+      .select('id')
+      .eq('campaign_id', campaign.id)
+      .eq('contact_id', typedContact.id)
+      .eq('founder_id', user.id)
+      .maybeSingle()
+
+    if (existingError) {
+      console.error('[campaigns/drip] duplicate check failed:', existingError.message)
+      return NextResponse.json({ error: 'Failed to enroll contact' }, { status: 500 })
+    }
+    if (existingEnrollment) return NextResponse.json({ error: 'Contact is already enrolled' }, { status: 409 })
+
+    const now = new Date().toISOString()
+    const { data: enrollment, error: enrollError } = await supabase
+      .from('drip_enrollments')
+      .insert({
+        founder_id: user.id,
+        campaign_id: campaign.id,
+        contact_id: typedContact.id,
+        email: typedContact.email.trim(),
+        name: contactName(typedContact),
+        status: 'active',
+        current_step_order: 1,
+        next_run_at: now,
+        enrolled_at: now,
+      })
+      .select('*')
+      .single()
+
+    if (enrollError || !enrollment) {
+      console.error('[campaigns/drip] enroll failed:', enrollError?.message)
+      return NextResponse.json({ error: 'Failed to enroll contact' }, { status: 500 })
+    }
+
+    return NextResponse.json({ enrollment: enrollmentPayload(enrollment as DripEnrollmentRow) })
   }
 
   if (body.action === 'process_pending') {
+    const dryRun = body.dryRun !== false
+    const now = new Date()
     let processed = 0
     let skipped = 0
+    let failed = 0
 
-    const updatedEnrollments = metadata.drip.enrollments.map((enrollment) => {
-      if (enrollment.status !== 'pending') return enrollment
-      if (!metadata.drip.steps.length || !isTestAddress(enrollment.email)) {
-        skipped += 1
-        return {
-          ...enrollment,
-          status: 'skipped' as const,
-          processedAt: now,
-          lastResult: !metadata.drip.steps.length ? 'no_step' : 'non_test_address_blocked',
-        }
-      }
+    const steps = await loadSteps(supabase, user.id, campaign.id)
+    const stepsByOrder = new Map(steps.map((step) => [step.step_order, step]))
 
-      processed += 1
-      return {
-        ...enrollment,
-        status: 'processed' as const,
-        processedAt: now,
-        lastResult: 'dry_run_no_email_sent',
-      }
-    })
-
-    metadata.drip.enrollments = updatedEnrollments
-    metadata.drip.processRuns.push({ id: randomUUID(), processed, skipped, dryRun: true, processedAt: now })
-
-    const { error } = await supabase
-      .from('email_campaigns')
-      .update({ metadata })
-      .eq('id', campaign.id)
+    const { data: enrollments, error: enrollmentsError } = await supabase
+      .from('drip_enrollments')
+      .select('*')
+      .eq('campaign_id', campaign.id)
       .eq('founder_id', user.id)
+      .eq('status', 'active')
+      .lte('next_run_at', now.toISOString())
+      .order('next_run_at', { ascending: true })
 
-    if (error) return NextResponse.json({ error: 'Failed to process drip campaign' }, { status: 500 })
-    return NextResponse.json({ processed, skipped, dryRun: true, emailSent: false, enrollments: updatedEnrollments })
+    if (enrollmentsError) {
+      console.error('[campaigns/drip] load pending failed:', enrollmentsError.message)
+      return NextResponse.json({ error: 'Failed to process pending drip steps' }, { status: 500 })
+    }
+
+    for (const enrollment of (enrollments ?? []) as DripEnrollmentRow[]) {
+      const step = stepsByOrder.get(enrollment.current_step_order)
+      if (!step) {
+        const { error } = await supabase
+          .from('drip_enrollments')
+          .update({ status: 'completed', completed_at: now.toISOString() })
+          .eq('id', enrollment.id)
+          .eq('founder_id', user.id)
+        if (error) failed++
+        else skipped++
+        continue
+      }
+
+      if (!dryRun || !isSafeDryRunRecipient(enrollment.email)) {
+        const { error: updateError } = await supabase
+          .from('drip_enrollments')
+          .update({
+            status: 'failed',
+            metadata: {
+              blockedReason: 'unsafe_or_live_send_blocked',
+              blockedAt: now.toISOString(),
+              dryRun,
+            } satisfies JsonObject,
+          })
+          .eq('id', enrollment.id)
+          .eq('founder_id', user.id)
+
+        if (updateError) {
+          console.error('[campaigns/drip] unsafe send block failed:', updateError.message)
+          failed++
+          continue
+        }
+
+        const { error: eventError } = await supabase.from('drip_events').insert({
+          founder_id: user.id,
+          campaign_id: campaign.id,
+          enrollment_id: enrollment.id,
+          contact_id: enrollment.contact_id,
+          step_id: step.id,
+          event_type: 'failed',
+          provider_send: 'not_attempted',
+          metadata: { dryRun, reason: 'unsafe_or_live_send_blocked' } satisfies JsonObject,
+        })
+
+        if (eventError) {
+          console.error('[campaigns/drip] unsafe send event failed:', eventError?.message)
+        }
+        failed++
+        continue
+      }
+
+      const nextOrder = enrollment.current_step_order + 1
+      const nextStep = stepsByOrder.get(nextOrder)
+      const update = nextStep
+        ? {
+            current_step_order: nextOrder,
+            next_run_at: new Date(now.getTime() + nextStep.delay_minutes * 60_000).toISOString(),
+          }
+        : {
+            current_step_order: nextOrder,
+            status: 'completed',
+            completed_at: now.toISOString(),
+          }
+
+      const { error: eventError } = await supabase.from('drip_events').insert({
+        founder_id: user.id,
+        campaign_id: campaign.id,
+        enrollment_id: enrollment.id,
+        contact_id: enrollment.contact_id,
+        step_id: step.id,
+        event_type: 'dry_run_processed',
+        provider_send: 'not_attempted',
+        metadata: { dryRun: true } satisfies JsonObject,
+      })
+
+      const { error: updateError } = await supabase
+        .from('drip_enrollments')
+        .update(update)
+        .eq('id', enrollment.id)
+        .eq('founder_id', user.id)
+
+      if (eventError || updateError) failed++
+      else processed++
+    }
+
+    if (failed > 0) {
+      await supabase
+        .from('drip_campaigns')
+        .update({ status: 'partial' })
+        .eq('id', campaign.id)
+        .eq('founder_id', user.id)
+    }
+
+    return NextResponse.json({
+      result: {
+        processed,
+        skipped,
+        failed,
+        dryRun,
+        providerSend: 'not_attempted',
+      },
+    })
   }
 
-  return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
+  return NextResponse.json({ error: `Unsupported action: ${(body as { action: string }).action}` }, { status: 400 })
 }
