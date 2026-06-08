@@ -3,6 +3,7 @@
 // GET /api/auth/microsoft/authorize?email=phill@disasterrecovery.com.au
 
 import { NextResponse } from 'next/server'
+import { randomBytes } from 'crypto'
 import { getUser } from '@/lib/supabase/server'
 import { signOAuthState } from '@/lib/oauth-state'
 import {
@@ -11,6 +12,8 @@ import {
 } from '@/lib/integrations/microsoft-oauth'
 
 export const dynamic = 'force-dynamic'
+
+const MICROSOFT_OAUTH_STATE_TTL_MS = 10 * 60 * 1000
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
@@ -39,7 +42,12 @@ export async function GET(request: Request) {
     scope: MICROSOFT_OAUTH_SCOPES,
     prompt: 'consent',
     login_hint: email,
-    state: signOAuthState({ email }),
+    state: signOAuthState({
+      email,
+      founderId: user.id,
+      nonce: randomBytes(16).toString('base64url'),
+      expiresAt: String(Date.now() + MICROSOFT_OAUTH_STATE_TTL_MS),
+    }),
   })
 
   return NextResponse.redirect(

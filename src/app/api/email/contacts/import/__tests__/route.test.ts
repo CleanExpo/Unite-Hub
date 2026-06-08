@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   getUser: vi.fn(),
+  createClient: vi.fn(),
   createServiceClient: vi.fn(),
   fetchFullThread: vi.fn(),
   getAccessTokenForEmail: vi.fn(),
@@ -10,6 +11,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/supabase/server', () => ({
   getUser: mocks.getUser,
+  createClient: mocks.createClient,
 }))
 
 vi.mock('@/lib/supabase/service', () => ({
@@ -97,6 +99,25 @@ describe('POST /api/email/contacts/import', () => {
     })
     expect(mocks.getConnectedGoogleAccounts).toHaveBeenCalledWith('founder-123')
     expect(mocks.fetchFullThread).not.toHaveBeenCalled()
+    expect(mocks.createClient).not.toHaveBeenCalled()
+    expect(mocks.createServiceClient).not.toHaveBeenCalled()
+  })
+
+  it('rejects invalid sources before Gmail, mock, or database work', async () => {
+    const res = await POST(request({
+      source: 'gmail_preview',
+      senderEmail: 'preview@unite-hub.test',
+      senderName: 'Preview Sender',
+    }))
+    const body = await res.json()
+
+    expect(res.status).toBe(400)
+    expect(body).toMatchObject({
+      code: 'invalid_import_source',
+    })
+    expect(mocks.getConnectedGoogleAccounts).not.toHaveBeenCalled()
+    expect(mocks.fetchFullThread).not.toHaveBeenCalled()
+    expect(mocks.createClient).not.toHaveBeenCalled()
     expect(mocks.createServiceClient).not.toHaveBeenCalled()
   })
 
@@ -127,7 +148,7 @@ describe('POST /api/email/contacts/import', () => {
         last_name: 'Example',
       },
     })
-    mocks.createServiceClient.mockReturnValue(db.client)
+    mocks.createClient.mockResolvedValue(db.client)
 
     const res = await POST(request({
       source: 'gmail',
@@ -148,6 +169,8 @@ describe('POST /api/email/contacts/import', () => {
       },
     })
     expect(mocks.fetchFullThread).toHaveBeenCalledWith('founder-123', 'founder@example.com', 'thread-1')
+    expect(mocks.createClient).toHaveBeenCalledTimes(1)
+    expect(mocks.createServiceClient).not.toHaveBeenCalled()
     expect(db.calls.from).toHaveBeenCalledWith('contacts')
     expect(db.calls.existingEqFounder).toHaveBeenCalledWith('founder_id', 'founder-123')
     expect(db.calls.existingEqEmail).toHaveBeenCalledWith('email', 'alice@example.com')
@@ -203,7 +226,7 @@ describe('POST /api/email/contacts/import', () => {
         email: 'bob@example.com',
       },
     })
-    mocks.createServiceClient.mockReturnValue(db.client)
+    mocks.createClient.mockResolvedValue(db.client)
 
     const res = await POST(request({
       source: 'gmail',
@@ -218,6 +241,8 @@ describe('POST /api/email/contacts/import', () => {
       source: 'gmail',
       contact: { id: 'contact-2', email: 'bob@example.com' },
     })
+    expect(mocks.createClient).toHaveBeenCalledTimes(1)
+    expect(mocks.createServiceClient).not.toHaveBeenCalled()
     expect(mocks.getAccessTokenForEmail).toHaveBeenCalledWith('founder-123', 'founder@example.com')
     expect(fetchSpy).toHaveBeenCalledWith(
       'https://gmail.googleapis.com/gmail/v1/users/me/messages/message-1?format=metadata&metadataHeaders=From',

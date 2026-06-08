@@ -1,6 +1,19 @@
 -- Dedicated drip campaign lifecycle tables.
 -- Additive only: no existing tables, columns, constraints, or policies are altered.
 
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'contacts_id_founder_id_key'
+      AND conrelid = 'public.contacts'::regclass
+  ) THEN
+    ALTER TABLE public.contacts
+      ADD CONSTRAINT contacts_id_founder_id_key UNIQUE (id, founder_id);
+  END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS public.drip_campaigns (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   founder_id    uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -14,13 +27,14 @@ CREATE TABLE IF NOT EXISTS public.drip_campaigns (
   source        text NOT NULL DEFAULT 'api',
   metadata      jsonb NOT NULL DEFAULT '{}',
   created_at    timestamptz NOT NULL DEFAULT now(),
-  updated_at    timestamptz NOT NULL DEFAULT now()
+  updated_at    timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (id, founder_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.drip_steps (
   id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   founder_id     uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  campaign_id    uuid NOT NULL REFERENCES public.drip_campaigns(id) ON DELETE CASCADE,
+  campaign_id    uuid NOT NULL,
   step_order     integer NOT NULL CHECK (step_order > 0),
   subject        text NOT NULL,
   body_html      text NOT NULL,
@@ -29,14 +43,18 @@ CREATE TABLE IF NOT EXISTS public.drip_steps (
   metadata       jsonb NOT NULL DEFAULT '{}',
   created_at     timestamptz NOT NULL DEFAULT now(),
   updated_at     timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (campaign_id, step_order)
+  UNIQUE (id, founder_id),
+  UNIQUE (campaign_id, step_order),
+  FOREIGN KEY (campaign_id, founder_id)
+    REFERENCES public.drip_campaigns(id, founder_id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public.drip_enrollments (
   id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   founder_id          uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  campaign_id         uuid NOT NULL REFERENCES public.drip_campaigns(id) ON DELETE CASCADE,
-  contact_id          uuid NOT NULL REFERENCES public.contacts(id) ON DELETE CASCADE,
+  campaign_id         uuid NOT NULL,
+  contact_id          uuid NOT NULL,
   email               text NOT NULL,
   name                text,
   status              text NOT NULL DEFAULT 'active'
@@ -48,20 +66,39 @@ CREATE TABLE IF NOT EXISTS public.drip_enrollments (
   metadata            jsonb NOT NULL DEFAULT '{}',
   created_at          timestamptz NOT NULL DEFAULT now(),
   updated_at          timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (campaign_id, contact_id)
+  UNIQUE (id, founder_id),
+  UNIQUE (campaign_id, contact_id),
+  FOREIGN KEY (campaign_id, founder_id)
+    REFERENCES public.drip_campaigns(id, founder_id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (contact_id, founder_id)
+    REFERENCES public.contacts(id, founder_id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public.drip_events (
   id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   founder_id      uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  campaign_id     uuid NOT NULL REFERENCES public.drip_campaigns(id) ON DELETE CASCADE,
-  enrollment_id   uuid NOT NULL REFERENCES public.drip_enrollments(id) ON DELETE CASCADE,
-  contact_id      uuid NOT NULL REFERENCES public.contacts(id) ON DELETE CASCADE,
-  step_id         uuid REFERENCES public.drip_steps(id) ON DELETE SET NULL,
+  campaign_id     uuid NOT NULL,
+  enrollment_id   uuid NOT NULL,
+  contact_id      uuid NOT NULL,
+  step_id         uuid,
   event_type      text NOT NULL CHECK (event_type IN ('dry_run_processed', 'skipped', 'failed')),
   provider_send   text NOT NULL DEFAULT 'not_attempted',
   metadata        jsonb NOT NULL DEFAULT '{}',
-  created_at      timestamptz NOT NULL DEFAULT now()
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  FOREIGN KEY (campaign_id, founder_id)
+    REFERENCES public.drip_campaigns(id, founder_id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (enrollment_id, founder_id)
+    REFERENCES public.drip_enrollments(id, founder_id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (contact_id, founder_id)
+    REFERENCES public.contacts(id, founder_id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (step_id, founder_id)
+    REFERENCES public.drip_steps(id, founder_id)
+    ON DELETE SET NULL (step_id)
 );
 
 CREATE INDEX IF NOT EXISTS drip_campaigns_founder_status_idx

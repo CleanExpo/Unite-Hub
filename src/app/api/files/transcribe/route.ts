@@ -4,11 +4,30 @@
 // are explicitly approved.
 
 import { NextResponse } from 'next/server'
-import { getUser } from '@/lib/supabase/server'
-import { createServiceClient } from '@/lib/supabase/service'
-import { transcribeCachedFile, TranscriptionError } from '@/lib/ai/features/transcription'
+import { createClient, getUser } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
+
+type CachedFileRow = {
+  id: string
+  cache_key: string
+  file_id: string
+  filename: string
+  expires_at: string | null
+}
+
+type TranscriptResult = {
+  cacheKey: string
+  fileId: string
+  filename: string
+  provider: 'mock'
+  source: 'mocked_provider'
+  transcript: {
+    text: string
+    language: string
+    confidence: number
+  }
+}
 
 function readCacheKey(body: unknown): string | undefined {
   if (!body || typeof body !== 'object') return undefined
@@ -16,38 +35,44 @@ function readCacheKey(body: unknown): string | undefined {
   return typeof value === 'string' ? value.trim() : undefined
 }
 
-function isMissingTranscriptTableError(error: { code?: string; message?: string }) {
+class StableRouteError extends Error {
+  constructor(
+    readonly code: 'file_cache_lookup_failed' | 'transcript_persist_failed',
+    readonly status: number
+  ) {
+    super(code)
+    this.name = 'StableRouteError'
+  }
+}
+
+function isMissingTableError(error: { code?: string; message?: string }, tableName: string) {
   const message = error.message ?? ''
   return (
     error.code === 'PGRST205' ||
     error.code === '42P01' ||
     (
-      message.includes('ai_file_transcripts') &&
+      message.includes(tableName) &&
       (message.includes('Could not find the table') || message.includes('does not exist'))
     )
   )
 }
 
-async function persistTranscript(founderId: string, result: Awaited<ReturnType<typeof transcribeCachedFile>>) {
-  const supabase = createServiceClient()
-  const { data: cached, error: cacheError } = await supabase
-    .from('ai_file_cache')
-    .select('id')
-    .eq('founder_id', founderId)
-    .eq('cache_key', result.cacheKey)
-    .single()
+function logSupabaseError(context: string, error: unknown) {
+  console.error(`[files/transcribe] ${context}:`, error)
+}
 
-  if (cacheError || !cached?.id) {
-    const message = cacheError?.message ?? 'Cached file row was not found during transcript persistence'
-    throw new Error(`Failed to locate uploaded file cache for transcript persistence: ${message}`)
-  }
-
+async function persistTranscript(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  founderId: string,
+  cached: CachedFileRow,
+  result: TranscriptResult
+) {
   const { data, error } = await supabase
     .from('ai_file_transcripts')
     .upsert(
       {
         founder_id: founderId,
-        file_cache_id: cached.id as string,
+        file_cache_id: cached.id,
         cache_key: result.cacheKey,
         file_id: result.fileId,
         filename: result.filename,
@@ -65,15 +90,20 @@ async function persistTranscript(founderId: string, result: Awaited<ReturnType<t
     .single()
 
   if (error) {
-    if (isMissingTranscriptTableError(error)) {
+    logSupabaseError('transcript persist failed', error)
+    if (isMissingTableError(error, 'ai_file_transcripts')) {
       return {
         status: 'unknown' as const,
         persisted: false,
-        reason: 'Transcript persistence schema is not applied.',
+        table: 'ai_file_transcripts',
+        reason: 'schema_missing' as const,
       }
     }
 
-    throw new Error(`Failed to persist transcript: ${error.message}`)
+    throw new StableRouteError(
+      'transcript_persist_failed',
+      500
+    )
   }
 
   return {
@@ -81,6 +111,21 @@ async function persistTranscript(founderId: string, result: Awaited<ReturnType<t
     persisted: true,
     table: 'ai_file_transcripts',
     transcriptId: data.id as string,
+  }
+}
+
+function buildMockTranscript(cached: CachedFileRow): TranscriptResult {
+  return {
+    cacheKey: cached.cache_key,
+    fileId: cached.file_id,
+    filename: cached.filename,
+    provider: 'mock',
+    source: 'mocked_provider',
+    transcript: {
+      text: `Mock transcript for ${cached.filename} (${cached.cache_key}).`,
+      language: 'en',
+      confidence: 1,
+    },
   }
 }
 
@@ -101,29 +146,56 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await transcribeCachedFile(user.id, cacheKey)
-    const persistence = await persistTranscript(user.id, result)
+    const supabase = await createClient()
+    const { data: cached, error: cacheError } = await supabase
+      .from('ai_file_cache')
+      .select('id,cache_key,file_id,filename,expires_at')
+      .eq('founder_id', user.id)
+      .eq('cache_key', cacheKey)
+      .maybeSingle()
+
+    if (cacheError) {
+      logSupabaseError('file cache lookup failed', cacheError)
+
+      return NextResponse.json({
+        error: 'file_cache_lookup_failed',
+        code: 'file_cache_lookup_failed',
+      }, { status: isMissingTableError(cacheError, 'ai_file_cache') ? 503 : 500 })
+    }
+
+    if (!cached) {
+      return NextResponse.json({ error: 'Cached file not found', code: 'file_not_found' }, { status: 404 })
+    }
+
+    if (cached.expires_at && new Date(cached.expires_at) < new Date()) {
+      return NextResponse.json({ error: 'Cached file not found', code: 'file_not_found' }, { status: 404 })
+    }
+
+    if (process.env.UNITE_HUB_TEST_MOCK_TRANSCRIPTION !== '1' || !cacheKey.startsWith('__PW_TEST__')) {
+      return NextResponse.json({
+        error: 'Live transcription provider is not configured for this endpoint.',
+        code: 'provider_not_configured',
+      }, { status: 503 })
+    }
+
+    const result = buildMockTranscript(cached)
+    const persistence = await persistTranscript(supabase, user.id, cached, result)
     return NextResponse.json({
       ...result,
       persistence,
     })
   } catch (error) {
-    if (error instanceof TranscriptionError) {
+    logSupabaseError('transcription failed', error)
+    if (error instanceof StableRouteError) {
       return NextResponse.json({
-        error: error.message,
+        error: error.code,
         code: error.code,
       }, { status: error.status })
     }
 
-    const message = error instanceof Error ? error.message : 'Transcription failed'
-    if (message.includes('ai_file_cache') && message.includes('Could not find the table')) {
-      return NextResponse.json({
-        error: 'File upload cache is not configured',
-        table: 'ai_file_cache',
-        code: 'file_cache_not_configured',
-      }, { status: 503 })
-    }
-
-    return NextResponse.json({ error: message }, { status: 500 })
+    return NextResponse.json({
+      error: 'transcript_persist_failed',
+      code: 'transcript_persist_failed',
+    }, { status: 500 })
   }
 }

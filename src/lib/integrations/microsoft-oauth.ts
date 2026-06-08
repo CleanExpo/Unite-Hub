@@ -32,6 +32,23 @@ export interface MicrosoftSender {
   displayName: string | null
 }
 
+interface MicrosoftRefreshedTokens {
+  access_token: string
+  refresh_token?: string
+  expires_in?: number
+  scope?: string
+}
+
+interface MicrosoftVaultRow {
+  encrypted_value: string
+  iv: string
+  salt: string
+  business_id: string | null
+  label: string
+  notes: string | null
+  metadata: unknown
+}
+
 export function isMicrosoftClientIdPlaceholder(clientId: string): boolean {
   const id = clientId.trim()
   if (!id) return true
@@ -44,7 +61,7 @@ export function isMicrosoftConfigured(): boolean {
   return Boolean(clientId && clientSecret && !isMicrosoftClientIdPlaceholder(clientId))
 }
 
-async function refreshAccessToken(tokens: MicrosoftStoredTokens): Promise<string> {
+async function refreshAccessToken(tokens: MicrosoftStoredTokens): Promise<MicrosoftRefreshedTokens> {
   if (!tokens.refresh_token) throw new Error('No Microsoft refresh token available')
 
   const res = await fetch(MICROSOFT_TOKEN_URL, {
@@ -65,41 +82,74 @@ async function refreshAccessToken(tokens: MicrosoftStoredTokens): Promise<string
     throw new Error(`Microsoft token refresh failed: ${res.status}`)
   }
 
-  const refreshed = (await res.json()) as { access_token: string }
-  return refreshed.access_token
+  return (await res.json()) as MicrosoftRefreshedTokens
 }
 
-export async function getValidMicrosoftToken(tokens: MicrosoftStoredTokens): Promise<string> {
+export async function getValidMicrosoftToken(
+  tokens: MicrosoftStoredTokens,
+  persistRefreshedTokens?: (tokens: MicrosoftStoredTokens) => Promise<void>,
+): Promise<string> {
   if (tokens.expires_at > Date.now() + 60_000) {
     return tokens.access_token
   }
 
-  return refreshAccessToken(tokens)
+  const refreshed = await refreshAccessToken(tokens)
+  const mergedTokens: MicrosoftStoredTokens = {
+    access_token: refreshed.access_token,
+    refresh_token: refreshed.refresh_token ?? tokens.refresh_token,
+    expires_at: refreshed.expires_in ? Date.now() + refreshed.expires_in * 1000 : tokens.expires_at,
+    scope: refreshed.scope ?? tokens.scope,
+  }
+
+  await persistRefreshedTokens?.(mergedTokens)
+
+  return mergedTokens.access_token
 }
 
-export async function getMicrosoftAccessTokenForEmail(
+export async function getMicrosoftAccessTokenForBusinessKey(
   founderId: string,
-  email: string,
+  businessKey: string,
 ): Promise<string> {
   const { createServiceClient } = await import('@/lib/supabase/service')
-  const { decrypt } = await import('@/lib/vault')
+  const { decrypt, encrypt } = await import('@/lib/vault')
   const supabase = createServiceClient()
 
   const { data: row } = await supabase
     .from('credentials_vault')
-    .select('encrypted_value, iv, salt')
+    .select('encrypted_value, iv, salt, business_id, label, notes, metadata')
     .eq('founder_id', founderId)
     .eq('service', 'microsoft')
-    .eq('notes', email)
-    .single()
+    .eq('metadata->>businessKey', businessKey)
+    .single<MicrosoftVaultRow>()
 
-  if (!row) throw new Error(`No Microsoft credentials found for ${email}`)
+  if (!row) throw new Error(`No Microsoft credentials found for business key ${businessKey}`)
 
   const tokens = JSON.parse(
     decrypt({ encryptedValue: row.encrypted_value, iv: row.iv, salt: row.salt }),
   ) as MicrosoftStoredTokens
 
-  return getValidMicrosoftToken(tokens)
+  return getValidMicrosoftToken(tokens, async (refreshedTokens) => {
+    const payload = encrypt(JSON.stringify(refreshedTokens))
+    const { error } = await supabase.from('credentials_vault').upsert(
+      {
+        founder_id: founderId,
+        business_id: row.business_id,
+        service: 'microsoft',
+        label: row.label,
+        encrypted_value: payload.encryptedValue,
+        iv: payload.iv,
+        salt: payload.salt,
+        notes: row.notes,
+        metadata: row.metadata,
+        last_accessed_at: new Date().toISOString(),
+      },
+      { onConflict: 'founder_id,service,label' },
+    )
+
+    if (error) {
+      throw new Error(`Microsoft token refresh persist failed: ${error.message}`)
+    }
+  })
 }
 
 export async function fetchMicrosoftSender(accessToken: string): Promise<MicrosoftSender> {

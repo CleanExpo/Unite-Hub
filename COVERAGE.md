@@ -66,7 +66,7 @@ This PR does **not** prove the product is sellable. The authenticated founder CR
 
 - Contact create/list/update with authenticated founder data.
 - Gmail full OAuth callback token exchange, import, and contact creation.
-- Outlook OAuth/import: route inventory found Microsoft account metadata but no current Outlook/Microsoft Graph OAuth route.
+- Outlook/Microsoft import: Microsoft OAuth route guards now exist, but live consent and Microsoft Graph mailbox import remain UNKNOWN / not connected.
 - Drip campaign create → step → enrol → process: route inventory found email campaign draft/send routes, but no current drip/enrol/process API journey.
 - Lead scoring from real ingestion: library scoring tests exist, but no API/app journey was found.
 - Multimedia upload + transcription: upload/video routes exist, but no transcription endpoint was found.
@@ -259,6 +259,30 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - `pnpm exec supabase db push --dry-run --linked` -> PASS as dry-run only; it reported pending migrations including the new transcript and drip migrations and did not apply anything.
 - `pnpm build` -> BLOCKED before compile by local env validation (`0/3` critical, `0/4` required runtime vars in this shell).
 
+## PR #106 review-fix swarm — 2026-06-08T10:42+10:00
+
+### Coverage delta
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Microsoft/Outlook OAuth foundation | PASS (route guards) / UNKNOWN (live consent/import) | Review fixes added founder-bound expiring signed state, authoritative Microsoft Graph sender lookup before vault write, business-key token retrieval, and refresh-token persistence. `pnpm vitest run src/app/api/auth/microsoft/__tests__/authorize.test.ts src/app/api/email/contacts/import/__tests__/route.test.ts --config vitest.config.api.ts` passed `21/21`. |
+| Gmail import route hardening | PASS (mocked + live wiring) / UNKNOWN (live consent) | Route now rejects invalid sources and uses request-scoped Supabase. Focused tests passed in the `21/21` run; `pnpm run test:e2e:email-import` passed `2/2` with tagged cleanup. |
+| Dedicated drip schema + route | UNKNOWN / SCHEMA-GATED | Review fixes moved the route to request-scoped Supabase, made unsafe/live sends terminal, and hardened the migration with composite founder constraints. No schema was applied; dedicated drip E2E remains blocked until `20260608000000_drip_lifecycle_schema.sql` is applied. |
+| Transcription endpoint mocked-provider wiring | PASS (response wiring) / UNKNOWN (durable persistence) | Review fixes moved the route to request-scoped Supabase and normalized errors. With `ai_file_transcripts` absent, `pnpm run test:e2e:transcription` passed `2/2` by proving transcript content is still returned with `persistence.status='unknown'`, `persisted=false`, `reason='schema_missing'`. |
+
+### Fresh proof commands
+
+- `pnpm run type-check` -> PASS.
+- `pnpm run lint` -> PASS.
+- `pnpm vitest run` -> PASS, `120` files / `868` tests.
+- Focused Microsoft/import Vitest -> PASS, `21` tests.
+- `pnpm run test:e2e:email-import` -> PASS, `2` tests.
+- `pnpm run test:e2e:transcription` -> PASS, `2` tests.
+- Regression E2E -> PASS: contact-crud `1/1`, lead-scoring `1/1`, file-upload `1/1`, core-journeys `5/5`.
+- `git diff --check` -> PASS.
+- `pnpm exec supabase db push --dry-run --linked` -> PASS dry-run only; no schema was applied.
+- `pnpm build` -> BLOCKED before compile by missing local runtime env (`0/3` critical, `0/4` required).
+
 ## Drip campaign compatibility lifecycle proof — 2026-06-08T08:54+10:00
 
 ### Coverage
@@ -297,7 +321,7 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 |---|---:|---|
 | Mocked Gmail sender -> contact import | PASS | `EMAIL_IMPORT_APPEND_EVIDENCE=1 pnpm test:e2e:email-import` passed `2/2`; the guard proved `POST /api/email/contacts/import` fails closed before auth, then provisioned two tagged throwaway auth users, imported a mocked Gmail sender into one founder-scoped contact, proved duplicate import returns the existing contact, proved user B cannot list user A's imported contact, and verified cleanup. |
 | Live Gmail thread import | UNKNOWN / HUMAN-GATED | Google OAuth consent and a real Gmail account are required before live thread fetch/import can be proved. The route returns `503 gmail_live_import_not_connected` for live mode instead of faking it. |
-| Outlook/Microsoft import | UNKNOWN / NOT BUILT | No active Microsoft/Outlook OAuth route or Graph import helper exists. |
+| Outlook/Microsoft import | PASS (OAuth route guards) / UNKNOWN (live consent/import) | Microsoft authorize/callback route guards exist and unit tests pass; live Microsoft consent and Graph mailbox import were not attempted, and no live import is proved. |
 
 ### Fresh proof commands
 

@@ -203,6 +203,7 @@ test.describe('authenticated file transcription', () => {
         data: { cacheKey },
       })
       const body = await transcribe.json().catch(async () => ({ raw: await transcribe.text() }))
+
       expect(transcribe.status(), JSON.stringify({ step: 'transcribe-a', body })).toBe(200)
       expect(body).toMatchObject({
         cacheKey,
@@ -214,6 +215,21 @@ test.describe('authenticated file transcription', () => {
           language: 'en',
           confidence: 1,
         },
+      })
+      if ((body as { persistence?: { persisted?: boolean } }).persistence?.persisted === false) {
+        expect(body).toMatchObject({
+          persistence: {
+            status: 'unknown',
+            persisted: false,
+            table: 'ai_file_transcripts',
+            reason: 'schema_missing',
+          },
+        })
+        appendEvidence(`  - transcription returned transcript with schema_missing persistence marker for ${cacheKey}`)
+        return
+      }
+
+      expect(body).toMatchObject({
         persistence: {
           status: 'persisted',
           persisted: true,

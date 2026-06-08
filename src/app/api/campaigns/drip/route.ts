@@ -2,8 +2,7 @@
 // Founder-scoped drip lifecycle backed by dedicated drip_* tables.
 
 import { NextResponse } from 'next/server'
-import { getUser } from '@/lib/supabase/server'
-import { createServiceClient } from '@/lib/supabase/service'
+import { createClient, getUser } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
@@ -88,6 +87,7 @@ type ProcessBody = {
 }
 
 type DripBody = CreateCampaignBody | AddStepBody | EnrollBody | ProcessBody
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
 function required(value: string | undefined, name: string): string | NextResponse {
   if (!value?.trim()) {
@@ -149,7 +149,7 @@ function enrollmentPayload(enrollment: DripEnrollmentRow) {
 }
 
 async function loadCampaign(
-  supabase: ReturnType<typeof createServiceClient>,
+  supabase: SupabaseServerClient,
   founderId: string,
   campaignId: string
 ) {
@@ -165,7 +165,7 @@ async function loadCampaign(
 }
 
 async function loadSteps(
-  supabase: ReturnType<typeof createServiceClient>,
+  supabase: SupabaseServerClient,
   founderId: string,
   campaignId: string
 ) {
@@ -195,7 +195,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'action is required' }, { status: 400 })
   }
 
-  const supabase = createServiceClient()
+  const supabase = await createClient()
 
   if (body.action === 'create_campaign') {
     const businessKey = required(body.businessKey, 'businessKey')
@@ -365,8 +365,26 @@ export async function POST(request: Request) {
       }
 
       if (!dryRun || !isSafeDryRunRecipient(enrollment.email)) {
-        failed++
-        await supabase.from('drip_events').insert({
+        const { error: updateError } = await supabase
+          .from('drip_enrollments')
+          .update({
+            status: 'failed',
+            metadata: {
+              blockedReason: 'unsafe_or_live_send_blocked',
+              blockedAt: now.toISOString(),
+              dryRun,
+            } satisfies JsonObject,
+          })
+          .eq('id', enrollment.id)
+          .eq('founder_id', user.id)
+
+        if (updateError) {
+          console.error('[campaigns/drip] unsafe send block failed:', updateError.message)
+          failed++
+          continue
+        }
+
+        const { error: eventError } = await supabase.from('drip_events').insert({
           founder_id: user.id,
           campaign_id: campaign.id,
           enrollment_id: enrollment.id,
@@ -376,6 +394,11 @@ export async function POST(request: Request) {
           provider_send: 'not_attempted',
           metadata: { dryRun, reason: 'unsafe_or_live_send_blocked' } satisfies JsonObject,
         })
+
+        if (eventError) {
+          console.error('[campaigns/drip] unsafe send event failed:', eventError?.message)
+        }
+        failed++
         continue
       }
 

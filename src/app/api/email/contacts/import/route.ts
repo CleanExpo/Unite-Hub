@@ -2,8 +2,7 @@
 // Converts a parsed email sender into a founder-scoped CRM contact.
 
 import { NextResponse } from 'next/server'
-import { getUser } from '@/lib/supabase/server'
-import { createServiceClient } from '@/lib/supabase/service'
+import { createClient, getUser } from '@/lib/supabase/server'
 import {
   fetchFullThread,
   getAccessTokenForEmail,
@@ -13,8 +12,11 @@ import {
 
 export const dynamic = 'force-dynamic'
 
+const IMPORT_SOURCES = ['gmail', 'gmail_mock'] as const
+type ImportSource = (typeof IMPORT_SOURCES)[number]
+
 type ImportBody = {
-  source?: 'gmail_mock' | 'gmail'
+  source?: string
   senderEmail?: string
   senderName?: string
   company?: string
@@ -30,6 +32,10 @@ type ParsedSender = {
 
 function normaliseEmail(value: string | undefined) {
   return value?.trim().toLowerCase()
+}
+
+function isImportSource(value: string): value is ImportSource {
+  return IMPORT_SOURCES.includes(value as ImportSource)
 }
 
 function stripSenderName(value: string) {
@@ -188,6 +194,13 @@ export async function POST(request: Request) {
   }
 
   const source = body.source ?? 'gmail'
+  if (!isImportSource(source)) {
+    return NextResponse.json({
+      error: 'Invalid email import source',
+      code: 'invalid_import_source',
+    }, { status: 400 })
+  }
+
   if (source === 'gmail') {
     if (!body.threadId && !body.messageId) {
       return NextResponse.json({ error: 'threadId or messageId is required for live Gmail import' }, { status: 400 })
@@ -219,7 +232,7 @@ export async function POST(request: Request) {
       }, { status: 422 })
     }
 
-    const supabase = createServiceClient()
+    const supabase = await createClient()
 
     const { data: existing, error: existingError } = await supabase
       .from('contacts')
@@ -273,6 +286,13 @@ export async function POST(request: Request) {
     }, { status: 201 })
   }
 
+  if (source !== 'gmail_mock') {
+    return NextResponse.json({
+      error: 'Invalid email import source',
+      code: 'invalid_import_source',
+    }, { status: 400 })
+  }
+
   const email = normaliseEmail(body.senderEmail)
   if (!email) return NextResponse.json({ error: 'senderEmail is required' }, { status: 400 })
   if (!email.endsWith('@unite-hub.test') && !email.includes('__pw_test__')) {
@@ -282,7 +302,7 @@ export async function POST(request: Request) {
     }, { status: 400 })
   }
 
-  const supabase = createServiceClient()
+  const supabase = await createClient()
 
   const { data: existing, error: existingError } = await supabase
     .from('contacts')

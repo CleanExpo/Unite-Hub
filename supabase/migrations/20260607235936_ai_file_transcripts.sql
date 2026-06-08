@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS ai_file_transcripts (
   id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   founder_id      UUID        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  file_cache_id   UUID        NOT NULL REFERENCES ai_file_cache(id) ON DELETE CASCADE,
+  file_cache_id   UUID        REFERENCES ai_file_cache(id) ON DELETE SET NULL,
   cache_key       TEXT        NOT NULL,
   file_id         TEXT        NOT NULL,
   filename        TEXT        NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS ai_file_transcripts (
 );
 
 COMMENT ON TABLE  ai_file_transcripts                 IS 'Durable transcript results for founder-owned ai_file_cache rows.';
-COMMENT ON COLUMN ai_file_transcripts.file_cache_id   IS 'Owning ai_file_cache row; cascades when the cached file is removed.';
+COMMENT ON COLUMN ai_file_transcripts.file_cache_id   IS 'Source ai_file_cache row when present; set null if the cached file is removed so transcript artefacts remain durable.';
 COMMENT ON COLUMN ai_file_transcripts.provider        IS 'Transcription provider identifier. Only mock is currently enabled.';
 COMMENT ON COLUMN ai_file_transcripts.source          IS 'Honest source marker for fake-vs-real detection.';
 COMMENT ON COLUMN ai_file_transcripts.transcript_text IS 'Plain text transcript for search and review.';

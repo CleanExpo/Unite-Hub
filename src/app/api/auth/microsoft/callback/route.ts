@@ -10,6 +10,7 @@ import { accountByEmail } from '@/lib/email-accounts'
 import { verifyOAuthState } from '@/lib/oauth-state'
 import {
   MICROSOFT_OAUTH_SCOPES,
+  fetchMicrosoftSender,
   isMicrosoftConfigured,
 } from '@/lib/integrations/microsoft-oauth'
 
@@ -37,15 +38,24 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${appUrl}/founder/email?error=microsoft_not_configured`)
   }
 
-  let email = ''
+  let loginHintEmail = ''
   try {
     const decoded = verifyOAuthState(state)
-    email = decoded.email
+    const expiresAt = Number(decoded.expiresAt)
+    if (
+      decoded.founderId !== user.id ||
+      !decoded.nonce ||
+      !Number.isFinite(expiresAt) ||
+      expiresAt <= Date.now()
+    ) {
+      return NextResponse.redirect(`${appUrl}/founder/email?error=invalid_state`)
+    }
+    loginHintEmail = decoded.email
   } catch {
     return NextResponse.redirect(`${appUrl}/founder/email?error=invalid_state`)
   }
 
-  if (!email) {
+  if (!loginHintEmail) {
     return NextResponse.redirect(`${appUrl}/founder/email?error=invalid_state`)
   }
 
@@ -75,6 +85,17 @@ export async function GET(request: Request) {
     scope?: string
   }
 
+  let sender: Awaited<ReturnType<typeof fetchMicrosoftSender>>
+  try {
+    sender = await fetchMicrosoftSender(tokens.access_token)
+  } catch (err) {
+    console.error(
+      '[Microsoft OAuth] Sender lookup failed:',
+      err instanceof Error ? err.message : 'unknown error',
+    )
+    return NextResponse.redirect(`${appUrl}/founder/email?error=sender_lookup_failed`)
+  }
+
   const payload = encrypt(
     JSON.stringify({
       access_token: tokens.access_token,
@@ -84,9 +105,9 @@ export async function GET(request: Request) {
     }),
   )
 
-  const account = accountByEmail(email)
+  const account = accountByEmail(sender.email)
   const businessKey = account?.businessKey ?? 'personal'
-  const label = account?.label ?? email
+  const label = sender.displayName ?? account?.label ?? sender.email
 
   const supabase = createServiceClient()
   const { data: business } = await supabase
@@ -105,8 +126,13 @@ export async function GET(request: Request) {
       encrypted_value: payload.encryptedValue,
       iv: payload.iv,
       salt: payload.salt,
-      notes: email,
-      metadata: { email, businessKey },
+      notes: sender.email,
+      metadata: {
+        email: sender.email,
+        displayName: sender.displayName,
+        businessKey,
+        loginHintEmail,
+      },
       last_accessed_at: new Date().toISOString(),
     },
     { onConflict: 'founder_id,service,label' },
@@ -118,6 +144,6 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.redirect(
-    `${appUrl}/founder/email?connected=${encodeURIComponent(email)}`,
+    `${appUrl}/founder/email?connected=${encodeURIComponent(sender.email)}`,
   )
 }
