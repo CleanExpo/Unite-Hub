@@ -37,6 +37,19 @@ function makeAdminClient() {
   })
 }
 
+function isMissingTranscriptTableError(error: { code?: string; message?: string } | null) {
+  if (!error) return false
+  const message = error.message ?? ''
+  return (
+    error.code === 'PGRST205' ||
+    error.code === '42P01' ||
+    (
+      message.includes('ai_file_transcripts') &&
+      (message.includes('Could not find the table') || message.includes('does not exist'))
+    )
+  )
+}
+
 async function provisionUser(admin: SupabaseClient, state: CleanupState, user: TestUser) {
   const { data, error } = await admin.auth.admin.createUser({
     email: user.email,
@@ -70,6 +83,27 @@ async function cleanup(admin: SupabaseClient, state: CleanupState) {
   const userIds = state.users.flatMap((user) => user.id ? [user.id] : [])
 
   if (userIds.length > 0 && state.cacheKeys.length > 0) {
+    const { error: transcriptError } = await admin
+      .from('ai_file_transcripts')
+      .delete()
+      .in('founder_id', userIds)
+      .in('cache_key', state.cacheKeys)
+    if (transcriptError && !isMissingTranscriptTableError(transcriptError)) {
+      throw new Error(`transcription transcript cleanup failed: ${transcriptError.message}`)
+    }
+
+    const { data: transcripts, error: transcriptRequeryError } = await admin
+      .from('ai_file_transcripts')
+      .select('id')
+      .in('founder_id', userIds)
+      .in('cache_key', state.cacheKeys)
+    if (transcriptRequeryError && !isMissingTranscriptTableError(transcriptRequeryError)) {
+      throw new Error(`transcription transcript cleanup re-query failed: ${transcriptRequeryError.message}`)
+    }
+    if ((transcripts ?? []).length > 0) {
+      throw new Error(`transcription cleanup left ${transcripts?.length ?? 0} transcript rows`)
+    }
+
     const { error } = await admin
       .from('ai_file_cache')
       .delete()
@@ -181,14 +215,18 @@ test.describe('authenticated file transcription', () => {
           confidence: 1,
         },
         persistence: {
-          status: 'unknown',
-          persisted: false,
+          status: 'persisted',
+          persisted: true,
+          table: 'ai_file_transcripts',
         },
       })
+      expect(String((body as { persistence?: { transcriptId?: string } }).persistence?.transcriptId ?? '')).toMatch(
+        /^[0-9a-f-]{36}$/
+      )
 
       const { data, error } = await admin
         .from('ai_file_cache')
-        .select('cache_key,filename,founder_id')
+        .select('cache_key,file_id,filename,founder_id')
         .eq('founder_id', state.users[0].id!)
         .eq('cache_key', cacheKey)
         .single()
@@ -197,6 +235,30 @@ test.describe('authenticated file transcription', () => {
         cache_key: cacheKey,
         filename,
         founder_id: state.users[0].id,
+      })
+
+      const { data: persistedTranscript, error: transcriptError } = await admin
+        .from('ai_file_transcripts')
+        .select('cache_key,file_id,filename,founder_id,provider,source,transcript_text,language,confidence,transcript')
+        .eq('founder_id', state.users[0].id!)
+        .eq('cache_key', cacheKey)
+        .single()
+      expect(transcriptError, JSON.stringify({ step: 'admin-reread-transcript', error: transcriptError })).toBeNull()
+      expect(persistedTranscript).toMatchObject({
+        cache_key: cacheKey,
+        file_id: data?.file_id,
+        filename,
+        founder_id: state.users[0].id,
+        provider: 'mock',
+        source: 'mocked_provider',
+        transcript_text: `Mock transcript for ${filename} (${cacheKey}).`,
+        language: 'en',
+      })
+      expect(Number(persistedTranscript?.confidence)).toBe(1)
+      expect(persistedTranscript?.transcript).toMatchObject({
+        text: `Mock transcript for ${filename} (${cacheKey}).`,
+        language: 'en',
+        confidence: 1,
       })
 
       contextB = await browser.newContext()
@@ -209,10 +271,33 @@ test.describe('authenticated file transcription', () => {
       expect(transcribeB.status(), JSON.stringify({ step: 'transcribe-b', body: bodyB })).toBe(404)
       expect(bodyB).toMatchObject({ code: 'file_not_found' })
 
+      const anonA = createClient(cfg.url, cfg.anonKey, {
+        auth: { autoRefreshToken: false, persistSession: false },
+      })
+      const anonB = createClient(cfg.url, cfg.anonKey, {
+        auth: { autoRefreshToken: false, persistSession: false },
+      })
+      const signInA = await anonA.auth.signInWithPassword({
+        email: state.users[0].email,
+        password: state.users[0].password,
+      })
+      expect(signInA.error, JSON.stringify({ step: 'rls-transcript-sign-in-a', error: signInA.error })).toBeNull()
+      const signInB = await anonB.auth.signInWithPassword({
+        email: state.users[1].email,
+        password: state.users[1].password,
+      })
+      expect(signInB.error, JSON.stringify({ step: 'rls-transcript-sign-in-b', error: signInB.error })).toBeNull()
+
+      const rlsA = await anonA.from('ai_file_transcripts').select('cache_key').eq('cache_key', cacheKey)
+      expect(rlsA.error, JSON.stringify({ step: 'rls-transcript-a', error: rlsA.error })).toBeNull()
+      expect(rlsA.data?.map((row) => row.cache_key)).toEqual([cacheKey])
+      const rlsB = await anonB.from('ai_file_transcripts').select('cache_key').eq('cache_key', cacheKey)
+      expect(rlsB.error, JSON.stringify({ step: 'rls-transcript-b', error: rlsB.error })).toBeNull()
+      expect(rlsB.data).toEqual([])
+
       appendEvidence(`  - uploaded tagged source file: status 201, cacheKey ${cacheKey}`)
-      appendEvidence(`  - mocked transcription returned 200 with transcript text for ${cacheKey}`)
-      appendEvidence(`  - cross-user transcription isolation verified: user B received 404 for ${cacheKey}`)
-      appendEvidence('  - persistence note: transcript durable storage remains UNKNOWN because no active transcript schema exists.')
+      appendEvidence(`  - mocked transcription persisted transcript row for ${cacheKey}`)
+      appendEvidence(`  - cross-user transcription isolation verified: user B received 404 and direct RLS returned no transcript for ${cacheKey}`)
     } finally {
       await contextB?.close().catch(() => undefined)
       await context?.close().catch(() => undefined)

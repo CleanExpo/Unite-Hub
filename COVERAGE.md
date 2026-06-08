@@ -233,6 +233,32 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - `pnpm vitest run` -> PASS, `118` files / `847` tests.
 - `pnpm build` -> BLOCKED before compile by missing local required runtime env names.
 
+## Core journey swarm follow-up — 2026-06-08T10:09+10:00
+
+### Coverage
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Gmail live thread/message import route | PASS (wiring) / UNKNOWN (live consent) | `pnpm vitest run src/app/api/email/contacts/import/__tests__/route.test.ts --config vitest.config.api.ts` passed `7/7`; `pnpm run test:e2e:email-import` passed `2/2` for the self-cleaning mocked path. Live Gmail still requires human OAuth consent and a real tagged thread/message. |
+| Microsoft/Outlook OAuth foundation | PASS (route guards) / UNKNOWN (live consent/import) | `pnpm vitest run src/app/api/auth/microsoft/__tests__/authorize.test.ts --config vitest.config.api.ts` passed `8/8`; routes are auth-gated and store tokens founder-scoped in `credentials_vault` when consent is completed. Live Microsoft consent/import was not attempted. |
+| Dedicated drip schema + route | UNKNOWN / SCHEMA-GATED | Migration `supabase/migrations/20260608000000_drip_lifecycle_schema.sql`, route, and e2e guard are ready. `pnpm exec supabase db push --dry-run --linked` did not apply schema and showed the new migration pending; `pnpm test:e2e:drip-campaign` is intentionally blocked until the migration is applied. |
+| Durable transcript persistence | UNKNOWN / SCHEMA-GATED | Migration `supabase/migrations/20260607235936_ai_file_transcripts.sql`, route persistence, and e2e guard are ready. Live probe showed the table is absent; no schema change was applied. |
+
+### Fresh proof commands
+
+- `pnpm run type-check` -> PASS.
+- `pnpm run lint` -> PASS.
+- `pnpm vitest run` -> PASS, `120` files / `862` tests.
+- `pnpm vitest run src/app/api/auth/microsoft/__tests__/authorize.test.ts src/app/api/email/contacts/import/__tests__/route.test.ts --config vitest.config.api.ts` -> PASS, `15` tests.
+- `pnpm run test:e2e:email-import` -> PASS, `2` Playwright tests.
+- `pnpm test:e2e:contact-crud` -> PASS, `1` Playwright test.
+- `pnpm test:e2e:lead-scoring` -> PASS, `1` Playwright test.
+- `pnpm test:e2e:file-upload` -> PASS, `1` Playwright test.
+- `pnpm test:e2e:core-journeys` -> PASS, `5` Playwright tests.
+- `git diff --check` -> PASS.
+- `pnpm exec supabase db push --dry-run --linked` -> PASS as dry-run only; it reported pending migrations including the new transcript and drip migrations and did not apply anything.
+- `pnpm build` -> BLOCKED before compile by local env validation (`0/3` critical, `0/4` required runtime vars in this shell).
+
 ## Drip campaign compatibility lifecycle proof — 2026-06-08T08:54+10:00
 
 ### Coverage

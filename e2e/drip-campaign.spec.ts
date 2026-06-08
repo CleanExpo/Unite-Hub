@@ -69,11 +69,20 @@ async function signIn(page: Page, user: TestUser) {
 
 async function cleanup(admin: SupabaseClient, state: CleanupState) {
   if (state.campaignIds.length > 0) {
-    const { error } = await admin.from('email_campaigns').delete().in('id', state.campaignIds)
+    const { error: eventError } = await admin.from('drip_events').delete().in('campaign_id', state.campaignIds)
+    if (eventError) throw new Error(`drip event cleanup failed: ${eventError.message}`)
+
+    const { error: enrollmentError } = await admin.from('drip_enrollments').delete().in('campaign_id', state.campaignIds)
+    if (enrollmentError) throw new Error(`drip enrollment cleanup failed: ${enrollmentError.message}`)
+
+    const { error: stepError } = await admin.from('drip_steps').delete().in('campaign_id', state.campaignIds)
+    if (stepError) throw new Error(`drip step cleanup failed: ${stepError.message}`)
+
+    const { error } = await admin.from('drip_campaigns').delete().in('id', state.campaignIds)
     if (error) throw new Error(`drip campaign cleanup failed: ${error.message}`)
 
     const { data, error: requeryError } = await admin
-      .from('email_campaigns')
+      .from('drip_campaigns')
       .select('id')
       .in('id', state.campaignIds)
     if (requeryError) throw new Error(`drip campaign cleanup re-query failed: ${requeryError.message}`)
@@ -230,23 +239,65 @@ test.describe('authenticated drip campaign lifecycle', () => {
       })
 
       const { data: persisted, error } = await admin
-        .from('email_campaigns')
-        .select('id,founder_id,recipient_list,metadata')
+        .from('drip_campaigns')
+        .select('id,founder_id,status')
         .eq('id', campaignId!)
         .eq('founder_id', state.users[0].id!)
         .single()
       expect(error, JSON.stringify({ step: 'admin-reread-campaign', error })).toBeNull()
-      const metadata = persisted?.metadata as {
-        drip?: {
-          steps?: unknown[]
-          enrollments?: Array<{ contactId?: string; status?: string }>
-          events?: unknown[]
-        }
-      } | null
-      expect(metadata?.drip?.steps?.length).toBe(1)
-      expect(metadata?.drip?.enrollments?.[0]).toMatchObject({ contactId, status: 'completed' })
-      expect(metadata?.drip?.events?.length).toBe(1)
-      expect(Array.isArray(persisted?.recipient_list) ? persisted.recipient_list.length : 0).toBe(1)
+      expect(persisted?.founder_id).toBe(state.users[0].id)
+
+      const { data: persistedSteps, error: stepsError } = await admin
+        .from('drip_steps')
+        .select('id,founder_id,campaign_id,step_order')
+        .eq('campaign_id', campaignId!)
+        .eq('founder_id', state.users[0].id!)
+        .order('step_order', { ascending: true })
+      expect(stepsError, JSON.stringify({ step: 'admin-reread-steps', error: stepsError })).toBeNull()
+      expect(persistedSteps?.length).toBe(1)
+      expect(persistedSteps?.[0]).toMatchObject({ campaign_id: campaignId, step_order: 1 })
+
+      const { data: persistedEnrollments, error: enrollmentsError } = await admin
+        .from('drip_enrollments')
+        .select('id,founder_id,campaign_id,contact_id,email,status,current_step_order,completed_at')
+        .eq('campaign_id', campaignId!)
+        .eq('founder_id', state.users[0].id!)
+      expect(enrollmentsError, JSON.stringify({ step: 'admin-reread-enrollments', error: enrollmentsError })).toBeNull()
+      expect(persistedEnrollments?.length).toBe(1)
+      expect(persistedEnrollments?.[0]).toMatchObject({
+        campaign_id: campaignId,
+        contact_id: contactId,
+        email: contactEmail,
+        status: 'completed',
+        current_step_order: 2,
+      })
+      expect(persistedEnrollments?.[0]?.completed_at).toBeTruthy()
+
+      const { data: persistedEvents, error: eventsError } = await admin
+        .from('drip_events')
+        .select('id,founder_id,campaign_id,enrollment_id,contact_id,step_id,event_type,provider_send')
+        .eq('campaign_id', campaignId!)
+        .eq('founder_id', state.users[0].id!)
+      expect(eventsError, JSON.stringify({ step: 'admin-reread-events', error: eventsError })).toBeNull()
+      expect(persistedEvents?.length).toBe(1)
+      expect(persistedEvents?.[0]).toMatchObject({
+        campaign_id: campaignId,
+        contact_id: contactId,
+        step_id: persistedSteps?.[0]?.id,
+        event_type: 'dry_run_processed',
+        provider_send: 'not_attempted',
+      })
+
+      const { data: crossFounderRows, error: crossFounderRereadError } = await admin
+        .from('drip_campaigns')
+        .select('id')
+        .eq('id', campaignId!)
+        .eq('founder_id', state.users[1].id!)
+      expect(crossFounderRereadError, JSON.stringify({
+        step: 'admin-cross-founder-reread',
+        error: crossFounderRereadError,
+      })).toBeNull()
+      expect(crossFounderRows).toEqual([])
 
       contextB = await browser.newContext()
       const pageB = await contextB.newPage()
@@ -263,7 +314,7 @@ test.describe('authenticated drip campaign lifecycle', () => {
 
       appendEvidence(`  - created drip contact ${contactId}: ${contactEmail}`)
       appendEvidence(`  - created drip campaign ${campaignId}`)
-      appendEvidence('  - added one drip step and enrolled the tagged contact')
+      appendEvidence('  - added one drip step and enrolled the tagged contact in dedicated drip tables')
       appendEvidence('  - process_pending dry-run returned processed=1, failed=0, providerSend=not_attempted')
       appendEvidence(`  - cross-user isolation verified: user B received 404 for campaign ${campaignId}`)
     } finally {

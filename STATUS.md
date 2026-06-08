@@ -335,3 +335,24 @@ What genuinely works now: `POST /api/email/contacts/import` exists and is authen
 What remains blocked: live Gmail thread import is **UNKNOWN / HUMAN-GATED** until Google OAuth consent and real thread fetch are available. Outlook/Microsoft import is **UNKNOWN / NOT BUILT** because no active Microsoft OAuth/Graph route exists.
 
 Fresh verification: type-check PASS, lint PASS, email-import e2e PASS (`2/2`), cleanup audit PASS (`0` tagged email-import contacts remain), final chained e2e gate PASS, Vitest PASS (`118` files / `847` tests). Local build remains blocked before compile by missing required runtime env names in this shell.
+
+## Core journey swarm follow-up — 2026-06-08T10:09+10:00
+
+What genuinely works now:
+
+- Gmail import has a live route path for `source='gmail'` using existing founder-scoped Google credentials, `threadId` or `messageId`, and contact upsert/create by `founder_id` + email. Unit tests prove no-account, thread import, message import, and unauthorised-token handling; mocked e2e still proves safe contact creation and cleanup.
+- Microsoft OAuth foundation exists at `/api/auth/microsoft/authorize` and `/api/auth/microsoft/callback`, with auth guards, missing-env guards, signed state, token exchange, encryption, and founder-scoped `credentials_vault` storage. Unit tests prove the guard rails.
+- Dedicated drip and transcript persistence are no longer just vague blockers: additive migrations, routes, and stricter e2e guards are ready for review.
+
+Still blocked:
+
+- Dedicated drip e2e is schema-gated until `supabase/migrations/20260608000000_drip_lifecycle_schema.sql` is applied.
+- Transcript persistence e2e is schema-gated until `supabase/migrations/20260607235936_ai_file_transcripts.sql` is applied.
+- Live Gmail and Microsoft import remain human-consent gated; no provider consent or live mailbox read was attempted.
+- Local build is blocked before compile by missing runtime env in this shell.
+
+Top 3 next fixes:
+
+1. Review and apply the two additive migrations in an authorised schema lane, then rerun `pnpm test:e2e:drip-campaign` and `pnpm test:e2e:transcription`.
+2. Complete Google and Microsoft OAuth consent with target accounts, then run one tagged live import proof for each provider.
+3. Move Playwright e2e to a non-production Supabase CI lane; current CI skips Playwright and local guards still rely on the approved production-write exception.

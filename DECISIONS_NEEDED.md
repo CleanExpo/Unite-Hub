@@ -200,3 +200,23 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
 32. **Decide Outlook/Microsoft scope**
    - No active Microsoft/Outlook OAuth or Graph import route exists.
    - Needed decision: either approve Microsoft authorize/callback plus Graph fetch implementation, or mark Outlook import as not connected for the current CRM surface.
+
+## Added 2026-06-08T09:20+10:00 — Transcript persistence migration ready, application gated
+
+33. **Apply the additive transcript persistence migration in the authorised schema-change lane**
+   - Migration/code/tests are ready in `supabase/migrations/20260607235936_ai_file_transcripts.sql`, `src/app/api/files/transcribe/route.ts`, and `e2e/transcription.spec.ts`.
+   - Read-only live probe returned `PGRST205 Could not find the table 'public.ai_file_transcripts' in the schema cache`, so the focused transcription E2E is blocked until this migration is applied.
+   - This lane did not run production schema changes. Required next command, once authorised and after reviewing the SQL: `supabase db query --linked --file supabase/migrations/20260607235936_ai_file_transcripts.sql`, then `env TRANSCRIPTION_APPEND_EVIDENCE=1 pnpm test:e2e:transcription`.
+   - Live provider transcription remains UNKNOWN until provider credentials, source-byte retrieval/storage, and cost ceiling are explicitly approved.
+
+## Added 2026-06-08T10:09+10:00 — Swarm follow-up gates
+
+34. **Review/apply the dedicated drip migration before claiming GREEN drip**
+   - Migration/code/tests are ready in `supabase/migrations/20260608000000_drip_lifecycle_schema.sql`, `src/app/api/campaigns/drip/route.ts`, and `e2e/drip-campaign.spec.ts`.
+   - No schema change was applied in this run. Required next commands after review/approval: `pnpm exec supabase db push --dry-run --linked`, then the approved apply command for only the intended additive migrations, then `DRIP_CAMPAIGN_APPEND_EVIDENCE=1 pnpm test:e2e:drip-campaign`.
+   - Live provider sending remains separately gated by consent/unsubscribe/test-domain rules and provider cost/credential approval.
+
+35. **Complete human OAuth consent before live Gmail/Microsoft import proof**
+   - Gmail live import route wiring now exists and unit tests pass, but live proof still needs a connected Google account and a tagged real thread/message ID.
+   - Microsoft authorize/callback route wiring now exists and unit tests pass, but live proof still needs Microsoft app env vars and human consent.
+   - Do not mark provider import GREEN until a real consented account import is run with tagged data and cleanup proof.
