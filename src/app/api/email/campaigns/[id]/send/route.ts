@@ -9,6 +9,13 @@ import { sendCampaignEmail, type EmailRecipient } from '@/lib/integrations/sendg
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
 
+function campaignCategories(metadata: unknown): string[] | undefined {
+  if (!metadata || typeof metadata !== 'object') return undefined
+  const categories = (metadata as { categories?: unknown }).categories
+  if (!Array.isArray(categories)) return undefined
+  return categories.filter((category): category is string => typeof category === 'string')
+}
+
 export async function POST(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -84,7 +91,7 @@ export async function POST(
       campaign.subject,
       campaign.body_html,
       campaign.body_text ?? undefined,
-      campaign.categories ?? undefined
+      campaignCategories(campaign.metadata)
     )
 
     // 8. Update campaign status

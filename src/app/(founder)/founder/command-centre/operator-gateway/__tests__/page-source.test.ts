@@ -1,0 +1,132 @@
+import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
+const root = process.cwd()
+
+describe('command centre operator gateway UI source', () => {
+  it('renders the required safety and lane visibility language', () => {
+    const page = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(page).toContain('No API keys')
+    expect(page).toContain('Operator-session lanes only')
+    expect(page).toContain('No external execution yet')
+    expect(page).toContain('Production actions gated')
+    expect(page).toContain('Senior PM next action queue')
+    expect(page).toContain('Hard-gate warnings')
+    expect(page).toContain('Daily ops panel')
+    expect(page).toContain('Create sandbox job')
+  })
+
+  it('does not introduce browser automation, secret storage, or live runner calls', () => {
+    const page = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(page).not.toMatch(/process\.env\.[A-Z_]*(?:SECRET|KEY|TOKEN)/)
+    expect(page).not.toContain('localStorage')
+    expect(page).not.toContain('sessionStorage')
+    expect(page).not.toContain('puppeteer')
+    expect(page).not.toContain('playwright')
+    expect(page).not.toContain('runOperatorJob')
+  })
+
+  it('shows sandbox-only job creation while keeping execution disabled', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Sandbox persistence')
+    expect(source).toContain('Production connected')
+    expect(source).toContain('sandbox job creation')
+    expect(source).toContain('Job creation enabled')
+    expect(source).toContain('Live runner enabled')
+    expect(source).toContain('External execution disabled')
+  })
+
+  it('shows dry-run-only execution state without a real execute button', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Dry-run only')
+    expect(source).toContain('/api/hermes/operator-gateway/jobs/dry-run')
+    expect(source).toContain('dry-run-only execution')
+    expect(source).toContain('No real execute button')
+    expect(source).not.toContain('Execute job')
+  })
+
+  it('shows controlled real-local execution design status while keeping external/live execution disabled', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Controlled real-local execution')
+    expect(source).toContain('local_foundation_ready')
+    expect(source).toContain('/api/hermes/operator-gateway/jobs/local-execution')
+    expect(source).toContain('Hard-gated actions refused')
+    expect(source).toContain('pending Claude/Cursor lanes')
+    expect(source).toContain('active Hermes/Codex/skill-exec lanes')
+    expect(source).not.toContain('Real execute job')
+  })
+
+  it('shows specialized skill mesh and business mission router without live execution', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Specialised Skill Mesh')
+    expect(source).toContain('Business Mission Router')
+    expect(source).toContain('Available specialised skills')
+    expect(source).toContain('Business mission templates')
+    expect(source).toContain('First 20-action mission route')
+    expect(source).toContain('sandbox_voice_migration_blocked_op')
+    expect(source).toContain('/api/hermes/operator-gateway/skill-mesh')
+    expect(source).toContain('External execution remains disabled')
+  })
+
+  it('shows self-evolving skill mesh status without auto-promotion or external eval calls', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Self-Evolving Skill Mesh')
+    expect(source).toContain('Skills under evaluation')
+    expect(source).toContain('Graders defined')
+    expect(source).toContain('Promotion candidates')
+    expect(source).toContain('Blocked promotions')
+    expect(source).toContain('Next skill to evaluate')
+    expect(source).toContain('/api/hermes/operator-gateway/skill-evolution')
+    expect(source).toContain('Live auto-promotion enabled')
+    expect(source).toContain('External eval API called')
+    expect(source).not.toContain('Auto-promote live skill')
+  })
+
+
+  it('shows Board Decision Mathematics Engine status without hard-gate bypass', () => {
+    const source = readFileSync(
+      join(root, 'src/app/(founder)/founder/command-centre/operator-gateway/page.tsx'),
+      'utf8',
+    )
+
+    expect(source).toContain('Board Decision Mathematics Engine')
+    expect(source).toContain('Expected value')
+    expect(source).toContain('Verification + retry')
+    expect(source).toContain('Calibration status')
+    expect(source).toContain('Human approval required')
+    expect(source).toContain('No hard gates bypassed')
+    expect(source).toContain('market launch action disabled')
+    expect(source).toContain('/api/hermes/operator-gateway/command-centre')
+    expect(source).not.toContain('Override hard gate')
+  })
+
+})

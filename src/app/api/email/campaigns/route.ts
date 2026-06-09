@@ -77,12 +77,14 @@ export async function POST(request: Request) {
     .insert({
       founder_id: user.id,
       business_key: body.businessKey.trim(),
-      name: body.name.trim(),
       subject: body.subject.trim(),
       body_html: body.bodyHtml,
       body_text: body.bodyText ?? null,
       recipient_list: body.recipientList ?? [],
-      categories: body.categories ?? [],
+      metadata: {
+        name: body.name.trim(),
+        categories: body.categories ?? [],
+      },
       status: 'draft',
     })
     .select()

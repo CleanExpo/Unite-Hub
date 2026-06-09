@@ -292,8 +292,6 @@ scripts/_archive/
 .vercel
 
 .env*.local
-.vercel
-
 # Env backups (may contain real secrets — never commit)
 .env.local.bak.*
 .env.local.*.bak

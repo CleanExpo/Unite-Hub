@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "project_definition_of_done.schema.json",
+  "title": "Project Definition of Done",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "project_name",
+    "owner_role",
+    "approver_role",
+    "completion_threshold",
+    "false_done_prevention_active",
+    "requirements"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "owner_role": {
+      "type": "string"
+    },
+    "approver_role": {
+      "type": "string"
+    },
+    "completion_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "false_done_prevention_active": {
+      "type": "boolean"
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "project_requirement.schema.json"
+      }
+    }
+  }
+}

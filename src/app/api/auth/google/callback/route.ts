@@ -12,11 +12,12 @@ import { verifyOAuthState } from '@/lib/oauth-state'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
-  const APP_URL = process.env.NEXT_PUBLIC_APP_URL!.trim()
+  const requestUrl = new URL(request.url)
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL?.trim() || requestUrl.origin
   const user = await getUser()
   if (!user) return NextResponse.redirect(`${APP_URL}/auth/login`)
 
-  const { searchParams } = new URL(request.url)
+  const { searchParams } = requestUrl
   const code = searchParams.get('code')
   const state = searchParams.get('state')
   const error = searchParams.get('error')
