@@ -13,6 +13,7 @@ import { LiveClock } from './LiveClock'
 import { CommandPalette } from './CommandPalette'
 import { IdeaConsole } from './IdeaConsole'
 import { QueueBoard } from './QueueBoard'
+import { DigestBanner } from './DigestBanner'
 import styles from './command-deck.module.css'
 
 const chakra = Chakra_Petch({
@@ -125,6 +126,11 @@ export default async function CommandDeckPage() {
           </span>
         </div>
       </header>
+
+      {/* ── Morning digest ───────────────────────────────────────────── */}
+      <section className={`${styles.reveal}`} style={{ animationDelay: '0.01s' }}>
+        <DigestBanner />
+      </section>
 
       {/* ── Idea intake ──────────────────────────────────────────────── */}
       <div className={styles.sectionHead} id="idea-intake">
