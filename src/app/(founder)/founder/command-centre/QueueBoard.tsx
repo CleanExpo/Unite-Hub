@@ -11,8 +11,10 @@
 // (credentials: 'include'). Loading / error / empty states are honest — success
 // is only ever claimed on a 2xx response.
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './queue-board.module.css'
+import { subscribeToQueue, type RealtimeClientLike } from '@/lib/command-centre/realtime'
+import { createClient } from '@/lib/supabase/client'
 
 interface QueueTask {
   id: string
@@ -97,6 +99,8 @@ export function QueueBoard() {
   const [sessOpen, setSessOpen] = useState<string | null>(null)
   const [sessData, setSessData] = useState<Record<string, SessionCell>>({})
   const [sessBusy, setSessBusy] = useState(false)
+  const [live, setLive] = useState(false)
+  const reloadTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const loadQueue = useCallback(async () => {
     setLoading(true)
@@ -118,6 +122,30 @@ export function QueueBoard() {
 
   useEffect(() => {
     void loadQueue()
+  }, [loadQueue])
+
+  // Live updates: debounced refetch whenever a cc_tasks / session row the founder
+  // can see changes — including cron + overnight-session writes (RLS authorises).
+  useEffect(() => {
+    let client: RealtimeClientLike
+    try {
+      client = createClient() as unknown as RealtimeClientLike
+    } catch {
+      return // env not ready; the static board still works without live updates
+    }
+    const unsub = subscribeToQueue(
+      client,
+      () => {
+        if (reloadTimer.current) clearTimeout(reloadTimer.current)
+        reloadTimer.current = setTimeout(() => void loadQueue(), 400)
+      },
+      (status) => setLive(status === 'SUBSCRIBED'),
+    )
+    return () => {
+      if (reloadTimer.current) clearTimeout(reloadTimer.current)
+      setLive(false)
+      unsub()
+    }
   }, [loadQueue])
 
   async function decide(taskId: string, decision: Decision) {
@@ -248,9 +276,18 @@ export function QueueBoard() {
         <span className={styles.count}>
           {tasks.length} task{tasks.length === 1 ? '' : 's'}
         </span>
-        <button type="button" className={styles.refresh} onClick={() => void loadQueue()} disabled={loading}>
-          {loading ? 'Loading…' : '↻ Refresh'}
-        </button>
+        <span className={styles.toolbarRight}>
+          <span
+            className={styles.liveDot}
+            data-live={live}
+            title={live ? 'Live — board updates in real time' : 'Not connected to live updates'}
+            aria-hidden="true"
+          />
+          <span className={styles.liveLabel}>{live ? 'Live' : 'Offline'}</span>
+          <button type="button" className={styles.refresh} onClick={() => void loadQueue()} disabled={loading}>
+            {loading ? 'Loading…' : '↻ Refresh'}
+          </button>
+        </span>
       </div>
 
       {error && (
