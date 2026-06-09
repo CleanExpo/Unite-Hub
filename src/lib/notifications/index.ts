@@ -3,7 +3,7 @@
 // All notification delivery is fire-and-forget — never throws, never blocks callers.
 
 import { sendSlack, formatSlackNotification } from './slack'
-import { createServiceClient } from '@/lib/supabase/service'
+import { createServiceClient, hasSupabaseServiceConfig } from '@/lib/supabase/service'
 
 export type NotificationType =
   | 'cron_complete'
@@ -41,6 +41,12 @@ export async function notify(payload: NotificationPayload): Promise<void> {
 
     if (!founderId) {
       console.warn('[Notify] FOUNDER_USER_ID not set — skipping channel delivery')
+      return
+    }
+
+    if (!hasSupabaseServiceConfig()) {
+      console.warn('[Notify] Supabase service config not set — skipping DB-backed channel delivery')
+      await attemptEnvSlack(payload)
       return
     }
 

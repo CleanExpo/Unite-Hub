@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { GET as authorize } from '../authorize/route'
+import { GET as callback } from '../callback/route'
 import { getUser } from '@/lib/supabase/server'
 
 vi.mock('@/lib/supabase/server', () => ({
@@ -63,5 +64,50 @@ describe('Google authorize route', () => {
     expect(location).toContain('client_id=valid-client.apps.googleusercontent.com')
     expect(location).toContain('login_hint=phill%40example.com')
     expect(location).toContain('redirect_uri=https%3A%2F%2Fapp.test%2Fapi%2Fauth%2Fgoogle%2Fcallback')
+  })
+
+  it('uses the request origin for redirects when NEXT_PUBLIC_APP_URL is absent', async () => {
+    delete process.env.NEXT_PUBLIC_APP_URL
+
+    const res = await authorize(new Request('https://preview.test/api/auth/google/authorize?email=phill@example.com'))
+
+    expect(res.status).toBe(307)
+    const location = res.headers.get('location') ?? ''
+    expect(location).toContain('redirect_uri=https%3A%2F%2Fpreview.test%2Fapi%2Fauth%2Fgoogle%2Fcallback')
+  })
+})
+
+describe('Google callback route', () => {
+  beforeEach(() => {
+    process.env.GOOGLE_CLIENT_ID = 'valid-client.apps.googleusercontent.com'
+    process.env.GOOGLE_CLIENT_SECRET = 'valid-secret'
+    process.env.VAULT_ENCRYPTION_KEY = 'test-encryption-key-32-bytes-ok!'
+    delete process.env.NEXT_PUBLIC_APP_URL
+  })
+
+  afterEach(() => {
+    process.env.GOOGLE_CLIENT_ID = originalEnv.GOOGLE_CLIENT_ID
+    process.env.GOOGLE_CLIENT_SECRET = originalEnv.GOOGLE_CLIENT_SECRET
+    process.env.NEXT_PUBLIC_APP_URL = originalEnv.NEXT_PUBLIC_APP_URL
+    process.env.VAULT_ENCRYPTION_KEY = originalEnv.VAULT_ENCRYPTION_KEY
+    vi.clearAllMocks()
+  })
+
+  it('redirects anonymous callback requests to login when NEXT_PUBLIC_APP_URL is absent', async () => {
+    vi.mocked(getUser).mockResolvedValue(null)
+
+    const res = await callback(new Request('https://preview.test/api/auth/google/callback'))
+
+    expect(res.status).toBe(307)
+    expect(res.headers.get('location')).toBe('https://preview.test/auth/login')
+  })
+
+  it('redirects missing callback params without throwing when NEXT_PUBLIC_APP_URL is absent', async () => {
+    vi.mocked(getUser).mockResolvedValue({ id: 'user-123' } as Awaited<ReturnType<typeof getUser>>)
+
+    const res = await callback(new Request('https://preview.test/api/auth/google/callback'))
+
+    expect(res.status).toBe(307)
+    expect(res.headers.get('location')).toBe('https://preview.test/founder/email?error=missing_params')
   })
 })

@@ -21,6 +21,10 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { getPooledDatabaseUrl, isPoolerEnabled } from './pooler-config';
 
+export function hasSupabaseConfig(env: NodeJS.ProcessEnv = process.env): boolean {
+  return Boolean(env.NEXT_PUBLIC_SUPABASE_URL?.trim() && env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim());
+}
+
 /**
  * Check if we're in a build-time/static context
  * During build, there's no request context so cookies() would fail
@@ -127,6 +131,10 @@ export function getPooledDatabaseConfig(): {
  * Returns null if not authenticated
  */
 export async function getUser() {
+  if (!hasSupabaseConfig()) {
+    return null;
+  }
+
   const supabase = await createClient();
   const { data: { user }, error } = await supabase.auth.getUser();
 
@@ -142,6 +150,10 @@ export async function getUser() {
  * Returns null if no session
  */
 export async function getSession() {
+  if (!hasSupabaseConfig()) {
+    return null;
+  }
+
   const supabase = await createClient();
   const { data: { session }, error } = await supabase.auth.getSession();
 
@@ -157,6 +169,10 @@ export async function getSession() {
  * Used for role-based access control
  */
 export async function getUserWithRole() {
+  if (!hasSupabaseConfig()) {
+    return null;
+  }
+
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 

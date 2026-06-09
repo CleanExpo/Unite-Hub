@@ -137,6 +137,22 @@ describe('GET /api/cron/bookkeeper', () => {
     expect(body.status).toBe('completed')
   })
 
+  it('does not log Supabase service-client errors when fire-and-forget delivery lacks local service env', async () => {
+    delete process.env.NEXT_PUBLIC_SUPABASE_URL
+    delete process.env.SUPABASE_SERVICE_ROLE_KEY
+    mockRunBookkeeper.mockResolvedValue(makeSuccessResult())
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const response = await GET(makeRequest('Bearer test-cron-secret'))
+    await response.json()
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    const logged = errorSpy.mock.calls.flat().map(String).join('\n')
+    expect(logged).not.toContain('supabaseUrl is required')
+
+    errorSpy.mockRestore()
+  })
+
   it('calls runBookkeeperForAllBusinesses with the correct founder ID', async () => {
     mockRunBookkeeper.mockResolvedValue(makeSuccessResult())
 

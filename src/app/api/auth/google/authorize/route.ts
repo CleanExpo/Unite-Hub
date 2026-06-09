@@ -20,10 +20,12 @@ const SCOPES = [
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
+  const requestUrl = new URL(request.url)
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || requestUrl.origin
   const user = await getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { searchParams } = new URL(request.url)
+  const { searchParams } = requestUrl
   const email = searchParams.get('email')
   if (!email) return NextResponse.json({ error: 'email param required' }, { status: 400 })
 
@@ -39,7 +41,7 @@ export async function GET(request: Request) {
 
   const params = new URLSearchParams({
     client_id: process.env.GOOGLE_CLIENT_ID!.trim(),
-    redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL!.trim()}/api/auth/google/callback`,
+    redirect_uri: `${appUrl}/api/auth/google/callback`,
     response_type: 'code',
     scope: SCOPES,
     access_type: 'offline',

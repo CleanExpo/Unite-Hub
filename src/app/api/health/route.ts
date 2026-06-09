@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { captureApiError } from "@/lib/error-reporting";
+import { hasSupabaseConfig } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,18 @@ export async function GET() {
   const connections: Record<string, string> = {};
 
   try {
+    if (!hasSupabaseConfig()) {
+      connections.supabase = "error";
+      return NextResponse.json(
+        {
+          status: "degraded",
+          timestamp: new Date().toISOString(),
+          connections,
+        },
+        { status: 503 }
+      );
+    }
+
     const cookieStore = await cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
