@@ -2,7 +2,7 @@
 
 - **Date:** 2026-06-08
 - **Status:** Approved design — ready for implementation planning
-- **Owner:** Phillip McGurk (phill.mcgurk@gmail.com)
+- **Owner:** Phillip McGurk
 - **Author:** Claude (brainstorming session)
 - **Scope:** Consolidate the duplicated "Unite-Hub / Unite-Group" stacks into ONE product with one repo, one Vercel project, one domain, and one set of integrations. This is the foundational "clean data" step that the later autonomous-engineering vision depends on.
 
@@ -29,7 +29,7 @@ GitHub account: **CleanExpo**. Vercel team: **Unite-Group** (`team_KMZACI5rIltoC
 | Vercel project | `unite-hub` (`prj_y8hsRwhZHe6ewe6wCbwMbBYx20yp`), region iad1, node 24 | `unite-group` (`prj_IfUuJNLjXTE8VXqEGwLAleIGhiA0`), region syd1, node 22 |
 | Custom domain | none (`unite-hub*.vercel.app` only) | **`unite-group.in`** (live) + `unite-group.vercel.app` |
 | Deploys from | `Unite-Hub` @ main | `Unite-Group` @ main |
-| Commit identity | phill.mcgurk@gmail.com / agent@unite-group.net | support@carsi.com.au |
+| Commit identity | `<owner-personal-email>` / agent@unite-group.net | support@carsi.com.au |
 
 **Integrations are split across the two repos — neither is complete:**
 
@@ -103,7 +103,7 @@ Identity and domain are treated as portable "stickers" applied to the surviving 
 
 ### Phase 3 — Cutover (the only phase touching live wiring; reversible at every step)
 
-1. **Move `unite-group.in`** onto the unified Vercel project. Because the domain name is unchanged, Stripe/OAuth URLs already on `unite-group.in` keep working as-is.
+1. **Move `unite-group.in`** onto the unified Vercel project. Because the domain name is unchanged, Stripe/OAuth URLs already on `unite-group.in` are *expected* to keep working — treat this as a hypothesis, not a guarantee. Verify it explicitly at step 4 before retiring anything, and pre-check any provider that pins exact callback/redirect URLs, webhook destinations, or per-deployment signing secrets.
 2. **Update the finite redirect-URI checklist** from Phase 1 (consoles still pointing at `unite-hub.vercel.app`).
 3. **Copy env-var secrets** into the unified project using the Phase-1 name list.
 4. **Verify end-to-end BEFORE retiring anything:** a test Stripe payment received via webhook; real logins for the main OAuth providers; dashboard + CRM pages load on `unite-group.in`.
@@ -118,7 +118,7 @@ Identity and domain are treated as portable "stickers" applied to the surviving 
 3. **Install guardrails (fixes the root cause):**
    - **`SOURCE-OF-TRUTH.md`** at the top of the surviving repo + a clear repo description naming the one canonical repo.
    - **Remove ambiguous signals:** give the survivor a unique `package.json` name and description so no two repos look identical to an agent.
-   - **Re-aim every automation:** the Phase-1 culprit, Pi-CEO / "margot", the Hermes Agent (`phill.mcgurk@gmail.com` login), and any `CLAUDE.md`, cron job, or MCP config across `Unite-Hub`, `Pi-Dev-Ops`, and `2nd Brain` — all reference only the canonical repo.
+   - **Re-aim every automation:** the Phase-1 culprit, Pi-CEO / "margot", the Hermes Agent (`<owner-personal-email>` login), and any `CLAUDE.md`, cron job, or MCP config across `Unite-Hub`, `Pi-Dev-Ops`, and `2nd Brain` — all reference only the canonical repo.
    - **Tripwire:** because the old repo is archived, any agent that tries to push to it simply cannot.
 
 ## 6. Risks & containment
