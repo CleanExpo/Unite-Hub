@@ -332,3 +332,37 @@ Each requested journey was counted as PASS only if exercised end-to-end as a rea
 - Final chained e2e gate -> PASS: drip `2/2`, email-import `2/2`, contact-crud `1/1`, core-journeys `5/5`, lead-scoring `1/1`, file-upload `1/1`, transcription `2/2`.
 - `pnpm vitest run` -> PASS, `118` files / `847` tests.
 - `pnpm build` -> BLOCKED before compile by missing local required runtime env names.
+
+## Durable transcript persistence applied — 2026-06-09
+
+### What changed
+
+The additive transcript-persistence schema was applied to the production Supabase project the
+e2e lane targets (`lksfwktwtmyznckodsau` / "Unite-Group"), moving **Durable transcript persistence**
+from `UNKNOWN / SCHEMA-GATED` to **PASS**. This supersedes the schema-gated UNKNOWN rows recorded in
+the `2026-06-08T08:32` and PR #106 (`2026-06-08T10:42`) sections above.
+
+- Migration applied (idempotent, additive only — `CREATE TABLE/INDEX IF NOT EXISTS`,
+  `ENABLE ROW LEVEL SECURITY`, `GRANT`, policies guarded by `IF NOT EXISTS`):
+  `supabase/migrations/20260607235936_ai_file_transcripts.sql`.
+- Applied via the Supabase Management API (`apply_migration`) against project `lksfwktwtmyznckodsau`,
+  **not** `--linked` — the Supabase CLI is linked to `xgqwfwqumliuguzhshwv` ("Unite-Group Test"),
+  a different project than the one `e2e/support/supabase-admin-config.ts` authenticates against.
+  Applying via `--linked` would have hit the wrong database.
+- No destructive DDL was run. No secrets were printed or written to disk.
+
+### Coverage
+
+| Journey | Status | Evidence |
+|---|---:|---|
+| Durable transcript persistence | PASS | Pre-state confirmed `ai_file_transcripts` absent. After `apply_migration`, table verified: `table_exists=1`, `rls_enabled=true`, `policy_count=2`, `index_count=4`, `row_count=0`. `pnpm run test:e2e:transcription` then passed `2/2` taking the **persisted** branch (table present), asserting `persistence.status='persisted'`, `persisted=true`, a UUID `transcriptId`, an admin re-read of the actual `ai_file_transcripts` row with full content match, and RLS isolation (user A sees the transcript row, user B sees none). |
+| Transcription endpoint mocked-provider wiring | PASS | Re-confirmed in the same `2/2` run: fails closed before auth, mocked provider returns deterministic transcript text scoped to the authed founder. |
+| Live transcription provider | UNKNOWN / HUMAN-GATED | Unchanged. No live provider call attempted; the run used `UNITE_HUB_TEST_MOCK_TRANSCRIPTION=1`. Live proof still needs provider API key, cost ceiling, and source-byte retrieval/storage design (DECISIONS_NEEDED.md #28). |
+
+### Fresh proof commands
+
+- `apply_migration` (Supabase Management API, project `lksfwktwtmyznckodsau`, name `ai_file_transcripts`) -> `{"success":true}`.
+- Post-apply table audit -> PASS: `table_exists=1, rls_enabled=true, policy_count=2, index_count=4, row_count=0`.
+- `pnpm run test:e2e:transcription` -> PASS, `2/2` Playwright tests (persisted branch).
+- Tagged-data cleanup audit -> PASS: `ai_file_transcripts` tagged `0`, `ai_file_cache` tagged `0`, `ai_file_transcripts` total `0` (self-cleaning, no leftover prod data).
+- Regression guards -> PASS: `test:e2e:file-upload` `1/1`, `test:e2e:contact-crud` `1/1`, `test:e2e:lead-scoring` `1/1`.

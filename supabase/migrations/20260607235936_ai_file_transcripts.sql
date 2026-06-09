@@ -40,6 +40,9 @@ CREATE INDEX IF NOT EXISTS ai_file_transcripts_founder_created_idx
 
 ALTER TABLE ai_file_transcripts ENABLE ROW LEVEL SECURITY;
 
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.ai_file_transcripts
+TO authenticated, service_role;
+
 DO $$
 BEGIN
   IF NOT EXISTS (

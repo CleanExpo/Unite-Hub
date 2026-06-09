@@ -208,6 +208,7 @@ Leftover test IDs for marker 2026-06-07T12:06:12.154Z: {"contacts":[],"workspace
    - Read-only live probe returned `PGRST205 Could not find the table 'public.ai_file_transcripts' in the schema cache`, so the focused transcription E2E is blocked until this migration is applied.
    - This lane did not run production schema changes. Required next command, once authorized and after reviewing the SQL: `supabase db query --linked --file supabase/migrations/20260607235936_ai_file_transcripts.sql`, then `env TRANSCRIPTION_APPEND_EVIDENCE=1 pnpm test:e2e:transcription`.
    - Live provider transcription remains UNKNOWN until provider credentials, source-byte retrieval/storage, and cost ceiling are explicitly approved.
+   - **RESOLVED 2026-06-09:** Migration applied to production project `lksfwktwtmyznckodsau` ("Unite-Group") via the Supabase Management API `apply_migration` (idempotent, additive only). NOTE: the documented `--linked` command would have hit the WRONG database — the Supabase CLI is linked to `xgqwfwqumliuguzhshwv` ("Unite-Group Test"), whereas `e2e/support/supabase-admin-config.ts` authenticates against `lksfwktwtmyznckodsau`. `pnpm run test:e2e:transcription` then passed `2/2` on the persisted branch with admin re-read + RLS isolation, tagged data cleaned (0 rows remain). Durable transcript persistence is now **PASS** (see COVERAGE.md "Durable transcript persistence applied — 2026-06-09"). Live provider (#28) remains the only open transcription decision.
 
 ## Added 2026-06-08T10:09+10:00 — Swarm follow-up gates
 
