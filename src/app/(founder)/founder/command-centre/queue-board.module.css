@@ -254,3 +254,33 @@
 }
 .completeBadge[data-ok='true'] { color: #052e1c; background: #34d399; }
 .completeBadge[data-ok='false'] { color: #fde68a; background: rgba(251, 191, 36, 0.16); border: 1px solid rgba(251, 191, 36, 0.4); }
+
+/* ── Sessions panel (CC-14) ────────────────────────────────────────────── */
+.sessPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(111, 135, 155, 0.14);
+}
+
+.sessList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sessRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sessActions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}

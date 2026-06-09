@@ -42,6 +42,28 @@ interface ValidationCell {
   summary?: ValidationSummary
 }
 
+type SessionStatus = 'running' | 'paused' | 'done' | 'failed'
+type SessionAction = 'pause' | 'resume' | 'complete' | 'fail'
+interface ExecutionSession {
+  id: string
+  surface: string
+  status: SessionStatus
+  started_at: string
+}
+interface SessionCell {
+  loading?: boolean
+  error?: string
+  sessions?: ExecutionSession[]
+}
+
+// Which lifecycle actions are valid from each session status (mirrors the API).
+const SESSION_ACTIONS_FOR: Record<SessionStatus, SessionAction[]> = {
+  running: ['pause', 'complete', 'fail'],
+  paused: ['resume', 'complete', 'fail'],
+  done: [],
+  failed: [],
+}
+
 // Display order; the first two groups are the ones that need a human decision.
 const STATUS_ORDER = ['proposed', 'awaiting_approval', 'queued', 'running', 'blocked', 'done', 'failed'] as const
 const ACTIONABLE = new Set(['proposed', 'awaiting_approval'])
@@ -72,6 +94,9 @@ export function QueueBoard() {
   const [busyId, setBusyId] = useState<string | null>(null)
   const [valOpen, setValOpen] = useState<string | null>(null)
   const [valData, setValData] = useState<Record<string, ValidationCell>>({})
+  const [sessOpen, setSessOpen] = useState<string | null>(null)
+  const [sessData, setSessData] = useState<Record<string, SessionCell>>({})
+  const [sessBusy, setSessBusy] = useState(false)
 
   const loadQueue = useCallback(async () => {
     setLoading(true)
@@ -141,6 +166,77 @@ export function QueueBoard() {
     }
   }
 
+  const loadSessions = useCallback(async (taskId: string) => {
+    setSessData((d) => ({ ...d, [taskId]: { ...d[taskId], loading: true, error: undefined } }))
+    try {
+      const res = await fetch(`/api/command-centre/sessions?taskId=${encodeURIComponent(taskId)}`, { credentials: 'include' })
+      if (!res.ok) {
+        const msg = await readError(res, 'Could not load sessions')
+        setSessData((d) => ({ ...d, [taskId]: { error: msg } }))
+        return
+      }
+      const data = (await res.json()) as { sessions?: ExecutionSession[] }
+      setSessData((d) => ({ ...d, [taskId]: { sessions: Array.isArray(data.sessions) ? data.sessions : [] } }))
+    } catch {
+      setSessData((d) => ({ ...d, [taskId]: { error: 'Network error — could not load sessions.' } }))
+    }
+  }, [])
+
+  async function toggleSessions(taskId: string) {
+    if (sessOpen === taskId) {
+      setSessOpen(null)
+      return
+    }
+    setSessOpen(taskId)
+    if (!sessData[taskId]?.sessions) await loadSessions(taskId)
+  }
+
+  async function startSession(taskId: string) {
+    if (sessBusy) return
+    setSessBusy(true)
+    try {
+      const res = await fetch('/api/command-centre/sessions', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId }),
+      })
+      if (!res.ok) {
+        const msg = await readError(res, 'Could not start session')
+        setSessData((d) => ({ ...d, [taskId]: { ...d[taskId], error: msg } }))
+        return
+      }
+      await loadSessions(taskId)
+    } catch {
+      setSessData((d) => ({ ...d, [taskId]: { ...d[taskId], error: 'Network error — could not start session.' } }))
+    } finally {
+      setSessBusy(false)
+    }
+  }
+
+  async function sessionAction(taskId: string, sessionId: string, action: SessionAction) {
+    if (sessBusy) return
+    setSessBusy(true)
+    try {
+      const res = await fetch(`/api/command-centre/sessions/${sessionId}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      })
+      if (!res.ok) {
+        const msg = await readError(res, `Could not ${action} session`)
+        setSessData((d) => ({ ...d, [taskId]: { ...d[taskId], error: msg } }))
+        return
+      }
+      await loadSessions(taskId)
+    } catch {
+      setSessData((d) => ({ ...d, [taskId]: { ...d[taskId], error: `Network error — could not ${action} session.` } }))
+    } finally {
+      setSessBusy(false)
+    }
+  }
+
   const grouped = STATUS_ORDER.map((status) => ({
     status,
     items: tasks.filter((t) => t.status === status),
@@ -200,6 +296,14 @@ export function QueueBoard() {
                     >
                       {valOpen === task.id ? 'Hide gates' : 'Validation'}
                     </button>
+                    <button
+                      type="button"
+                      className={styles.valToggle}
+                      onClick={() => void toggleSessions(task.id)}
+                      aria-expanded={sessOpen === task.id}
+                    >
+                      {sessOpen === task.id ? 'Hide sessions' : 'Sessions'}
+                    </button>
                     {ACTIONABLE.has(task.status) && (
                       <>
                         <button
@@ -232,6 +336,15 @@ export function QueueBoard() {
                 </div>
 
                 {valOpen === task.id && <ValidationView cell={valData[task.id]} />}
+                {sessOpen === task.id && (
+                  <SessionsView
+                    cell={sessData[task.id]}
+                    canStart={task.status === 'queued'}
+                    busy={sessBusy}
+                    onStart={() => void startSession(task.id)}
+                    onAction={(sid, a) => void sessionAction(task.id, sid, a)}
+                  />
+                )}
               </li>
             ))}
           </ul>
@@ -281,6 +394,74 @@ function ValidationView({ cell }: { cell?: ValidationCell }) {
       <span className={styles.completeBadge} data-ok={summary.canComplete}>
         {summary.canComplete ? 'Ready to complete' : 'Blocked — gates not all passing'}
       </span>
+    </div>
+  )
+}
+
+function sessionChipState(status: SessionStatus): 'pass' | 'fail' | 'pending' {
+  if (status === 'done') return 'pass'
+  if (status === 'failed') return 'fail'
+  return 'pending'
+}
+
+function SessionsView({
+  cell,
+  canStart,
+  busy,
+  onStart,
+  onAction,
+}: {
+  cell?: SessionCell
+  canStart: boolean
+  busy: boolean
+  onStart: () => void
+  onAction: (sessionId: string, action: SessionAction) => void
+}) {
+  if (!cell || cell.loading) {
+    return (
+      <div className={styles.sessPanel}>
+        <span className={styles.valMuted}>Loading sessions…</span>
+      </div>
+    )
+  }
+  const sessions = cell.sessions ?? []
+  return (
+    <div className={styles.sessPanel}>
+      {cell.error && <span className={styles.valError}>{cell.error}</span>}
+      {sessions.length === 0 ? (
+        <span className={styles.valMuted}>No sessions yet.</span>
+      ) : (
+        <div className={styles.sessList}>
+          {sessions.map((s) => (
+            <div key={s.id} className={styles.sessRow}>
+              <span className={styles.gateChip} data-state={sessionChipState(s.status)}>
+                {s.surface} · {s.status}
+              </span>
+              <div className={styles.sessActions}>
+                {SESSION_ACTIONS_FOR[s.status].map((a) => (
+                  <button
+                    key={a}
+                    type="button"
+                    className={styles.valToggle}
+                    disabled={busy}
+                    onClick={() => onAction(s.id, a)}
+                  >
+                    {a}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {canStart && (
+        <button type="button" className={`${styles.action} ${styles.approve}`} disabled={busy} onClick={onStart}>
+          Start session
+        </button>
+      )}
+      {!canStart && sessions.length === 0 && (
+        <span className={styles.valMuted}>Approve the task (→ queued) to start a session.</span>
+      )}
     </div>
   )
 }
