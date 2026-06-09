@@ -119,14 +119,20 @@
 
 .row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 0.6rem 0.8rem;
   border: 1px solid rgba(111, 135, 155, 0.16);
   border-left: 3px solid var(--rail, #6f879b);
   border-radius: 8px;
   background: rgba(13, 23, 33, 0.55);
+}
+
+.rowTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .rowMain {
@@ -185,3 +191,66 @@
 .approve { color: #052e1c; background: #34d399; }
 .defer { color: #cfe6f5; background: rgba(251, 191, 36, 0.16); border-color: rgba(251, 191, 36, 0.4); }
 .reject { color: #fecaca; background: rgba(248, 113, 113, 0.14); border-color: rgba(248, 113, 113, 0.4); }
+
+/* ── Validation panel (CC-12) ──────────────────────────────────────────── */
+.valToggle {
+  font: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #cfe6f5;
+  background: rgba(56, 225, 255, 0.06);
+  border: 1px solid rgba(56, 225, 255, 0.22);
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.valToggle:hover { background: rgba(56, 225, 255, 0.14); }
+
+.valPanel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(111, 135, 155, 0.14);
+}
+
+.valGates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.valMuted { color: #7d93a6; font-size: 0.78rem; }
+.valError { color: #fecaca; font-size: 0.78rem; }
+
+.gateChip {
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 0.14rem 0.44rem;
+  color: #9fb3c2;
+  background: rgba(111, 135, 155, 0.14);
+  border: 1px solid transparent;
+}
+.gateChip[data-state='pass'] { color: #bbf7d0; background: rgba(52, 211, 153, 0.16); border-color: rgba(52, 211, 153, 0.4); }
+.gateChip[data-state='fail'] { color: #fecaca; background: rgba(248, 113, 113, 0.16); border-color: rgba(248, 113, 113, 0.4); }
+.gateChip[data-state='skip'],
+.gateChip[data-state='pending'] { color: #fde68a; background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.3); }
+
+.completeBadge {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 5px;
+  padding: 0.22rem 0.5rem;
+  white-space: nowrap;
+}
+.completeBadge[data-ok='true'] { color: #052e1c; background: #34d399; }
+.completeBadge[data-ok='false'] { color: #fde68a; background: rgba(251, 191, 36, 0.16); border: 1px solid rgba(251, 191, 36, 0.4); }

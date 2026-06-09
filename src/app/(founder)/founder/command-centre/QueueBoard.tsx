@@ -28,6 +28,20 @@ interface QueueTask {
 
 type Decision = 'approve' | 'defer' | 'reject'
 
+type GateState = 'pass' | 'fail' | 'skip' | 'pending'
+interface ValidationSummary {
+  byGate: Record<string, GateState>
+  passed: string[]
+  failed: string[]
+  pending: string[]
+  canComplete: boolean
+}
+interface ValidationCell {
+  loading?: boolean
+  error?: string
+  summary?: ValidationSummary
+}
+
 // Display order; the first two groups are the ones that need a human decision.
 const STATUS_ORDER = ['proposed', 'awaiting_approval', 'queued', 'running', 'blocked', 'done', 'failed'] as const
 const ACTIONABLE = new Set(['proposed', 'awaiting_approval'])
@@ -56,6 +70,8 @@ export function QueueBoard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
+  const [valOpen, setValOpen] = useState<string | null>(null)
+  const [valData, setValData] = useState<Record<string, ValidationCell>>({})
 
   const loadQueue = useCallback(async () => {
     setLoading(true)
@@ -103,6 +119,28 @@ export function QueueBoard() {
     }
   }
 
+  async function toggleValidation(taskId: string) {
+    if (valOpen === taskId) {
+      setValOpen(null)
+      return
+    }
+    setValOpen(taskId)
+    if (valData[taskId]?.summary) return // already loaded
+    setValData((d) => ({ ...d, [taskId]: { loading: true } }))
+    try {
+      const res = await fetch(`/api/command-centre/queue/${taskId}/validation`, { credentials: 'include' })
+      if (!res.ok) {
+        const msg = await readError(res, 'Could not load validation')
+        setValData((d) => ({ ...d, [taskId]: { error: msg } }))
+        return
+      }
+      const data = (await res.json()) as { summary?: ValidationSummary }
+      setValData((d) => ({ ...d, [taskId]: { summary: data.summary } }))
+    } catch {
+      setValData((d) => ({ ...d, [taskId]: { error: 'Network error — could not load validation.' } }))
+    }
+  }
+
   const grouped = STATUS_ORDER.map((status) => ({
     status,
     items: tasks.filter((t) => t.status === status),
@@ -142,49 +180,107 @@ export function QueueBoard() {
           <ul className={styles.list}>
             {group.items.map((task) => (
               <li key={task.id} className={styles.row} style={{ '--rail': riskRail(task.risk_level) } as React.CSSProperties}>
-                <div className={styles.rowMain}>
-                  <span className={styles.rowTitle}>{task.title}</span>
-                  <span className={styles.rowMeta}>
-                    <span className={styles.tag}>{task.priority}</span>
-                    <span className={styles.tag} data-risk={task.risk_level}>{task.risk_level}</span>
-                    <span className={styles.tag}>{task.origin}</span>
-                    {task.project_key && <span className={styles.tag}>{task.project_key}</span>}
-                  </span>
-                </div>
+                <div className={styles.rowTop}>
+                  <div className={styles.rowMain}>
+                    <span className={styles.rowTitle}>{task.title}</span>
+                    <span className={styles.rowMeta}>
+                      <span className={styles.tag}>{task.priority}</span>
+                      <span className={styles.tag} data-risk={task.risk_level}>{task.risk_level}</span>
+                      <span className={styles.tag}>{task.origin}</span>
+                      {task.project_key && <span className={styles.tag}>{task.project_key}</span>}
+                    </span>
+                  </div>
 
-                {ACTIONABLE.has(task.status) && (
                   <div className={styles.rowActions}>
                     <button
                       type="button"
-                      className={`${styles.action} ${styles.approve}`}
-                      onClick={() => void decide(task.id, 'approve')}
-                      disabled={busyId !== null}
+                      className={styles.valToggle}
+                      onClick={() => void toggleValidation(task.id)}
+                      aria-expanded={valOpen === task.id}
                     >
-                      Approve
+                      {valOpen === task.id ? 'Hide gates' : 'Validation'}
                     </button>
-                    <button
-                      type="button"
-                      className={`${styles.action} ${styles.defer}`}
-                      onClick={() => void decide(task.id, 'defer')}
-                      disabled={busyId !== null}
-                    >
-                      Defer
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.action} ${styles.reject}`}
-                      onClick={() => void decide(task.id, 'reject')}
-                      disabled={busyId !== null}
-                    >
-                      Reject
-                    </button>
+                    {ACTIONABLE.has(task.status) && (
+                      <>
+                        <button
+                          type="button"
+                          className={`${styles.action} ${styles.approve}`}
+                          onClick={() => void decide(task.id, 'approve')}
+                          disabled={busyId !== null}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.action} ${styles.defer}`}
+                          onClick={() => void decide(task.id, 'defer')}
+                          disabled={busyId !== null}
+                        >
+                          Defer
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.action} ${styles.reject}`}
+                          onClick={() => void decide(task.id, 'reject')}
+                          disabled={busyId !== null}
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
                   </div>
-                )}
+                </div>
+
+                {valOpen === task.id && <ValidationView cell={valData[task.id]} />}
               </li>
             ))}
           </ul>
         </section>
       ))}
+    </div>
+  )
+}
+
+function ValidationView({ cell }: { cell?: ValidationCell }) {
+  if (!cell || cell.loading) {
+    return (
+      <div className={styles.valPanel}>
+        <span className={styles.valMuted}>Loading gates…</span>
+      </div>
+    )
+  }
+  if (cell.error) {
+    return (
+      <div className={styles.valPanel}>
+        <span className={styles.valError}>{cell.error}</span>
+      </div>
+    )
+  }
+  const summary = cell.summary
+  if (!summary) {
+    return (
+      <div className={styles.valPanel}>
+        <span className={styles.valMuted}>No validation data.</span>
+      </div>
+    )
+  }
+  const gates = Object.entries(summary.byGate)
+  return (
+    <div className={styles.valPanel}>
+      <div className={styles.valGates}>
+        {gates.length === 0 ? (
+          <span className={styles.valMuted}>No required gates configured.</span>
+        ) : (
+          gates.map(([gate, state]) => (
+            <span key={gate} className={styles.gateChip} data-state={state}>
+              {gate} · {state}
+            </span>
+          ))
+        )}
+      </div>
+      <span className={styles.completeBadge} data-ok={summary.canComplete}>
+        {summary.canComplete ? 'Ready to complete' : 'Blocked — gates not all passing'}
+      </span>
     </div>
   )
 }
