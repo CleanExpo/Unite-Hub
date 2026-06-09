@@ -1,0 +1,187 @@
+/* QueueBoard — task queue + approvals (CC-17). Matches the Command Deck cockpit
+   aesthetic: dark panels, monospace labels, LED status accents, risk rails. */
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.count {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7d93a6;
+}
+
+.refresh {
+  font: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #cfe6f5;
+  background: rgba(56, 225, 255, 0.08);
+  border: 1px solid rgba(56, 225, 255, 0.25);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.refresh:hover:not(:disabled) {
+  background: rgba(56, 225, 255, 0.16);
+  border-color: rgba(56, 225, 255, 0.5);
+}
+.refresh:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.error {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.08);
+  color: #fecaca;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.82rem;
+}
+
+.placeholder {
+  border: 1px dashed rgba(111, 135, 155, 0.3);
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+  color: #7d93a6;
+  font-size: 0.85rem;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(111, 135, 155, 0.18);
+}
+
+.groupName {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #aebfcd;
+}
+
+.groupCount {
+  margin-left: auto;
+  font-size: 0.72rem;
+  color: #6f879b;
+}
+
+.led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6f879b;
+  box-shadow: 0 0 6px currentColor;
+}
+.led[data-status='proposed'] { background: #38e1ff; color: #38e1ff; }
+.led[data-status='awaiting_approval'] { background: #fbbf24; color: #fbbf24; }
+.led[data-status='queued'] { background: #34d399; color: #34d399; }
+.led[data-status='running'] { background: #60a5fa; color: #60a5fa; animation: pulse 1.4s ease-in-out infinite; }
+.led[data-status='blocked'] { background: #fb923c; color: #fb923c; }
+.led[data-status='done'] { background: #2f6f53; color: #2f6f53; }
+.led[data-status='failed'] { background: #f87171; color: #f87171; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(111, 135, 155, 0.16);
+  border-left: 3px solid var(--rail, #6f879b);
+  border-radius: 8px;
+  background: rgba(13, 23, 33, 0.55);
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.rowTitle {
+  color: #e6f1f8;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tag {
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9fb3c2;
+  background: rgba(111, 135, 155, 0.12);
+  border-radius: 4px;
+  padding: 0.12rem 0.4rem;
+}
+.tag[data-risk='high'] { color: #fed7aa; background: rgba(251, 146, 60, 0.14); }
+.tag[data-risk='critical'] { color: #fecaca; background: rgba(248, 113, 113, 0.16); }
+
+.rowActions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.action {
+  font: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+.action:disabled { opacity: 0.45; cursor: default; }
+.action:hover:not(:disabled) { filter: brightness(1.2); }
+
+.approve { color: #052e1c; background: #34d399; }
+.defer { color: #cfe6f5; background: rgba(251, 191, 36, 0.16); border-color: rgba(251, 191, 36, 0.4); }
+.reject { color: #fecaca; background: rgba(248, 113, 113, 0.14); border-color: rgba(248, 113, 113, 0.4); }

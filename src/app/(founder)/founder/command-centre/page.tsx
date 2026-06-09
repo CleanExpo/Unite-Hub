@@ -12,6 +12,7 @@ import { getToolCatalogue } from '@/lib/command-centre/tools/catalogue'
 import { LiveClock } from './LiveClock'
 import { CommandPalette } from './CommandPalette'
 import { IdeaConsole } from './IdeaConsole'
+import { QueueBoard } from './QueueBoard'
 import styles from './command-deck.module.css'
 
 const chakra = Chakra_Petch({
@@ -133,6 +134,16 @@ export default async function CommandDeckPage() {
 
       <section className={`${styles.reveal}`} style={{ animationDelay: '0.02s' }}>
         <IdeaConsole projects={projects.map((p) => ({ name: p.name }))} />
+      </section>
+
+      {/* ── Task queue ───────────────────────────────────────────────── */}
+      <div className={styles.sectionHead} id="task-queue">
+        <span className={styles.sectionLabel}>Task Queue</span>
+        <span className={styles.sectionMeta}>proposed → approve → queued</span>
+      </div>
+
+      <section className={`${styles.reveal}`} style={{ animationDelay: '0.06s' }}>
+        <QueueBoard />
       </section>
 
       {/* ── Portfolio ────────────────────────────────────────────────── */}
