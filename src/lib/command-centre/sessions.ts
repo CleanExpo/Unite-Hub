@@ -143,6 +143,25 @@ export async function listSessionsForTask(
   return (data as ExecutionSession[]) ?? []
 }
 
+/** List a founder's most recent sessions across all tasks, newest first. Capped at 200. */
+export async function listRecentSessions(
+  input: { founderId: string; limit?: number },
+  client?: SupabaseLike,
+): Promise<ExecutionSession[]> {
+  const db = client ?? ((await createClient()) as unknown as SupabaseLike)
+  const limit = Math.min(Math.max(input.limit ?? 100, 1), 200)
+
+  const { data, error } = await db
+    .from(CC_EXECUTION_SESSIONS_TABLE)
+    .select('*')
+    .eq('founder_id', input.founderId)
+    .order('started_at', { ascending: false })
+    .limit(limit)
+
+  if (error) throw new Error(`listRecentSessions failed: ${error.message}`)
+  return (data as ExecutionSession[]) ?? []
+}
+
 /** Fetch a single founder-scoped session by id, or null. */
 export async function getSessionById(
   input: { founderId: string; sessionId: string },

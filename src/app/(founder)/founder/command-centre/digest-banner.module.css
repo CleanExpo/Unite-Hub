@@ -1,0 +1,64 @@
+/* DigestBanner — morning digest (CC-19). Cockpit aesthetic, attention-aware. */
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(56, 225, 255, 0.18);
+  border-left: 3px solid #38e1ff;
+  background: linear-gradient(180deg, rgba(56, 225, 255, 0.06), rgba(13, 23, 33, 0.4));
+}
+.banner[data-attention='true'] {
+  border-color: rgba(251, 191, 36, 0.3);
+  border-left-color: #fbbf24;
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.06), rgba(13, 23, 33, 0.4));
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #aebfcd;
+}
+
+.headline {
+  font-size: 0.95rem;
+  color: #e6f1f8;
+}
+
+.muted {
+  font-size: 0.85rem;
+  color: #7d93a6;
+}
+
+.attention {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.attention li {
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+  color: #fde68a;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 5px;
+  padding: 0.22rem 0.55rem;
+}
+
+.clear {
+  font-size: 0.8rem;
+  color: #bbf7d0;
+}

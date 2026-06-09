@@ -91,6 +91,10 @@
     {
       "path": "/api/cron/strategy-daily?business=ccw",
       "schedule": "30 16 * * *"
+    },
+    {
+      "path": "/api/cron/overnight-digest",
+      "schedule": "30 19 * * *"
     }
   ],
   "functions": {
