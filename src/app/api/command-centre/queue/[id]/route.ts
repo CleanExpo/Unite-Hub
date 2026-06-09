@@ -9,6 +9,7 @@ import { NextResponse } from 'next/server'
 import { getUser } from '@/lib/supabase/server'
 import { getTaskById, updateTaskStatus, appendTaskEvent, type TaskStatus } from '@/lib/command-centre/tasks'
 import { listApprovalsForTask } from '@/lib/command-centre/approvals'
+import { getValidationSummary } from '@/lib/command-centre/validation'
 
 export const dynamic = 'force-dynamic'
 
@@ -53,6 +54,30 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       { error: `Field "status" must be one of: ${VALID_STATUS.join(', ')}` },
       { status: 400 },
     )
+  }
+
+  // CC-12 enforcement (no fake-green): a task may not be marked `done` while any
+  // required validation gate is failing or unrun. Returns 422 with the offenders.
+  if (status === 'done') {
+    try {
+      const summary = await getValidationSummary({ founderId: user.id, taskId: id })
+      if (!summary.canComplete) {
+        return NextResponse.json(
+          {
+            error: 'Cannot complete: required validation gates are not all passing',
+            failed: summary.failed,
+            pending: summary.pending,
+            byGate: summary.byGate,
+          },
+          { status: 422 },
+        )
+      }
+    } catch (err) {
+      return NextResponse.json(
+        { error: err instanceof Error ? err.message : 'Failed to check validation gates' },
+        { status: 500 },
+      )
+    }
   }
 
   try {
