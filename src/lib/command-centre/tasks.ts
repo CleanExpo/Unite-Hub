@@ -169,6 +169,7 @@ export interface SupabaseLike {
           order(column: string, opts: { ascending: boolean }): {
             limit(n: number): Promise<{ data: unknown; error: { message: string } | null }>
           }
+          single(): Promise<{ data: unknown; error: { message: string } | null }>
         }
         order(column: string, opts: { ascending: boolean }): {
           limit(n: number): Promise<{ data: unknown; error: { message: string } | null }>
@@ -310,4 +311,57 @@ export async function updateTaskStatusByExternalRef(
   }
   if (!data) return null
   return data as CommandCentreTask
+}
+
+/**
+ * Fetch a single founder-scoped task by id. Returns null when no matching row
+ * exists (wrong id, or another founder's task hidden by RLS). The `client`
+ * argument is for testing — production callers omit it.
+ */
+export async function getTaskById(
+  input: { founderId: string; taskId: string },
+  client?: SupabaseLike,
+): Promise<CommandCentreTask | null> {
+  const db = client ?? ((await createClient()) as unknown as SupabaseLike)
+
+  const { data, error } = await db
+    .from(CC_TASKS_TABLE)
+    .select('*')
+    .eq('founder_id', input.founderId)
+    .eq('id', input.taskId)
+    .single()
+
+  // PostgREST returns PGRST116 from .single() when no row matches; treat a
+  // missing row as a quiet null rather than a hard failure.
+  if (error) {
+    if (!data) return null
+    throw new Error(`getTaskById failed: ${error.message}`)
+  }
+  return (data as CommandCentreTask) ?? null
+}
+
+/**
+ * Update a task's status by (founder_id, id). Returns the updated row, or null
+ * when no matching row exists. The `client` argument is for testing — production
+ * callers omit it.
+ */
+export async function updateTaskStatus(
+  input: { founderId: string; taskId: string; status: TaskStatus },
+  client?: SupabaseLike,
+): Promise<CommandCentreTask | null> {
+  const db = client ?? ((await createClient()) as unknown as SupabaseLike)
+
+  const { data, error } = await db
+    .from(CC_TASKS_TABLE)
+    .update({ status: input.status })
+    .eq('founder_id', input.founderId)
+    .eq('id', input.taskId)
+    .select('*')
+    .single()
+
+  if (error) {
+    if (!data) return null
+    throw new Error(`updateTaskStatus failed: ${error.message}`)
+  }
+  return (data as CommandCentreTask) ?? null
 }
