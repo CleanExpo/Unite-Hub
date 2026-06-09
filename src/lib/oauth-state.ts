@@ -12,7 +12,10 @@ function secret(): string {
 
 /**
  * Creates a signed state string for OAuth authorize requests.
- * The HMAC ensures the callback cannot be replayed or forged.
+ * The HMAC ensures the state cannot be forged or tampered with without the secret.
+ * NOTE: this does NOT prevent replay — there is no nonce or expiry, so a captured,
+ * validly-signed state can be re-submitted. Add a nonce/timestamp to the payload and
+ * verify it on the callback if replay protection is required.
  */
 export function signOAuthState(payload: Record<string, string>): string {
   const data = Buffer.from(JSON.stringify(payload)).toString('base64url')
