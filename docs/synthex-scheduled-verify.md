@@ -36,13 +36,13 @@ related:
 - No dependencies added
 - No new env vars / new vendors / new Supabase tables / new RLS / new migrations
 
-## Cron installation (operator, 1 minute)
+## Cron install (operator, 1 minute)
 
-The script is designed to run from the operator's shell on a schedule. Recommended:
+The script is designed to run from the operator's shell on a schedule. The script-invocation block only fires when `SYNTHEX_RUN_CRON=1` is set, so imports in test code have **no side effects**. Recommended:
 
 ```bash
 # Daily at 08:00 AEST (after the morning health check fires at 08:00)
-0 8 * * 1-5  cd /Users/phillmcgurk/Unite-Hub && /Users/phillmcgurk/.local/bin/npx tsx src/lib/synthex/sync-verify-cron.ts >> /Users/phillmcgurk/2nd-brain/.agentic_nexus/dashboard/synthex-sync-verify.log 2>&1
+0 8 * * 1-5  cd /Users/phillmcgurk/Unite-Hub && SYNTHEX_RUN_CRON=1 /Users/phillmcgurk/.local/bin/npx tsx src/lib/synthex/sync-verify-cron.ts >> /Users/phillmcgurk/2nd-brain/.agentic_nexus/dashboard/synthex-sync-verify.log 2>&1
 ```
 
 If the script's exit code is non-zero (FAIL or DEGRADED), the cron line will emit to the operator's mail / log; the dashboard entry is the durable record.

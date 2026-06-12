@@ -124,8 +124,12 @@ export async function runAndWriteDashboard(
   return v
 }
 
-if (process.argv[1] && process.argv[1].endsWith('sync-verify-cron.ts')) {
-  // Running as a script. Print the summary and exit.
+if (typeof process !== 'undefined' && process.env.SYNTHEX_RUN_CRON === '1') {
+  // The script-invocation block only runs when the env var
+  // SYNTHEX_RUN_CRON=1 is set. The cron entry sets this var when invoking
+  // the file. Imports in test code do not set the var, so the import has
+  // no side effects — this is the safest pattern for cron entrypoints
+  // that are also imported by tests.
   runAndWriteDashboard()
     .then((v) => {
       console.log(formatSyncSummary(v))
