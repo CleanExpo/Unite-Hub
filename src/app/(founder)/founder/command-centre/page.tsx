@@ -11,6 +11,7 @@ import { getProjects, type CommandCentreProject } from '@/lib/command-centre/reg
 import { getToolCatalogue } from '@/lib/command-centre/tools/catalogue'
 import { summariseDashboard } from '@/lib/command-centre/dashboard-summary'
 import { tailEvidence } from '@/lib/command-centre/evidence-stream'
+import { listInProgressPRs } from '@/lib/command-centre/in-progress-prs'
 import { loadActionQueueData } from './ActionQueueTile'
 import { loadBlockedLanesData } from './BlockedLanesTile'
 import { LiveClock } from './LiveClock'
@@ -22,6 +23,7 @@ import { OperatingHealthTile } from './OperatingHealthTile'
 import { EvidenceStreamTile } from './EvidenceStreamTile'
 import { ActionQueueTile } from './ActionQueueTile'
 import { BlockedLanesTile } from './BlockedLanesTile'
+import { InProgressPRsTile } from './InProgressPRsTile'
 import styles from './command-deck.module.css'
 
 const chakra = Chakra_Petch({
@@ -74,13 +76,14 @@ function hostOf(url?: string): string {
 }
 
 export default async function CommandDeckPage() {
-  const [projects, tools, dashboard, evidence, actionQueue, blockedLanes] = await Promise.all([
+  const [projects, tools, dashboard, evidence, actionQueue, blockedLanes, inProgressPRs] = await Promise.all([
     getProjects(),
     getToolCatalogue(),
     summariseDashboard(),
     tailEvidence(),
     loadActionQueueData(),
     loadBlockedLanesData(),
+    listInProgressPRs(),
   ])
 
   const activeCount = projects.filter((p) => p.status === 'active').length
@@ -306,6 +309,18 @@ export default async function CommandDeckPage() {
 
       <section className={`${styles.reveal}`} style={{ animationDelay: '0.18s' }}>
         <BlockedLanesTile data={blockedLanes} />
+      </section>
+
+      {/* ── In-Progress PRs (Lane 16.5) ─────────────────────────────────── */}
+      <div className={styles.sectionHead} id="in-progress-prs">
+        <span className={styles.sectionLabel}>In-Progress PRs</span>
+        <span className={styles.sectionMeta}>
+          {inProgressPRs.status_message} · via <code style={{ fontSize: '0.7rem' }}>{inProgressPRs.gh_path}</code>
+        </span>
+      </div>
+
+      <section className={`${styles.reveal}`} style={{ animationDelay: '0.2s' }}>
+        <InProgressPRsTile data={inProgressPRs} />
       </section>
     </div>
   )
