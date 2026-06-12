@@ -8,6 +8,7 @@ vi.mock('@/lib/supabase/server', () => ({
 describe('Meta authorize route', () => {
   it('redirects to Facebook OAuth with correct params', async () => {
     process.env.FACEBOOK_APP_ID = 'test-app-id'
+    process.env.FACEBOOK_APP_SECRET='***'
     process.env.NEXT_PUBLIC_APP_URL = 'https://app.test'
     process.env.VAULT_ENCRYPTION_KEY = 'test-encryption-key-32-bytes-ok!'
 
