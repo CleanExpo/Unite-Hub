@@ -49,19 +49,20 @@ describe('TikTok authorize route', () => {
     expect(res.status).toBe(400)
   })
 
-  it('RED TEST: today the route redirects with client_key=undefined when env is unset (fail-silently bug — bounded follow-on PR fixes)', async () => {
+  it('returns 503 with structured error when TIKTOK_CLIENT_KEY is unset (fail-loud patch — PR #125)', async () => {
     delete process.env.TIKTOK_CLIENT_KEY
     delete process.env.TIKTOK_CLIENT_SECRET
-    process.env.VAULT_ENCRYPTION_KEY = 'test-暗号化-key-32-bytes-ok!'
+    process.env.VAULT_ENCRYPTION_KEY = 'test-encryption-key-32-bytes-ok!'
     process.env.NEXT_PUBLIC_APP_URL = 'https://app.test'
 
     const req = new Request('https://app.test/api/auth/tiktok/authorize?business=synthex')
     const res = await authorize(req)
-    // Same fail-silently bug as LinkedIn. Documents the current behavior.
-    expect(res.status).toBe(307)
-    const location = res.headers.get('location') ?? ''
-    expect(location).toContain('tiktok.com/v2/auth/authorize')
-    expect(location).toContain('client_key=undefined')
+    // After the fix (PR #125), the route returns a structured 503 instead
+    // of redirecting to TikTok with client_key=undefined in the URL.
+    expect(res.status).toBe(503)
+    const body = (await res.json()) as { check: string; missing_env_vars: string[] }
+    expect(body.check).toBe('tiktok_authorize')
+    expect(body.missing_env_vars).toContain('TIKTOK_CLIENT_KEY')
   })
 })
 

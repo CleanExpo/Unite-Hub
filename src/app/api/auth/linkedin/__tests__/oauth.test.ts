@@ -54,22 +54,20 @@ describe('LinkedIn authorize route', () => {
     expect(res.status).toBe(400)
   })
 
-  it('RED TEST: today the route redirects with client_id=undefined when env is unset (fail-silently bug — bounded follow-on PR fixes)', async () => {
+  it('returns 503 with structured error when LINKEDIN_CLIENT_ID is unset (fail-loud patch — PR #125)', async () => {
     delete process.env.LINKEDIN_CLIENT_ID
     delete process.env.LINKEDIN_CLIENT_SECRET
-    process.env.VAULT_ENCRYPTION_KEY = 'test-暗号化-key-32-bytes-ok!'
+    process.env.VAULT_ENCRYPTION_KEY = 'test-encryption-key-32-bytes-ok!'
     process.env.NEXT_PUBLIC_APP_URL = 'https://app.test'
 
     const req = new Request('https://app.test/api/auth/linkedin/authorize?business=synthex')
     const res = await authorize(req)
-    // Today the route returns 307 with client_id=undefined in the URL —
-    // fail-silently. The bounded follow-on PR (a separate bounded PR)
-    // changes this to a structured 503. This test asserts the CURRENT
-    // behavior so a future change is caught.
-    expect(res.status).toBe(307)
-    const location = res.headers.get('location') ?? ''
-    expect(location).toContain('linkedin.com/oauth/v2/authorization')
-    expect(location).toContain('client_id=undefined') // documents the bug
+    // After the fix (PR #125), the route returns a structured 503 instead
+    // of redirecting to LinkedIn with client_id=undefined in the URL.
+    expect(res.status).toBe(503)
+    const body = (await res.json()) as { check: string; missing_env_vars: string[] }
+    expect(body.check).toBe('linkedin_authorize')
+    expect(body.missing_env_vars).toContain('LINKEDIN_CLIENT_ID')
   })
 })
 
